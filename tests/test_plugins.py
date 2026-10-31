@@ -20,7 +20,8 @@ class DiscoverTests(unittest.TestCase):
     def test_discovers_built_in_checks_and_providers(self) -> None:
         plugins = discover()
         self.assertEqual(
-            sorted(c.name for c in plugins.checks), ["ci-present", "coverage", "ctest-runs", "platform-matrix"]
+            sorted(c.name for c in plugins.checks),
+            ["ci-present", "coverage", "ctest-runs", "platform-matrix", "security-scanning"],
         )
         self.assertTrue({"GitHub Actions", "GitLab CI", "Travis CI"} <= {p.name for p in plugins.providers})
 
