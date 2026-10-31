@@ -7,7 +7,6 @@ BRANCH_COVERAGE = (
     pattern("genhtml", r"--branch-coverage\b"),
     pattern("gcov", r"--branch-(probabilities|counts)\b"),
     pattern("llvm-cov", r"-show-branch(es|-summary)\b"),
-    pattern("coverage.py", r"\bcoverage\s+run\b[^\n]*--branch\b|--cov-branch\b"),
 )
 
 PATH_COVERAGE = (
