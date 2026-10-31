@@ -2,6 +2,7 @@ import shutil
 import unittest
 
 from project_validator.checks.ci_present import ci_present
+from project_validator.checks.clang_format import clang_format
 from project_validator.checks.coverage import coverage
 from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.ctest_runs import ctest_runs
@@ -214,3 +215,52 @@ class CxxExtensionsTests(unittest.TestCase):
         result = self._run({"CMakeLists.txt": "project(p C)\n"})
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("set(CMAKE_C_EXTENSIONS OFF)", result.message)
+
+
+class ClangFormatTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]):
+        with temp_project(files) as root:
+            return clang_format.run(make_context(root))
+
+    def test_fails_without_a_clang_format_file(self) -> None:
+        result = clang_format.run(make_context(FIXTURES / "bare_project"))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn(".clang-format", result.message)
+
+    def test_passes_when_ci_checks_formatting(self) -> None:
+        result = clang_format.run(make_context(FIXTURES / "well_configured"))
+        self.assertEqual(result.status, Status.PASS)
+        self.assertEqual(result.message, ".clang-format is defined and CI runs clang-format")
+
+    def test_passes_with_a_clang_format_github_action(self) -> None:
+        result = self._run(
+            {
+                "_clang-format": "BasedOnStyle: LLVM\n",
+                ".github/workflows/format.yml": "steps:\n  - uses: DoozyX/clang-format-lint-action@v0.18\n",
+            }
+        )
+        self.assertEqual(result.status, Status.PASS)
+        self.assertIn("_clang-format", result.message)
+
+    def test_warns_when_ci_does_not_run_clang_format(self) -> None:
+        result = self._run(
+            {
+                ".clang-format": "BasedOnStyle: LLVM\n",
+                ".github/workflows/ci.yml": "steps:\n  - run: cmake -S . -B build\n",
+            }
+        )
+        self.assertEqual(result.status, Status.WARN)
+        self.assertEqual(result.message, ".clang-format is defined but CI does not run clang-format")
+
+    def test_mentioning_the_config_file_in_ci_does_not_count(self) -> None:
+        result = self._run(
+            {
+                ".clang-format": "BasedOnStyle: LLVM\n",
+                ".github/workflows/ci.yml": "on:\n  push:\n    paths-ignore: ['.clang-format', '_clang-format']\n",
+            }
+        )
+        self.assertEqual(result.status, Status.WARN)
+
+    def test_running_clang_format_without_a_config_file_fails(self) -> None:
+        result = self._run({".github/workflows/ci.yml": "steps:\n  - run: clang-format --dry-run -Werror src/*.cpp\n"})
+        self.assertEqual(result.status, Status.FAIL)

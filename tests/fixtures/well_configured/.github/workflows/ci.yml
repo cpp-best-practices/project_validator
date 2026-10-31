@@ -17,3 +17,8 @@ jobs:
       - run: cmake --build build
       - run: ctest --test-dir build --output-on-failure
       - run: gcovr --fail-under-branch 80
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: find . -name '*.cpp' | xargs clang-format --dry-run -Werror
