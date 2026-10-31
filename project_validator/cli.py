@@ -2,11 +2,12 @@
 
 import argparse
 import json
+import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from project_validator import yaml_support
+from project_validator import pretty, yaml_support
 from project_validator.core import Check, Context, Options, Project
 from project_validator.plugins import PluginError, discover
 from project_validator.runner import Report, SelectionError, run_checks, select, succeeded
@@ -29,6 +30,9 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--only", action="append", default=[], metavar="CHECKS", help="run only these checks")
     parser.add_argument("--skip", action="append", default=[], metavar="CHECKS", help="do not run these checks")
     parser.add_argument("--format", choices=("text", "json"), default="text", help="output format")
+    parser.add_argument(
+        "--color", choices=("auto", "always", "never"), default="auto", help="color the text output (needs rich)"
+    )
     parser.add_argument("--build", action="store_true", help="configure and build the project to list its tests")
     parser.add_argument("--strict", action="store_true", help="treat warnings as failures")
     parser.add_argument("--cmake", default="cmake", help="cmake executable used by --build")
@@ -62,6 +66,21 @@ def _format_json(reports: list[Report]) -> str:
     )
 
 
+def _use_color(choice: str) -> bool:
+    if choice == "auto":
+        return sys.stdout.isatty() and "NO_COLOR" not in os.environ
+    return choice == "always"
+
+
+def _print_text(reports: list[Report], color: bool) -> None:
+    if color and pretty.available():
+        pretty.print_reports(reports, sys.stdout)
+        return
+    if color:
+        print("note: install rich for colored output", file=sys.stderr)
+    print(_format_text(reports))
+
+
 def _format_list(checks: Sequence[Check]) -> str:
     width = max((len(c.name) for c in checks), default=0)
     return "\n".join(f"{c.name:<{width}}  {c.description}" for c in checks)
@@ -91,5 +110,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     options = Options(build=arguments.build, cmake=arguments.cmake, ctest=arguments.ctest)
     context = Context(Project(arguments.path.resolve()), plugins.providers, options)
     reports = run_checks(selected, context)
-    print(_format_json(reports) if arguments.format == "json" else _format_text(reports))
+    if arguments.format == "json":
+        print(_format_json(reports))
+    else:
+        _print_text(reports, _use_color(arguments.color))
     return EXIT_SUCCESS if succeeded(reports, strict=arguments.strict) else EXIT_FAILURE
