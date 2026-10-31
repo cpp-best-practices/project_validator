@@ -1,0 +1,4 @@
+Checks: '-*,readability-function-size'
+CheckOptions:
+  - key: readability-function-size.LineThreshold
+    value: 80

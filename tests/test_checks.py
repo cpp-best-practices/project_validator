@@ -10,6 +10,7 @@ from project_validator.checks.compiler_warnings import compiler_warnings
 from project_validator.checks.coverage import coverage
 from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.ctest_runs import ctest_runs
+from project_validator.checks.function_limits import function_limits
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.security_scanning import security_scanning
 from project_validator.core import Status
@@ -398,3 +399,85 @@ class CompilerWarningsTests(unittest.TestCase):
         result = self._run({"CMakeLists.txt": "add_compile_options(/W4 /permissive-)\n"})
         self.assertEqual(result.status, Status.WARN)
         self.assertIn("-Wall", result.message)
+
+
+class FunctionLimitsTests(unittest.TestCase):
+    CLANG_TIDY = """\
+        Checks: '-*,readability-function-size'
+        CheckOptions:
+          - key: readability-function-size.LineThreshold
+            value: 80
+        """
+    RUNS_CLANG_TIDY = {".github/workflows/ci.yml": "steps:\n  - run: run-clang-tidy -p build\n"}
+
+    def _run(self, files: dict[str, str]):
+        with temp_project(files) as root:
+            return function_limits.run(make_context(root))
+
+    def test_fails_without_function_limits(self) -> None:
+        result = function_limits.run(make_context(FIXTURES / "bare_project"))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("readability-function-size", result.message)
+
+    def test_passes_with_the_well_configured_fixture(self) -> None:
+        result = function_limits.run(make_context(FIXTURES / "well_configured"))
+        self.assertEqual(result.status, Status.PASS)
+        self.assertIn("clang-tidy readability-function-size (LineThreshold 80)", result.message)
+
+    def test_passes_with_a_lizard_length_limit_in_ci(self) -> None:
+        result = self._run({".github/workflows/ci.yml": "steps:\n  - run: lizard src -L 60 -w\n"})
+        self.assertEqual(result.status, Status.PASS)
+        self.assertEqual(result.message, "function length is limited with lizard -L 60")
+
+    def test_lizard_threshold_spellings_count(self) -> None:
+        for command in ("lizard --length=60", "lizard -Tnloc=40", "lizard --Threshold length=60"):
+            with self.subTest(command=command):
+                result = self._run({".gitlab-ci.yml": f"lint:\n  script:\n    - {command}\n"})
+                self.assertEqual(result.status, Status.PASS)
+
+    def test_lizard_options_on_continuation_lines_count(self) -> None:
+        result = self._run({".github/workflows/ci.yml": "steps:\n  - run: |\n      lizard src \\\n        -L 60\n"})
+        self.assertEqual(result.status, Status.PASS)
+
+    def test_lizard_without_a_length_limit_does_not_count(self) -> None:
+        for command in ("lizard src", "lizard -l cpp src", "lizard -C 10 src"):
+            with self.subTest(command=command):
+                result = self._run({".github/workflows/ci.yml": f"steps:\n  - run: {command}\n"})
+                self.assertEqual(result.status, Status.FAIL)
+
+    def test_passes_when_cmake_runs_clang_tidy(self) -> None:
+        result = self._run(
+            {".clang-tidy": self.CLANG_TIDY, "CMakeLists.txt": "set(CMAKE_CXX_CLANG_TIDY clang-tidy)\n"}
+        )
+        self.assertEqual(result.status, Status.PASS)
+
+    def test_statement_threshold_and_mapping_style_options_count(self) -> None:
+        clang_tidy = "Checks: [readability-*]\nCheckOptions:\n  readability-function-size.StatementThreshold: '50'\n"
+        result = self._run({".clang-tidy": clang_tidy, **self.RUNS_CLANG_TIDY})
+        self.assertEqual(result.status, Status.PASS)
+        self.assertIn("StatementThreshold 50", result.message)
+
+    def test_warns_when_nothing_runs_clang_tidy(self) -> None:
+        result = self._run({".clang-tidy": self.CLANG_TIDY})
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("nothing runs clang-tidy", result.message)
+
+    def test_disabled_check_does_not_count(self) -> None:
+        for checks in ("'-*,bugprone-*'", "'readability-*,-readability-function-size'", "''"):
+            with self.subTest(checks=checks):
+                clang_tidy = self.CLANG_TIDY.replace("'-*,readability-function-size'", checks)
+                result = self._run({".clang-tidy": clang_tidy, **self.RUNS_CLANG_TIDY})
+                self.assertEqual(result.status, Status.FAIL)
+
+    def test_enabled_check_without_a_length_threshold_fails_and_says_why(self) -> None:
+        for options in ("", "CheckOptions:\n  readability-function-size.LineThreshold: -1\n"):
+            with self.subTest(options=options):
+                clang_tidy = f"Checks: 'readability-function-size'\n{options}"
+                result = self._run({".clang-tidy": clang_tidy, **self.RUNS_CLANG_TIDY})
+                self.assertEqual(result.status, Status.FAIL)
+                self.assertIn("sets no LineThreshold or StatementThreshold", " ".join(result.details))
+
+    def test_unreadable_clang_tidy_file_does_not_count(self) -> None:
+        result = self._run({".clang-tidy": "Checks: [\n", **self.RUNS_CLANG_TIDY})
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn(".clang-tidy could not be read", " ".join(result.details))
