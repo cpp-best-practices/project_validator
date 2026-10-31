@@ -32,13 +32,25 @@ class ProjectStructureTests(unittest.TestCase):
             "Cargo.toml": ({"Rust"}, {"Cargo"}),
             "pyproject.toml": ({"Python"}, {"Python packaging"}),
             "setup.py": ({"Python"}, {"Python packaging"}),
-            "meson.build": (set(C_FAMILY), {"Meson"}),
+            "meson.build": (set(), {"Meson"}),
         }
         for build_file, (languages, build_systems) in cases.items():
             with self.subTest(build_file), temp_project({build_file: ""}) as root:
                 structure = make_context(root).structure
                 self.assertEqual(structure.languages, languages)
                 self.assertEqual(structure.build_systems, build_systems)
+
+    def test_meson_languages_come_from_the_project_declaration(self) -> None:
+        cases = {
+            "project('demo', 'rust')": {"Rust"},
+            "project('demo', ['c', 'cpp'], version: '1.0')": set(C_FAMILY),
+            "project(\n  'demo', # 'c'\n  'cpp',\n  default_options: ['cpp_std=c++20'],\n)": {"C++"},
+            "project('demo', version: run_command('cat', 'VERSION').stdout())": set(),
+            "project()": set(),
+        }
+        for declaration, languages in cases.items():
+            with self.subTest(declaration), temp_project({"meson.build": declaration, "sub/meson.build": ""}) as root:
+                self.assertEqual(make_context(root).structure.languages, languages)
 
     def test_source_files_name_their_languages(self) -> None:
         files = {"src/main.rs": "", "tools/gen.py": "", "lib/a.c": "", "lib/b.hpp": "", "lib/ambiguous.h": ""}
