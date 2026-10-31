@@ -2,6 +2,7 @@ import shutil
 import unittest
 
 from project_validator.checks.ci_present import ci_present
+from project_validator.checks.compiler_warnings import compiler_warnings
 from project_validator.checks.coverage import coverage
 from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.ctest_runs import ctest_runs
@@ -214,3 +215,105 @@ class CxxExtensionsTests(unittest.TestCase):
         result = self._run({"CMakeLists.txt": "project(p C)\n"})
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("set(CMAKE_C_EXTENSIONS OFF)", result.message)
+
+
+class CompilerWarningsTests(unittest.TestCase):
+    GCC_FLAGS = "-Wall -Wextra -Wpedantic -Wshadow -Wconversion"
+    MSVC_CI = "jobs:\n  build:\n    runs-on: windows-latest\n    steps:\n      - run: cmake -S . -B build\n"
+
+    def _run(self, files: dict[str, str]):
+        with temp_project(files) as root:
+            return compiler_warnings.run(make_context(root))
+
+    def test_fails_when_no_warning_flags_are_found(self) -> None:
+        result = compiler_warnings.run(make_context(FIXTURES / "bare_project"))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("-Wall", result.message)
+
+    def test_passes_with_the_well_configured_fixture(self) -> None:
+        result = compiler_warnings.run(make_context(FIXTURES / "well_configured"))
+        self.assertEqual(result.status, Status.PASS, result)
+
+    def test_passes_with_the_minimum_gcc_and_clang_flags(self) -> None:
+        result = self._run({"CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n"})
+        self.assertEqual(result.status, Status.PASS)
+        self.assertIn("-Wconversion", result.message)
+
+    def test_cmake_template_style_lists_count(self) -> None:
+        result = self._run(
+            {
+                "cmake/CompilerWarnings.cmake": """\
+                    set(CLANG_WARNINGS
+                        -Wall
+                        -Wextra # reasonable and standard
+                        -Wshadow
+                        -Wconversion
+                        -pedantic)
+                    target_compile_options(${project_name} INTERFACE ${CLANG_WARNINGS})
+                """,
+            }
+        )
+        self.assertEqual(result.status, Status.PASS)
+
+    def test_warns_and_lists_missing_flags(self) -> None:
+        result = self._run({"CMakeLists.txt": "add_compile_options(-Wall -Wextra)\n"})
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("-Wpedantic", result.message)
+        self.assertIn("-Wshadow", result.message)
+        self.assertIn("-Wconversion", result.message)
+        self.assertNotIn("-Wall,", result.message)
+
+    def test_similar_flags_do_not_count(self) -> None:
+        result = self._run({"CMakeLists.txt": "add_compile_options(-Wshadow=local -Wno-conversion -Wall-extra)\n"})
+        self.assertEqual(result.status, Status.FAIL)
+
+    def test_commented_out_flags_do_not_count(self) -> None:
+        result = self._run({"CMakeLists.txt": f"# add_compile_options({self.GCC_FLAGS})\n"})
+        self.assertEqual(result.status, Status.FAIL)
+
+    def test_msvc_in_ci_requires_msvc_flags(self) -> None:
+        result = self._run(
+            {"CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n", ".github/workflows/ci.yml": self.MSVC_CI}
+        )
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("/W4", result.message)
+        self.assertIn("/permissive-", result.message)
+
+    def test_msvc_in_ci_passes_with_msvc_flags(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": f"""\
+                    if(MSVC)
+                      add_compile_options(/Wall /permissive-)
+                    else()
+                      add_compile_options({self.GCC_FLAGS})
+                    endif()
+                """,
+                ".github/workflows/ci.yml": self.MSVC_CI,
+            }
+        )
+        self.assertEqual(result.status, Status.PASS)
+
+    def test_lowercase_msvc_flags_do_not_count(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS} /w4 /permissive-)\n",
+                ".github/workflows/ci.yml": self.MSVC_CI,
+            }
+        )
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("/W4", result.message)
+
+    def test_msvc_flags_are_not_required_without_msvc_in_ci(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n",
+                ".github/workflows/ci.yml": "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make\n",
+            }
+        )
+        self.assertEqual(result.status, Status.PASS)
+
+    def test_only_unrequired_msvc_flags_warn_rather_than_fail(self) -> None:
+        result = self._run({"CMakeLists.txt": "add_compile_options(/W4 /permissive-)\n"})
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("-Wall", result.message)
