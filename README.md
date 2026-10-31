@@ -1,4 +1,8 @@
 # project_validator
+
+[![ci](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml/badge.svg)](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/cpp-best-practices/project_validator/graph/badge.svg)](https://codecov.io/gh/cpp-best-practices/project_validator)
+
 A tool to validate CMake based projects against Best Practices
 
 ## Requirements
@@ -80,6 +84,19 @@ cmake -S . -B build && ctest --test-dir build --output-on-failure
 
 The CTest suite runs the unit tests and validates this repository with its own tool.
 
+Branch coverage is measured with [coverage.py](https://coverage.readthedocs.io/)
+(configured in `pyproject.toml`, which fails the report below 95%):
+
+```sh
+python3 -m pip install "coverage>=7.10"
+coverage run --branch -m unittest
+coverage report
+```
+
+CI runs the tests with and without PyYAML, combines the coverage of both runs,
+uploads it to [Codecov](https://codecov.io/gh/cpp-best-practices/project_validator)
+and fails if branch coverage drops below the threshold.
+
 ## Dependency Policy
 
 The validator is meant to run anywhere a CMake project can be built,
@@ -105,5 +122,6 @@ with as little setup as possible. To keep it that way:
 | Dependency | Kind | Why |
 |---|---|---|
 | [PyYAML](https://pyyaml.org/) `>=6.0` | optional (`yaml` extra) | The standard library has no YAML parser, and CI configuration is YAML. PyYAML is mature, MIT licensed, has no dependencies, and is packaged by every major distro (`python3-yaml` on Ubuntu). Without it, CI files are scanned heuristically and `platform-matrix` reports `reduced accuracy: PyYAML is not available`; nothing fails because it is missing. |
+| [coverage.py](https://coverage.readthedocs.io/) `>=7.10` | development only (`coverage` extra) | Measures the branch coverage of the test suite; the standard library's `trace` module does not measure branches. coverage.py is the de facto Python coverage tool, Apache 2.0 licensed and has no required dependencies. The validator itself never imports it. |
 
 There are no required dependencies.

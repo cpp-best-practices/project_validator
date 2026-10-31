@@ -12,6 +12,7 @@ dependencies = []
 
 [project.optional-dependencies]
 yaml = ["PyYAML>=6.0"]
+coverage = ["coverage>=7.10"]
 
 [project.scripts]
 project-validator = "project_validator.cli:main"
@@ -22,3 +23,12 @@ include = ["project_validator*"]
 [tool.ruff]
 line-length = 120
 target-version = "py314"
+
+[tool.coverage.run]
+branch = true
+source = ["project_validator"]
+relative_files = true
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true

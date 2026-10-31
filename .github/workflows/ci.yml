@@ -55,10 +55,29 @@ jobs:
           python-version: "3.14"
 
       - name: Install tools
-        run: python -m pip install coverage "PyYAML>=6.0"
+        run: python -m pip install "coverage>=7.10" "PyYAML>=6.0"
 
-      - name: Test with branch coverage
-        run: coverage run --branch --source project_validator -m unittest
+      - name: Test with branch coverage, with PyYAML
+        run: coverage run --branch --parallel-mode -m unittest
 
-      - name: Report branch coverage
-        run: coverage report --show-missing
+      - name: Test with branch coverage, without PyYAML
+        run: |
+          python -m pip uninstall --yes PyYAML
+          coverage run --branch --parallel-mode -m unittest
+
+      - name: Combine coverage
+        run: coverage combine
+
+      - name: Write coverage reports
+        run: |
+          coverage report --fail-under=0 --format=markdown >> "$GITHUB_STEP_SUMMARY"
+          coverage xml --fail-under=0
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Enforce branch coverage threshold
+        run: coverage report
