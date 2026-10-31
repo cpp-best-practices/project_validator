@@ -1,0 +1,19 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        compiler: [gcc, clang]
+        include:
+          - os: windows-latest
+            compiler: msvc
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DENABLE_COVERAGE=ON
+      - run: cmake --build build
+      - run: ctest --test-dir build --output-on-failure
+      - run: gcovr --fail-under-branch 80

@@ -1,0 +1,80 @@
+import unittest
+from unittest import mock
+
+from project_validator import yaml_support
+from project_validator.ci import REDUCED_ACCURACY_NOTE, find_ci_files, heuristic_jobs, parse_jobs
+from project_validator.core import Project
+from project_validator.plugins import discover
+from tests.support import requires_yaml, temp_project
+
+
+class FindCiFilesTests(unittest.TestCase):
+    def test_finds_files_for_every_provider(self) -> None:
+        files = {
+            ".github/workflows/a.yml": "",
+            ".github/workflows/b.yaml": "",
+            ".github/workflows/readme.md": "",
+            ".gitlab-ci.yml": "",
+            "Jenkinsfile": "",
+        }
+        with temp_project(files) as root:
+            found = find_ci_files(Project(root), discover().providers)
+        self.assertEqual(
+            sorted((f.provider.name, f.path) for f in found),
+            [
+                ("GitHub Actions", ".github/workflows/a.yml"),
+                ("GitHub Actions", ".github/workflows/b.yaml"),
+                ("GitLab CI", ".gitlab-ci.yml"),
+                ("Jenkins", "Jenkinsfile"),
+            ],
+        )
+
+
+class HeuristicJobsTests(unittest.TestCase):
+    def test_one_job_per_operating_system(self) -> None:
+        jobs = heuristic_jobs("f", "os: [ubuntu-latest, windows-latest]\ncxx: [g++, clang++]")
+        self.assertEqual([job.os for job in jobs], ["linux", "windows"])
+        self.assertTrue(all(job.compilers == {"gcc", "clang"} and job.heuristic for job in jobs))
+
+    def test_runner_default_when_no_compiler_is_named(self) -> None:
+        [job] = heuristic_jobs("f", "os: osx")
+        self.assertEqual((job.compilers, job.default_compiler), (frozenset({"appleclang"}), True))
+
+    def test_unknown_operating_system(self) -> None:
+        [job] = heuristic_jobs("f", "script: make")
+        self.assertEqual((job.os, job.compilers), ("unknown", frozenset()))
+
+
+WORKFLOW = {".github/workflows/ci.yml": "jobs:\n  a:\n    runs-on: ubuntu-latest\n    steps: []\n"}
+
+
+class ParseJobsTests(unittest.TestCase):
+    def _parse(self, files: dict[str, str], *, use_yaml: bool):
+        with temp_project(files) as root:
+            project = Project(root)
+            return parse_jobs(project, find_ci_files(project, discover().providers), use_yaml=use_yaml)
+
+    @requires_yaml
+    def test_structured_parsing_has_no_notes(self) -> None:
+        analysis = self._parse(WORKFLOW, use_yaml=True)
+        self.assertEqual(analysis.notes, ())
+        self.assertEqual([job.name for job in analysis.jobs], [".github/workflows/ci.yml: a"])
+
+    def test_without_yaml_files_are_scanned_with_reduced_accuracy(self) -> None:
+        analysis = self._parse(WORKFLOW, use_yaml=False)
+        self.assertEqual(analysis.notes, (REDUCED_ACCURACY_NOTE,))
+        self.assertTrue(all(job.heuristic for job in analysis.jobs))
+
+    def test_missing_pyyaml_degrades_to_reduced_accuracy(self) -> None:
+        with mock.patch.object(yaml_support, "_yaml", None):
+            analysis = self._parse(WORKFLOW, use_yaml=True)
+        self.assertEqual(analysis.notes, (REDUCED_ACCURACY_NOTE,))
+
+    @requires_yaml
+    def test_invalid_yaml_is_scanned_heuristically(self) -> None:
+        analysis = self._parse({".gitlab-ci.yml": "a: [unclosed\n"}, use_yaml=True)
+        self.assertIn("invalid YAML", analysis.notes[0])
+
+    def test_unstructured_providers_are_noted(self) -> None:
+        analysis = self._parse({".travis.yml": "os: linux\ncompiler: gcc\n"}, use_yaml=True)
+        self.assertEqual(analysis.notes, (".travis.yml: Travis CI is scanned heuristically",))
