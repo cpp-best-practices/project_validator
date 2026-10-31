@@ -1,6 +1,8 @@
 import json
+import os
 import shutil
 import unittest
+from unittest import mock
 
 from project_validator.checks.ci_build_types import ci_build_types
 from project_validator.checks.ci_present import ci_present
@@ -60,6 +62,12 @@ class CtestRunsTests(unittest.TestCase):
         self.assertEqual(
             result.message, "the project builds and ctest finds 1 test(s), but no CI configuration runs ctest"
         )
+
+    @unittest.skipUnless(shutil.which("cmake") and shutil.which("ninja"), "cmake or ninja is not installed")
+    def test_build_mode_finds_tests_with_multi_config_generators(self) -> None:
+        with mock.patch.dict(os.environ, {"CMAKE_GENERATOR": "Ninja Multi-Config"}):
+            result = ctest_runs.run(make_context(FIXTURES / "buildable", build=True))
+        self.assertIn("ctest finds 1 test(s)", result.message)
 
     def test_build_mode_reports_tools_that_cannot_run(self) -> None:
         result = ctest_runs.run(make_context(FIXTURES / "buildable", build=True, cmake="no-such-cmake-binary"))
