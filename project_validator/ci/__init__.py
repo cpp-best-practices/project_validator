@@ -4,17 +4,19 @@ from collections.abc import Callable
 from dataclasses import dataclass, replace
 
 from project_validator import yaml_support
+from project_validator.build_configurations import BuildConfiguration, detect_configurations
 from project_validator.core import Project
 from project_validator.platforms import RUNNER_DEFAULT_COMPILERS, detect_compilers, detect_operating_systems
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Job:
-    """One CI job as it would run: a single OS, plus every compiler it builds with."""
+    """One CI job as it would run: a single OS, plus every compiler and build configuration it builds with."""
 
     name: str
     os: str
     compilers: frozenset[str]
+    configurations: frozenset[BuildConfiguration] = frozenset()
     default_compiler: bool = False
     heuristic: bool = False
 
@@ -55,25 +57,36 @@ def find_ci_files(project: Project, providers: tuple[CiProvider, ...]) -> tuple[
     )
 
 
-def _job_with_compilers(name: str, os: str, compilers: list[str], *, heuristic: bool = False) -> Job:
+def _job_with_compilers(
+    name: str, os: str, compilers: list[str], configurations: set[BuildConfiguration], *, heuristic: bool = False
+) -> Job:
+    found = frozenset(configurations)
     if compilers:
-        return Job(name=name, os=os, compilers=frozenset(compilers), heuristic=heuristic)
+        return Job(name=name, os=os, compilers=frozenset(compilers), configurations=found, heuristic=heuristic)
     default = RUNNER_DEFAULT_COMPILERS.get(os)
     if default is None:
-        return Job(name=name, os=os, compilers=frozenset(), heuristic=heuristic)
-    return Job(name=name, os=os, compilers=frozenset({default}), default_compiler=True, heuristic=heuristic)
+        return Job(name=name, os=os, compilers=frozenset(), configurations=found, heuristic=heuristic)
+    return Job(
+        name=name,
+        os=os,
+        compilers=frozenset({default}),
+        configurations=found,
+        default_compiler=True,
+        heuristic=heuristic,
+    )
 
 
-def build_job(name: str, os: str, *compiler_texts: str) -> Job:
+def build_job(name: str, os: str, *texts: str) -> Job:
     """Use the compilers named by the first text that names any, falling back to the runner's default."""
-    compilers = next((found for text in compiler_texts if (found := detect_compilers(text))), [])
-    return _job_with_compilers(name, os, compilers)
+    compilers = next((found for text in texts if (found := detect_compilers(text))), [])
+    return _job_with_compilers(name, os, compilers, detect_configurations(*texts))
 
 
 def heuristic_jobs(name: str, text: str) -> list[Job]:
     compilers = detect_compilers(text)
+    configurations = detect_configurations(text)
     operating_systems = detect_operating_systems(text) or ["unknown"]
-    return [_job_with_compilers(name, os, compilers, heuristic=True) for os in operating_systems]
+    return [_job_with_compilers(name, os, compilers, configurations, heuristic=True) for os in operating_systems]
 
 
 def _parse_file(project: Project, ci_file: CiFile) -> tuple[list[Job], list[str]]:

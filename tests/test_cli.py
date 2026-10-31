@@ -45,7 +45,7 @@ class CliTests(unittest.TestCase):
         self.assertEqual([entry["check"] for entry in json.loads(output)], ["ci-present", "coverage"])
 
     def test_skipping_every_failure_succeeds(self) -> None:
-        skipped = "ci-present,coverage,ctest-runs,platform-matrix"
+        skipped = "ci-build-types,ci-present,coverage,ctest-runs,platform-matrix"
         self.assertEqual(run_cli("--skip", skipped, str(FIXTURES / "bare_project"))[0], EXIT_SUCCESS)
 
     def test_usage_errors(self) -> None:
@@ -57,7 +57,7 @@ class CliTests(unittest.TestCase):
         code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
-        self.assertIn("4 passed", output)
+        self.assertIn("5 passed", output)
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
         for choice in ("never", "auto"):

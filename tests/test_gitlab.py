@@ -1,5 +1,6 @@
 import unittest
 
+from project_validator.build_configurations import BuildConfiguration
 from project_validator.ci.gitlab import expand_parallel, parse_pipeline
 
 
@@ -44,3 +45,19 @@ class ParsePipelineTests(unittest.TestCase):
     def test_untagged_jobs_without_compilers_use_the_linux_default(self) -> None:
         [job] = parse_pipeline({"test": {"script": ["make test"]}})
         self.assertEqual((job.os, job.compilers, job.default_compiler), ("linux", frozenset({"gcc"}), True))
+
+    def test_build_configurations_come_from_matrix_variables(self) -> None:
+        pipeline = {
+            "build": {
+                "parallel": {"matrix": [{"BUILD_TYPE": ["Debug", "Release"], "SANITIZE": ["address", "none"]}]},
+                "script": ["cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DSANITIZER=$SANITIZE"],
+            }
+        }
+        self.assertEqual(
+            {configuration for job in parse_pipeline(pipeline) for configuration in job.configurations},
+            {
+                BuildConfiguration(build_type=build_type, sanitizers=sanitizers)
+                for build_type in ("debug", "release")
+                for sanitizers in (False, True)
+            },
+        )
