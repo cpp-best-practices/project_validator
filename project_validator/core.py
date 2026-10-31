@@ -90,9 +90,7 @@ class Project:
             subdirectories[:] = [
                 name
                 for name in subdirectories
-                if not name.startswith(".")
-                and name not in _SKIPPED_DIRECTORIES
-                and not _is_build_tree(current / name)
+                if not name.startswith(".") and name not in _SKIPPED_DIRECTORIES and not _is_build_tree(current / name)
             ]
             relative = current.relative_to(self.root)
             yield from (str(PurePosixPath(relative, name)) for name in files if _is_cmake_file(name))

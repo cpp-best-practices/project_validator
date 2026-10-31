@@ -4,11 +4,11 @@ import unittest
 from project_validator.checks.ci_present import ci_present
 from project_validator.checks.compiler_warnings import compiler_warnings
 from project_validator.checks.coverage import coverage
-from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.ctest_runs import ctest_runs
+from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.security_scanning import security_scanning
-from project_validator.core import Status
+from project_validator.core import Options, Result, Status
 from tests.support import FIXTURES, make_context, temp_project
 
 
@@ -25,7 +25,7 @@ class CiPresentTests(unittest.TestCase):
 
 
 class CtestRunsTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         with temp_project(files) as root:
             return ctest_runs.run(make_context(root))
 
@@ -54,19 +54,19 @@ class CtestRunsTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("cmake") and shutil.which("ctest"), "cmake is not installed")
     def test_build_mode_counts_the_tests_ctest_finds(self) -> None:
-        result = ctest_runs.run(make_context(FIXTURES / "buildable", build=True))
+        result = ctest_runs.run(make_context(FIXTURES / "buildable", Options(build=True)))
         self.assertEqual(
             result.message, "the project builds and ctest finds 1 test(s), but no CI configuration runs ctest"
         )
 
     def test_build_mode_reports_tools_that_cannot_run(self) -> None:
-        result = ctest_runs.run(make_context(FIXTURES / "buildable", build=True, cmake="no-such-cmake-binary"))
+        result = ctest_runs.run(make_context(FIXTURES / "buildable", Options(build=True, cmake="no-such-cmake-binary")))
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("could not run no-such-cmake-binary", result.message)
 
 
 class CoverageTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         with temp_project(files) as root:
             return coverage.run(make_context(root))
 
@@ -115,7 +115,7 @@ class PlatformMatrixTests(unittest.TestCase):
 
 
 class SecurityScanningTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         with temp_project(files) as root:
             return security_scanning.run(make_context(root))
 
@@ -144,7 +144,7 @@ class SecurityScanningTests(unittest.TestCase):
 
 
 class CxxExtensionsTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         with temp_project(files) as root:
             return cxx_extensions.run(make_context(root))
 
@@ -221,7 +221,7 @@ class CompilerWarningsTests(unittest.TestCase):
     GCC_FLAGS = "-Wall -Wextra -Wpedantic -Wshadow -Wconversion"
     MSVC_CI = "jobs:\n  build:\n    runs-on: windows-latest\n    steps:\n      - run: cmake -S . -B build\n"
 
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         with temp_project(files) as root:
             return compiler_warnings.run(make_context(root))
 
@@ -308,7 +308,9 @@ class CompilerWarningsTests(unittest.TestCase):
         result = self._run(
             {
                 "CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n",
-                ".github/workflows/ci.yml": "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make\n",
+                ".github/workflows/ci.yml": (
+                    "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make\n"
+                ),
             }
         )
         self.assertEqual(result.status, Status.PASS)

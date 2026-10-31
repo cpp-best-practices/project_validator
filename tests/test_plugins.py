@@ -21,7 +21,15 @@ class DiscoverTests(unittest.TestCase):
         plugins = discover()
         self.assertEqual(
             sorted(c.name for c in plugins.checks),
-            ["ci-present", "compiler-warnings", "coverage", "ctest-runs", "cxx-extensions", "platform-matrix", "security-scanning"],
+            [
+                "ci-present",
+                "compiler-warnings",
+                "coverage",
+                "ctest-runs",
+                "cxx-extensions",
+                "platform-matrix",
+                "security-scanning",
+            ],
         )
         self.assertTrue({"GitHub Actions", "GitLab CI", "Travis CI"} <= {p.name for p in plugins.providers})
 
@@ -32,16 +40,19 @@ class DiscoverTests(unittest.TestCase):
         self.assertIn("Example CI", [p.name for p in plugins.providers])
 
     def test_rejects_duplicate_check_names(self) -> None:
-        with temp_project({"a.py": PLUGIN, "b.py": PLUGIN}) as directory:
-            with self.assertRaisesRegex(PluginError, "duplicate check name"):
-                discover([directory])
+        with (
+            temp_project({"a.py": PLUGIN, "b.py": PLUGIN}) as directory,
+            self.assertRaisesRegex(PluginError, "duplicate check name"),
+        ):
+            discover([directory])
 
     def test_reports_broken_plugins(self) -> None:
-        with temp_project({"broken.py": "raise RuntimeError('boom')"}) as directory:
-            with self.assertRaisesRegex(PluginError, "boom"):
-                discover([directory])
+        with (
+            temp_project({"broken.py": "raise RuntimeError('boom')"}) as directory,
+            self.assertRaisesRegex(PluginError, "boom"),
+        ):
+            discover([directory])
 
     def test_reports_missing_plugin_directories(self) -> None:
-        with temp_project({}) as directory:
-            with self.assertRaisesRegex(PluginError, "does not exist"):
-                discover([directory / "missing"])
+        with temp_project({}) as directory, self.assertRaisesRegex(PluginError, "does not exist"):
+            discover([directory / "missing"])

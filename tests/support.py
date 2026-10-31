@@ -27,5 +27,5 @@ def temp_project(files: Mapping[str, str]) -> Iterator[Path]:
         yield root
 
 
-def make_context(root: Path, **options: object) -> Context:
-    return Context(Project(root), discover().providers, Options(**options))
+def make_context(root: Path, options: Options | None = None) -> Context:
+    return Context(Project(root), discover().providers, options or Options())

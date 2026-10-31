@@ -24,6 +24,13 @@ include = ["project_validator*"]
 line-length = 120
 target-version = "py314"
 
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "BLE", "C4", "PIE", "RET", "SIM", "UP", "RUF"]
+
+[tool.mypy]
+strict = true
+files = ["project_validator", "tests"]
+
 [tool.coverage.run]
 branch = true
 source = ["project_validator"]

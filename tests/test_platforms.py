@@ -5,9 +5,7 @@ from project_validator.platforms import detect_compilers, detect_operating_syste
 
 class PlatformDetectionTests(unittest.TestCase):
     def test_detects_runner_labels(self) -> None:
-        self.assertEqual(
-            detect_operating_systems("ubuntu-24.04 windows-2022 macos-14"), ["linux", "windows", "macos"]
-        )
+        self.assertEqual(detect_operating_systems("ubuntu-24.04 windows-2022 macos-14"), ["linux", "windows", "macos"])
 
     def test_detects_compiler_spellings(self) -> None:
         self.assertEqual(detect_compilers("g++-13"), ["gcc"])
