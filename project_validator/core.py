@@ -44,7 +44,6 @@ class Result:
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Options:
     build: bool = False
-    use_yaml: bool = True
     cmake: str = "cmake"
     ctest: str = "ctest"
 
@@ -117,7 +116,7 @@ class Context:
     def ci_analysis(self) -> CiAnalysis:
         from project_validator.ci import parse_jobs
 
-        return parse_jobs(self.project, self.ci_files, use_yaml=self.options.use_yaml)
+        return parse_jobs(self.project, self.ci_files)
 
     @cached_property
     def ci_texts(self) -> tuple[str, ...]:

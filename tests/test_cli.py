@@ -1,8 +1,12 @@
 import contextlib
 import io
 import json
+import tomllib
 import unittest
+from pathlib import Path
+from unittest import mock
 
+from project_validator import yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
 from tests.support import FIXTURES
 
@@ -42,3 +46,20 @@ class CliTests(unittest.TestCase):
     def test_usage_errors(self) -> None:
         self.assertEqual(run_cli("--only", "nope", ".")[0], EXIT_USAGE)
         self.assertEqual(run_cli(str(FIXTURES / "missing"))[0], EXIT_USAGE)
+
+    def test_missing_pyyaml_is_an_error_instead_of_reduced_accuracy(self) -> None:
+        with mock.patch.object(yaml_support, "_yaml", None):
+            code, output, error = run_cli(str(FIXTURES / "well_configured"))
+        self.assertEqual((code, output), (EXIT_USAGE, ""))
+        self.assertIn("PyYAML", error)
+
+    def test_pyyaml_can_not_be_disabled(self) -> None:
+        with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
+            main(["--no-yaml", str(FIXTURES / "well_configured")])
+
+
+class DependencyTests(unittest.TestCase):
+    def test_pyyaml_is_a_required_dependency(self) -> None:
+        pyproject = tomllib.loads((Path(__file__).parent.parent / "pyproject.toml").read_text(encoding="utf-8"))
+        self.assertIn("PyYAML>=6.0", pyproject["project"]["dependencies"])
+        self.assertNotIn("yaml", pyproject["project"]["optional-dependencies"])
