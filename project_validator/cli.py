@@ -35,7 +35,6 @@ def _parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--build", action="store_true", help="configure and build the project to list its tests")
     parser.add_argument("--strict", action="store_true", help="treat warnings as failures")
-    parser.add_argument("--no-yaml", action="store_true", help="do not use PyYAML even if it is installed")
     parser.add_argument("--cmake", default="cmake", help="cmake executable used by --build")
     parser.add_argument("--ctest", default="ctest", help="ctest executable used by --build")
     parser.add_argument(
@@ -101,16 +100,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     if arguments.list:
         print(_format_list(plugins.checks))
         return EXIT_SUCCESS
+    if not yaml_support.available():
+        print(f"{parser.prog}: error: {yaml_support.MISSING_MESSAGE}", file=sys.stderr)
+        return EXIT_USAGE
     if not arguments.path.is_dir():
         print(f"{parser.prog}: error: {arguments.path} is not a directory", file=sys.stderr)
         return EXIT_USAGE
 
-    options = Options(
-        build=arguments.build,
-        use_yaml=not arguments.no_yaml and yaml_support.available(),
-        cmake=arguments.cmake,
-        ctest=arguments.ctest,
-    )
+    options = Options(build=arguments.build, cmake=arguments.cmake, ctest=arguments.ctest)
     context = Context(Project(arguments.path.resolve()), plugins.providers, options)
     reports = run_checks(selected, context)
     if arguments.format == "json":

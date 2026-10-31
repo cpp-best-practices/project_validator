@@ -8,10 +8,9 @@ version = "0.1.0"
 description = "Validate CMake based projects against C++ Best Practices"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = ["PyYAML>=6.0"]
 
 [project.optional-dependencies]
-yaml = ["PyYAML>=6.0"]
 pretty = ["rich>=13.0"]
 coverage = ["coverage>=7.10"]
 
