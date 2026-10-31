@@ -27,7 +27,7 @@ def select(available: Iterable[Check], only: Iterable[str] = (), skip: Iterable[
 def run_check(selected: Check, context: Context) -> Result:
     try:
         result = selected.run(context)
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001 - any failure inside a check is reported, never propagated
         return Result(status=Status.ERROR, message=f"check raised {type(error).__name__}: {error}")
     if not isinstance(result, Result):
         return Result(status=Status.ERROR, message=f"check returned {type(result).__name__} instead of a Result")

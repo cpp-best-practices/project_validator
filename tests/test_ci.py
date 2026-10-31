@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from project_validator import yaml_support
-from project_validator.ci import find_ci_files, heuristic_jobs, parse_jobs
+from project_validator.ci import CiAnalysis, find_ci_files, heuristic_jobs, parse_jobs
 from project_validator.core import Project
 from project_validator.plugins import discover
 from tests.support import temp_project
@@ -49,7 +49,7 @@ WORKFLOW = {".github/workflows/ci.yml": "jobs:\n  a:\n    runs-on: ubuntu-latest
 
 
 class ParseJobsTests(unittest.TestCase):
-    def _parse(self, files: dict[str, str]):
+    def _parse(self, files: dict[str, str]) -> CiAnalysis:
         with temp_project(files) as root:
             project = Project(root)
             return parse_jobs(project, find_ci_files(project, discover().providers))

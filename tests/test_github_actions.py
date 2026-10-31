@@ -1,6 +1,6 @@
 import unittest
 
-from project_validator.ci.github_actions import expand_matrix, parse_workflow, substitute_matrix
+from project_validator.ci.github_actions import Combination, expand_matrix, parse_workflow, substitute_matrix
 
 
 class ExpandMatrixTests(unittest.TestCase):
@@ -38,7 +38,7 @@ class ExpandMatrixTests(unittest.TestCase):
 
 class SubstituteMatrixTests(unittest.TestCase):
     def test_substitutes_nested_values_and_keeps_unknown_ones(self) -> None:
-        combination = {"config": {"os": "windows-latest"}, "cc": "gcc"}
+        combination: Combination = {"config": {"os": "windows-latest"}, "cc": "gcc"}
         self.assertEqual(
             substitute_matrix("${{ matrix.config.os }} ${{matrix.cc}} ${{ matrix.nope }}", combination),
             "windows-latest gcc ${{ matrix.nope }}",

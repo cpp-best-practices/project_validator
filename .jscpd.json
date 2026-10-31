@@ -1,0 +1,6 @@
+{
+  "threshold": 0,
+  "reporters": ["console"],
+  "ignore": ["**/__pycache__/**", "**/.venv/**", "**/*.egg-info/**"],
+  "path": ["project_validator", "tests", ".github"]
+}

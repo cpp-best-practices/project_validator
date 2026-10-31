@@ -42,19 +42,20 @@ def available() -> bool:
 def print_reports(reports: Sequence[Report], stream: TextIO) -> None:
     if _rich is None:
         raise PrettyError("rich is not available")
+    text = _rich.text
     console = _rich.console.Console(file=stream, force_terminal=True, soft_wrap=True, highlight=False)
     name_width = max((len(report.check.name) for report in reports), default=0)
     for report in reports:
-        console.print(_report_line(report, name_width))
+        console.print(_report_line(text, report, name_width))
         for detail in report.result.details:
-            console.print(_rich.text.Text(f"{'':{_BADGE_WIDTH + 1}}{detail}", style="dim"))
+            console.print(text.Text(f"{'':{_BADGE_WIDTH + 1}}{detail}", style="dim"))
     console.print()
-    console.print(_summary(Counter(report.result.status for report in reports)))
+    console.print(_summary(text, Counter(report.result.status for report in reports)))
 
 
-def _report_line(report: Report, name_width: int) -> Any:
+def _report_line(text: ModuleType, report: Report, name_width: int) -> Any:
     status = report.result.status
-    return _rich.text.Text.assemble(
+    return text.Text.assemble(
         (f"{status:^{_BADGE_WIDTH}}", f"reverse {_STYLES[status]}"),
         " ",
         (f"{report.check.name:<{name_width}}", "bold"),
@@ -63,8 +64,8 @@ def _report_line(report: Report, name_width: int) -> Any:
     )
 
 
-def _summary(counts: Counter[Status]) -> Any:
+def _summary(text: ModuleType, counts: Counter[Status]) -> Any:
     outcomes = [(f"{counts[status]} {_OUTCOMES[status]}", _STYLES[status]) for status in Status if counts[status]]
     if not outcomes:
-        return _rich.text.Text("no checks were run", style="dim")
-    return _rich.text.Text(", ").join(_rich.text.Text(text, style=style) for text, style in outcomes)
+        return text.Text("no checks were run", style="dim")
+    return text.Text(", ").join(text.Text(outcome, style=style) for outcome, style in outcomes)
