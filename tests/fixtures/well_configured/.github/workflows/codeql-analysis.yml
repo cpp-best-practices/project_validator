@@ -1,0 +1,15 @@
+name: codeql
+on: [push, pull_request]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+      - run: cmake -S . -B build && cmake --build build
+      - uses: github/codeql-action/analyze@v3

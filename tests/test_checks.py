@@ -7,6 +7,7 @@ from project_validator.checks.ci_present import ci_present
 from project_validator.checks.coverage import coverage
 from project_validator.checks.ctest_runs import ctest_runs
 from project_validator.checks.platform_matrix import platform_matrix
+from project_validator.checks.security_scanning import security_scanning
 from project_validator.core import Status
 from tests.support import FIXTURES, make_context, temp_project
 
@@ -182,3 +183,32 @@ class CiBuildTypesTests(unittest.TestCase):
             " -D${{ env.PROJECT_NAME }}_PACKAGING_MAINTAINER_MODE:BOOL=${{matrix.maintainer}}"
         )
         self.assertEqual(self._run(_workflow(matrix, configure)).status, Status.PASS)
+
+
+class SecurityScanningTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]):
+        with temp_project(files) as root:
+            return security_scanning.run(make_context(root))
+
+    def test_warns_without_ci(self) -> None:
+        result = security_scanning.run(make_context(FIXTURES / "bare_project"))
+        self.assertEqual(result.status, Status.WARN)
+
+    def test_warns_when_ci_runs_no_code_scanning(self) -> None:
+        result = self._run({".github/workflows/ci.yml": "steps:\n  - run: ctest --test-dir build\n"})
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("no code security scanning", result.message)
+
+    def test_passes_with_codeql(self) -> None:
+        result = security_scanning.run(make_context(FIXTURES / "well_configured"))
+        self.assertEqual(result.status, Status.PASS)
+        self.assertEqual(result.message, "CI runs code security scanning with CodeQL")
+
+    def test_passes_with_the_gitlab_sast_template(self) -> None:
+        result = self._run({".gitlab-ci.yml": "include:\n  - template: Security/SAST.gitlab-ci.yml\n"})
+        self.assertEqual(result.status, Status.PASS)
+        self.assertEqual(result.message, "CI runs code security scanning with GitLab SAST")
+
+    def test_codeql_outside_ci_does_not_count(self) -> None:
+        result = self._run({"CMakeLists.txt": "# uses: github/codeql-action/analyze@v3\n"})
+        self.assertEqual(result.status, Status.WARN)
