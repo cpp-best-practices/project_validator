@@ -1,48 +1,23 @@
 cmake_minimum_required(VERSION 3.21)
 
+# The validator itself is pure Python; CMake only drives its tests through CTest,
+# so the repository can be validated by its own tool like any other CMake project.
 project(
   project_validator
   VERSION 0.1.0
   DESCRIPTION "Validate CMake based projects against C++ Best Practices"
-  LANGUAGES CXX)
+  LANGUAGES NONE)
 
-option(PROJECT_VALIDATOR_BUILD_TESTS "Build the project_validator tests" ${PROJECT_IS_TOP_LEVEL})
-option(PROJECT_VALIDATOR_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
-option(PROJECT_VALIDATOR_ENABLE_COVERAGE "Instrument the build for coverage reporting" OFF)
+find_package(Python3 3.14 REQUIRED COMPONENTS Interpreter)
 
-add_library(project_validator_options INTERFACE)
-target_compile_features(project_validator_options INTERFACE cxx_std_20)
+enable_testing()
 
-if(MSVC)
-  target_compile_options(project_validator_options INTERFACE /W4 /permissive- $<$<BOOL:${PROJECT_VALIDATOR_WARNINGS_AS_ERRORS}>:/WX>)
-else()
-  target_compile_options(
-    project_validator_options
-    INTERFACE -Wall
-              -Wextra
-              -Wpedantic
-              -Wshadow
-              -Wconversion
-              -Wsign-conversion
-              -Wnon-virtual-dtor
-              -Wold-style-cast
-              -Wcast-align
-              -Woverloaded-virtual
-              -Wnull-dereference
-              -Wdouble-promotion
-              -Wformat=2
-              -Wimplicit-fallthrough
-              $<$<BOOL:${PROJECT_VALIDATOR_WARNINGS_AS_ERRORS}>:-Werror>)
-endif()
+add_test(
+  NAME unit_tests
+  COMMAND Python3::Interpreter -W error -m unittest
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
-if(PROJECT_VALIDATOR_ENABLE_COVERAGE)
-  target_compile_options(project_validator_options INTERFACE --coverage -O0 -g)
-  target_link_options(project_validator_options INTERFACE --coverage)
-endif()
-
-add_subdirectory(src)
-
-if(PROJECT_VALIDATOR_BUILD_TESTS)
-  enable_testing()
-  add_subdirectory(test)
-endif()
+add_test(
+  NAME self_validation
+  COMMAND Python3::Interpreter -m project_validator --strict ${PROJECT_SOURCE_DIR}
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
