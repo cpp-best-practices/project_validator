@@ -24,8 +24,18 @@ def select(available: Iterable[Check], only: Iterable[str] = (), skip: Iterable[
     return [c for c in available if (not only or c.name in only) and c.name not in skip]
 
 
+def _skipped(selected: Check, context: Context) -> Result | None:
+    languages = context.structure.languages
+    if selected.applies_to(languages):
+        return None
+    found, wanted = ", ".join(sorted(languages)), ", ".join(sorted(selected.languages))
+    return Result(status=Status.SKIP, message=f"not applicable to {found} (applies to {wanted})")
+
+
 def run_check(selected: Check, context: Context) -> Result:
     try:
+        if skipped := _skipped(selected, context):
+            return skipped
         result = selected.run(context)
     except Exception as error:
         return Result(status=Status.ERROR, message=f"check raised {type(error).__name__}: {error}")

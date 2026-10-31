@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from project_validator.ci import CiAnalysis, CiFile, CiProvider
+    from project_validator.structure import ProjectStructure
 
 
 class Status(enum.StrEnum):
@@ -17,6 +18,7 @@ class Status(enum.StrEnum):
     WARN = "WARN"
     FAIL = "FAIL"
     ERROR = "ERROR"
+    SKIP = "SKIP"
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -81,10 +83,14 @@ class Project:
             if entry.is_file() and entry.name.endswith(suffixes)
         )
 
-    def cmake_files(self) -> list[str]:
-        return sorted(self._walk_cmake_files())
+    def files(self) -> list[str]:
+        """Every file of the project, skipping hidden directories, vendored packages and CMake build trees."""
+        return sorted(self._walk_files())
 
-    def _walk_cmake_files(self) -> Iterator[str]:
+    def cmake_files(self) -> list[str]:
+        return [path for path in self.files() if _is_cmake_file(PurePosixPath(path).name)]
+
+    def _walk_files(self) -> Iterator[str]:
         for directory, subdirectories, files in os.walk(self.root):
             current = Path(directory)
             subdirectories[:] = [
@@ -95,7 +101,7 @@ class Project:
                 and not _is_build_tree(current / name)
             ]
             relative = current.relative_to(self.root)
-            yield from (str(PurePosixPath(relative, name)) for name in files if _is_cmake_file(name))
+            yield from (str(PurePosixPath(relative, name)) for name in files)
 
 
 class Context:
@@ -123,6 +129,12 @@ class Context:
         return tuple(self.project.read_text(ci_file.path) for ci_file in self.ci_files)
 
     @cached_property
+    def structure(self) -> ProjectStructure:
+        from project_validator.structure import map_project
+
+        return map_project(self.project, self.ci_files, self.ci_analysis)
+
+    @cached_property
     def cmake_texts(self) -> tuple[str, ...]:
         from project_validator.text import strip_cmake_comments
 
@@ -137,12 +149,19 @@ class Check:
     name: str
     description: str
     run: CheckFunction = field(repr=False)
+    languages: frozenset[str] = frozenset()
+
+    def applies_to(self, languages: frozenset[str]) -> bool:
+        """A check without languages is language agnostic; a project whose languages are unknown gets every check."""
+        return not self.languages or not languages or bool(self.languages & languages)
 
 
-def check(*, name: str, description: str) -> Callable[[CheckFunction], Check]:
+def check(
+    *, name: str, description: str, languages: frozenset[str] = frozenset()
+) -> Callable[[CheckFunction], Check]:
     """Turn a function taking a `Context` and returning a `Result` into a discoverable `Check`."""
 
     def wrap(function: CheckFunction) -> Check:
-        return Check(name=name, description=description, run=function)
+        return Check(name=name, description=description, run=function, languages=languages)
 
     return wrap

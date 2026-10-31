@@ -27,6 +27,7 @@ def _parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("path", nargs="?", default=".", type=Path, help="project to validate (default: .)")
     parser.add_argument("--list", action="store_true", help="list the available checks and exit")
+    parser.add_argument("--map", action="store_true", help="print the detected project structure as JSON and exit")
     parser.add_argument("--only", action="append", default=[], metavar="CHECKS", help="run only these checks")
     parser.add_argument("--skip", action="append", default=[], metavar="CHECKS", help="do not run these checks")
     parser.add_argument("--format", choices=("text", "json"), default="text", help="output format")
@@ -109,6 +110,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     options = Options(build=arguments.build, cmake=arguments.cmake, ctest=arguments.ctest)
     context = Context(Project(arguments.path.resolve()), plugins.providers, options)
+    if arguments.map:
+        print(json.dumps(context.structure.as_dict(), indent=2))
+        return EXIT_SUCCESS
     reports = run_checks(selected, context)
     if arguments.format == "json":
         print(_format_json(reports))

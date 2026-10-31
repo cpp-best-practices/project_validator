@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 
 from project_validator.core import Context, Options, Result, Status, check
+from project_validator.structure import C_FAMILY
 from project_validator.text import matching_names, pattern
 
 ENABLES_TESTING = (
@@ -74,7 +75,7 @@ def _source_result(context: Context) -> Result:
     return Result.passed(f"CTest is enabled and tests are registered with {', '.join(registered)}")
 
 
-@check(name="ctest-runs", description="Tests are registered with CTest and CI runs them")
+@check(name="ctest-runs", description="Tests are registered with CTest and CI runs them", languages=C_FAMILY)
 def ctest_runs(context: Context) -> Result:
     result = _built_result(context) if context.options.build else _source_result(context)
     if result.status != Status.PASS or matching_names(context.ci_texts, RUNS_CTEST):

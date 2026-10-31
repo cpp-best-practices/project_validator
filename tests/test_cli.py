@@ -8,7 +8,7 @@ from unittest import mock
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
-from tests.support import FIXTURES, requires_rich
+from tests.support import FIXTURES, requires_rich, temp_project
 
 
 class Terminal(io.StringIO):
@@ -47,6 +47,19 @@ class CliTests(unittest.TestCase):
     def test_skipping_every_failure_succeeds(self) -> None:
         skipped = "ci-build-types,ci-present,compiler-warnings,coverage,ctest-runs,cxx-extensions,platform-matrix"
         self.assertEqual(run_cli("--skip", skipped, str(FIXTURES / "bare_project"))[0], EXIT_SUCCESS)
+
+    def test_map_prints_the_project_structure(self) -> None:
+        code, output, _ = run_cli("--map", str(FIXTURES / "well_configured"))
+        self.assertEqual(code, EXIT_SUCCESS)
+        mapped = json.loads(output)
+        self.assertEqual(mapped["languages"], ["C", "C++"])
+        self.assertIn("GitHub Actions", mapped["ci"]["providers"])
+
+    def test_compiler_checks_are_skipped_for_a_rust_project(self) -> None:
+        with temp_project({"Cargo.toml": "", ".github/workflows/ci.yml": "jobs: {}\n"}) as root:
+            code, output, _ = run_cli("--only", "ci-present,compiler-warnings", str(root))
+        self.assertEqual(code, EXIT_SUCCESS, output)
+        self.assertIn("[SKIP] compiler-warnings:", output)
 
     def test_usage_errors(self) -> None:
         self.assertEqual(run_cli("--only", "nope", ".")[0], EXIT_USAGE)

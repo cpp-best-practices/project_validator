@@ -1,5 +1,6 @@
 from project_validator.ci import Job
 from project_validator.core import Context, Result, check
+from project_validator.structure import C_FAMILY
 
 MINIMUM_OPERATING_SYSTEMS = 2
 MINIMUM_COMPILERS = 2
@@ -25,7 +26,11 @@ def _shortfalls(operating_systems: set[str], compilers: set[str], pairs: set[tup
     return [f"at least {minimum} {kind} (found {found})" for kind, found, minimum in requirements if found < minimum]
 
 
-@check(name="platform-matrix", description="CI builds on several operating systems with several compilers")
+@check(
+    name="platform-matrix",
+    description="CI builds on several operating systems with several compilers",
+    languages=C_FAMILY,
+)
 def platform_matrix(context: Context) -> Result:
     if not context.ci_files:
         return Result.failed("no CI configuration found")

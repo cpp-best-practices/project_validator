@@ -2,6 +2,7 @@ import re
 from collections.abc import Iterable
 
 from project_validator.core import Context, Result, check
+from project_validator.structure import C_FAMILY
 from project_validator.text import Pattern, matching_names
 
 PRESET_FILES = ("CMakePresets.json", "CMakeUserPresets.json")
@@ -42,7 +43,7 @@ def _preset_texts(context: Context) -> tuple[str, ...]:
     return tuple(context.project.read_text(name) for name in PRESET_FILES if context.project.exists(name))
 
 
-@check(name="compiler-warnings", description="A strict compiler warning set is enabled")
+@check(name="compiler-warnings", description="A strict compiler warning set is enabled", languages=C_FAMILY)
 def compiler_warnings(context: Context) -> Result:
     required = (*GCC_CLANG_FLAGS, *MSVC_FLAGS) if _msvc_in_ci(context) else GCC_CLANG_FLAGS
     texts = (*context.cmake_texts, *context.ci_texts, *_preset_texts(context))

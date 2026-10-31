@@ -1,4 +1,5 @@
 from project_validator.core import Context, Result, check
+from project_validator.structure import C_FAMILY
 from project_validator.text import matching_names, pattern
 
 BRANCH_COVERAGE = (
@@ -17,7 +18,7 @@ PATH_COVERAGE = (
 )
 
 
-@check(name="coverage", description="CI reports branch coverage (path coverage is a bonus)")
+@check(name="coverage", description="CI reports branch coverage (path coverage is a bonus)", languages=C_FAMILY)
 def coverage(context: Context) -> Result:
     texts = (*context.ci_texts, *context.cmake_texts)
     branch_tools = matching_names(texts, BRANCH_COVERAGE)

@@ -3,6 +3,7 @@ from collections import defaultdict
 from project_validator.build_configurations import BuildConfiguration
 from project_validator.ci import Job
 from project_validator.core import Context, Result, check
+from project_validator.structure import C_FAMILY
 
 REQUIRED_CONFIGURATIONS = frozenset(
     BuildConfiguration(build_type=build_type, sanitizers=sanitizers)
@@ -33,7 +34,11 @@ def _shortfall(platform: Platform, configurations: set[BuildConfiguration]) -> s
     return None
 
 
-@check(name="ci-build-types", description="CI builds Debug and Release, with and without sanitizers, everywhere")
+@check(
+    name="ci-build-types",
+    description="CI builds Debug and Release, with and without sanitizers, everywhere",
+    languages=C_FAMILY,
+)
 def ci_build_types(context: Context) -> Result:
     if not context.ci_files:
         return Result.failed("no CI configuration found")
