@@ -1,7 +1,9 @@
-"""Optional PyYAML support; everything that needs YAML degrades gracefully when it is missing."""
+"""PyYAML support; it is required, but imported here so a missing install is reported cleanly instead of crashing."""
 
 import importlib
 from types import ModuleType
+
+MISSING_MESSAGE = "PyYAML >= 6.0 is required (python3 -m pip install PyYAML, or the distro's python3-yaml package)"
 
 
 class YamlError(Exception):
@@ -24,7 +26,7 @@ def available() -> bool:
 
 def load(text: str) -> object:
     if _yaml is None:
-        raise YamlError("PyYAML is not available")
+        raise YamlError(MISSING_MESSAGE)
     try:
         return _yaml.safe_load(text)
     except _yaml.YAMLError as error:

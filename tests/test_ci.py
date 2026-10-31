@@ -2,10 +2,10 @@ import unittest
 from unittest import mock
 
 from project_validator import yaml_support
-from project_validator.ci import REDUCED_ACCURACY_NOTE, find_ci_files, heuristic_jobs, parse_jobs
+from project_validator.ci import find_ci_files, heuristic_jobs, parse_jobs
 from project_validator.core import Project
 from project_validator.plugins import discover
-from tests.support import requires_yaml, temp_project
+from tests.support import temp_project
 
 
 class FindCiFilesTests(unittest.TestCase):
@@ -49,32 +49,25 @@ WORKFLOW = {".github/workflows/ci.yml": "jobs:\n  a:\n    runs-on: ubuntu-latest
 
 
 class ParseJobsTests(unittest.TestCase):
-    def _parse(self, files: dict[str, str], *, use_yaml: bool):
+    def _parse(self, files: dict[str, str]):
         with temp_project(files) as root:
             project = Project(root)
-            return parse_jobs(project, find_ci_files(project, discover().providers), use_yaml=use_yaml)
+            return parse_jobs(project, find_ci_files(project, discover().providers))
 
-    @requires_yaml
     def test_structured_parsing_has_no_notes(self) -> None:
-        analysis = self._parse(WORKFLOW, use_yaml=True)
+        analysis = self._parse(WORKFLOW)
         self.assertEqual(analysis.notes, ())
         self.assertEqual([job.name for job in analysis.jobs], [".github/workflows/ci.yml: a"])
 
-    def test_without_yaml_files_are_scanned_with_reduced_accuracy(self) -> None:
-        analysis = self._parse(WORKFLOW, use_yaml=False)
-        self.assertEqual(analysis.notes, (REDUCED_ACCURACY_NOTE,))
-        self.assertTrue(all(job.heuristic for job in analysis.jobs))
-
-    def test_missing_pyyaml_degrades_to_reduced_accuracy(self) -> None:
+    def test_missing_pyyaml_is_reported(self) -> None:
         with mock.patch.object(yaml_support, "_yaml", None):
-            analysis = self._parse(WORKFLOW, use_yaml=True)
-        self.assertEqual(analysis.notes, (REDUCED_ACCURACY_NOTE,))
+            analysis = self._parse(WORKFLOW)
+        self.assertIn(yaml_support.MISSING_MESSAGE, analysis.notes[0])
 
-    @requires_yaml
     def test_invalid_yaml_is_scanned_heuristically(self) -> None:
-        analysis = self._parse({".gitlab-ci.yml": "a: [unclosed\n"}, use_yaml=True)
+        analysis = self._parse({".gitlab-ci.yml": "a: [unclosed\n"})
         self.assertIn("invalid YAML", analysis.notes[0])
 
     def test_unstructured_providers_are_noted(self) -> None:
-        analysis = self._parse({".travis.yml": "os: linux\ncompiler: gcc\n"}, use_yaml=True)
+        analysis = self._parse({".travis.yml": "os: linux\ncompiler: gcc\n"})
         self.assertEqual(analysis.notes, (".travis.yml: Travis CI is scanned heuristically",))
