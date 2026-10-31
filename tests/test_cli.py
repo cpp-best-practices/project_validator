@@ -61,6 +61,15 @@ class CliTests(unittest.TestCase):
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("[SKIP] compiler-warnings:", output)
 
+    def test_excluded_directories_are_left_out_of_the_map(self) -> None:
+        files = {"pyproject.toml": "", "tests/fixtures/cmake/CMakeLists.txt": "", "tests/fixtures/cmake/main.cpp": ""}
+        with temp_project(files) as root:
+            code, output, _ = run_cli("--map", "--exclude", "./tests/fixtures/", str(root))
+        self.assertEqual(code, EXIT_SUCCESS)
+        mapped = json.loads(output)
+        self.assertEqual(mapped["languages"], ["Python"])
+        self.assertEqual(mapped["build_systems"], ["Python packaging"])
+
     def test_usage_errors(self) -> None:
         self.assertEqual(run_cli("--only", "nope", ".")[0], EXIT_USAGE)
         self.assertEqual(run_cli(str(FIXTURES / "missing"))[0], EXIT_USAGE)

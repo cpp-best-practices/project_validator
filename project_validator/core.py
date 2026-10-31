@@ -77,6 +77,7 @@ class Project:
     """Read-only view of the source tree being validated; paths are POSIX and relative to `root`."""
 
     root: Path
+    excluded: frozenset[PurePosixPath] = frozenset()
 
     def exists(self, relative: str) -> bool:
         return (self.root / relative).is_file()
@@ -95,7 +96,7 @@ class Project:
         )
 
     def files(self) -> list[str]:
-        """Every file of the project, skipping hidden directories, vendored packages and CMake/Cargo build trees."""
+        """Every file of the project, skipping hidden, excluded and vendored directories and CMake/Cargo build trees."""
         return sorted(self._walk_files())
 
     def cmake_files(self) -> list[str]:
@@ -104,14 +105,15 @@ class Project:
     def _walk_files(self) -> Iterator[str]:
         for directory, subdirectories, files in os.walk(self.root):
             current = Path(directory)
+            relative = PurePosixPath(current.relative_to(self.root).as_posix())
             subdirectories[:] = [
                 name
                 for name in subdirectories
                 if not name.startswith(".")
                 and name not in _SKIPPED_DIRECTORIES
+                and relative / name not in self.excluded
                 and not _is_build_tree(current / name)
             ]
-            relative = current.relative_to(self.root)
             yield from (str(PurePosixPath(relative, name)) for name in files)
 
 

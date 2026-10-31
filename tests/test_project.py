@@ -1,4 +1,5 @@
 import unittest
+from pathlib import PurePosixPath
 
 from project_validator.core import Project
 from tests.support import temp_project
@@ -21,6 +22,12 @@ class ProjectTests(unittest.TestCase):
         }
         with temp_project(files) as root:
             self.assertEqual(Project(root).cmake_files(), ["CMakeLists.txt"])
+
+    def test_skips_excluded_directories(self) -> None:
+        files = {"CMakeLists.txt": "", "tests/fixtures/x/CMakeLists.txt": "", "tests/CMakeLists.txt": ""}
+        with temp_project(files) as root:
+            project = Project(root, frozenset({PurePosixPath("tests/fixtures")}))
+            self.assertEqual(project.cmake_files(), ["CMakeLists.txt", "tests/CMakeLists.txt"])
 
     def test_files_in_filters_by_suffix_and_ignores_missing_directories(self) -> None:
         files = {"w/a.yml": "", "w/b.yaml": "", "w/c.txt": ""}
