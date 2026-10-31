@@ -2,14 +2,19 @@
 
 import tempfile
 import textwrap
+import unittest
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from pathlib import Path
 
+from project_validator import pretty
 from project_validator.core import Context, Options, Project
 from project_validator.plugins import discover
 
 FIXTURES = Path(__file__).parent / "fixtures"
+
+requires_rich = unittest.skipUnless(pretty.available(), "rich is not installed")
+
 
 @contextmanager
 def temp_project(files: Mapping[str, str]) -> Iterator[Path]:
