@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 project(well_configured LANGUAGES CXX)
 
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 option(ENABLE_COVERAGE "Instrument for coverage" OFF)
 if(ENABLE_COVERAGE)
   add_compile_options(--coverage -fcondition-coverage)
