@@ -12,6 +12,7 @@ dependencies = []
 
 [project.optional-dependencies]
 yaml = ["PyYAML>=6.0"]
+pretty = ["rich>=13.0"]
 coverage = ["coverage>=7.10"]
 
 [project.scripts]

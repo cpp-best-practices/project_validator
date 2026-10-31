@@ -2,13 +2,20 @@ import contextlib
 import io
 import json
 import unittest
+from unittest import mock
 
+from project_validator import pretty
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
-from tests.support import FIXTURES
+from tests.support import FIXTURES, requires_rich
 
 
-def run_cli(*arguments: str) -> tuple[int, str, str]:
-    stdout, stderr = io.StringIO(), io.StringIO()
+class Terminal(io.StringIO):
+    def isatty(self) -> bool:
+        return True
+
+
+def run_cli(*arguments: str, terminal: bool = False) -> tuple[int, str, str]:
+    stdout, stderr = Terminal() if terminal else io.StringIO(), io.StringIO()
     with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
         code = main(list(arguments))
     return code, stdout.getvalue(), stderr.getvalue()
@@ -42,3 +49,30 @@ class CliTests(unittest.TestCase):
     def test_usage_errors(self) -> None:
         self.assertEqual(run_cli("--only", "nope", ".")[0], EXIT_USAGE)
         self.assertEqual(run_cli(str(FIXTURES / "missing"))[0], EXIT_USAGE)
+
+    @requires_rich
+    def test_color_always_beautifies_the_output(self) -> None:
+        code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured"))
+        self.assertEqual(code, EXIT_SUCCESS, output)
+        self.assertIn("\x1b[", output)
+        self.assertIn("4 passed", output)
+
+    def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
+        for choice in ("never", "auto"):
+            _, output, _ = run_cli("--color", choice, str(FIXTURES / "well_configured"))
+            self.assertNotIn("\x1b[", output)
+            self.assertIn("[PASS] coverage:", output)
+
+    def test_color_auto_is_used_for_a_terminal_unless_no_color_is_set(self) -> None:
+        with mock.patch.object(pretty, "available", return_value=False):
+            with mock.patch.dict("os.environ", {}, clear=True):
+                self.assertIn("install rich", run_cli(str(FIXTURES / "well_configured"), terminal=True)[2])
+            with mock.patch.dict("os.environ", {"NO_COLOR": "1"}):
+                self.assertEqual(run_cli(str(FIXTURES / "well_configured"), terminal=True)[2], "")
+
+    def test_color_without_rich_falls_back_to_plain_text_and_says_so(self) -> None:
+        with mock.patch.object(pretty, "_rich", None):
+            code, output, errors = run_cli("--color", "always", str(FIXTURES / "well_configured"))
+        self.assertEqual(code, EXIT_SUCCESS, output)
+        self.assertIn("[PASS] coverage:", output)
+        self.assertIn("install rich", errors)

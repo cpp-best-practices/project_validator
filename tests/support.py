@@ -7,13 +7,14 @@ from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from pathlib import Path
 
-from project_validator import yaml_support
+from project_validator import pretty, yaml_support
 from project_validator.core import Context, Options, Project
 from project_validator.plugins import discover
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
 requires_yaml = unittest.skipUnless(yaml_support.available(), "PyYAML is not installed")
+requires_rich = unittest.skipUnless(pretty.available(), "rich is not installed")
 
 
 @contextmanager
