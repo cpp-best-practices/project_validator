@@ -45,7 +45,7 @@ class CliTests(unittest.TestCase):
         self.assertEqual([entry["check"] for entry in json.loads(output)], ["ci-present", "coverage"])
 
     def test_skipping_every_failure_succeeds(self) -> None:
-        skipped = "ci-present,compiler-warnings,coverage,ctest-runs,cxx-extensions,platform-matrix"
+        skipped = "ci-build-types,ci-present,compiler-warnings,coverage,ctest-runs,cxx-extensions,platform-matrix"
         self.assertEqual(run_cli("--skip", skipped, str(FIXTURES / "bare_project"))[0], EXIT_SUCCESS)
 
     def test_usage_errors(self) -> None:
