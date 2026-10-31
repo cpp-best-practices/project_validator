@@ -6,6 +6,7 @@ from project_validator.checks.coverage import coverage
 from project_validator.checks.ctest_runs import ctest_runs
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.security_scanning import security_scanning
+from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Status
 from tests.support import FIXTURES, make_context, temp_project
 
@@ -139,3 +140,54 @@ class SecurityScanningTests(unittest.TestCase):
     def test_codeql_outside_ci_does_not_count(self) -> None:
         result = self._run({"CMakeLists.txt": "# uses: github/codeql-action/analyze@v3\n"})
         self.assertEqual(result.status, Status.WARN)
+
+
+class WarningsAsErrorsTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]):
+        with temp_project(files) as root:
+            return warnings_as_errors.run(make_context(root))
+
+    def test_fails_without_warnings_as_errors(self) -> None:
+        result = warnings_as_errors.run(make_context(FIXTURES / "bare_project"))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("warnings are not treated as errors", result.message)
+
+    def test_passes_with_werror_in_an_optional_configuration(self) -> None:
+        result = warnings_as_errors.run(make_context(FIXTURES / "well_configured"))
+        self.assertEqual(result.status, Status.PASS)
+        self.assertEqual(result.message, "warnings are treated as errors with -Werror")
+
+    def test_passes_with_msvc_wx(self) -> None:
+        result = self._run({"cmake/CompilerWarnings.cmake": "set(MSVC_WARNINGS /W4 /WX)\n"})
+        self.assertEqual(result.status, Status.PASS)
+        self.assertEqual(result.message, "warnings are treated as errors with /WX")
+
+    def test_passes_with_the_cmake_variable(self) -> None:
+        result = self._run({"CMakeLists.txt": "set(CMAKE_COMPILE_WARNING_AS_ERROR ON)\n"})
+        self.assertEqual(result.status, Status.PASS)
+        self.assertEqual(result.message, "warnings are treated as errors with COMPILE_WARNING_AS_ERROR")
+
+    def test_passes_with_the_target_property(self) -> None:
+        result = self._run({"CMakeLists.txt": "set_target_properties(app PROPERTIES COMPILE_WARNING_AS_ERROR TRUE)\n"})
+        self.assertEqual(result.status, Status.PASS)
+
+    def test_passes_with_the_cmake_variable_set_from_ci(self) -> None:
+        result = self._run(
+            {".github/workflows/ci.yml": "run: cmake -S . -B build -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON\n"}
+        )
+        self.assertEqual(result.status, Status.PASS)
+
+    def test_disabled_or_partial_settings_do_not_count(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": """\
+                    set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
+                    add_compile_options(-Werror=return-type -Wno-error /WX:NO)
+                    """
+            }
+        )
+        self.assertEqual(result.status, Status.FAIL)
+
+    def test_commented_out_werror_does_not_count(self) -> None:
+        result = self._run({"CMakeLists.txt": "# add_compile_options(-Werror)\n"})
+        self.assertEqual(result.status, Status.FAIL)

@@ -7,5 +7,10 @@ if(ENABLE_COVERAGE)
   add_link_options(--coverage)
 endif()
 
+option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
+if(WARNINGS_AS_ERRORS)
+  add_compile_options(-Werror)
+endif()
+
 include(CTest)
 add_subdirectory(test)
