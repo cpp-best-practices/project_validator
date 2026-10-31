@@ -82,6 +82,10 @@ class CoverageTests(unittest.TestCase):
             result.message, "branch coverage is reported with gcovr; path coverage bonus: gcc -fcondition-coverage"
         )
 
+    def test_python_branch_coverage_does_not_count(self) -> None:
+        result = self._run({".github/workflows/ci.yml": "run: coverage run --branch -m pytest --cov-branch\n"})
+        self.assertEqual(result.status, Status.FAIL)
+
     def test_commented_out_cmake_flags_do_not_count(self) -> None:
         result = self._run({"CMakeLists.txt": "# llvm-cov report -show-branch-summary\n"})
         self.assertEqual(result.status, Status.FAIL)

@@ -35,14 +35,8 @@ jobs:
           echo "PyYAML available: $available (expected $expected)"
           [ "$available" = "$expected" ]
 
-      - name: Configure
-        run: cmake -S . -B build -DPython3_EXECUTABLE="${{ steps.python.outputs.python-path }}"
-
       - name: Test
-        run: ctest --test-dir build --output-on-failure
-
-      - name: Validate this repository
-        run: python -m project_validator --build --strict .
+        run: python -W error -m unittest
 
   coverage:
     name: coverage

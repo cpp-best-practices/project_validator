@@ -3,13 +3,16 @@
 [![ci](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml/badge.svg)](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/cpp-best-practices/project_validator/graph/badge.svg)](https://codecov.io/gh/cpp-best-practices/project_validator)
 
-A tool to validate CMake based projects against Best Practices
+A tool to validate CMake based C and C++ projects against Best Practices.
+
+The validator itself is pure Python and has no build step; it only inspects
+(and, with `--build`, configures and builds) the C or C++ project it is pointed at.
 
 ## Requirements
 
 - Python 3.14+ (the system Python on Ubuntu 26.04 LTS; no installation step,
   run with `python3 -m project_validator <path>`)
-- CMake / CTest (already required by any project being validated)
+- CMake / CTest, only for `--build` (already required by any project being validated)
 
 On a machine without Python 3.14, `uv run` or a distro backport will work.
 In CI, use `actions/setup-python` with `python-version: "3.14"`.
@@ -78,11 +81,10 @@ def has_readme(context: Context) -> Result:
 ## Development
 
 ```sh
-python3 -m unittest
-cmake -S . -B build && ctest --test-dir build --output-on-failure
+python3 -W error -m unittest
 ```
 
-The CTest suite runs the unit tests and validates this repository with its own tool.
+This repository is not a CMake project, so it is not validated with its own tool.
 
 Branch coverage is measured with [coverage.py](https://coverage.readthedocs.io/)
 (configured in `pyproject.toml`, which fails the report below 95%):
@@ -99,7 +101,7 @@ and fails if branch coverage drops below the threshold.
 
 ## Dependency Policy
 
-The validator is meant to run anywhere a CMake project can be built,
+The validator is meant to run anywhere a CMake based C or C++ project can be built,
 with as little setup as possible. To keep it that way:
 
 - **The standard library comes first.** If something can reasonably be
