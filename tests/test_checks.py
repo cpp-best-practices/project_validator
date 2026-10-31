@@ -6,6 +6,7 @@ from project_validator.checks.compiler_warnings import compiler_warnings
 from project_validator.checks.coverage import coverage
 from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.ctest_runs import ctest_runs
+from project_validator.checks.hardening import hardening
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.security_scanning import security_scanning
 from project_validator.core import Status
@@ -317,3 +318,150 @@ class CompilerWarningsTests(unittest.TestCase):
         result = self._run({"CMakeLists.txt": "add_compile_options(/W4 /permissive-)\n"})
         self.assertEqual(result.status, Status.WARN)
         self.assertIn("-Wall", result.message)
+
+
+class HardeningTests(unittest.TestCase):
+    GCC_FLAGS = "-D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS -fstack-protector-strong -fcf-protection -fstack-clash-protection"
+    MSVC_CI = "jobs:\n  build:\n    runs-on: windows-latest\n    steps:\n      - run: cmake -S . -B build\n"
+    CLANG_CI = "jobs:\n  build:\n    runs-on: ubuntu-latest\n    env:\n      CXX: clang++\n    steps:\n      - run: make\n"
+
+    def _run(self, files: dict[str, str]):
+        with temp_project(files) as root:
+            return hardening.run(make_context(root))
+
+    def test_fails_when_no_hardening_options_are_found(self) -> None:
+        result = hardening.run(make_context(FIXTURES / "bare_project"))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("-fstack-protector-strong", result.message)
+        self.assertIn("-fhardened", result.message)
+
+    def test_passes_with_the_well_configured_fixture(self) -> None:
+        result = hardening.run(make_context(FIXTURES / "well_configured"))
+        self.assertEqual(result.status, Status.PASS, result)
+
+    def test_passes_with_every_gcc_and_clang_option(self) -> None:
+        result = self._run({"CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n"})
+        self.assertEqual(result.status, Status.PASS, result)
+        self.assertIn("-fstack-clash-protection", result.message)
+
+    def test_cmake_template_style_passes(self) -> None:
+        result = self._run(
+            {
+                "cmake/Hardening.cmake": """\
+                    set(NEW_CXX_DEFINITIONS "${NEW_CXX_DEFINITIONS} -D_GLIBCXX_ASSERTIONS")
+                    set(NEW_COMPILE_OPTIONS "${NEW_COMPILE_OPTIONS} -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3")
+                    check_cxx_compiler_flag(-fstack-protector-strong STACK_PROTECTOR)
+                    set(NEW_COMPILE_OPTIONS "${NEW_COMPILE_OPTIONS} -fcf-protection")
+                    set(NEW_COMPILE_OPTIONS "${NEW_COMPILE_OPTIONS} -fstack-clash-protection")
+                """,
+            }
+        )
+        self.assertEqual(result.status, Status.PASS, result)
+
+    def test_libcxx_hardening_mode_counts_as_library_assertions(self) -> None:
+        flags = self.GCC_FLAGS.replace("-D_GLIBCXX_ASSERTIONS", "-D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST")
+        result = self._run({"CMakeLists.txt": f"add_compile_options({flags})\n"})
+        self.assertEqual(result.status, Status.PASS, result)
+
+    def test_warns_and_lists_missing_options(self) -> None:
+        result = self._run({"CMakeLists.txt": "add_compile_options(-fstack-protector-strong)\n"})
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("_FORTIFY_SOURCE", result.message)
+        self.assertIn("-fcf-protection", result.message)
+        self.assertIn("-fstack-clash-protection", result.message)
+        self.assertIn("_GLIBCXX_ASSERTIONS", result.message)
+        self.assertNotIn("-fstack-protector-strong", result.message)
+
+    def test_disabled_options_do_not_count(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": """\
+                    add_compile_options(-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -fcf-protection=none)
+                    add_compile_definitions(_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_NONE)
+                """,
+            }
+        )
+        self.assertEqual(result.status, Status.FAIL, result)
+
+    def test_commented_out_options_do_not_count(self) -> None:
+        result = self._run({"CMakeLists.txt": f"# add_compile_options({self.GCC_FLAGS})\n"})
+        self.assertEqual(result.status, Status.FAIL)
+
+    def test_fhardened_enables_every_gcc_option(self) -> None:
+        result = self._run({"CMakeLists.txt": "add_compile_options(-fhardened)\n"})
+        self.assertEqual(result.status, Status.PASS, result)
+        self.assertIn("-fhardened", result.message)
+
+    def test_fhardened_alone_warns_when_clang_is_in_ci(self) -> None:
+        result = self._run(
+            {"CMakeLists.txt": "add_compile_options(-fhardened)\n", ".github/workflows/ci.yml": self.CLANG_CI}
+        )
+        self.assertEqual(result.status, Status.WARN, result)
+        self.assertIn("-fhardened", result.message)
+        self.assertIn("Clang", result.message)
+        self.assertIn("-fstack-protector-strong", result.message)
+
+    def test_fhardened_with_explicit_options_passes_when_clang_is_in_ci(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": f"""\
+                    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+                      add_compile_options(-fhardened)
+                    else()
+                      add_compile_options({self.GCC_FLAGS})
+                    endif()
+                """,
+                ".github/workflows/ci.yml": self.CLANG_CI,
+            }
+        )
+        self.assertEqual(result.status, Status.PASS, result)
+
+    def test_msvc_in_ci_requires_msvc_options(self) -> None:
+        result = self._run(
+            {"CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n", ".github/workflows/ci.yml": self.MSVC_CI}
+        )
+        self.assertEqual(result.status, Status.WARN)
+        for flag in ("/sdl", "/guard:cf", "/DYNAMICBASE", "/CETCOMPAT"):
+            self.assertIn(flag, result.message)
+
+    def test_msvc_in_ci_passes_with_msvc_options(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": f"""\
+                    if(MSVC)
+                      add_compile_options(/sdl /guard:cf)
+                      add_link_options(/DYNAMICBASE /CETCOMPAT)
+                    else()
+                      add_compile_options({self.GCC_FLAGS})
+                    endif()
+                """,
+                ".github/workflows/ci.yml": self.MSVC_CI,
+            }
+        )
+        self.assertEqual(result.status, Status.PASS, result)
+
+    def test_disabled_msvc_options_do_not_count(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n"
+                "add_compile_options(/sdl- /guard:cf- /DYNAMICBASE:NO /CETCOMPAT:NO)\n",
+                ".github/workflows/ci.yml": self.MSVC_CI,
+            }
+        )
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("/sdl", result.message)
+        self.assertIn("/CETCOMPAT", result.message)
+
+    def test_msvc_options_are_not_required_without_msvc_in_ci(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n",
+                ".github/workflows/ci.yml": "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make\n",
+            }
+        )
+        self.assertEqual(result.status, Status.PASS)
+
+    def test_only_unrequired_msvc_options_warn_rather_than_fail(self) -> None:
+        result = self._run({"CMakeLists.txt": "add_compile_options(/sdl /guard:cf)\n"})
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("-fstack-protector-strong", result.message)
