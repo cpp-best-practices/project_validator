@@ -25,6 +25,8 @@ def select(available: Iterable[Check], only: Iterable[str] = (), skip: Iterable[
 
 
 def _skipped(selected: Check, context: Context) -> Result | None:
+    if not selected.languages:
+        return None
     languages = context.structure.languages
     if selected.applies_to(languages):
         return None

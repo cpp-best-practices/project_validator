@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 from project_validator.core import Check, Result, Status
 from project_validator.runner import run_check
@@ -68,6 +69,14 @@ class LanguageApplicabilityTests(unittest.TestCase):
     def test_language_agnostic_checks_always_run(self) -> None:
         with temp_project({"Cargo.toml": ""}) as root:
             self.assertEqual(run_check(_check("generic"), make_context(root)).status, Status.PASS)
+
+    def test_language_agnostic_checks_run_when_the_project_cannot_be_mapped(self) -> None:
+        with temp_project({"README.md": ""}) as root, mock.patch(
+            "project_validator.structure.map_project", side_effect=RuntimeError("unparseable CI")
+        ):
+            context = make_context(root)
+            self.assertEqual(run_check(_check("generic"), context).status, Status.PASS)
+            self.assertEqual(run_check(_check("cpp", C_FAMILY), context).status, Status.ERROR)
 
     def test_matching_checks_run(self) -> None:
         context = make_context(FIXTURES / "well_configured")
