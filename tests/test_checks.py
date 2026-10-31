@@ -6,7 +6,7 @@ from project_validator.checks.coverage import coverage
 from project_validator.checks.ctest_runs import ctest_runs
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.core import Status
-from tests.support import FIXTURES, make_context, requires_yaml, temp_project
+from tests.support import FIXTURES, make_context, temp_project
 
 
 class CiPresentTests(unittest.TestCase):
@@ -91,7 +91,6 @@ class PlatformMatrixTests(unittest.TestCase):
     def test_fails_without_ci(self) -> None:
         self.assertEqual(platform_matrix.run(make_context(FIXTURES / "bare_project")).status, Status.FAIL)
 
-    @requires_yaml
     def test_passes_with_an_expanded_matrix(self) -> None:
         result = platform_matrix.run(make_context(FIXTURES / "well_configured"))
         self.assertEqual(result.status, Status.PASS)
@@ -99,7 +98,6 @@ class PlatformMatrixTests(unittest.TestCase):
             "3 OS(es) (linux, macos, windows), 3 compiler(s) (clang, gcc, msvc), 5 combination(s)", result.message
         )
 
-    @requires_yaml
     def test_fails_with_a_single_platform_and_explains_why(self) -> None:
         files = {".github/workflows/ci.yml": "jobs:\n  a:\n    runs-on: ubuntu-latest\n    steps: []\n"}
         with temp_project(files) as root:
@@ -107,8 +105,3 @@ class PlatformMatrixTests(unittest.TestCase):
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("at least 2 operating systems (found 1)", result.message)
         self.assertIn(".github/workflows/ci.yml: a: linux / gcc (runner default)", result.details)
-
-    def test_reduced_accuracy_is_noted_without_yaml(self) -> None:
-        result = platform_matrix.run(make_context(FIXTURES / "well_configured", use_yaml=False))
-        self.assertEqual(result.status, Status.PASS)
-        self.assertIn("reduced accuracy", result.details[0])

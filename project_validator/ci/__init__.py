@@ -49,9 +49,6 @@ class CiAnalysis:
     notes: tuple[str, ...]
 
 
-REDUCED_ACCURACY_NOTE = "reduced accuracy: PyYAML is not available, so CI files were scanned heuristically"
-
-
 def find_ci_files(project: Project, providers: tuple[CiProvider, ...]) -> tuple[CiFile, ...]:
     return tuple(
         CiFile(provider=provider, path=path) for provider in providers for path in provider.config_files(project)
@@ -79,13 +76,11 @@ def heuristic_jobs(name: str, text: str) -> list[Job]:
     return [_job_with_compilers(name, os, compilers, heuristic=True) for os in operating_systems]
 
 
-def _parse_file(project: Project, ci_file: CiFile, use_yaml: bool) -> tuple[list[Job], list[str]]:
+def _parse_file(project: Project, ci_file: CiFile) -> tuple[list[Job], list[str]]:
     text = project.read_text(ci_file.path)
     parser = ci_file.provider.parse_yaml
     if parser is None:
         return heuristic_jobs(ci_file.path, text), [f"{ci_file.path}: {ci_file.provider.name} is scanned heuristically"]
-    if not use_yaml or not yaml_support.available():
-        return heuristic_jobs(ci_file.path, text), [REDUCED_ACCURACY_NOTE]
     try:
         document = yaml_support.load(text)
     except yaml_support.YamlError as error:
@@ -93,11 +88,11 @@ def _parse_file(project: Project, ci_file: CiFile, use_yaml: bool) -> tuple[list
     return [replace(job, name=f"{ci_file.path}: {job.name}") for job in parser(document)], []
 
 
-def parse_jobs(project: Project, ci_files: tuple[CiFile, ...], *, use_yaml: bool) -> CiAnalysis:
+def parse_jobs(project: Project, ci_files: tuple[CiFile, ...]) -> CiAnalysis:
     jobs: list[Job] = []
     notes: list[str] = []
     for ci_file in ci_files:
-        file_jobs, file_notes = _parse_file(project, ci_file, use_yaml)
+        file_jobs, file_notes = _parse_file(project, ci_file)
         jobs.extend(file_jobs)
         notes.extend(file_notes)
     return CiAnalysis(jobs=tuple(jobs), notes=tuple(dict.fromkeys(notes)))

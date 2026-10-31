@@ -9,6 +9,7 @@ A tool to validate CMake based projects against Best Practices
 
 - Python 3.14+ (the system Python on Ubuntu 26.04 LTS; no installation step,
   run with `python3 -m project_validator <path>`)
+- [PyYAML](https://pyyaml.org/) 6.0+ (`python3-yaml` on Ubuntu, or `python3 -m pip install PyYAML`)
 - CMake / CTest (already required by any project being validated)
 
 On a machine without Python 3.14, `uv run` or a distro backport will work.
@@ -29,7 +30,6 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 | `--format text\|json` | output format |
 | `--build` | configure and build the project in a temporary directory and ask `ctest` for its tests |
 | `--strict` | treat warnings as failures |
-| `--no-yaml` | ignore PyYAML even if it is installed |
 | `--cmake PATH` / `--ctest PATH` | the executables used by `--build` |
 | `--plugin-dir DIR` | load extra checks and CI providers from `DIR/*.py` |
 
@@ -46,7 +46,7 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 
 CI detection is pluggable too. GitHub Actions workflows (including `strategy.matrix`
 with `include`/`exclude`) and GitLab CI pipelines (including `parallel: matrix:`)
-are parsed when PyYAML is available. Azure Pipelines, AppVeyor, CircleCI, Travis CI,
+are parsed as YAML. Azure Pipelines, AppVeyor, CircleCI, Travis CI,
 Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected
 and scanned heuristically. A job that names no compiler is counted with its runner's
 default compiler (gcc on Linux, AppleClang on macOS, MSVC on Windows).
@@ -93,8 +93,7 @@ coverage run --branch -m unittest
 coverage report
 ```
 
-CI runs the tests with and without PyYAML, combines the coverage of both runs,
-uploads it to [Codecov](https://codecov.io/gh/cpp-best-practices/project_validator)
+CI uploads the coverage report to [Codecov](https://codecov.io/gh/cpp-best-practices/project_validator)
 and fails if branch coverage drops below the threshold.
 
 ## Dependency Policy
@@ -121,7 +120,7 @@ with as little setup as possible. To keep it that way:
 
 | Dependency | Kind | Why |
 |---|---|---|
-| [PyYAML](https://pyyaml.org/) `>=6.0` | optional (`yaml` extra) | The standard library has no YAML parser, and CI configuration is YAML. PyYAML is mature, MIT licensed, has no dependencies, and is packaged by every major distro (`python3-yaml` on Ubuntu). Without it, CI files are scanned heuristically and `platform-matrix` reports `reduced accuracy: PyYAML is not available`; nothing fails because it is missing. |
+| [PyYAML](https://pyyaml.org/) `>=6.0` | required | The standard library has no YAML parser, and CI configuration is YAML. PyYAML is mature, MIT licensed, has no dependencies, and is packaged by every major distro (`python3-yaml` on Ubuntu). It is required rather than optional because scanning CI files as text cannot tell which compiler runs on which OS, nor apply a matrix's `include`/`exclude`, so it over-counts platform combinations and can pass `platform-matrix` for a project that should fail. Without PyYAML the validator exits with an error that says how to install it. |
 | [coverage.py](https://coverage.readthedocs.io/) `>=7.10` | development only (`coverage` extra) | Measures the branch coverage of the test suite; the standard library's `trace` module does not measure branches. coverage.py is the de facto Python coverage tool, Apache 2.0 licensed and has no required dependencies. The validator itself never imports it. |
 
-There are no required dependencies.
+PyYAML is the only required dependency.
