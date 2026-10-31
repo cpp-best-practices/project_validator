@@ -38,11 +38,18 @@ def _run(command: list[str]) -> str:
     return completed.stdout
 
 
+# Multi-config generators (Visual Studio, Ninja Multi-Config) register tests per
+# configuration, so ctest lists none unless asked for the configuration that was built.
+BUILD_CONFIGURATION = "Debug"
+
+
 def count_built_tests(root: Path, options: Options) -> int:
     with tempfile.TemporaryDirectory(prefix="project_validator_") as build:
-        _run([options.cmake, "-S", str(root), "-B", build])
-        _run([options.cmake, "--build", build])
-        listing = json.loads(_run([options.ctest, "--test-dir", build, "--show-only=json-v1"]))
+        _run([options.cmake, "-S", str(root), "-B", build, f"-DCMAKE_BUILD_TYPE={BUILD_CONFIGURATION}"])
+        _run([options.cmake, "--build", build, "--config", BUILD_CONFIGURATION])
+        listing = json.loads(
+            _run([options.ctest, "--test-dir", build, "-C", BUILD_CONFIGURATION, "--show-only=json-v1"])
+        )
     return len(listing.get("tests", []))
 
 

@@ -1,6 +1,10 @@
+import json
+import os
 import shutil
 import unittest
+from unittest import mock
 
+from project_validator.checks.ci_build_types import ci_build_types
 from project_validator.checks.ci_present import ci_present
 from project_validator.checks.compiler_warnings import compiler_warnings
 from project_validator.checks.coverage import coverage
@@ -59,6 +63,12 @@ class CtestRunsTests(unittest.TestCase):
             result.message, "the project builds and ctest finds 1 test(s), but no CI configuration runs ctest"
         )
 
+    @unittest.skipUnless(shutil.which("cmake") and shutil.which("ninja"), "cmake or ninja is not installed")
+    def test_build_mode_finds_tests_with_multi_config_generators(self) -> None:
+        with mock.patch.dict(os.environ, {"CMAKE_GENERATOR": "Ninja Multi-Config"}):
+            result = ctest_runs.run(make_context(FIXTURES / "buildable", build=True))
+        self.assertIn("ctest finds 1 test(s)", result.message)
+
     def test_build_mode_reports_tools_that_cannot_run(self) -> None:
         result = ctest_runs.run(make_context(FIXTURES / "buildable", build=True, cmake="no-such-cmake-binary"))
         self.assertEqual(result.status, Status.FAIL)
@@ -112,6 +122,77 @@ class PlatformMatrixTests(unittest.TestCase):
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("at least 2 operating systems (found 1)", result.message)
         self.assertIn(".github/workflows/ci.yml: a: linux / gcc (runner default)", result.details)
+
+
+def _workflow(matrix: dict[str, object], configure: str) -> dict[str, str]:
+    job = {"runs-on": "${{ matrix.os }}", "strategy": {"matrix": matrix}, "steps": [{"run": configure}]}
+    return {".github/workflows/ci.yml": json.dumps({"jobs": {"build": job}})}
+
+
+class CiBuildTypesTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]):
+        with temp_project(files) as root:
+            return ci_build_types.run(make_context(root))
+
+    def test_fails_without_ci(self) -> None:
+        self.assertEqual(ci_build_types.run(make_context(FIXTURES / "bare_project")).status, Status.FAIL)
+
+    def test_fails_without_a_known_platform(self) -> None:
+        result = self._run({".github/workflows/ci.yml": "jobs: {}\n"})
+        self.assertEqual(result.message, "no OS/compiler combination found in CI configuration")
+
+    def test_passes_with_debug_and_release_with_and_without_sanitizers_everywhere(self) -> None:
+        result = ci_build_types.run(make_context(FIXTURES / "well_configured"))
+        self.assertEqual(result.status, Status.PASS, result.details)
+        self.assertEqual(
+            result.message,
+            "all 5 OS/compiler combination(s) build Debug and Release, each with and without sanitizers",
+        )
+
+    def test_fails_when_build_type_is_never_specified(self) -> None:
+        result = self._run(_workflow({"os": ["ubuntu-latest"]}, "cmake -S . -B build"))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("1 of 1 OS/compiler combination(s)", result.message)
+        self.assertIn("linux / gcc: no build type specified", result.details)
+
+    def test_fails_when_only_one_kind_is_built(self) -> None:
+        matrix = {"os": ["ubuntu-latest"], "sanitize": ["ON", "OFF"]}
+        result = self._run(
+            _workflow(matrix, "cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=${{ matrix.sanitize }}")
+        )
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("linux / gcc: missing Debug, Debug + sanitizers", result.details)
+
+    def test_fails_when_sanitizers_are_never_enabled(self) -> None:
+        matrix = {"os": ["ubuntu-latest"], "build_type": ["Debug", "Release"]}
+        result = self._run(_workflow(matrix, "cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}"))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("linux / gcc: missing Debug + sanitizers, Release + sanitizers", result.details)
+
+    def test_every_combination_needs_all_four_builds(self) -> None:
+        matrix = {
+            "os": ["ubuntu-latest"],
+            "compiler": ["gcc", "clang"],
+            "build_type": ["Debug", "Release"],
+            "sanitize": ["ON", "OFF"],
+            "exclude": [{"compiler": "clang", "sanitize": "ON"}],
+        }
+        configure = (
+            "cmake -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}"
+            " -DENABLE_SANITIZERS=${{ matrix.sanitize }}"
+        )
+        result = self._run(_workflow(matrix, configure))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("1 of 2 OS/compiler combination(s)", result.message)
+        self.assertEqual(result.details, ("linux / clang: missing Debug + sanitizers, Release + sanitizers",))
+
+    def test_cmake_template_maintainer_mode_toggles_sanitizers(self) -> None:
+        matrix = {"os": ["ubuntu-latest"], "build_type": ["Release", "Debug"], "maintainer": ["ON", "OFF"]}
+        configure = (
+            "cmake -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}}"
+            " -D${{ env.PROJECT_NAME }}_PACKAGING_MAINTAINER_MODE:BOOL=${{matrix.maintainer}}"
+        )
+        self.assertEqual(self._run(_workflow(matrix, configure)).status, Status.PASS)
 
 
 class SecurityScanningTests(unittest.TestCase):
