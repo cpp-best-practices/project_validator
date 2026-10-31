@@ -62,6 +62,16 @@ class ProjectStructureTests(unittest.TestCase):
         with temp_project(files) as root:
             self.assertEqual(make_context(root).structure.languages, {"Rust"})
 
+    def test_cargo_build_output_is_not_mapped(self) -> None:
+        generated = "debug/build/native-sys/out/generated.c"
+        layouts = {
+            "default target": {"Cargo.toml": "", "src/main.rs": "", f"target/{generated}": ""},
+            "tagged target": {"Cargo.toml": "", "build-out/CACHEDIR.TAG": "", f"build-out/{generated}": ""},
+        }
+        for layout, files in layouts.items():
+            with self.subTest(layout), temp_project(files) as root:
+                self.assertEqual(make_context(root).structure.languages, {"Rust"})
+
     def test_map_is_serialisable(self) -> None:
         mapped = make_context(FIXTURES / "well_configured").structure.as_dict()
         self.assertEqual(mapped["languages"], ["C", "C++"])

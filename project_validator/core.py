@@ -53,8 +53,19 @@ class Options:
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})
 
 
-def _is_build_tree(directory: Path) -> bool:
+def _is_cmake_build_tree(directory: Path) -> bool:
     return (directory / "CMakeCache.txt").is_file()
+
+
+def _is_cargo_target(directory: Path) -> bool:
+    """Cargo tags its output with CACHEDIR.TAG and, by default, puts it in `target/` beside `Cargo.toml`."""
+    return (directory / "CACHEDIR.TAG").is_file() or (
+        directory.name == "target" and (directory.parent / "Cargo.toml").is_file()
+    )
+
+
+def _is_build_tree(directory: Path) -> bool:
+    return _is_cmake_build_tree(directory) or _is_cargo_target(directory)
 
 
 def _is_cmake_file(name: str) -> bool:
@@ -84,7 +95,7 @@ class Project:
         )
 
     def files(self) -> list[str]:
-        """Every file of the project, skipping hidden directories, vendored packages and CMake build trees."""
+        """Every file of the project, skipping hidden directories, vendored packages and CMake/Cargo build trees."""
         return sorted(self._walk_files())
 
     def cmake_files(self) -> list[str]:
