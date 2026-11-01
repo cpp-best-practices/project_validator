@@ -5,7 +5,7 @@ from project_validator import yaml_support
 from project_validator.ci import find_ci_files, heuristic_jobs, parse_jobs
 from project_validator.core import Project
 from project_validator.plugins import discover
-from tests.support import temp_project
+from tests.support import CI_FILES, PROJECT_LAYOUTS, layout_project, temp_project
 
 
 class FindCiFilesTests(unittest.TestCase):
@@ -28,6 +28,13 @@ class FindCiFilesTests(unittest.TestCase):
                 ("Jenkins", "Jenkinsfile"),
             ],
         )
+
+    def test_finds_every_provider_in_every_layout(self) -> None:
+        for layout in PROJECT_LAYOUTS:
+            for provider, path in CI_FILES.items():
+                with layout_project(self, layout, {path: ""}, ci=provider) as root:
+                    found = find_ci_files(Project(root), discover().providers)
+                    self.assertEqual([(f.provider.name, f.path) for f in found], [(provider, path)])
 
 
 class HeuristicJobsTests(unittest.TestCase):

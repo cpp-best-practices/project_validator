@@ -8,7 +8,20 @@ from unittest import mock
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
-from tests.support import FIXTURES, requires_rich, temp_project
+from tests.support import (
+    C_FAMILY_LAYOUTS,
+    CI_FILES,
+    FIXTURES,
+    OTHER_LANGUAGE_LAYOUTS,
+    PROJECT_LAYOUTS,
+    fixture_files,
+    layout_project,
+    requires_rich,
+)
+
+WELL_CONFIGURED = fixture_files("well_configured")
+BARE_PROJECT = fixture_files("bare_project")
+COMPILER_CHECKS = "ci-build-types,compiler-warnings,coverage,ctest-runs,cxx-extensions,platform-matrix"
 
 
 class Terminal(io.StringIO):
@@ -30,23 +43,30 @@ class CliTests(unittest.TestCase):
         self.assertIn("platform-matrix", output)
 
     def test_well_configured_project_passes(self) -> None:
-        code, output, _ = run_cli(str(FIXTURES / "well_configured"))
-        self.assertEqual(code, EXIT_SUCCESS, output)
-        self.assertIn("[PASS] coverage:", output)
+        for layout in C_FAMILY_LAYOUTS:
+            with layout_project(self, layout, WELL_CONFIGURED) as root:
+                code, output, _ = run_cli(str(root))
+                self.assertEqual(code, EXIT_SUCCESS, output)
+                self.assertIn("[PASS] coverage:", output)
 
     def test_bare_project_fails(self) -> None:
-        code, output, _ = run_cli(str(FIXTURES / "bare_project"))
-        self.assertEqual(code, EXIT_FAILURE)
-        self.assertIn("[FAIL] ci-present:", output)
+        for layout in PROJECT_LAYOUTS:
+            with layout_project(self, layout, BARE_PROJECT) as root:
+                code, output, _ = run_cli(str(root))
+                self.assertEqual(code, EXIT_FAILURE)
+                self.assertIn("[FAIL] ci-present:", output)
 
     def test_json_output_with_only(self) -> None:
-        code, output, _ = run_cli("--format", "json", "--only", "ci-present,coverage", str(FIXTURES / "bare_project"))
-        self.assertEqual(code, EXIT_FAILURE)
-        self.assertEqual([entry["check"] for entry in json.loads(output)], ["ci-present", "coverage"])
+        for layout in PROJECT_LAYOUTS:
+            with layout_project(self, layout, BARE_PROJECT) as root:
+                code, output, _ = run_cli("--format", "json", "--only", "ci-present,coverage", str(root))
+                self.assertEqual(code, EXIT_FAILURE)
+                self.assertEqual([entry["check"] for entry in json.loads(output)], ["ci-present", "coverage"])
 
     def test_skipping_every_failure_succeeds(self) -> None:
-        skipped = "ci-build-types,ci-present,compiler-warnings,coverage,ctest-runs,cxx-extensions,platform-matrix"
-        self.assertEqual(run_cli("--skip", skipped, str(FIXTURES / "bare_project"))[0], EXIT_SUCCESS)
+        for layout in PROJECT_LAYOUTS:
+            with layout_project(self, layout, BARE_PROJECT) as root:
+                self.assertEqual(run_cli("--skip", f"ci-present,{COMPILER_CHECKS}", str(root))[0], EXIT_SUCCESS)
 
     def test_map_prints_the_project_structure(self) -> None:
         code, output, _ = run_cli("--map", str(FIXTURES / "well_configured"))
@@ -55,20 +75,42 @@ class CliTests(unittest.TestCase):
         self.assertEqual(mapped["languages"], ["C", "C++"])
         self.assertIn("GitHub Actions", mapped["ci"]["providers"])
 
-    def test_compiler_checks_are_skipped_for_a_rust_project(self) -> None:
-        with temp_project({"Cargo.toml": "", ".github/workflows/ci.yml": "jobs: {}\n"}) as root:
-            code, output, _ = run_cli("--only", "ci-present,compiler-warnings", str(root))
-        self.assertEqual(code, EXIT_SUCCESS, output)
-        self.assertIn("[SKIP] compiler-warnings:", output)
+    def test_map_prints_every_layout_with_every_ci_provider(self) -> None:
+        for layout in PROJECT_LAYOUTS:
+            for provider, path in CI_FILES.items():
+                with layout_project(self, layout, {path: "jobs: {}\n"}, ci=provider) as root:
+                    code, output, _ = run_cli("--map", str(root))
+                    self.assertEqual(code, EXIT_SUCCESS)
+                    mapped = json.loads(output)
+                    self.assertEqual(mapped["languages"], sorted(layout.languages))
+                    self.assertEqual(mapped["build_systems"], sorted(layout.build_systems))
+                    self.assertEqual(mapped["ci"]["providers"], [provider])
+
+    def test_compiler_checks_are_skipped_for_other_languages(self) -> None:
+        for layout in OTHER_LANGUAGE_LAYOUTS:
+            for provider, path in CI_FILES.items():
+                with layout_project(self, layout, {path: "jobs: {}\n"}, ci=provider) as root:
+                    code, output, _ = run_cli("--only", f"ci-present,{COMPILER_CHECKS}", str(root))
+                    self.assertEqual(code, EXIT_SUCCESS, output)
+                    for name in COMPILER_CHECKS.split(","):
+                        self.assertIn(f"[SKIP] {name}:", output)
+
+    def test_compiler_checks_run_for_c_family_and_unrecognised_languages(self) -> None:
+        for layout in C_FAMILY_LAYOUTS:
+            with layout_project(self, layout, {".github/workflows/ci.yml": "jobs: {}\n"}) as root:
+                code, output, _ = run_cli("--only", COMPILER_CHECKS, str(root))
+                self.assertEqual(code, EXIT_FAILURE, output)
+                self.assertNotIn("[SKIP]", output)
 
     def test_excluded_directories_are_left_out_of_the_map(self) -> None:
-        files = {"pyproject.toml": "", "tests/fixtures/cmake/CMakeLists.txt": "", "tests/fixtures/cmake/main.cpp": ""}
-        with temp_project(files) as root:
-            code, output, _ = run_cli("--map", "--exclude", "./tests/fixtures/", str(root))
-        self.assertEqual(code, EXIT_SUCCESS)
-        mapped = json.loads(output)
-        self.assertEqual(mapped["languages"], ["Python"])
-        self.assertEqual(mapped["build_systems"], ["Python packaging"])
+        excluded = {"tests/fixtures/cmake/CMakeLists.txt": "", "tests/fixtures/cmake/main.cpp": ""}
+        for layout in PROJECT_LAYOUTS:
+            with layout_project(self, layout, excluded) as root:
+                code, output, _ = run_cli("--map", "--exclude", "./tests/fixtures/", str(root))
+                self.assertEqual(code, EXIT_SUCCESS)
+                mapped = json.loads(output)
+                self.assertEqual(mapped["languages"], sorted(layout.languages))
+                self.assertEqual(mapped["build_systems"], sorted(layout.build_systems))
 
     def test_usage_errors(self) -> None:
         self.assertEqual(run_cli("--only", "nope", ".")[0], EXIT_USAGE)
