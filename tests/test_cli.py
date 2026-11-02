@@ -4,6 +4,7 @@ import json
 import tomllib
 import unittest
 from pathlib import Path
+from typing import Any
 from unittest import mock
 
 from project_validator import pretty, yaml_support
@@ -17,6 +18,7 @@ from tests.support import (
     PROJECT_LAYOUTS,
     WELL_CONFIGURED_PYTHON,
     WELL_CONFIGURED_RUST,
+    ProjectLayout,
     fixture_files,
     layout_project,
     requires_rich,
@@ -106,15 +108,19 @@ class CliTests(unittest.TestCase):
         self.assertEqual(mapped["languages"], ["C", "C++"])
         self.assertIn("GitHub Actions", mapped["ci"]["providers"])
 
+    def assert_map_matches_layout(self, layout: ProjectLayout, *arguments: str) -> dict[str, Any]:
+        code, output, _ = run_cli("--map", *arguments)
+        self.assertEqual(code, EXIT_SUCCESS)
+        mapped = json.loads(output)
+        self.assertEqual(mapped["languages"], sorted(layout.languages))
+        self.assertEqual(mapped["build_systems"], sorted(layout.build_systems))
+        return mapped
+
     def test_map_prints_every_layout_with_every_ci_provider(self) -> None:
         for layout in PROJECT_LAYOUTS:
             for provider, path in CI_FILES.items():
                 with layout_project(self, layout, {path: "jobs: {}\n"}, ci=provider) as root:
-                    code, output, _ = run_cli("--map", str(root))
-                    self.assertEqual(code, EXIT_SUCCESS)
-                    mapped = json.loads(output)
-                    self.assertEqual(mapped["languages"], sorted(layout.languages))
-                    self.assertEqual(mapped["build_systems"], sorted(layout.build_systems))
+                    mapped = self.assert_map_matches_layout(layout, str(root))
                     self.assertEqual(mapped["ci"]["providers"], [provider])
 
     def test_compiler_checks_are_skipped_only_where_they_do_not_apply(self) -> None:
@@ -139,11 +145,7 @@ class CliTests(unittest.TestCase):
         excluded = {"tests/fixtures/cmake/CMakeLists.txt": "", "tests/fixtures/cmake/main.cpp": ""}
         for layout in PROJECT_LAYOUTS:
             with layout_project(self, layout, excluded) as root:
-                code, output, _ = run_cli("--map", "--exclude", "./tests/fixtures/", str(root))
-                self.assertEqual(code, EXIT_SUCCESS)
-                mapped = json.loads(output)
-                self.assertEqual(mapped["languages"], sorted(layout.languages))
-                self.assertEqual(mapped["build_systems"], sorted(layout.build_systems))
+                self.assert_map_matches_layout(layout, "--exclude", "./tests/fixtures/", str(root))
 
     def test_usage_errors(self) -> None:
         self.assertEqual(run_cli("--only", "nope", ".")[0], EXIT_USAGE)
@@ -154,7 +156,7 @@ class CliTests(unittest.TestCase):
         code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
-        self.assertIn("9 passed", output)
+        self.assertIn("10 passed", output)
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
         for choice in ("never", "auto"):

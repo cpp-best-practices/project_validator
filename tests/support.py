@@ -218,6 +218,15 @@ updates:
       interval: weekly
 """
 
+COPY_PASTE_WORKFLOW = """\
+jobs:
+  copy-paste-detection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npx --yes jscpd@4 --threshold 0 .
+"""
+
 # A Python project that passes every check that applies to Python.
 WELL_CONFIGURED_PYTHON: Mapping[str, str] = MappingProxyType(
     {
@@ -225,6 +234,7 @@ WELL_CONFIGURED_PYTHON: Mapping[str, str] = MappingProxyType(
         "tests/test_app.py": "",
         ".github/dependabot.yml": DEPENDABOT_CONFIG,
         ".github/workflows/codeql.yml": CODEQL_WORKFLOW,
+        ".github/workflows/copy-paste-detection.yml": COPY_PASTE_WORKFLOW,
         ".github/workflows/ci.yml": """\
             jobs:
               test:
@@ -251,6 +261,7 @@ WELL_CONFIGURED_RUST: Mapping[str, str] = MappingProxyType(
         "src/lib.rs": "#[cfg(test)]\nmod tests {\n    #[test]\n    fn works() {}\n}\n",
         ".github/dependabot.yml": DEPENDABOT_CONFIG,
         ".github/workflows/codeql.yml": CODEQL_WORKFLOW,
+        ".github/workflows/copy-paste-detection.yml": COPY_PASTE_WORKFLOW,
         ".github/workflows/ci.yml": """\
             jobs:
               test:
