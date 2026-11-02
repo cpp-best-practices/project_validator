@@ -160,8 +160,9 @@ class LanguageApplicabilityTests(unittest.TestCase):
 
     def test_language_agnostic_checks_run_when_the_project_cannot_be_mapped(self) -> None:
         for layout in PROJECT_LAYOUTS:
-            with layout_project(self, layout) as root, mock.patch(
-                "project_validator.structure.map_project", side_effect=RuntimeError("unparseable CI")
+            with (
+                layout_project(self, layout) as root,
+                mock.patch("project_validator.structure.map_project", side_effect=RuntimeError("unparseable CI")),
             ):
                 context = make_context(root)
                 self.assertEqual(run_check(_check("generic"), context).status, Status.PASS)

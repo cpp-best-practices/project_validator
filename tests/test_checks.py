@@ -216,9 +216,7 @@ class RustCoverageTests(unittest.TestCase):
         result = self._run(dict(WELL_CONFIGURED_RUST))
         self.assertEqual(
             result,
-            Result.passed(
-                "branch coverage is reported with cargo-llvm-cov; path coverage bonus: cargo-llvm-cov MC/DC"
-            ),
+            Result.passed("branch coverage is reported with cargo-llvm-cov; path coverage bonus: cargo-llvm-cov MC/DC"),
         )
 
     def test_line_coverage_fails(self) -> None:
@@ -592,7 +590,9 @@ class CodeFormattingTests(unittest.TestCase):
 
     def test_fails_without_a_clang_format_file(self) -> None:
         result = self._run(BARE_PROJECT)
-        expected = Result.failed("no clang-format configuration found; formatting is not defined", self.CLANG_FORMAT_HINT)
+        expected = Result.failed(
+            "no clang-format configuration found; formatting is not defined", self.CLANG_FORMAT_HINT
+        )
         self.assertEqual(result, expected)
 
     def test_passes_when_ci_checks_formatting(self) -> None:
@@ -676,7 +676,9 @@ class PythonCodeFormattingTests(unittest.TestCase):
 
     def test_warns_when_configured_but_ci_does_not_format(self) -> None:
         result = self._run({"pyproject.toml": "[tool.black]\nline-length = 100\n", GITHUB_WORKFLOW: "run: pytest\n"})
-        self.assertEqual(result, Result.warned("pyproject.toml is defined but CI does not run ruff format or black", self.HINT))
+        self.assertEqual(
+            result, Result.warned("pyproject.toml is defined but CI does not run ruff format or black", self.HINT)
+        )
 
     def test_fails_without_a_formatter(self) -> None:
         result = self._run({"pyproject.toml": "[project]\nname = 'black'\n", GITHUB_WORKFLOW: "run: black-box-tests\n"})

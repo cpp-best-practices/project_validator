@@ -135,6 +135,7 @@ PROJECT_LAYOUTS = (
     ),
 )
 
+
 def checked_ecosystems(selected: Check, layout: ProjectLayout) -> tuple[Ecosystem, ...]:
     """The ecosystems `selected` judges in a project of `layout`."""
     supported = (ecosystem for ecosystem in ECOSYSTEMS if ecosystem.languages <= selected.languages)

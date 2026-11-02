@@ -121,9 +121,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_USAGE
 
     options = Options(build=arguments.build, cmake=arguments.cmake, ctest=arguments.ctest)
-    context = Context(
-        Project(arguments.path.resolve(), frozenset(arguments.exclude)), plugins.providers, options
-    )
+    context = Context(Project(arguments.path.resolve(), frozenset(arguments.exclude)), plugins.providers, options)
     if arguments.map:
         print(json.dumps(context.structure.as_dict(), indent=2))
         return EXIT_SUCCESS
