@@ -2,6 +2,7 @@ import re
 from collections.abc import Iterable
 
 from project_validator.core import Context, Result, check
+from project_validator.structure import C_FAMILY
 from project_validator.text import Pattern, matching_names, pattern
 
 PRESET_FILES = ("CMakePresets.json", "CMakeUserPresets.json")
@@ -42,7 +43,11 @@ def _preset_texts(context: Context) -> tuple[str, ...]:
     return tuple(context.project.read_text(name) for name in PRESET_FILES if context.project.exists(name))
 
 
-@check(name="cxx-extensions", description="Compiler extensions are disabled (-std=c++NN rather than -std=gnu++NN)")
+@check(
+    name="cxx-extensions",
+    description="Compiler extensions are disabled (-std=c++NN rather than -std=gnu++NN)",
+    languages=C_FAMILY,
+)
 def cxx_extensions(context: Context) -> Result:
     language = checked_language(context.cmake_texts)
     label = _LANGUAGE_NAMES[language]

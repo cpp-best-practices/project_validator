@@ -1,4 +1,4 @@
-"""Recognising the CMake build types and sanitizer settings a CI job builds with."""
+"""Recognising the CMake build types, Cargo profiles and sanitizer settings a CI job builds with."""
 
 import re
 from collections.abc import Iterable
@@ -14,6 +14,11 @@ _BUILD_TYPE_SOURCES = re.compile(
     rf"|\bconfiguration{_VALUE}",
     re.IGNORECASE,
 )
+
+# A Cargo command up to the end of its shell command; the job text is JSON, so line breaks appear as `\n`.
+_CARGO_COMMANDS = re.compile(r"\bcargo\s+(?:\+\S+\s+)?(?:build|test|run|nextest\s+run)\b([^\\\n\"&;|]*)")
+_CARGO_RELEASE = re.compile(r"--release\b|--profile[=\s]+release\b")
+_CARGO_OTHER_PROFILE = re.compile(r"--profile\b")
 
 _DISABLED = r"(?!(?:off|false|no|none|0)\b)"
 _SANITIZERS_ENABLED = re.compile(
@@ -34,9 +39,21 @@ class BuildConfiguration:
         return f"{build_type} + sanitizers" if self.sanitizers else build_type
 
 
+def _cargo_profile(arguments: str) -> str | None:
+    if _CARGO_RELEASE.search(arguments):
+        return "release"
+    return None if _CARGO_OTHER_PROFILE.search(arguments) else "debug"
+
+
+def _cargo_build_types(texts: Iterable[str]) -> set[str]:
+    profiles = (_cargo_profile(match[1]) for text in texts for match in _CARGO_COMMANDS.finditer(text))
+    return {profile for profile in profiles if profile is not None}
+
+
 def detect_build_types(*texts: str) -> set[str]:
     values = (value for text in texts for match in _BUILD_TYPE_SOURCES.finditer(text) for value in match.groups())
-    return {BUILD_TYPE_KINDS[value.lower()] for value in values if value and value.lower() in BUILD_TYPE_KINDS}
+    cmake = {BUILD_TYPE_KINDS[value.lower()] for value in values if value and value.lower() in BUILD_TYPE_KINDS}
+    return cmake | _cargo_build_types(texts)
 
 
 def sanitizers_enabled(texts: Iterable[str]) -> bool:
