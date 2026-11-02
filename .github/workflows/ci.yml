@@ -41,6 +41,22 @@ jobs:
       - name: Detect duplicated code
         run: npx --yes jscpd@4 --threshold 0 --format python --reporters console --gitignore project_validator tests
 
+  self-validation:
+    name: self-validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install project_validator
+        run: python -m pip install .
+
+      - name: Validate project_validator with itself
+        run: project-validator --exclude tests/fixtures .
+
   coverage:
     name: coverage
     runs-on: ubuntu-latest

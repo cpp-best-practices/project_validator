@@ -30,8 +30,15 @@ _STYLES = {
     Status.WARN: "bold yellow",
     Status.FAIL: "bold red",
     Status.ERROR: "bold magenta",
+    Status.SKIP: "bold blue",
 }
-_OUTCOMES = {Status.PASS: "passed", Status.WARN: "warned", Status.FAIL: "failed", Status.ERROR: "errored"}
+_OUTCOMES = {
+    Status.PASS: "passed",
+    Status.WARN: "warned",
+    Status.FAIL: "failed",
+    Status.ERROR: "errored",
+    Status.SKIP: "skipped",
+}
 _BADGE_WIDTH = max(len(status) for status in Status) + 2
 
 
