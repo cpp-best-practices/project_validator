@@ -10,10 +10,13 @@ from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
 from tests.support import (
     C_FAMILY_LAYOUTS,
+    C_FAMILY_ONLY_LAYOUTS,
     CI_FILES,
     FIXTURES,
     OTHER_LANGUAGE_LAYOUTS,
     PROJECT_LAYOUTS,
+    WELL_CONFIGURED_PYTHON,
+    WELL_CONFIGURED_RUST,
     fixture_files,
     layout_project,
     requires_rich,
@@ -22,6 +25,8 @@ from tests.support import (
 WELL_CONFIGURED = fixture_files("well_configured")
 BARE_PROJECT = fixture_files("bare_project")
 COMPILER_CHECKS = "ci-build-types,compiler-warnings,coverage,ctest-runs,cxx-extensions,platform-matrix"
+# Language -> the checks that do not apply to it: only C/C++ has compiler extensions, and Python has no build types.
+NOT_APPLICABLE = {"Python": {"ci-build-types", "cxx-extensions"}, "Rust": {"cxx-extensions"}}
 
 
 class Terminal(io.StringIO):
@@ -43,11 +48,37 @@ class CliTests(unittest.TestCase):
         self.assertIn("platform-matrix", output)
 
     def test_well_configured_project_passes(self) -> None:
-        for layout in C_FAMILY_LAYOUTS:
+        for layout in C_FAMILY_ONLY_LAYOUTS:
             with layout_project(self, layout, WELL_CONFIGURED) as root:
                 code, output, _ = run_cli(str(root))
                 self.assertEqual(code, EXIT_SUCCESS, output)
                 self.assertIn("[PASS] coverage:", output)
+
+    def test_well_configured_projects_in_other_languages_pass_strictly(self) -> None:
+        projects = {"Python": WELL_CONFIGURED_PYTHON, "Rust": WELL_CONFIGURED_RUST}
+        for layout in OTHER_LANGUAGE_LAYOUTS:
+            [language] = layout.languages
+            with layout_project(self, layout, projects[language]) as root:
+                code, output, _ = run_cli("--strict", str(root))
+                self.assertEqual(code, EXIT_SUCCESS, output)
+                for name in COMPILER_CHECKS.split(","):
+                    status = "SKIP" if name in NOT_APPLICABLE[language] else "PASS"
+                    self.assertIn(f"[{status}] {name}:", output)
+
+    def test_mixed_language_project_passes_when_every_language_is_well_configured(self) -> None:
+        python = {
+            "pyproject.toml": "[tool.coverage.run]\nbranch = true\n",
+            "tests/test_bindings.py": "",
+            ".github/workflows/python.yml": WELL_CONFIGURED_PYTHON[".github/workflows/ci.yml"],
+        }
+        mixed = [layout for layout in C_FAMILY_LAYOUTS if layout not in C_FAMILY_ONLY_LAYOUTS]
+        # ci-build-types is left out: a Python-only job on a runner counts as a C/C++ build with its default compiler.
+        judged_per_language = "compiler-warnings,coverage,ctest-runs,platform-matrix"
+        for layout in mixed:
+            with layout_project(self, layout, {**WELL_CONFIGURED, **python}) as root:
+                code, output, _ = run_cli("--only", judged_per_language, str(root))
+                self.assertEqual(code, EXIT_SUCCESS, output)
+                self.assertIn("[PASS] coverage: C/C++: branch coverage is reported with gcovr", output)
 
     def test_bare_project_fails(self) -> None:
         for layout in PROJECT_LAYOUTS:
@@ -86,14 +117,16 @@ class CliTests(unittest.TestCase):
                     self.assertEqual(mapped["build_systems"], sorted(layout.build_systems))
                     self.assertEqual(mapped["ci"]["providers"], [provider])
 
-    def test_compiler_checks_are_skipped_for_other_languages(self) -> None:
+    def test_compiler_checks_are_skipped_only_where_they_do_not_apply(self) -> None:
         for layout in OTHER_LANGUAGE_LAYOUTS:
+            [language] = layout.languages
             for provider, path in CI_FILES.items():
                 with layout_project(self, layout, {path: "jobs: {}\n"}, ci=provider) as root:
-                    code, output, _ = run_cli("--only", f"ci-present,{COMPILER_CHECKS}", str(root))
-                    self.assertEqual(code, EXIT_SUCCESS, output)
+                    code, output, _ = run_cli("--only", COMPILER_CHECKS, str(root))
+                    self.assertEqual(code, EXIT_FAILURE, output)
                     for name in COMPILER_CHECKS.split(","):
-                        self.assertIn(f"[SKIP] {name}:", output)
+                        skipped = f"[SKIP] {name}:" in output
+                        self.assertEqual(skipped, name in NOT_APPLICABLE[language], name)
 
     def test_compiler_checks_run_for_c_family_and_unrecognised_languages(self) -> None:
         for layout in C_FAMILY_LAYOUTS:

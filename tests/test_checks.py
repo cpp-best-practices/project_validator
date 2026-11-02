@@ -12,13 +12,17 @@ from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.ctest_runs import ctest_runs
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.security_scanning import security_scanning
-from project_validator.core import Status
+from project_validator.core import Check, Result, Status
+from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST, Ecosystem
 from tests.support import (
     CI_FILES,
     FIXTURES,
     NON_CMAKE_C_FAMILY_LAYOUTS,
     PROJECT_LAYOUTS,
+    WELL_CONFIGURED_PYTHON,
+    WELL_CONFIGURED_RUST,
     fixture_files,
+    layouts_checked_as,
     make_context,
     run_in_every_layout,
 )
@@ -28,6 +32,21 @@ BARE_PROJECT = fixture_files("bare_project")
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}
 }
+GITHUB_WORKFLOW = ".github/workflows/ci.yml"
+
+
+def run_as(test: unittest.TestCase, selected: Check, files: dict[str, str], *ecosystems: Ecosystem, **options: object):
+    """The result of `selected` in every layout it judges as exactly `ecosystems`; it must not depend on the layout."""
+    layouts = layouts_checked_as(selected, *ecosystems)
+    test.assertTrue(layouts, f"no layout is judged as {[ecosystem.label for ecosystem in ecosystems]}")
+    return run_in_every_layout(test, selected, files, layouts, **options)
+
+
+def _github_job(runs_on: str, *steps: str, matrix: dict[str, object] | None = None) -> dict[str, str]:
+    job: dict[str, object] = {"runs-on": runs_on, "steps": [{"run": step} for step in steps]}
+    if matrix is not None:
+        job["strategy"] = {"matrix": matrix}
+    return {GITHUB_WORKFLOW: json.dumps({"jobs": {"build": job}})}
 
 
 class CiPresentTests(unittest.TestCase):
@@ -127,7 +146,7 @@ class CoverageTests(unittest.TestCase):
             result.message, "branch coverage is reported with gcovr; path coverage bonus: gcc -fcondition-coverage"
         )
 
-    def test_python_branch_coverage_does_not_count(self) -> None:
+    def test_python_branch_coverage_does_not_count_for_c_and_cxx(self) -> None:
         for provider, path in CI_FILES.items():
             with self.subTest(ci=provider):
                 result = self._run({path: "run: coverage run --branch -m pytest --cov-branch\n"})
@@ -136,6 +155,87 @@ class CoverageTests(unittest.TestCase):
     def test_commented_out_cmake_flags_do_not_count(self) -> None:
         result = self._run({"CMakeLists.txt": "# llvm-cov report -show-branch-summary\n"})
         self.assertEqual(result.status, Status.FAIL)
+
+
+class PythonCoverageTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]) -> Result:
+        return run_as(self, coverage, files, PYTHON)
+
+    def test_coverage_py_branch_measurement_in_any_ci_passes_without_a_path_coverage_hint(self) -> None:
+        for provider, path in CI_FILES.items():
+            with self.subTest(ci=provider):
+                result = self._run({path: "script: python -m coverage run --branch -m pytest\n"})
+                self.assertEqual(result, Result.passed("branch coverage is reported with coverage.py"))
+
+    def test_pytest_cov_branch_passes(self) -> None:
+        result = self._run({GITHUB_WORKFLOW: "run: pytest --cov=app --cov-branch\n"})
+        self.assertEqual(result.message, "branch coverage is reported with pytest-cov")
+
+    def test_branch_setting_in_any_coverage_settings_file_passes(self) -> None:
+        for name, section in {"pyproject.toml": "[tool.coverage.run]", ".coveragerc": "[run]"}.items():
+            with self.subTest(name):
+                result = self._run({name: f"{section}\nsource = ['app']\nbranch = True\n"})
+                self.assertEqual(result.message, "branch coverage is reported with coverage.py branch = true")
+
+    def test_line_coverage_fails(self) -> None:
+        result = self._run(
+            {GITHUB_WORKFLOW: "run: coverage run -m pytest\n", "setup.cfg": "[coverage:run]\nbranch = false\n"}
+        )
+        self.assertEqual(
+            result, Result.failed("no branch coverage reporting found in CI configuration or coverage.py settings")
+        )
+
+    def test_c_and_cxx_branch_coverage_does_not_count(self) -> None:
+        self.assertEqual(self._run(WELL_CONFIGURED).status, Status.FAIL)
+
+    def test_well_configured_python_project_passes(self) -> None:
+        self.assertEqual(self._run(dict(WELL_CONFIGURED_PYTHON)).status, Status.PASS)
+
+
+class RustCoverageTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]) -> Result:
+        return run_as(self, coverage, files, RUST)
+
+    def test_branch_coverage_tools_in_any_ci_pass_and_suggest_mcdc(self) -> None:
+        tools = {
+            "cargo-llvm-cov": "cargo +nightly llvm-cov --branch --lcov",
+            "cargo-tarpaulin": "cargo tarpaulin --branch --out xml",
+            "grcov": "grcov . --binary-path target/debug --branch -o lcov.info",
+        }
+        for provider, path in CI_FILES.items():
+            for tool, command in tools.items():
+                with self.subTest(ci=provider, tool=tool):
+                    result = self._run({path: f"script: {command}\n"})
+                    self.assertEqual(result.message, f"branch coverage is reported with {tool}")
+                    self.assertEqual(result.details, ("consider adding MC/DC coverage (e.g. cargo llvm-cov --mcdc)",))
+
+    def test_mcdc_coverage_is_reported_as_a_bonus(self) -> None:
+        result = self._run(dict(WELL_CONFIGURED_RUST))
+        self.assertEqual(
+            result,
+            Result.passed(
+                "branch coverage is reported with cargo-llvm-cov; path coverage bonus: cargo-llvm-cov MC/DC"
+            ),
+        )
+
+    def test_line_coverage_fails(self) -> None:
+        result = self._run({GITHUB_WORKFLOW: "run: cargo llvm-cov --lcov\n"})
+        self.assertEqual(result, Result.failed("no branch coverage reporting found in CI configuration"))
+
+
+class MixedLanguageCoverageTests(unittest.TestCase):
+    def test_every_language_needs_branch_coverage_and_findings_are_labelled(self) -> None:
+        result = run_as(self, coverage, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertEqual(
+            result.message,
+            "C/C++: branch coverage is reported with gcovr; path coverage bonus: gcc -fcondition-coverage; "
+            "Python: no branch coverage reporting found in CI configuration or coverage.py settings",
+        )
+
+    def test_passes_when_every_language_reports_branch_coverage(self) -> None:
+        files = {**WELL_CONFIGURED, "pyproject.toml": "[tool.coverage.run]\nbranch = true\n"}
+        self.assertEqual(run_as(self, coverage, files, C_AND_CXX, PYTHON).status, Status.PASS)
 
 
 class PlatformMatrixTests(unittest.TestCase):
@@ -163,6 +263,63 @@ class PlatformMatrixTests(unittest.TestCase):
                 self.assertEqual(result.status, Status.FAIL)
                 self.assertIn(f"{path}: {provider} is scanned heuristically", result.details)
                 self.assertIn(f"{path}: linux / gcc", result.details)
+
+
+class PythonPlatformMatrixTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]) -> Result:
+        return run_as(self, platform_matrix, files, PYTHON)
+
+    def test_passes_with_several_operating_systems_and_python_versions(self) -> None:
+        result = self._run(dict(WELL_CONFIGURED_PYTHON))
+        self.assertEqual(result.status, Status.PASS)
+        self.assertEqual(
+            result.message,
+            "CI covers 3 OS(es) (linux, macos, windows), 2 Python version(s) (3.13, 3.14), 6 combination(s)",
+        )
+
+    def test_fails_with_a_single_python_version_and_explains_why(self) -> None:
+        matrix = {"os": ["ubuntu-latest", "windows-latest"]}
+        result = self._run(_github_job("${{ matrix.os }}", "python -m pytest", matrix=matrix))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("at least 2 Python versions (found 1)", result.message)
+        self.assertIn("at least 3 OS/Python version combinations (found 2)", result.message)
+        self.assertIn(f"{GITHUB_WORKFLOW}: build (ubuntu-latest): linux / default", result.details)
+
+    def test_python_versions_are_read_from_gitlab_images(self) -> None:
+        pipeline = "".join(
+            f"test-{version}:\n  image: python:{version}\n  script: [pytest]\n" for version in ("3.12", "3.13")
+        )
+        result = self._run({".gitlab-ci.yml": pipeline})
+        self.assertIn("2 Python version(s) (3.12, 3.13)", result.message)
+        self.assertIn("at least 2 operating systems (found 1)", result.message)
+
+    def test_jobs_that_never_run_python_are_not_counted(self) -> None:
+        result = self._run(_github_job("ubuntu-latest", "make docs"))
+        self.assertIn(f"{GITHUB_WORKFLOW}: build: linux / no Python version", result.details)
+        self.assertIn("0 Python version(s) (none)", result.message)
+
+
+class RustPlatformMatrixTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]) -> Result:
+        return run_as(self, platform_matrix, files, RUST)
+
+    def test_passes_with_several_operating_systems_and_toolchains(self) -> None:
+        result = self._run(dict(WELL_CONFIGURED_RUST))
+        self.assertEqual(result.status, Status.PASS)
+        self.assertIn("2 Rust toolchain(s) (nightly, stable), 6 combination(s)", result.message)
+
+    def test_unstructured_providers_are_scanned_for_toolchains(self) -> None:
+        for provider, path in UNSTRUCTURED_CI_FILES.items():
+            with self.subTest(ci=provider):
+                result = self._run({path: "os: [linux, osx]\nscript:\n  - cargo +1.80 test\n  - cargo +nightly test\n"})
+                self.assertEqual(result.status, Status.PASS)
+                self.assertIn("2 Rust toolchain(s) (1.80, nightly), 4 combination(s)", result.message)
+
+    def test_fails_with_the_runner_default_toolchain_only(self) -> None:
+        result = self._run(_github_job("ubuntu-latest", "cargo test"))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("at least 2 Rust toolchains (found 1)", result.message)
+        self.assertIn(f"{GITHUB_WORKFLOW}: build: linux / default", result.details)
 
 
 def _workflow(matrix: dict[str, object], configure: str) -> dict[str, str]:
@@ -233,6 +390,37 @@ class CiBuildTypesTests(unittest.TestCase):
             " -D${{ env.PROJECT_NAME }}_PACKAGING_MAINTAINER_MODE:BOOL=${{matrix.maintainer}}"
         )
         self.assertEqual(self._run(_workflow(matrix, configure)).status, Status.PASS)
+
+
+class RustCiBuildTypesTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]) -> Result:
+        return run_as(self, ci_build_types, files, RUST)
+
+    def test_passes_with_debug_and_release_with_and_without_sanitizers_everywhere(self) -> None:
+        result = self._run(dict(WELL_CONFIGURED_RUST))
+        self.assertEqual(
+            result,
+            Result.passed(
+                "all 6 OS/Rust toolchain combination(s) build Debug and Release, each with and without sanitizers"
+            ),
+        )
+
+    def test_fails_without_a_known_platform(self) -> None:
+        result = self._run({GITHUB_WORKFLOW: "jobs: {}\n"})
+        self.assertEqual(result.message, "no OS/Rust toolchain combination found in CI configuration")
+
+    def test_fails_when_only_release_is_built_without_sanitizers(self) -> None:
+        release_only = "cargo +stable build --release && cargo +stable test --release"
+        result = self._run(_github_job("ubuntu-latest", release_only))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertEqual(result.details, ("linux / stable: missing Debug, Debug + sanitizers, Release + sanitizers",))
+
+    def test_fails_when_no_cargo_command_builds(self) -> None:
+        result = self._run(_github_job("ubuntu-latest", "cargo clippy", "cargo test --profile ci"))
+        self.assertEqual(result.details, ("linux / default: no build type specified",))
+
+    def test_python_is_not_judged(self) -> None:
+        self.assertEqual(layouts_checked_as(ci_build_types, PYTHON), ())
 
 
 class SecurityScanningTests(unittest.TestCase):
@@ -439,3 +627,142 @@ class CompilerWarningsTests(unittest.TestCase):
         result = self._run({"CMakeLists.txt": "add_compile_options(/W4 /permissive-)\n"})
         self.assertEqual(result.status, Status.WARN)
         self.assertIn("-Wall", result.message)
+
+
+class PythonCompilerWarningsTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]) -> Result:
+        return run_as(self, compiler_warnings, files, PYTHON)
+
+    def test_warnings_as_errors_in_any_spelling_passes(self) -> None:
+        spellings = {
+            "python -W error": {GITHUB_WORKFLOW: "run: python3.14 -X dev -W error -m unittest\n"},
+            "pytest -W error": {GITHUB_WORKFLOW: "run: pytest -q -W error\n"},
+            "PYTHONWARNINGS": {GITHUB_WORKFLOW: "env:\n  PYTHONWARNINGS: error\n"},
+            "pyproject filterwarnings": {"pyproject.toml": "[tool.pytest.ini_options]\nfilterwarnings = ['error']\n"},
+            "pytest.ini filterwarnings": {"pytest.ini": "[pytest]\nfilterwarnings =\n    error\n"},
+        }
+        for spelling, files in spellings.items():
+            with self.subTest(spelling):
+                expected = Result.passed("strict Python warning settings are enabled: -W error")
+                self.assertEqual(self._run(files), expected)
+
+    def test_warnings_as_errors_in_any_ci_passes(self) -> None:
+        for provider, path in CI_FILES.items():
+            with self.subTest(ci=provider):
+                self.assertEqual(self._run({path: "script: python -W error -m pytest\n"}).status, Status.PASS)
+
+    def test_fails_when_warnings_are_not_errors(self) -> None:
+        result = self._run({GITHUB_WORKFLOW: "run: python -W ignore -m pytest && cmake -DCMAKE_CXX_FLAGS=-Werror\n"})
+        self.assertEqual(result, Result.failed("no Python warning settings found; enable at least -W error"))
+
+    def test_c_and_cxx_flags_do_not_count(self) -> None:
+        self.assertEqual(self._run(WELL_CONFIGURED).status, Status.FAIL)
+
+
+class RustCompilerWarningsTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]) -> Result:
+        return run_as(self, compiler_warnings, files, RUST)
+
+    def test_passes_with_clippy_denied_warnings_and_pedantic_lints(self) -> None:
+        self.assertEqual(
+            self._run(dict(WELL_CONFIGURED_RUST)),
+            Result.passed("strict Rust lint settings are enabled: cargo clippy -D warnings clippy::pedantic"),
+        )
+
+    def test_settings_in_cargo_and_source_files_count(self) -> None:
+        files = {
+            ".cargo/config.toml": '[build]\nrustflags = ["-D", "warnings"]\n',
+            "src/lib.rs": "#![warn(clippy::pedantic)]\n",
+            GITHUB_WORKFLOW: "run: cargo clippy\n",
+        }
+        self.assertEqual(self._run(files).status, Status.PASS)
+
+    def test_denying_warnings_in_cargo_lints_or_crate_attributes_counts(self) -> None:
+        settings = {"Cargo.toml": '[lints.rust]\nwarnings = "deny"\n', "src/main.rs": "#![deny(warnings)]\n"}
+        for name, text in settings.items():
+            with self.subTest(name):
+                result = self._run({name: text, GITHUB_WORKFLOW: "run: cargo clippy -- -W clippy::pedantic\n"})
+                self.assertEqual(result.status, Status.PASS)
+
+    def test_warns_and_lists_missing_lints(self) -> None:
+        result = self._run({GITHUB_WORKFLOW: "run: cargo clippy -- -Dwarnings\n"})
+        self.assertEqual(
+            result, Result.warned("missing Rust lint settings: clippy::pedantic", "found cargo clippy -D warnings")
+        )
+
+    def test_fails_without_lint_settings(self) -> None:
+        result = self._run({GITHUB_WORKFLOW: "run: cargo build -Dwarnings_as_errors\n"})
+        self.assertEqual(
+            result,
+            Result.failed("no Rust lint settings found; enable at least cargo clippy -D warnings clippy::pedantic"),
+        )
+
+
+class MixedLanguageCompilerWarningsTests(unittest.TestCase):
+    def test_every_language_needs_strict_warnings_and_findings_are_labelled(self) -> None:
+        result = run_as(self, compiler_warnings, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertTrue(result.message.startswith("C/C++: strict compiler warning flags are enabled: -Wall"))
+        self.assertTrue(result.message.endswith("; Python: no Python warning settings found; enable at least -W error"))
+
+
+class PythonTestsRunTests(unittest.TestCase):
+    def _run(self, files: dict[str, str], **options: object) -> Result:
+        return run_as(self, ctest_runs, files, PYTHON, **options)
+
+    def test_passes_when_tests_exist_and_any_ci_runs_them(self) -> None:
+        runners = ("python -m pytest", "python -m unittest discover", "tox -e py314", "nox -s tests")
+        for provider, path in CI_FILES.items():
+            for runner in runners:
+                with self.subTest(ci=provider, runner=runner):
+                    result = self._run({"tests/test_app.py": "", "app/io_test.py": "", path: f"script: {runner}\n"})
+                    self.assertEqual(result, Result.passed("Python tests found in 2 file(s)"))
+
+    def test_fails_without_tests(self) -> None:
+        result = self._run({"tests/helpers.py": "", "tests/conftest.py": "", GITHUB_WORKFLOW: "run: pytest\n"})
+        self.assertEqual(result, Result.failed("no Python tests found (test_*.py or *_test.py files)"))
+
+    def test_warns_when_ci_never_runs_the_tests(self) -> None:
+        result = self._run({"tests/test_app.py": "", GITHUB_WORKFLOW: "run: python -m build\n"})
+        self.assertEqual(
+            result,
+            Result.warned("Python tests found in 1 file(s), but no CI configuration runs pytest, unittest, tox or nox"),
+        )
+
+    def test_build_mode_does_not_need_cmake(self) -> None:
+        result = self._run(dict(WELL_CONFIGURED_PYTHON), build=True, cmake="no-such-cmake-binary")
+        self.assertEqual(result.status, Status.PASS)
+
+
+class RustTestsRunTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]) -> Result:
+        return run_as(self, ctest_runs, files, RUST)
+
+    def test_passes_when_tests_exist_and_any_ci_runs_them(self) -> None:
+        sources = {"src/lib.rs": "#[test]\nfn unit() {}\n", "tests/api.rs": "#[tokio::test]\nasync fn api() {}\n"}
+        for provider, path in CI_FILES.items():
+            for runner in ("cargo test", "cargo +nightly nextest run", "cargo llvm-cov --branch"):
+                with self.subTest(ci=provider, runner=runner):
+                    result = self._run({**sources, path: f"script: {runner}\n"})
+                    self.assertEqual(result, Result.passed("Rust tests found in 2 file(s)"))
+
+    def test_fails_without_tests(self) -> None:
+        result = self._run({"src/lib.rs": "pub fn testing() {}\n", GITHUB_WORKFLOW: "run: cargo test\n"})
+        self.assertEqual(result, Result.failed("no Rust tests found (#[test] functions)"))
+
+    def test_warns_when_ci_never_runs_the_tests(self) -> None:
+        result = self._run({"src/lib.rs": "#[test]\nfn unit() {}\n", GITHUB_WORKFLOW: "run: cargo build\n"})
+        expected = Result.warned("Rust tests found in 1 file(s), but no CI configuration runs cargo test")
+        self.assertEqual(result, expected)
+
+
+class MixedLanguageTestsRunTests(unittest.TestCase):
+    def test_every_language_needs_tests_and_findings_are_labelled(self) -> None:
+        result = run_as(self, ctest_runs, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        self.assertEqual(
+            result,
+            Result.failed(
+                "C/C++: CTest is enabled and tests are registered with add_test; "
+                "Python: no Python tests found (test_*.py or *_test.py files)"
+            ),
+        )

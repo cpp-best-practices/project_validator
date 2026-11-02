@@ -25,6 +25,19 @@ jobs:
 """
 
 
+# Only C/C++ has compiler extensions, and only compiled languages have build types.
+BUILTIN_CHECK_LANGUAGES = {
+    "ci-build-types": C_FAMILY | {"Rust"},
+    "ci-present": frozenset(),
+    "compiler-warnings": C_FAMILY | {"Python", "Rust"},
+    "coverage": C_FAMILY | {"Python", "Rust"},
+    "ctest-runs": C_FAMILY | {"Python", "Rust"},
+    "cxx-extensions": C_FAMILY,
+    "platform-matrix": C_FAMILY | {"Python", "Rust"},
+    "security-scanning": frozenset(),
+}
+
+
 def _check(name: str, languages: frozenset[str] = frozenset()) -> Check:
     return Check(name=name, description=name, run=lambda context: Result.passed("ran"), languages=languages)
 
@@ -113,7 +126,7 @@ class ProjectStructureTests(unittest.TestCase):
         self.assertEqual(mapped["build_systems"], ["CMake"])
         self.assertEqual(mapped["ci"]["files"], [".github/workflows/ci.yml", ".github/workflows/codeql-analysis.yml"])
         job = mapped["ci"]["jobs"][0]
-        self.assertEqual(set(job), {"name", "os", "compilers", "configurations"})
+        self.assertEqual(set(job), {"name", "os", "compilers", "toolchains", "configurations"})
 
 
 class LanguageApplicabilityTests(unittest.TestCase):
@@ -159,8 +172,9 @@ class LanguageApplicabilityTests(unittest.TestCase):
             with layout_project(self, layout, {".github/workflows/ci.yml": GITHUB_CI}) as root:
                 context = make_context(root)
                 for found in discover().checks:
-                    skipped = run_check(found, context).status == Status.SKIP
-                    self.assertEqual(skipped, bool(found.languages) and not layout.gets_c_family_checks, found.name)
+                    expected = BUILTIN_CHECK_LANGUAGES[found.name]
+                    outside = bool(expected) and bool(layout.languages) and not expected & layout.languages
+                    self.assertEqual(run_check(found, context).status == Status.SKIP, outside, found.name)
 
     def test_matching_checks_run(self) -> None:
         context = make_context(FIXTURES / "well_configured")
@@ -170,12 +184,6 @@ class LanguageApplicabilityTests(unittest.TestCase):
         with temp_project({"README.md": ""}) as root:
             self.assertEqual(run_check(_check("cpp", C_FAMILY), make_context(root)).status, Status.PASS)
 
-    def test_builtin_compiler_checks_declare_c_family(self) -> None:
+    def test_builtin_checks_declare_the_languages_they_judge(self) -> None:
         languages = {found.name: found.languages for found in discover().checks}
-        compiler_checks = (
-            "ci-build-types", "compiler-warnings", "coverage", "ctest-runs", "cxx-extensions", "platform-matrix"
-        )
-        for name in compiler_checks:
-            self.assertEqual(languages[name], C_FAMILY, name)
-        for name in ("ci-present", "security-scanning"):
-            self.assertEqual(languages[name], frozenset(), name)
+        self.assertEqual(languages, BUILTIN_CHECK_LANGUAGES)

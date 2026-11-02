@@ -19,6 +19,17 @@ class DetectBuildTypesTests(unittest.TestCase):
     def test_unknown_or_unresolved_values_are_ignored(self) -> None:
         self.assertEqual(detect_build_types("-DCMAKE_BUILD_TYPE=${{ env.TYPE }} --config Coverage"), set())
 
+    def test_cargo_profiles(self) -> None:
+        self.assertEqual(detect_build_types("cargo build && cargo +nightly test --release"), {"debug", "release"})
+        self.assertEqual(detect_build_types("cargo nextest run --profile=release"), {"release"})
+
+    def test_cargo_commands_end_at_the_shell_command(self) -> None:
+        self.assertEqual(detect_build_types('{"run": "cargo test\\ncargo doc --release"}'), {"debug"})
+        self.assertEqual(detect_build_types("cargo test; echo --release"), {"debug"})
+
+    def test_custom_cargo_profiles_and_non_building_commands_are_ignored(self) -> None:
+        self.assertEqual(detect_build_types("cargo test --profile ci && cargo clippy --release"), set())
+
 
 class DetectConfigurationsTests(unittest.TestCase):
     def test_sanitizers_enabled_by_flags_or_options(self) -> None:
@@ -27,6 +38,7 @@ class DetectConfigurationsTests(unittest.TestCase):
             "/fsanitize=address",
             "-Dmyproject_ENABLE_SANITIZER_ADDRESS:BOOL=ON -Dmyproject_ENABLE_SANITIZER_MEMORY=OFF",
             '{"sanitizer": "thread"}',
+            'RUSTFLAGS="-Zsanitizer=address"',
             "-Dmyproject_PACKAGING_MAINTAINER_MODE:BOOL=OFF",
         ):
             with self.subTest(text=text):

@@ -71,6 +71,7 @@ def _job_as_dict(job: Job) -> dict[str, object]:
         "name": job.name,
         "os": job.os,
         "compilers": sorted(job.compilers),
+        "toolchains": sorted(map(str, job.toolchains)),
         "configurations": sorted(map(str, job.configurations)),
     }
 

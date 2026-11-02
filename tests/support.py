@@ -11,6 +11,7 @@ from types import MappingProxyType
 
 from project_validator import pretty
 from project_validator.core import Check, Context, Options, Project, Result
+from project_validator.ecosystems import C_AND_CXX, ECOSYSTEMS, Ecosystem, ecosystems_for
 from project_validator.plugins import discover
 from project_validator.structure import C_FAMILY
 
@@ -134,7 +135,19 @@ PROJECT_LAYOUTS = (
     ),
 )
 
+def checked_ecosystems(selected: Check, layout: ProjectLayout) -> tuple[Ecosystem, ...]:
+    """The ecosystems `selected` judges in a project of `layout`."""
+    supported = (ecosystem for ecosystem in ECOSYSTEMS if ecosystem.languages <= selected.languages)
+    return ecosystems_for(layout.languages, supported)
+
+
+def layouts_checked_as(selected: Check, *ecosystems: Ecosystem) -> tuple[ProjectLayout, ...]:
+    """Every layout in which `selected` judges exactly `ecosystems`."""
+    return tuple(layout for layout in PROJECT_LAYOUTS if checked_ecosystems(selected, layout) == ecosystems)
+
+
 C_FAMILY_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if layout.gets_c_family_checks)
+C_FAMILY_ONLY_LAYOUTS = tuple(layout for layout in C_FAMILY_LAYOUTS if layout.languages <= C_FAMILY)
 OTHER_LANGUAGE_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if not layout.gets_c_family_checks)
 NON_CMAKE_C_FAMILY_LAYOUTS = tuple(layout for layout in C_FAMILY_LAYOUTS if not layout.uses_cmake)
 
@@ -164,10 +177,15 @@ def run_in_every_layout(
     test: unittest.TestCase,
     selected: Check,
     files: Mapping[str, str],
-    layouts: tuple[ProjectLayout, ...] = C_FAMILY_LAYOUTS,
+    layouts: tuple[ProjectLayout, ...] | None = None,
     **options: object,
 ) -> Result:
-    """The result of `selected` in a project of each layout with `files` added, which must not depend on the layout."""
+    """The result of `selected` in a project of each layout with `files` added, which must not depend on the layout.
+
+    By default the layouts are every one in which `selected` judges only C/C++.
+    """
+    if layouts is None:
+        layouts = layouts_checked_as(selected, C_AND_CXX)
     results: dict[str, Result] = {}
     for layout in layouts:
         with temp_project({**layout.files, **files}) as root:
@@ -177,3 +195,71 @@ def run_in_every_layout(
         with test.subTest(layout=name):
             test.assertEqual(result, expected)
     return expected
+
+
+CODEQL_WORKFLOW = """\
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: python
+      - uses: github/codeql-action/analyze@v3
+"""
+
+# A Python project that passes every check that applies to Python.
+WELL_CONFIGURED_PYTHON: Mapping[str, str] = MappingProxyType(
+    {
+        "pyproject.toml": "[project]\nname = 'app'\n\n[tool.coverage.run]\nbranch = true\n",
+        "tests/test_app.py": "",
+        ".github/workflows/codeql.yml": CODEQL_WORKFLOW,
+        ".github/workflows/ci.yml": """\
+            jobs:
+              test:
+                runs-on: ${{ matrix.os }}
+                strategy:
+                  matrix:
+                    os: [ubuntu-latest, macos-latest, windows-latest]
+                    python: ["3.13", "3.14"]
+                steps:
+                  - uses: actions/checkout@v4
+                  - uses: actions/setup-python@v5
+                    with:
+                      python-version: ${{ matrix.python }}
+                  - run: python -m pip install coverage pytest
+                  - run: python -W error -m coverage run -m pytest
+        """,
+    }
+)
+
+# A Rust project that passes every check that applies to Rust.
+WELL_CONFIGURED_RUST: Mapping[str, str] = MappingProxyType(
+    {
+        "Cargo.toml": "[package]\nname = 'app'\n\n[lints.clippy]\npedantic = { level = 'warn', priority = -1 }\n",
+        "src/lib.rs": "#[cfg(test)]\nmod tests {\n    #[test]\n    fn works() {}\n}\n",
+        ".github/workflows/codeql.yml": CODEQL_WORKFLOW,
+        ".github/workflows/ci.yml": """\
+            jobs:
+              test:
+                runs-on: ${{ matrix.os }}
+                strategy:
+                  matrix:
+                    os: [ubuntu-latest, macos-latest, windows-latest]
+                    toolchain: [stable, nightly]
+                    sanitizer: ["", "-Zsanitizer=address"]
+                env:
+                  RUSTFLAGS: -D warnings ${{ matrix.sanitizer }}
+                steps:
+                  - uses: actions/checkout@v4
+                  - uses: dtolnay/rust-toolchain@master
+                    with:
+                      toolchain: ${{ matrix.toolchain }}
+                  - run: cargo clippy --all-targets
+                  - run: cargo test
+                  - run: cargo test --release
+                  - run: cargo llvm-cov --branch --mcdc
+        """,
+    }
+)
