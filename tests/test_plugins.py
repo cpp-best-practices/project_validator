@@ -22,8 +22,10 @@ class DiscoverTests(unittest.TestCase):
         self.assertEqual(
             sorted(c.name for c in plugins.checks),
             [
+                "ci-build-types",
                 "ci-present",
                 "compiler-warnings",
+                "copy-paste-detection",
                 "coverage",
                 "ctest-runs",
                 "cxx-extensions",
