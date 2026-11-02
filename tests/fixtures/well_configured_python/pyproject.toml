@@ -1,0 +1,5 @@
+[project]
+name = 'app'
+
+[tool.coverage.run]
+branch = true

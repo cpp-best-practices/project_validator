@@ -1,5 +1,6 @@
 """Helpers for building throw-away projects and contexts in tests."""
 
+import json
 import tempfile
 import textwrap
 import unittest
@@ -197,80 +198,28 @@ def run_in_every_layout(
     return expected
 
 
-CODEQL_WORKFLOW = """\
-jobs:
-  analyze:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v3
-        with:
-          languages: python
-      - uses: github/codeql-action/analyze@v3
-"""
+WELL_CONFIGURED = fixture_files("well_configured")
+BARE_PROJECT = fixture_files("bare_project")
 
-COPY_PASTE_WORKFLOW = """\
-jobs:
-  copy-paste-detection:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npx --yes jscpd@4 --threshold 0 .
-"""
+# Projects that pass every check that applies to their language.
+WELL_CONFIGURED_PYTHON = fixture_files("well_configured_python")
+WELL_CONFIGURED_RUST = fixture_files("well_configured_rust")
 
-# A Python project that passes every check that applies to Python.
-WELL_CONFIGURED_PYTHON: Mapping[str, str] = MappingProxyType(
-    {
-        "pyproject.toml": "[project]\nname = 'app'\n\n[tool.coverage.run]\nbranch = true\n",
-        "tests/test_app.py": "",
-        ".github/workflows/codeql.yml": CODEQL_WORKFLOW,
-        ".github/workflows/copy-paste-detection.yml": COPY_PASTE_WORKFLOW,
-        ".github/workflows/ci.yml": """\
-            jobs:
-              test:
-                runs-on: ${{ matrix.os }}
-                strategy:
-                  matrix:
-                    os: [ubuntu-latest, macos-latest, windows-latest]
-                    python: ["3.13", "3.14"]
-                steps:
-                  - uses: actions/checkout@v4
-                  - uses: actions/setup-python@v5
-                    with:
-                      python-version: ${{ matrix.python }}
-                  - run: python -m pip install coverage pytest
-                  - run: python -W error -m coverage run -m pytest
-        """,
-    }
-)
+UNSTRUCTURED_CI_FILES = {
+    provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}
+}
+GITHUB_WORKFLOW = ".github/workflows/ci.yml"
 
-# A Rust project that passes every check that applies to Rust.
-WELL_CONFIGURED_RUST: Mapping[str, str] = MappingProxyType(
-    {
-        "Cargo.toml": "[package]\nname = 'app'\n\n[lints.clippy]\npedantic = { level = 'warn', priority = -1 }\n",
-        "src/lib.rs": "#[cfg(test)]\nmod tests {\n    #[test]\n    fn works() {}\n}\n",
-        ".github/workflows/codeql.yml": CODEQL_WORKFLOW,
-        ".github/workflows/copy-paste-detection.yml": COPY_PASTE_WORKFLOW,
-        ".github/workflows/ci.yml": """\
-            jobs:
-              test:
-                runs-on: ${{ matrix.os }}
-                strategy:
-                  matrix:
-                    os: [ubuntu-latest, macos-latest, windows-latest]
-                    toolchain: [stable, nightly]
-                    sanitizer: ["", "-Zsanitizer=address"]
-                env:
-                  RUSTFLAGS: -D warnings ${{ matrix.sanitizer }}
-                steps:
-                  - uses: actions/checkout@v4
-                  - uses: dtolnay/rust-toolchain@master
-                    with:
-                      toolchain: ${{ matrix.toolchain }}
-                  - run: cargo clippy --all-targets
-                  - run: cargo test
-                  - run: cargo test --release
-                  - run: cargo llvm-cov --branch --mcdc
-        """,
-    }
-)
+
+def run_as(test: unittest.TestCase, selected: Check, files: dict[str, str], *ecosystems: Ecosystem, **options: object):
+    """The result of `selected` in every layout it judges as exactly `ecosystems`; it must not depend on the layout."""
+    layouts = layouts_checked_as(selected, *ecosystems)
+    test.assertTrue(layouts, f"no layout is judged as {[ecosystem.label for ecosystem in ecosystems]}")
+    return run_in_every_layout(test, selected, files, layouts, **options)
+
+
+def github_job(runs_on: str, *steps: str, matrix: dict[str, object] | None = None) -> dict[str, str]:
+    job: dict[str, object] = {"runs-on": runs_on, "steps": [{"run": step} for step in steps]}
+    if matrix is not None:
+        job["strategy"] = {"matrix": matrix}
+    return {GITHUB_WORKFLOW: json.dumps({"jobs": {"build": job}})}
