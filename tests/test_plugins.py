@@ -21,7 +21,18 @@ class DiscoverTests(unittest.TestCase):
         plugins = discover()
         self.assertEqual(
             sorted(c.name for c in plugins.checks),
-            ["ci-present", "clang-format", "coverage", "ctest-runs", "cxx-extensions", "platform-matrix", "security-scanning"],
+            [
+                "ci-build-types",
+                "ci-present",
+                "code-formatting",
+                "compiler-warnings",
+                "copy-paste-detection",
+                "coverage",
+                "ctest-runs",
+                "cxx-extensions",
+                "platform-matrix",
+                "security-scanning",
+            ],
         )
         self.assertTrue({"GitHub Actions", "GitLab CI", "Travis CI"} <= {p.name for p in plugins.providers})
 

@@ -3,7 +3,7 @@ import unittest
 from unittest import mock
 
 from project_validator import pretty
-from project_validator.core import Check, Result
+from project_validator.core import Check, Result, Status
 from project_validator.runner import Report
 from tests.support import requires_rich
 
@@ -41,6 +41,10 @@ class PrettyTests(unittest.TestCase):
         self.assertIn("1 passed", _render(REPORTS))
         self.assertIn("1 warned", _render(REPORTS))
         self.assertIn("1 failed", _render(REPORTS))
+
+    def test_summary_counts_skipped_checks(self) -> None:
+        skipped = _report("ctest-runs", Result(status=Status.SKIP, message="not applicable to Rust"))
+        self.assertIn("1 skipped", _render([*REPORTS, skipped]))
 
     def test_summary_without_checks(self) -> None:
         self.assertIn("no checks were run", _render([]))

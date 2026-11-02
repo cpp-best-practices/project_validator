@@ -8,12 +8,29 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         compiler: [gcc, clang]
+        build_type: [Release, Debug]
+        sanitizers: ["ON", "OFF"]
         include:
           - os: windows-latest
             compiler: msvc
+            build_type: Release
+            sanitizers: "ON"
+          - os: windows-latest
+            compiler: msvc
+            build_type: Release
+            sanitizers: "OFF"
+          - os: windows-latest
+            compiler: msvc
+            build_type: Debug
+            sanitizers: "ON"
+          - os: windows-latest
+            compiler: msvc
+            build_type: Debug
+            sanitizers: "OFF"
     steps:
       - uses: actions/checkout@v4
       - run: cmake -S . -B build -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DENABLE_COVERAGE=ON
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DENABLE_SANITIZERS=${{ matrix.sanitizers }}
       - run: cmake --build build
       - run: ctest --test-dir build --output-on-failure
       - run: gcovr --fail-under-branch 80

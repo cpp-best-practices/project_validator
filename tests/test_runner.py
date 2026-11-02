@@ -2,7 +2,7 @@ import unittest
 
 from project_validator.core import Check, Result, Status
 from project_validator.runner import Report, SelectionError, run_checks, select, succeeded
-from tests.support import FIXTURES, make_context
+from tests.support import PROJECT_LAYOUTS, layout_project, make_context
 
 
 def _check(name: str, run) -> Check:
@@ -29,10 +29,12 @@ class RunChecksTests(unittest.TestCase):
             raise ValueError("boom")
 
         checks = [_check("raises", explode), _check("wrong-type", lambda context: "ok"), PASSING]
-        reports = run_checks(checks, make_context(FIXTURES / "bare_project"))
-        self.assertEqual([r.result.status for r in reports], [Status.ERROR, Status.ERROR, Status.PASS])
-        self.assertEqual(reports[0].result.message, "check raised ValueError: boom")
-        self.assertEqual(reports[1].result.message, "check returned str instead of a Result")
+        for layout in PROJECT_LAYOUTS:
+            with layout_project(self, layout) as root:
+                reports = run_checks(checks, make_context(root))
+                self.assertEqual([r.result.status for r in reports], [Status.ERROR, Status.ERROR, Status.PASS])
+                self.assertEqual(reports[0].result.message, "check raised ValueError: boom")
+                self.assertEqual(reports[1].result.message, "check returned str instead of a Result")
 
 
 class SucceededTests(unittest.TestCase):
