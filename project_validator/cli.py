@@ -5,7 +5,7 @@ import json
 import os
 import sys
 from collections.abc import Sequence
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from project_validator import pretty, yaml_support
 from project_validator.core import Check, Context, Options, Project
@@ -21,17 +21,30 @@ def _names(values: list[str]) -> list[str]:
     return [name.strip() for value in values for name in value.split(",") if name.strip()]
 
 
+def _relative_directory(value: str) -> PurePosixPath:
+    return PurePosixPath(Path(value).as_posix())
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="project_validator", description="Validate a CMake based project against C++ Best Practices."
     )
     parser.add_argument("path", nargs="?", default=".", type=Path, help="project to validate (default: .)")
     parser.add_argument("--list", action="store_true", help="list the available checks and exit")
+    parser.add_argument("--map", action="store_true", help="print the detected project structure as JSON and exit")
     parser.add_argument("--only", action="append", default=[], metavar="CHECKS", help="run only these checks")
     parser.add_argument("--skip", action="append", default=[], metavar="CHECKS", help="do not run these checks")
     parser.add_argument("--format", choices=("text", "json"), default="text", help="output format")
     parser.add_argument(
         "--color", choices=("auto", "always", "never"), default="auto", help="color the text output (needs rich)"
+    )
+    parser.add_argument(
+        "--exclude",
+        action="append",
+        default=[],
+        type=_relative_directory,
+        metavar="DIR",
+        help="leave DIR, relative to the project, out of the validation (e.g. test fixtures)",
     )
     parser.add_argument("--build", action="store_true", help="configure and build the project to list its tests")
     parser.add_argument("--strict", action="store_true", help="treat warnings as failures")
@@ -108,7 +121,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_USAGE
 
     options = Options(build=arguments.build, cmake=arguments.cmake, ctest=arguments.ctest)
-    context = Context(Project(arguments.path.resolve()), plugins.providers, options)
+    context = Context(
+        Project(arguments.path.resolve(), frozenset(arguments.exclude)), plugins.providers, options
+    )
+    if arguments.map:
+        print(json.dumps(context.structure.as_dict(), indent=2))
+        return EXIT_SUCCESS
     reports = run_checks(selected, context)
     if arguments.format == "json":
         print(_format_json(reports))

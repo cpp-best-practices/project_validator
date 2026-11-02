@@ -5,6 +5,7 @@ from fnmatch import fnmatchcase
 
 from project_validator import yaml_support
 from project_validator.core import Context, Project, Result, check
+from project_validator.structure import C_FAMILY
 from project_validator.text import matching_names, pattern
 
 CLANG_TIDY_CONFIG = ".clang-tidy"
@@ -81,7 +82,11 @@ def clang_tidy_limits(project: Project) -> ClangTidyLimits:
     )
 
 
-@check(name="function-limits", description="Function length is limited by clang-tidy or lizard")
+@check(
+    name="function-limits",
+    description="Function length is limited by clang-tidy or lizard",
+    languages=C_FAMILY,
+)
 def function_limits(context: Context) -> Result:
     texts = (*context.ci_texts, *context.cmake_texts)
     if found := lizard_limits(texts):
