@@ -28,6 +28,19 @@ jobs:
       - name: Test
         run: python -W error -m unittest
 
+  copy-paste-detection:
+    name: copy-paste detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Detect duplicated code
+        run: npx --yes jscpd@4 --threshold 0 --format python --reporters console --gitignore project_validator tests
+
   coverage:
     name: coverage
     runs-on: ubuntu-latest
