@@ -1,0 +1,19 @@
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        toolchain: [stable, nightly]
+        sanitizer: ["", "-Zsanitizer=address"]
+    env:
+      RUSTFLAGS: -D warnings ${{ matrix.sanitizer }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+      - run: cargo clippy --all-targets
+      - run: cargo test
+      - run: cargo test --release
+      - run: cargo llvm-cov --branch --mcdc
