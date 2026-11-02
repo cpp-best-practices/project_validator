@@ -33,6 +33,7 @@ BUILTIN_CHECK_LANGUAGES = {
     "coverage": C_FAMILY | {"Python", "Rust"},
     "ctest-runs": C_FAMILY | {"Python", "Rust"},
     "cxx-extensions": C_FAMILY,
+    "dependency-updates": frozenset(),
     "platform-matrix": C_FAMILY | {"Python", "Rust"},
     "security-scanning": frozenset(),
 }

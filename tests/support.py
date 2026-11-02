@@ -209,11 +209,21 @@ jobs:
       - uses: github/codeql-action/analyze@v3
 """
 
+DEPENDABOT_CONFIG = """\
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+"""
+
 # A Python project that passes every check that applies to Python.
 WELL_CONFIGURED_PYTHON: Mapping[str, str] = MappingProxyType(
     {
         "pyproject.toml": "[project]\nname = 'app'\n\n[tool.coverage.run]\nbranch = true\n",
         "tests/test_app.py": "",
+        ".github/dependabot.yml": DEPENDABOT_CONFIG,
         ".github/workflows/codeql.yml": CODEQL_WORKFLOW,
         ".github/workflows/ci.yml": """\
             jobs:
@@ -239,6 +249,7 @@ WELL_CONFIGURED_RUST: Mapping[str, str] = MappingProxyType(
     {
         "Cargo.toml": "[package]\nname = 'app'\n\n[lints.clippy]\npedantic = { level = 'warn', priority = -1 }\n",
         "src/lib.rs": "#[cfg(test)]\nmod tests {\n    #[test]\n    fn works() {}\n}\n",
+        ".github/dependabot.yml": DEPENDABOT_CONFIG,
         ".github/workflows/codeql.yml": CODEQL_WORKFLOW,
         ".github/workflows/ci.yml": """\
             jobs:

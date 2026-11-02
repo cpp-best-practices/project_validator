@@ -28,6 +28,7 @@ class DiscoverTests(unittest.TestCase):
                 "coverage",
                 "ctest-runs",
                 "cxx-extensions",
+                "dependency-updates",
                 "platform-matrix",
                 "security-scanning",
             ],
