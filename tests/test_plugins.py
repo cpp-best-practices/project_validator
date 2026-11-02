@@ -25,6 +25,7 @@ class DiscoverTests(unittest.TestCase):
                 "ci-build-types",
                 "ci-present",
                 "compiler-warnings",
+                "copy-paste-detection",
                 "coverage",
                 "ctest-runs",
                 "cxx-extensions",

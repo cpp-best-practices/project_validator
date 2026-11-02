@@ -30,6 +30,7 @@ BUILTIN_CHECK_LANGUAGES = {
     "ci-build-types": C_FAMILY | {"Rust"},
     "ci-present": frozenset(),
     "compiler-warnings": C_FAMILY | {"Python", "Rust"},
+    "copy-paste-detection": frozenset(),
     "coverage": C_FAMILY | {"Python", "Rust"},
     "ctest-runs": C_FAMILY | {"Python", "Rust"},
     "cxx-extensions": C_FAMILY,
@@ -124,7 +125,14 @@ class ProjectStructureTests(unittest.TestCase):
         mapped = make_context(FIXTURES / "well_configured").structure.as_dict()
         self.assertEqual(mapped["languages"], ["C", "C++"])
         self.assertEqual(mapped["build_systems"], ["CMake"])
-        self.assertEqual(mapped["ci"]["files"], [".github/workflows/ci.yml", ".github/workflows/codeql-analysis.yml"])
+        self.assertEqual(
+            mapped["ci"]["files"],
+            [
+                ".github/workflows/ci.yml",
+                ".github/workflows/codeql-analysis.yml",
+                ".github/workflows/copy-paste-detection.yml",
+            ],
+        )
         job = mapped["ci"]["jobs"][0]
         self.assertEqual(set(job), {"name", "os", "compilers", "toolchains", "configurations"})
 
