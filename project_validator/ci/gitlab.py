@@ -19,7 +19,7 @@ _VARIABLE = re.compile(r"\$\{?(\w+)\}?")
 
 def _entry_combinations(entry: Mapping[str, object]) -> list[Variables]:
     values = [value if isinstance(value, list) else [value] for value in entry.values()]
-    return [dict(zip(entry, map(str, combination))) for combination in itertools.product(*values)]
+    return [dict(zip(entry, map(str, combination), strict=True)) for combination in itertools.product(*values)]
 
 
 def expand_parallel(parallel: object) -> list[Variables]:

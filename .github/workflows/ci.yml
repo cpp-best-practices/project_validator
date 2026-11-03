@@ -6,6 +6,35 @@ on:
   pull_request:
 
 jobs:
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install tools
+        run: python -m pip install ruff mypy types-PyYAML "PyYAML>=6.0" "rich>=13.0"
+
+      - name: Lint
+        run: ruff check --output-format=github .
+
+      - name: Check formatting
+        run: ruff format --check --diff .
+
+      - name: Type check
+        run: mypy
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Detect copy-paste
+        run: npx --yes jscpd@4
+
   test:
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
@@ -15,9 +44,9 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python: ["3.14", "3.x"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         id: python
         with:
           python-version: ${{ matrix.python }}
@@ -28,13 +57,58 @@ jobs:
       - name: Test
         run: python -W error -m unittest
 
+  formatting:
+    name: formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install ruff
+        run: python -m pip install "ruff>=0.15"
+
+      - name: Check formatting
+        run: ruff format --check --diff .
+
+  copy-paste-detection:
+    name: copy-paste detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+
+      - name: Detect duplicated code
+        run: npx --yes jscpd@4 --threshold 0 --format python --reporters console --gitignore project_validator tests
+
+  self-validation:
+    name: self-validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install project_validator
+        run: python -m pip install .
+
+      - name: Validate project_validator with itself
+        run: project-validator --exclude tests/fixtures .
+
   coverage:
     name: coverage
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.14"
 
@@ -50,7 +124,7 @@ jobs:
           coverage xml --fail-under=0
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           files: coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}

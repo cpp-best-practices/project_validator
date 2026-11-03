@@ -24,10 +24,22 @@ def select(available: Iterable[Check], only: Iterable[str] = (), skip: Iterable[
     return [c for c in available if (not only or c.name in only) and c.name not in skip]
 
 
+def _skipped(selected: Check, context: Context) -> Result | None:
+    if not selected.languages:
+        return None
+    languages = context.structure.languages
+    if selected.applies_to(languages):
+        return None
+    found, wanted = ", ".join(sorted(languages)), ", ".join(sorted(selected.languages))
+    return Result(status=Status.SKIP, message=f"not applicable to {found} (applies to {wanted})")
+
+
 def run_check(selected: Check, context: Context) -> Result:
     try:
+        if skipped := _skipped(selected, context):
+            return skipped
         result = selected.run(context)
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001 - any failure inside a check is reported, never propagated
         return Result(status=Status.ERROR, message=f"check raised {type(error).__name__}: {error}")
     if not isinstance(result, Result):
         return Result(status=Status.ERROR, message=f"check returned {type(result).__name__} instead of a Result")

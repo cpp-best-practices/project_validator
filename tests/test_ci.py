@@ -2,10 +2,10 @@ import unittest
 from unittest import mock
 
 from project_validator import yaml_support
-from project_validator.ci import find_ci_files, heuristic_jobs, parse_jobs
+from project_validator.ci import CiAnalysis, find_ci_files, heuristic_jobs, parse_jobs
 from project_validator.core import Project
 from project_validator.plugins import discover
-from tests.support import temp_project
+from tests.support import CI_FILES, PROJECT_LAYOUTS, layout_project, temp_project
 
 
 class FindCiFilesTests(unittest.TestCase):
@@ -29,6 +29,13 @@ class FindCiFilesTests(unittest.TestCase):
             ],
         )
 
+    def test_finds_every_provider_in_every_layout(self) -> None:
+        for layout in PROJECT_LAYOUTS:
+            for provider, path in CI_FILES.items():
+                with layout_project(self, layout, {path: ""}, ci=provider) as root:
+                    found = find_ci_files(Project(root), discover().providers)
+                    self.assertEqual([(f.provider.name, f.path) for f in found], [(provider, path)])
+
 
 class HeuristicJobsTests(unittest.TestCase):
     def test_one_job_per_operating_system(self) -> None:
@@ -49,7 +56,7 @@ WORKFLOW = {".github/workflows/ci.yml": "jobs:\n  a:\n    runs-on: ubuntu-latest
 
 
 class ParseJobsTests(unittest.TestCase):
-    def _parse(self, files: dict[str, str]):
+    def _parse(self, files: dict[str, str]) -> CiAnalysis:
         with temp_project(files) as root:
             project = Project(root)
             return parse_jobs(project, find_ci_files(project, discover().providers))
