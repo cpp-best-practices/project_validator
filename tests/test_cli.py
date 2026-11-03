@@ -79,7 +79,7 @@ class CliTests(unittest.TestCase):
         }
         mixed = [layout for layout in C_FAMILY_LAYOUTS if layout not in C_FAMILY_ONLY_LAYOUTS]
         # ci-build-types is left out: a Python-only job on a runner counts as a C/C++ build with its default compiler.
-        judged_per_language = "compiler-warnings,coverage,ctest-runs,platform-matrix"
+        judged_per_language = "compiler-warnings,coverage,ctest-runs,hardening,platform-matrix"
         for layout in mixed:
             with layout_project(self, layout, {**WELL_CONFIGURED, **python}) as root:
                 code, output, _ = run_cli("--only", judged_per_language, str(root))
