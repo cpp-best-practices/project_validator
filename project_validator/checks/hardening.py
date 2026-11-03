@@ -1,8 +1,9 @@
 import re
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 
 from project_validator.core import Context, Result, check
-from project_validator.text import Pattern, matching_names
+from project_validator.ecosystems import C_AND_CXX, Ecosystem, check_each_ecosystem, languages_of
+from project_validator.text import Pattern, found_and_missing, matching_names
 
 PRESET_FILES = ("CMakePresets.json", "CMakeUserPresets.json")
 CLANG_COMPILERS = frozenset({"clang", "appleclang"})
@@ -39,43 +40,34 @@ MSVC_OPTIONS = (
 )
 
 
-def _found_and_missing(texts: tuple[str, ...], options: Iterable[Pattern]) -> tuple[list[str], list[str]]:
-    found: list[str] = []
-    missing: list[str] = []
-    for option in options:
-        (found if any(option.regex.search(text) for text in texts) else missing).append(option.name)
-    return found, missing
+def _existing_texts(context: Context, names: Iterable[str]) -> tuple[str, ...]:
+    return tuple(context.project.read_text(name) for name in names if context.project.exists(name))
 
 
 def _ci_compilers(context: Context) -> set[str]:
     return {compiler for job in context.ci_analysis.jobs for compiler in job.compilers}
 
 
-def _preset_texts(context: Context) -> tuple[str, ...]:
-    return tuple(context.project.read_text(name) for name in PRESET_FILES if context.project.exists(name))
-
-
 def _names(options: Iterable[Pattern]) -> str:
     return ", ".join(option.name for option in options)
 
 
-def _failure_message(msvc_required: bool) -> str:
+def _c_and_cxx_failure(msvc_required: bool) -> str:
     message = f"no hardening options found; enable -fhardened (GCC 14+) or {_names(GCC_CLANG_OPTIONS)}"
     return f"{message}, and for MSVC {_names(MSVC_OPTIONS)}" if msvc_required else message
 
 
-@check(name="hardening", description="Security hardening options are enabled")
-def hardening(context: Context) -> Result:
+def _c_and_cxx_hardening(context: Context) -> Result:
     compilers = _ci_compilers(context)
     msvc_required = "msvc" in compilers
-    texts = (*context.cmake_texts, *context.ci_texts, *_preset_texts(context))
+    texts = (*context.cmake_texts, *context.ci_texts, *_existing_texts(context, PRESET_FILES))
 
     if not matching_names(texts, (FHARDENED, *GCC_CLANG_OPTIONS, *MSVC_OPTIONS)):
-        return Result.failed(_failure_message(msvc_required))
+        return Result.failed(_c_and_cxx_failure(msvc_required))
 
     fhardened = bool(matching_names(texts, (FHARDENED,)))
-    found, missing = _found_and_missing(texts, GCC_CLANG_OPTIONS)
-    msvc_found, msvc_missing = _found_and_missing(texts, MSVC_OPTIONS) if msvc_required else ([], [])
+    found, missing = found_and_missing(texts, GCC_CLANG_OPTIONS)
+    msvc_found, msvc_missing = found_and_missing(texts, MSVC_OPTIONS) if msvc_required else ([], [])
     enabled = ", ".join([*([FHARDENED.name] if fhardened else []), *found, *msvc_found])
 
     if fhardened and missing and compilers & CLANG_COMPILERS:
@@ -86,3 +78,17 @@ def hardening(context: Context) -> Result:
     if missing := [*([] if fhardened else missing), *msvc_missing]:
         return Result.warned(f"missing hardening options: {', '.join(missing)}", f"found {enabled}")
     return Result.passed(f"hardening options are enabled: {enabled}")
+
+
+JUDGES: dict[Ecosystem, Callable[[Context], Result]] = {
+    C_AND_CXX: _c_and_cxx_hardening,
+}
+
+
+def _judged(judge: Callable[[Context], Result], context: Context) -> Result:
+    return judge(context)
+
+
+@check(name="hardening", description="Security hardening options are enabled", languages=languages_of(JUDGES))
+def hardening(context: Context) -> Result:
+    return check_each_ecosystem(context, JUDGES, _judged)

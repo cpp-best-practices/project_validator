@@ -4,11 +4,35 @@ import json
 import tomllib
 import unittest
 from pathlib import Path
+from typing import Any
 from unittest import mock
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
-from tests.support import FIXTURES, requires_rich
+from project_validator.plugins import discover
+from tests.support import (
+    BARE_PROJECT,
+    C_FAMILY_LAYOUTS,
+    C_FAMILY_ONLY_LAYOUTS,
+    CI_FILES,
+    FIXTURES,
+    OTHER_LANGUAGE_LAYOUTS,
+    PROJECT_LAYOUTS,
+    WELL_CONFIGURED,
+    WELL_CONFIGURED_PYTHON,
+    WELL_CONFIGURED_RUST,
+    ProjectLayout,
+    layout_project,
+    requires_rich,
+)
+
+LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages)
+COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
+# Language -> the language-specific checks that do not apply to it.
+NOT_APPLICABLE = {
+    language: {found.name for found in LANGUAGE_SPECIFIC_CHECKS if language not in found.languages}
+    for language in ("Python", "Rust")
+}
 
 
 class Terminal(io.StringIO):
@@ -30,23 +54,102 @@ class CliTests(unittest.TestCase):
         self.assertIn("platform-matrix", output)
 
     def test_well_configured_project_passes(self) -> None:
-        code, output, _ = run_cli(str(FIXTURES / "well_configured"))
-        self.assertEqual(code, EXIT_SUCCESS, output)
-        self.assertIn("[PASS] coverage:", output)
+        for layout in C_FAMILY_ONLY_LAYOUTS:
+            with layout_project(self, layout, WELL_CONFIGURED) as root:
+                code, output, _ = run_cli(str(root))
+                self.assertEqual(code, EXIT_SUCCESS, output)
+                self.assertIn("[PASS] coverage:", output)
+
+    def test_well_configured_projects_in_other_languages_pass_strictly(self) -> None:
+        projects = {"Python": WELL_CONFIGURED_PYTHON, "Rust": WELL_CONFIGURED_RUST}
+        for layout in OTHER_LANGUAGE_LAYOUTS:
+            [language] = layout.languages
+            with layout_project(self, layout, projects[language]) as root:
+                code, output, _ = run_cli("--strict", str(root))
+                self.assertEqual(code, EXIT_SUCCESS, output)
+                for name in COMPILER_CHECKS.split(","):
+                    status = "SKIP" if name in NOT_APPLICABLE[language] else "PASS"
+                    self.assertIn(f"[{status}] {name}:", output)
+
+    def test_mixed_language_project_passes_when_every_language_is_well_configured(self) -> None:
+        python = {
+            "pyproject.toml": "[tool.coverage.run]\nbranch = true\n",
+            "tests/test_bindings.py": "",
+            ".github/workflows/python.yml": WELL_CONFIGURED_PYTHON[".github/workflows/ci.yml"],
+        }
+        mixed = [layout for layout in C_FAMILY_LAYOUTS if layout not in C_FAMILY_ONLY_LAYOUTS]
+        # ci-build-types is left out: a Python-only job on a runner counts as a C/C++ build with its default compiler.
+        judged_per_language = "compiler-warnings,coverage,ctest-runs,platform-matrix"
+        for layout in mixed:
+            with layout_project(self, layout, {**WELL_CONFIGURED, **python}) as root:
+                code, output, _ = run_cli("--only", judged_per_language, str(root))
+                self.assertEqual(code, EXIT_SUCCESS, output)
+                self.assertIn("[PASS] coverage: C/C++: branch coverage is reported with gcovr", output)
 
     def test_bare_project_fails(self) -> None:
-        code, output, _ = run_cli(str(FIXTURES / "bare_project"))
-        self.assertEqual(code, EXIT_FAILURE)
-        self.assertIn("[FAIL] ci-present:", output)
+        for layout in PROJECT_LAYOUTS:
+            with layout_project(self, layout, BARE_PROJECT) as root:
+                code, output, _ = run_cli(str(root))
+                self.assertEqual(code, EXIT_FAILURE)
+                self.assertIn("[FAIL] ci-present:", output)
 
     def test_json_output_with_only(self) -> None:
-        code, output, _ = run_cli("--format", "json", "--only", "ci-present,coverage", str(FIXTURES / "bare_project"))
-        self.assertEqual(code, EXIT_FAILURE)
-        self.assertEqual([entry["check"] for entry in json.loads(output)], ["ci-present", "coverage"])
+        for layout in PROJECT_LAYOUTS:
+            with layout_project(self, layout, BARE_PROJECT) as root:
+                code, output, _ = run_cli("--format", "json", "--only", "ci-present,coverage", str(root))
+                self.assertEqual(code, EXIT_FAILURE)
+                self.assertEqual([entry["check"] for entry in json.loads(output)], ["ci-present", "coverage"])
 
     def test_skipping_every_failure_succeeds(self) -> None:
-        skipped = "ci-present,compiler-warnings,coverage,ctest-runs,cxx-extensions,hardening,platform-matrix"
-        self.assertEqual(run_cli("--skip", skipped, str(FIXTURES / "bare_project"))[0], EXIT_SUCCESS)
+        for layout in PROJECT_LAYOUTS:
+            with layout_project(self, layout, BARE_PROJECT) as root:
+                self.assertEqual(run_cli("--skip", f"ci-present,{COMPILER_CHECKS}", str(root))[0], EXIT_SUCCESS)
+
+    def test_map_prints_the_project_structure(self) -> None:
+        code, output, _ = run_cli("--map", str(FIXTURES / "well_configured"))
+        self.assertEqual(code, EXIT_SUCCESS)
+        mapped = json.loads(output)
+        self.assertEqual(mapped["languages"], ["C", "C++"])
+        self.assertIn("GitHub Actions", mapped["ci"]["providers"])
+
+    def assert_map_matches_layout(self, layout: ProjectLayout, *arguments: str) -> dict[str, Any]:
+        code, output, _ = run_cli("--map", *arguments)
+        self.assertEqual(code, EXIT_SUCCESS)
+        mapped: dict[str, Any] = json.loads(output)
+        self.assertEqual(mapped["languages"], sorted(layout.languages))
+        self.assertEqual(mapped["build_systems"], sorted(layout.build_systems))
+        return mapped
+
+    def test_map_prints_every_layout_with_every_ci_provider(self) -> None:
+        for layout in PROJECT_LAYOUTS:
+            for provider, path in CI_FILES.items():
+                with layout_project(self, layout, {path: "jobs: {}\n"}, ci=provider) as root:
+                    mapped = self.assert_map_matches_layout(layout, str(root))
+                    self.assertEqual(mapped["ci"]["providers"], [provider])
+
+    def test_compiler_checks_are_skipped_only_where_they_do_not_apply(self) -> None:
+        for layout in OTHER_LANGUAGE_LAYOUTS:
+            [language] = layout.languages
+            for provider, path in CI_FILES.items():
+                with layout_project(self, layout, {path: "jobs: {}\n"}, ci=provider) as root:
+                    code, output, _ = run_cli("--only", COMPILER_CHECKS, str(root))
+                    self.assertEqual(code, EXIT_FAILURE, output)
+                    for name in COMPILER_CHECKS.split(","):
+                        skipped = f"[SKIP] {name}:" in output
+                        self.assertEqual(skipped, name in NOT_APPLICABLE[language], name)
+
+    def test_compiler_checks_run_for_c_family_and_unrecognised_languages(self) -> None:
+        for layout in C_FAMILY_LAYOUTS:
+            with layout_project(self, layout, {".github/workflows/ci.yml": "jobs: {}\n"}) as root:
+                code, output, _ = run_cli("--only", COMPILER_CHECKS, str(root))
+                self.assertEqual(code, EXIT_FAILURE, output)
+                self.assertNotIn("[SKIP]", output)
+
+    def test_excluded_directories_are_left_out_of_the_map(self) -> None:
+        excluded = {"tests/fixtures/cmake/CMakeLists.txt": "", "tests/fixtures/cmake/main.cpp": ""}
+        for layout in PROJECT_LAYOUTS:
+            with layout_project(self, layout, excluded) as root:
+                self.assert_map_matches_layout(layout, "--exclude", "./tests/fixtures/", str(root))
 
     def test_usage_errors(self) -> None:
         self.assertEqual(run_cli("--only", "nope", ".")[0], EXIT_USAGE)
@@ -57,7 +160,7 @@ class CliTests(unittest.TestCase):
         code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
-        self.assertIn("8 passed", output)
+        self.assertIn(f"{len(discover().checks)} passed", output)
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
         for choice in ("never", "auto"):
