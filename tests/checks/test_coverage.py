@@ -16,7 +16,7 @@ from tests.support import (
 
 
 class CoverageTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         return run_in_every_layout(self, coverage, files)
 
     def test_declares_the_languages_it_judges(self) -> None:

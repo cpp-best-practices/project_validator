@@ -115,7 +115,7 @@ class CliTests(unittest.TestCase):
     def assert_map_matches_layout(self, layout: ProjectLayout, *arguments: str) -> dict[str, Any]:
         code, output, _ = run_cli("--map", *arguments)
         self.assertEqual(code, EXIT_SUCCESS)
-        mapped = json.loads(output)
+        mapped: dict[str, Any] = json.loads(output)
         self.assertEqual(mapped["languages"], sorted(layout.languages))
         self.assertEqual(mapped["build_systems"], sorted(layout.build_systems))
         return mapped

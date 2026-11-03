@@ -1,11 +1,12 @@
 import unittest
+from typing import NoReturn, cast
 
-from project_validator.core import Check, Result, Status
+from project_validator.core import Check, CheckFunction, Context, Result, Status
 from project_validator.runner import Report, SelectionError, run_checks, select, succeeded
 from tests.support import PROJECT_LAYOUTS, layout_project, make_context
 
 
-def _check(name: str, run) -> Check:
+def _check(name: str, run: CheckFunction) -> Check:
     return Check(name=name, description=name, run=run)
 
 
@@ -25,10 +26,13 @@ class SelectTests(unittest.TestCase):
 
 class RunChecksTests(unittest.TestCase):
     def test_misbehaving_checks_are_errors_and_do_not_stop_the_others(self) -> None:
-        def explode(context):
+        def explode(context: Context) -> NoReturn:
             raise ValueError("boom")
 
-        checks = [_check("raises", explode), _check("wrong-type", lambda context: "ok"), PASSING]
+        def wrong_type(context: Context) -> Result:
+            return cast(Result, "ok")
+
+        checks = [_check("raises", explode), _check("wrong-type", wrong_type), PASSING]
         for layout in PROJECT_LAYOUTS:
             with layout_project(self, layout) as root:
                 reports = run_checks(checks, make_context(root))

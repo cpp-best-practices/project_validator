@@ -34,8 +34,8 @@ def temp_project(files: Mapping[str, str]) -> Iterator[Path]:
         yield root
 
 
-def make_context(root: Path, **options: object) -> Context:
-    return Context(Project(root), discover().providers, Options(**options))
+def make_context(root: Path, options: Options | None = None) -> Context:
+    return Context(Project(root), discover().providers, options or Options())
 
 
 def fixture_files(name: str) -> dict[str, str]:
@@ -180,7 +180,7 @@ def run_in_every_layout(
     selected: Check,
     files: Mapping[str, str],
     layouts: tuple[ProjectLayout, ...] | None = None,
-    **options: object,
+    options: Options | None = None,
 ) -> Result:
     """The result of `selected` in a project of each layout with `files` added, which must not depend on the layout.
 
@@ -191,7 +191,7 @@ def run_in_every_layout(
     results: dict[str, Result] = {}
     for layout in layouts:
         with temp_project({**layout.files, **files}) as root:
-            results[layout.name] = selected.run(make_context(root, **options))
+            results[layout.name] = selected.run(make_context(root, options))
     expected = results[layouts[0].name]
     for name, result in results.items():
         with test.subTest(layout=name):
@@ -212,14 +212,20 @@ UNSTRUCTURED_CI_FILES = {
 GITHUB_WORKFLOW = ".github/workflows/ci.yml"
 
 
-def run_as(test: unittest.TestCase, selected: Check, files: dict[str, str], *ecosystems: Ecosystem, **options: object):
+def run_as(
+    test: unittest.TestCase,
+    selected: Check,
+    files: dict[str, str],
+    *ecosystems: Ecosystem,
+    options: Options | None = None,
+) -> Result:
     """The result of `selected` in every layout it judges as exactly `ecosystems`; it must not depend on the layout."""
     layouts = layouts_checked_as(selected, *ecosystems)
     test.assertTrue(layouts, f"no layout is judged as {[ecosystem.label for ecosystem in ecosystems]}")
-    return run_in_every_layout(test, selected, files, layouts, **options)
+    return run_in_every_layout(test, selected, files, layouts, options)
 
 
-def github_job(runs_on: str, *steps: str, matrix: dict[str, object] | None = None) -> dict[str, str]:
+def github_job(runs_on: str, *steps: str, matrix: Mapping[str, object] | None = None) -> dict[str, str]:
     job: dict[str, object] = {"runs-on": runs_on, "steps": [{"run": step} for step in steps]}
     if matrix is not None:
         job["strategy"] = {"matrix": matrix}
