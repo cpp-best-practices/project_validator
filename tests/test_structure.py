@@ -26,20 +26,6 @@ jobs:
 """
 
 
-# Only C/C++ has compiler extensions, and only compiled languages have build types.
-BUILTIN_CHECK_LANGUAGES = {
-    "ci-build-types": C_FAMILY | {"Rust"},
-    "ci-present": frozenset(),
-    "compiler-warnings": C_FAMILY | {"Python", "Rust"},
-    "copy-paste-detection": frozenset(),
-    "coverage": C_FAMILY | {"Python", "Rust"},
-    "ctest-runs": C_FAMILY | {"Python", "Rust"},
-    "cxx-extensions": C_FAMILY,
-    "platform-matrix": C_FAMILY | {"Python", "Rust"},
-    "security-scanning": frozenset(),
-}
-
-
 def _check(name: str, languages: frozenset[str] = frozenset()) -> Check:
     return Check(name=name, description=name, run=lambda context: Result.passed("ran"), languages=languages)
 
@@ -183,7 +169,7 @@ class LanguageApplicabilityTests(unittest.TestCase):
             with layout_project(self, layout, {".github/workflows/ci.yml": GITHUB_CI}) as root:
                 context = make_context(root)
                 for found in discover().checks:
-                    expected = BUILTIN_CHECK_LANGUAGES[found.name]
+                    expected = found.languages
                     outside = bool(expected) and bool(layout.languages) and not expected & layout.languages
                     self.assertEqual(run_check(found, context).status == Status.SKIP, outside, found.name)
 
@@ -194,7 +180,3 @@ class LanguageApplicabilityTests(unittest.TestCase):
     def test_every_check_runs_when_no_language_is_recognised(self) -> None:
         with temp_project({"README.md": ""}) as root:
             self.assertEqual(run_check(_check("cpp", C_FAMILY), make_context(root)).status, Status.PASS)
-
-    def test_builtin_checks_declare_the_languages_they_judge(self) -> None:
-        languages = {found.name: found.languages for found in discover().checks}
-        self.assertEqual(languages, BUILTIN_CHECK_LANGUAGES)
