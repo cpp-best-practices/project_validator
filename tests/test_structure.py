@@ -1,4 +1,5 @@
 import unittest
+from typing import Any, cast
 from unittest import mock
 
 from project_validator.core import Check, Result, Status
@@ -111,15 +112,16 @@ class ProjectStructureTests(unittest.TestCase):
         mapped = make_context(FIXTURES / "well_configured").structure.as_dict()
         self.assertEqual(mapped["languages"], ["C", "C++"])
         self.assertEqual(mapped["build_systems"], ["CMake"])
+        ci = cast(dict[str, Any], mapped["ci"])
         self.assertEqual(
-            mapped["ci"]["files"],
+            ci["files"],
             [
                 ".github/workflows/ci.yml",
                 ".github/workflows/codeql-analysis.yml",
                 ".github/workflows/copy-paste-detection.yml",
             ],
         )
-        job = mapped["ci"]["jobs"][0]
+        job = ci["jobs"][0]
         self.assertEqual(set(job), {"name", "os", "compilers", "toolchains", "configurations"})
 
 

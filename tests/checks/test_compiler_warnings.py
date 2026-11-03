@@ -22,7 +22,7 @@ class CompilerWarningsTests(unittest.TestCase):
     GCC_FLAGS = "-Wall -Wextra -Wpedantic -Wshadow -Wconversion"
     MSVC_CI = "jobs:\n  build:\n    runs-on: windows-latest\n    steps:\n      - run: cmake -S . -B build\n"
 
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         return run_in_every_layout(self, compiler_warnings, files)
 
     def test_fails_when_no_warning_flags_are_found(self) -> None:
@@ -108,7 +108,9 @@ class CompilerWarningsTests(unittest.TestCase):
         result = self._run(
             {
                 "CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n",
-                ".github/workflows/ci.yml": "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make\n",
+                ".github/workflows/ci.yml": (
+                    "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make\n"
+                ),
             }
         )
         self.assertEqual(result.status, Status.PASS)

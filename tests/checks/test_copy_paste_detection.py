@@ -1,7 +1,7 @@
 import unittest
 
 from project_validator.checks.copy_paste_detection import copy_paste_detection
-from project_validator.core import Status
+from project_validator.core import Result, Status
 from tests.support import FIXTURES, make_context, temp_project
 
 
@@ -9,7 +9,7 @@ class CopyPasteDetectionTests(unittest.TestCase):
     def test_applies_to_every_language(self) -> None:
         self.assertEqual(copy_paste_detection.languages, frozenset())
 
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         with temp_project(files) as root:
             return copy_paste_detection.run(make_context(root))
 

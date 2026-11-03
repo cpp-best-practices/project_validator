@@ -4,7 +4,7 @@ import unittest
 from unittest import mock
 
 from project_validator.checks.ctest_runs import ctest_runs
-from project_validator.core import Result, Status
+from project_validator.core import Options, Result, Status
 from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST
 from project_validator.structure import C_FAMILY
 from tests.support import (
@@ -22,7 +22,7 @@ from tests.support import (
 
 
 class CtestRunsTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         return run_in_every_layout(self, ctest_runs, files)
 
     def test_declares_the_languages_it_judges(self) -> None:
@@ -59,7 +59,7 @@ class CtestRunsTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("cmake") and shutil.which("ctest"), "cmake is not installed")
     def test_build_mode_counts_the_tests_ctest_finds(self) -> None:
-        result = ctest_runs.run(make_context(FIXTURES / "buildable", build=True))
+        result = ctest_runs.run(make_context(FIXTURES / "buildable", Options(build=True)))
         self.assertEqual(
             result.message, "the project builds and ctest finds 1 test(s), but no CI configuration runs ctest"
         )
@@ -67,18 +67,18 @@ class CtestRunsTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("cmake") and shutil.which("ninja"), "cmake or ninja is not installed")
     def test_build_mode_finds_tests_with_multi_config_generators(self) -> None:
         with mock.patch.dict(os.environ, {"CMAKE_GENERATOR": "Ninja Multi-Config"}):
-            result = ctest_runs.run(make_context(FIXTURES / "buildable", build=True))
+            result = ctest_runs.run(make_context(FIXTURES / "buildable", Options(build=True)))
         self.assertIn("ctest finds 1 test(s)", result.message)
 
     def test_build_mode_reports_tools_that_cannot_run(self) -> None:
-        result = ctest_runs.run(make_context(FIXTURES / "buildable", build=True, cmake="no-such-cmake-binary"))
+        result = ctest_runs.run(make_context(FIXTURES / "buildable", Options(build=True, cmake="no-such-cmake-binary")))
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("could not run no-such-cmake-binary", result.message)
 
 
 class PythonTestsRunTests(unittest.TestCase):
-    def _run(self, files: dict[str, str], **options: object) -> Result:
-        return run_as(self, ctest_runs, files, PYTHON, **options)
+    def _run(self, files: dict[str, str], options: Options | None = None) -> Result:
+        return run_as(self, ctest_runs, files, PYTHON, options=options)
 
     def test_passes_when_tests_exist_and_any_ci_runs_them(self) -> None:
         runners = ("python -m pytest", "python -m unittest discover", "tox -e py314", "nox -s tests")
@@ -100,7 +100,7 @@ class PythonTestsRunTests(unittest.TestCase):
         )
 
     def test_build_mode_does_not_need_cmake(self) -> None:
-        result = self._run(dict(WELL_CONFIGURED_PYTHON), build=True, cmake="no-such-cmake-binary")
+        result = self._run(dict(WELL_CONFIGURED_PYTHON), Options(build=True, cmake="no-such-cmake-binary"))
         self.assertEqual(result.status, Status.PASS)
 
 

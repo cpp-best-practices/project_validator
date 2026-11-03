@@ -54,7 +54,7 @@ def expand_matrix(matrix: object) -> list[Combination] | None:
     if not all(isinstance(vector, list) for vector in vectors):
         return None
 
-    originals = [dict(zip(base, values)) for values in itertools.product(*base.values())] if base else []
+    originals = [dict(zip(base, values, strict=True)) for values in itertools.product(*base.values())] if base else []
     originals = [c for c in originals if not any(_is_subset(entry, c) for entry in excludes)]
     return _with_includes(originals, includes) if base or includes else [{}]
 
@@ -64,7 +64,7 @@ def _with_includes(originals: list[Combination], includes: list[Mapping[str, obj
     expanded = [dict(original) for original in originals]
     additions: list[Combination] = []
     for entry in includes:
-        targets = [result for original, result in zip(originals, expanded) if _can_extend(entry, original)]
+        targets = [result for original, result in zip(originals, expanded, strict=True) if _can_extend(entry, original)]
         for target in targets:
             target.update(entry)
         if not targets:
