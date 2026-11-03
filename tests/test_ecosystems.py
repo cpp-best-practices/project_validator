@@ -1,7 +1,16 @@
 import unittest
+from typing import ClassVar
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_AND_CXX, ECOSYSTEMS, PYTHON, RUST, check_each_ecosystem, ecosystems_for
+from project_validator.ecosystems import (
+    C_AND_CXX,
+    ECOSYSTEMS,
+    PYTHON,
+    RUST,
+    Ecosystem,
+    check_each_ecosystem,
+    ecosystems_for,
+)
 from project_validator.structure import C_FAMILY
 from tests.support import make_context, temp_project
 
@@ -20,7 +29,7 @@ class EcosystemsForTests(unittest.TestCase):
 
 
 class CheckEachEcosystemTests(unittest.TestCase):
-    RESULTS = {
+    RESULTS: ClassVar[dict[Ecosystem, Result]] = {
         C_AND_CXX: Result.warned("c warned", "c detail"),
         PYTHON: Result.passed("python passed", "python detail"),
         RUST: Result.failed("rust failed"),

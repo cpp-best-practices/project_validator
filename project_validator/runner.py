@@ -39,7 +39,7 @@ def run_check(selected: Check, context: Context) -> Result:
         if skipped := _skipped(selected, context):
             return skipped
         result = selected.run(context)
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001 - any failure inside a check is reported, never propagated
         return Result(status=Status.ERROR, message=f"check raised {type(error).__name__}: {error}")
     if not isinstance(result, Result):
         return Result(status=Status.ERROR, message=f"check returned {type(result).__name__} instead of a Result")

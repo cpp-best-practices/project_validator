@@ -1,13 +1,13 @@
 import unittest
 
 from project_validator.checks.cxx_extensions import cxx_extensions
-from project_validator.core import Status
+from project_validator.core import Result, Status
 from project_validator.structure import C_FAMILY
 from tests.support import BARE_PROJECT, CI_FILES, WELL_CONFIGURED, run_in_every_layout
 
 
 class CxxExtensionsTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         return run_in_every_layout(self, cxx_extensions, files)
 
     # Only C/C++ has compiler extensions.

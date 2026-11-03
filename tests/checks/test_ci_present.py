@@ -1,12 +1,12 @@
 import unittest
 
 from project_validator.checks.ci_present import ci_present
-from project_validator.core import Status
+from project_validator.core import Result, Status
 from tests.support import BARE_PROJECT, CI_FILES, PROJECT_LAYOUTS, WELL_CONFIGURED, run_in_every_layout
 
 
 class CiPresentTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         return run_in_every_layout(self, ci_present, files, PROJECT_LAYOUTS)
 
     def test_applies_to_every_language(self) -> None:

@@ -1,12 +1,12 @@
 import unittest
 
 from project_validator.checks.dependency_updates import dependency_updates
-from project_validator.core import Status
+from project_validator.core import Result, Status
 from tests.support import BARE_PROJECT, PROJECT_LAYOUTS, WELL_CONFIGURED, run_in_every_layout
 
 
 class DependencyUpdatesTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         return run_in_every_layout(self, dependency_updates, files, PROJECT_LAYOUTS)
 
     def test_applies_to_every_language(self) -> None:

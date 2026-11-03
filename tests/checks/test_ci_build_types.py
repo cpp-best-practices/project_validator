@@ -1,5 +1,6 @@
 import json
 import unittest
+from collections.abc import Mapping
 
 from project_validator.checks.ci_build_types import ci_build_types
 from project_validator.core import Result, Status
@@ -17,13 +18,13 @@ from tests.support import (
 )
 
 
-def _workflow(matrix: dict[str, object], configure: str) -> dict[str, str]:
+def _workflow(matrix: Mapping[str, object], configure: str) -> dict[str, str]:
     job = {"runs-on": "${{ matrix.os }}", "strategy": {"matrix": matrix}, "steps": [{"run": configure}]}
     return {".github/workflows/ci.yml": json.dumps({"jobs": {"build": job}})}
 
 
 class CiBuildTypesTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]):
+    def _run(self, files: dict[str, str]) -> Result:
         return run_in_every_layout(self, ci_build_types, files)
 
     # Only compiled languages have build types.
