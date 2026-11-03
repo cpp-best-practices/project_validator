@@ -9,29 +9,29 @@ from unittest import mock
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
+from project_validator.plugins import discover
 from tests.support import (
+    BARE_PROJECT,
     C_FAMILY_LAYOUTS,
     C_FAMILY_ONLY_LAYOUTS,
     CI_FILES,
     FIXTURES,
     OTHER_LANGUAGE_LAYOUTS,
     PROJECT_LAYOUTS,
+    WELL_CONFIGURED,
     WELL_CONFIGURED_PYTHON,
     WELL_CONFIGURED_RUST,
     ProjectLayout,
-    fixture_files,
     layout_project,
     requires_rich,
 )
 
-WELL_CONFIGURED = fixture_files("well_configured")
-BARE_PROJECT = fixture_files("bare_project")
-COMPILER_CHECKS = "ci-build-types,compiler-warnings,coverage,ctest-runs,cxx-extensions,function-limits,platform-matrix"
-# Language -> the checks that do not apply to it: only C/C++ has compiler extensions and clang-tidy function limits,
-# and Python has no build types.
+LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages)
+COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
+# Language -> the language-specific checks that do not apply to it.
 NOT_APPLICABLE = {
-    "Python": {"ci-build-types", "cxx-extensions", "function-limits"},
-    "Rust": {"cxx-extensions", "function-limits"},
+    language: {found.name for found in LANGUAGE_SPECIFIC_CHECKS if language not in found.languages}
+    for language in ("Python", "Rust")
 }
 
 
@@ -160,7 +160,7 @@ class CliTests(unittest.TestCase):
         code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
-        self.assertIn("10 passed", output)
+        self.assertIn(f"{len(discover().checks)} passed", output)
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
         for choice in ("never", "auto"):

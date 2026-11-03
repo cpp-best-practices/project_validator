@@ -169,9 +169,7 @@ class Check:
         return not self.languages or not languages or bool(self.languages & languages)
 
 
-def check(
-    *, name: str, description: str, languages: frozenset[str] = frozenset()
-) -> Callable[[CheckFunction], Check]:
+def check(*, name: str, description: str, languages: frozenset[str] = frozenset()) -> Callable[[CheckFunction], Check]:
     """Turn a function taking a `Context` and returning a `Result` into a discoverable `Check`."""
 
     def wrap(function: CheckFunction) -> Check:
