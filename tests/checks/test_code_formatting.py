@@ -127,11 +127,9 @@ class PythonCodeFormattingTests(unittest.TestCase):
     def test_black_that_only_rewrites_files_does_not_count(self) -> None:
         self.assertEqual(self._run({GITHUB_WORKFLOW: "run: black .\n"}).status, Status.FAIL)
 
-    def test_clang_format_does_not_count(self) -> None:
-        self.assertEqual(self._run(WELL_CONFIGURED).status, Status.FAIL)
-
-    def test_well_configured_python_project_passes(self) -> None:
-        self.assertEqual(self._run(dict(WELL_CONFIGURED_PYTHON)).status, Status.PASS)
+    def test_clang_format_does_not_count_but_python_formatting_does(self) -> None:
+        statuses = {"C++": self._run(WELL_CONFIGURED).status, "Python": self._run(dict(WELL_CONFIGURED_PYTHON)).status}
+        self.assertEqual(statuses, {"C++": Status.FAIL, "Python": Status.PASS})
 
 
 class RustCodeFormattingTests(unittest.TestCase):
