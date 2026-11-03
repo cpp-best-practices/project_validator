@@ -98,8 +98,7 @@ def heuristic_jobs(name: str, text: str) -> list[Job]:
     toolchains = detect_toolchains(text)
     operating_systems = detect_operating_systems(text) or ["unknown"]
     return [
-        _job_with_compilers(name, os, compilers, configurations, toolchains, heuristic=True)
-        for os in operating_systems
+        _job_with_compilers(name, os, compilers, configurations, toolchains, heuristic=True) for os in operating_systems
     ]
 
 
