@@ -107,9 +107,7 @@ class RustCoverageTests(unittest.TestCase):
         result = self._run(dict(WELL_CONFIGURED_RUST))
         self.assertEqual(
             result,
-            Result.passed(
-                "branch coverage is reported with cargo-llvm-cov; path coverage bonus: cargo-llvm-cov MC/DC"
-            ),
+            Result.passed("branch coverage is reported with cargo-llvm-cov; path coverage bonus: cargo-llvm-cov MC/DC"),
         )
 
     def test_line_coverage_fails(self) -> None:
