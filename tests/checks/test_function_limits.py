@@ -1,4 +1,6 @@
 import unittest
+from collections.abc import Mapping
+from types import MappingProxyType
 
 from project_validator.checks.function_limits import function_limits
 from project_validator.core import Result, Status
@@ -23,7 +25,9 @@ class FunctionLimitsTests(unittest.TestCase):
           - key: readability-function-size.LineThreshold
             value: 80
         """
-    RUNS_CLANG_TIDY = {GITHUB_WORKFLOW: "steps:\n  - run: run-clang-tidy -p build\n"}
+    RUNS_CLANG_TIDY: Mapping[str, str] = MappingProxyType(
+        {GITHUB_WORKFLOW: "steps:\n  - run: run-clang-tidy -p build\n"}
+    )
     NEVER_LIMITED = (
         "function length is never limited; enable clang-tidy readability-function-size with a LineThreshold "
         "or run lizard --length 30 in CI"
