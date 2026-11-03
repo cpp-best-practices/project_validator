@@ -1,11 +1,11 @@
 import re
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 
 from project_validator import yaml_support
 from project_validator.core import Context, Project, Result, check
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST, Ecosystem, check_each_ecosystem, languages_of
 from project_validator.text import matching_names, pattern
 
 CLANG_TIDY_CONFIG = ".clang-tidy"
@@ -13,6 +13,9 @@ CLANG_TIDY_CHECK = "readability-function-size"
 LENGTH_THRESHOLDS = ("LineThreshold", "StatementThreshold")
 
 RUNS_CLANG_TIDY = pattern("clang-tidy", r"clang[-_]tidy")
+
+DEFAULT_LENGTH_LIMIT = 30
+SUGGESTED_LIZARD = f"lizard --length {DEFAULT_LENGTH_LIMIT}"
 
 # lizard options are case-sensitive (`-l` selects a language) and the default length limit of 1000 is no limit at all.
 _LIZARD_LENGTH_LIMIT = re.compile(
@@ -82,20 +85,15 @@ def clang_tidy_limits(project: Project) -> ClangTidyLimits:
     )
 
 
-@check(
-    name="function-limits",
-    description="Function length is limited by clang-tidy or lizard",
-    languages=C_FAMILY,
-)
-def function_limits(context: Context) -> Result:
-    texts = (*context.ci_texts, *context.cmake_texts)
-    if found := lizard_limits(texts):
-        return Result.passed(f"function length is limited with {', '.join(found)}")
+def _build_texts(context: Context) -> tuple[str, ...]:
+    return (*context.ci_texts, *context.cmake_texts)
 
+
+def _clang_tidy_limits_enforced(context: Context) -> Result:
     clang_tidy = clang_tidy_limits(context.project)
     if clang_tidy.thresholds:
         tool = f"clang-tidy {CLANG_TIDY_CHECK} ({', '.join(clang_tidy.thresholds)})"
-        if matching_names(texts, (RUNS_CLANG_TIDY,)):
+        if matching_names(_build_texts(context), (RUNS_CLANG_TIDY,)):
             return Result.passed(f"function length is limited with {tool}")
         return Result.warned(
             f"function length limits are configured for {tool} but nothing runs clang-tidy",
@@ -105,6 +103,33 @@ def function_limits(context: Context) -> Result:
     details = (clang_tidy.problem,) if clang_tidy.problem else ()
     return Result.failed(
         f"function length is never limited; enable clang-tidy {CLANG_TIDY_CHECK} with a LineThreshold "
-        "or run lizard -L in CI",
+        f"or run {SUGGESTED_LIZARD} in CI",
         *details,
     )
+
+
+def _never_limited(_context: Context) -> Result:
+    return Result.failed(f"function length is never limited; run {SUGGESTED_LIZARD} in CI")
+
+
+# Ecosystem -> how its function length is judged when no lizard length limit is found; lizard covers every ecosystem.
+WITHOUT_LIZARD: Mapping[Ecosystem, Callable[[Context], Result]] = {
+    C_AND_CXX: _clang_tidy_limits_enforced,
+    PYTHON: _never_limited,
+    RUST: _never_limited,
+}
+
+
+def _function_length_limited(without_lizard: Callable[[Context], Result], context: Context) -> Result:
+    if found := lizard_limits(_build_texts(context)):
+        return Result.passed(f"function length is limited with {', '.join(found)}")
+    return without_lizard(context)
+
+
+@check(
+    name="function-limits",
+    description="Function length is limited by clang-tidy or lizard",
+    languages=languages_of(WITHOUT_LIZARD),
+)
+def function_limits(context: Context) -> Result:
+    return check_each_ecosystem(context, WITHOUT_LIZARD, _function_length_limited)

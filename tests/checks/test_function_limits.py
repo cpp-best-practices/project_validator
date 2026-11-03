@@ -2,8 +2,18 @@ import unittest
 
 from project_validator.checks.function_limits import function_limits
 from project_validator.core import Result, Status
+from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST
 from project_validator.structure import C_FAMILY
-from tests.support import BARE_PROJECT, CI_FILES, GITHUB_WORKFLOW, WELL_CONFIGURED, run_in_every_layout
+from tests.support import (
+    BARE_PROJECT,
+    CI_FILES,
+    GITHUB_WORKFLOW,
+    WELL_CONFIGURED,
+    WELL_CONFIGURED_PYTHON,
+    WELL_CONFIGURED_RUST,
+    run_as,
+    run_in_every_layout,
+)
 
 
 class FunctionLimitsTests(unittest.TestCase):
@@ -16,15 +26,14 @@ class FunctionLimitsTests(unittest.TestCase):
     RUNS_CLANG_TIDY = {GITHUB_WORKFLOW: "steps:\n  - run: run-clang-tidy -p build\n"}
     NEVER_LIMITED = (
         "function length is never limited; enable clang-tidy readability-function-size with a LineThreshold "
-        "or run lizard -L in CI"
+        "or run lizard --length 30 in CI"
     )
 
     def _run(self, files: dict[str, str]) -> Result:
         return run_in_every_layout(self, function_limits, files)
 
-    # Only C/C++ is checked by clang-tidy and lizard's length limits here.
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(function_limits.languages, C_FAMILY)
+        self.assertEqual(function_limits.languages, C_FAMILY | {"Python", "Rust"})
 
     def test_fails_without_function_limits(self) -> None:
         result = self._run(BARE_PROJECT)
@@ -110,3 +119,48 @@ class FunctionLimitsTests(unittest.TestCase):
         result = self._run({".clang-tidy": "Checks: [\n", **self.RUNS_CLANG_TIDY})
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn(".clang-tidy could not be read", " ".join(result.details))
+
+
+class OtherLanguageFunctionLimitsTests(unittest.TestCase):
+    NEVER_LIMITED = Result.failed("function length is never limited; run lizard --length 30 in CI")
+
+    def test_lizard_length_limit_in_any_ci_passes(self) -> None:
+        for ecosystem in (PYTHON, RUST):
+            for provider, path in CI_FILES.items():
+                with self.subTest(ecosystem=ecosystem.label, ci=provider):
+                    result = run_as(self, function_limits, {path: "script: lizard --length 30 src\n"}, ecosystem)
+                    self.assertEqual(result, Result.passed("function length is limited with lizard --length 30"))
+
+    def test_fails_without_a_lizard_length_limit(self) -> None:
+        for ecosystem in (PYTHON, RUST):
+            for command in ("pytest", "lizard src", "cargo clippy"):
+                with self.subTest(ecosystem=ecosystem.label, command=command):
+                    result = run_as(self, function_limits, {GITHUB_WORKFLOW: f"run: {command}\n"}, ecosystem)
+                    self.assertEqual(result, self.NEVER_LIMITED)
+
+    def test_clang_tidy_does_not_count(self) -> None:
+        files = {".clang-tidy": FunctionLimitsTests.CLANG_TIDY, **FunctionLimitsTests.RUNS_CLANG_TIDY}
+        self.assertEqual(run_as(self, function_limits, files, PYTHON), self.NEVER_LIMITED)
+
+    def test_well_configured_projects_pass(self) -> None:
+        for ecosystem, files in ((PYTHON, WELL_CONFIGURED_PYTHON), (RUST, WELL_CONFIGURED_RUST)):
+            with self.subTest(ecosystem=ecosystem.label):
+                result = run_as(self, function_limits, dict(files), ecosystem)
+                self.assertEqual(result, Result.passed("function length is limited with lizard --length 30"))
+
+
+class MixedLanguageFunctionLimitsTests(unittest.TestCase):
+    def test_every_language_needs_a_limit_and_findings_are_labelled(self) -> None:
+        result = run_as(self, function_limits, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        expected = Result.failed(
+            "C/C++: function length is limited with clang-tidy readability-function-size (LineThreshold 80); "
+            "Python: function length is never limited; run lizard --length 30 in CI"
+        )
+        self.assertEqual(result, expected)
+
+    def test_one_lizard_length_limit_covers_every_language(self) -> None:
+        result = run_as(self, function_limits, {GITHUB_WORKFLOW: "run: lizard -L 30\n"}, C_AND_CXX, PYTHON)
+        expected = Result.passed(
+            "C/C++: function length is limited with lizard -L 30; Python: function length is limited with lizard -L 30"
+        )
+        self.assertEqual(result, expected)
