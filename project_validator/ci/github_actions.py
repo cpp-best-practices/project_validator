@@ -56,6 +56,11 @@ def expand_matrix(matrix: object) -> list[Combination] | None:
 
     originals = [dict(zip(base, values)) for values in itertools.product(*base.values())] if base else []
     originals = [c for c in originals if not any(_is_subset(entry, c) for entry in excludes)]
+    return _with_includes(originals, includes) if base or includes else [{}]
+
+
+def _with_includes(originals: list[Combination], includes: list[Mapping[str, object]]) -> list[Combination]:
+    """GitHub's include rules: extend every original combination an entry fits, else add the entry as its own."""
     expanded = [dict(original) for original in originals]
     additions: list[Combination] = []
     for entry in includes:
@@ -64,7 +69,7 @@ def expand_matrix(matrix: object) -> list[Combination] | None:
             target.update(entry)
         if not targets:
             additions.append(dict(entry))
-    return expanded + additions if base or includes else [{}]
+    return expanded + additions
 
 
 def _runner_os(job: Mapping[str, object], combination: Combination) -> str:
