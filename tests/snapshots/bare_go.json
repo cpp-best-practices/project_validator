@@ -52,6 +52,13 @@
       "message": "not applicable to Go (applies to C, C++)",
       "status": "SKIP"
     },
+    "dependency-audit": {
+      "details": [
+        "consider running govulncheck ./... in CI (golang/govulncheck-action)"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
     "dependency-updates": {
       "details": [
         "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
@@ -65,8 +72,10 @@
       "status": "FAIL"
     },
     "hardening": {
-      "details": [],
-      "message": "no hardening options found; enable govulncheck, gosec security lints",
+      "details": [
+        "build them with -buildmode=pie (GOFLAGS=-buildmode=pie, or buildmode: pie in .goreleaser.yaml); it is the default on Windows and macOS but not on Linux"
+      ],
+      "message": "Go programs are not built as position-independent executables",
       "status": "FAIL"
     },
     "platform-matrix": {
@@ -76,7 +85,8 @@
     },
     "security-scanning": {
       "details": [
-        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
+        "or enable each language's security lints (Go: gosec)"
       ],
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"

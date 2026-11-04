@@ -54,10 +54,23 @@ class GoTests(unittest.TestCase):
         self.assertIn("no CI configuration runs go test", result.message)
         self.assertEqual(self._run(tests_run, {**TEST_FILE, **_ci("gotestsum ./...")}).status, Status.PASS)
 
-    def test_hardening_is_vulnerability_and_security_scanning(self) -> None:
-        self.assertEqual(self._run(hardening, _ci("govulncheck ./...")).status, Status.WARN)
-        result = self._run(hardening, _ci("govulncheck ./...", "gosec ./..."))
-        self.assertEqual(result, Result.passed("hardening options are enabled: govulncheck, gosec security lints"))
+    def test_programs_must_be_position_independent_executables(self) -> None:
+        self.assertEqual(self._run(hardening, _ci("go build ./...")).status, Status.FAIL)
+        for build in ("go build -buildmode=pie ./...", "GOFLAGS: -buildmode=pie"):
+            with self.subTest(build):
+                result = self._run(hardening, _ci(build))
+                self.assertEqual(result, Result.passed("hardening options are enabled: -buildmode=pie"))
+        goreleaser = {".goreleaser.yaml": "builds:\n  - buildmode: pie\n"}
+        self.assertEqual(self._run(hardening, goreleaser).status, Status.PASS)
+
+    def test_a_library_builds_no_binary_to_harden(self) -> None:
+        result = self._run(hardening, {"main.go": "package app\n", "cmd/tool/main_test.go": "package main\n"})
+        self.assertEqual(result.status, Status.SKIP)
+        self.assertIn("no Go program", result.message)
+
+    # Vulnerability scans and security lints are not binary hardening.
+    def test_govulncheck_and_gosec_are_not_hardening(self) -> None:
+        self.assertEqual(self._run(hardening, _ci("govulncheck ./...", "gosec ./...")).status, Status.FAIL)
 
     def test_funlen_limits_functions_when_golangci_lint_runs(self) -> None:
         result = self._run(function_limits, {**FUNLEN_CONFIG, **_ci("golangci-lint run")})

@@ -53,6 +53,11 @@
       "message": "C++ compiler extensions are never disabled; add set(CMAKE_CXX_EXTENSIONS OFF)",
       "status": "FAIL"
     },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to C, C++ (applies to Go, Python, Rust)",
+      "status": "SKIP"
+    },
     "dependency-updates": {
       "details": [
         "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"

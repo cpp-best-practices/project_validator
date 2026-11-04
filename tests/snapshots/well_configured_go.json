@@ -179,6 +179,11 @@
       "message": "not applicable to Go (applies to C, C++)",
       "status": "SKIP"
     },
+    "dependency-audit": {
+      "details": [],
+      "message": "CI audits the dependencies with govulncheck",
+      "status": "PASS"
+    },
     "dependency-updates": {
       "details": [
         ".github/dependabot.yml"
@@ -193,7 +198,7 @@
     },
     "hardening": {
       "details": [],
-      "message": "hardening options are enabled: govulncheck, gosec security lints",
+      "message": "hardening options are enabled: -buildmode=pie",
       "status": "PASS"
     },
     "platform-matrix": {

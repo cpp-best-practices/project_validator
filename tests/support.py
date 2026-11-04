@@ -129,7 +129,7 @@ PROJECT_LAYOUTS = (
     ),
     ProjectLayout(
         name="Go module",
-        files={"go.mod": "module example.com/app\n", "app.go": "package app\n"},
+        files={"go.mod": "module example.com/app\n", "main.go": "package main\n"},
         languages=frozenset({"Go"}),
         build_systems=frozenset({"Go modules"}),
     ),

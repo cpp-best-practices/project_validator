@@ -3,16 +3,19 @@
 import re
 from pathlib import PurePosixPath
 
-from project_validator.core import Context, Result
+from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import existing_texts, first_existing
 from project_validator.rules import (
+    MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     BuildOutputs,
     CoverageTools,
+    DependencyAudit,
     Formatter,
     FunctionLimits,
     Hardening,
+    SecurityLints,
     TestSuite,
     WarningPolicy,
     directories,
@@ -90,13 +93,38 @@ WARNINGS = WarningPolicy(
     kind="Go linters", recognised=GO_LINTS, required=_required_lints, texts=_lint_texts, separator=", "
 )
 
-HARDENING = Hardening(
-    texts=_lint_texts,
-    options=(
-        pattern("govulncheck", r"\bgovulncheck\b"),
-        pattern("gosec security lints", r"\bgosec\b"),
-    ),
+SECURITY_LINTS = SecurityLints(texts=_lint_texts, lints=(pattern("gosec", r"\bgosec\b|\bsecurego/gosec\b"),))
+
+DEPENDENCY_AUDIT = DependencyAudit(
+    tools=(pattern("govulncheck", r"\bgovulncheck\b"), *MULTI_ECOSYSTEM_AUDITS),
+    hint="consider running govulncheck ./... in CI (golang/govulncheck-action)",
 )
+
+MAIN_PACKAGE = re.compile(r"^package\s+main\b", re.MULTILINE)
+PIE = pattern("-buildmode=pie", r"-buildmode[=\s]+pie\b|\bbuildmode:\s*[\"']?pie\b")
+BUILD_SETTINGS_FILES = ("Makefile", "GNUmakefile", "makefile", "justfile", ".goreleaser.yml", ".goreleaser.yaml")
+
+
+def _builds_a_program(context: Context) -> bool:
+    sources = (path for path in context.project.files() if path.endswith(".go") and not path.endswith("_test.go"))
+    return any(MAIN_PACKAGE.search(context.project.read_text(path)) for path in sources)
+
+
+def _position_independent(context: Context) -> Result:
+    """Go is memory safe and bounds checked; what the build adds is a position-independent executable, so that the
+    program's own code is randomised in memory (ASLR). That is the default on Windows and macOS, not on Linux."""
+    if not _builds_a_program(context):
+        return Result(status=Status.SKIP, message="no Go program (package main) is built; a library has no binary")
+    if matching_names((*context.ci_texts, *existing_texts(context, BUILD_SETTINGS_FILES)), (PIE,)):
+        return Result.passed(f"hardening options are enabled: {PIE.name}")
+    return Result.failed(
+        "Go programs are not built as position-independent executables",
+        "build them with -buildmode=pie (GOFLAGS=-buildmode=pie, or buildmode: pie in .goreleaser.yaml); "
+        "it is the default on Windows and macOS but not on Linux",
+    )
+
+
+HARDENING = Hardening(texts=_ci_texts, judge=_position_independent)
 
 FUNLEN = re.compile(r"(?<![\w-])funlen\b")
 
@@ -140,6 +168,8 @@ GO = Ecosystem(
         TESTS,
         WARNINGS,
         HARDENING,
+        SECURITY_LINTS,
+        DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_funlen_enforced),
         BUILD_OUTPUTS,
     ),

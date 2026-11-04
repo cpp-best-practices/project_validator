@@ -52,6 +52,13 @@
       "message": "not applicable to Python (applies to C, C++)",
       "status": "SKIP"
     },
+    "dependency-audit": {
+      "details": [
+        "consider running pip-audit in CI (pypa/gh-action-pip-audit, or pip-audit -r requirements.txt)"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
     "dependency-updates": {
       "details": [
         "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
@@ -66,8 +73,8 @@
     },
     "hardening": {
       "details": [],
-      "message": "no hardening options found; enable bandit security lints, hash-checked dependencies",
-      "status": "FAIL"
+      "message": "not applicable to Python (applies to C, C++, Go, Rust)",
+      "status": "SKIP"
     },
     "platform-matrix": {
       "details": [],
@@ -76,7 +83,8 @@
     },
     "security-scanning": {
       "details": [
-        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
+        "or enable each language's security lints (Python: bandit security lints)"
       ],
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"

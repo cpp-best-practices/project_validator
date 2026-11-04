@@ -163,6 +163,11 @@
       "message": "not applicable to Python (applies to C, C++)",
       "status": "SKIP"
     },
+    "dependency-audit": {
+      "details": [],
+      "message": "CI audits the dependencies with pip-audit",
+      "status": "PASS"
+    },
     "dependency-updates": {
       "details": [
         ".github/dependabot.yml"
@@ -177,8 +182,8 @@
     },
     "hardening": {
       "details": [],
-      "message": "hardening options are enabled: bandit security lints, hash-checked dependencies",
-      "status": "PASS"
+      "message": "not applicable to Python (applies to C, C++, Go, Rust)",
+      "status": "SKIP"
     },
     "platform-matrix": {
       "details": [

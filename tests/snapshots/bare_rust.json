@@ -52,6 +52,13 @@
       "message": "not applicable to Rust (applies to C, C++)",
       "status": "SKIP"
     },
+    "dependency-audit": {
+      "details": [
+        "consider running cargo audit (rustsec/audit-check) or cargo deny check advisories in CI"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
     "dependency-updates": {
       "details": [
         "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
@@ -66,7 +73,7 @@
     },
     "hardening": {
       "details": [],
-      "message": "no hardening options found; enable unsafe_code forbidden, release overflow-checks",
+      "message": "no hardening options found; enable release overflow-checks",
       "status": "FAIL"
     },
     "platform-matrix": {
@@ -76,7 +83,8 @@
     },
     "security-scanning": {
       "details": [
-        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
+        "or enable each language's security lints (Rust: unsafe_code forbidden)"
       ],
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"

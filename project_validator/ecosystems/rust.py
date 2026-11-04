@@ -7,12 +7,15 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import existing_texts, first_existing
 from project_validator.rules import (
+    MULTI_ECOSYSTEM_AUDITS,
     BuildOutputs,
     BuildTypes,
     CoverageTools,
+    DependencyAudit,
     Formatter,
     FunctionLimits,
     Hardening,
+    SecurityLints,
     TestSuite,
     WarningPolicy,
     directories,
@@ -113,21 +116,43 @@ WARNINGS = WarningPolicy(
     kind="Rust lint settings", recognised=RUST_LINTS, required=_required_lints, texts=_settings_texts
 )
 
+# Overflow checks are compiled into the binary; release builds leave them out unless the profile asks for them.
 HARDENING = Hardening(
     texts=_settings_texts,
     options=(
-        _setting(
-            "unsafe_code forbidden",
-            r"#!\[\s*(?:forbid|deny)\s*\([^)]*\bunsafe_code\b"
-            r"""|^\s*unsafe_code\s*=\s*(?:\{[^}]*\blevel\s*=\s*)?["'](?:forbid|deny)["']"""
-            r"""|-[FD][\s"',]*unsafe_code\b|--(?:forbid|deny)[=\s]+unsafe_code\b""",
-        ),
         _setting(
             "release overflow-checks",
             r"^\[profile\.release\][^\[]*^\s*overflow-checks\s*=\s*true\b"
             r"""|-C[\s"',]*overflow-checks(?:=(?:on|yes|y|true))?(?![\w=-])""",
         ),
     ),
+)
+
+# Forbidding unsafe code crate-wide makes the compiler reject the code whose memory safety it cannot check.
+SECURITY_LINTS = SecurityLints(
+    texts=_settings_texts,
+    lints=(
+        _setting(
+            "unsafe_code forbidden",
+            r"#!\[\s*(?:forbid|deny)\s*\([^)]*\bunsafe_code\b"
+            r"""|^\s*unsafe_code\s*=\s*(?:\{[^}]*\blevel\s*=\s*)?["'](?:forbid|deny)["']"""
+            r"""|-[FD][\s"',]*unsafe_code\b|--(?:forbid|deny)[=\s]+unsafe_code\b""",
+        ),
+    ),
+)
+
+DEPENDENCY_AUDIT = DependencyAudit(
+    tools=(
+        pattern("cargo audit", r"\bcargo[- ]audit\b|\brustsec/audit-check\b|\bactions-rust-lang/audit\b"),
+        # cargo deny checks advisories unless told to run only its other checks.
+        pattern(
+            "cargo deny",
+            r"\bcargo[- ]deny\b[^\n]*\bcheck\b(?:[ \t]+advisories\b|(?![ \t]+(?:bans|licenses|sources)\b))"
+            r"|\bEmbarkStudios/cargo-deny-action\b",
+        ),
+        *MULTI_ECOSYSTEM_AUDITS,
+    ),
+    hint="consider running cargo audit (rustsec/audit-check) or cargo deny check advisories in CI",
 )
 
 TARGET_DIRECTORY = BuildOutputs(
@@ -161,6 +186,8 @@ RUST = Ecosystem(
         TESTS,
         WARNINGS,
         HARDENING,
+        SECURITY_LINTS,
+        DEPENDENCY_AUDIT,
         FunctionLimits(),
         TARGET_DIRECTORY,
     ),

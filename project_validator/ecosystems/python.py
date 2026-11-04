@@ -8,11 +8,13 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import existing_texts, first_existing
 from project_validator.rules import (
+    MULTI_ECOSYSTEM_AUDITS,
     BuildOutputs,
     CoverageTools,
+    DependencyAudit,
     Formatter,
     FunctionLimits,
-    Hardening,
+    SecurityLints,
     TestSuite,
     WarningPolicy,
     directories,
@@ -108,7 +110,7 @@ WARNINGS = WarningPolicy(
     kind="Python warning settings", recognised=PYTHON_WARNINGS, required=_required_warnings, texts=_warning_texts
 )
 
-HARDENING_SETTINGS_FILES = (
+SECURITY_SETTINGS_FILES = (
     "pyproject.toml",
     "setup.cfg",
     "tox.ini",
@@ -118,25 +120,30 @@ HARDENING_SETTINGS_FILES = (
 )
 
 
-def _hardening_texts(context: Context) -> tuple[str, ...]:
-    return (*context.ci_texts, *existing_texts(context, HARDENING_SETTINGS_FILES))
+def _security_texts(context: Context) -> tuple[str, ...]:
+    return (*context.ci_texts, *existing_texts(context, SECURITY_SETTINGS_FILES))
 
 
-# Python has no compiler mitigations; its hardening is linting for insecure code and refusing tampered dependencies.
-HARDENING = Hardening(
-    texts=_hardening_texts,
-    options=(
+# Python builds no binary, so it has no hardening rule: its interpreter is hardened by whoever builds it.
+SECURITY_LINTS = SecurityLints(
+    texts=_security_texts,
+    lints=(
         _setting(
             "bandit security lints",
             r"\bbandit\s+-|\bid:\s*bandit\b|\bPyCQA/bandit-action\b"
             r"""|\bruff\b[^\n]*--(?:extend-)?select[=\s]+(?:\S*,)?(?:S\d*|ALL)(?![\w-])"""
             r"""|\b(?:extend-)?select\s*=\s*\[[^\]]*["'](?:S\d*|ALL)["']""",
         ),
-        _setting(
-            "hash-checked dependencies",
-            r"--require-hashes\b|--generate-hashes\b|\buv\s+sync\b[^\n]*--(?:locked|frozen)\b",
-        ),
     ),
+)
+
+DEPENDENCY_AUDIT = DependencyAudit(
+    tools=(
+        pattern("pip-audit", r"\bpip-audit\b|\bpypa/gh-action-pip-audit\b"),
+        pattern("safety", r"\bsafety\s+(?:check|scan)\b"),
+        *MULTI_ECOSYSTEM_AUDITS,
+    ),
+    hint="consider running pip-audit in CI (pypa/gh-action-pip-audit, or pip-audit -r requirements.txt)",
 )
 
 BYTECODE = BuildOutputs(
@@ -168,7 +175,8 @@ PYTHON = Ecosystem(
         COVERAGE,
         TESTS,
         WARNINGS,
-        HARDENING,
+        SECURITY_LINTS,
+        DEPENDENCY_AUDIT,
         FunctionLimits(),
         BYTECODE,
     ),

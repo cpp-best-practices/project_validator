@@ -9,6 +9,7 @@ from unittest import mock
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
+from project_validator.ecosystems import C_FAMILY
 from project_validator.plugins import discover
 from tests.support import (
     BARE_PROJECT,
@@ -144,7 +145,9 @@ class CliTests(unittest.TestCase):
             with layout_project(self, layout, {".github/workflows/ci.yml": "jobs: {}\n"}) as root:
                 code, output, _ = run_cli("--only", COMPILER_CHECKS, str(root))
                 self.assertEqual(code, EXIT_FAILURE, output)
-                self.assertNotIn("[SKIP]", output)
+                for found in LANGUAGE_SPECIFIC_CHECKS:
+                    skipped = f"[SKIP] {found.name}:" in output
+                    self.assertEqual(skipped, not found.languages & layout.languages, found.name)
 
     def test_excluded_directories_are_left_out_of_the_map(self) -> None:
         excluded = {"tests/fixtures/cmake/CMakeLists.txt": "", "tests/fixtures/cmake/main.cpp": ""}
@@ -161,7 +164,8 @@ class CliTests(unittest.TestCase):
         code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
-        self.assertIn(f"{len(discover().checks)} passed", output)
+        applicable = [found for found in discover().checks if not found.languages or found.languages & C_FAMILY]
+        self.assertIn(f"{len(applicable)} passed", output)
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
         for choice in ("never", "auto"):

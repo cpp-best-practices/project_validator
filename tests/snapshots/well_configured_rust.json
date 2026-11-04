@@ -299,6 +299,11 @@
       "message": "not applicable to Rust (applies to C, C++)",
       "status": "SKIP"
     },
+    "dependency-audit": {
+      "details": [],
+      "message": "CI audits the dependencies with cargo audit",
+      "status": "PASS"
+    },
     "dependency-updates": {
       "details": [
         ".github/dependabot.yml"
@@ -313,7 +318,7 @@
     },
     "hardening": {
       "details": [],
-      "message": "hardening options are enabled: unsafe_code forbidden, release overflow-checks",
+      "message": "hardening options are enabled: release overflow-checks",
       "status": "PASS"
     },
     "platform-matrix": {

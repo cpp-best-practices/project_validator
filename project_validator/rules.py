@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
 from project_validator.core import Context, Result
-from project_validator.text import Pattern
+from project_validator.text import Pattern, pattern
 
 if TYPE_CHECKING:
     from project_validator.ci import Job
@@ -130,7 +130,12 @@ class WarningsAsErrors:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Hardening:
-    """The security hardening options an ecosystem must enable, all of them, and where they are found.
+    """The binary hardening an ecosystem must enable, all of it, and where it is found.
+
+    Binary hardening is what the build inserts into the binary to make it harder to exploit: stack protectors,
+    control-flow protection, checked library calls, position-independent executables, release-mode overflow checks.
+    It is not static analysis (see `SecurityLints`) nor dependency auditing (see `DependencyAudit`); an ecosystem
+    that builds no binary has no hardening rule.
 
     An ecosystem whose options depend on more than presence, e.g. on the compilers in CI, supplies its own `judge`.
     """
@@ -138,6 +143,30 @@ class Hardening:
     texts: Evidence
     options: tuple[Pattern, ...] = ()
     judge: Callable[[Context], Result] | None = None
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class SecurityLints:
+    """The static analysis an ecosystem has for insecure code; enabled, it counts as code security scanning."""
+
+    lints: tuple[Pattern, ...]
+    texts: Evidence
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class DependencyAudit:
+    """The tools that check an ecosystem's dependencies against known vulnerabilities when CI runs them."""
+
+    tools: tuple[Pattern, ...]
+    hint: str
+
+
+# Scanners that audit the dependencies of many ecosystems at once, from their manifests and lockfiles.
+MULTI_ECOSYSTEM_AUDITS = (
+    pattern("osv-scanner", r"\bosv-scanner\b"),
+    pattern("trivy", r"\btrivy\s+(?:fs|filesystem|repo(?:sitory)?)\b"),
+    pattern("snyk", r"\bsnyk\s+test\b"),
+)
 
 
 DEFAULT_LENGTH_LIMIT = 30
