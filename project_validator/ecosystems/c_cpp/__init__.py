@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from project_validator.core import Context
+from project_validator.ecosystems.c_cpp.clang_tidy import FUNCTION_LIMITS
 from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, WARNINGS, WARNINGS_AS_ERRORS
 from project_validator.ecosystems.c_cpp.ctest import CTEST
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem, Ecosystem, ToolchainAxis
@@ -114,5 +115,6 @@ C_AND_CXX = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         HARDENING,
+        FUNCTION_LIMITS,
     ),
 )

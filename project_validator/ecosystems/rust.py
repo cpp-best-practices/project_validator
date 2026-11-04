@@ -6,7 +6,15 @@ from pathlib import Path, PurePosixPath
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import existing_texts, first_existing
-from project_validator.rules import BuildTypes, CoverageTools, Formatter, Hardening, TestSuite, WarningPolicy
+from project_validator.rules import (
+    BuildTypes,
+    CoverageTools,
+    Formatter,
+    FunctionLimits,
+    Hardening,
+    TestSuite,
+    WarningPolicy,
+)
 from project_validator.text import Pattern, pattern
 
 
@@ -135,5 +143,14 @@ RUST = Ecosystem(
         ),
         usage=re.compile(r"\bcargo\b|\brustup\b|\brustc\b"),
     ),
-    rules=(RUST_TOOLCHAINS, BuildTypes(axis=RUST_TOOLCHAINS), RUSTFMT, COVERAGE, TESTS, WARNINGS, HARDENING),
+    rules=(
+        RUST_TOOLCHAINS,
+        BuildTypes(axis=RUST_TOOLCHAINS),
+        RUSTFMT,
+        COVERAGE,
+        TESTS,
+        WARNINGS,
+        HARDENING,
+        FunctionLimits(),
+    ),
 )

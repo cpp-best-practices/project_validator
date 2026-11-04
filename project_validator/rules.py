@@ -127,3 +127,17 @@ class Hardening:
     texts: Evidence
     options: tuple[Pattern, ...] = ()
     judge: Callable[[Context], Result] | None = None
+
+
+DEFAULT_LENGTH_LIMIT = 30
+SUGGESTED_LIZARD = f"lizard --length {DEFAULT_LENGTH_LIMIT}"
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class FunctionLimits:
+    """Function length can be limited in this ecosystem; lizard measures every one of them.
+
+    `without_lizard` judges the ecosystem's own way of limiting function length when lizard is not run.
+    """
+
+    without_lizard: Callable[[Context], Result] | None = None

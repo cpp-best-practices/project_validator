@@ -7,7 +7,7 @@ from pathlib import PurePosixPath
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import existing_texts, first_existing
-from project_validator.rules import CoverageTools, Formatter, Hardening, TestSuite, WarningPolicy
+from project_validator.rules import CoverageTools, Formatter, FunctionLimits, Hardening, TestSuite, WarningPolicy
 from project_validator.text import Pattern, pattern
 
 PYTHON_PACKAGING = BuildSystem(
@@ -145,5 +145,13 @@ PYTHON = Ecosystem(
             r"\bpython[\d.]*\s+(?:-|\S+\.py\b)|\bpip\d*\s+install\b|\bpytest\b|\btox\b|\bnox\b|\bsetup-python\b"
         ),
     ),
-    rules=(versions_axis("Python version", "Python"), RUFF_OR_BLACK, COVERAGE, TESTS, WARNINGS, HARDENING),
+    rules=(
+        versions_axis("Python version", "Python"),
+        RUFF_OR_BLACK,
+        COVERAGE,
+        TESTS,
+        WARNINGS,
+        HARDENING,
+        FunctionLimits(),
+    ),
 )
