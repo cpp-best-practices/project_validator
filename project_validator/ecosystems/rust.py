@@ -3,10 +3,10 @@
 import re
 from pathlib import Path
 
-from project_validator.core import Context
+from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import first_existing
-from project_validator.rules import BuildTypes, CoverageTools, Formatter
+from project_validator.rules import BuildTypes, CoverageTools, Formatter, TestSuite
 from project_validator.text import pattern
 
 
@@ -56,6 +56,20 @@ COVERAGE = CoverageTools(
     path_hint="consider adding MC/DC coverage (e.g. cargo llvm-cov --mcdc)",
 )
 
+RUST_TEST = re.compile(r"#\[(?:\w+::)*test\b")
+RUNS_RUST_TESTS = (pattern("cargo test", r"\bcargo\s+(\+\S+\s+)?(test|nextest|llvm-cov|tarpaulin)\b"),)
+
+
+def _rust_tests_result(context: Context) -> Result:
+    sources = (path for path in context.project.files() if path.endswith(".rs"))
+    count = sum(1 for path in sources if RUST_TEST.search(context.project.read_text(path)))
+    if count == 0:
+        return Result.failed("no Rust tests found (#[test] functions)")
+    return Result.passed(f"Rust tests found in {count} file(s)")
+
+
+TESTS = TestSuite(found=_rust_tests_result, runs=RUNS_RUST_TESTS, runner="cargo test")
+
 RUST = Ecosystem(
     label="Rust",
     languages=frozenset({"Rust"}),
@@ -72,5 +86,5 @@ RUST = Ecosystem(
         ),
         usage=re.compile(r"\bcargo\b|\brustup\b|\brustc\b"),
     ),
-    rules=(RUST_TOOLCHAINS, BuildTypes(axis=RUST_TOOLCHAINS), RUSTFMT, COVERAGE),
+    rules=(RUST_TOOLCHAINS, BuildTypes(axis=RUST_TOOLCHAINS), RUSTFMT, COVERAGE, TESTS),
 )

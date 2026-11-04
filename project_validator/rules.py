@@ -9,7 +9,7 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
-from project_validator.core import Context
+from project_validator.core import Context, Result
 from project_validator.text import Pattern
 
 if TYPE_CHECKING:
@@ -86,3 +86,12 @@ class CoverageTools:
     branch: tuple[Pattern, ...]
     path: tuple[Pattern, ...] = ()
     path_hint: str | None = None
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class TestSuite:
+    """How an ecosystem's tests are found, and how CI is recognised running them."""
+
+    found: Callable[[Context], Result]
+    runs: tuple[Pattern, ...]
+    runner: str

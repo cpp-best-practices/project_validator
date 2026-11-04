@@ -1,11 +1,13 @@
 """Python: packaged with pyproject.toml or setup.py, judged by the interpreter versions CI runs."""
 
 import re
+from fnmatch import fnmatch
+from pathlib import PurePosixPath
 
-from project_validator.core import Context
+from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import existing_texts, first_existing
-from project_validator.rules import CoverageTools, Formatter
+from project_validator.rules import CoverageTools, Formatter, TestSuite
 from project_validator.text import Pattern, pattern
 
 PYTHON_PACKAGING = BuildSystem(
@@ -53,6 +55,20 @@ COVERAGE = CoverageTools(
     ),
 )
 
+PYTHON_TEST_FILES = ("test_*.py", "*_test.py")
+RUNS_PYTHON_TESTS = (pattern("Python tests", r"\bpytest\b|\bunittest\b|\btox\b|\bnox\b"),)
+
+
+def _python_tests_result(context: Context) -> Result:
+    names = (PurePosixPath(path).name for path in context.project.files() if path.endswith(".py"))
+    count = sum(1 for name in names if any(fnmatch(name, test_file) for test_file in PYTHON_TEST_FILES))
+    if count == 0:
+        return Result.failed(f"no Python tests found ({' or '.join(PYTHON_TEST_FILES)} files)")
+    return Result.passed(f"Python tests found in {count} file(s)")
+
+
+TESTS = TestSuite(found=_python_tests_result, runs=RUNS_PYTHON_TESTS, runner="pytest, unittest, tox or nox")
+
 PYTHON = Ecosystem(
     label="Python",
     languages=frozenset({"Python"}),
@@ -69,5 +85,5 @@ PYTHON = Ecosystem(
             r"\bpython[\d.]*\s+(?:-|\S+\.py\b)|\bpip\d*\s+install\b|\bpytest\b|\btox\b|\bnox\b|\bsetup-python\b"
         ),
     ),
-    rules=(versions_axis("Python version", "Python"), RUFF_OR_BLACK, COVERAGE),
+    rules=(versions_axis("Python version", "Python"), RUFF_OR_BLACK, COVERAGE, TESTS),
 )

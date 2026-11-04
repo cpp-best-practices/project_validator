@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from project_validator.core import Context
+from project_validator.ecosystems.c_cpp.ctest import CTEST
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem, Ecosystem, ToolchainAxis
 from project_validator.evidence import first_existing
 from project_validator.rules import BuildTypes, CoverageTools, Formatter
@@ -103,5 +104,5 @@ C_AND_CXX = Ecosystem(
         ".ixx": "C++",
         ".cppm": "C++",
     },
-    rules=(COMPILERS, BuildTypes(axis=COMPILERS), CLANG_FORMAT, COVERAGE),
+    rules=(COMPILERS, BuildTypes(axis=COMPILERS), CLANG_FORMAT, COVERAGE, CTEST),
 )
