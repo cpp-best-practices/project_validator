@@ -99,6 +99,18 @@ def _format_list(checks: Sequence[Check]) -> str:
     return "\n".join(f"{c.name:<{width}}  {c.description}" for c in checks)
 
 
+def _usage_error(parser: argparse.ArgumentParser, message: str) -> int:
+    print(f"{parser.prog}: error: {message}", file=sys.stderr)
+    return EXIT_USAGE
+
+
+def _print_reports(reports: list[Report], arguments: argparse.Namespace) -> None:
+    if arguments.format == "json":
+        print(_format_json(reports))
+    else:
+        _print_text(reports, _use_color(arguments.color))
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     arguments = parser.parse_args(argv)
@@ -107,18 +119,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         selected = select(plugins.checks, _names(arguments.only), _names(arguments.skip))
     except (PluginError, SelectionError) as error:
         parser.print_usage(sys.stderr)
-        print(f"{parser.prog}: error: {error}", file=sys.stderr)
-        return EXIT_USAGE
+        return _usage_error(parser, str(error))
 
     if arguments.list:
         print(_format_list(plugins.checks))
         return EXIT_SUCCESS
     if not yaml_support.available():
-        print(f"{parser.prog}: error: {yaml_support.MISSING_MESSAGE}", file=sys.stderr)
-        return EXIT_USAGE
+        return _usage_error(parser, yaml_support.MISSING_MESSAGE)
     if not arguments.path.is_dir():
-        print(f"{parser.prog}: error: {arguments.path} is not a directory", file=sys.stderr)
-        return EXIT_USAGE
+        return _usage_error(parser, f"{arguments.path} is not a directory")
 
     options = Options(build=arguments.build, cmake=arguments.cmake, ctest=arguments.ctest)
     context = Context(Project(arguments.path.resolve(), frozenset(arguments.exclude)), plugins.providers, options)
@@ -126,8 +135,5 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(json.dumps(context.structure.as_dict(), indent=2))
         return EXIT_SUCCESS
     reports = run_checks(selected, context)
-    if arguments.format == "json":
-        print(_format_json(reports))
-    else:
-        _print_text(reports, _use_color(arguments.color))
+    _print_reports(reports, arguments)
     return EXIT_SUCCESS if succeeded(reports, strict=arguments.strict) else EXIT_FAILURE
