@@ -70,6 +70,11 @@ class Project:
     def read_text(self, relative: str) -> str:
         return (self.root / relative).read_text(encoding="utf-8", errors="replace")
 
+    def read_head(self, relative: str, size: int = 4096) -> str:
+        """The first `size` bytes of a file as text: enough for a content probe, cheap for a large file."""
+        with (self.root / relative).open("rb") as file:
+            return file.read(size).decode("utf-8", errors="replace")
+
     def files_in(self, relative_directory: str, suffixes: tuple[str, ...]) -> list[str]:
         directory = self.root / relative_directory
         if not directory.is_dir():

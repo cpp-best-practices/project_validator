@@ -41,7 +41,7 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 | Option | Meaning |
 |---|---|
 | `--list` | list the available checks; with `--format json`, also the ecosystems each one applies to |
-| `--map` | print the detected project structure (languages, build systems, CI providers, jobs and toolchains) as JSON |
+| `--map` | print the detected project structure as JSON: languages, build systems, the signals that recognised each ecosystem, the file suffixes no ecosystem recognises, and the CI providers, jobs and toolchains |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
 | `--format text\|json` | output format |
 | `--color auto\|always\|never` | color the text output (needs rich); `auto` colors only on a terminal when `NO_COLOR` is unset |
@@ -114,7 +114,21 @@ Everything the validator knows about a language lives in its profile under `proj
 how it is recognised (build systems, source suffixes, how CI names its toolchain versions) and the rules
 it is judged by. The checks are generic: each one judges every ecosystem that has a rule of its type
 (see `project_validator/rules.py`), and does not apply to the others. A plugin can add an ecosystem
-the same way, without changing the validator:
+the same way, without changing the validator.
+
+A project is recognised as an ecosystem by any of:
+
+- `BuildSystem.files`: exact names (`build.zig`), file name patterns (`*.csproj`) or directory patterns
+  ending in `/` (`*.xcodeproj/`), matched anywhere in the project;
+- `source_suffixes`: suffixes only this ecosystem uses;
+- `detect`: a probe that reads the project (e.g. `project.read_head(path)`) and returns the languages it found,
+  for ecosystems that file names cannot show;
+- `ambiguous_suffixes`: suffixes other ecosystems may share (`.h`, `.pl`), counted only once the ecosystem
+  was recognised another way. A suffix mapped to `None` is accounted for without adding a language.
+
+Registering an ecosystem that claims another one's build file or source suffix is an error.
+`--map` lists the suffixes no ecosystem recognises, so the gaps are visible.
+
 
 ```python
 import re
@@ -160,7 +174,7 @@ python3 -W error -m unittest
 The project validates itself; CI runs the same command:
 
 ```sh
-python3 -m project_validator --exclude tests/fixtures .
+python3 -m project_validator --strict --exclude tests/fixtures .
 ```
 
 Each quality gate is its own CI job, so a pull request shows which one failed.
@@ -171,7 +185,7 @@ To run them locally:
 | `lint` | `ruff check .` |
 | `formatting` | `ruff format --check --diff .` |
 | `typing` | `mypy` |
-| `copy-paste-detection` | `npx --yes jscpd@4` (settings in `.jscpd.json`) |
+| `copy-paste-detection` | `npx --yes jscpd@4.3.0` (settings in `.jscpd.json`) |
 | `function-limits` | `lizard --length 30 --warnings_only project_validator tests` |
 
 Branch coverage is measured with [coverage.py](https://coverage.readthedocs.io/)

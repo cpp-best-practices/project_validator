@@ -1,8 +1,9 @@
 """The registry of language ecosystems (one profile module each, plus plugins' ones), and judging per ecosystem."""
 
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from dataclasses import replace
+from fnmatch import fnmatchcase
 from pathlib import Path
 
 from project_validator.core import Check, CheckFunction, Context, Result, Status
@@ -37,15 +38,64 @@ def registered() -> tuple[Ecosystem, ...]:
     return tuple(_registered)
 
 
+def _build_file_claims(ecosystems: Iterable[Ecosystem]) -> Iterator[tuple[str, BuildSystem, Ecosystem]]:
+    for ecosystem in ecosystems:
+        for system in ecosystem.build_systems:
+            for name in system.files:
+                yield name, system, ecosystem
+
+
+def _suffix_claims(ecosystems: Iterable[Ecosystem]) -> Iterator[tuple[str, bool, Ecosystem]]:
+    """(suffix, whether it is unambiguous, the ecosystem claiming it)."""
+    for ecosystem in ecosystems:
+        yield from ((suffix, True, ecosystem) for suffix in ecosystem.source_suffixes or {})
+        yield from ((suffix, False, ecosystem) for suffix in ecosystem.ambiguous_suffixes or {})
+
+
+def claim_conflicts(ecosystems: Iterable[Ecosystem]) -> list[str]:
+    """Where `ecosystems` claim the same files: a build file of two build systems (sharing one build system is
+    fine), or a source suffix one claims outright and another claims too (two may share an ambiguous suffix)."""
+    ecosystems = tuple(ecosystems)
+    conflicts = []
+    build_files: dict[str, BuildSystem] = {}
+    for name, system, ecosystem in _build_file_claims(ecosystems):
+        known = build_files.setdefault(name, system)
+        if known is not system:
+            conflicts.append(f"{ecosystem.label}: build file {name} is already claimed by {known.name}")
+        elif clashing := next(
+            (other for other, owner in build_files.items() if owner is not system and _globs_overlap(name, other)),
+            None,
+        ):
+            conflicts.append(
+                f"{ecosystem.label}: build file {name} overlaps {clashing} of {build_files[clashing].name}"
+            )
+    claimed: dict[str, tuple[bool, Ecosystem]] = {}
+    for suffix, outright, ecosystem in _suffix_claims(ecosystems):
+        known_outright, claimant = claimed.setdefault(suffix, (outright, ecosystem))
+        if claimant is not ecosystem and (outright or known_outright):
+            conflicts.append(f"{ecosystem.label}: source suffix {suffix} is already claimed by {claimant.label}")
+    return conflicts
+
+
+def _globs_overlap(name: str, other: str) -> bool:
+    """Whether one build file entry matches the other literally (`*.csproj` and `app.csproj`)."""
+    return fnmatchcase(name, other) or fnmatchcase(other, name)
+
+
 def register(ecosystem: Ecosystem) -> None:
     """Add a plugin's ecosystem, replacing a plugin ecosystem with the same label (the same plugin, loaded again).
 
-    A built-in ecosystem is never replaced.
+    A built-in ecosystem is never replaced, and an ecosystem must not claim another one's files.
     """
     if ecosystem in _registered:
         return
     if any(built_in.label == ecosystem.label for built_in in BUILT_IN):
         raise RegistryError(f"{ecosystem.label} is a built-in ecosystem")
+    others = [known for known in _registered if known.label != ecosystem.label]
+    if conflicts := [
+        conflict for conflict in claim_conflicts([*others, ecosystem]) if conflict.startswith(f"{ecosystem.label}:")
+    ]:
+        raise RegistryError("; ".join(conflicts))
     replaced = [index for index, known in enumerate(_registered) if known.label == ecosystem.label]
     if replaced:
         _registered[replaced[0]] = ecosystem
@@ -164,6 +214,7 @@ __all__ = [
     "applies_to",
     "build_systems",
     "check_each_ecosystem",
+    "claim_conflicts",
     "combined",
     "ecosystem_check",
     "ecosystems_for",

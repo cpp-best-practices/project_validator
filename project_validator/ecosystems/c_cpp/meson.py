@@ -101,7 +101,7 @@ MESON_WARNINGS_AS_ERRORS = WarningsAsErrors(
 # Meson builds only the languages its project() declares.
 MESON = BuildSystem(
     name="Meson",
-    files=(BUILD_FILE,),
+    files=(BUILD_FILE, "meson.options"),
     declared_languages=meson_declared_languages,
     rules=(MESON_TESTS, CompilerExtensions(judge=_extensions_disabled), MESON_WARNINGS_AS_ERRORS),
 )

@@ -23,7 +23,9 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern, matching_names, pattern
 
-GO_MODULES = BuildSystem(name="Go modules", files=("go.mod",), languages=frozenset({"Go"}))
+GO_MODULES = BuildSystem(
+    name="Go modules", files=("go.mod", "go.sum", "go.work", "go.work.sum"), languages=frozenset({"Go"})
+)
 
 GOLANGCI_CONFIG_FILES = (".golangci.yml", ".golangci.yaml", ".golangci.toml", ".golangci.json")
 RUNS_GOLANGCI_LINT = r"\bgolangci-lint\b(?!\s+fmt)|\bgolangci/golangci-lint-action\b"

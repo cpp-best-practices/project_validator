@@ -134,9 +134,16 @@
         "GitHub Actions"
       ]
     },
+    "ecosystems": {
+      "Go": [
+        "build file go.mod",
+        ".go files"
+      ]
+    },
     "languages": [
       "Go"
-    ]
+    ],
+    "unrecognised_suffixes": []
   },
   "results": {
     "ci-build-types": {

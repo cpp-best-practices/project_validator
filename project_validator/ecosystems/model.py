@@ -8,7 +8,7 @@ from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from project_validator.core import Context, Result, Status
+from project_validator.core import Context, Project, Result, Status
 from project_validator.rules import ToolchainAxis, toolchain_versions, versions_axis
 
 __all__ = [
@@ -40,8 +40,10 @@ def _rule_of[R](rules: tuple[object, ...], kind: type[R]) -> R | None:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class BuildSystem:
-    """A build system recognised by its build file names, in any directory.
+    """A build system recognised by its build files, in any directory.
 
+    Each of `files` is a file name (`CMakeLists.txt`), a glob pattern for one (`*.csproj`), or a glob pattern ending
+    in `/` for a directory (`*.xcodeproj/`), which is recognised by the files inside it.
     The languages it builds are `languages`, plus those `declared_languages` reads from one of its build files.
     A directory for which `is_build_tree` is true holds its build output and is never inspected.
     `rules` are those of its ecosystem's practices that depend on the build system (see `Ecosystem.rule_for`).
@@ -75,6 +77,12 @@ class ToolchainPatterns:
 class Ecosystem:
     """A language ecosystem: how it is recognised, and the rules (see `project_validator.rules`) it is judged by.
 
+    It is recognised by its build systems' files, its `source_suffixes`, and `detect`, a probe that reads the project
+    (with `Project.read_head`) and returns the ecosystem's languages it finds, for intent that file names cannot
+    show. `ambiguous_suffixes` count only once the ecosystem is recognised one of those ways, because another
+    ecosystem uses them too (`.pl`: Perl or Prolog) or they do not tell its languages apart (`.h`: C or C++); each
+    maps to the language it adds, or to None for a file of the ecosystem that adds no language.
+
     `rules` holds at most one rule of each type; a practice whose rule type an ecosystem lacks does not apply to it.
     Rules that depend on the build system belong to the ecosystem's `build_systems` instead; a project using none of
     them is judged as if it used `default_build_system`.
@@ -84,6 +92,8 @@ class Ecosystem:
     languages: frozenset[str]
     build_systems: tuple[BuildSystem, ...] = ()
     source_suffixes: Mapping[str, str] | None = None
+    ambiguous_suffixes: Mapping[str, str | None] | None = None
+    detect: Callable[[Project], frozenset[str]] | None = None
     toolchain: ToolchainPatterns | None = None
     # How a CI job shows it builds with the ecosystem, besides naming or using its toolchain.
     ci_usage: re.Pattern[str] | None = None

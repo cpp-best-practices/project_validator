@@ -8,9 +8,16 @@
       "jobs": [],
       "providers": []
     },
+    "ecosystems": {
+      "Rust": [
+        "build file Cargo.toml",
+        ".rs files"
+      ]
+    },
     "languages": [
       "Rust"
-    ]
+    ],
+    "unrecognised_suffixes": []
   },
   "results": {
     "ci-build-types": {
