@@ -4,9 +4,9 @@ import re
 
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import first_existing
-from project_validator.rules import Formatter
-from project_validator.text import pattern
+from project_validator.evidence import existing_texts, first_existing
+from project_validator.rules import CoverageTools, Formatter
+from project_validator.text import Pattern, pattern
 
 PYTHON_PACKAGING = BuildSystem(
     name="Python packaging", files=("pyproject.toml", "setup.py"), languages=frozenset({"Python"})
@@ -33,6 +33,26 @@ RUFF_OR_BLACK = Formatter(
     default_style=True,
 )
 
+COVERAGE_SETTINGS_FILES = ("pyproject.toml", "setup.cfg", "tox.ini", ".coveragerc")
+
+
+def _ci_and_coverage_settings_texts(context: Context) -> tuple[str, ...]:
+    return (*context.ci_texts, *existing_texts(context, COVERAGE_SETTINGS_FILES))
+
+
+COVERAGE = CoverageTools(
+    searched="CI configuration or coverage.py settings",
+    texts=_ci_and_coverage_settings_texts,
+    branch=(
+        pattern("coverage.py", r"\bcoverage\s+run\b[^\n]*--branch\b"),
+        pattern("pytest-cov", r"--cov-branch\b"),
+        Pattern(
+            "coverage.py branch = true",
+            re.compile(r"^\s*branch\s*=\s*(true|1|yes|on)\b", re.IGNORECASE | re.MULTILINE),
+        ),
+    ),
+)
+
 PYTHON = Ecosystem(
     label="Python",
     languages=frozenset({"Python"}),
@@ -49,5 +69,5 @@ PYTHON = Ecosystem(
             r"\bpython[\d.]*\s+(?:-|\S+\.py\b)|\bpip\d*\s+install\b|\bpytest\b|\btox\b|\bnox\b|\bsetup-python\b"
         ),
     ),
-    rules=(versions_axis("Python version", "Python"), RUFF_OR_BLACK),
+    rules=(versions_axis("Python version", "Python"), RUFF_OR_BLACK, COVERAGE),
 )

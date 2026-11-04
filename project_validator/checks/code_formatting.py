@@ -19,4 +19,3 @@ def code_formatting(formatter: Formatter, context: Context) -> Result:
     if config is None:
         return Result.failed(f"no {formatter.name} configuration found; formatting is not defined", formatter.hint)
     return Result.warned(f"{config} is defined but CI does not run {formatter.name}", formatter.hint)
-

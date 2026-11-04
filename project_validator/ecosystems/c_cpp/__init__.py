@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from project_validator.core import Context
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem, Ecosystem, ToolchainAxis
 from project_validator.evidence import first_existing
-from project_validator.rules import BuildTypes, Formatter
+from project_validator.rules import BuildTypes, CoverageTools, Formatter
 from project_validator.text import pattern
 
 if TYPE_CHECKING:
@@ -63,6 +63,30 @@ CLANG_FORMAT = Formatter(
     hint="consider a CI job that checks formatting (clang-format --dry-run -Werror) or applies it automatically",
 )
 
+
+def _ci_and_cmake_texts(context: Context) -> tuple[str, ...]:
+    return (*context.ci_texts, *context.cmake_texts)
+
+
+COVERAGE = CoverageTools(
+    searched="CI configuration or CMake files",
+    texts=_ci_and_cmake_texts,
+    branch=(
+        pattern("gcovr", r"--txt-metric[\s=]+branch|--fail-under-branch|--branches\b"),
+        pattern("lcov", r"\b(lcov_)?branch_coverage\s*=\s*1"),
+        pattern("genhtml", r"--branch-coverage\b"),
+        pattern("gcov", r"--branch-(probabilities|counts)\b"),
+        pattern("llvm-cov", r"-show-branch(es|-summary)\b"),
+    ),
+    path=(
+        pattern("gcc -fcondition-coverage", r"-fcondition-coverage\b"),
+        pattern("gcc -fpath-coverage", r"-fpath-coverage\b"),
+        pattern("gcov --prime-paths", r"--prime-paths\b"),
+        pattern("clang MC/DC", r"-fcoverage-mcdc\b|-show-mcdc\b"),
+    ),
+    path_hint="consider adding path coverage (e.g. -fcondition-coverage or -fcoverage-mcdc)",
+)
+
 # `.h` is deliberately absent: it is used by both C and C++.
 C_AND_CXX = Ecosystem(
     label="C/C++",
@@ -79,5 +103,5 @@ C_AND_CXX = Ecosystem(
         ".ixx": "C++",
         ".cppm": "C++",
     },
-    rules=(COMPILERS, BuildTypes(axis=COMPILERS), CLANG_FORMAT),
+    rules=(COMPILERS, BuildTypes(axis=COMPILERS), CLANG_FORMAT, COVERAGE),
 )

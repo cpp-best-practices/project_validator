@@ -48,4 +48,3 @@ def platform_matrix(axis: ToolchainAxis, context: Context) -> Result:
     if shortfalls := _shortfalls(axis, operating_systems, toolchains, pairs):
         return Result.failed(f"CI covers {summary}; expected {', '.join(shortfalls)}", *details)
     return Result.passed(f"CI covers {summary}", *details)
-

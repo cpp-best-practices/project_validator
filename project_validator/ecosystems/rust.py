@@ -6,7 +6,7 @@ from pathlib import Path
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import first_existing
-from project_validator.rules import BuildTypes, Formatter
+from project_validator.rules import BuildTypes, CoverageTools, Formatter
 from project_validator.text import pattern
 
 
@@ -36,6 +36,26 @@ RUSTFMT = Formatter(
     default_style=True,
 )
 
+
+def _ci_texts(context: Context) -> tuple[str, ...]:
+    return context.ci_texts
+
+
+COVERAGE = CoverageTools(
+    searched="CI configuration",
+    texts=_ci_texts,
+    branch=(
+        pattern("cargo-llvm-cov", r"\bcargo\s+(\+\S+\s+)?llvm-cov\b[^\n]*--branch\b"),
+        pattern("cargo-tarpaulin", r"\bcargo\s+(\+\S+\s+)?tarpaulin\b[^\n]*(--branch\b|\s-b\b)"),
+        pattern("grcov", r"\bgrcov\b[^\n]*--branch\b"),
+    ),
+    path=(
+        pattern("cargo-llvm-cov MC/DC", r"\bllvm-cov\b[^\n]*--mcdc\b"),
+        pattern("rustc MC/DC", r"-Z\s*coverage-options=\S*mcdc"),
+    ),
+    path_hint="consider adding MC/DC coverage (e.g. cargo llvm-cov --mcdc)",
+)
+
 RUST = Ecosystem(
     label="Rust",
     languages=frozenset({"Rust"}),
@@ -52,5 +72,5 @@ RUST = Ecosystem(
         ),
         usage=re.compile(r"\bcargo\b|\brustup\b|\brustc\b"),
     ),
-    rules=(RUST_TOOLCHAINS, BuildTypes(axis=RUST_TOOLCHAINS), RUSTFMT),
+    rules=(RUST_TOOLCHAINS, BuildTypes(axis=RUST_TOOLCHAINS), RUSTFMT, COVERAGE),
 )

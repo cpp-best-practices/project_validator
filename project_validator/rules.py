@@ -75,3 +75,14 @@ class BuildTypes:
     """A compiled ecosystem, whose CI must build each of its platforms (along `axis`) in every build configuration."""
 
     axis: ToolchainAxis
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class CoverageTools:
+    """How an ecosystem reports branch coverage, and the path (or MC/DC) coverage that is a bonus on top of it."""
+
+    searched: str
+    texts: Evidence
+    branch: tuple[Pattern, ...]
+    path: tuple[Pattern, ...] = ()
+    path_hint: str | None = None
