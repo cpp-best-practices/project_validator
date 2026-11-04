@@ -152,6 +152,8 @@ class Check:
     languages: frozenset[str] = frozenset()
     # The rule type a check judges, for checks that apply wherever an ecosystem has a rule of that type.
     rule: type[object] | None = None
+    # Former names, still accepted by --only and --skip.
+    aliases: tuple[str, ...] = ()
 
     def applies_to(self, languages: frozenset[str]) -> bool:
         """A check without languages is language agnostic; a project whose languages are unknown gets every check."""

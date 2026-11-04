@@ -138,11 +138,6 @@
       "message": "branch coverage is reported with coverage.py branch = true",
       "status": "PASS"
     },
-    "ctest-runs": {
-      "details": [],
-      "message": "Python tests found in 1 file(s)",
-      "status": "PASS"
-    },
     "cxx-extensions": {
       "details": [],
       "message": "not applicable to Python (applies to C, C++)",
@@ -182,6 +177,11 @@
     "security-scanning": {
       "details": [],
       "message": "CI runs code security scanning with CodeQL",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "Python tests found in 1 file(s)",
       "status": "PASS"
     },
     "vcs-ignore": {

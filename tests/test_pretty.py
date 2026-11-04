@@ -43,7 +43,7 @@ class PrettyTests(unittest.TestCase):
         self.assertIn("1 failed", _render(REPORTS))
 
     def test_summary_counts_skipped_checks(self) -> None:
-        skipped = _report("ctest-runs", Result(status=Status.SKIP, message="not applicable to Rust"))
+        skipped = _report("tests-run", Result(status=Status.SKIP, message="not applicable to Rust"))
         self.assertIn("1 skipped", _render([*REPORTS, skipped]))
 
     def test_summary_without_checks(self) -> None:

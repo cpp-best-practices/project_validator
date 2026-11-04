@@ -302,11 +302,6 @@
       "message": "branch coverage is reported with gcovr; path coverage bonus: gcc -fcondition-coverage",
       "status": "PASS"
     },
-    "ctest-runs": {
-      "details": [],
-      "message": "CTest is enabled and tests are registered with add_test",
-      "status": "PASS"
-    },
     "cxx-extensions": {
       "details": [],
       "message": "C++ compiler extensions are disabled globally with set(CMAKE_CXX_EXTENSIONS OFF)",
@@ -361,6 +356,11 @@
     "security-scanning": {
       "details": [],
       "message": "CI runs code security scanning with CodeQL",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "CTest is enabled and tests are registered with add_test",
       "status": "PASS"
     },
     "vcs-ignore": {

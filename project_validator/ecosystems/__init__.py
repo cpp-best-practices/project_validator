@@ -117,7 +117,9 @@ def judge_ecosystem[R](
     return Result(status=Status.SKIP, message=f"not applicable to {ecosystem.label} built with {used}")
 
 
-def practice[R](*, name: str, description: str, rule: type[R]) -> Callable[[Judge[R]], Check]:
+def practice[R](
+    *, name: str, description: str, rule: type[R], aliases: tuple[str, ...] = ()
+) -> Callable[[Judge[R]], Check]:
     """Turn a judge of one ecosystem's rule into a check of every ecosystem that has a rule of type `rule`.
 
     The check applies to those ecosystems' languages, and judges each one the project uses (see
@@ -135,7 +137,8 @@ def practice[R](*, name: str, description: str, rule: type[R]) -> Callable[[Judg
                 }
             )
 
-        return Check(name=name, description=description, run=run, languages=languages_of(providers(rule)), rule=rule)
+        languages = languages_of(providers(rule))
+        return Check(name=name, description=description, run=run, languages=languages, rule=rule, aliases=aliases)
 
     return wrap
 

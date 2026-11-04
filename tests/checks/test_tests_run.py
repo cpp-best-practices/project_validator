@@ -3,7 +3,7 @@ import shutil
 import unittest
 from unittest import mock
 
-from project_validator.checks.ctest_runs import ctest_runs
+from project_validator.checks.tests_run import tests_run
 from project_validator.core import Options, Result, Status
 from project_validator.ecosystems import C_AND_CXX, C_FAMILY, PYTHON, RUST
 from tests.support import (
@@ -23,25 +23,25 @@ from tests.support import (
 
 class CtestRunsTests(unittest.TestCase):
     def _run(self, files: dict[str, str]) -> Result:
-        return run_in_every_layout(self, ctest_runs, files, c_family_layouts_built_with(ctest_runs, "CMake"))
+        return run_in_every_layout(self, tests_run, files, c_family_layouts_built_with(tests_run, "CMake"))
 
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(ctest_runs.languages, C_FAMILY | {"Python", "Rust"})
+        self.assertEqual(tests_run.languages, C_FAMILY | {"Python", "Rust"})
 
     def test_passes_when_tests_are_registered_and_run_in_ci(self) -> None:
         self.assertEqual(self._run(WELL_CONFIGURED).status, Status.PASS)
 
     def test_a_project_without_a_build_system_fails_as_a_cmake_project(self) -> None:
         layouts = tuple(layout for layout in NON_CMAKE_C_FAMILY_LAYOUTS if not layout.build_systems)
-        result = run_in_every_layout(self, ctest_runs, {"main.cpp": ""}, layouts)
+        result = run_in_every_layout(self, tests_run, {"main.cpp": ""}, layouts)
         self.assertEqual(result.message, "no CMake files found")
 
 
 class MesonTestsTests(unittest.TestCase):
     def _run(self, files: dict[str, str]) -> Result:
-        layouts = c_family_layouts_built_with(ctest_runs, "Meson")
+        layouts = c_family_layouts_built_with(tests_run, "Meson")
         self.assertTrue(layouts)
-        return run_in_every_layout(self, ctest_runs, files, layouts)
+        return run_in_every_layout(self, tests_run, files, layouts)
 
     def test_fails_when_meson_registers_no_tests(self) -> None:
         result = self._run({})
@@ -87,7 +87,7 @@ class MesonTestsTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("cmake") and shutil.which("ctest"), "cmake is not installed")
     def test_build_mode_counts_the_tests_ctest_finds(self) -> None:
-        result = ctest_runs.run(make_context(FIXTURES / "buildable", Options(build=True)))
+        result = tests_run.run(make_context(FIXTURES / "buildable", Options(build=True)))
         self.assertEqual(
             result.message, "the project builds and ctest finds 1 test(s), but no CI configuration runs ctest"
         )
@@ -95,18 +95,18 @@ class MesonTestsTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("cmake") and shutil.which("ninja"), "cmake or ninja is not installed")
     def test_build_mode_finds_tests_with_multi_config_generators(self) -> None:
         with mock.patch.dict(os.environ, {"CMAKE_GENERATOR": "Ninja Multi-Config"}):
-            result = ctest_runs.run(make_context(FIXTURES / "buildable", Options(build=True)))
+            result = tests_run.run(make_context(FIXTURES / "buildable", Options(build=True)))
         self.assertIn("ctest finds 1 test(s)", result.message)
 
     def test_build_mode_reports_tools_that_cannot_run(self) -> None:
-        result = ctest_runs.run(make_context(FIXTURES / "buildable", Options(build=True, cmake="no-such-cmake-binary")))
+        result = tests_run.run(make_context(FIXTURES / "buildable", Options(build=True, cmake="no-such-cmake-binary")))
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("could not run no-such-cmake-binary", result.message)
 
 
 class PythonTestsRunTests(unittest.TestCase):
     def _run(self, files: dict[str, str], options: Options | None = None) -> Result:
-        return run_as(self, ctest_runs, files, PYTHON, options=options)
+        return run_as(self, tests_run, files, PYTHON, options=options)
 
     def test_passes_when_tests_exist_and_any_ci_runs_them(self) -> None:
         runners = ("python -m pytest", "python -m unittest discover", "tox -e py314", "nox -s tests")
@@ -134,7 +134,7 @@ class PythonTestsRunTests(unittest.TestCase):
 
 class RustTestsRunTests(unittest.TestCase):
     def _run(self, files: dict[str, str]) -> Result:
-        return run_as(self, ctest_runs, files, RUST)
+        return run_as(self, tests_run, files, RUST)
 
     def test_passes_when_tests_exist_and_any_ci_runs_them(self) -> None:
         sources = {"src/lib.rs": "#[test]\nfn unit() {}\n", "tests/api.rs": "#[tokio::test]\nasync fn api() {}\n"}
@@ -156,7 +156,7 @@ class RustTestsRunTests(unittest.TestCase):
 
 class MixedLanguageTestsRunTests(unittest.TestCase):
     def test_every_language_needs_tests_and_findings_are_labelled(self) -> None:
-        result = run_as(self, ctest_runs, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        result = run_as(self, tests_run, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
         self.assertEqual(
             result,
             Result.failed(

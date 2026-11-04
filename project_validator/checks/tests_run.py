@@ -5,11 +5,12 @@ from project_validator.text import matching_names
 
 
 @practice(
-    name="ctest-runs",
-    description="Tests exist (registered with CTest for C/C++) and CI runs them",
+    name="tests-run",
+    description="Tests exist (registered with CTest or Meson for C/C++) and CI runs them",
     rule=TestSuite,
+    aliases=("ctest-runs",),
 )
-def ctest_runs(suite: TestSuite, context: Context) -> Result:
+def tests_run(suite: TestSuite, context: Context) -> Result:
     result = suite.found(context)
     if result.status != Status.PASS or matching_names(context.ci_texts, suite.runs):
         return result

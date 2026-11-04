@@ -48,11 +48,6 @@
       "message": "no branch coverage reporting found in CI configuration or CMake files",
       "status": "FAIL"
     },
-    "ctest-runs": {
-      "details": [],
-      "message": "CTest is enabled and tests are registered with add_test, but no CI configuration runs ctest",
-      "status": "WARN"
-    },
     "cxx-extensions": {
       "details": [],
       "message": "C++ compiler extensions are never disabled; add set(CMAKE_CXX_EXTENSIONS OFF)",
@@ -85,6 +80,11 @@
         "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)"
       ],
       "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "CTest is enabled and tests are registered with add_test, but no CI configuration runs ctest",
       "status": "WARN"
     },
     "vcs-ignore": {
