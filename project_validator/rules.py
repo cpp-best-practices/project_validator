@@ -5,6 +5,7 @@ A practice (a check) is generic over its rule type and never names an ecosystem;
 stay a plain check limited to that ecosystem's languages.
 """
 
+import re
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
@@ -141,3 +142,26 @@ class FunctionLimits:
     """
 
     without_lizard: Callable[[Context], Result] | None = None
+
+
+def ignored_at_top_level(names: str) -> re.Pattern[str]:
+    """Globs that ignore one of `names` at the top of the repository, as a directory or with all of its contents."""
+    return re.compile(rf"(?:\*\*/|/)?(?:{names})(?:/\**)?", re.IGNORECASE)
+
+
+def directories(*names: str) -> tuple[str, ...]:
+    """The paths of `names` as an ignore rule sees them: the directory itself and what is inside it."""
+    return tuple(path for name in names for path in (name, f"{name}/"))
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class BuildOutputs:
+    """The build outputs of an ecosystem that must never be committed, and the ignore entries that ignore them.
+
+    A glob entry ignores the outputs when it is one of `globs`; a regular expression when it matches one of `paths`.
+    """
+
+    name: str
+    globs: re.Pattern[str]
+    paths: tuple[str, ...]
+    hint: str

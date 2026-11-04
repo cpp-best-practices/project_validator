@@ -10,7 +10,14 @@ from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, WARNING
 from project_validator.ecosystems.c_cpp.ctest import CTEST
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem, Ecosystem, ToolchainAxis
 from project_validator.evidence import first_existing
-from project_validator.rules import BuildTypes, CoverageTools, Formatter
+from project_validator.rules import (
+    BuildOutputs,
+    BuildTypes,
+    CoverageTools,
+    Formatter,
+    directories,
+    ignored_at_top_level,
+)
 from project_validator.text import pattern
 
 if TYPE_CHECKING:
@@ -90,6 +97,13 @@ COVERAGE = CoverageTools(
     path_hint="consider adding path coverage (e.g. -fcondition-coverage or -fcoverage-mcdc)",
 )
 
+BUILD_DIRECTORY = BuildOutputs(
+    name="the build directory",
+    globs=ignored_at_top_level(r"(?:\[Bb\]uild|_?build|out|cmake-build)(?:[-_*][\w*-]*)?"),
+    paths=directories("build", "out", "_build", "cmake-build-debug"),
+    hint="consider ignoring the build directory (e.g. build/ and out/)",
+)
+
 # `.h` is deliberately absent: it is used by both C and C++.
 C_AND_CXX = Ecosystem(
     label="C/C++",
@@ -116,5 +130,6 @@ C_AND_CXX = Ecosystem(
         WARNINGS_AS_ERRORS,
         HARDENING,
         FUNCTION_LIMITS,
+        BUILD_DIRECTORY,
     ),
 )

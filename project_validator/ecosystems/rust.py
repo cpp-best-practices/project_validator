@@ -7,6 +7,7 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import existing_texts, first_existing
 from project_validator.rules import (
+    BuildOutputs,
     BuildTypes,
     CoverageTools,
     Formatter,
@@ -14,6 +15,8 @@ from project_validator.rules import (
     Hardening,
     TestSuite,
     WarningPolicy,
+    directories,
+    ignored_at_top_level,
 )
 from project_validator.text import Pattern, pattern
 
@@ -127,6 +130,13 @@ HARDENING = Hardening(
     ),
 )
 
+TARGET_DIRECTORY = BuildOutputs(
+    name="the target directory",
+    globs=ignored_at_top_level("target"),
+    paths=directories("target"),
+    hint="consider ignoring /target",
+)
+
 RUST = Ecosystem(
     label="Rust",
     languages=frozenset({"Rust"}),
@@ -152,5 +162,6 @@ RUST = Ecosystem(
         WARNINGS,
         HARDENING,
         FunctionLimits(),
+        TARGET_DIRECTORY,
     ),
 )

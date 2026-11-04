@@ -7,7 +7,17 @@ from pathlib import PurePosixPath
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import existing_texts, first_existing
-from project_validator.rules import CoverageTools, Formatter, FunctionLimits, Hardening, TestSuite, WarningPolicy
+from project_validator.rules import (
+    BuildOutputs,
+    CoverageTools,
+    Formatter,
+    FunctionLimits,
+    Hardening,
+    TestSuite,
+    WarningPolicy,
+    directories,
+    ignored_at_top_level,
+)
 from project_validator.text import Pattern, pattern
 
 PYTHON_PACKAGING = BuildSystem(
@@ -129,6 +139,13 @@ HARDENING = Hardening(
     ),
 )
 
+BYTECODE = BuildOutputs(
+    name="Python bytecode",
+    globs=ignored_at_top_level(r"__pycache__|\*\.py(?:c|\[[cod]+\])"),
+    paths=(*directories("__pycache__"), "module.pyc"),
+    hint="consider ignoring __pycache__/ and *.py[cod]",
+)
+
 PYTHON = Ecosystem(
     label="Python",
     languages=frozenset({"Python"}),
@@ -153,5 +170,6 @@ PYTHON = Ecosystem(
         WARNINGS,
         HARDENING,
         FunctionLimits(),
+        BYTECODE,
     ),
 )

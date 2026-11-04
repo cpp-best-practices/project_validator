@@ -4,7 +4,8 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
 from project_validator.core import Context, Result, check
-from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST, check_each_ecosystem, languages_of
+from project_validator.ecosystems import check_each_ecosystem, languages_of, rules_of
+from project_validator.rules import BuildOutputs
 
 
 class Syntax(enum.Enum):
@@ -128,51 +129,6 @@ IGNORE_FILES = (
 )
 
 
-def _ignored_at_top_level(names: str) -> re.Pattern[str]:
-    """Globs that ignore one of `names` at the top of the repository, as a directory or with all of its contents."""
-    return re.compile(rf"(?:\*\*/|/)?(?:{names})(?:/\**)?", re.IGNORECASE)
-
-
-def _directories(*names: str) -> tuple[str, ...]:
-    """The paths of `names` as an ignore rule sees them: the directory itself and what is inside it."""
-    return tuple(path for name in names for path in (name, f"{name}/"))
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class BuildOutputs:
-    """The build outputs of an ecosystem that must never be committed, and the ignore entries that ignore them.
-
-    A glob entry ignores the outputs when it is one of `globs`; a regular expression when it matches one of `paths`.
-    """
-
-    name: str
-    globs: re.Pattern[str]
-    paths: tuple[str, ...]
-    hint: str
-
-
-BUILD_OUTPUTS = {
-    C_AND_CXX: BuildOutputs(
-        name="the build directory",
-        globs=_ignored_at_top_level(r"(?:\[Bb\]uild|_?build|out|cmake-build)(?:[-_*][\w*-]*)?"),
-        paths=_directories("build", "out", "_build", "cmake-build-debug"),
-        hint="consider ignoring the build directory (e.g. build/ and out/)",
-    ),
-    PYTHON: BuildOutputs(
-        name="Python bytecode",
-        globs=_ignored_at_top_level(r"__pycache__|\*\.py(?:c|\[[cod]+\])"),
-        paths=(*_directories("__pycache__"), "module.pyc"),
-        hint="consider ignoring __pycache__/ and *.py[cod]",
-    ),
-    RUST: BuildOutputs(
-        name="the target directory",
-        globs=_ignored_at_top_level("target"),
-        paths=_directories("target"),
-        hint="consider ignoring /target",
-    ),
-}
-
-
 def _regex_matches_any(pattern: str, paths: tuple[str, ...]) -> bool:
     try:
         compiled = re.compile(pattern)
@@ -208,6 +164,8 @@ def _outputs_ignored(outputs: BuildOutputs, context: Context) -> Result:
         return Result.warned(f"{', '.join(unignored)} {verb} not ignore {outputs.name}", outputs.hint)
     return Result.passed("; ".join(f"{path} ignores {entry.written}" for path, entry in found.items() if entry))
 
+
+BUILD_OUTPUTS = rules_of(BuildOutputs)
 
 IGNORE_FILE_NAMES = ", ".join(ignore_file.path for ignore_file in IGNORE_FILES)
 
