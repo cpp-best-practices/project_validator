@@ -61,6 +61,11 @@ def _language_toolchains(language: str, patterns: ToolchainPatterns, texts: tupl
     return {Toolchain(language=language, version=version) for version in versions}
 
 
+def detect_ecosystems(*texts: str) -> frozenset[str]:
+    """The labels of the registered ecosystems a CI job with `texts` builds with or runs."""
+    return frozenset(ecosystem.label for ecosystem in registered() if any(map(ecosystem.used_by, texts)))
+
+
 def detect_toolchains(*texts: str) -> frozenset[Toolchain]:
     return frozenset(
         toolchain

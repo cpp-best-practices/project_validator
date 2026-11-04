@@ -86,8 +86,8 @@ Known limitations:
 - A GitHub matrix computed by an expression (`fromJSON(...)`) cannot be expanded; those jobs are reported with an `unknown` OS.
 - Evidence is found by scanning text, so every file under the project is considered;
   use `--exclude` to leave out test fixtures or vendored code.
-- In a mixed project, a Python-only CI job still counts as a C/C++ build with its
-  runner's default compiler, so `ci-build-types` expects build types from it.
+- A CI job that names no compiler counts as a C/C++ build with its runner's default compiler,
+  unless it only runs another ecosystem's tools (e.g. pytest, but no CMake, Meson or compiler).
 
 ## Writing a Plugin
 

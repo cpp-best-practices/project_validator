@@ -15,6 +15,9 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, 3.13)",
           "os": "linux",
           "toolchains": [
@@ -26,6 +29,9 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, 3.14)",
           "os": "linux",
           "toolchains": [
@@ -37,6 +43,9 @@
             "appleclang"
           ],
           "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
           "name": ".github/workflows/ci.yml: test (macos-latest, 3.13)",
           "os": "macos",
           "toolchains": [
@@ -48,6 +57,9 @@
             "appleclang"
           ],
           "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
           "name": ".github/workflows/ci.yml: test (macos-latest, 3.14)",
           "os": "macos",
           "toolchains": [
@@ -59,6 +71,9 @@
             "msvc"
           ],
           "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
           "name": ".github/workflows/ci.yml: test (windows-latest, 3.13)",
           "os": "windows",
           "toolchains": [
@@ -70,6 +85,9 @@
             "msvc"
           ],
           "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
           "name": ".github/workflows/ci.yml: test (windows-latest, 3.14)",
           "os": "windows",
           "toolchains": [
@@ -81,6 +99,7 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [],
           "name": ".github/workflows/codeql.yml: analyze",
           "os": "linux",
           "toolchains": []
@@ -90,6 +109,7 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [],
           "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
           "os": "linux",
           "toolchains": []

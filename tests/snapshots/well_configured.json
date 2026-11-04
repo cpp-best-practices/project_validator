@@ -17,6 +17,9 @@
           "configurations": [
             "Release + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, ON)",
           "os": "linux",
           "toolchains": []
@@ -27,6 +30,9 @@
           ],
           "configurations": [
             "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, OFF)",
           "os": "linux",
@@ -39,6 +45,9 @@
           "configurations": [
             "Debug + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, ON)",
           "os": "linux",
           "toolchains": []
@@ -49,6 +58,9 @@
           ],
           "configurations": [
             "Debug"
+          ],
+          "ecosystems": [
+            "C/C++"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, OFF)",
           "os": "linux",
@@ -61,6 +73,9 @@
           "configurations": [
             "Release + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, ON)",
           "os": "linux",
           "toolchains": []
@@ -71,6 +86,9 @@
           ],
           "configurations": [
             "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, OFF)",
           "os": "linux",
@@ -83,6 +101,9 @@
           "configurations": [
             "Debug + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, ON)",
           "os": "linux",
           "toolchains": []
@@ -93,6 +114,9 @@
           ],
           "configurations": [
             "Debug"
+          ],
+          "ecosystems": [
+            "C/C++"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, OFF)",
           "os": "linux",
@@ -105,6 +129,9 @@
           "configurations": [
             "Release + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Release, ON)",
           "os": "macos",
           "toolchains": []
@@ -115,6 +142,9 @@
           ],
           "configurations": [
             "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Release, OFF)",
           "os": "macos",
@@ -127,6 +157,9 @@
           "configurations": [
             "Debug + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, ON)",
           "os": "macos",
           "toolchains": []
@@ -137,6 +170,9 @@
           ],
           "configurations": [
             "Debug"
+          ],
+          "ecosystems": [
+            "C/C++"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, OFF)",
           "os": "macos",
@@ -149,6 +185,9 @@
           "configurations": [
             "Release + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (macos-latest, clang, Release, ON)",
           "os": "macos",
           "toolchains": []
@@ -159,6 +198,9 @@
           ],
           "configurations": [
             "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, clang, Release, OFF)",
           "os": "macos",
@@ -171,6 +213,9 @@
           "configurations": [
             "Debug + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (macos-latest, clang, Debug, ON)",
           "os": "macos",
           "toolchains": []
@@ -181,6 +226,9 @@
           ],
           "configurations": [
             "Debug"
+          ],
+          "ecosystems": [
+            "C/C++"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, clang, Debug, OFF)",
           "os": "macos",
@@ -193,6 +241,9 @@
           "configurations": [
             "Release + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Release, ON)",
           "os": "windows",
           "toolchains": []
@@ -203,6 +254,9 @@
           ],
           "configurations": [
             "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
           ],
           "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Release, OFF)",
           "os": "windows",
@@ -215,6 +269,9 @@
           "configurations": [
             "Debug + sanitizers"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, ON)",
           "os": "windows",
           "toolchains": []
@@ -226,6 +283,9 @@
           "configurations": [
             "Debug"
           ],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, OFF)",
           "os": "windows",
           "toolchains": []
@@ -235,6 +295,9 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/ci.yml: format",
           "os": "linux",
           "toolchains": []
@@ -244,6 +307,9 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [
+            "C/C++"
+          ],
           "name": ".github/workflows/codeql-analysis.yml: analyze",
           "os": "linux",
           "toolchains": []
@@ -253,6 +319,7 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [],
           "name": ".github/workflows/copy-paste-detection.yml: cpd",
           "os": "linux",
           "toolchains": []

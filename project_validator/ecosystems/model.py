@@ -85,6 +85,8 @@ class Ecosystem:
     build_systems: tuple[BuildSystem, ...] = ()
     source_suffixes: Mapping[str, str] | None = None
     toolchain: ToolchainPatterns | None = None
+    # How a CI job shows it builds with the ecosystem, besides naming or using its toolchain.
+    ci_usage: re.Pattern[str] | None = None
     default_build_system: BuildSystem | None = None
     rules: tuple[object, ...] = field(default=())
 
@@ -93,6 +95,11 @@ class Ecosystem:
 
     def __repr__(self) -> str:
         return f"Ecosystem({self.label})"
+
+    def used_by(self, text: str) -> bool:
+        """Whether CI configuration `text` builds with or runs the ecosystem's toolchain."""
+        patterns = (self.ci_usage, *((self.toolchain.usage, *self.toolchain.versions) if self.toolchain else ()))
+        return any(pattern.search(text) for pattern in patterns if pattern is not None)
 
     def rule[R](self, kind: type[R]) -> R | None:
         """The ecosystem's own rule of type `kind`, whatever the build system."""

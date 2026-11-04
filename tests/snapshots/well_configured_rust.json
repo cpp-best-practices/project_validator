@@ -19,6 +19,9 @@
             "Debug",
             "Release"
           ],
+          "ecosystems": [
+            "Rust"
+          ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, stable, )",
           "os": "linux",
           "toolchains": [
@@ -32,6 +35,9 @@
           "configurations": [
             "Debug + sanitizers",
             "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Rust"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, stable, -Zsanitizer=address)",
           "os": "linux",
@@ -47,6 +53,9 @@
             "Debug",
             "Release"
           ],
+          "ecosystems": [
+            "Rust"
+          ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, nightly, )",
           "os": "linux",
           "toolchains": [
@@ -60,6 +69,9 @@
           "configurations": [
             "Debug + sanitizers",
             "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Rust"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, nightly, -Zsanitizer=address)",
           "os": "linux",
@@ -75,6 +87,9 @@
             "Debug",
             "Release"
           ],
+          "ecosystems": [
+            "Rust"
+          ],
           "name": ".github/workflows/ci.yml: test (macos-latest, stable, )",
           "os": "macos",
           "toolchains": [
@@ -88,6 +103,9 @@
           "configurations": [
             "Debug + sanitizers",
             "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Rust"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, stable, -Zsanitizer=address)",
           "os": "macos",
@@ -103,6 +121,9 @@
             "Debug",
             "Release"
           ],
+          "ecosystems": [
+            "Rust"
+          ],
           "name": ".github/workflows/ci.yml: test (macos-latest, nightly, )",
           "os": "macos",
           "toolchains": [
@@ -116,6 +137,9 @@
           "configurations": [
             "Debug + sanitizers",
             "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Rust"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, nightly, -Zsanitizer=address)",
           "os": "macos",
@@ -131,6 +155,9 @@
             "Debug",
             "Release"
           ],
+          "ecosystems": [
+            "Rust"
+          ],
           "name": ".github/workflows/ci.yml: test (windows-latest, stable, )",
           "os": "windows",
           "toolchains": [
@@ -144,6 +171,9 @@
           "configurations": [
             "Debug + sanitizers",
             "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Rust"
           ],
           "name": ".github/workflows/ci.yml: test (windows-latest, stable, -Zsanitizer=address)",
           "os": "windows",
@@ -159,6 +189,9 @@
             "Debug",
             "Release"
           ],
+          "ecosystems": [
+            "Rust"
+          ],
           "name": ".github/workflows/ci.yml: test (windows-latest, nightly, )",
           "os": "windows",
           "toolchains": [
@@ -173,6 +206,9 @@
             "Debug + sanitizers",
             "Release + sanitizers"
           ],
+          "ecosystems": [
+            "Rust"
+          ],
           "name": ".github/workflows/ci.yml: test (windows-latest, nightly, -Zsanitizer=address)",
           "os": "windows",
           "toolchains": [
@@ -184,6 +220,7 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [],
           "name": ".github/workflows/codeql.yml: analyze",
           "os": "linux",
           "toolchains": []
@@ -193,6 +230,7 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [],
           "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
           "os": "linux",
           "toolchains": []
@@ -202,6 +240,9 @@
             "gcc"
           ],
           "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
           "name": ".github/workflows/function-limits.yml: function-limits",
           "os": "linux",
           "toolchains": [

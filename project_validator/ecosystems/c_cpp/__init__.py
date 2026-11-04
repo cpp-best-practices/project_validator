@@ -4,6 +4,7 @@ Rules that depend on the build system are in the `cmake` and `meson` modules; a 
 CMake project.
 """
 
+import re
 from typing import TYPE_CHECKING
 
 from project_validator.core import Context
@@ -27,12 +28,25 @@ if TYPE_CHECKING:
     from project_validator.ci import Job
 
 
+# Building C or C++, as opposed to running another ecosystem's tools on a runner that has a C/C++ compiler.
+CI_USAGE = re.compile(
+    r"\b(?:cmake|ctest|meson|ninja|make|gmake|msbuild|devenv|bazel|conan|vcpkg|xmake|premake\d*|scons)\b"
+    r"|\.(?:c|cc|cpp|cxx)\b|\bg\+\+|\bgcc\b|\bclang(?:\+\+|-cl)?\b|\bcl\.exe\b"
+)
+
+
+def _builds_c_or_cxx(job: Job) -> bool:
+    """A job that names a compiler builds C/C++; one that only uses its runner's default compiler builds C/C++
+    unless it is seen using another ecosystem's tools and not C/C++ build tools."""
+    return not job.default_compiler or not job.ecosystems or "C/C++" in job.ecosystems
+
+
 def _compilers(job: Job) -> frozenset[str]:
-    return job.compilers
+    return job.compilers if _builds_c_or_cxx(job) else frozenset()
 
 
 def _uses_runner_default_compiler(job: Job) -> bool:
-    return job.default_compiler
+    return job.default_compiler and _builds_c_or_cxx(job)
 
 
 COMPILERS = ToolchainAxis(noun="compiler", of_job=_compilers, runner_default=_uses_runner_default_compiler)
@@ -86,6 +100,7 @@ C_AND_CXX = Ecosystem(
     languages=C_FAMILY,
     build_systems=(CMAKE, MESON),
     default_build_system=CMAKE,
+    ci_usage=CI_USAGE,
     source_suffixes={
         ".c": "C",
         ".cpp": "C++",

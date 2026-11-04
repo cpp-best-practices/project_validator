@@ -123,7 +123,7 @@ class ProjectStructureTests(unittest.TestCase):
             ],
         )
         job = ci["jobs"][0]
-        self.assertEqual(set(job), {"name", "os", "compilers", "toolchains", "configurations"})
+        self.assertEqual(set(job), {"name", "os", "compilers", "toolchains", "ecosystems", "configurations"})
 
 
 class LanguageApplicabilityTests(unittest.TestCase):
