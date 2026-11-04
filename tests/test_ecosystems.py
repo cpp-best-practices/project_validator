@@ -4,6 +4,7 @@ from typing import ClassVar
 from project_validator.core import Result, Status
 from project_validator.ecosystems import (
     C_AND_CXX,
+    C_FAMILY,
     ECOSYSTEMS,
     PYTHON,
     RUST,
@@ -11,7 +12,6 @@ from project_validator.ecosystems import (
     check_each_ecosystem,
     ecosystems_for,
 )
-from project_validator.structure import C_FAMILY
 from tests.support import make_context, temp_project
 
 

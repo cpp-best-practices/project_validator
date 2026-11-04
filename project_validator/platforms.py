@@ -1,9 +1,8 @@
 """Recognising operating systems, compilers and language toolchains in CI configuration text."""
 
-import re
-from collections.abc import Iterable
 from dataclasses import dataclass
 
+from project_validator.ecosystems import ECOSYSTEMS, ToolchainPatterns
 from project_validator.text import matching_names, pattern
 
 OPERATING_SYSTEMS = (
@@ -42,39 +41,10 @@ class Toolchain:
         return f"{self.language} {self.version}"
 
 
-@dataclass(frozen=True, slots=True, kw_only=True)
-class ToolchainPatterns:
-    versions: tuple[re.Pattern[str], ...]
-    usage: re.Pattern[str]
-
-
 DEFAULT_VERSION = "default"
 
-_RUST_VERSION = r"(stable|beta|nightly|\d+\.\d+(?:\.\d+)?)"
-
 # Language -> how a job names the versions it runs, and how a job that names none shows that it uses the language.
-TOOLCHAINS = {
-    "Python": ToolchainPatterns(
-        versions=(
-            re.compile(r"\bpython-version\W+(\d+(?:\.(?:\d+|x))*|pypy[\d.]*)"),
-            re.compile(r"\bpython:(\d+(?:\.\d+)*)"),
-            re.compile(r"\bpython(\d\.\d+)\b"),
-        ),
-        usage=re.compile(
-            r"\bpython[\d.]*\s+(?:-|\S+\.py\b)|\bpip\d*\s+install\b|\bpytest\b|\btox\b|\bnox\b|\bsetup-python\b"
-        ),
-    ),
-    "Rust": ToolchainPatterns(
-        versions=(
-            re.compile(rf"\brust-toolchain@{_RUST_VERSION}"),
-            re.compile(rf"\btoolchain\W+{_RUST_VERSION}"),
-            re.compile(rf"\bcargo\s+\+{_RUST_VERSION}"),
-            re.compile(rf"\brustup\s+(?:default|toolchain\s+install|install)\s+{_RUST_VERSION}"),
-            re.compile(r"\brust:(\d+\.\d+(?:\.\d+)?)"),
-        ),
-        usage=re.compile(r"\bcargo\b|\brustup\b|\brustc\b"),
-    ),
-}
+TOOLCHAINS = {ecosystem.toolchain.language: ecosystem.toolchain for ecosystem in ECOSYSTEMS if ecosystem.toolchain}
 
 
 def _named_versions(patterns: ToolchainPatterns, text: str) -> set[str]:
@@ -95,7 +65,3 @@ def detect_toolchains(*texts: str) -> frozenset[Toolchain]:
         for language, patterns in TOOLCHAINS.items()
         for toolchain in _language_toolchains(language, patterns, texts)
     )
-
-
-def toolchain_versions(toolchains: Iterable[Toolchain], language: str) -> frozenset[str]:
-    return frozenset(toolchain.version for toolchain in toolchains if toolchain.language == language)

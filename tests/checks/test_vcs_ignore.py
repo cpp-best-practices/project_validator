@@ -3,9 +3,8 @@ from pathlib import Path, PurePosixPath
 
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Context, Options, Project, Result, Status
-from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST
+from project_validator.ecosystems import C_AND_CXX, C_FAMILY, PYTHON, RUST
 from project_validator.plugins import discover
-from project_validator.structure import C_FAMILY
 from tests.support import (
     NO_FILES,
     PROJECT_LAYOUTS,

@@ -3,8 +3,8 @@ from collections import defaultdict
 from project_validator.build_configurations import BuildConfiguration
 from project_validator.ci import Job
 from project_validator.core import Context, Result, check
-from project_validator.ecosystems import C_AND_CXX, RUST, check_each_ecosystem, languages_of
-from project_validator.toolchain_axes import AXES, ToolchainAxis
+from project_validator.ecosystems import C_AND_CXX, RUST, ToolchainAxis, check_each_ecosystem, languages_of
+from project_validator.toolchain_axes import AXES
 
 REQUIRED_CONFIGURATIONS = frozenset(
     BuildConfiguration(build_type=build_type, sanitizers=sanitizers)

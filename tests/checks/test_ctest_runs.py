@@ -5,8 +5,7 @@ from unittest import mock
 
 from project_validator.checks.ctest_runs import ctest_runs
 from project_validator.core import Options, Result, Status
-from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_AND_CXX, C_FAMILY, PYTHON, RUST
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,

@@ -12,9 +12,8 @@ from types import MappingProxyType
 
 from project_validator import pretty
 from project_validator.core import Check, Context, Options, Project, Result
-from project_validator.ecosystems import C_AND_CXX, ECOSYSTEMS, Ecosystem, ecosystems_for
+from project_validator.ecosystems import C_AND_CXX, C_FAMILY, ECOSYSTEMS, Ecosystem, ecosystems_for
 from project_validator.plugins import discover
-from project_validator.structure import C_FAMILY
 
 FIXTURES = Path(__file__).parent / "fixtures"
 

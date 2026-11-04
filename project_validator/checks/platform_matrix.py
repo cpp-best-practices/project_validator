@@ -1,7 +1,7 @@
 from project_validator.ci import Job
 from project_validator.core import Context, Result, check
-from project_validator.ecosystems import check_each_ecosystem, languages_of
-from project_validator.toolchain_axes import AXES, ToolchainAxis, platforms
+from project_validator.ecosystems import ToolchainAxis, check_each_ecosystem, languages_of
+from project_validator.toolchain_axes import AXES, platforms
 
 MINIMUM_OPERATING_SYSTEMS = 2
 MINIMUM_COMPILERS = 2

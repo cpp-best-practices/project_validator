@@ -2,7 +2,7 @@ import unittest
 
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Result, Status
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_FAMILY
 from tests.support import BARE_PROJECT, CI_FILES, WELL_CONFIGURED, run_in_every_layout
 
 

@@ -2,7 +2,7 @@ import re
 from collections.abc import Iterable
 
 from project_validator.core import Context, Result, check
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_FAMILY
 from project_validator.text import Pattern, matching_names, pattern
 
 PRESET_FILES = ("CMakePresets.json", "CMakeUserPresets.json")

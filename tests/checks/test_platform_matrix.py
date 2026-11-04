@@ -2,8 +2,7 @@ import unittest
 
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.core import Result, Status
-from project_validator.ecosystems import PYTHON, RUST
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_FAMILY, PYTHON, RUST
 from tests.support import (
     BARE_PROJECT,
     GITHUB_WORKFLOW,

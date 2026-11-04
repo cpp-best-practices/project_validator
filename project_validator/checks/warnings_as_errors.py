@@ -1,7 +1,7 @@
 import re
 
 from project_validator.core import Context, Result, check
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_FAMILY
 from project_validator.text import Pattern, matching_names
 
 PRESET_FILES = ("CMakePresets.json", "CMakeUserPresets.json")

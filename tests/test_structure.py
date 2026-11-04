@@ -3,9 +3,9 @@ from typing import Any, cast
 from unittest import mock
 
 from project_validator.core import Check, Result, Status
+from project_validator.ecosystems import C_FAMILY
 from project_validator.plugins import discover
 from project_validator.runner import run_check
-from project_validator.structure import C_FAMILY
 from tests.support import (
     C_FAMILY_LAYOUTS,
     CI_FILES,

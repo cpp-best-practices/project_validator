@@ -53,21 +53,6 @@ class Options:
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})
 
 
-def _is_cmake_build_tree(directory: Path) -> bool:
-    return (directory / "CMakeCache.txt").is_file()
-
-
-def _is_cargo_target(directory: Path) -> bool:
-    """Cargo tags its output with CACHEDIR.TAG and, by default, puts it in `target/` beside `Cargo.toml`."""
-    return (directory / "CACHEDIR.TAG").is_file() or (
-        directory.name == "target" and (directory.parent / "Cargo.toml").is_file()
-    )
-
-
-def _is_build_tree(directory: Path) -> bool:
-    return _is_cmake_build_tree(directory) or _is_cargo_target(directory)
-
-
 def _is_cmake_file(name: str) -> bool:
     return name == "CMakeLists.txt" or name.endswith(".cmake")
 
@@ -96,13 +81,15 @@ class Project:
         )
 
     def files(self) -> list[str]:
-        """Every file of the project, skipping hidden, excluded and vendored directories and CMake/Cargo build trees."""
+        """Every file of the project, skipping hidden, excluded and vendored directories and build trees."""
         return sorted(self._walk_files())
 
     def cmake_files(self) -> list[str]:
         return [path for path in self.files() if _is_cmake_file(PurePosixPath(path).name)]
 
     def _walk_files(self) -> Iterator[str]:
+        from project_validator.ecosystems import is_build_tree
+
         for directory, subdirectories, files in os.walk(self.root):
             current = Path(directory)
             relative = PurePosixPath(current.relative_to(self.root).as_posix())
@@ -112,7 +99,7 @@ class Project:
                 if not name.startswith(".")
                 and name not in _SKIPPED_DIRECTORIES
                 and relative / name not in self.excluded
-                and not _is_build_tree(current / name)
+                and not is_build_tree(current / name)
             ]
             yield from (str(PurePosixPath(relative, name)) for name in files)
 

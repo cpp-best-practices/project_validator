@@ -4,8 +4,7 @@ from types import MappingProxyType
 
 from project_validator.checks.function_limits import function_limits
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_AND_CXX, C_FAMILY, PYTHON, RUST
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,
