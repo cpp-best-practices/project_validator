@@ -3,7 +3,11 @@
 import re
 from pathlib import Path
 
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.evidence import first_existing
+from project_validator.rules import BuildTypes, Formatter
+from project_validator.text import pattern
 
 
 def is_cargo_target(directory: Path) -> bool:
@@ -16,6 +20,21 @@ def is_cargo_target(directory: Path) -> bool:
 CARGO = BuildSystem(name="Cargo", files=("Cargo.toml",), languages=frozenset({"Rust"}), is_build_tree=is_cargo_target)
 
 _RUST_VERSION = r"(stable|beta|nightly|\d+\.\d+(?:\.\d+)?)"
+
+RUST_TOOLCHAINS = versions_axis("Rust toolchain", "Rust")
+
+
+def _rustfmt_file(context: Context) -> str | None:
+    return first_existing(context, ("rustfmt.toml", ".rustfmt.toml"))
+
+
+RUSTFMT = Formatter(
+    name="rustfmt",
+    config_file=_rustfmt_file,
+    runs=(pattern("rustfmt", r"\bcargo\s+(?:\+\S+\s+)?fmt\b|(?<![\w.-])rustfmt\b(?!\.toml)"),),
+    hint="consider a CI job that runs cargo fmt --check",
+    default_style=True,
+)
 
 RUST = Ecosystem(
     label="Rust",
@@ -33,5 +52,5 @@ RUST = Ecosystem(
         ),
         usage=re.compile(r"\bcargo\b|\brustup\b|\brustc\b"),
     ),
-    axis=versions_axis("Rust toolchain", "Rust"),
+    rules=(RUST_TOOLCHAINS, BuildTypes(axis=RUST_TOOLCHAINS), RUSTFMT),
 )

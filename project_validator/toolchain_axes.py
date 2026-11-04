@@ -1,9 +1,11 @@
 """What a CI job builds or runs with, per ecosystem: compilers for C/C++, interpreter or toolchain versions else."""
 
-from project_validator.ci import Job
-from project_validator.ecosystems import ECOSYSTEMS, Ecosystem, ToolchainAxis
+from collections.abc import Mapping
 
-AXES: dict[Ecosystem, ToolchainAxis] = {ecosystem: ecosystem.axis for ecosystem in ECOSYSTEMS if ecosystem.axis}
+from project_validator.ci import Job
+from project_validator.ecosystems import Ecosystem, ToolchainAxis, rules_of
+
+AXES: Mapping[Ecosystem, ToolchainAxis] = rules_of(ToolchainAxis)
 
 
 def platforms(jobs: tuple[Job, ...], axis: ToolchainAxis) -> set[tuple[str, str]]:

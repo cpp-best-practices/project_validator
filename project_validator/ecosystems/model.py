@@ -5,14 +5,24 @@ Everything the validator knows about one ecosystem lives in that ecosystem's pro
 
 import re
 from collections.abc import Callable, Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Protocol
 
 from project_validator.core import Context, Result, Status
+from project_validator.rules import ToolchainAxis, toolchain_versions, versions_axis
 
-if TYPE_CHECKING:
-    from project_validator.ci import Job
+__all__ = [
+    "C_FAMILY",
+    "BuildSystem",
+    "Ecosystem",
+    "ToolchainAxis",
+    "ToolchainPatterns",
+    "check_each_ecosystem",
+    "ecosystems_for",
+    "languages_of",
+    "toolchain_versions",
+    "versions_axis",
+]
 
 C_FAMILY = frozenset({"C", "C++"})
 
@@ -41,55 +51,31 @@ class ToolchainPatterns:
     usage: re.Pattern[str]
 
 
-class _Versioned(Protocol):
-    @property
-    def language(self) -> str: ...
-
-    @property
-    def version(self) -> str: ...
-
-
-def toolchain_versions(toolchains: Iterable[_Versioned], language: str) -> frozenset[str]:
-    return frozenset(toolchain.version for toolchain in toolchains if toolchain.language == language)
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class ToolchainAxis:
-    """What varies between the CI jobs of an ecosystem besides the OS: compilers, or language toolchain versions."""
-
-    noun: str
-    of_job: Callable[[Job], frozenset[str]]
-    runner_default: Callable[[Job], bool]
-
-    def plural(self) -> str:
-        return f"{self.noun}s"
-
-
-def _never(_: Job) -> bool:
-    return False
-
-
-def versions_axis(noun: str, language: str) -> ToolchainAxis:
-    """An axis of the `language` toolchain versions a job names; there is no runner default."""
-
-    def of_job(job: Job) -> frozenset[str]:
-        return toolchain_versions(job.toolchains, language)
-
-    return ToolchainAxis(noun=noun, of_job=of_job, runner_default=_never)
-
-
 # Ecosystems are registry singletons: they compare and hash by identity.
 @dataclass(frozen=True, slots=True, kw_only=True, eq=False)
 class Ecosystem:
+    """A language ecosystem: how it is recognised, and the rules (see `project_validator.rules`) it is judged by.
+
+    `rules` holds at most one rule of each type; a practice whose rule type an ecosystem lacks does not apply to it.
+    """
+
     label: str
     languages: frozenset[str]
     build_systems: tuple[BuildSystem, ...] = ()
     source_suffixes: Mapping[str, str] | None = None
     toolchain: ToolchainPatterns | None = None
-    axis: ToolchainAxis | None = None
+    rules: tuple[object, ...] = field(default=())
+
+    def __post_init__(self) -> None:
+        kinds = [type(rule) for rule in self.rules]
+        if duplicates := sorted({kind.__name__ for kind in kinds if kinds.count(kind) > 1}):
+            raise ValueError(f"{self.label} has several rules of type {', '.join(duplicates)}")
 
     def __repr__(self) -> str:
         return f"Ecosystem({self.label})"
+
+    def rule[R](self, kind: type[R]) -> R | None:
+        return next((rule for rule in self.rules if isinstance(rule, kind)), None)
 
 
 _SEVERITY = (Status.PASS, Status.WARN, Status.FAIL, Status.ERROR)
