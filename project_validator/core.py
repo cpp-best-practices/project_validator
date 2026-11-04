@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class Status(enum.StrEnum):
-    PASS = "PASS"
+    PASS = "PASS"  # noqa: S105 - a result status, not a password
     WARN = "WARN"
     FAIL = "FAIL"
     ERROR = "ERROR"

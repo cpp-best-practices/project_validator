@@ -10,7 +10,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install coverage lizard pytest ruff
+      - run: python -m pip install --require-hashes -r requirements-dev.txt
+      - run: bandit -c pyproject.toml -r src
       - run: ruff format --check
       - run: lizard --length 30 --warnings_only .
       - run: python -W error -m coverage run -m pytest

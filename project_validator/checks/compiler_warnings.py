@@ -5,7 +5,7 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result, check
 from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST, check_each_ecosystem, languages_of
-from project_validator.text import Pattern, matching_names
+from project_validator.text import Pattern, found_and_missing, matching_names
 
 PRESET_FILES = ("CMakePresets.json", "CMakeUserPresets.json")
 PYTHON_SETTINGS_FILES = ("pyproject.toml", "setup.cfg", "tox.ini", "pytest.ini")
@@ -64,14 +64,6 @@ class WarningPolicy:
     texts: Callable[[Context], tuple[str, ...]]
 
 
-def _found_and_missing(texts: tuple[str, ...], flags: Iterable[Pattern]) -> tuple[list[str], list[str]]:
-    found: list[str] = []
-    missing: list[str] = []
-    for flag in flags:
-        (found if any(flag.regex.search(text) for text in texts) else missing).append(flag.name)
-    return found, missing
-
-
 def _existing_texts(context: Context, names: Iterable[str]) -> tuple[str, ...]:
     return tuple(context.project.read_text(name) for name in names if context.project.exists(name))
 
@@ -122,7 +114,7 @@ POLICIES = {
 def _enforced(policy: WarningPolicy, context: Context) -> Result:
     required = policy.required(context)
     texts = policy.texts(context)
-    found, missing = _found_and_missing(texts, required)
+    found, missing = found_and_missing(texts, required)
 
     if not matching_names(texts, policy.recognised):
         return Result.failed(f"no {policy.kind} found; enable at least {' '.join(f.name for f in required)}")
