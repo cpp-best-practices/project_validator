@@ -125,14 +125,14 @@ def languages_of(ecosystems: Iterable[Ecosystem]) -> frozenset[str]:
 
 
 def ecosystems_for(languages: frozenset[str], supported: Iterable[Ecosystem]) -> tuple[Ecosystem, ...]:
-    """The supported ecosystems in `languages`; a project whose languages are unknown is judged as C/C++."""
-    supported = tuple(supported)
-    used = tuple(ecosystem for ecosystem in supported if ecosystem.languages & (languages or C_FAMILY))
-    return used or supported
+    """The supported ecosystems among `languages`, in the order they are supported."""
+    return tuple(ecosystem for ecosystem in supported if ecosystem.languages & languages)
 
 
 def combined(results: Mapping[Ecosystem, Result]) -> Result:
     """One result for several ecosystems; ecosystems a practice does not apply to are left out, unless all are."""
+    if not results:
+        return Result(status=Status.SKIP, message="no recognised ecosystem in the project")
     if judged := {ecosystem: result for ecosystem, result in results.items() if result.status is not Status.SKIP}:
         results = judged
     if len(results) == 1:

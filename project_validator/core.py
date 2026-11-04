@@ -156,8 +156,8 @@ class Check:
     aliases: tuple[str, ...] = ()
 
     def applies_to(self, languages: frozenset[str]) -> bool:
-        """A check without languages is language agnostic; a project whose languages are unknown gets every check."""
-        return not self.languages or not languages or bool(self.languages & languages)
+        """A check without languages is language agnostic; others apply to projects using one of their languages."""
+        return not self.languages or bool(self.languages & languages)
 
 
 def check(*, name: str, description: str, languages: frozenset[str] = frozenset()) -> Callable[[CheckFunction], Check]:

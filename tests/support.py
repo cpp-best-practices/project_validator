@@ -61,8 +61,8 @@ class ProjectLayout:
 
     @property
     def gets_c_family_checks(self) -> bool:
-        """C/C++ checks run for C and C++ projects, and for projects whose language is not recognised."""
-        return not self.languages or bool(self.languages & C_FAMILY)
+        """C/C++ checks run for C and C++ projects only."""
+        return bool(self.languages & C_FAMILY)
 
 
 # CMake files are deliberately free of project() and settings so that the files a test adds decide what is checked.
@@ -161,7 +161,10 @@ def c_family_layouts_built_with(selected: Check, build_system: str) -> tuple[Pro
 
 C_FAMILY_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if layout.gets_c_family_checks)
 C_FAMILY_ONLY_LAYOUTS = tuple(layout for layout in C_FAMILY_LAYOUTS if layout.languages <= C_FAMILY)
-OTHER_LANGUAGE_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if not layout.gets_c_family_checks)
+OTHER_LANGUAGE_LAYOUTS = tuple(
+    layout for layout in PROJECT_LAYOUTS if layout.languages and not layout.gets_c_family_checks
+)
+UNRECOGNISED_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if not layout.languages)
 NON_CMAKE_C_FAMILY_LAYOUTS = tuple(layout for layout in C_FAMILY_LAYOUTS if not layout.uses_cmake)
 
 

@@ -27,12 +27,11 @@ class EcosystemsForTests(unittest.TestCase):
         self.assertEqual(ecosystems_for(frozenset({"C++", "Python"}), BUILT_IN), (C_AND_CXX, PYTHON))
         self.assertEqual(ecosystems_for(frozenset({"Rust", "Python"}), (C_AND_CXX, RUST)), (RUST,))
 
-    def test_unknown_languages_are_judged_as_c_and_cxx(self) -> None:
-        self.assertEqual(ecosystems_for(frozenset(), BUILT_IN), (C_AND_CXX,))
+    def test_no_ecosystem_for_unknown_languages(self) -> None:
+        self.assertEqual(ecosystems_for(frozenset(), BUILT_IN), ())
 
-    def test_every_supported_ecosystem_when_none_is_used(self) -> None:
-        self.assertEqual(ecosystems_for(frozenset(), (PYTHON, RUST)), (PYTHON, RUST))
-        self.assertEqual(ecosystems_for(C_FAMILY, (PYTHON,)), (PYTHON,))
+    def test_no_ecosystem_when_none_of_the_supported_ones_is_used(self) -> None:
+        self.assertEqual(ecosystems_for(C_FAMILY, (PYTHON, RUST)), ())
 
 
 class CheckEachEcosystemTests(unittest.TestCase):
@@ -48,7 +47,12 @@ class CheckEachEcosystemTests(unittest.TestCase):
 
     def test_a_single_ecosystem_result_is_unchanged(self) -> None:
         self.assertEqual(self._judge({"Cargo.toml": ""}), self.RESULTS[RUST])
-        self.assertEqual(self._judge({"README.md": ""}), self.RESULTS[C_AND_CXX])
+        self.assertEqual(self._judge({"main.c": ""}), self.RESULTS[C_AND_CXX])
+
+    def test_a_project_of_no_recognised_ecosystem_is_skipped(self) -> None:
+        self.assertEqual(
+            self._judge({"README.md": ""}), Result(status=Status.SKIP, message="no recognised ecosystem in the project")
+        )
 
     def test_several_ecosystems_combine_into_the_worst_result_with_labelled_findings(self) -> None:
         self.assertEqual(

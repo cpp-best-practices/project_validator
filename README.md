@@ -10,9 +10,10 @@ Rust (Cargo) projects, and judges each language by its own ecosystem's tools: a 
 project needs branch coverage from gcovr or llvm-cov, a Python project from coverage.py,
 a Rust project from cargo-llvm-cov. Checks that do not apply to any of the project's
 languages are reported as `SKIP`. A project using several languages is judged for each
-of them and gets the worst result. Projects whose language is not recognised are judged
-as C/C++. A C/C++ project is judged by the rules of the build system it uses (CMake or Meson); one
-using neither is judged as a CMake project.
+of them and gets the worst result. In a project of no recognised language, only the
+checks that apply to every project run. A C/C++ project is judged by the rules of the
+build system it uses (CMake or Meson); one using neither is judged as a CMake project.
+More ecosystems can be added with plugins (see [Adding an ecosystem](#adding-an-ecosystem)).
 
 The validator itself is pure Python and has no build step; it only inspects
 (and, with `--build`, configures and builds) the project it is pointed at.

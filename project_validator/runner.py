@@ -35,7 +35,10 @@ def _skipped(selected: Check, context: Context) -> Result | None:
     languages = context.structure.languages
     if selected.applies_to(languages):
         return None
-    found, wanted = ", ".join(sorted(languages)), ", ".join(sorted(selected.languages))
+    found, wanted = (
+        ", ".join(sorted(languages)) or "a project of no recognised language",
+        ", ".join(sorted(selected.languages)),
+    )
     return Result(status=Status.SKIP, message=f"not applicable to {found} (applies to {wanted})")
 
 

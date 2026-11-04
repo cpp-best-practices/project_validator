@@ -138,7 +138,7 @@ class CliTests(unittest.TestCase):
                         skipped = f"[SKIP] {name}:" in output
                         self.assertEqual(skipped, name in NOT_APPLICABLE[language], name)
 
-    def test_compiler_checks_run_for_c_family_and_unrecognised_languages(self) -> None:
+    def test_compiler_checks_run_for_c_family_languages(self) -> None:
         for layout in C_FAMILY_LAYOUTS:
             with layout_project(self, layout, {".github/workflows/ci.yml": "jobs: {}\n"}) as root:
                 code, output, _ = run_cli("--only", COMPILER_CHECKS, str(root))
