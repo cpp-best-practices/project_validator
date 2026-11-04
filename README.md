@@ -138,8 +138,13 @@ ZIG = Ecosystem(
     ),
     rules=(
         versions_axis("Zig version", "Zig"),  # platform-matrix: OS x Zig version
-        Formatter(name="zig fmt", config_file=_no_config, runs=(pattern("zig fmt", r"\bzig\s+fmt\b"),),
-                  hint="run zig fmt --check in CI", default_style=True),  # code-formatting
+        Formatter(
+            name="zig fmt",
+            config_file=_no_config,
+            runs=(pattern("zig fmt", r"\bzig\s+fmt\b"),),
+            hint="run zig fmt --check in CI",
+            default_style=True,
+        ),  # code-formatting
     ),
 )
 ```
