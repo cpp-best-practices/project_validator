@@ -1,0 +1,2 @@
+[console_scripts]
+project-validator = project_validator.cli:main
