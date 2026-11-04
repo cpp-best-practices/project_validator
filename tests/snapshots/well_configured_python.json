@@ -1,0 +1,198 @@
+{
+  "map": {
+    "build_systems": [
+      "Python packaging"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/codeql.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 3.13)",
+          "os": "linux",
+          "toolchains": [
+            "Python 3.13"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 3.14)",
+          "os": "linux",
+          "toolchains": [
+            "Python 3.14"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 3.13)",
+          "os": "macos",
+          "toolchains": [
+            "Python 3.13"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 3.14)",
+          "os": "macos",
+          "toolchains": [
+            "Python 3.14"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 3.13)",
+          "os": "windows",
+          "toolchains": [
+            "Python 3.13"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 3.14)",
+          "os": "windows",
+          "toolchains": [
+            "Python 3.14"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "name": ".github/workflows/codeql.yml: analyze",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "languages": [
+      "Python"
+    ]
+  },
+  "results": {
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Python (applies to C, C++, Rust)",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/codeql.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "CI enforces the ruff format style",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict Python warning settings are enabled: -W error",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "branch coverage is reported with coverage.py branch = true",
+      "status": "PASS"
+    },
+    "ctest-runs": {
+      "details": [],
+      "message": "Python tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Python (applies to C, C++)",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with lizard --length 30",
+      "status": "PASS"
+    },
+    "hardening": {
+      "details": [],
+      "message": "hardening options are enabled: bandit security lints, hash-checked dependencies",
+      "status": "PASS"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci.yml: test (ubuntu-latest, 3.13): linux / 3.13",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 3.14): linux / 3.14",
+        ".github/workflows/ci.yml: test (macos-latest, 3.13): macos / 3.13",
+        ".github/workflows/ci.yml: test (macos-latest, 3.14): macos / 3.14",
+        ".github/workflows/ci.yml: test (windows-latest, 3.13): windows / 3.13",
+        ".github/workflows/ci.yml: test (windows-latest, 3.14): windows / 3.14",
+        ".github/workflows/codeql.yml: analyze: linux / no Python version",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Python version"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Python version(s) (3.13, 3.14), 6 combination(s)",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "CI runs code security scanning with CodeQL",
+      "status": "PASS"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores __pycache__/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to Python (applies to C, C++)",
+      "status": "SKIP"
+    }
+  }
+}

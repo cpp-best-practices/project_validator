@@ -1,0 +1,105 @@
+{
+  "map": {
+    "build_systems": [
+      "CMake"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "languages": [
+      "C",
+      "C++"
+    ]
+  },
+  "results": {
+    "ci-build-types": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that checks formatting (clang-format --dry-run -Werror) or applies it automatically"
+      ],
+      "message": "no clang-format configuration found; formatting is not defined",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no compiler warning flags found; enable at least -Wall -Wextra -Wpedantic -Wshadow -Wconversion",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding PMD CPD (pmd cpd --language cpp), jscpd, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [],
+      "message": "no branch coverage reporting found in CI configuration or CMake files",
+      "status": "FAIL"
+    },
+    "ctest-runs": {
+      "details": [],
+      "message": "CTest is enabled and tests are registered with add_test, but no CI configuration runs ctest",
+      "status": "WARN"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "C++ compiler extensions are never disabled; add set(CMAKE_CXX_EXTENSIONS OFF)",
+      "status": "FAIL"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is never limited; enable clang-tidy readability-function-size with a LineThreshold or run lizard --length 30 in CI",
+      "status": "FAIL"
+    },
+    "hardening": {
+      "details": [],
+      "message": "no hardening options found; enable -fhardened (GCC 14+) or _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE",
+      "status": "FAIL"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "security-scanning": {
+      "details": [
+        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "add -Werror (GCC/Clang), /WX (MSVC) or set CMAKE_COMPILE_WARNING_AS_ERROR, at least as an option"
+      ],
+      "message": "warnings are not treated as errors in CI configuration, CMake files or presets",
+      "status": "FAIL"
+    }
+  }
+}
