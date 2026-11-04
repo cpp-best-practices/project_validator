@@ -7,7 +7,7 @@ from pathlib import PurePosixPath
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import existing_texts, first_existing
-from project_validator.rules import CoverageTools, Formatter, TestSuite
+from project_validator.rules import CoverageTools, Formatter, Hardening, TestSuite, WarningPolicy
 from project_validator.text import Pattern, pattern
 
 PYTHON_PACKAGING = BuildSystem(
@@ -69,6 +69,66 @@ def _python_tests_result(context: Context) -> Result:
 
 TESTS = TestSuite(found=_python_tests_result, runs=RUNS_PYTHON_TESTS, runner="pytest, unittest, tox or nox")
 
+
+def _setting(name: str, regex: str) -> Pattern:
+    return Pattern(name, re.compile(regex, re.MULTILINE))
+
+
+WARNING_SETTINGS_FILES = ("pyproject.toml", "setup.cfg", "tox.ini", "pytest.ini")
+
+# Python reports problems such as deprecations as warnings; the strict setting turns every one into an error.
+PYTHON_WARNINGS = (
+    _setting(
+        "-W error",
+        r"\bpython[\d.]*\s+(?:-\w+(?:\s+[^-\s]\S*)?\s+)*-W\s*error\b|\bpytest\b[^\n]*\s-W\s*error\b"
+        r"|\bPYTHONWARNINGS\W+error\b|\bfilterwarnings\s*=\s*\[?\s*[\"']?error\b",
+    ),
+)
+
+
+def _required_warnings(_: Context) -> tuple[Pattern, ...]:
+    return PYTHON_WARNINGS
+
+
+def _warning_texts(context: Context) -> tuple[str, ...]:
+    return (*context.ci_texts, *existing_texts(context, WARNING_SETTINGS_FILES))
+
+
+WARNINGS = WarningPolicy(
+    kind="Python warning settings", recognised=PYTHON_WARNINGS, required=_required_warnings, texts=_warning_texts
+)
+
+HARDENING_SETTINGS_FILES = (
+    "pyproject.toml",
+    "setup.cfg",
+    "tox.ini",
+    "ruff.toml",
+    ".ruff.toml",
+    ".pre-commit-config.yaml",
+)
+
+
+def _hardening_texts(context: Context) -> tuple[str, ...]:
+    return (*context.ci_texts, *existing_texts(context, HARDENING_SETTINGS_FILES))
+
+
+# Python has no compiler mitigations; its hardening is linting for insecure code and refusing tampered dependencies.
+HARDENING = Hardening(
+    texts=_hardening_texts,
+    options=(
+        _setting(
+            "bandit security lints",
+            r"\bbandit\s+-|\bid:\s*bandit\b|\bPyCQA/bandit-action\b"
+            r"""|\bruff\b[^\n]*--(?:extend-)?select[=\s]+(?:\S*,)?(?:S\d*|ALL)(?![\w-])"""
+            r"""|\b(?:extend-)?select\s*=\s*\[[^\]]*["'](?:S\d*|ALL)["']""",
+        ),
+        _setting(
+            "hash-checked dependencies",
+            r"--require-hashes\b|--generate-hashes\b|\buv\s+sync\b[^\n]*--(?:locked|frozen)\b",
+        ),
+    ),
+)
+
 PYTHON = Ecosystem(
     label="Python",
     languages=frozenset({"Python"}),
@@ -85,5 +145,5 @@ PYTHON = Ecosystem(
             r"\bpython[\d.]*\s+(?:-|\S+\.py\b)|\bpip\d*\s+install\b|\bpytest\b|\btox\b|\bnox\b|\bsetup-python\b"
         ),
     ),
-    rules=(versions_axis("Python version", "Python"), RUFF_OR_BLACK, COVERAGE, TESTS),
+    rules=(versions_axis("Python version", "Python"), RUFF_OR_BLACK, COVERAGE, TESTS, WARNINGS, HARDENING),
 )

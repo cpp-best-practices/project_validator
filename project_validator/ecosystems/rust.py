@@ -1,13 +1,13 @@
 """Rust: built with Cargo, judged by the Rust toolchains CI runs."""
 
 import re
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import first_existing
-from project_validator.rules import BuildTypes, CoverageTools, Formatter, TestSuite
-from project_validator.text import pattern
+from project_validator.evidence import existing_texts, first_existing
+from project_validator.rules import BuildTypes, CoverageTools, Formatter, Hardening, TestSuite, WarningPolicy
+from project_validator.text import Pattern, pattern
 
 
 def is_cargo_target(directory: Path) -> bool:
@@ -70,6 +70,55 @@ def _rust_tests_result(context: Context) -> Result:
 
 TESTS = TestSuite(found=_rust_tests_result, runs=RUNS_RUST_TESTS, runner="cargo test")
 
+CARGO_CONFIG_FILES = (".cargo/config.toml", ".cargo/config")
+CRATE_SETTINGS_FILES = frozenset({"Cargo.toml", "lib.rs", "main.rs"})
+
+
+def _settings_texts(context: Context) -> tuple[str, ...]:
+    """Where Rust lints and profiles are set: CI configuration, Cargo configuration, manifests and crate roots."""
+    crate_files = (path for path in context.project.files() if PurePosixPath(path).name in CRATE_SETTINGS_FILES)
+    return (*context.ci_texts, *existing_texts(context, (*CARGO_CONFIG_FILES, *crate_files)))
+
+
+def _setting(name: str, regex: str) -> Pattern:
+    return Pattern(name, re.compile(regex, re.MULTILINE))
+
+
+RUST_LINTS = (
+    _setting("cargo clippy", r"\bcargo\s+(?:\+\S+\s+)?clippy\b"),
+    _setting(
+        "-D warnings",
+        r"""-D[\s"',]*warnings\b|--deny[=\s]+warnings\b|\bdeny\s*\(\s*warnings\s*\)|^\s*warnings\s*=\s*["']deny["']""",
+    ),
+    _setting("clippy::pedantic", r"\bclippy::pedantic\b|^\s*pedantic\s*="),
+)
+
+
+def _required_lints(_: Context) -> tuple[Pattern, ...]:
+    return RUST_LINTS
+
+
+WARNINGS = WarningPolicy(
+    kind="Rust lint settings", recognised=RUST_LINTS, required=_required_lints, texts=_settings_texts
+)
+
+HARDENING = Hardening(
+    texts=_settings_texts,
+    options=(
+        _setting(
+            "unsafe_code forbidden",
+            r"#!\[\s*(?:forbid|deny)\s*\([^)]*\bunsafe_code\b"
+            r"""|^\s*unsafe_code\s*=\s*(?:\{[^}]*\blevel\s*=\s*)?["'](?:forbid|deny)["']"""
+            r"""|-[FD][\s"',]*unsafe_code\b|--(?:forbid|deny)[=\s]+unsafe_code\b""",
+        ),
+        _setting(
+            "release overflow-checks",
+            r"^\[profile\.release\][^\[]*^\s*overflow-checks\s*=\s*true\b"
+            r"""|-C[\s"',]*overflow-checks(?:=(?:on|yes|y|true))?(?![\w=-])""",
+        ),
+    ),
+)
+
 RUST = Ecosystem(
     label="Rust",
     languages=frozenset({"Rust"}),
@@ -86,5 +135,5 @@ RUST = Ecosystem(
         ),
         usage=re.compile(r"\bcargo\b|\brustup\b|\brustc\b"),
     ),
-    rules=(RUST_TOOLCHAINS, BuildTypes(axis=RUST_TOOLCHAINS), RUSTFMT, COVERAGE, TESTS),
+    rules=(RUST_TOOLCHAINS, BuildTypes(axis=RUST_TOOLCHAINS), RUSTFMT, COVERAGE, TESTS, WARNINGS, HARDENING),
 )

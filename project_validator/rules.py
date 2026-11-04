@@ -95,3 +95,35 @@ class TestSuite:
     found: Callable[[Context], Result]
     runs: tuple[Pattern, ...]
     runner: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class WarningPolicy:
+    """The warning settings an ecosystem must enable, every setting it recognises, and where they are found."""
+
+    kind: str
+    recognised: tuple[Pattern, ...]
+    required: Callable[[Context], tuple[Pattern, ...]]
+    texts: Evidence
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class WarningsAsErrors:
+    """The settings that make warnings fail the build, where they are `searched`, and how to enable them."""
+
+    flags: tuple[Pattern, ...]
+    texts: Evidence
+    searched: str
+    hint: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Hardening:
+    """The security hardening options an ecosystem must enable, all of them, and where they are found.
+
+    An ecosystem whose options depend on more than presence, e.g. on the compilers in CI, supplies its own `judge`.
+    """
+
+    texts: Evidence
+    options: tuple[Pattern, ...] = ()
+    judge: Callable[[Context], Result] | None = None
