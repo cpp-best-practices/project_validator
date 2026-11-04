@@ -26,7 +26,8 @@ def _run_with(test: unittest.TestCase, ignore_file: str, text: str) -> Result:
 
 class VcsIgnoreTests(unittest.TestCase):
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(vcs_ignore.languages, C_FAMILY | {"Python", "Rust"})
+        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, vcs_ignore.languages)
 
     def test_fails_without_an_ignore_file_in_every_layout(self) -> None:
         result = run_in_every_layout(self, vcs_ignore, NO_FILES, PROJECT_LAYOUTS)

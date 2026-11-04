@@ -5,8 +5,8 @@
 
 A tool to validate a project's build, CI and tooling against best practices.
 
-It recognises C and C++ (CMake or Meson), Python (`pyproject.toml` or `setup.py`) and
-Rust (Cargo) projects, and judges each language by its own ecosystem's tools: a C++
+It recognises C and C++ (CMake or Meson), Python (`pyproject.toml` or `setup.py`),
+Rust (Cargo) and Go (Go modules) projects, and judges each language by its own ecosystem's tools: a C++
 project needs branch coverage from gcovr or llvm-cov, a Python project from coverage.py,
 a Rust project from cargo-llvm-cov. Checks that do not apply to any of the project's
 languages are reported as `SKIP`. A project using several languages is judged for each
@@ -58,20 +58,20 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 | Check | Applies to | Passes when |
 |---|---|---|
 | `ci-present` | all | at least one CI configuration is found |
-| `tests-run` | C/C++, Python, Rust | tests exist and CI runs them (`ctest-runs` is accepted as an old name). C/C++ with CMake: `enable_testing()` or `include(CTest)` is called, tests are registered (`add_test`, `*_discover_tests`, ...) and CI runs `ctest`; with `--build`, the project is really configured and built, and `ctest` must list at least one test. C/C++ with Meson: `test()` is called in a `meson.build` and CI runs `meson test`. Python: `test_*.py` / `*_test.py` files run by pytest, unittest, tox or nox. Rust: `#[test]` functions run by `cargo test` or nextest. Warns when CI never runs the tests |
-| `coverage` | C/C++, Python, Rust | CI reports branch coverage. C/C++: gcovr, lcov, genhtml, gcov or llvm-cov branch options; Python: `coverage run --branch`, `--cov-branch` or `branch = true`; Rust: cargo-llvm-cov, cargo-tarpaulin or grcov with `--branch`. Path or MC/DC coverage (`-fcondition-coverage`, `-fcoverage-mcdc`, `--mcdc`, ...) is reported as a bonus |
-| `platform-matrix` | C/C++, Python, Rust | CI covers at least 2 operating systems, 2 toolchains (compilers, Python versions or Rust toolchains) and 3 OS/toolchain combinations |
+| `tests-run` | C/C++, Python, Rust, Go | tests exist and CI runs them (`ctest-runs` is accepted as an old name). C/C++ with CMake: `enable_testing()` or `include(CTest)` is called, tests are registered (`add_test`, `*_discover_tests`, ...) and CI runs `ctest`; with `--build`, the project is really configured and built, and `ctest` must list at least one test. C/C++ with Meson: `test()` is called in a `meson.build` and CI runs `meson test`. Python: `test_*.py` / `*_test.py` files run by pytest, unittest, tox or nox. Rust: `#[test]` functions run by `cargo test` or nextest. Go: `Test` functions in `*_test.go` files run by `go test`. Warns when CI never runs the tests |
+| `coverage` | C/C++, Python, Rust, Go | CI reports branch coverage (Go's tools measure statements only, so Go needs statement coverage: `go test -cover` or `-coverprofile`). C/C++: gcovr, lcov, genhtml, gcov or llvm-cov branch options; Python: `coverage run --branch`, `--cov-branch` or `branch = true`; Rust: cargo-llvm-cov, cargo-tarpaulin or grcov with `--branch`. Path or MC/DC coverage (`-fcondition-coverage`, `-fcoverage-mcdc`, `--mcdc`, ...) is reported as a bonus |
+| `platform-matrix` | C/C++, Python, Rust, Go | CI covers at least 2 operating systems, 2 toolchains (compilers, Python versions, Rust toolchains or Go versions) and 3 OS/toolchain combinations |
 | `ci-build-types` | C/C++, Rust | every OS/toolchain combination in CI builds Debug and Release (Rust: debug and release profiles), each with and without sanitizers |
-| `compiler-warnings` | C/C++, Python, Rust | a strict warning set is enabled. C/C++: `-Wall -Wextra -Wpedantic -Wshadow -Wconversion`, plus `/W4` and `/permissive-` when MSVC is in CI; Python: warnings are errors (`-W error`, `PYTHONWARNINGS=error`, pytest `filterwarnings = error`); Rust: `cargo clippy`, `-D warnings` and `clippy::pedantic`. Warns listing what is missing |
+| `compiler-warnings` | C/C++, Python, Rust, Go | a strict warning set is enabled. C/C++: `-Wall -Wextra -Wpedantic -Wshadow -Wconversion`, plus `/W4` and `/permissive-` when MSVC is in CI; Python: warnings are errors (`-W error`, `PYTHONWARNINGS=error`, pytest `filterwarnings = error`); Rust: `cargo clippy`, `-D warnings` and `clippy::pedantic`; Go: `go vet` and staticcheck (golangci-lint runs both). Warns listing what is missing |
 | `warnings-as-errors` | C/C++ | `-Werror`, `/WX` or `COMPILE_WARNING_AS_ERROR` (Meson: `werror=true`) is enabled in at least one configuration |
 | `cxx-extensions` | C/C++ | `CMAKE_CXX_EXTENSIONS` (or `CMAKE_C_EXTENSIONS` for C) is turned off, or with Meson `cpp_std` (`c_std`) names a standard such as `c++20` rather than `gnu++20`, so `-std=c++NN` is used rather than `-std=gnu++NN` |
-| `hardening` | C/C++, Python, Rust | security hardening options are enabled. C/C++: `_FORTIFY_SOURCE`, `-fstack-protector-strong`, `-fcf-protection`, `-fstack-clash-protection` and `_GLIBCXX_ASSERTIONS` or `_LIBCPP_HARDENING_MODE` (or GCC's `-fhardened`), plus `/sdl /guard:cf /DYNAMICBASE /CETCOMPAT` when MSVC is in CI; Python: bandit security lints (or ruff's `S` rules) and hash-checked dependencies; Rust: `unsafe_code` forbidden crate-wide and release `overflow-checks`. Warns listing what is missing |
-| `code-formatting` | C/C++, Python, Rust | the formatting style is defined (`.clang-format`; ruff or black settings; `rustfmt.toml`) and CI runs the formatter. Python and Rust formatters have a default style, so CI enforcement alone passes. Warns when the style is defined but CI does not enforce it |
-| `function-limits` | C/C++, Python, Rust | function length is limited: lizard runs with a length limit (`lizard --length 30`), or for C/C++, `.clang-tidy` enables `readability-function-size` with a threshold and clang-tidy runs |
+| `hardening` | C/C++, Python, Rust, Go | security hardening options are enabled. C/C++: `_FORTIFY_SOURCE`, `-fstack-protector-strong`, `-fcf-protection`, `-fstack-clash-protection` and `_GLIBCXX_ASSERTIONS` or `_LIBCPP_HARDENING_MODE` (or GCC's `-fhardened`), plus `/sdl /guard:cf /DYNAMICBASE /CETCOMPAT` when MSVC is in CI; Python: bandit security lints (or ruff's `S` rules) and hash-checked dependencies; Rust: `unsafe_code` forbidden crate-wide and release `overflow-checks`; Go: govulncheck and gosec. Warns listing what is missing |
+| `code-formatting` | C/C++, Python, Rust, Go | the formatting style is defined (`.clang-format`; ruff or black settings; `rustfmt.toml`) and CI runs the formatter. Python, Rust and Go (gofmt, gofumpt, goimports) formatters have a default style, so CI enforcement alone passes. Warns when the style is defined but CI does not enforce it |
+| `function-limits` | C/C++, Python, Rust, Go | function length is limited: lizard runs with a length limit (`lizard --length 30`), or for C/C++, `.clang-tidy` enables `readability-function-size` with a threshold and clang-tidy runs, or for Go, golangci-lint runs with `funlen` enabled |
 | `copy-paste-detection` | all | CI runs a duplicate code detector (PMD CPD, jscpd, Duplo, Simian, CCFinderX or SonarQube); warns otherwise |
 | `security-scanning` | all | CI runs code security scanning (CodeQL or GitLab SAST); warns otherwise |
 | `dependency-updates` | all | Dependabot or Renovate is configured; warns otherwise |
-| `vcs-ignore` | C/C++, Python, Rust | a `.gitignore`, `.hgignore`, `.bzrignore` or `.fossil-settings/ignore-glob` ignores the build outputs (`build/` or `out/`, `__pycache__/` or `*.py[cod]`, `/target`). Warns when an ignore file misses them |
+| `vcs-ignore` | C/C++, Python, Rust, Go | a `.gitignore`, `.hgignore`, `.bzrignore` or `.fossil-settings/ignore-glob` ignores the build outputs (`build/` or `out/`, `__pycache__/` or `*.py[cod]`, `/target`, Go's `*.test` or `*.out`). Warns when an ignore file misses them |
 
 CI detection is pluggable too. GitHub Actions workflows (including `strategy.matrix`
 with `include`/`exclude`) and GitLab CI pipelines (including `parallel: matrix:`)
@@ -127,18 +127,18 @@ def _no_config(context):
     return None
 
 
-GO = Ecosystem(
-    label="Go",
-    languages=frozenset({"Go"}),
-    build_systems=(BuildSystem(name="Go modules", files=("go.mod",), languages=frozenset({"Go"})),),
-    source_suffixes={".go": "Go"},
+ZIG = Ecosystem(
+    label="Zig",
+    languages=frozenset({"Zig"}),
+    build_systems=(BuildSystem(name="Zig build", files=("build.zig",), languages=frozenset({"Zig"})),),
+    source_suffixes={".zig": "Zig"},
     toolchain=ToolchainPatterns(
-        language="Go", versions=(re.compile(r"\bgo-version\W+([\d.x]+)"),), usage=re.compile(r"\bgo\s+test\b")
+        language="Zig", versions=(re.compile(r"\bzig-version\W+([\d.x]+)"),), usage=re.compile(r"\bzig\s+build\b")
     ),
     rules=(
-        versions_axis("Go version", "Go"),  # platform-matrix: OS x Go version
-        Formatter(name="gofmt", config_file=_no_config, runs=(pattern("gofmt", r"\bgofmt\b"),),
-                  hint="run gofmt -l in CI", default_style=True),  # code-formatting
+        versions_axis("Zig version", "Zig"),  # platform-matrix: OS x Zig version
+        Formatter(name="zig fmt", config_file=_no_config, runs=(pattern("zig fmt", r"\bzig\s+fmt\b"),),
+                  hint="run zig fmt --check in CI", default_style=True),  # code-formatting
     ),
 )
 ```

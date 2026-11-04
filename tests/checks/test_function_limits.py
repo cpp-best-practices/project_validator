@@ -36,7 +36,8 @@ class FunctionLimitsTests(unittest.TestCase):
         return run_in_every_layout(self, function_limits, files)
 
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(function_limits.languages, C_FAMILY | {"Python", "Rust"})
+        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, function_limits.languages)
 
     def test_fails_without_function_limits(self) -> None:
         result = self._run(BARE_PROJECT)

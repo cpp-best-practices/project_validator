@@ -81,11 +81,16 @@ class BuildTypes:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class CoverageTools:
-    """How an ecosystem reports branch coverage, and the path (or MC/DC) coverage that is a bonus on top of it."""
+    """How an ecosystem reports branch coverage, and the path (or MC/DC) coverage that is a bonus on top of it.
+
+    An ecosystem whose tools cannot measure branches names the finest `granularity` they can measure instead, e.g.
+    statement coverage for Go; `branch` then holds the patterns that report it.
+    """
 
     searched: str
     texts: Evidence
     branch: tuple[Pattern, ...]
+    granularity: str = "branch"
     path: tuple[Pattern, ...] = ()
     path_hint: str | None = None
 
@@ -101,12 +106,16 @@ class TestSuite:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class WarningPolicy:
-    """The warning settings an ecosystem must enable, every setting it recognises, and where they are found."""
+    """The warning settings an ecosystem must enable, every setting it recognises, and where they are found.
+
+    Settings are listed joined by `separator`: flags as on a command line, named tools as a list.
+    """
 
     kind: str
     recognised: tuple[Pattern, ...]
     required: Callable[[Context], tuple[Pattern, ...]]
     texts: Evidence
+    separator: str = " "
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

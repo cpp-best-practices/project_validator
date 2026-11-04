@@ -1,0 +1,235 @@
+{
+  "map": {
+    "build_systems": [
+      "Go modules"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/codeql.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Go"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 1.22)",
+          "os": "linux",
+          "toolchains": [
+            "Go 1.22"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Go"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 1.23)",
+          "os": "linux",
+          "toolchains": [
+            "Go 1.23"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Go"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 1.22)",
+          "os": "macos",
+          "toolchains": [
+            "Go 1.22"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Go"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 1.23)",
+          "os": "macos",
+          "toolchains": [
+            "Go 1.23"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Go"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 1.22)",
+          "os": "windows",
+          "toolchains": [
+            "Go 1.22"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Go"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 1.23)",
+          "os": "windows",
+          "toolchains": [
+            "Go 1.23"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/codeql.yml: analyze",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "languages": [
+      "Go"
+    ]
+  },
+  "results": {
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Go (applies to C, C++, Rust)",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/codeql.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "CI enforces the gofmt style",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict Go linters are enabled: go vet, staticcheck",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "statement coverage is reported with go test -cover",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Go (applies to C, C++)",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with lizard --length 30",
+      "status": "PASS"
+    },
+    "hardening": {
+      "details": [],
+      "message": "hardening options are enabled: govulncheck, gosec security lints",
+      "status": "PASS"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci.yml: test (ubuntu-latest, 1.22): linux / 1.22",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 1.23): linux / 1.23",
+        ".github/workflows/ci.yml: test (macos-latest, 1.22): macos / 1.22",
+        ".github/workflows/ci.yml: test (macos-latest, 1.23): macos / 1.23",
+        ".github/workflows/ci.yml: test (windows-latest, 1.22): windows / 1.22",
+        ".github/workflows/ci.yml: test (windows-latest, 1.23): windows / 1.23",
+        ".github/workflows/codeql.yml: analyze: linux / no Go version",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Go version",
+        ".github/workflows/function-limits.yml: function-limits: linux / no Go version"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Go version(s) (1.22, 1.23), 6 combination(s)",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "CI runs code security scanning with CodeQL",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "Go tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores *.test",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to Go (applies to C, C++)",
+      "status": "SKIP"
+    }
+  }
+}

@@ -128,6 +128,12 @@ PROJECT_LAYOUTS = (
         build_systems=frozenset({"Python packaging"}),
     ),
     ProjectLayout(
+        name="Go module",
+        files={"go.mod": "module example.com/app\n", "app.go": "package app\n"},
+        languages=frozenset({"Go"}),
+        build_systems=frozenset({"Go modules"}),
+    ),
+    ProjectLayout(
         name="Unrecognised language",
         files={"README.md": "", "src/main.zig": ""},
         languages=frozenset(),
@@ -219,6 +225,7 @@ BARE_PROJECT = fixture_files("bare_project")
 # Projects that pass every check that applies to their language.
 WELL_CONFIGURED_PYTHON = fixture_files("well_configured_python")
 WELL_CONFIGURED_RUST = fixture_files("well_configured_rust")
+WELL_CONFIGURED_GO = fixture_files("well_configured_go")
 
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}

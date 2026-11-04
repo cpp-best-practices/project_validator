@@ -16,6 +16,8 @@ def code_formatting(formatter: Formatter, context: Context) -> Result:
         return Result.passed(f"{config} is defined and CI runs {', '.join(tools)}")
     if tools and formatter.default_style:
         return Result.passed(f"CI enforces the {', '.join(tools)} style")
+    if config is None and formatter.default_style:
+        return Result.failed(f"CI never runs {formatter.name}; its formatting is not enforced", formatter.hint)
     if config is None:
         return Result.failed(f"no {formatter.name} configuration found; formatting is not defined", formatter.hint)
     return Result.warned(f"{config} is defined but CI does not run {formatter.name}", formatter.hint)

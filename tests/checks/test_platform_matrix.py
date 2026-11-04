@@ -22,7 +22,8 @@ from tests.support import (
 
 class PlatformMatrixTests(unittest.TestCase):
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(platform_matrix.languages, C_FAMILY | {"Python", "Rust"})
+        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, platform_matrix.languages)
 
     def test_fails_without_ci(self) -> None:
         self.assertEqual(run_in_every_layout(self, platform_matrix, BARE_PROJECT).status, Status.FAIL)

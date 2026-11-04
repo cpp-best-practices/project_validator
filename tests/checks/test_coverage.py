@@ -19,7 +19,8 @@ class CoverageTests(unittest.TestCase):
         return run_in_every_layout(self, coverage, files)
 
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(coverage.languages, C_FAMILY | {"Python", "Rust"})
+        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, coverage.languages)
 
     def test_fails_without_branch_coverage(self) -> None:
         for provider, path in CI_FILES.items():

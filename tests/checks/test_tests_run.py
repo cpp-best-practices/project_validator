@@ -26,7 +26,8 @@ class CtestRunsTests(unittest.TestCase):
         return run_in_every_layout(self, tests_run, files, c_family_layouts_built_with(tests_run, "CMake"))
 
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(tests_run.languages, C_FAMILY | {"Python", "Rust"})
+        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, tests_run.languages)
 
     def test_passes_when_tests_are_registered_and_run_in_ci(self) -> None:
         self.assertEqual(self._run(WELL_CONFIGURED).status, Status.PASS)

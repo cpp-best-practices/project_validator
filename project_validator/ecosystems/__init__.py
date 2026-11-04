@@ -7,6 +7,7 @@ from pathlib import Path
 
 from project_validator.core import Check, CheckFunction, Context, Result, Status
 from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.go import GO
 from project_validator.ecosystems.model import (
     C_FAMILY,
     BuildSystem,
@@ -22,7 +23,7 @@ from project_validator.ecosystems.model import (
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 
-BUILT_IN = (C_AND_CXX, PYTHON, RUST)
+BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO)
 
 _registered: list[Ecosystem] = list(BUILT_IN)
 
@@ -152,6 +153,7 @@ __all__ = [
     "BUILT_IN",
     "C_AND_CXX",
     "C_FAMILY",
+    "GO",
     "PYTHON",
     "RUST",
     "BuildSystem",

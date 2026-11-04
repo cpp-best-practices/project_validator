@@ -1,0 +1,102 @@
+{
+  "map": {
+    "build_systems": [
+      "Python packaging"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "languages": [
+      "Python"
+    ]
+  },
+  "results": {
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Python (applies to C, C++, Rust)",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs ruff format --check (or black --check)"
+      ],
+      "message": "CI never runs ruff format or black; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Python warning settings found; enable at least -W error",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding PMD CPD (pmd cpd --language cpp), jscpd, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [],
+      "message": "no branch coverage reporting found in CI configuration or coverage.py settings",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Python (applies to C, C++)",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is never limited; run lizard --length 30 in CI",
+      "status": "FAIL"
+    },
+    "hardening": {
+      "details": [],
+      "message": "no hardening options found; enable bandit security lints, hash-checked dependencies",
+      "status": "FAIL"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "security-scanning": {
+      "details": [
+        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no Python tests found (test_*.py or *_test.py files)",
+      "status": "FAIL"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to Python (applies to C, C++)",
+      "status": "SKIP"
+    }
+  }
+}

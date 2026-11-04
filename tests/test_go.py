@@ -1,0 +1,96 @@
+"""The Go profile's rules, judged by the generic checks in every Go project layout."""
+
+import unittest
+
+from project_validator.checks.code_formatting import code_formatting
+from project_validator.checks.compiler_warnings import compiler_warnings
+from project_validator.checks.coverage import coverage
+from project_validator.checks.function_limits import function_limits
+from project_validator.checks.hardening import hardening
+from project_validator.checks.platform_matrix import platform_matrix
+from project_validator.checks.tests_run import tests_run
+from project_validator.checks.vcs_ignore import vcs_ignore
+from project_validator.core import Check, Result, Status
+from project_validator.ecosystems import GO
+from tests.support import GITHUB_WORKFLOW, github_job, run_as
+
+TEST_FILE = {"app_test.go": 'package app\n\nimport "testing"\n\nfunc TestAdd(t *testing.T) {}\n'}
+FUNLEN_CONFIG = {".golangci.yml": "linters:\n  enable:\n    - funlen\n"}
+
+
+def _ci(*steps: str) -> dict[str, str]:
+    return github_job("ubuntu-latest", *steps)
+
+
+class GoTests(unittest.TestCase):
+    def _run(self, selected: Check, files: dict[str, str]) -> Result:
+        return run_as(self, selected, files, GO)
+
+    def test_formatting_is_enforced_by_any_gofmt_style_tool(self) -> None:
+        for command in ('test -z "$(gofmt -l .)"', "gofumpt -l .", "goimports -l .", "golangci-lint fmt --diff"):
+            with self.subTest(command=command):
+                self.assertEqual(self._run(code_formatting, _ci(command)).status, Status.PASS)
+        self.assertEqual(self._run(code_formatting, _ci("golangci-lint run")).status, Status.FAIL)
+
+    def test_golangci_lint_runs_both_required_linters(self) -> None:
+        result = self._run(compiler_warnings, _ci("golangci-lint run ./..."))
+        self.assertEqual(result, Result.passed("strict Go linters are enabled: go vet, staticcheck"))
+
+    def test_go_vet_alone_is_not_enough(self) -> None:
+        result = self._run(compiler_warnings, _ci("go vet ./..."))
+        self.assertEqual(result.status, Status.WARN)
+        self.assertEqual(result.message, "missing Go linters: staticcheck")
+
+    def test_coverage_needs_a_cover_flag(self) -> None:
+        self.assertEqual(self._run(coverage, _ci("go test ./...")).status, Status.FAIL)
+        result = self._run(coverage, _ci("go test -covermode=atomic ./..."))
+        self.assertEqual(result, Result.passed("statement coverage is reported with go test -cover"))
+
+    def test_tests_are_test_functions_in_test_files(self) -> None:
+        self.assertEqual(self._run(tests_run, {"app_test.go": "package app\n"}).status, Status.FAIL)
+        self.assertEqual(self._run(tests_run, {"app.go": "func TestAdd(t *testing.T) {}\n"}).status, Status.FAIL)
+        result = self._run(tests_run, TEST_FILE)
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("no CI configuration runs go test", result.message)
+        self.assertEqual(self._run(tests_run, {**TEST_FILE, **_ci("gotestsum ./...")}).status, Status.PASS)
+
+    def test_hardening_is_vulnerability_and_security_scanning(self) -> None:
+        self.assertEqual(self._run(hardening, _ci("govulncheck ./...")).status, Status.WARN)
+        result = self._run(hardening, _ci("govulncheck ./...", "gosec ./..."))
+        self.assertEqual(result, Result.passed("hardening options are enabled: govulncheck, gosec security lints"))
+
+    def test_funlen_limits_functions_when_golangci_lint_runs(self) -> None:
+        result = self._run(function_limits, {**FUNLEN_CONFIG, **_ci("golangci-lint run")})
+        self.assertEqual(result, Result.passed("function length is limited with golangci-lint funlen (.golangci.yml)"))
+
+    def test_funlen_without_golangci_lint_in_ci_warns(self) -> None:
+        result = self._run(function_limits, FUNLEN_CONFIG)
+        self.assertEqual(result, Result.warned("funlen is enabled in .golangci.yml but CI does not run golangci-lint"))
+
+    def test_without_funlen_or_lizard_function_length_is_not_limited(self) -> None:
+        result = self._run(function_limits, _ci("golangci-lint run"))
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("funlen", result.message)
+
+    def test_test_binaries_and_profiles_must_be_ignored(self) -> None:
+        self.assertEqual(self._run(vcs_ignore, {".gitignore": "*.test\n"}).status, Status.PASS)
+        self.assertEqual(self._run(vcs_ignore, {".gitignore": "node_modules/\n"}).status, Status.WARN)
+
+    def test_the_platform_matrix_counts_go_versions(self) -> None:
+        files = {
+            GITHUB_WORKFLOW: """\
+                jobs:
+                  test:
+                    runs-on: ${{ matrix.os }}
+                    strategy:
+                      matrix:
+                        os: [ubuntu-latest, windows-latest]
+                        go: ["1.22", "1.23"]
+                    steps:
+                      - uses: actions/setup-go@v5
+                        with:
+                          go-version: ${{ matrix.go }}
+                """
+        }
+        result = self._run(platform_matrix, files)
+        self.assertIn("2 Go version(s) (1.22, 1.23)", result.message)

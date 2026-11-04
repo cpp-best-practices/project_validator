@@ -29,7 +29,8 @@ LINUX_CI = "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run
 
 class HardeningTests(unittest.TestCase):
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(hardening.languages, C_FAMILY | {"Python", "Rust"})
+        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, hardening.languages)
 
 
 class CAndCxxHardeningTests(unittest.TestCase):

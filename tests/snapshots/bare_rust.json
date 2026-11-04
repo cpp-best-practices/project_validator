@@ -1,0 +1,102 @@
+{
+  "map": {
+    "build_systems": [
+      "Cargo"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "languages": [
+      "Rust"
+    ]
+  },
+  "results": {
+    "ci-build-types": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs cargo fmt --check"
+      ],
+      "message": "CI never runs rustfmt; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Rust lint settings found; enable at least cargo clippy -D warnings clippy::pedantic",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding PMD CPD (pmd cpd --language cpp), jscpd, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [],
+      "message": "no branch coverage reporting found in CI configuration",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Rust (applies to C, C++)",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is never limited; run lizard --length 30 in CI",
+      "status": "FAIL"
+    },
+    "hardening": {
+      "details": [],
+      "message": "no hardening options found; enable unsafe_code forbidden, release overflow-checks",
+      "status": "FAIL"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "security-scanning": {
+      "details": [
+        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no Rust tests found (#[test] functions)",
+      "status": "FAIL"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to Rust (applies to C, C++)",
+      "status": "SKIP"
+    }
+  }
+}

@@ -16,7 +16,8 @@ from tests.support import (
 
 class CompilerWarningsTests(unittest.TestCase):
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(compiler_warnings.languages, C_FAMILY | {"Python", "Rust"})
+        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, compiler_warnings.languages)
 
     GCC_FLAGS = "-Wall -Wextra -Wpedantic -Wshadow -Wconversion"
     MSVC_CI = "jobs:\n  build:\n    runs-on: windows-latest\n    steps:\n      - run: cmake -S . -B build\n"

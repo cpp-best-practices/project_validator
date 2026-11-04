@@ -19,6 +19,7 @@ from tests.support import (
     OTHER_LANGUAGE_LAYOUTS,
     PROJECT_LAYOUTS,
     WELL_CONFIGURED,
+    WELL_CONFIGURED_GO,
     WELL_CONFIGURED_PYTHON,
     WELL_CONFIGURED_RUST,
     ProjectLayout,
@@ -31,7 +32,7 @@ COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
 NOT_APPLICABLE = {
     language: {found.name for found in LANGUAGE_SPECIFIC_CHECKS if language not in found.languages}
-    for language in ("Python", "Rust")
+    for language in ("Python", "Rust", "Go")
 }
 
 
@@ -61,7 +62,7 @@ class CliTests(unittest.TestCase):
                 self.assertIn("[PASS] coverage:", output)
 
     def test_well_configured_projects_in_other_languages_pass_strictly(self) -> None:
-        projects = {"Python": WELL_CONFIGURED_PYTHON, "Rust": WELL_CONFIGURED_RUST}
+        projects = {"Python": WELL_CONFIGURED_PYTHON, "Rust": WELL_CONFIGURED_RUST, "Go": WELL_CONFIGURED_GO}
         for layout in OTHER_LANGUAGE_LAYOUTS:
             [language] = layout.languages
             with layout_project(self, layout, projects[language]) as root:
@@ -206,6 +207,6 @@ class ListTests(unittest.TestCase):
         self.assertEqual(code, EXIT_SUCCESS)
         matrix = {row["check"]: row["applies_to"] for row in json.loads(output)}
         self.assertEqual(matrix["ci-present"], [])
-        self.assertEqual(matrix["coverage"], ["C/C++", "Python", "Rust"])
+        self.assertEqual(matrix["coverage"], ["C/C++", "Python", "Rust", "Go"])
         self.assertEqual(matrix["warnings-as-errors"], ["C/C++"])
         self.assertEqual(matrix["ci-build-types"], ["C/C++", "Rust"])

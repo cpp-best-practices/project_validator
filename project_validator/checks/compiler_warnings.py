@@ -11,9 +11,10 @@ def compiler_warnings(policy: WarningPolicy, context: Context) -> Result:
     required = policy.required(context)
     texts = policy.texts(context)
     found, missing = found_and_missing(texts, required)
+    joined = policy.separator.join
 
     if not matching_names(texts, policy.recognised):
-        return Result.failed(f"no {policy.kind} found; enable at least {' '.join(f.name for f in required)}")
+        return Result.failed(f"no {policy.kind} found; enable at least {joined(f.name for f in required)}")
     if missing:
-        return Result.warned(f"missing {policy.kind}: {', '.join(missing)}", f"found {' '.join(found)}")
-    return Result.passed(f"strict {policy.kind} are enabled: {' '.join(found)}")
+        return Result.warned(f"missing {policy.kind}: {', '.join(missing)}", f"found {joined(found)}")
+    return Result.passed(f"strict {policy.kind} are enabled: {joined(found)}")
