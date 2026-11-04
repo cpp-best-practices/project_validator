@@ -18,6 +18,7 @@ __all__ = [
     "ToolchainAxis",
     "ToolchainPatterns",
     "check_each_ecosystem",
+    "combined",
     "ecosystems_for",
     "languages_of",
     "toolchain_versions",
@@ -27,12 +28,23 @@ __all__ = [
 C_FAMILY = frozenset({"C", "C++"})
 
 
+def _reject_duplicate_rules(owner: str, rules: tuple[object, ...]) -> None:
+    kinds = [type(rule) for rule in rules]
+    if duplicates := sorted({kind.__name__ for kind in kinds if kinds.count(kind) > 1}):
+        raise ValueError(f"{owner} has several rules of type {', '.join(duplicates)}")
+
+
+def _rule_of[R](rules: tuple[object, ...], kind: type[R]) -> R | None:
+    return next((rule for rule in rules if isinstance(rule, kind)), None)
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class BuildSystem:
     """A build system recognised by its build file names, in any directory.
 
     The languages it builds are `languages`, plus those `declared_languages` reads from one of its build files.
     A directory for which `is_build_tree` is true holds its build output and is never inspected.
+    `rules` are those of its ecosystem's practices that depend on the build system (see `Ecosystem.rule_for`).
     """
 
     name: str
@@ -40,6 +52,13 @@ class BuildSystem:
     languages: frozenset[str] = frozenset()
     declared_languages: Callable[[str], frozenset[str]] | None = None
     is_build_tree: Callable[[Path], bool] | None = None
+    rules: tuple[object, ...] = field(default=(), repr=False)
+
+    def __post_init__(self) -> None:
+        _reject_duplicate_rules(self.name, self.rules)
+
+    def rule[R](self, kind: type[R]) -> R | None:
+        return _rule_of(self.rules, kind)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -57,6 +76,8 @@ class Ecosystem:
     """A language ecosystem: how it is recognised, and the rules (see `project_validator.rules`) it is judged by.
 
     `rules` holds at most one rule of each type; a practice whose rule type an ecosystem lacks does not apply to it.
+    Rules that depend on the build system belong to the ecosystem's `build_systems` instead; a project using none of
+    them is judged as if it used `default_build_system`.
     """
 
     label: str
@@ -64,21 +85,39 @@ class Ecosystem:
     build_systems: tuple[BuildSystem, ...] = ()
     source_suffixes: Mapping[str, str] | None = None
     toolchain: ToolchainPatterns | None = None
+    default_build_system: BuildSystem | None = None
     rules: tuple[object, ...] = field(default=())
 
     def __post_init__(self) -> None:
-        kinds = [type(rule) for rule in self.rules]
-        if duplicates := sorted({kind.__name__ for kind in kinds if kinds.count(kind) > 1}):
-            raise ValueError(f"{self.label} has several rules of type {', '.join(duplicates)}")
+        _reject_duplicate_rules(self.label, self.rules)
 
     def __repr__(self) -> str:
         return f"Ecosystem({self.label})"
 
     def rule[R](self, kind: type[R]) -> R | None:
-        return next((rule for rule in self.rules if isinstance(rule, kind)), None)
+        """The ecosystem's own rule of type `kind`, whatever the build system."""
+        return _rule_of(self.rules, kind)
+
+    def has_rule(self, kind: type[object]) -> bool:
+        """Whether the ecosystem, or one of its build systems, has a rule of type `kind`."""
+        return self.rule(kind) is not None or any(system.rule(kind) is not None for system in self.build_systems)
+
+    def used_build_systems(self, build_systems: frozenset[str]) -> tuple[BuildSystem, ...]:
+        """The ecosystem's build systems among `build_systems`, or its default build system when none is."""
+        used = tuple(system for system in self.build_systems if system.name in build_systems)
+        return used or ((self.default_build_system,) if self.default_build_system else ())
+
+    def rule_for[R](self, kind: type[R], build_systems: frozenset[str]) -> R | None:
+        """The rule of type `kind` for a project using `build_systems`: a used build system's rule comes first."""
+        found = (system.rule(kind) for system in self.used_build_systems(build_systems))
+        return next((rule for rule in found if rule is not None), self.rule(kind))
 
 
-_SEVERITY = (Status.PASS, Status.WARN, Status.FAIL, Status.ERROR)
+_SEVERITY = (Status.SKIP, Status.PASS, Status.WARN, Status.FAIL, Status.ERROR)
+
+
+def _severity(status: Status) -> int:
+    return _SEVERITY.index(status)
 
 
 def languages_of(ecosystems: Iterable[Ecosystem]) -> frozenset[str]:
@@ -92,11 +131,14 @@ def ecosystems_for(languages: frozenset[str], supported: Iterable[Ecosystem]) ->
     return used or supported
 
 
-def _combined(results: Mapping[Ecosystem, Result]) -> Result:
+def combined(results: Mapping[Ecosystem, Result]) -> Result:
+    """One result for several ecosystems; ecosystems a practice does not apply to are left out, unless all are."""
+    if judged := {ecosystem: result for ecosystem, result in results.items() if result.status is not Status.SKIP}:
+        results = judged
     if len(results) == 1:
         return next(iter(results.values()))
     return Result(
-        status=max((result.status for result in results.values()), key=_SEVERITY.index),
+        status=max((result.status for result in results.values()), key=_severity),
         message="; ".join(f"{ecosystem.label}: {result.message}" for ecosystem, result in results.items()),
         details=tuple(
             f"{ecosystem.label}: {detail}" for ecosystem, result in results.items() for detail in result.details
@@ -109,4 +151,4 @@ def check_each_ecosystem[Rules](
 ) -> Result:
     """Judge each ecosystem the project uses by its rules: the worst result wins, and findings are labelled."""
     used = ecosystems_for(context.structure.languages, rules)
-    return _combined({ecosystem: judge(rules[ecosystem], context) for ecosystem in used})
+    return combined({ecosystem: judge(rules[ecosystem], context) for ecosystem in used})

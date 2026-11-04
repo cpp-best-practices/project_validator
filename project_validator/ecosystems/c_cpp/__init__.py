@@ -1,14 +1,17 @@
-"""C and C++: built with CMake or Meson, judged by their compilers."""
+"""C and C++: built with CMake or Meson, judged by their compilers.
 
-import re
-from pathlib import Path
+Rules that depend on the build system are in the `cmake` and `meson` modules; a project with neither is judged as a
+CMake project.
+"""
+
 from typing import TYPE_CHECKING
 
 from project_validator.core import Context
 from project_validator.ecosystems.c_cpp.clang_tidy import FUNCTION_LIMITS
+from project_validator.ecosystems.c_cpp.cmake import CMAKE
 from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, WARNINGS, WARNINGS_AS_ERRORS
-from project_validator.ecosystems.c_cpp.ctest import CTEST
-from project_validator.ecosystems.model import C_FAMILY, BuildSystem, Ecosystem, ToolchainAxis
+from project_validator.ecosystems.c_cpp.meson import MESON
+from project_validator.ecosystems.model import C_FAMILY, Ecosystem, ToolchainAxis
 from project_validator.evidence import first_existing
 from project_validator.rules import (
     BuildOutputs,
@@ -22,33 +25,6 @@ from project_validator.text import pattern
 
 if TYPE_CHECKING:
     from project_validator.ci import Job
-
-# Meson language name -> language, for the languages a project() declaration can enable.
-MESON_LANGUAGES = {"c": "C", "cpp": "C++", "rust": "Rust"}
-
-_MESON_PROJECT = re.compile(r"\bproject\s*\(([^)]*)")
-_MESON_KEYWORD_ARGUMENT = re.compile(r"\b\w+\s*:")
-_MESON_STRING = re.compile(r"'([^']*)'")
-_MESON_COMMENT = re.compile(r"#[^\n]*")
-
-
-def meson_declared_languages(text: str) -> frozenset[str]:
-    """The languages after the name in `project('name', 'c', ['cpp'], ...)`, before any keyword argument."""
-    declaration = _MESON_PROJECT.search(_MESON_COMMENT.sub("", text))
-    if declaration is None:
-        return frozenset()
-    positional = _MESON_KEYWORD_ARGUMENT.split(declaration.group(1), maxsplit=1)[0]
-    declared = _MESON_STRING.findall(positional)[1:]
-    return frozenset(MESON_LANGUAGES[name] for name in declared if name in MESON_LANGUAGES)
-
-
-def is_cmake_build_tree(directory: Path) -> bool:
-    return (directory / "CMakeCache.txt").is_file()
-
-
-CMAKE = BuildSystem(name="CMake", files=("CMakeLists.txt",), languages=C_FAMILY, is_build_tree=is_cmake_build_tree)
-# Meson builds only the languages its project() declares.
-MESON = BuildSystem(name="Meson", files=("meson.build",), declared_languages=meson_declared_languages)
 
 
 def _compilers(job: Job) -> frozenset[str]:
@@ -109,6 +85,7 @@ C_AND_CXX = Ecosystem(
     label="C/C++",
     languages=C_FAMILY,
     build_systems=(CMAKE, MESON),
+    default_build_system=CMAKE,
     source_suffixes={
         ".c": "C",
         ".cpp": "C++",
@@ -125,7 +102,6 @@ C_AND_CXX = Ecosystem(
         BuildTypes(axis=COMPILERS),
         CLANG_FORMAT,
         COVERAGE,
-        CTEST,
         WARNINGS,
         WARNINGS_AS_ERRORS,
         HARDENING,

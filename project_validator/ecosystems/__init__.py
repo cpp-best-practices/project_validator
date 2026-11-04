@@ -3,7 +3,7 @@
 from collections.abc import Callable, Mapping
 from pathlib import Path
 
-from project_validator.core import Check, Context, Result
+from project_validator.core import Check, Context, Result, Status
 from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.ecosystems.model import (
     C_FAMILY,
@@ -12,6 +12,7 @@ from project_validator.ecosystems.model import (
     ToolchainAxis,
     ToolchainPatterns,
     check_each_ecosystem,
+    combined,
     ecosystems_for,
     languages_of,
     toolchain_versions,
@@ -25,27 +26,45 @@ BUILD_SYSTEMS = tuple(build_system for ecosystem in ECOSYSTEMS for build_system 
 
 
 def rules_of[R](kind: type[R]) -> Mapping[Ecosystem, R]:
-    """The rule of type `kind` of every ecosystem that has one, in registry order."""
+    """The ecosystem-wide rule of type `kind` of every ecosystem that has one, in registry order."""
     return {ecosystem: rule for ecosystem in ECOSYSTEMS if (rule := ecosystem.rule(kind)) is not None}
 
 
 type Judge[R] = Callable[[R, Context], Result]
 
 
+def judge_ecosystem[R](
+    ecosystem: Ecosystem, kind: type[R], judge: Judge[R], context: Context, build_systems: frozenset[str]
+) -> Result:
+    """`judge` of the ecosystem's rule of type `kind` for `build_systems`; a SKIP when it has none for them."""
+    rule = ecosystem.rule_for(kind, build_systems)
+    if rule is not None:
+        return judge(rule, context)
+    used = ", ".join(system.name for system in ecosystem.used_build_systems(build_systems))
+    return Result(status=Status.SKIP, message=f"not applicable to {ecosystem.label} built with {used}")
+
+
 def practice[R](*, name: str, description: str, rule: type[R]) -> Callable[[Judge[R]], Check]:
     """Turn a judge of one ecosystem's rule into a check of every ecosystem that has a rule of type `rule`.
 
     The check applies to those ecosystems' languages, and judges each one the project uses (see
-    `check_each_ecosystem`).
+    `check_each_ecosystem`) by the rule for the build systems the project uses (see `Ecosystem.rule_for`).
     """
 
     def wrap(judge: Judge[R]) -> Check:
-        rules = rules_of(rule)
+        ecosystems = tuple(ecosystem for ecosystem in ECOSYSTEMS if ecosystem.has_rule(rule))
 
         def run(context: Context) -> Result:
-            return check_each_ecosystem(context, rules, judge)
+            structure = context.structure
+            used = ecosystems_for(structure.languages, ecosystems)
+            return combined(
+                {
+                    ecosystem: judge_ecosystem(ecosystem, rule, judge, context, structure.build_systems)
+                    for ecosystem in used
+                }
+            )
 
-        return Check(name=name, description=description, run=run, languages=languages_of(rules))
+        return Check(name=name, description=description, run=run, languages=languages_of(ecosystems))
 
     return wrap
 
@@ -67,8 +86,10 @@ __all__ = [
     "ToolchainAxis",
     "ToolchainPatterns",
     "check_each_ecosystem",
+    "combined",
     "ecosystems_for",
     "is_build_tree",
+    "judge_ecosystem",
     "languages_of",
     "practice",
     "rules_of",

@@ -165,3 +165,10 @@ class BuildOutputs:
     globs: re.Pattern[str]
     paths: tuple[str, ...]
     hint: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class CompilerExtensions:
+    """Judges whether the language is compiled as standardised, without compiler extensions (C/C++ only)."""
+
+    judge: Callable[[Context], Result]

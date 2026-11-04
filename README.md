@@ -11,7 +11,8 @@ project needs branch coverage from gcovr or llvm-cov, a Python project from cove
 a Rust project from cargo-llvm-cov. Checks that do not apply to any of the project's
 languages are reported as `SKIP`. A project using several languages is judged for each
 of them and gets the worst result. Projects whose language is not recognised are judged
-as C/C++.
+as C/C++. A C/C++ project is judged by the rules of the build system it uses (CMake or Meson); one
+using neither is judged as a CMake project.
 
 The validator itself is pure Python and has no build step; it only inspects
 (and, with `--build`, configures and builds) the project it is pointed at.
@@ -56,13 +57,13 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 | Check | Applies to | Passes when |
 |---|---|---|
 | `ci-present` | all | at least one CI configuration is found |
-| `ctest-runs` | C/C++, Python, Rust | tests exist and CI runs them. C/C++: `enable_testing()` or `include(CTest)` is called, tests are registered (`add_test`, `*_discover_tests`, ...) and CI runs `ctest`; with `--build`, the project is really configured and built, and `ctest` must list at least one test. Python: `test_*.py` / `*_test.py` files run by pytest, unittest, tox or nox. Rust: `#[test]` functions run by `cargo test` or nextest. Warns when CI never runs the tests |
+| `ctest-runs` | C/C++, Python, Rust | tests exist and CI runs them. C/C++ with CMake: `enable_testing()` or `include(CTest)` is called, tests are registered (`add_test`, `*_discover_tests`, ...) and CI runs `ctest`; with `--build`, the project is really configured and built, and `ctest` must list at least one test. C/C++ with Meson: `test()` is called in a `meson.build` and CI runs `meson test`. Python: `test_*.py` / `*_test.py` files run by pytest, unittest, tox or nox. Rust: `#[test]` functions run by `cargo test` or nextest. Warns when CI never runs the tests |
 | `coverage` | C/C++, Python, Rust | CI reports branch coverage. C/C++: gcovr, lcov, genhtml, gcov or llvm-cov branch options; Python: `coverage run --branch`, `--cov-branch` or `branch = true`; Rust: cargo-llvm-cov, cargo-tarpaulin or grcov with `--branch`. Path or MC/DC coverage (`-fcondition-coverage`, `-fcoverage-mcdc`, `--mcdc`, ...) is reported as a bonus |
 | `platform-matrix` | C/C++, Python, Rust | CI covers at least 2 operating systems, 2 toolchains (compilers, Python versions or Rust toolchains) and 3 OS/toolchain combinations |
 | `ci-build-types` | C/C++, Rust | every OS/toolchain combination in CI builds Debug and Release (Rust: debug and release profiles), each with and without sanitizers |
 | `compiler-warnings` | C/C++, Python, Rust | a strict warning set is enabled. C/C++: `-Wall -Wextra -Wpedantic -Wshadow -Wconversion`, plus `/W4` and `/permissive-` when MSVC is in CI; Python: warnings are errors (`-W error`, `PYTHONWARNINGS=error`, pytest `filterwarnings = error`); Rust: `cargo clippy`, `-D warnings` and `clippy::pedantic`. Warns listing what is missing |
-| `warnings-as-errors` | C/C++ | `-Werror`, `/WX` or `COMPILE_WARNING_AS_ERROR` is enabled in at least one configuration |
-| `cxx-extensions` | C/C++ | `CMAKE_CXX_EXTENSIONS` (or `CMAKE_C_EXTENSIONS` for C) is turned off, so `-std=c++NN` is used rather than `-std=gnu++NN` |
+| `warnings-as-errors` | C/C++ | `-Werror`, `/WX` or `COMPILE_WARNING_AS_ERROR` (Meson: `werror=true`) is enabled in at least one configuration |
+| `cxx-extensions` | C/C++ | `CMAKE_CXX_EXTENSIONS` (or `CMAKE_C_EXTENSIONS` for C) is turned off, or with Meson `cpp_std` (`c_std`) names a standard such as `c++20` rather than `gnu++20`, so `-std=c++NN` is used rather than `-std=gnu++NN` |
 | `hardening` | C/C++, Python, Rust | security hardening options are enabled. C/C++: `_FORTIFY_SOURCE`, `-fstack-protector-strong`, `-fcf-protection`, `-fstack-clash-protection` and `_GLIBCXX_ASSERTIONS` or `_LIBCPP_HARDENING_MODE` (or GCC's `-fhardened`), plus `/sdl /guard:cf /DYNAMICBASE /CETCOMPAT` when MSVC is in CI; Python: bandit security lints (or ruff's `S` rules) and hash-checked dependencies; Rust: `unsafe_code` forbidden crate-wide and release `overflow-checks`. Warns listing what is missing |
 | `code-formatting` | C/C++, Python, Rust | the formatting style is defined (`.clang-format`; ruff or black settings; `rustfmt.toml`) and CI runs the formatter. Python and Rust formatters have a default style, so CI enforcement alone passes. Warns when the style is defined but CI does not enforce it |
 | `function-limits` | C/C++, Python, Rust | function length is limited: lizard runs with a length limit (`lizard --length 30`), or for C/C++, `.clang-tidy` enables `readability-function-size` with a threshold and clang-tidy runs |

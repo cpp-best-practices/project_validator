@@ -14,6 +14,7 @@ from tests.support import (
     NON_CMAKE_C_FAMILY_LAYOUTS,
     WELL_CONFIGURED,
     WELL_CONFIGURED_PYTHON,
+    c_family_layouts_built_with,
     make_context,
     run_as,
     run_in_every_layout,
@@ -22,7 +23,7 @@ from tests.support import (
 
 class CtestRunsTests(unittest.TestCase):
     def _run(self, files: dict[str, str]) -> Result:
-        return run_in_every_layout(self, ctest_runs, files)
+        return run_in_every_layout(self, ctest_runs, files, c_family_layouts_built_with(ctest_runs, "CMake"))
 
     def test_declares_the_languages_it_judges(self) -> None:
         self.assertEqual(ctest_runs.languages, C_FAMILY | {"Python", "Rust"})
@@ -30,9 +31,37 @@ class CtestRunsTests(unittest.TestCase):
     def test_passes_when_tests_are_registered_and_run_in_ci(self) -> None:
         self.assertEqual(self._run(WELL_CONFIGURED).status, Status.PASS)
 
-    def test_fails_without_cmake_files(self) -> None:
-        result = run_in_every_layout(self, ctest_runs, {"main.cpp": ""}, NON_CMAKE_C_FAMILY_LAYOUTS)
+    def test_a_project_without_a_build_system_fails_as_a_cmake_project(self) -> None:
+        layouts = tuple(layout for layout in NON_CMAKE_C_FAMILY_LAYOUTS if not layout.build_systems)
+        result = run_in_every_layout(self, ctest_runs, {"main.cpp": ""}, layouts)
         self.assertEqual(result.message, "no CMake files found")
+
+
+class MesonTestsTests(unittest.TestCase):
+    def _run(self, files: dict[str, str]) -> Result:
+        layouts = c_family_layouts_built_with(ctest_runs, "Meson")
+        self.assertTrue(layouts)
+        return run_in_every_layout(self, ctest_runs, files, layouts)
+
+    def test_fails_when_meson_registers_no_tests(self) -> None:
+        result = self._run({})
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertEqual(result.message, "no tests are registered; call test() in meson.build")
+
+    def test_commented_out_or_other_calls_do_not_count(self) -> None:
+        result = self._run({"tests/meson.build": "# test('unit', exe)\nunittest_exe = executable('t', 't.cpp')\n"})
+        self.assertEqual(result.status, Status.FAIL)
+
+    def test_warns_when_ci_never_runs_meson_test(self) -> None:
+        result = self._run({"tests/meson.build": "test('unit', executable('t', 't.cpp'))\n"})
+        self.assertEqual(result.status, Status.WARN)
+        self.assertEqual(result.message, "tests are registered with test(), but no CI configuration runs meson test")
+
+    def test_passes_when_ci_runs_meson_test(self) -> None:
+        for command in ("meson test -C build", "ninja -C build test"):
+            with self.subTest(command=command):
+                files = {"tests/meson.build": "test('unit', exe)\n", GITHUB_WORKFLOW: f"steps:\n  - run: {command}\n"}
+                self.assertEqual(self._run(files).status, Status.PASS)
 
     def test_fails_when_ctest_is_never_enabled(self) -> None:
         self.assertIn("never enabled", self._run(BARE_PROJECT).message)

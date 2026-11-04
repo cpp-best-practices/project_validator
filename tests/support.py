@@ -147,6 +147,18 @@ def layouts_checked_as(selected: Check, *ecosystems: Ecosystem) -> tuple[Project
     return tuple(layout for layout in PROJECT_LAYOUTS if checked_ecosystems(selected, layout) == ecosystems)
 
 
+def c_family_layouts_built_with(selected: Check, build_system: str) -> tuple[ProjectLayout, ...]:
+    """The layouts in which `selected` judges only C/C++, by the rules of `build_system`.
+
+    A layout without a C/C++ build system is judged as a CMake project.
+    """
+    return tuple(
+        layout
+        for layout in layouts_checked_as(selected, C_AND_CXX)
+        if C_AND_CXX.used_build_systems(layout.build_systems)[0].name == build_system
+    )
+
+
 C_FAMILY_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if layout.gets_c_family_checks)
 C_FAMILY_ONLY_LAYOUTS = tuple(layout for layout in C_FAMILY_LAYOUTS if layout.languages <= C_FAMILY)
 OTHER_LANGUAGE_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if not layout.gets_c_family_checks)
