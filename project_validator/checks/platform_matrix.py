@@ -1,11 +1,15 @@
 from project_validator.ci import Job
 from project_validator.core import Context, Result
 from project_validator.ecosystems import ToolchainAxis, practice
-from project_validator.toolchain_axes import platforms
 
 MINIMUM_OPERATING_SYSTEMS = 2
 MINIMUM_COMPILERS = 2
 MINIMUM_COMBINATIONS = 3
+
+
+def platforms(jobs: tuple[Job, ...], axis: ToolchainAxis) -> set[tuple[str, str]]:
+    """Every (OS, toolchain) pair the jobs run on, leaving out jobs whose OS is unknown."""
+    return {(job.os, toolchain) for job in jobs if job.os != "unknown" for toolchain in axis.of_job(job)}
 
 
 def _describe(job: Job, axis: ToolchainAxis) -> str:
