@@ -3,17 +3,26 @@
 [![ci](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml/badge.svg)](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/cpp-best-practices/project_validator/graph/badge.svg)](https://codecov.io/gh/cpp-best-practices/project_validator)
 
-A tool to validate CMake based C and C++ projects against Best Practices.
+A tool to validate a project's build, CI and tooling against best practices.
+
+It recognises C and C++ (CMake or Meson), Python (`pyproject.toml` or `setup.py`) and
+Rust (Cargo) projects, and judges each language by its own ecosystem's tools: a C++
+project needs branch coverage from gcovr or llvm-cov, a Python project from coverage.py,
+a Rust project from cargo-llvm-cov. Checks that do not apply to any of the project's
+languages are reported as `SKIP`. A project using several languages is judged for each
+of them and gets the worst result. Projects whose language is not recognised are judged
+as C/C++.
 
 The validator itself is pure Python and has no build step; it only inspects
-(and, with `--build`, configures and builds) the C or C++ project it is pointed at.
+(and, with `--build`, configures and builds) the project it is pointed at.
 
 ## Requirements
 
 - Python 3.14+ (the system Python on Ubuntu 26.04 LTS; no installation step,
   run with `python3 -m project_validator <path>`)
 - [PyYAML](https://pyyaml.org/) 6.0+ (`python3-yaml` on Ubuntu, or `python3 -m pip install PyYAML`)
-- CMake / CTest, only for `--build` (already required by any project being validated)
+- Optionally [rich](https://github.com/Textualize/rich) 13.0+ for colored output
+- CMake / CTest, only for `--build` (already required by any CMake project being validated)
 
 On a machine without Python 3.14, `uv run` or a distro backport will work.
 In CI, use `actions/setup-python` with `python-version: "3.14"`.
@@ -23,14 +32,18 @@ In CI, use `actions/setup-python` with `python-version: "3.14"`.
 ```sh
 python3 -m project_validator path/to/project
 python3 -m project_validator --list
+python3 -m project_validator --map path/to/project
 python3 -m project_validator --only coverage,platform-matrix --format json path/to/project
 ```
 
 | Option | Meaning |
 |---|---|
 | `--list` | list the available checks |
+| `--map` | print the detected project structure (languages, build systems, CI providers, jobs and toolchains) as JSON |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
 | `--format text\|json` | output format |
+| `--color auto\|always\|never` | color the text output (needs rich); `auto` colors only on a terminal when `NO_COLOR` is unset |
+| `--exclude DIR` | leave `DIR`, relative to the project, out of the validation (e.g. test fixtures); may be repeated |
 | `--build` | configure and build the project in a temporary directory and ask `ctest` for its tests |
 | `--strict` | treat warnings as failures |
 | `--cmake PATH` / `--ctest PATH` | the executables used by `--build` |
@@ -40,12 +53,23 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 
 ## Checks
 
-| Check | Passes when |
-|---|---|
-| `ci-present` | at least one CI configuration is found |
-| `ctest-runs` | `enable_testing()` or `include(CTest)` is called and tests are registered (`add_test`, `*_discover_tests`, ...); warns if no CI configuration runs `ctest`. With `--build`, the project is really configured and built, and `ctest` must list at least one test |
-| `coverage` | branch coverage is reported (e.g. `gcovr --fail-under-branch`, `lcov --rc branch_coverage=1`, `llvm-cov -show-branches`); path coverage (`-fcondition-coverage`, `-fcoverage-mcdc`, `-fpath-coverage`, ...) is reported as a bonus |
-| `platform-matrix` | CI covers at least 2 operating systems, 2 compilers and 3 OS/compiler combinations |
+| Check | Applies to | Passes when |
+|---|---|---|
+| `ci-present` | all | at least one CI configuration is found |
+| `ctest-runs` | C/C++, Python, Rust | tests exist and CI runs them. C/C++: `enable_testing()` or `include(CTest)` is called, tests are registered (`add_test`, `*_discover_tests`, ...) and CI runs `ctest`; with `--build`, the project is really configured and built, and `ctest` must list at least one test. Python: `test_*.py` / `*_test.py` files run by pytest, unittest, tox or nox. Rust: `#[test]` functions run by `cargo test` or nextest. Warns when CI never runs the tests |
+| `coverage` | C/C++, Python, Rust | CI reports branch coverage. C/C++: gcovr, lcov, genhtml, gcov or llvm-cov branch options; Python: `coverage run --branch`, `--cov-branch` or `branch = true`; Rust: cargo-llvm-cov, cargo-tarpaulin or grcov with `--branch`. Path or MC/DC coverage (`-fcondition-coverage`, `-fcoverage-mcdc`, `--mcdc`, ...) is reported as a bonus |
+| `platform-matrix` | C/C++, Python, Rust | CI covers at least 2 operating systems, 2 toolchains (compilers, Python versions or Rust toolchains) and 3 OS/toolchain combinations |
+| `ci-build-types` | C/C++, Rust | every OS/toolchain combination in CI builds Debug and Release (Rust: debug and release profiles), each with and without sanitizers |
+| `compiler-warnings` | C/C++, Python, Rust | a strict warning set is enabled. C/C++: `-Wall -Wextra -Wpedantic -Wshadow -Wconversion`, plus `/W4` and `/permissive-` when MSVC is in CI; Python: warnings are errors (`-W error`, `PYTHONWARNINGS=error`, pytest `filterwarnings = error`); Rust: `cargo clippy`, `-D warnings` and `clippy::pedantic`. Warns listing what is missing |
+| `warnings-as-errors` | C/C++ | `-Werror`, `/WX` or `COMPILE_WARNING_AS_ERROR` is enabled in at least one configuration |
+| `cxx-extensions` | C/C++ | `CMAKE_CXX_EXTENSIONS` (or `CMAKE_C_EXTENSIONS` for C) is turned off, so `-std=c++NN` is used rather than `-std=gnu++NN` |
+| `hardening` | C/C++, Python, Rust | security hardening options are enabled. C/C++: `_FORTIFY_SOURCE`, `-fstack-protector-strong`, `-fcf-protection`, `-fstack-clash-protection` and `_GLIBCXX_ASSERTIONS` or `_LIBCPP_HARDENING_MODE` (or GCC's `-fhardened`), plus `/sdl /guard:cf /DYNAMICBASE /CETCOMPAT` when MSVC is in CI; Python: bandit security lints (or ruff's `S` rules) and hash-checked dependencies; Rust: `unsafe_code` forbidden crate-wide and release `overflow-checks`. Warns listing what is missing |
+| `code-formatting` | C/C++, Python, Rust | the formatting style is defined (`.clang-format`; ruff or black settings; `rustfmt.toml`) and CI runs the formatter. Python and Rust formatters have a default style, so CI enforcement alone passes. Warns when the style is defined but CI does not enforce it |
+| `function-limits` | C/C++, Python, Rust | function length is limited: lizard runs with a length limit (`lizard --length 30`), or for C/C++, `.clang-tidy` enables `readability-function-size` with a threshold and clang-tidy runs |
+| `copy-paste-detection` | all | CI runs a duplicate code detector (PMD CPD, jscpd, Duplo, Simian, CCFinderX or SonarQube); warns otherwise |
+| `security-scanning` | all | CI runs code security scanning (CodeQL or GitLab SAST); warns otherwise |
+| `dependency-updates` | all | Dependabot or Renovate is configured; warns otherwise |
+| `vcs-ignore` | C/C++, Python, Rust | a `.gitignore`, `.hgignore`, `.bzrignore` or `.fossil-settings/ignore-glob` ignores the build outputs (`build/` or `out/`, `__pycache__/` or `*.py[cod]`, `/target`). Warns when an ignore file misses them |
 
 CI detection is pluggable too. GitHub Actions workflows (including `strategy.matrix`
 with `include`/`exclude`) and GitLab CI pipelines (including `parallel: matrix:`)
@@ -58,7 +82,10 @@ Known limitations:
 
 - GitLab `extends:` is not resolved.
 - A GitHub matrix computed by an expression (`fromJSON(...)`) cannot be expanded; those jobs are reported with an `unknown` OS.
-- Evidence is found by scanning text, so all CMake files under the project (including test fixtures) are considered.
+- Evidence is found by scanning text, so every file under the project is considered;
+  use `--exclude` to leave out test fixtures or vendored code.
+- In a mixed project, a Python-only CI job still counts as a C/C++ build with its
+  runner's default compiler, so `ci-build-types` expects build types from it.
 
 ## Writing a Plugin
 
@@ -84,7 +111,22 @@ def has_readme(context: Context) -> Result:
 python3 -W error -m unittest
 ```
 
-This repository is not a CMake project, so it is not validated with its own tool.
+The project validates itself; CI runs the same command:
+
+```sh
+python3 -m project_validator --exclude tests/fixtures .
+```
+
+Each quality gate is its own CI job, so a pull request shows which one failed.
+To run them locally:
+
+| CI job | Command |
+|---|---|
+| `lint` | `ruff check .` |
+| `formatting` | `ruff format --check --diff .` |
+| `typing` | `mypy` |
+| `copy-paste-detection` | `npx --yes jscpd@4` (settings in `.jscpd.json`) |
+| `function-limits` | `lizard --length 30 --warnings_only project_validator tests` |
 
 Branch coverage is measured with [coverage.py](https://coverage.readthedocs.io/)
 (configured in `pyproject.toml`, which fails the report below 95%):
@@ -100,7 +142,7 @@ and fails if branch coverage drops below the threshold.
 
 ## Dependency Policy
 
-The validator is meant to run anywhere a CMake based C or C++ project can be built,
+The validator is meant to run anywhere a project can be built,
 with as little setup as possible. To keep it that way:
 
 - **The standard library comes first.** If something can reasonably be
@@ -123,6 +165,8 @@ with as little setup as possible. To keep it that way:
 | Dependency | Kind | Why |
 |---|---|---|
 | [PyYAML](https://pyyaml.org/) `>=6.0` | required | The standard library has no YAML parser, and CI configuration is YAML. PyYAML is mature, MIT licensed, has no dependencies, and is packaged by every major distro (`python3-yaml` on Ubuntu). It is required rather than optional because scanning CI files as text cannot tell which compiler runs on which OS, nor apply a matrix's `include`/`exclude`, so it over-counts platform combinations and can pass `platform-matrix` for a project that should fail. Without PyYAML the validator exits with an error that says how to install it. |
+| [rich](https://github.com/Textualize/rich) `>=13.0` | optional (`pretty` extra) | Colored, aligned text output with a per-status summary. MIT licensed and widely used. Without it the validator prints plain text and says so. |
 | [coverage.py](https://coverage.readthedocs.io/) `>=7.10` | development only (`coverage` extra) | Measures the branch coverage of the test suite; the standard library's `trace` module does not measure branches. coverage.py is the de facto Python coverage tool, Apache 2.0 licensed and has no required dependencies. The validator itself never imports it. |
+| [ruff](https://docs.astral.sh/ruff/), [mypy](https://mypy-lang.org/), [lizard](https://github.com/terryyin/lizard), [jscpd](https://github.com/kucherenko/jscpd) | CI only | The lint, typing, function-limits and copy-paste-detection quality gates. They are installed by their CI jobs and are never imported by the validator. |
 
 PyYAML is the only required dependency.
