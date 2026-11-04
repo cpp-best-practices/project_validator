@@ -1,8 +1,9 @@
 """The rule types practices are judged by; each ecosystem profile supplies its own rule of the types that apply to it.
 
 A practice (a check) is generic over its rule type and never names an ecosystem; see
-`project_validator.ecosystems.practice`. A practice that only one ecosystem can have, such as `cxx-extensions`, may
-stay a plain check limited to that ecosystem's languages.
+`project_validator.ecosystems.practice`. A practice that only one ecosystem can have, such as `cxx-extensions`, is
+written the same way: only that ecosystem's profile supplies the rule. Rules that depend on the build system are
+supplied by the profile's build systems instead (see `project_validator.ecosystems.model.Ecosystem.rule_for`).
 """
 
 import re

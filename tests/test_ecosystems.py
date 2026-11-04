@@ -1,30 +1,34 @@
 import unittest
 from typing import ClassVar
 
-from project_validator.core import Context, Result, Status
+from project_validator.core import Check, Context, Result, Status
 from project_validator.ecosystems import (
+    BUILT_IN,
     C_AND_CXX,
     C_FAMILY,
-    ECOSYSTEMS,
     PYTHON,
     RUST,
     BuildSystem,
     Ecosystem,
+    applies_to,
     check_each_ecosystem,
     combined,
     ecosystems_for,
+    isolated_registry,
     judge_ecosystem,
+    register,
+    registered,
 )
 from tests.support import make_context, temp_project
 
 
 class EcosystemsForTests(unittest.TestCase):
     def test_the_supported_ecosystems_of_the_languages(self) -> None:
-        self.assertEqual(ecosystems_for(frozenset({"C++", "Python"}), ECOSYSTEMS), (C_AND_CXX, PYTHON))
+        self.assertEqual(ecosystems_for(frozenset({"C++", "Python"}), BUILT_IN), (C_AND_CXX, PYTHON))
         self.assertEqual(ecosystems_for(frozenset({"Rust", "Python"}), (C_AND_CXX, RUST)), (RUST,))
 
     def test_unknown_languages_are_judged_as_c_and_cxx(self) -> None:
-        self.assertEqual(ecosystems_for(frozenset(), ECOSYSTEMS), (C_AND_CXX,))
+        self.assertEqual(ecosystems_for(frozenset(), BUILT_IN), (C_AND_CXX,))
 
     def test_every_supported_ecosystem_when_none_is_used(self) -> None:
         self.assertEqual(ecosystems_for(frozenset(), (PYTHON, RUST)), (PYTHON, RUST))
@@ -128,3 +132,18 @@ class JudgeEcosystemTests(unittest.TestCase):
             self.assertEqual(result, Result(status=Status.SKIP, message="not applicable to Y built with Beta"))
             result = judge_ecosystem(WITH_DEFAULT, Marker, self._judge, context, frozenset({"Beta"}))
             self.assertEqual(result, Result.passed("own"))
+
+
+class RegistryTests(unittest.TestCase):
+    def test_registering_the_same_ecosystem_again_does_nothing(self) -> None:
+        with isolated_registry():
+            register(WITH_DEFAULT)
+            register(WITH_DEFAULT)
+            self.assertEqual(registered(), (*BUILT_IN, WITH_DEFAULT))
+
+    def test_a_check_limited_by_languages_applies_to_the_ecosystems_of_those_languages(self) -> None:
+        def run(_: Context) -> Result:
+            return Result.passed("")
+
+        self.assertEqual(applies_to(Check(name="c", description="", run=run, languages=frozenset({"C"}))), ("C/C++",))
+        self.assertEqual(applies_to(Check(name="any", description="", run=run)), ())

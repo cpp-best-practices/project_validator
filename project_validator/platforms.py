@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from project_validator.ecosystems import ECOSYSTEMS, ToolchainPatterns
+from project_validator.ecosystems import ToolchainPatterns, registered
 from project_validator.text import matching_names, pattern
 
 OPERATING_SYSTEMS = (
@@ -43,8 +43,10 @@ class Toolchain:
 
 DEFAULT_VERSION = "default"
 
-# Language -> how a job names the versions it runs, and how a job that names none shows that it uses the language.
-TOOLCHAINS = {ecosystem.toolchain.language: ecosystem.toolchain for ecosystem in ECOSYSTEMS if ecosystem.toolchain}
+
+def toolchains() -> dict[str, ToolchainPatterns]:
+    """Language -> how a job names the versions it runs, and how a job that names none shows it uses the language."""
+    return {ecosystem.toolchain.language: ecosystem.toolchain for ecosystem in registered() if ecosystem.toolchain}
 
 
 def _named_versions(patterns: ToolchainPatterns, text: str) -> set[str]:
@@ -62,6 +64,6 @@ def _language_toolchains(language: str, patterns: ToolchainPatterns, texts: tupl
 def detect_toolchains(*texts: str) -> frozenset[Toolchain]:
     return frozenset(
         toolchain
-        for language, patterns in TOOLCHAINS.items()
+        for language, patterns in toolchains().items()
         for toolchain in _language_toolchains(language, patterns, texts)
     )

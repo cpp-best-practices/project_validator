@@ -198,3 +198,14 @@ class DependencyTests(unittest.TestCase):
         pyproject = tomllib.loads((Path(__file__).parent.parent / "pyproject.toml").read_text(encoding="utf-8"))
         self.assertIn("PyYAML>=6.0", pyproject["project"]["dependencies"])
         self.assertNotIn("yaml", pyproject["project"]["optional-dependencies"])
+
+
+class ListTests(unittest.TestCase):
+    def test_list_as_json_is_the_support_matrix(self) -> None:
+        code, output, _ = run_cli("--list", "--format", "json")
+        self.assertEqual(code, EXIT_SUCCESS)
+        matrix = {row["check"]: row["applies_to"] for row in json.loads(output)}
+        self.assertEqual(matrix["ci-present"], [])
+        self.assertEqual(matrix["coverage"], ["C/C++", "Python", "Rust"])
+        self.assertEqual(matrix["warnings-as-errors"], ["C/C++"])
+        self.assertEqual(matrix["ci-build-types"], ["C/C++", "Rust"])

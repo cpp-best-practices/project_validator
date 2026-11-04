@@ -10,7 +10,7 @@ from pathlib import Path
 import project_validator
 from project_validator import ecosystems
 from project_validator.core import Context
-from project_validator.ecosystems import ECOSYSTEMS, Ecosystem
+from project_validator.ecosystems import BUILT_IN, Ecosystem
 from project_validator.rules import Formatter
 
 PACKAGE = Path(project_validator.__file__).parent
@@ -20,9 +20,6 @@ PROFILES = frozenset(
     for module in pkgutil.iter_modules(ecosystems.__path__)
     if module.name != "model"
 )
-
-# Checks that only one ecosystem can have may name that ecosystem's languages; see project_validator.rules.
-ECOSYSTEM_SPECIFIC_CHECKS = frozenset({"cxx_extensions"})
 
 
 def _imported_modules(path: Path) -> set[str]:
@@ -72,10 +69,9 @@ class ArchitectureTests(unittest.TestCase):
                 profiles = sorted(module for module in _imported_modules(path) if _is_profile(module))
                 self.assertEqual(profiles, [])
 
-    def test_only_ecosystem_specific_checks_name_languages(self) -> None:
+    def test_checks_never_name_languages(self) -> None:
+        """Even a practice only one ecosystem has, such as cxx-extensions, gets its languages from the registry."""
         for path in sorted(CHECKS.glob("*.py")):
-            if path.stem in ECOSYSTEM_SPECIFIC_CHECKS:
-                continue
             with self.subTest(check=path.stem):
                 self.assertNotIn("project_validator.ecosystems.C_FAMILY", _imported_modules(path))
                 self.assertNotIn("languages=", path.read_text(encoding="utf-8").replace("languages=languages_of", ""))
@@ -93,7 +89,7 @@ class ArchitectureTests(unittest.TestCase):
 
 class EcosystemRuleTests(unittest.TestCase):
     def test_an_ecosystem_has_at_most_one_rule_of_each_type(self) -> None:
-        for ecosystem in ECOSYSTEMS:
+        for ecosystem in BUILT_IN:
             with self.subTest(ecosystem=ecosystem.label):
                 kinds = [type(rule) for rule in ecosystem.rules]
                 self.assertEqual(len(kinds), len(set(kinds)))

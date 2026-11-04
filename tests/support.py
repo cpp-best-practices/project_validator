@@ -12,7 +12,7 @@ from types import MappingProxyType
 
 from project_validator import pretty
 from project_validator.core import Check, Context, Options, Project, Result
-from project_validator.ecosystems import C_AND_CXX, C_FAMILY, ECOSYSTEMS, Ecosystem, ecosystems_for
+from project_validator.ecosystems import BUILT_IN, C_AND_CXX, C_FAMILY, Ecosystem, ecosystems_for
 from project_validator.plugins import discover
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -138,7 +138,7 @@ PROJECT_LAYOUTS = (
 
 def checked_ecosystems(selected: Check, layout: ProjectLayout) -> tuple[Ecosystem, ...]:
     """The ecosystems `selected` judges in a project of `layout`."""
-    supported = (ecosystem for ecosystem in ECOSYSTEMS if ecosystem.languages <= selected.languages)
+    supported = (ecosystem for ecosystem in BUILT_IN if ecosystem.languages <= selected.languages)
     return ecosystems_for(layout.languages, supported)
 
 

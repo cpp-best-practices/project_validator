@@ -39,7 +39,7 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 
 | Option | Meaning |
 |---|---|
-| `--list` | list the available checks |
+| `--list` | list the available checks; with `--format json`, also the ecosystems each one applies to |
 | `--map` | print the detected project structure (languages, build systems, CI providers, jobs and toolchains) as JSON |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
 | `--format text\|json` | output format |
@@ -90,7 +90,7 @@ Known limitations:
 
 ## Writing a Plugin
 
-Any module-level `Check` or `CiProvider` in a file passed with `--plugin-dir` is picked up:
+Any module-level `Check`, `CiProvider` or `Ecosystem` in a file passed with `--plugin-dir` is picked up:
 
 ```python
 from project_validator.ci import CiProvider
@@ -105,6 +105,44 @@ def has_readme(context: Context) -> Result:
         return Result.passed("README.md found")
     return Result.failed("no README.md")
 ```
+
+### Adding an ecosystem
+
+Everything the validator knows about a language lives in its profile under `project_validator/ecosystems/`:
+how it is recognised (build systems, source suffixes, how CI names its toolchain versions) and the rules
+it is judged by. The checks are generic: each one judges every ecosystem that has a rule of its type
+(see `project_validator/rules.py`), and does not apply to the others. A plugin can add an ecosystem
+the same way, without changing the validator:
+
+```python
+import re
+
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.rules import Formatter
+from project_validator.text import pattern
+
+
+def _no_config(context):
+    return None
+
+
+GO = Ecosystem(
+    label="Go",
+    languages=frozenset({"Go"}),
+    build_systems=(BuildSystem(name="Go modules", files=("go.mod",), languages=frozenset({"Go"})),),
+    source_suffixes={".go": "Go"},
+    toolchain=ToolchainPatterns(
+        language="Go", versions=(re.compile(r"\bgo-version\W+([\d.x]+)"),), usage=re.compile(r"\bgo\s+test\b")
+    ),
+    rules=(
+        versions_axis("Go version", "Go"),  # platform-matrix: OS x Go version
+        Formatter(name="gofmt", config_file=_no_config, runs=(pattern("gofmt", r"\bgofmt\b"),),
+                  hint="run gofmt -l in CI", default_style=True),  # code-formatting
+    ),
+)
+```
+
+`--list --format json` shows which ecosystems each check applies to, including those added by plugins.
 
 ## Development
 

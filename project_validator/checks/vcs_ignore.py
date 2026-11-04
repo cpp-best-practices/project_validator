@@ -3,8 +3,8 @@ import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
-from project_validator.core import Context, Result, check
-from project_validator.ecosystems import check_each_ecosystem, languages_of, rules_of
+from project_validator.core import Context, Result
+from project_validator.ecosystems import check_each_ecosystem, ecosystem_check, rules_of
 from project_validator.rules import BuildOutputs
 
 
@@ -165,16 +165,14 @@ def _outputs_ignored(outputs: BuildOutputs, context: Context) -> Result:
     return Result.passed("; ".join(f"{path} ignores {entry.written}" for path, entry in found.items() if entry))
 
 
-BUILD_OUTPUTS = rules_of(BuildOutputs)
-
 IGNORE_FILE_NAMES = ", ".join(ignore_file.path for ignore_file in IGNORE_FILES)
 
 
-@check(
+@ecosystem_check(
     name="vcs-ignore",
     description="A .gitignore (or .hgignore, .bzrignore, ...) keeps build outputs (e.g. build/, __pycache__/, target/) "
     "out of version control",
-    languages=languages_of(BUILD_OUTPUTS),
+    rule=BuildOutputs,
 )
 def vcs_ignore(context: Context) -> Result:
     if not _present_ignore_files(context):
@@ -182,4 +180,4 @@ def vcs_ignore(context: Context) -> Result:
             f"no version control ignore file found ({IGNORE_FILE_NAMES}); build outputs can be committed by accident",
             "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs",
         )
-    return check_each_ecosystem(context, BUILD_OUTPUTS, _outputs_ignored)
+    return check_each_ecosystem(context, rules_of(BuildOutputs), _outputs_ignored)

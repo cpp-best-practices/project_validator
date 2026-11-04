@@ -5,7 +5,7 @@ from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
 from project_validator.core import Project
-from project_validator.ecosystems import BUILD_SYSTEMS, ECOSYSTEMS
+from project_validator.ecosystems import BuildSystem, build_systems, registered
 
 if TYPE_CHECKING:
     from project_validator.ci import CiAnalysis, CiFile, Job
@@ -41,33 +41,34 @@ def _job_as_dict(job: Job) -> dict[str, object]:
     }
 
 
-# Build file name -> the build system it belongs to.
-BUILD_FILES = {name: system for system in BUILD_SYSTEMS for name in system.files}
+def build_files() -> dict[str, BuildSystem]:
+    """Build file name -> the registered build system it belongs to."""
+    return {name: system for system in build_systems() for name in system.files}
 
-# Source file suffix -> its language.
-SOURCE_SUFFIXES = {
-    suffix: language for ecosystem in ECOSYSTEMS for suffix, language in (ecosystem.source_suffixes or {}).items()
-}
+
+def source_suffixes() -> dict[str, str]:
+    """Source file suffix -> its language, for every registered ecosystem."""
+    return {
+        suffix: language for ecosystem in registered() for suffix, language in (ecosystem.source_suffixes or {}).items()
+    }
 
 
 def _build_systems_and_languages(project: Project, files: list[str]) -> tuple[frozenset[str], frozenset[str]]:
     """The build systems whose build files are present, and the languages they build or their build files declare."""
-    build_files = [(path, BUILD_FILES[name]) for path in files if (name := PurePosixPath(path).name) in BUILD_FILES]
-    build_systems = frozenset(system.name for _, system in build_files)
+    known = build_files()
+    found = [(path, known[name]) for path in files if (name := PurePosixPath(path).name) in known]
+    build_systems = frozenset(system.name for _, system in found)
     languages = frozenset().union(
-        *(system.languages for _, system in build_files),
-        *(
-            system.declared_languages(project.read_text(path))
-            for path, system in build_files
-            if system.declared_languages
-        ),
+        *(system.languages for _, system in found),
+        *(system.declared_languages(project.read_text(path)) for path, system in found if system.declared_languages),
     )
     return build_systems, languages
 
 
 def _source_languages(files: list[str]) -> frozenset[str]:
+    known = source_suffixes()
     suffixes = {PurePosixPath(path).suffix for path in files}
-    return frozenset(SOURCE_SUFFIXES[suffix] for suffix in suffixes if suffix in SOURCE_SUFFIXES)
+    return frozenset(known[suffix] for suffix in suffixes if suffix in known)
 
 
 def map_project(project: Project, ci_files: tuple[CiFile, ...], analysis: CiAnalysis) -> ProjectStructure:

@@ -150,6 +150,8 @@ class Check:
     description: str
     run: CheckFunction = field(repr=False)
     languages: frozenset[str] = frozenset()
+    # The rule type a check judges, for checks that apply wherever an ecosystem has a rule of that type.
+    rule: type[object] | None = None
 
     def applies_to(self, languages: frozenset[str]) -> bool:
         """A check without languages is language agnostic; a project whose languages are unknown gets every check."""

@@ -1,9 +1,11 @@
-"""The language ecosystems the validator knows, one profile module each, and judging a project per ecosystem."""
+"""The registry of language ecosystems (one profile module each, plus plugins' ones), and judging per ecosystem."""
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterator, Mapping
+from contextlib import contextmanager
+from dataclasses import replace
 from pathlib import Path
 
-from project_validator.core import Check, Context, Result, Status
+from project_validator.core import Check, CheckFunction, Context, Result, Status
 from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.ecosystems.model import (
     C_FAMILY,
@@ -20,14 +22,85 @@ from project_validator.ecosystems.model import (
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 
-ECOSYSTEMS = (C_AND_CXX, PYTHON, RUST)
+BUILT_IN = (C_AND_CXX, PYTHON, RUST)
 
-BUILD_SYSTEMS = tuple(build_system for ecosystem in ECOSYSTEMS for build_system in ecosystem.build_systems)
+_registered: list[Ecosystem] = list(BUILT_IN)
+
+
+class RegistryError(Exception):
+    pass
+
+
+def registered() -> tuple[Ecosystem, ...]:
+    """Every known ecosystem: the built-in ones, then those registered by plugins, in registration order."""
+    return tuple(_registered)
+
+
+def register(ecosystem: Ecosystem) -> None:
+    """Add a plugin's ecosystem, replacing a plugin ecosystem with the same label (the same plugin, loaded again).
+
+    A built-in ecosystem is never replaced.
+    """
+    if ecosystem in _registered:
+        return
+    if any(built_in.label == ecosystem.label for built_in in BUILT_IN):
+        raise RegistryError(f"{ecosystem.label} is a built-in ecosystem")
+    replaced = [index for index, known in enumerate(_registered) if known.label == ecosystem.label]
+    if replaced:
+        _registered[replaced[0]] = ecosystem
+    else:
+        _registered.append(ecosystem)
+
+
+@contextmanager
+def isolated_registry() -> Iterator[None]:
+    """Undo, on leaving, every registration made inside (for tests)."""
+    saved = list(_registered)
+    try:
+        yield
+    finally:
+        _registered[:] = saved
+
+
+def build_systems() -> tuple[BuildSystem, ...]:
+    return tuple(system for ecosystem in _registered for system in ecosystem.build_systems)
+
+
+def providers(kind: type[object]) -> tuple[Ecosystem, ...]:
+    """The ecosystems that have a rule of type `kind`, their own or one of their build systems'."""
+    return tuple(ecosystem for ecosystem in _registered if ecosystem.has_rule(kind))
 
 
 def rules_of[R](kind: type[R]) -> Mapping[Ecosystem, R]:
     """The ecosystem-wide rule of type `kind` of every ecosystem that has one, in registry order."""
-    return {ecosystem: rule for ecosystem in ECOSYSTEMS if (rule := ecosystem.rule(kind)) is not None}
+    return {ecosystem: rule for ecosystem in _registered if (rule := ecosystem.rule(kind)) is not None}
+
+
+def applies_to(selected: Check) -> tuple[str, ...]:
+    """The labels of the ecosystems `selected` judges; none for a check that judges every project."""
+    if selected.rule is not None:
+        return tuple(ecosystem.label for ecosystem in providers(selected.rule))
+    if selected.languages:
+        return tuple(ecosystem.label for ecosystem in _registered if ecosystem.languages & selected.languages)
+    return ()
+
+
+def with_registered_languages(selected: Check) -> Check:
+    """`selected`, applying to the languages of every ecosystem now registered that has its rule."""
+    if selected.rule is None:
+        return selected
+    return replace(selected, languages=languages_of(providers(selected.rule)))
+
+
+def ecosystem_check(*, name: str, description: str, rule: type[object]) -> Callable[[CheckFunction], Check]:
+    """A check of the whole project that applies wherever an ecosystem has a rule of type `rule`."""
+
+    def wrap(function: CheckFunction) -> Check:
+        return Check(
+            name=name, description=description, run=function, languages=languages_of(providers(rule)), rule=rule
+        )
+
+    return wrap
 
 
 type Judge[R] = Callable[[R, Context], Result]
@@ -52,11 +125,9 @@ def practice[R](*, name: str, description: str, rule: type[R]) -> Callable[[Judg
     """
 
     def wrap(judge: Judge[R]) -> Check:
-        ecosystems = tuple(ecosystem for ecosystem in ECOSYSTEMS if ecosystem.has_rule(rule))
-
         def run(context: Context) -> Result:
             structure = context.structure
-            used = ecosystems_for(structure.languages, ecosystems)
+            used = ecosystems_for(structure.languages, providers(rule))
             return combined(
                 {
                     ecosystem: judge_ecosystem(ecosystem, rule, judge, context, structure.build_systems)
@@ -64,34 +135,42 @@ def practice[R](*, name: str, description: str, rule: type[R]) -> Callable[[Judg
                 }
             )
 
-        return Check(name=name, description=description, run=run, languages=languages_of(ecosystems))
+        return Check(name=name, description=description, run=run, languages=languages_of(providers(rule)), rule=rule)
 
     return wrap
 
 
 def is_build_tree(directory: Path) -> bool:
     """Whether `directory` holds the output of a build, which is never part of the project's sources."""
-    return any(system.is_build_tree(directory) for system in BUILD_SYSTEMS if system.is_build_tree is not None)
+    return any(system.is_build_tree(directory) for system in build_systems() if system.is_build_tree is not None)
 
 
 __all__ = [
-    "BUILD_SYSTEMS",
+    "BUILT_IN",
     "C_AND_CXX",
     "C_FAMILY",
-    "ECOSYSTEMS",
     "PYTHON",
     "RUST",
     "BuildSystem",
     "Ecosystem",
+    "RegistryError",
     "ToolchainAxis",
     "ToolchainPatterns",
+    "applies_to",
+    "build_systems",
     "check_each_ecosystem",
     "combined",
+    "ecosystem_check",
     "ecosystems_for",
     "is_build_tree",
+    "isolated_registry",
     "judge_ecosystem",
     "languages_of",
     "practice",
+    "providers",
+    "register",
+    "registered",
     "rules_of",
     "toolchain_versions",
+    "with_registered_languages",
 ]
