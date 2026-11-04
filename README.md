@@ -5,13 +5,15 @@
 
 A tool to validate a project's build, CI and tooling against best practices.
 
-It recognises C and C++ (CMake or Meson), Python (`pyproject.toml` or `setup.py`) and
-Rust (Cargo) projects, and judges each language by its own ecosystem's tools: a C++
+It recognises C and C++ (CMake or Meson), Python (`pyproject.toml` or `setup.py`),
+Rust (Cargo) and Go (Go modules) projects, and judges each language by its own ecosystem's tools: a C++
 project needs branch coverage from gcovr or llvm-cov, a Python project from coverage.py,
 a Rust project from cargo-llvm-cov. Checks that do not apply to any of the project's
 languages are reported as `SKIP`. A project using several languages is judged for each
-of them and gets the worst result. Projects whose language is not recognised are judged
-as C/C++.
+of them and gets the worst result. In a project of no recognised language, only the
+checks that apply to every project run. A C/C++ project is judged by the rules of the
+build system it uses (CMake or Meson); one using neither is judged as a CMake project.
+More ecosystems can be added with plugins (see [Adding an ecosystem](#adding-an-ecosystem)).
 
 The validator itself is pure Python and has no build step; it only inspects
 (and, with `--build`, configures and builds) the project it is pointed at.
@@ -38,7 +40,7 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 
 | Option | Meaning |
 |---|---|
-| `--list` | list the available checks |
+| `--list` | list the available checks; with `--format json`, also the ecosystems each one applies to |
 | `--map` | print the detected project structure (languages, build systems, CI providers, jobs and toolchains) as JSON |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
 | `--format text\|json` | output format |
@@ -56,20 +58,21 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 | Check | Applies to | Passes when |
 |---|---|---|
 | `ci-present` | all | at least one CI configuration is found |
-| `ctest-runs` | C/C++, Python, Rust | tests exist and CI runs them. C/C++: `enable_testing()` or `include(CTest)` is called, tests are registered (`add_test`, `*_discover_tests`, ...) and CI runs `ctest`; with `--build`, the project is really configured and built, and `ctest` must list at least one test. Python: `test_*.py` / `*_test.py` files run by pytest, unittest, tox or nox. Rust: `#[test]` functions run by `cargo test` or nextest. Warns when CI never runs the tests |
-| `coverage` | C/C++, Python, Rust | CI reports branch coverage. C/C++: gcovr, lcov, genhtml, gcov or llvm-cov branch options; Python: `coverage run --branch`, `--cov-branch` or `branch = true`; Rust: cargo-llvm-cov, cargo-tarpaulin or grcov with `--branch`. Path or MC/DC coverage (`-fcondition-coverage`, `-fcoverage-mcdc`, `--mcdc`, ...) is reported as a bonus |
-| `platform-matrix` | C/C++, Python, Rust | CI covers at least 2 operating systems, 2 toolchains (compilers, Python versions or Rust toolchains) and 3 OS/toolchain combinations |
+| `tests-run` | C/C++, Python, Rust, Go | tests exist and CI runs them (`ctest-runs` is accepted as an old name). C/C++ with CMake: `enable_testing()` or `include(CTest)` is called, tests are registered (`add_test`, `*_discover_tests`, ...) and CI runs `ctest`; with `--build`, the project is really configured and built, and `ctest` must list at least one test. C/C++ with Meson: `test()` is called in a `meson.build` and CI runs `meson test`. Python: `test_*.py` / `*_test.py` files run by pytest, unittest, tox or nox. Rust: `#[test]` functions run by `cargo test` or nextest. Go: `Test` functions in `*_test.go` files run by `go test`. Warns when CI never runs the tests |
+| `coverage` | C/C++, Python, Rust, Go | CI reports branch coverage (Go's tools measure statements only, so Go needs statement coverage: `go test -cover` or `-coverprofile`). C/C++: gcovr, lcov, genhtml, gcov or llvm-cov branch options; Python: `coverage run --branch`, `--cov-branch` or `branch = true`; Rust: cargo-llvm-cov, cargo-tarpaulin or grcov with `--branch`. Path or MC/DC coverage (`-fcondition-coverage`, `-fcoverage-mcdc`, `--mcdc`, ...) is reported as a bonus |
+| `platform-matrix` | C/C++, Python, Rust, Go | CI covers at least 2 operating systems, 2 toolchains (compilers, Python versions, Rust toolchains or Go versions) and 3 OS/toolchain combinations |
 | `ci-build-types` | C/C++, Rust | every OS/toolchain combination in CI builds Debug and Release (Rust: debug and release profiles), each with and without sanitizers |
-| `compiler-warnings` | C/C++, Python, Rust | a strict warning set is enabled. C/C++: `-Wall -Wextra -Wpedantic -Wshadow -Wconversion`, plus `/W4` and `/permissive-` when MSVC is in CI; Python: warnings are errors (`-W error`, `PYTHONWARNINGS=error`, pytest `filterwarnings = error`); Rust: `cargo clippy`, `-D warnings` and `clippy::pedantic`. Warns listing what is missing |
-| `warnings-as-errors` | C/C++ | `-Werror`, `/WX` or `COMPILE_WARNING_AS_ERROR` is enabled in at least one configuration |
-| `cxx-extensions` | C/C++ | `CMAKE_CXX_EXTENSIONS` (or `CMAKE_C_EXTENSIONS` for C) is turned off, so `-std=c++NN` is used rather than `-std=gnu++NN` |
-| `hardening` | C/C++, Python, Rust | security hardening options are enabled. C/C++: `_FORTIFY_SOURCE`, `-fstack-protector-strong`, `-fcf-protection`, `-fstack-clash-protection` and `_GLIBCXX_ASSERTIONS` or `_LIBCPP_HARDENING_MODE` (or GCC's `-fhardened`), plus `/sdl /guard:cf /DYNAMICBASE /CETCOMPAT` when MSVC is in CI; Python: bandit security lints (or ruff's `S` rules) and hash-checked dependencies; Rust: `unsafe_code` forbidden crate-wide and release `overflow-checks`. Warns listing what is missing |
-| `code-formatting` | C/C++, Python, Rust | the formatting style is defined (`.clang-format`; ruff or black settings; `rustfmt.toml`) and CI runs the formatter. Python and Rust formatters have a default style, so CI enforcement alone passes. Warns when the style is defined but CI does not enforce it |
-| `function-limits` | C/C++, Python, Rust | function length is limited: lizard runs with a length limit (`lizard --length 30`), or for C/C++, `.clang-tidy` enables `readability-function-size` with a threshold and clang-tidy runs |
+| `compiler-warnings` | C/C++, Python, Rust, Go | a strict warning set is enabled. C/C++: `-Wall -Wextra -Wpedantic -Wshadow -Wconversion`, plus `/W4` and `/permissive-` when MSVC is in CI; Python: warnings are errors (`-W error`, `PYTHONWARNINGS=error`, pytest `filterwarnings = error`); Rust: `cargo clippy`, `-D warnings` and `clippy::pedantic`; Go: `go vet` and staticcheck (golangci-lint runs both). Warns listing what is missing |
+| `warnings-as-errors` | C/C++ | `-Werror`, `/WX` or `COMPILE_WARNING_AS_ERROR` (Meson: `werror=true`) is enabled in at least one configuration |
+| `cxx-extensions` | C/C++ | `CMAKE_CXX_EXTENSIONS` (or `CMAKE_C_EXTENSIONS` for C) is turned off, or with Meson `cpp_std` (`c_std`) names a standard such as `c++20` rather than `gnu++20`, so `-std=c++NN` is used rather than `-std=gnu++NN` |
+| `hardening` | C/C++, Rust, Go | binary hardening is enabled: exploit mitigations that the build inserts into the binary (static analysis and dependency audits are judged by `security-scanning` and `dependency-audit`). C/C++: `_FORTIFY_SOURCE`, `-fstack-protector-strong`, `-fcf-protection`, `-fstack-clash-protection` and `_GLIBCXX_ASSERTIONS` or `_LIBCPP_HARDENING_MODE` (or GCC's `-fhardened`), plus `/sdl /guard:cf /DYNAMICBASE /CETCOMPAT` when MSVC is in CI; Rust: `overflow-checks` in release builds; Go: programs are built as position-independent executables (`-buildmode=pie`, not the default on Linux), and a module with no `package main` is skipped. Python builds no binary, so it is not judged. Warns listing what is missing |
+| `code-formatting` | C/C++, Python, Rust, Go | the formatting style is defined (`.clang-format`; ruff or black settings; `rustfmt.toml`) and CI runs the formatter. Python, Rust and Go (gofmt, gofumpt, goimports) formatters have a default style, so CI enforcement alone passes. Warns when the style is defined but CI does not enforce it |
+| `function-limits` | C/C++, Python, Rust, Go | function length is limited: lizard runs with a length limit (`lizard --length 30`), or for C/C++, `.clang-tidy` enables `readability-function-size` with a threshold and clang-tidy runs, or for Go, golangci-lint runs with `funlen` enabled |
 | `copy-paste-detection` | all | CI runs a duplicate code detector (PMD CPD, jscpd, Duplo, Simian, CCFinderX or SonarQube); warns otherwise |
-| `security-scanning` | all | CI runs code security scanning (CodeQL or GitLab SAST); warns otherwise |
+| `security-scanning` | all | CI runs code security scanning (CodeQL or GitLab SAST), or every language in the project that has security lints enables them: Python: bandit (or ruff's `S` rules); Rust: `unsafe_code` forbidden crate-wide; Go: gosec. Warns otherwise, naming the languages left unscanned |
+| `dependency-audit` | Python, Rust, Go | CI checks the dependencies against known vulnerabilities. Python: pip-audit or safety; Rust: cargo audit or `cargo deny check` (advisories); Go: govulncheck. osv-scanner, `trivy fs` and `snyk test` count for every language. Warns otherwise |
 | `dependency-updates` | all | Dependabot or Renovate is configured; warns otherwise |
-| `vcs-ignore` | C/C++, Python, Rust | a `.gitignore`, `.hgignore`, `.bzrignore` or `.fossil-settings/ignore-glob` ignores the build outputs (`build/` or `out/`, `__pycache__/` or `*.py[cod]`, `/target`). Warns when an ignore file misses them |
+| `vcs-ignore` | C/C++, Python, Rust, Go | a `.gitignore`, `.hgignore`, `.bzrignore` or `.fossil-settings/ignore-glob` ignores the build outputs (`build/` or `out/`, `__pycache__/` or `*.py[cod]`, `/target`, Go's `*.test` or `*.out`). Warns when an ignore file misses them |
 
 CI detection is pluggable too. GitHub Actions workflows (including `strategy.matrix`
 with `include`/`exclude`) and GitLab CI pipelines (including `parallel: matrix:`)
@@ -84,12 +87,12 @@ Known limitations:
 - A GitHub matrix computed by an expression (`fromJSON(...)`) cannot be expanded; those jobs are reported with an `unknown` OS.
 - Evidence is found by scanning text, so every file under the project is considered;
   use `--exclude` to leave out test fixtures or vendored code.
-- In a mixed project, a Python-only CI job still counts as a C/C++ build with its
-  runner's default compiler, so `ci-build-types` expects build types from it.
+- A CI job that names no compiler counts as a C/C++ build with its runner's default compiler,
+  unless it only runs another ecosystem's tools (e.g. pytest, but no CMake, Meson or compiler).
 
 ## Writing a Plugin
 
-Any module-level `Check` or `CiProvider` in a file passed with `--plugin-dir` is picked up:
+Any module-level `Check`, `CiProvider` or `Ecosystem` in a file passed with `--plugin-dir` is picked up:
 
 ```python
 from project_validator.ci import CiProvider
@@ -104,6 +107,49 @@ def has_readme(context: Context) -> Result:
         return Result.passed("README.md found")
     return Result.failed("no README.md")
 ```
+
+### Adding an ecosystem
+
+Everything the validator knows about a language lives in its profile under `project_validator/ecosystems/`:
+how it is recognised (build systems, source suffixes, how CI names its toolchain versions) and the rules
+it is judged by. The checks are generic: each one judges every ecosystem that has a rule of its type
+(see `project_validator/rules.py`), and does not apply to the others. A plugin can add an ecosystem
+the same way, without changing the validator:
+
+```python
+import re
+
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.rules import Formatter
+from project_validator.text import pattern
+
+
+def _no_config(context):
+    return None
+
+
+ZIG = Ecosystem(
+    label="Zig",
+    languages=frozenset({"Zig"}),
+    build_systems=(BuildSystem(name="Zig build", files=("build.zig",), languages=frozenset({"Zig"})),),
+    source_suffixes={".zig": "Zig"},
+    toolchain=ToolchainPatterns(
+        language="Zig", versions=(re.compile(r"\bzig-version\W+([\d.x]+)"),), usage=re.compile(r"\bzig\s+build\b")
+    ),
+    rules=(
+        versions_axis("Zig version", "Zig"),  # platform-matrix: OS x Zig version
+        Formatter(
+            name="zig fmt",
+            config_file=_no_config,
+            runs=(pattern("zig fmt", r"\bzig\s+fmt\b"),),
+            hint="run zig fmt --check in CI",
+            default_style=True,
+        ),  # code-formatting
+    ),
+)
+```
+
+`--list --format json` shows which ecosystems each check applies to, including those added by plugins.
 
 ## Development
 

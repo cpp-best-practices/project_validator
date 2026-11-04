@@ -2,9 +2,9 @@ from collections import defaultdict
 
 from project_validator.build_configurations import BuildConfiguration
 from project_validator.ci import Job
-from project_validator.core import Context, Result, check
-from project_validator.ecosystems import C_AND_CXX, RUST, check_each_ecosystem, languages_of
-from project_validator.toolchain_axes import AXES, ToolchainAxis
+from project_validator.core import Context, Result
+from project_validator.ecosystems import ToolchainAxis, practice
+from project_validator.rules import BuildTypes
 
 REQUIRED_CONFIGURATIONS = frozenset(
     BuildConfiguration(build_type=build_type, sanitizers=sanitizers)
@@ -12,9 +12,6 @@ REQUIRED_CONFIGURATIONS = frozenset(
     for sanitizers in (False, True)
 )
 REQUIREMENT = "build Debug and Release, each with and without sanitizers"
-
-# Interpreted languages such as Python have no build types, so only compiled ecosystems are judged.
-BUILT_AXES = {ecosystem: AXES[ecosystem] for ecosystem in (C_AND_CXX, RUST)}
 
 type Platform = tuple[str, str]
 
@@ -55,10 +52,11 @@ def _built_everywhere(axis: ToolchainAxis, context: Context) -> Result:
     return Result.passed(f"all {len(platforms)} {combinations} {REQUIREMENT}", *analysis.notes)
 
 
-@check(
+# Interpreted languages such as Python have no build types, so only compiled ecosystems have a BuildTypes rule.
+@practice(
     name="ci-build-types",
     description="CI builds Debug and Release, with and without sanitizers, everywhere",
-    languages=languages_of(BUILT_AXES),
+    rule=BuildTypes,
 )
-def ci_build_types(context: Context) -> Result:
-    return check_each_ecosystem(context, BUILT_AXES, _built_everywhere)
+def ci_build_types(rule: BuildTypes, context: Context) -> Result:
+    return _built_everywhere(rule.axis, context)

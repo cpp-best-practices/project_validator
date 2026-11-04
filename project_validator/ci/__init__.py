@@ -10,6 +10,7 @@ from project_validator.platforms import (
     RUNNER_DEFAULT_COMPILERS,
     Toolchain,
     detect_compilers,
+    detect_ecosystems,
     detect_operating_systems,
     detect_toolchains,
 )
@@ -24,6 +25,8 @@ class Job:
     compilers: frozenset[str]
     configurations: frozenset[BuildConfiguration] = frozenset()
     toolchains: frozenset[Toolchain] = frozenset()
+    # The labels of the ecosystems the job is seen building with or running (see `Ecosystem.used_by`).
+    ecosystems: frozenset[str] = frozenset()
     default_compiler: bool = False
     heuristic: bool = False
 
@@ -70,6 +73,7 @@ def _job_with_compilers(
     compilers: list[str],
     configurations: set[BuildConfiguration],
     toolchains: frozenset[Toolchain],
+    ecosystems: frozenset[str],
     *,
     heuristic: bool = False,
 ) -> Job:
@@ -81,6 +85,7 @@ def _job_with_compilers(
         compilers=frozenset(compilers) if default is None else frozenset({default}),
         configurations=found,
         toolchains=toolchains,
+        ecosystems=ecosystems,
         default_compiler=default is not None,
         heuristic=heuristic,
     )
@@ -89,16 +94,20 @@ def _job_with_compilers(
 def build_job(name: str, os: str, *texts: str) -> Job:
     """Use the compilers named by the first text that names any, falling back to the runner's default."""
     compilers = next((found for text in texts if (found := detect_compilers(text))), [])
-    return _job_with_compilers(name, os, compilers, detect_configurations(*texts), detect_toolchains(*texts))
+    return _job_with_compilers(
+        name, os, compilers, detect_configurations(*texts), detect_toolchains(*texts), detect_ecosystems(*texts)
+    )
 
 
 def heuristic_jobs(name: str, text: str) -> list[Job]:
     compilers = detect_compilers(text)
     configurations = detect_configurations(text)
     toolchains = detect_toolchains(text)
+    ecosystems = detect_ecosystems(text)
     operating_systems = detect_operating_systems(text) or ["unknown"]
     return [
-        _job_with_compilers(name, os, compilers, configurations, toolchains, heuristic=True) for os in operating_systems
+        _job_with_compilers(name, os, compilers, configurations, toolchains, ecosystems, heuristic=True)
+        for os in operating_systems
     ]
 
 

@@ -1,0 +1,449 @@
+{
+  "map": {
+    "build_systems": [
+      "CMake"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/codeql-analysis.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, ON)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, OFF)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, ON)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, OFF)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "clang"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, ON)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "clang"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, OFF)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "clang"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, ON)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "clang"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, OFF)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Release, ON)",
+          "os": "macos",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Release, OFF)",
+          "os": "macos",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, ON)",
+          "os": "macos",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, OFF)",
+          "os": "macos",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "clang"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, clang, Release, ON)",
+          "os": "macos",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "clang"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, clang, Release, OFF)",
+          "os": "macos",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "clang"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, clang, Debug, ON)",
+          "os": "macos",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "clang"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, clang, Debug, OFF)",
+          "os": "macos",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Release, ON)",
+          "os": "windows",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Release, OFF)",
+          "os": "windows",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, ON)",
+          "os": "windows",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, OFF)",
+          "os": "windows",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/ci.yml: format",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "C/C++"
+          ],
+          "name": ".github/workflows/codeql-analysis.yml: analyze",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: cpd",
+          "os": "linux",
+          "toolchains": []
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "languages": [
+      "C",
+      "C++"
+    ]
+  },
+  "results": {
+    "ci-build-types": {
+      "details": [],
+      "message": "all 5 OS/compiler combination(s) build Debug and Release, each with and without sanitizers",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/codeql-analysis.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": ".clang-format is defined and CI runs clang-format",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wshadow -Wconversion /W4 /permissive-",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with PMD CPD",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "branch coverage is reported with gcovr; path coverage bonus: gcc -fcondition-coverage",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "C++ compiler extensions are disabled globally with set(CMAKE_CXX_EXTENSIONS OFF)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to C, C++ (applies to Go, Python, Rust)",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with clang-tidy readability-function-size (LineThreshold 80)",
+      "status": "PASS"
+    },
+    "hardening": {
+      "details": [],
+      "message": "hardening options are enabled: _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+      "status": "PASS"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, ON): linux / gcc",
+        ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, OFF): linux / gcc",
+        ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, ON): linux / gcc",
+        ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, OFF): linux / gcc",
+        ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, ON): linux / clang",
+        ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, OFF): linux / clang",
+        ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, ON): linux / clang",
+        ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, OFF): linux / clang",
+        ".github/workflows/ci.yml: test (macos-latest, gcc, Release, ON): macos / gcc",
+        ".github/workflows/ci.yml: test (macos-latest, gcc, Release, OFF): macos / gcc",
+        ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, ON): macos / gcc",
+        ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, OFF): macos / gcc",
+        ".github/workflows/ci.yml: test (macos-latest, clang, Release, ON): macos / clang",
+        ".github/workflows/ci.yml: test (macos-latest, clang, Release, OFF): macos / clang",
+        ".github/workflows/ci.yml: test (macos-latest, clang, Debug, ON): macos / clang",
+        ".github/workflows/ci.yml: test (macos-latest, clang, Debug, OFF): macos / clang",
+        ".github/workflows/ci.yml: test (windows-latest, msvc, Release, ON): windows / msvc",
+        ".github/workflows/ci.yml: test (windows-latest, msvc, Release, OFF): windows / msvc",
+        ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, ON): windows / msvc",
+        ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, OFF): windows / msvc",
+        ".github/workflows/ci.yml: format: linux / gcc (runner default)",
+        ".github/workflows/codeql-analysis.yml: analyze: linux / gcc (runner default)",
+        ".github/workflows/copy-paste-detection.yml: cpd: linux / gcc (runner default)"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 3 compiler(s) (clang, gcc, msvc), 5 combination(s)",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "CI runs code security scanning with CodeQL",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "CTest is enabled and tests are registered with add_test",
+      "status": "PASS"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores /build/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with -Werror",
+      "status": "PASS"
+    }
+  }
+}

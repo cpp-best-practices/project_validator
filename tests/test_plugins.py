@@ -4,9 +4,11 @@ import unittest
 from pathlib import Path
 
 from project_validator import checks
-from project_validator.core import Check
-from project_validator.plugins import PluginError, discover
-from tests.support import temp_project
+from project_validator.core import Check, Result, Status
+from project_validator.ecosystems import BUILT_IN, applies_to, isolated_registry, registered
+from project_validator.plugins import PluginError, Plugins, discover
+from project_validator.runner import run_check
+from tests.support import make_context, temp_project
 
 CHECK_MODULES = tuple(sorted(info.name for info in pkgutil.iter_modules(checks.__path__)))
 CHECK_TESTS = Path(__file__).parent / "checks"
@@ -72,3 +74,104 @@ class DiscoverTests(unittest.TestCase):
     def test_reports_missing_plugin_directories(self) -> None:
         with temp_project({}) as directory, self.assertRaisesRegex(PluginError, "does not exist"):
             discover([directory / "missing"])
+
+
+# A whole ecosystem that is not built in, from a plugin: detected by its build file and source suffix, judged
+# by the practices it has rules for, and seen by --list.
+ECOSYSTEM_PLUGIN = """
+import re
+
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.rules import Formatter
+from project_validator.text import pattern
+
+
+def _no_config(context):
+    return None
+
+
+ZIG = Ecosystem(
+    label="Zig",
+    languages=frozenset({"Zig"}),
+    build_systems=(BuildSystem(name="Zig build", files=("build.zig",), languages=frozenset({"Zig"})),),
+    source_suffixes={".zig": "Zig"},
+    toolchain=ToolchainPatterns(
+        language="Zig", versions=(re.compile(r"\\bzig-version\\W+([\\d.x]+)"),), usage=re.compile(r"\\bzig\\s+build\\b")
+    ),
+    rules=(
+        versions_axis("Zig version", "Zig"),
+        Formatter(
+            name="zig fmt",
+            config_file=_no_config,
+            runs=(pattern("zig fmt", r"\\bzig\\s+fmt\\b"),),
+            hint="run zig fmt --check in CI",
+            default_style=True,
+        ),
+    ),
+)
+"""
+
+ZIG_PROJECT = {
+    "build.zig": "",
+    "src/main.zig": "",
+    ".github/workflows/ci.yml": (
+        "jobs:\n  t:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: mlugg/setup-zig@v2\n"
+        "        with:\n          zig-version: '0.14.1'\n      - run: zig fmt --check . && zig build test\n"
+    ),
+}
+
+
+class EcosystemPluginTests(unittest.TestCase):
+    def setUp(self) -> None:
+        registry = isolated_registry()
+        registry.__enter__()
+        self.addCleanup(registry.__exit__, None, None, None)
+
+    def _discover_zig(self) -> Plugins:
+        with temp_project({"zig.py": ECOSYSTEM_PLUGIN}) as directory:
+            return discover([directory])
+
+    def test_a_plugin_ecosystem_is_registered_and_practices_apply_to_it(self) -> None:
+        plugins = self._discover_zig()
+        self.assertEqual([ecosystem.label for ecosystem in registered()], ["C/C++", "Python", "Rust", "Go", "Zig"])
+        formatting = next(found for found in plugins.checks if found.name == "code-formatting")
+        self.assertIn("Zig", formatting.languages)
+        self.assertIn("Zig", applies_to(formatting))
+
+    def test_a_plugin_ecosystem_is_detected_and_judged(self) -> None:
+        plugins = self._discover_zig()
+        checks = {found.name: found for found in plugins.checks}
+        with temp_project(ZIG_PROJECT) as root:
+            context = make_context(root)
+            self.assertEqual(context.structure.languages, frozenset({"Zig"}))
+            self.assertEqual(context.structure.build_systems, frozenset({"Zig build"}))
+            self.assertEqual(
+                run_check(checks["code-formatting"], context), Result.passed("CI enforces the zig fmt style")
+            )
+            self.assertEqual(run_check(checks["coverage"], context).status, Status.SKIP)
+            self.assertIn("0.14.1", run_check(checks["platform-matrix"], context).message)
+
+    def test_loading_a_plugin_again_replaces_its_ecosystem(self) -> None:
+        self._discover_zig()
+        self._discover_zig()
+        self.assertEqual([ecosystem.label for ecosystem in registered()], ["C/C++", "Python", "Rust", "Go", "Zig"])
+
+    def test_rejects_an_ecosystem_with_a_built_in_label(self) -> None:
+        clash = ECOSYSTEM_PLUGIN.replace('label="Zig"', 'label="Python"')
+        with (
+            temp_project({"clash.py": clash}) as directory,
+            self.assertRaisesRegex(PluginError, "Python is a built-in ecosystem"),
+        ):
+            discover([directory])
+
+    def test_rejects_two_plugin_ecosystems_with_the_same_label(self) -> None:
+        with (
+            temp_project({"a.py": ECOSYSTEM_PLUGIN, "b.py": ECOSYSTEM_PLUGIN}) as directory,
+            self.assertRaisesRegex(PluginError, "duplicate ecosystem label"),
+        ):
+            discover([directory])
+
+    def test_the_registry_is_restored_after_isolation(self) -> None:
+        with isolated_registry():
+            self._discover_zig()
+        self.assertEqual(registered(), BUILT_IN)

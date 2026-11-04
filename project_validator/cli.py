@@ -9,6 +9,7 @@ from pathlib import Path, PurePosixPath
 
 from project_validator import pretty, yaml_support
 from project_validator.core import Check, Context, Options, Project
+from project_validator.ecosystems import applies_to
 from project_validator.plugins import PluginError, discover
 from project_validator.runner import Report, SelectionError, run_checks, select, succeeded
 
@@ -30,7 +31,7 @@ def _parser() -> argparse.ArgumentParser:
         prog="project_validator", description="Validate a project's build, CI and tooling against best practices."
     )
     parser.add_argument("path", nargs="?", default=".", type=Path, help="project to validate (default: .)")
-    parser.add_argument("--list", action="store_true", help="list the available checks and exit")
+    parser.add_argument("--list", action="store_true", help="list the checks (as JSON: with what each applies to)")
     parser.add_argument("--map", action="store_true", help="print the detected project structure as JSON and exit")
     parser.add_argument("--only", action="append", default=[], metavar="CHECKS", help="run only these checks")
     parser.add_argument("--skip", action="append", default=[], metavar="CHECKS", help="do not run these checks")
@@ -99,6 +100,11 @@ def _format_list(checks: Sequence[Check]) -> str:
     return "\n".join(f"{c.name:<{width}}  {c.description}" for c in checks)
 
 
+def support_matrix(checks: Sequence[Check]) -> list[dict[str, object]]:
+    """Each check and the ecosystems it judges; an empty `applies_to` means every project."""
+    return [{"check": c.name, "description": c.description, "applies_to": list(applies_to(c))} for c in checks]
+
+
 def _usage_error(parser: argparse.ArgumentParser, message: str) -> int:
     print(f"{parser.prog}: error: {message}", file=sys.stderr)
     return EXIT_USAGE
@@ -122,7 +128,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _usage_error(parser, str(error))
 
     if arguments.list:
-        print(_format_list(plugins.checks))
+        if arguments.format == "json":
+            print(json.dumps(support_matrix(plugins.checks), indent=2))
+        else:
+            print(_format_list(plugins.checks))
         return EXIT_SUCCESS
     if not yaml_support.available():
         return _usage_error(parser, yaml_support.MISSING_MESSAGE)

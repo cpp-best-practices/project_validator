@@ -21,7 +21,7 @@ jobs:
           python-version: "3.14"
 
       - name: Install ruff
-        run: python -m pip install "ruff>=0.15"
+        run: python -m pip install -r .github/requirements/ruff.txt
 
       - name: Lint
         run: ruff check --output-format=github .
@@ -37,7 +37,7 @@ jobs:
           python-version: "3.14"
 
       - name: Install mypy and the project's dependencies
-        run: python -m pip install "mypy>=1.18" types-PyYAML "PyYAML>=6.0" "rich>=13.0"
+        run: python -m pip install -r .github/requirements/typing.txt
 
       - name: Type check
         run: mypy
@@ -59,7 +59,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install PyYAML
-        run: python -m pip install "PyYAML>=6.0"
+        run: python -m pip install -r .github/requirements/test.txt
 
       - name: Test
         run: python -W error -m unittest
@@ -75,7 +75,7 @@ jobs:
           python-version: "3.14"
 
       - name: Install ruff
-        run: python -m pip install "ruff>=0.15"
+        run: python -m pip install -r .github/requirements/ruff.txt
 
       - name: Check formatting
         run: ruff format --check --diff .
@@ -90,8 +90,9 @@ jobs:
         with:
           node-version: "lts/*"
 
+      # Pinned by hand: Dependabot does not update versions given to npx.
       - name: Detect duplicated code
-        run: npx --yes jscpd@4
+        run: npx --yes jscpd@4.3.0
 
   function-limits:
     name: function limits
@@ -104,7 +105,7 @@ jobs:
           python-version: "3.14"
 
       - name: Install lizard
-        run: python -m pip install "lizard>=1.17"
+        run: python -m pip install -r .github/requirements/lizard.txt
 
       - name: Limit function length
         run: lizard --length 30 --warnings_only project_validator tests
@@ -122,8 +123,9 @@ jobs:
       - name: Install project_validator
         run: python -m pip install .
 
+      # --strict: a warning fails the build, so every check this project is judged by must pass.
       - name: Validate project_validator with itself
-        run: project-validator --exclude tests/fixtures .
+        run: project-validator --strict --exclude tests/fixtures .
 
   coverage:
     name: coverage
@@ -136,7 +138,7 @@ jobs:
           python-version: "3.14"
 
       - name: Install tools
-        run: python -m pip install "coverage>=7.10" "PyYAML>=6.0"
+        run: python -m pip install -r .github/requirements/coverage.txt
 
       - name: Test with branch coverage
         run: coverage run --branch -m unittest

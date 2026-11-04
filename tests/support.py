@@ -12,9 +12,8 @@ from types import MappingProxyType
 
 from project_validator import pretty
 from project_validator.core import Check, Context, Options, Project, Result
-from project_validator.ecosystems import C_AND_CXX, ECOSYSTEMS, Ecosystem, ecosystems_for
+from project_validator.ecosystems import BUILT_IN, C_AND_CXX, C_FAMILY, Ecosystem, ecosystems_for
 from project_validator.plugins import discover
-from project_validator.structure import C_FAMILY
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -62,8 +61,8 @@ class ProjectLayout:
 
     @property
     def gets_c_family_checks(self) -> bool:
-        """C/C++ checks run for C and C++ projects, and for projects whose language is not recognised."""
-        return not self.languages or bool(self.languages & C_FAMILY)
+        """C/C++ checks run for C and C++ projects only."""
+        return bool(self.languages & C_FAMILY)
 
 
 # CMake files are deliberately free of project() and settings so that the files a test adds decide what is checked.
@@ -129,6 +128,12 @@ PROJECT_LAYOUTS = (
         build_systems=frozenset({"Python packaging"}),
     ),
     ProjectLayout(
+        name="Go module",
+        files={"go.mod": "module example.com/app\n", "main.go": "package main\n"},
+        languages=frozenset({"Go"}),
+        build_systems=frozenset({"Go modules"}),
+    ),
+    ProjectLayout(
         name="Unrecognised language",
         files={"README.md": "", "src/main.zig": ""},
         languages=frozenset(),
@@ -139,7 +144,7 @@ PROJECT_LAYOUTS = (
 
 def checked_ecosystems(selected: Check, layout: ProjectLayout) -> tuple[Ecosystem, ...]:
     """The ecosystems `selected` judges in a project of `layout`."""
-    supported = (ecosystem for ecosystem in ECOSYSTEMS if ecosystem.languages <= selected.languages)
+    supported = (ecosystem for ecosystem in BUILT_IN if ecosystem.languages <= selected.languages)
     return ecosystems_for(layout.languages, supported)
 
 
@@ -148,9 +153,24 @@ def layouts_checked_as(selected: Check, *ecosystems: Ecosystem) -> tuple[Project
     return tuple(layout for layout in PROJECT_LAYOUTS if checked_ecosystems(selected, layout) == ecosystems)
 
 
+def c_family_layouts_built_with(selected: Check, build_system: str) -> tuple[ProjectLayout, ...]:
+    """The layouts in which `selected` judges only C/C++, by the rules of `build_system`.
+
+    A layout without a C/C++ build system is judged as a CMake project.
+    """
+    return tuple(
+        layout
+        for layout in layouts_checked_as(selected, C_AND_CXX)
+        if C_AND_CXX.used_build_systems(layout.build_systems)[0].name == build_system
+    )
+
+
 C_FAMILY_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if layout.gets_c_family_checks)
 C_FAMILY_ONLY_LAYOUTS = tuple(layout for layout in C_FAMILY_LAYOUTS if layout.languages <= C_FAMILY)
-OTHER_LANGUAGE_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if not layout.gets_c_family_checks)
+OTHER_LANGUAGE_LAYOUTS = tuple(
+    layout for layout in PROJECT_LAYOUTS if layout.languages and not layout.gets_c_family_checks
+)
+UNRECOGNISED_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if not layout.languages)
 NON_CMAKE_C_FAMILY_LAYOUTS = tuple(layout for layout in C_FAMILY_LAYOUTS if not layout.uses_cmake)
 
 
@@ -205,6 +225,7 @@ BARE_PROJECT = fixture_files("bare_project")
 # Projects that pass every check that applies to their language.
 WELL_CONFIGURED_PYTHON = fixture_files("well_configured_python")
 WELL_CONFIGURED_RUST = fixture_files("well_configured_rust")
+WELL_CONFIGURED_GO = fixture_files("well_configured_go")
 
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}

@@ -23,6 +23,11 @@ class SelectTests(unittest.TestCase):
         with self.assertRaisesRegex(SelectionError, "nope"):
             select([PASSING], only=["nope"])
 
+    def test_former_names_select_a_check(self) -> None:
+        renamed = Check(name="new-name", description="", run=PASSING.run, aliases=("old-name",))
+        self.assertEqual(select([PASSING, renamed], only=["old-name"]), [renamed])
+        self.assertEqual(select([PASSING, renamed], skip=["old-name"]), [PASSING])
+
 
 class RunChecksTests(unittest.TestCase):
     def test_misbehaving_checks_are_errors_and_do_not_stop_the_others(self) -> None:

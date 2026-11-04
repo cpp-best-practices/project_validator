@@ -16,12 +16,17 @@ class Report:
     result: Result
 
 
+def _names_of(candidate: Check) -> set[str]:
+    return {candidate.name, *candidate.aliases}
+
+
 def select(available: Iterable[Check], only: Iterable[str] = (), skip: Iterable[str] = ()) -> list[Check]:
+    """The checks named by `only` (every one if empty), minus those named by `skip`; former names count too."""
     available = list(available)
     only, skip = set(only), set(skip)
-    if unknown := sorted((only | skip) - {candidate.name for candidate in available}):
+    if unknown := sorted((only | skip) - set().union(*map(_names_of, available))):
         raise SelectionError(f"unknown check(s): {', '.join(unknown)}")
-    return [c for c in available if (not only or c.name in only) and c.name not in skip]
+    return [c for c in available if (not only or _names_of(c) & only) and not _names_of(c) & skip]
 
 
 def _skipped(selected: Check, context: Context) -> Result | None:
@@ -30,7 +35,10 @@ def _skipped(selected: Check, context: Context) -> Result | None:
     languages = context.structure.languages
     if selected.applies_to(languages):
         return None
-    found, wanted = ", ".join(sorted(languages)), ", ".join(sorted(selected.languages))
+    found, wanted = (
+        ", ".join(sorted(languages)) or "a project of no recognised language",
+        ", ".join(sorted(selected.languages)),
+    )
     return Result(status=Status.SKIP, message=f"not applicable to {found} (applies to {wanted})")
 
 

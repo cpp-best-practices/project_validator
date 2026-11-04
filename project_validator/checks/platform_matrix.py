@@ -1,11 +1,15 @@
 from project_validator.ci import Job
-from project_validator.core import Context, Result, check
-from project_validator.ecosystems import check_each_ecosystem, languages_of
-from project_validator.toolchain_axes import AXES, ToolchainAxis, platforms
+from project_validator.core import Context, Result
+from project_validator.ecosystems import ToolchainAxis, practice
 
 MINIMUM_OPERATING_SYSTEMS = 2
 MINIMUM_COMPILERS = 2
 MINIMUM_COMBINATIONS = 3
+
+
+def platforms(jobs: tuple[Job, ...], axis: ToolchainAxis) -> set[tuple[str, str]]:
+    """Every (OS, toolchain) pair the jobs run on, leaving out jobs whose OS is unknown."""
+    return {(job.os, toolchain) for job in jobs if job.os != "unknown" for toolchain in axis.of_job(job)}
 
 
 def _describe(job: Job, axis: ToolchainAxis) -> str:
@@ -25,7 +29,12 @@ def _shortfalls(
     return [f"at least {minimum} {kind} (found {found})" for kind, found, minimum in requirements if found < minimum]
 
 
-def _covered(axis: ToolchainAxis, context: Context) -> Result:
+@practice(
+    name="platform-matrix",
+    description="CI runs on several operating systems with several compilers (or interpreter/toolchain versions)",
+    rule=ToolchainAxis,
+)
+def platform_matrix(axis: ToolchainAxis, context: Context) -> Result:
     if not context.ci_files:
         return Result.failed("no CI configuration found")
 
@@ -43,12 +52,3 @@ def _covered(axis: ToolchainAxis, context: Context) -> Result:
     if shortfalls := _shortfalls(axis, operating_systems, toolchains, pairs):
         return Result.failed(f"CI covers {summary}; expected {', '.join(shortfalls)}", *details)
     return Result.passed(f"CI covers {summary}", *details)
-
-
-@check(
-    name="platform-matrix",
-    description="CI runs on several operating systems with several compilers (or interpreter/toolchain versions)",
-    languages=languages_of(AXES),
-)
-def platform_matrix(context: Context) -> Result:
-    return check_each_ecosystem(context, AXES, _covered)

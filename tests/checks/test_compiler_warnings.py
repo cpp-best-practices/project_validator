@@ -2,8 +2,7 @@ import unittest
 
 from project_validator.checks.compiler_warnings import compiler_warnings
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_AND_CXX, C_FAMILY, PYTHON, RUST
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,
@@ -17,7 +16,8 @@ from tests.support import (
 
 class CompilerWarningsTests(unittest.TestCase):
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(compiler_warnings.languages, C_FAMILY | {"Python", "Rust"})
+        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, compiler_warnings.languages)
 
     GCC_FLAGS = "-Wall -Wextra -Wpedantic -Wshadow -Wconversion"
     MSVC_CI = "jobs:\n  build:\n    runs-on: windows-latest\n    steps:\n      - run: cmake -S . -B build\n"

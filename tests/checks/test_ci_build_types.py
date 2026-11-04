@@ -4,8 +4,7 @@ from collections.abc import Mapping
 
 from project_validator.checks.ci_build_types import ci_build_types
 from project_validator.core import Result, Status
-from project_validator.ecosystems import PYTHON, RUST
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_FAMILY, PYTHON, RUST
 from tests.support import (
     BARE_PROJECT,
     GITHUB_WORKFLOW,

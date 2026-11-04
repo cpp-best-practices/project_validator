@@ -16,5 +16,6 @@ jobs:
       - run: cargo fmt --check
       - run: cargo clippy --all-targets
       - run: cargo test
+      - run: cargo audit
       - run: cargo test --release
       - run: cargo llvm-cov --branch --mcdc

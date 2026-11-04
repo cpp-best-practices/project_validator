@@ -1,9 +1,10 @@
+import json
 import unittest
+from types import MappingProxyType
 
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.core import Result, Status
-from project_validator.ecosystems import PYTHON, RUST
-from project_validator.structure import C_FAMILY
+from project_validator.ecosystems import C_FAMILY, PYTHON, RUST
 from tests.support import (
     BARE_PROJECT,
     GITHUB_WORKFLOW,
@@ -12,14 +13,17 @@ from tests.support import (
     WELL_CONFIGURED_PYTHON,
     WELL_CONFIGURED_RUST,
     github_job,
+    make_context,
     run_as,
     run_in_every_layout,
+    temp_project,
 )
 
 
 class PlatformMatrixTests(unittest.TestCase):
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(platform_matrix.languages, C_FAMILY | {"Python", "Rust"})
+        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, platform_matrix.languages)
 
     def test_fails_without_ci(self) -> None:
         self.assertEqual(run_in_every_layout(self, platform_matrix, BARE_PROJECT).status, Status.FAIL)
@@ -102,3 +106,54 @@ class RustPlatformMatrixTests(unittest.TestCase):
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("at least 2 Rust toolchains (found 1)", result.message)
         self.assertIn(f"{GITHUB_WORKFLOW}: build: linux / default", result.details)
+
+
+MIXED_PROJECT = MappingProxyType(
+    {"CMakeLists.txt": "", "src/main.cpp": "", "pyproject.toml": "", "app/__init__.py": ""}
+)
+
+
+class JobAttributionTests(unittest.TestCase):
+    """A job naming no compiler counts as a C/C++ build on its runner's default compiler, unless it only runs
+    another ecosystem's tools."""
+
+    def _jobs(self, *jobs: tuple[str, str]) -> dict[str, str]:
+        return {
+            GITHUB_WORKFLOW: json.dumps(
+                {
+                    "jobs": {
+                        f"j{index}": {"runs-on": runs_on, "steps": [{"run": step}]}
+                        for index, (runs_on, step) in enumerate(jobs)
+                    }
+                }
+            )
+        }
+
+    def _c_and_cxx_result(self, *jobs: tuple[str, str]) -> str:
+        with temp_project({**MIXED_PROJECT, **self._jobs(*jobs)}) as root:
+            return platform_matrix.run(make_context(root)).message.split("; Python: ")[0]
+
+    def test_a_python_only_job_is_not_a_c_and_cxx_build(self) -> None:
+        message = self._c_and_cxx_result(
+            ("windows-latest", "cmake --build build"), ("macos-latest", "python -m pytest")
+        )
+        self.assertIn("1 OS(es) (windows), 1 compiler(s) (msvc)", message)
+
+    def test_a_job_that_builds_with_cmake_and_python_tools_is_a_c_and_cxx_build(self) -> None:
+        message = self._c_and_cxx_result(("ubuntu-latest", "pip install gcovr && cmake --build build && gcovr"))
+        self.assertIn("1 compiler(s) (gcc)", message)
+
+    def test_a_job_that_names_a_compiler_is_a_c_and_cxx_build(self) -> None:
+        message = self._c_and_cxx_result(("ubuntu-latest", "CXX=clang++ python build.py"))
+        self.assertIn("1 compiler(s) (clang)", message)
+
+    def test_a_job_of_no_recognisable_ecosystem_is_a_c_and_cxx_build(self) -> None:
+        message = self._c_and_cxx_result(("ubuntu-latest", "./build.sh"))
+        self.assertIn("1 compiler(s) (gcc)", message)
+
+    def test_the_project_map_lists_each_jobs_ecosystems(self) -> None:
+        with temp_project(
+            {**MIXED_PROJECT, **self._jobs(("ubuntu-latest", "pip install gcovr && cmake -B b"))}
+        ) as root:
+            [job] = make_context(root).structure.as_dict()["ci"]["jobs"]  # type: ignore[index]
+            self.assertEqual(job["ecosystems"], ["C/C++", "Python"])

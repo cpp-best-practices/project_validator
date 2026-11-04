@@ -9,6 +9,7 @@ from unittest import mock
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
+from project_validator.ecosystems import C_FAMILY
 from project_validator.plugins import discover
 from tests.support import (
     BARE_PROJECT,
@@ -19,6 +20,7 @@ from tests.support import (
     OTHER_LANGUAGE_LAYOUTS,
     PROJECT_LAYOUTS,
     WELL_CONFIGURED,
+    WELL_CONFIGURED_GO,
     WELL_CONFIGURED_PYTHON,
     WELL_CONFIGURED_RUST,
     ProjectLayout,
@@ -31,7 +33,7 @@ COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
 NOT_APPLICABLE = {
     language: {found.name for found in LANGUAGE_SPECIFIC_CHECKS if language not in found.languages}
-    for language in ("Python", "Rust")
+    for language in ("Python", "Rust", "Go")
 }
 
 
@@ -61,7 +63,7 @@ class CliTests(unittest.TestCase):
                 self.assertIn("[PASS] coverage:", output)
 
     def test_well_configured_projects_in_other_languages_pass_strictly(self) -> None:
-        projects = {"Python": WELL_CONFIGURED_PYTHON, "Rust": WELL_CONFIGURED_RUST}
+        projects = {"Python": WELL_CONFIGURED_PYTHON, "Rust": WELL_CONFIGURED_RUST, "Go": WELL_CONFIGURED_GO}
         for layout in OTHER_LANGUAGE_LAYOUTS:
             [language] = layout.languages
             with layout_project(self, layout, projects[language]) as root:
@@ -79,7 +81,7 @@ class CliTests(unittest.TestCase):
         }
         mixed = [layout for layout in C_FAMILY_LAYOUTS if layout not in C_FAMILY_ONLY_LAYOUTS]
         # ci-build-types is left out: a Python-only job on a runner counts as a C/C++ build with its default compiler.
-        judged_per_language = "compiler-warnings,coverage,ctest-runs,hardening,platform-matrix"
+        judged_per_language = "compiler-warnings,coverage,tests-run,hardening,platform-matrix"
         for layout in mixed:
             with layout_project(self, layout, {**WELL_CONFIGURED, **python}) as root:
                 code, output, _ = run_cli("--only", judged_per_language, str(root))
@@ -138,12 +140,14 @@ class CliTests(unittest.TestCase):
                         skipped = f"[SKIP] {name}:" in output
                         self.assertEqual(skipped, name in NOT_APPLICABLE[language], name)
 
-    def test_compiler_checks_run_for_c_family_and_unrecognised_languages(self) -> None:
+    def test_compiler_checks_run_for_c_family_languages(self) -> None:
         for layout in C_FAMILY_LAYOUTS:
             with layout_project(self, layout, {".github/workflows/ci.yml": "jobs: {}\n"}) as root:
                 code, output, _ = run_cli("--only", COMPILER_CHECKS, str(root))
                 self.assertEqual(code, EXIT_FAILURE, output)
-                self.assertNotIn("[SKIP]", output)
+                for found in LANGUAGE_SPECIFIC_CHECKS:
+                    skipped = f"[SKIP] {found.name}:" in output
+                    self.assertEqual(skipped, not found.languages & layout.languages, found.name)
 
     def test_excluded_directories_are_left_out_of_the_map(self) -> None:
         excluded = {"tests/fixtures/cmake/CMakeLists.txt": "", "tests/fixtures/cmake/main.cpp": ""}
@@ -160,7 +164,8 @@ class CliTests(unittest.TestCase):
         code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
-        self.assertIn(f"{len(discover().checks)} passed", output)
+        applicable = [found for found in discover().checks if not found.languages or found.languages & C_FAMILY]
+        self.assertIn(f"{len(applicable)} passed", output)
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
         for choice in ("never", "auto"):
@@ -198,3 +203,14 @@ class DependencyTests(unittest.TestCase):
         pyproject = tomllib.loads((Path(__file__).parent.parent / "pyproject.toml").read_text(encoding="utf-8"))
         self.assertIn("PyYAML>=6.0", pyproject["project"]["dependencies"])
         self.assertNotIn("yaml", pyproject["project"]["optional-dependencies"])
+
+
+class ListTests(unittest.TestCase):
+    def test_list_as_json_is_the_support_matrix(self) -> None:
+        code, output, _ = run_cli("--list", "--format", "json")
+        self.assertEqual(code, EXIT_SUCCESS)
+        matrix = {row["check"]: row["applies_to"] for row in json.loads(output)}
+        self.assertEqual(matrix["ci-present"], [])
+        self.assertEqual(matrix["coverage"], ["C/C++", "Python", "Rust", "Go"])
+        self.assertEqual(matrix["warnings-as-errors"], ["C/C++"])
+        self.assertEqual(matrix["ci-build-types"], ["C/C++", "Rust"])

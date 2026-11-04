@@ -1,0 +1,29 @@
+name: dependency audit
+
+# Weekly too: a vulnerability can be published in a dependency without any change here.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+
+jobs:
+  pip-audit:
+    name: pip-audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install pip-audit
+        run: python -m pip install -r .github/requirements/audit.txt
+
+      - name: Audit the project's dependencies
+        run: pip-audit --progress-spinner off .
+
+      - name: Audit the tools CI installs
+        run: pip-audit --progress-spinner off $(printf -- '-r %s ' .github/requirements/*.txt)

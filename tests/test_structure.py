@@ -3,15 +3,16 @@ from typing import Any, cast
 from unittest import mock
 
 from project_validator.core import Check, Result, Status
+from project_validator.ecosystems import C_FAMILY
 from project_validator.plugins import discover
 from project_validator.runner import run_check
-from project_validator.structure import C_FAMILY
 from tests.support import (
     C_FAMILY_LAYOUTS,
     CI_FILES,
     FIXTURES,
     OTHER_LANGUAGE_LAYOUTS,
     PROJECT_LAYOUTS,
+    UNRECOGNISED_LAYOUTS,
     layout_project,
     make_context,
     temp_project,
@@ -122,20 +123,19 @@ class ProjectStructureTests(unittest.TestCase):
             ],
         )
         job = ci["jobs"][0]
-        self.assertEqual(set(job), {"name", "os", "compilers", "toolchains", "configurations"})
+        self.assertEqual(set(job), {"name", "os", "compilers", "toolchains", "ecosystems", "configurations"})
 
 
 class LanguageApplicabilityTests(unittest.TestCase):
-    def test_c_family_checks_are_skipped_for_other_languages(self) -> None:
-        for layout in OTHER_LANGUAGE_LAYOUTS:
+    def test_c_family_checks_are_skipped_for_other_and_unrecognised_languages(self) -> None:
+        for layout in (*OTHER_LANGUAGE_LAYOUTS, *UNRECOGNISED_LAYOUTS):
             with layout_project(self, layout, {".github/workflows/ci.yml": GITHUB_CI}) as root:
                 result = run_check(_check("warnings", C_FAMILY), make_context(root))
                 self.assertEqual(result.status, Status.SKIP)
-                self.assertEqual(
-                    result.message, f"not applicable to {', '.join(sorted(layout.languages))} (applies to C, C++)"
-                )
+                found = ", ".join(sorted(layout.languages)) or "a project of no recognised language"
+                self.assertEqual(result.message, f"not applicable to {found} (applies to C, C++)")
 
-    def test_c_family_checks_run_for_c_family_and_unrecognised_languages(self) -> None:
+    def test_c_family_checks_run_for_c_family_languages(self) -> None:
         for layout in C_FAMILY_LAYOUTS:
             with layout_project(self, layout) as root:
                 self.assertEqual(run_check(_check("warnings", C_FAMILY), make_context(root)).status, Status.PASS)
@@ -160,7 +160,7 @@ class LanguageApplicabilityTests(unittest.TestCase):
             selected = _check(language, frozenset({language}))
             for layout in PROJECT_LAYOUTS:
                 with layout_project(self, layout, language=language) as root:
-                    applies = not layout.languages or language in layout.languages
+                    applies = language in layout.languages
                     expected = Status.PASS if applies else Status.SKIP
                     self.assertEqual(run_check(selected, make_context(root)).status, expected)
 
@@ -170,13 +170,15 @@ class LanguageApplicabilityTests(unittest.TestCase):
                 context = make_context(root)
                 for found in discover().checks:
                     expected = found.languages
-                    outside = bool(expected) and bool(layout.languages) and not expected & layout.languages
+                    outside = bool(expected) and not expected & layout.languages
                     self.assertEqual(run_check(found, context).status == Status.SKIP, outside, found.name)
 
     def test_matching_checks_run(self) -> None:
         context = make_context(FIXTURES / "well_configured")
         self.assertEqual(run_check(_check("cpp", frozenset({"C++"})), context).status, Status.PASS)
 
-    def test_every_check_runs_when_no_language_is_recognised(self) -> None:
-        with temp_project({"README.md": ""}) as root:
-            self.assertEqual(run_check(_check("cpp", C_FAMILY), make_context(root)).status, Status.PASS)
+    def test_only_language_agnostic_checks_run_when_no_language_is_recognised(self) -> None:
+        with temp_project({"README.md": "", "src/main.zig": ""}) as root:
+            context = make_context(root)
+            self.assertEqual(run_check(_check("cpp", C_FAMILY), context).status, Status.SKIP)
+            self.assertEqual(run_check(_check("generic"), context).status, Status.PASS)

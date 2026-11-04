@@ -11,6 +11,7 @@ from types import ModuleType
 from project_validator import checks, ci
 from project_validator.ci import CiProvider
 from project_validator.core import Check
+from project_validator.ecosystems import Ecosystem, RegistryError, register, with_registered_languages
 
 
 class PluginError(Exception):
@@ -50,10 +51,18 @@ def _instances[T](modules: Iterable[ModuleType], kind: type[T]) -> list[T]:
     return [value for module in modules for value in vars(module).values() if isinstance(value, kind)]
 
 
-def _reject_duplicates(found: list[Check]) -> None:
-    names = [found_check.name for found_check in found]
+def _reject_duplicates(kind: str, names: list[str]) -> None:
     if duplicates := sorted({name for name in names if names.count(name) > 1}):
-        raise PluginError(f"duplicate check name(s): {', '.join(duplicates)}")
+        raise PluginError(f"duplicate {kind}(s): {', '.join(duplicates)}")
+
+
+def _register_all(ecosystems: list[Ecosystem]) -> None:
+    _reject_duplicates("ecosystem label", [ecosystem.label for ecosystem in ecosystems])
+    for ecosystem in ecosystems:
+        try:
+            register(ecosystem)
+        except RegistryError as error:
+            raise PluginError(str(error)) from error
 
 
 def discover(plugin_directories: Iterable[Path] = ()) -> Plugins:
@@ -62,7 +71,8 @@ def discover(plugin_directories: Iterable[Path] = ()) -> Plugins:
         *_package_modules(ci),
         *(module for directory in plugin_directories for module in _directory_modules(directory)),
     ]
-    found_checks = list(dict.fromkeys(_instances(modules, Check)))
-    _reject_duplicates(found_checks)
+    _register_all(list(dict.fromkeys(_instances(modules, Ecosystem))))
+    found_checks = [with_registered_languages(found) for found in dict.fromkeys(_instances(modules, Check))]
+    _reject_duplicates("check name", [found.name for found in found_checks])
     providers = tuple(dict.fromkeys(_instances(modules, CiProvider)))
     return Plugins(checks=tuple(found_checks), providers=providers)

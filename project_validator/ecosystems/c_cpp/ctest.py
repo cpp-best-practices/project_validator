@@ -1,15 +1,13 @@
+"""C/C++ tests: registered with CTest in CMake files, or listed by ctest after a real build with --build."""
+
 import json
-import re
 import subprocess
 import tempfile
-from collections.abc import Callable
-from dataclasses import dataclass
-from fnmatch import fnmatch
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
-from project_validator.core import Context, Options, Result, Status, check
-from project_validator.ecosystems import C_AND_CXX, PYTHON, RUST, check_each_ecosystem, languages_of
-from project_validator.text import Pattern, matching_names, pattern
+from project_validator.core import Context, Options, Result
+from project_validator.rules import TestSuite
+from project_validator.text import matching_names, pattern
 
 ENABLES_TESTING = (
     pattern("enable_testing()", r"\benable_testing\s*\("),
@@ -26,12 +24,6 @@ REGISTERS_TESTS = (
 )
 
 RUNS_CTEST = (pattern("ctest", r"\bctest\b|--target[\s=]+(test|RUN_TESTS)\b|\bcmake\s+--workflow\b"),)
-
-PYTHON_TEST_FILES = ("test_*.py", "*_test.py")
-RUNS_PYTHON_TESTS = (pattern("Python tests", r"\bpytest\b|\bunittest\b|\btox\b|\bnox\b"),)
-
-RUST_TEST = re.compile(r"#\[(?:\w+::)*test\b")
-RUNS_RUST_TESTS = (pattern("cargo test", r"\bcargo\s+(\+\S+\s+)?(test|nextest|llvm-cov|tarpaulin)\b"),)
 
 
 class BuildError(Exception):
@@ -89,49 +81,4 @@ def _ctest_result(context: Context) -> Result:
     return _built_result(context) if context.options.build else _cmake_source_result(context)
 
 
-def _python_tests_result(context: Context) -> Result:
-    names = (PurePosixPath(path).name for path in context.project.files() if path.endswith(".py"))
-    count = sum(1 for name in names if any(fnmatch(name, test_file) for test_file in PYTHON_TEST_FILES))
-    if count == 0:
-        return Result.failed(f"no Python tests found ({' or '.join(PYTHON_TEST_FILES)} files)")
-    return Result.passed(f"Python tests found in {count} file(s)")
-
-
-def _rust_tests_result(context: Context) -> Result:
-    sources = (path for path in context.project.files() if path.endswith(".rs"))
-    count = sum(1 for path in sources if RUST_TEST.search(context.project.read_text(path)))
-    if count == 0:
-        return Result.failed("no Rust tests found (#[test] functions)")
-    return Result.passed(f"Rust tests found in {count} file(s)")
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class TestSuite:
-    """How an ecosystem's tests are found, and how CI is recognised running them."""
-
-    found: Callable[[Context], Result]
-    runs: tuple[Pattern, ...]
-    runner: str
-
-
-SUITES = {
-    C_AND_CXX: TestSuite(found=_ctest_result, runs=RUNS_CTEST, runner="ctest"),
-    PYTHON: TestSuite(found=_python_tests_result, runs=RUNS_PYTHON_TESTS, runner="pytest, unittest, tox or nox"),
-    RUST: TestSuite(found=_rust_tests_result, runs=RUNS_RUST_TESTS, runner="cargo test"),
-}
-
-
-def _run_in_ci(suite: TestSuite, context: Context) -> Result:
-    result = suite.found(context)
-    if result.status != Status.PASS or matching_names(context.ci_texts, suite.runs):
-        return result
-    return Result.warned(f"{result.message}, but no CI configuration runs {suite.runner}", *result.details)
-
-
-@check(
-    name="ctest-runs",
-    description="Tests exist (registered with CTest for C/C++) and CI runs them",
-    languages=languages_of(SUITES),
-)
-def ctest_runs(context: Context) -> Result:
-    return check_each_ecosystem(context, SUITES, _run_in_ci)
+CTEST = TestSuite(found=_ctest_result, runs=RUNS_CTEST, runner="ctest")
