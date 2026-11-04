@@ -27,7 +27,7 @@ def _relative_directory(value: str) -> PurePosixPath:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="project_validator", description="Validate a CMake based project against C++ Best Practices."
+        prog="project_validator", description="Validate a project's build, CI and tooling against best practices."
     )
     parser.add_argument("path", nargs="?", default=".", type=Path, help="project to validate (default: .)")
     parser.add_argument("--list", action="store_true", help="list the available checks and exit")
