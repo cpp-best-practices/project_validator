@@ -9,27 +9,31 @@ from project_validator import yaml_support
 ROOT = Path(__file__).parent.parent
 
 
-def _quality_job() -> dict[str, Any]:
+QUALITY_GATES = {
+    "lint": "ruff check",
+    "formatting": "ruff format --check",
+    "typing": "mypy",
+    "copy-paste-detection": "jscpd",
+    "function-limits": "lizard --length",
+}
+
+
+def _job(name: str) -> dict[str, Any]:
     workflow = cast(dict[str, Any], yaml_support.load((ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")))
-    return cast(dict[str, Any], workflow["jobs"]["quality"])
+    return cast(dict[str, Any], workflow["jobs"][name])
 
 
-def _quality_commands() -> str:
-    return "\n".join(step.get("run", "") for step in _quality_job()["steps"])
+def _commands(job: dict[str, Any]) -> str:
+    return "\n".join(step.get("run", "") for step in job["steps"])
 
 
 class QualityGateTests(unittest.TestCase):
-    def test_quality_job_runs_on_a_single_platform(self) -> None:
-        self.assertEqual(_quality_job()["runs-on"], "ubuntu-latest")
-
-    def test_quality_job_lints_formats_and_type_checks(self) -> None:
-        commands = _quality_commands()
-        for command in ("ruff check", "ruff format --check", "mypy"):
-            with self.subTest(command=command):
-                self.assertIn(command, commands)
-
-    def test_quality_job_detects_copy_paste(self) -> None:
-        self.assertIn("jscpd", _quality_commands())
+    def test_each_quality_gate_is_its_own_single_platform_job(self) -> None:
+        for name, command in QUALITY_GATES.items():
+            with self.subTest(job=name):
+                job = _job(name)
+                self.assertEqual(job["runs-on"], "ubuntu-latest")
+                self.assertIn(command, _commands(job))
 
     def test_copy_paste_detection_fails_on_any_clone(self) -> None:
         config = json.loads((ROOT / ".jscpd.json").read_text(encoding="utf-8"))
