@@ -40,7 +40,7 @@ class BuildError(Exception):
 
 def _run(command: list[str]) -> str:
     try:
-        completed = subprocess.run(command, capture_output=True, text=True, check=False)
+        completed = subprocess.run(command, capture_output=True, text=True, check=False)  # noqa: S603 - argv list, no shell
     except OSError as error:
         raise BuildError(f"could not run {command[0]}: {error}") from error
     if completed.returncode != 0:
