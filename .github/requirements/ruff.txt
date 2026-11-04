@@ -1,0 +1,2 @@
+# The ruff CI runs (lint and formatting); Dependabot keeps it current.
+ruff==0.17.3
