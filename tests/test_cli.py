@@ -105,7 +105,9 @@ class CliTests(unittest.TestCase):
     def test_skipping_every_failure_succeeds(self) -> None:
         for layout in PROJECT_LAYOUTS:
             with layout_project(self, layout, BARE_PROJECT) as root:
-                self.assertEqual(run_cli("--skip", f"ci-present,license,{COMPILER_CHECKS}", str(root))[0], EXIT_SUCCESS)
+                self.assertEqual(
+                    run_cli("--skip", f"ci-present,license,status-badges,{COMPILER_CHECKS}", str(root))[0], EXIT_SUCCESS
+                )
 
     def test_map_prints_the_project_structure(self) -> None:
         code, output, _ = run_cli("--map", str(FIXTURES / "well_configured"))

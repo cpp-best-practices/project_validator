@@ -92,4 +92,5 @@ GITLAB_CI = CiProvider(
         pattern("the CI lint API", r"/api/v4/projects/\S*/ci/lint\b"),
     ),
     lint_hint="GitLab CI: run glab ci lint (or gitlab-ci-local --preview) in CI",
+    badges=(pattern("GitLab CI", r"/badges/[^\s)\]]+/pipeline\.svg|img\.shields\.io/gitlab/pipeline-status/"),),
 )

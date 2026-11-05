@@ -147,5 +147,11 @@ GITHUB_ACTIONS = CiProvider(
     # zizmor also finds security problems in workflows: template injection, credentials persisted by checkout, ...
     linters=(pattern("actionlint", r"\bactionlint\b"), pattern("zizmor", r"\bzizmor\b")),
     lint_hint="GitHub Actions: run actionlint (rhysd/actionlint) or zizmor (zizmorcore/zizmor-action) in CI",
+    badges=(
+        pattern(
+            "GitHub Actions",
+            r"/actions/workflows/[^/\s]+/badge\.svg|/workflows/[^/\s]+/badge\.svg|img\.shields\.io/github/actions/workflow/status/",
+        ),
+    ),
     step_references=action_references,
 )
