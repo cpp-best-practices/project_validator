@@ -14,5 +14,6 @@ jobs:
       - run: bandit -c pyproject.toml -r src
       - run: pip-audit -r requirements-dev.txt
       - run: ruff format --check
+      - run: ruff check
       - run: lizard --length 30 --warnings_only .
       - run: python -W error -m coverage run -m pytest

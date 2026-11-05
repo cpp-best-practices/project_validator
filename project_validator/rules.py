@@ -164,6 +164,37 @@ class DependencyAudit:
     hint: str
 
 
+def _nothing(_: Context) -> str | None:
+    return None
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Analyzer:
+    """A static analyzer (a linter), and how it is seen running.
+
+    `configured` names the file that configures it, if any; `shortfall` says why it falls short when it runs, e.g.
+    that it runs only its default checks.
+    """
+
+    name: str
+    runs: re.Pattern[str]
+    configured: Callable[[Context], str | None] = _nothing
+    shortfall: Callable[[Context], str | None] = _nothing
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class StaticAnalysis:
+    """The static analyzers of an ecosystem, and the texts in which they are seen running.
+
+    One running analyzer is enough, unless `all_required`: their checks complement each other.
+    """
+
+    analyzers: tuple[Analyzer, ...]
+    texts: Evidence
+    hint: str
+    all_required: bool = False
+
+
 # Scanners that audit the dependencies of many ecosystems at once, from their manifests and lockfiles.
 MULTI_ECOSYSTEM_AUDITS = (
     pattern("osv-scanner", r"\bosv-scanner\b"),

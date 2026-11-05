@@ -5,9 +5,10 @@ from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import existing_texts, first_existing
+from project_validator.evidence import configuration, existing_texts, first_existing
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
+    Analyzer,
     BuildOutputs,
     BuildTypes,
     CoverageTools,
@@ -16,6 +17,7 @@ from project_validator.rules import (
     FunctionLimits,
     Hardening,
     SecurityLints,
+    StaticAnalysis,
     TestSuite,
     WarningPolicy,
     directories,
@@ -166,6 +168,21 @@ TARGET_DIRECTORY = BuildOutputs(
 
 LICENSE = toml_license("Cargo.toml", "package")
 
+STATIC_ANALYSIS = StaticAnalysis(
+    analyzers=(
+        Analyzer(
+            name="clippy",
+            runs=re.compile(r"\bcargo\s+(?:\+\S+\s+)?clippy\b|\bclippy-check\b"),
+            configured=configuration(
+                ("clippy.toml", ".clippy.toml"),
+                {"Cargo.toml": re.compile(r"^\s*\[(?:workspace\.)?lints\.clippy\]", re.MULTILINE)},
+            ),
+        ),
+    ),
+    texts=_ci_texts,
+    hint="consider running cargo clippy in CI",
+)
+
 RUST = Ecosystem(
     label="Rust",
     languages=frozenset({"Rust"}),
@@ -193,6 +210,7 @@ RUST = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(),
+        STATIC_ANALYSIS,
         TARGET_DIRECTORY,
         LICENSE,
     ),

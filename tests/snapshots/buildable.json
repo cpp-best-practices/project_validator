@@ -139,6 +139,13 @@
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"
     },
+    "static-analysis": {
+      "details": [
+        "consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy) and cppcheck (CMAKE_CXX_CPPCHECK) in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
     "status-badges": {
       "details": [
         "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",

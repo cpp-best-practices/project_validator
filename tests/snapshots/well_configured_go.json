@@ -215,7 +215,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "6 data files parse (YAML: 6)",
+      "message": "7 data files parse (YAML: 7)",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -281,6 +281,11 @@
     "security-scanning": {
       "details": [],
       "message": "CI runs code security scanning with CodeQL",
+      "status": "PASS"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "golangci-lint (.golangci.yml) runs",
       "status": "PASS"
     },
     "status-badges": {

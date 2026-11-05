@@ -5,10 +5,11 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import existing_texts, first_existing
+from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
+    Analyzer,
     BuildOutputs,
     CoverageTools,
     DependencyAudit,
@@ -16,6 +17,7 @@ from project_validator.rules import (
     FunctionLimits,
     Hardening,
     SecurityLints,
+    StaticAnalysis,
     TestSuite,
     WarningPolicy,
     directories,
@@ -144,6 +146,37 @@ def _funlen_enforced(context: Context) -> Result:
     return Result.passed(f"function length is limited with golangci-lint funlen ({config})")
 
 
+# golangci-lint enables a few linters by default; a configuration that enables more asks for more.
+ENABLES_MORE_LINTERS = re.compile(
+    r"""(?:^|[{,])\s*["']?enable(?:-all)?["']?\s*[:=](?!\s*(?:false\b|\[\s*\]))|\bdefault["']?\s*[:=]\s*["']?all\b""",
+    re.MULTILINE,
+)
+
+
+def _default_linters_only(context: Context) -> str | None:
+    config = first_existing(context, GOLANGCI_CONFIG_FILES)
+    if config is None:
+        return "golangci-lint has no configuration, so it runs only its default linters"
+    if ENABLES_MORE_LINTERS.search(context.project.read_text(config)):
+        return None
+    return f"{config} enables no linters beyond golangci-lint's defaults"
+
+
+# go vet and staticcheck are required as warnings (see WARNINGS); static analysis asks for golangci-lint's others.
+STATIC_ANALYSIS = StaticAnalysis(
+    analyzers=(
+        Analyzer(
+            name="golangci-lint",
+            runs=re.compile(RUNS_GOLANGCI_LINT),
+            configured=configuration(GOLANGCI_CONFIG_FILES),
+            shortfall=_default_linters_only,
+        ),
+    ),
+    texts=ci_and_hook_texts,
+    hint="consider running golangci-lint in CI, with linters enabled beyond its defaults in a .golangci.yml",
+)
+
+
 BUILD_OUTPUTS = BuildOutputs(
     name="Go test binaries and coverage profiles",
     globs=ignored_at_top_level(r"\*\.test|\*\.out|bin"),
@@ -174,6 +207,7 @@ GO = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_funlen_enforced),
+        STATIC_ANALYSIS,
         BUILD_OUTPUTS,
     ),
 )

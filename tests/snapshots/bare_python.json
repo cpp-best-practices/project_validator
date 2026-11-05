@@ -145,6 +145,13 @@
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"
     },
+    "static-analysis": {
+      "details": [
+        "consider running ruff check (or pylint or flake8) in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
     "status-badges": {
       "details": [
         "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",

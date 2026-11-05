@@ -35,6 +35,7 @@ jobs:
       - run: ctest --test-dir build --output-on-failure
       - run: gcovr --fail-under-branch 80
       - run: run-clang-tidy -p build
+      - run: cppcheck --project=build/compile_commands.json --error-exitcode=1
   format:
     runs-on: ubuntu-latest
     steps:

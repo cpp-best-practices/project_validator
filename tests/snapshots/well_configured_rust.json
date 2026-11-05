@@ -409,6 +409,11 @@
       "message": "CI runs code security scanning with CodeQL",
       "status": "PASS"
     },
+    "static-analysis": {
+      "details": [],
+      "message": "clippy (Cargo.toml) runs",
+      "status": "PASS"
+    },
     "status-badges": {
       "details": [],
       "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
