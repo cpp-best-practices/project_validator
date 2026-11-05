@@ -1,5 +1,6 @@
 """Gathering the files whose text a rule searches for evidence."""
 
+import re
 import tomllib
 from collections.abc import Iterable
 
@@ -27,3 +28,18 @@ def toml_value(context: Context, path: str, *keys: str) -> object | None:
             return None
         value = value.get(key)
     return value
+
+
+# Where GitHub, GitLab and other forges look for a project's community documents (SECURITY.md, ...).
+DOCUMENT_DIRECTORIES = ("", ".github", "docs")
+
+
+def documents(context: Context, name: re.Pattern[str], directories: Iterable[str] = DOCUMENT_DIRECTORIES) -> list[str]:
+    """The files in `directories` whose whole name matches `name`, in the order of `directories`."""
+    found = []
+    for directory in directories:
+        folder = context.project.root / directory
+        if folder.is_dir():
+            names = sorted(entry.name for entry in folder.iterdir() if entry.is_file() and name.fullmatch(entry.name))
+            found += [f"{directory}/{entry}" if directory else entry for entry in names]
+    return found

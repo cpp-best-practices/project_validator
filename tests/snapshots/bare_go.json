@@ -107,6 +107,13 @@
       "message": "no CI configuration found",
       "status": "FAIL"
     },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
     "security-scanning": {
       "details": [
         "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
