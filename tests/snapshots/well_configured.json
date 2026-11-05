@@ -5,11 +5,22 @@
     ],
     "ci": {
       "files": [
+        ".github/workflows/ci-lint.yml",
         ".github/workflows/ci.yml",
         ".github/workflows/codeql-analysis.yml",
         ".github/workflows/copy-paste-detection.yml"
       ],
       "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
         {
           "compilers": [
             "gcc"
@@ -341,13 +352,24 @@
     "unrecognised_suffixes": []
   },
   "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 7 actions are pinned to a commit",
+      "status": "PASS"
+    },
     "ci-build-types": {
       "details": [],
       "message": "all 5 OS/compiler combination(s) build Debug and Release, each with and without sanitizers",
       "status": "PASS"
     },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
     "ci-present": {
       "details": [
+        ".github/workflows/ci-lint.yml",
         ".github/workflows/ci.yml",
         ".github/workflows/codeql-analysis.yml",
         ".github/workflows/copy-paste-detection.yml"
@@ -382,7 +404,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "4 data files parse (YAML: 4)",
+      "message": "5 data files parse (YAML: 5)",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -407,8 +429,21 @@
       "message": "hardening options are enabled: _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
       "status": "PASS"
     },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
     "platform-matrix": {
       "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / gcc (runner default)",
         ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, ON): linux / gcc",
         ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, OFF): linux / gcc",
         ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, ON): linux / gcc",
@@ -436,9 +471,24 @@
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 compiler(s) (clang, gcc, msvc), 5 combination(s)",
       "status": "PASS"
     },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
     "security-scanning": {
       "details": [],
       "message": "CI runs code security scanning with CodeQL",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
       "status": "PASS"
     },
     "tests-run": {

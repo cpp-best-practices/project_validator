@@ -5,11 +5,22 @@
     ],
     "ci": {
       "files": [
+        ".github/workflows/ci-lint.yml",
         ".github/workflows/ci.yml",
         ".github/workflows/codeql.yml",
         ".github/workflows/copy-paste-detection.yml"
       ],
       "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
         {
           "compilers": [
             "gcc"
@@ -131,13 +142,24 @@
     "unrecognised_suffixes": []
   },
   "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 8 actions are pinned to a commit",
+      "status": "PASS"
+    },
     "ci-build-types": {
       "details": [],
       "message": "not applicable to Python (applies to C, C++, Rust)",
       "status": "SKIP"
     },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
     "ci-present": {
       "details": [
+        ".github/workflows/ci-lint.yml",
         ".github/workflows/ci.yml",
         ".github/workflows/codeql.yml",
         ".github/workflows/copy-paste-detection.yml"
@@ -172,7 +194,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "5 data files parse (TOML: 1, YAML: 4)",
+      "message": "6 data files parse (TOML: 1, YAML: 5)",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -197,8 +219,21 @@
       "message": "not applicable to Python (applies to C, C++, Go, Rust)",
       "status": "SKIP"
     },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
     "platform-matrix": {
       "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no Python version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 3.13): linux / 3.13",
         ".github/workflows/ci.yml: test (ubuntu-latest, 3.14): linux / 3.14",
         ".github/workflows/ci.yml: test (macos-latest, 3.13): macos / 3.13",
@@ -211,9 +246,24 @@
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Python version(s) (3.13, 3.14), 6 combination(s)",
       "status": "PASS"
     },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
     "security-scanning": {
       "details": [],
       "message": "CI runs code security scanning with CodeQL",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
       "status": "PASS"
     },
     "tests-run": {

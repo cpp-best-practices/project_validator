@@ -20,6 +20,7 @@ from project_validator.rules import (
     WarningPolicy,
     directories,
     ignored_at_top_level,
+    toml_license,
 )
 from project_validator.text import Pattern, pattern
 
@@ -162,6 +163,8 @@ TARGET_DIRECTORY = BuildOutputs(
     hint="consider ignoring /target",
 )
 
+LICENSE = toml_license("Cargo.toml", "package")
+
 RUST = Ecosystem(
     label="Rust",
     languages=frozenset({"Rust"}),
@@ -190,5 +193,6 @@ RUST = Ecosystem(
         DEPENDENCY_AUDIT,
         FunctionLimits(),
         TARGET_DIRECTORY,
+        LICENSE,
     ),
 )

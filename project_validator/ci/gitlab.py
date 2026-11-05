@@ -7,6 +7,7 @@ from collections.abc import Mapping
 
 from project_validator.ci import CiProvider, Job, build_job
 from project_validator.platforms import detect_operating_systems
+from project_validator.text import pattern
 
 type Variables = dict[str, str]
 
@@ -81,4 +82,15 @@ def parse_pipeline(document: object) -> list[Job]:
     ]
 
 
-GITLAB_CI = CiProvider(name="GitLab CI", files=(".gitlab-ci.yml",), parse_yaml=parse_pipeline)
+GITLAB_CI = CiProvider(
+    name="GitLab CI",
+    files=(".gitlab-ci.yml",),
+    parse_yaml=parse_pipeline,
+    linters=(
+        pattern("glab ci lint", r"\bglab\s+ci\s+lint\b"),
+        pattern("gitlab-ci-local --preview", r"\bgitlab-ci-local\b[^\n]*--preview\b"),
+        pattern("the CI lint API", r"/api/v4/projects/\S*/ci/lint\b"),
+    ),
+    lint_hint="GitLab CI: run glab ci lint (or gitlab-ci-local --preview) in CI",
+    badges=(pattern("GitLab CI", r"/badges/[^\s)\]]+/pipeline\.svg|img\.shields\.io/gitlab/pipeline-status/"),),
+)

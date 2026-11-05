@@ -1,5 +1,8 @@
+import shutil
+import subprocess
 import unittest
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
+from unittest import mock
 
 from project_validator.core import Project
 from tests.support import PROJECT_LAYOUTS, layout_project, temp_project
@@ -55,3 +58,24 @@ class ProjectTests(unittest.TestCase):
             project = Project(root)
             self.assertEqual(project.files_in("w", (".yml", ".yaml")), ["w/a.yml", "w/b.yaml"])
             self.assertEqual(project.files_in("missing", (".yml",)), [])
+
+
+def git(root: Path, *arguments: str) -> None:
+    subprocess.run(["git", "-C", str(root), *arguments], check=True, capture_output=True)  # noqa: S603, S607 - tests
+
+
+@unittest.skipUnless(shutil.which("git"), "git is not installed")
+class TrackedFilesTests(unittest.TestCase):
+    def test_lists_the_files_git_tracks(self) -> None:
+        files = {"src/main.c": "", ".github/workflows/ci.yml": "", "untracked.c": "", "tests/fixtures/f.c": ""}
+        with temp_project(files) as root:
+            git(root, "init", "-q")
+            git(root, "add", "src", ".github", "tests")
+            project = Project(root, frozenset({PurePosixPath("tests/fixtures")}))
+            self.assertEqual(project.tracked_files(), [".github/workflows/ci.yml", "src/main.c"])
+
+    def test_lists_every_file_outside_a_git_checkout(self) -> None:
+        with temp_project({"src/main.c": "", ".github/ci.yml": ""}) as root:
+            self.assertEqual(Project(root).tracked_files(), ["src/main.c"])
+            with mock.patch("shutil.which", return_value=None):
+                self.assertEqual(Project(root).tracked_files(), ["src/main.c"])

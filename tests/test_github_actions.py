@@ -1,6 +1,12 @@
 import unittest
 
-from project_validator.ci.github_actions import Combination, expand_matrix, parse_workflow, substitute_matrix
+from project_validator.ci.github_actions import (
+    Combination,
+    action_references,
+    expand_matrix,
+    parse_workflow,
+    substitute_matrix,
+)
 
 
 class ExpandMatrixTests(unittest.TestCase):
@@ -86,3 +92,25 @@ class ParseWorkflowTests(unittest.TestCase):
     def test_ignores_documents_without_jobs(self) -> None:
         self.assertEqual(parse_workflow(None), [])
         self.assertEqual(parse_workflow({"name": "x"}), [])
+
+
+class ActionReferencesTests(unittest.TestCase):
+    def test_lists_the_actions_and_reusable_workflows_a_workflow_uses(self) -> None:
+        workflow = {
+            "jobs": {
+                "build": {"steps": [{"uses": "actions/checkout@v4"}, {"run": "make"}, {"uses": "./.github/actions/x"}]},
+                "release": {"uses": "octo/workflows/.github/workflows/release.yml@main"},
+                "odd": {"steps": "not a list"},
+                "broken": "not a job",
+            }
+        }
+        self.assertEqual(
+            action_references(workflow),
+            ["octo/workflows/.github/workflows/release.yml@main", "actions/checkout@v4", "./.github/actions/x"],
+        )
+
+    def test_a_document_that_is_not_a_workflow_uses_nothing(self) -> None:
+        documents: tuple[object, ...] = (None, [], {"jobs": []}, {"on": "push"})
+        for document in documents:
+            with self.subTest(document=document):
+                self.assertEqual(action_references(document), [])

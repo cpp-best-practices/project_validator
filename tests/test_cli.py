@@ -105,7 +105,9 @@ class CliTests(unittest.TestCase):
     def test_skipping_every_failure_succeeds(self) -> None:
         for layout in PROJECT_LAYOUTS:
             with layout_project(self, layout, BARE_PROJECT) as root:
-                self.assertEqual(run_cli("--skip", f"ci-present,{COMPILER_CHECKS}", str(root))[0], EXIT_SUCCESS)
+                self.assertEqual(
+                    run_cli("--skip", f"ci-present,license,status-badges,{COMPILER_CHECKS}", str(root))[0], EXIT_SUCCESS
+                )
 
     def test_map_prints_the_project_structure(self) -> None:
         code, output, _ = run_cli("--map", str(FIXTURES / "well_configured"))
@@ -158,6 +160,16 @@ class CliTests(unittest.TestCase):
     def test_usage_errors(self) -> None:
         self.assertEqual(run_cli("--only", "nope", ".")[0], EXIT_USAGE)
         self.assertEqual(run_cli(str(FIXTURES / "missing"))[0], EXIT_USAGE)
+        for size in ("0", "-1", "big", "nan"):
+            with self.subTest(size=size), self.assertRaises(SystemExit) as raised:
+                run_cli("--max-file-size", size, ".")
+            self.assertEqual(raised.exception.code, EXIT_USAGE)
+
+    def test_max_file_size_sets_the_large_file_limit(self) -> None:
+        code, output, _ = run_cli("--only", "large-files", "--max-file-size", "0.5", str(FIXTURES / "bare_project"))
+        self.assertEqual(
+            (code, output.strip()), (EXIT_SUCCESS, "[PASS] large-files: no committed file is larger than 512 KiB")
+        )
 
     @requires_rich
     def test_color_always_beautifies_the_output(self) -> None:

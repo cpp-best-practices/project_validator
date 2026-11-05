@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
 from project_validator.core import Context, Result
+from project_validator.evidence import toml_value
 from project_validator.text import Pattern, pattern
 
 if TYPE_CHECKING:
@@ -211,3 +212,22 @@ class CompilerExtensions:
     """Judges whether the language is compiled as standardised, without compiler extensions (C/C++ only)."""
 
     judge: Callable[[Context], Result]
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class DeclaredLicense:
+    """Where an ecosystem's manifest declares the project's license: `declared` reads it as an SPDX expression."""
+
+    manifest: str
+    declared: Callable[[Context], str | None]
+
+
+def toml_license(manifest: str, table: str) -> DeclaredLicense:
+    """The license declared as `license = "<SPDX expression>"` in `table` of the TOML file `manifest`; the older
+    table form (`license = {text = ...}`) names no SPDX expression."""
+
+    def declared(context: Context) -> str | None:
+        license_ = toml_value(context, manifest, table, "license")
+        return license_ if isinstance(license_, str) else None
+
+    return DeclaredLicense(manifest=manifest, declared=declared)

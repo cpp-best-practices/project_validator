@@ -1,5 +1,6 @@
 [package]
 name = 'app'
+license = 'MIT'
 
 [lints.clippy]
 pedantic = { level = 'warn', priority = -1 }
