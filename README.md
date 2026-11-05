@@ -48,6 +48,7 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 | `--exclude DIR` | leave `DIR`, relative to the project, out of the validation (e.g. test fixtures); may be repeated |
 | `--build` | configure and build the project in a temporary directory and ask `ctest` for its tests |
 | `--strict` | treat warnings as failures |
+| `--max-file-size MIB` | committed files larger than this belong in Git LFS or DVC (default: 5) |
 | `--cmake PATH` / `--ctest PATH` | the executables used by `--build` |
 | `--plugin-dir DIR` | load extra checks and CI providers from `DIR/*.py` |
 
@@ -72,6 +73,7 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 | `security-scanning` | all | CI runs code security scanning (CodeQL or GitLab SAST), or every language in the project that has security lints enables them: Python: bandit (or ruff's `S` rules); Rust: `unsafe_code` forbidden crate-wide; Go: gosec. Warns otherwise, naming the languages left unscanned |
 | `dependency-audit` | Python, Rust, Go | CI checks the dependencies against known vulnerabilities. Python: pip-audit or safety; Rust: cargo audit or `cargo deny check` (advisories); Go: govulncheck. osv-scanner, `trivy fs` and `snyk test` count for every language. Warns otherwise |
 | `data-wellformed` | all | every JSON, TOML, YAML and XML file parses, including the configuration in `.github/`, `.gitlab/`, `.circleci/`, `.buildkite/`, `.devcontainer/` and `.vscode/`. JSON that tools read with comments (`*.jsonc`, `tsconfig*.json`, `jsconfig.json`, `devcontainer.json`, `.vscode/*.json`) may have comments and trailing commas; YAML tags of any tool (GitLab's `!reference`) are accepted; XML external entities are never read. Files over 5 MiB are not parsed. Fails listing each file that does not parse, with the line and column |
+| `large-files` | all | no committed file is larger than 5 MiB (`--max-file-size`) unless Git LFS stores it (`filter=lfs` in a `.gitattributes`) or DVC tracks it (a `.dvc` file beside it). In a git checkout only the files git tracks are judged. Warns listing the largest files |
 | `license` | all | a license file (`LICENSE`, `LICENSE.md`, `LICENSE-MIT`, `COPYING`, `UNLICENSE`, ... or REUSE's `LICENSES/` directory) holds a recognised license: an `SPDX-License-Identifier` line, or the standard text of AGPL, LGPL, GPL, Apache-2.0, MPL-2.0, EPL-2.0, BSL-1.0, Unlicense, CC0-1.0, MIT, BSD, ISC, 0BSD or Zlib. Warns when the license is not recognised, or when a manifest declares another one (Python: `[project] license`; Rust: `[package] license`). Fails without a license file |
 | `dependency-updates` | all | Dependabot or Renovate is configured; warns otherwise |
 | `vcs-ignore` | C/C++, Python, Rust, Go | a `.gitignore`, `.hgignore`, `.bzrignore` or `.fossil-settings/ignore-glob` ignores the build outputs (`build/` or `out/`, `__pycache__/` or `*.py[cod]`, `/target`, Go's `*.test` or `*.out`). Warns when an ignore file misses them |

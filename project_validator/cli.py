@@ -8,7 +8,7 @@ from collections.abc import Sequence
 from pathlib import Path, PurePosixPath
 
 from project_validator import pretty, yaml_support
-from project_validator.core import Check, Context, Options, Project
+from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, Options, Project
 from project_validator.ecosystems import applies_to
 from project_validator.plugins import PluginError, discover
 from project_validator.runner import Report, SelectionError, run_checks, select, succeeded
@@ -24,6 +24,17 @@ def _names(values: list[str]) -> list[str]:
 
 def _relative_directory(value: str) -> PurePosixPath:
     return PurePosixPath(Path(value).as_posix())
+
+
+def _mebibytes(value: str) -> int:
+    """A positive size in MiB, as bytes."""
+    try:
+        size = float(value)
+    except ValueError:
+        size = 0
+    if not size > 0:
+        raise argparse.ArgumentTypeError(f"expected a positive number of MiB, got {value!r}")
+    return int(size * 1024 * 1024)
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -47,14 +58,35 @@ def _parser() -> argparse.ArgumentParser:
         metavar="DIR",
         help="leave DIR, relative to the project, out of the validation (e.g. test fixtures)",
     )
-    parser.add_argument("--build", action="store_true", help="configure and build the project to list its tests")
     parser.add_argument("--strict", action="store_true", help="treat warnings as failures")
-    parser.add_argument("--cmake", default="cmake", help="cmake executable used by --build")
-    parser.add_argument("--ctest", default="ctest", help="ctest executable used by --build")
     parser.add_argument(
         "--plugin-dir", action="append", default=[], type=Path, metavar="DIR", help="load extra plugins from DIR/*.py"
     )
+    _add_check_options(parser)
     return parser
+
+
+def _add_check_options(parser: argparse.ArgumentParser) -> None:
+    """The options that change what some checks do (see `Options`)."""
+    parser.add_argument("--build", action="store_true", help="configure and build the project to list its tests")
+    parser.add_argument("--cmake", default="cmake", help="cmake executable used by --build")
+    parser.add_argument("--ctest", default="ctest", help="ctest executable used by --build")
+    parser.add_argument(
+        "--max-file-size",
+        type=_mebibytes,
+        default=DEFAULT_MAX_FILE_SIZE,
+        metavar="MIB",
+        help="committed files larger than this belong in Git LFS or DVC (default: 5)",
+    )
+
+
+def _options(arguments: argparse.Namespace) -> Options:
+    return Options(
+        build=arguments.build,
+        cmake=arguments.cmake,
+        ctest=arguments.ctest,
+        max_file_size=arguments.max_file_size,
+    )
 
 
 def _format_text(reports: list[Report]) -> str:
@@ -138,8 +170,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not arguments.path.is_dir():
         return _usage_error(parser, f"{arguments.path} is not a directory")
 
-    options = Options(build=arguments.build, cmake=arguments.cmake, ctest=arguments.ctest)
-    context = Context(Project(arguments.path.resolve(), frozenset(arguments.exclude)), plugins.providers, options)
+    project = Project(arguments.path.resolve(), frozenset(arguments.exclude))
+    context = Context(project, plugins.providers, _options(arguments))
     if arguments.map:
         print(json.dumps(context.structure.as_dict(), indent=2))
         return EXIT_SUCCESS
