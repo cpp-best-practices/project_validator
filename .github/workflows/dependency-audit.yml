@@ -25,7 +25,7 @@ jobs:
           python-version: "3.14"
 
       - name: Install pip-audit
-        run: python -m pip install -r .github/requirements/audit.txt
+        run: python -m pip install --require-hashes -r .github/requirements/audit.txt
 
       - name: Audit the project's dependencies
         run: pip-audit --progress-spinner off .

@@ -89,6 +89,13 @@
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
     },
+    "dependency-management": {
+      "details": [
+        "lock them: commit uv.lock (uv lock), poetry.lock, pdm.lock or pylock.toml, or pin requirements with hashes (pip-compile --generate-hashes) and install them with --require-hashes"
+      ],
+      "message": "dependencies are declared in pyproject.toml but not locked",
+      "status": "WARN"
+    },
     "dependency-updates": {
       "details": [
         "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"

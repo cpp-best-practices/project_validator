@@ -1,6 +1,7 @@
 [project]
 name = 'app'
 license = 'MIT'
+dependencies = ['requests>=2.32']
 
 [tool.coverage.run]
 branch = true

@@ -16,7 +16,7 @@ HINT = "remove them from version control (git rm -r --cached <path>) and ignore 
 )
 def committed_artifacts(outputs: BuildOutputs, context: Context) -> Result:
     found = dict.fromkeys(
-        artifact for path in context.project.tracked_files() if (artifact := outputs.artifact(path)) is not None
+        artifact for path in context.tracked_files if (artifact := outputs.artifact(path)) is not None
     )
     if not found:
         return Result.passed("no build outputs are committed")

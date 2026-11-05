@@ -223,6 +223,11 @@
       "message": "CI audits the dependencies with govulncheck",
       "status": "PASS"
     },
+    "dependency-management": {
+      "details": [],
+      "message": "no dependencies are declared",
+      "status": "PASS"
+    },
     "dependency-updates": {
       "details": [
         ".github/dependabot.yml"

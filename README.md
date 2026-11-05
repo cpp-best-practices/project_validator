@@ -77,6 +77,7 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 | `copy-paste-detection` | all | CI runs a duplicate code detector (PMD CPD, jscpd, Duplo, Simian, CCFinderX or SonarQube); warns otherwise |
 | `security-scanning` | all | CI runs code security scanning (CodeQL or GitLab SAST), or every language in the project that has security lints enables them: Python: bandit (or ruff's `S` rules); Rust: `unsafe_code` forbidden crate-wide; Go: gosec. Warns otherwise, naming the languages left unscanned |
 | `secret-scanning` | all | CI or a pre-commit hook runs a secret scanner: gitleaks, TruffleHog, detect-secrets, ggshield or Nosey Parker. Warns otherwise, and says so when a scanner is configured (`.gitleaks.toml`, `.secrets.baseline`, `.gitguardian.yaml`) but nothing runs it. GitHub's own secret scanning is a repository setting, which cannot be seen from a checkout |
+| `dependency-management` | C/C++, Python, Rust, Go | dependencies come from a package manager and are locked. C/C++: CPM, FetchContent, vcpkg (`vcpkg.json`), Conan (`conanfile.txt` / `conanfile.py`) or Meson wraps (`subprojects/*.wrap`); Python: dependencies declared in `pyproject.toml`, `setup.py` or requirements files are locked by a committed `uv.lock`, `poetry.lock`, `pdm.lock`, `Pipfile.lock` or `pylock.toml`, or by requirements pinned with `--hash`; Rust: a binary crate commits `Cargo.lock` (a library need not); Go: a module that requires others commits `go.sum`. Passes with a note when no dependencies are declared. Warns when they are not locked, or when third-party code is committed (`third_party/`, `external/`, `extern/`, `vendor/` other than `go mod vendor` output, or git submodules) |
 | `dependency-audit` | Python, Rust, Go | CI checks the dependencies against known vulnerabilities. Python: pip-audit or safety; Rust: cargo audit or `cargo deny check` (advisories); Go: govulncheck. osv-scanner, `trivy fs` and `snyk test` count for every language. Warns otherwise |
 | `data-wellformed` | all | every JSON, TOML, YAML and XML file parses, including the configuration in `.github/`, `.gitlab/`, `.circleci/`, `.buildkite/`, `.devcontainer/` and `.vscode/`. JSON that tools read with comments (`*.jsonc`, `tsconfig*.json`, `jsconfig.json`, `devcontainer.json`, `.vscode/*.json`) may have comments and trailing commas; YAML tags of any tool (GitLab's `!reference`) are accepted; XML external entities are never read. Files over 5 MiB are not parsed. Fails listing each file that does not parse, with the line and column |
 | `large-files` | all | no committed file is larger than 5 MiB (`--max-file-size`) unless Git LFS stores it (`filter=lfs` in a `.gitattributes`) or DVC tracks it (a `.dvc` file beside it). In a git checkout only the files git tracks are judged. Warns listing the largest files |
@@ -243,3 +244,13 @@ with as little setup as possible. To keep it that way:
 | [ruff](https://docs.astral.sh/ruff/), [mypy](https://mypy-lang.org/), [lizard](https://github.com/terryyin/lizard), [jscpd](https://github.com/kucherenko/jscpd) | CI only | The lint, typing, function-limits and copy-paste-detection quality gates. They are installed by their CI jobs and are never imported by the validator. |
 
 PyYAML is the only required dependency.
+
+The tools CI installs are locked with hashes: each `.github/requirements/<job>.in` names a job's tools,
+and `<job>.txt` pins them and everything they depend on, by version and hash. CI installs them with
+`--require-hashes`, so a tampered package fails the install. Dependabot updates both files; to change
+a tool by hand, edit its `.in` file and recompile the lock with pip-tools:
+
+```sh
+cd .github/requirements
+pip-compile --generate-hashes --allow-unsafe --strip-extras --no-emit-index-url --output-file=<job>.txt <job>.in
+```

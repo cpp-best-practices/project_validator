@@ -84,6 +84,13 @@
       "message": "not applicable to C, C++ (applies to Go, Python, Rust)",
       "status": "SKIP"
     },
+    "dependency-management": {
+      "details": [
+        "if the project has dependencies, consider a dependency manager: CPM, FetchContent, vcpkg, Conan or Meson wraps"
+      ],
+      "message": "no dependencies are declared",
+      "status": "PASS"
+    },
     "dependency-updates": {
       "details": [
         "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"

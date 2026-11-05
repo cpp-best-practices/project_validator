@@ -1,0 +1,5 @@
+# mypy and the dependencies it type-checks against.
+mypy==2.4.1
+types-PyYAML==6.0.12.20261103
+PyYAML==6.0.3
+rich==15.0.0

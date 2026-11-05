@@ -1,0 +1,2 @@
+# The dependencies the tests run with.
+PyYAML==6.0.3

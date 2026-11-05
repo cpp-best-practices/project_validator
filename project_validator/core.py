@@ -171,6 +171,14 @@ class Context:
         return map_project(self.project, self.ci_files, self.ci_analysis)
 
     @cached_property
+    def tracked_files(self) -> tuple[str, ...]:
+        """The files git tracks, or every file outside a git checkout (see `Project.tracked_files`)."""
+        return tuple(self.project.tracked_files())
+
+    def committed(self, relative: str) -> bool:
+        return relative in self.tracked_files
+
+    @cached_property
     def cmake_texts(self) -> tuple[str, ...]:
         from project_validator.text import strip_cmake_comments
 

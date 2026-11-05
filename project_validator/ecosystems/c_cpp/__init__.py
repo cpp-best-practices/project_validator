@@ -11,6 +11,7 @@ from project_validator.core import Context
 from project_validator.ecosystems.c_cpp.clang_tidy import FUNCTION_LIMITS, STATIC_ANALYSIS
 from project_validator.ecosystems.c_cpp.cmake import CMAKE
 from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, WARNINGS, WARNINGS_AS_ERRORS
+from project_validator.ecosystems.c_cpp.dependencies import DEPENDENCIES
 from project_validator.ecosystems.c_cpp.meson import MESON
 from project_validator.ecosystems.model import C_FAMILY, Ecosystem, ToolchainAxis
 from project_validator.evidence import first_existing
@@ -138,6 +139,7 @@ C_AND_CXX = Ecosystem(
         HARDENING,
         FUNCTION_LIMITS,
         STATIC_ANALYSIS,
+        DEPENDENCIES,
         BUILD_DIRECTORY,
     ),
 )

@@ -417,6 +417,11 @@
       "message": "not applicable to C, C++ (applies to Go, Python, Rust)",
       "status": "SKIP"
     },
+    "dependency-management": {
+      "details": [],
+      "message": "dependencies are managed with FetchContent",
+      "status": "PASS"
+    },
     "dependency-updates": {
       "details": [
         ".github/dependabot.yml"
