@@ -352,6 +352,11 @@
     "unrecognised_suffixes": []
   },
   "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 7 actions are pinned to a commit",
+      "status": "PASS"
+    },
     "ci-build-types": {
       "details": [],
       "message": "all 5 OS/compiler combination(s) build Debug and Release, each with and without sanitizers",

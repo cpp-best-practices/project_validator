@@ -55,6 +55,8 @@ class Options:
     ctest: str = "ctest"
     # Committed files larger than this, in bytes, belong in Git LFS or DVC.
     max_file_size: int = DEFAULT_MAX_FILE_SIZE
+    # Actions published by GitHub (actions/, github/) may be pinned to tags.
+    allow_official_tags: bool = False
 
 
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})

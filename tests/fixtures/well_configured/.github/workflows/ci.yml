@@ -28,7 +28,7 @@ jobs:
             build_type: Debug
             sanitizers: "OFF"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - run: cmake -S . -B build -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DENABLE_COVERAGE=ON
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DENABLE_SANITIZERS=${{ matrix.sanitizers }}
       - run: cmake --build build
@@ -38,5 +38,5 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - run: find . -name '*.cpp' | xargs clang-format --dry-run -Werror

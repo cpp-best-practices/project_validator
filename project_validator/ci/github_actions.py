@@ -126,6 +126,20 @@ def parse_workflow(document: object) -> list[Job]:
     ]
 
 
+def _uses(entries: object) -> list[str]:
+    if not isinstance(entries, list):
+        return []
+    return [str(entry["uses"]) for entry in entries if isinstance(entry, Mapping) and "uses" in entry]
+
+
+def action_references(document: object) -> list[str]:
+    """Every reusable workflow (`jobs.<id>.uses`) and action (`jobs.<id>.steps[*].uses`) a workflow uses."""
+    if not isinstance(document, Mapping) or not isinstance(jobs := document.get("jobs"), Mapping):
+        return []
+    found = [job for job in jobs.values() if isinstance(job, Mapping)]
+    return [*_uses(found), *(reference for job in found for reference in _uses(job.get("steps")))]
+
+
 GITHUB_ACTIONS = CiProvider(
     name="GitHub Actions",
     directories=(".github/workflows",),
@@ -133,4 +147,5 @@ GITHUB_ACTIONS = CiProvider(
     # zizmor also finds security problems in workflows: template injection, credentials persisted by checkout, ...
     linters=(pattern("actionlint", r"\bactionlint\b"), pattern("zizmor", r"\bzizmor\b")),
     lint_hint="GitHub Actions: run actionlint (rhysd/actionlint) or zizmor (zizmorcore/zizmor-action) in CI",
+    step_references=action_references,
 )

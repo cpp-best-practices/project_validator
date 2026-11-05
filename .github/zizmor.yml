@@ -1,4 +1,0 @@
-rules:
-  # Actions are pinned to tags until the action-pinning check lands (#102).
-  unpinned-uses:
-    disable: true

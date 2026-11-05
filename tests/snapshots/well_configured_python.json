@@ -142,6 +142,11 @@
     "unrecognised_suffixes": []
   },
   "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 8 actions are pinned to a commit",
+      "status": "PASS"
+    },
     "ci-build-types": {
       "details": [],
       "message": "not applicable to Python (applies to C, C++, Rust)",

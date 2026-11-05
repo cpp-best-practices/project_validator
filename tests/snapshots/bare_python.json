@@ -20,6 +20,11 @@
     "unrecognised_suffixes": []
   },
   "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
     "ci-build-types": {
       "details": [],
       "message": "not applicable to Python (applies to C, C++, Rust)",
