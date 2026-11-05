@@ -329,10 +329,16 @@
         "GitHub Actions"
       ]
     },
+    "ecosystems": {
+      "C/C++": [
+        "build file CMakeLists.txt"
+      ]
+    },
     "languages": [
       "C",
       "C++"
-    ]
+    ],
+    "unrecognised_suffixes": []
   },
   "results": {
     "ci-build-types": {

@@ -171,6 +171,14 @@ class EcosystemPluginTests(unittest.TestCase):
         ):
             discover([directory])
 
+    def test_rejects_an_ecosystem_that_claims_another_ones_files(self) -> None:
+        clash = ECOSYSTEM_PLUGIN.replace('{".zig": "Zig"}', '{".zig": "Zig", ".rs": "Zig"}')
+        with (
+            temp_project({"clash.py": clash}) as directory,
+            self.assertRaisesRegex(PluginError, "Zig: source suffix .rs is already claimed by Rust"),
+        ):
+            discover([directory])
+
     def test_the_registry_is_restored_after_isolation(self) -> None:
         with isolated_registry():
             self._discover_zig()

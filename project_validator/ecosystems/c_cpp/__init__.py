@@ -112,6 +112,17 @@ C_AND_CXX = Ecosystem(
         ".ixx": "C++",
         ".cppm": "C++",
     },
+    # Headers (and included .inc files) do not tell C from C++, and CMake modules and C++ template files belong to
+    # a C/C++ project only once it is recognised: other ecosystems use some of these suffixes too.
+    ambiguous_suffixes={
+        ".h": None,
+        ".inc": None,
+        ".cmake": None,
+        ".inl": "C++",
+        ".ipp": "C++",
+        ".tpp": "C++",
+        ".txx": "C++",
+    },
     rules=(
         COMPILERS,
         BuildTypes(axis=COMPILERS),

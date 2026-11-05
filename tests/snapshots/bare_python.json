@@ -8,9 +8,16 @@
       "jobs": [],
       "providers": []
     },
+    "ecosystems": {
+      "Python": [
+        "build file pyproject.toml",
+        ".py files"
+      ]
+    },
     "languages": [
       "Python"
-    ]
+    ],
+    "unrecognised_suffixes": []
   },
   "results": {
     "ci-build-types": {
