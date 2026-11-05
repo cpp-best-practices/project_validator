@@ -506,6 +506,11 @@
       "message": "CTest is enabled and tests are registered with add_test",
       "status": "PASS"
     },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to C, C++ (applies to Python)",
+      "status": "SKIP"
+    },
     "vcs-ignore": {
       "details": [],
       "message": ".gitignore ignores /build/",

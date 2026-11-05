@@ -4,3 +4,6 @@ license = 'MIT'
 
 [tool.coverage.run]
 branch = true
+
+[tool.mypy]
+strict = true

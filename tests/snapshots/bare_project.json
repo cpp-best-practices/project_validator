@@ -162,6 +162,11 @@
       "message": "CTest is never enabled; call enable_testing() or include(CTest)",
       "status": "FAIL"
     },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to C, C++ (applies to Python)",
+      "status": "SKIP"
+    },
     "vcs-ignore": {
       "details": [
         "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"

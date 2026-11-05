@@ -298,6 +298,11 @@
       "message": "Go tests found in 1 file(s)",
       "status": "PASS"
     },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Go (applies to Python)",
+      "status": "SKIP"
+    },
     "vcs-ignore": {
       "details": [],
       "message": ".gitignore ignores *.test",

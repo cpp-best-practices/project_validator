@@ -159,6 +159,11 @@
       "message": "CTest is enabled and tests are registered with add_test, but no CI configuration runs ctest",
       "status": "WARN"
     },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to C, C++ (applies to Python)",
+      "status": "SKIP"
+    },
     "vcs-ignore": {
       "details": [
         "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"

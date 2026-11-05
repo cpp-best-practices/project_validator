@@ -165,6 +165,11 @@
       "message": "no Rust tests found (#[test] functions)",
       "status": "FAIL"
     },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Rust (applies to Python)",
+      "status": "SKIP"
+    },
     "vcs-ignore": {
       "details": [
         "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"

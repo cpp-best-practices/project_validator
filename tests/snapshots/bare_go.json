@@ -172,6 +172,11 @@
       "message": "no Go tests found (Test functions in *_test.go files)",
       "status": "FAIL"
     },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Go (applies to Python)",
+      "status": "SKIP"
+    },
     "vcs-ignore": {
       "details": [
         "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
