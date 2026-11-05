@@ -90,6 +90,13 @@
       "message": "Go programs are not built as position-independent executables",
       "status": "FAIL"
     },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",

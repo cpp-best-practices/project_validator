@@ -197,6 +197,13 @@
       "message": "not applicable to Python (applies to C, C++, Go, Rust)",
       "status": "SKIP"
     },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci.yml: test (ubuntu-latest, 3.13): linux / 3.13",
