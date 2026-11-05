@@ -78,6 +78,9 @@ def _add_check_options(parser: argparse.ArgumentParser) -> None:
         metavar="MIB",
         help="committed files larger than this belong in Git LFS or DVC (default: 5)",
     )
+    parser.add_argument(
+        "--allow-official-tags", action="store_true", help="let actions from actions/ and github/ be pinned to tags"
+    )
 
 
 def _options(arguments: argparse.Namespace) -> Options:
@@ -86,6 +89,7 @@ def _options(arguments: argparse.Namespace) -> Options:
         cmake=arguments.cmake,
         ctest=arguments.ctest,
         max_file_size=arguments.max_file_size,
+        allow_official_tags=arguments.allow_official_tags,
     )
 
 

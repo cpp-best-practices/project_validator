@@ -157,6 +157,11 @@
     "unrecognised_suffixes": []
   },
   "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 9 actions are pinned to a commit",
+      "status": "PASS"
+    },
     "ci-build-types": {
       "details": [],
       "message": "not applicable to Go (applies to C, C++, Rust)",

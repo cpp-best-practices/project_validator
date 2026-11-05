@@ -277,6 +277,11 @@
     "unrecognised_suffixes": []
   },
   "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 9 actions are pinned to a commit",
+      "status": "PASS"
+    },
     "ci-build-types": {
       "details": [],
       "message": "all 6 OS/Rust toolchain combination(s) build Debug and Release, each with and without sanitizers",
