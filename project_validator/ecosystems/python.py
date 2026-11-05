@@ -6,15 +6,17 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import existing_texts, first_existing
+from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
+    Analyzer,
     BuildOutputs,
     CoverageTools,
     DependencyAudit,
     Formatter,
     FunctionLimits,
     SecurityLints,
+    StaticAnalysis,
     TestSuite,
     WarningPolicy,
     directories,
@@ -157,6 +159,34 @@ BYTECODE = BuildOutputs(
 
 LICENSE = toml_license("pyproject.toml", "project")
 
+
+def _section(name: str) -> re.Pattern[str]:
+    return re.compile(rf"^\s*\[{re.escape(name)}\b", re.MULTILINE)
+
+
+STATIC_ANALYSIS = StaticAnalysis(
+    analyzers=(
+        Analyzer(
+            name="ruff check",
+            # ruff's pre-commit hook is `ruff` (or `ruff-check`); `ruff-format` only formats.
+            runs=re.compile(r"\bruff\s+check\b|\bastral-sh/ruff-action\b|\bid:\s*ruff(?:-check)?\s*$", re.MULTILINE),
+            configured=configuration(("ruff.toml", ".ruff.toml"), {"pyproject.toml": _section("tool.ruff")}),
+        ),
+        Analyzer(
+            name="pylint",
+            runs=re.compile(r"\bpylint\b"),
+            configured=configuration((".pylintrc", "pylintrc"), {"pyproject.toml": _section("tool.pylint")}),
+        ),
+        Analyzer(
+            name="flake8",
+            runs=re.compile(r"\bflake8\b"),
+            configured=configuration((".flake8",), {"setup.cfg": _section("flake8"), "tox.ini": _section("flake8")}),
+        ),
+    ),
+    texts=ci_and_hook_texts,
+    hint="consider running ruff check (or pylint or flake8) in CI",
+)
+
 PYTHON = Ecosystem(
     label="Python",
     languages=frozenset({"Python"}),
@@ -182,6 +212,7 @@ PYTHON = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(),
+        STATIC_ANALYSIS,
         BYTECODE,
         LICENSE,
     ),

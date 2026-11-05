@@ -2,7 +2,7 @@
 
 import re
 import tomllib
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable, Mapping
 
 from project_validator.core import Context
 
@@ -32,6 +32,30 @@ def toml_value(context: Context, path: str, *keys: str) -> object | None:
 
 # pre-commit's configuration: a hook it runs counts as evidence much as a CI step does.
 PRE_COMMIT_CONFIGURATION = (".pre-commit-config.yaml", ".pre-commit-config.yml")
+
+
+def ci_and_hook_texts(context: Context) -> tuple[str, ...]:
+    """CI configuration and pre-commit's: a tool that either runs is run."""
+    return (*context.ci_texts, *existing_texts(context, PRE_COMMIT_CONFIGURATION))
+
+
+def configuration(
+    files: Iterable[str] = (), sections: Mapping[str, re.Pattern[str]] | None = None
+) -> Callable[[Context], str | None]:
+    """The file that configures a tool: the first of its own `files`, else the first shared file whose text has
+    the tool's section (file -> section)."""
+    own = tuple(files)
+    shared = dict(sections or {})
+
+    def configured(context: Context) -> str | None:
+        found = first_existing(context, own)
+        if found is not None:
+            return found
+        present = (path for path in shared if context.project.exists(path))
+        return next((path for path in present if shared[path].search(context.project.read_text(path))), None)
+
+    return configured
+
 
 # Where GitHub, GitLab and other forges look for a project's community documents (SECURITY.md, ...).
 DOCUMENT_DIRECTORIES = ("", ".github", "docs")
