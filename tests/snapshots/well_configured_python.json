@@ -207,6 +207,11 @@
       "message": "CI audits the dependencies with pip-audit",
       "status": "PASS"
     },
+    "dependency-management": {
+      "details": [],
+      "message": "dependencies are declared in pyproject.toml and locked in uv.lock",
+      "status": "PASS"
+    },
     "dependency-updates": {
       "details": [
         ".github/dependabot.yml"

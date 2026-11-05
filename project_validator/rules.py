@@ -221,6 +221,29 @@ class TypeChecking:
     strict_hint: str
 
 
+def _always(_: Context) -> bool:
+    return True
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class DependencyManagement:
+    """How an ecosystem's dependencies are declared, and where they are locked.
+
+    `managed` says how the project's dependencies are managed ("declared in pyproject.toml", "managed with Cargo"),
+    or None when it declares none; `hint` then suggests how to manage any it has. `locked` names where they are
+    locked, or None when they are not; an ecosystem without lockfiles has no `locked`. A lock is asked for only when
+    `lock_required`, e.g. for a binary crate. `vendor_outputs` are files that show a vendored directory is the
+    package manager's own output (`vendor/modules.txt`), not hand-copied code.
+    """
+
+    managed: Callable[[Context], str | None]
+    hint: str = ""
+    locked: Callable[[Context], str | None] | None = None
+    lock_required: Callable[[Context], bool] = _always
+    lock_hint: str = ""
+    vendor_outputs: tuple[str, ...] = ()
+
+
 # Scanners that audit the dependencies of many ecosystems at once, from their manifests and lockfiles.
 MULTI_ECOSYSTEM_AUDITS = (
     pattern("osv-scanner", r"\bosv-scanner\b"),

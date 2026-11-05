@@ -13,6 +13,7 @@ from project_validator.rules import (
     BuildOutputs,
     CoverageTools,
     DependencyAudit,
+    DependencyManagement,
     Formatter,
     FunctionLimits,
     Hardening,
@@ -177,6 +178,27 @@ STATIC_ANALYSIS = StaticAnalysis(
 )
 
 
+REQUIRE = re.compile(r"^\s*require\b", re.MULTILINE)
+
+
+def _requires_modules(context: Context) -> str | None:
+    if context.project.exists("go.mod") and REQUIRE.search(context.project.read_text("go.mod")):
+        return "managed with Go modules"
+    return None
+
+
+def _go_sum(context: Context) -> str | None:
+    return "go.sum" if context.committed("go.sum") else None
+
+
+DEPENDENCIES = DependencyManagement(
+    managed=_requires_modules,
+    locked=_go_sum,
+    lock_hint="commit go.sum, which holds the checksum of every module go.mod requires",
+    vendor_outputs=("vendor/modules.txt",),
+)
+
+
 BUILD_OUTPUTS = BuildOutputs(
     name="Go test binaries and coverage profiles",
     globs=ignored_at_top_level(r"\*\.test|\*\.out|bin"),
@@ -208,6 +230,7 @@ GO = Ecosystem(
         DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_funlen_enforced),
         STATIC_ANALYSIS,
+        DEPENDENCIES,
         BUILD_OUTPUTS,
     ),
 )

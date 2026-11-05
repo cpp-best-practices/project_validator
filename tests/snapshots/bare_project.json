@@ -10,7 +10,8 @@
     },
     "ecosystems": {
       "C/C++": [
-        "build file CMakeLists.txt"
+        "build file CMakeLists.txt",
+        ".hpp files"
       ]
     },
     "languages": [
@@ -86,6 +87,14 @@
       "details": [],
       "message": "not applicable to C, C++ (applies to Go, Python, Rust)",
       "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [
+        "if the project has dependencies, consider a dependency manager: CPM, FetchContent, vcpkg, Conan or Meson wraps",
+        "fetch third-party code with the ecosystem's package manager instead of committing a copy of it"
+      ],
+      "message": "third-party code is committed (third_party/); no dependencies are declared",
+      "status": "WARN"
     },
     "dependency-updates": {
       "details": [

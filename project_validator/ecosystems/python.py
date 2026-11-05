@@ -14,6 +14,7 @@ from project_validator.rules import (
     BuildOutputs,
     CoverageTools,
     DependencyAudit,
+    DependencyManagement,
     Formatter,
     FunctionLimits,
     SecurityLints,
@@ -242,6 +243,46 @@ TYPE_CHECKING = TypeChecking(
     strict_hint="consider enabling strict mode: strict = true in [tool.mypy], or pyright's typeCheckingMode = strict",
 )
 
+LOCKFILES = ("uv.lock", "poetry.lock", "pdm.lock", "Pipfile.lock", "pylock.toml")
+NAMED_LOCKFILE = re.compile(r"pylock\.[^/]+\.toml")
+REQUIREMENTS_FILE = re.compile(r"(?:^|/)(?:[^/]*requirements[^/]*\.txt|requirements/[^/]+\.txt)$")
+HASH = re.compile(r"--hash[=\s]+\w+:")
+SETUP_REQUIRES = re.compile(r"\binstall_requires\s*=")
+
+
+def _declared_dependencies(context: Context) -> str | None:
+    """Where the project declares the dependencies it needs: its manifest, or requirements files."""
+    poetry = toml_value(context, "pyproject.toml", "tool", "poetry", "dependencies")
+    if toml_value(context, "pyproject.toml", "project", "dependencies") or (
+        isinstance(poetry, dict) and set(poetry) - {"python"}
+    ):
+        return "declared in pyproject.toml"
+    if context.project.exists("setup.py") and SETUP_REQUIRES.search(context.project.read_text("setup.py")):
+        return "declared in setup.py"
+    requirements = next((path for path in context.tracked_files if REQUIREMENTS_FILE.search(path)), None)
+    return f"declared in {requirements}" if requirements else None
+
+
+def _locked_dependencies(context: Context) -> str | None:
+    """A committed lockfile, or requirements files that pin every package by hash."""
+    lockfiles = [*LOCKFILES, *(path for path in context.tracked_files if NAMED_LOCKFILE.fullmatch(path))]
+    if lockfile := next((path for path in lockfiles if context.committed(path)), None):
+        return lockfile
+    requirements = [path for path in context.tracked_files if REQUIREMENTS_FILE.search(path)]
+    hashed = [path for path in requirements if HASH.search(context.project.read_text(path))]
+    if not hashed:
+        return None
+    return hashed[0] if len(hashed) == 1 else f"{len(hashed)} hash-pinned requirements files"
+
+
+DEPENDENCIES = DependencyManagement(
+    managed=_declared_dependencies,
+    locked=_locked_dependencies,
+    lock_hint="lock them: commit uv.lock (uv lock), poetry.lock, pdm.lock or pylock.toml, or pin requirements "
+    "with hashes (pip-compile --generate-hashes) and install them with --require-hashes",
+)
+
+
 PYTHON = Ecosystem(
     label="Python",
     languages=frozenset({"Python"}),
@@ -269,6 +310,7 @@ PYTHON = Ecosystem(
         FunctionLimits(),
         STATIC_ANALYSIS,
         TYPE_CHECKING,
+        DEPENDENCIES,
         BYTECODE,
         LICENSE,
     ),

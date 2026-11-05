@@ -5,7 +5,7 @@ from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import configuration, existing_texts, first_existing
+from project_validator.evidence import configuration, existing_texts, first_existing, toml_value
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
@@ -13,6 +13,7 @@ from project_validator.rules import (
     BuildTypes,
     CoverageTools,
     DependencyAudit,
+    DependencyManagement,
     Formatter,
     FunctionLimits,
     Hardening,
@@ -168,6 +169,34 @@ TARGET_DIRECTORY = BuildOutputs(
 
 LICENSE = toml_license("Cargo.toml", "package")
 
+DEPENDENCY_TABLES = ("dependencies", "dev-dependencies", "build-dependencies")
+BINARY_SOURCES = re.compile(r"(?:^|/)src/(?:main\.rs|bin/[^/]+)$")
+
+
+def _declares_dependencies(context: Context) -> str | None:
+    """Cargo manages the dependencies a crate (or its workspace) declares in Cargo.toml."""
+    tables = [toml_value(context, "Cargo.toml", table) for table in DEPENDENCY_TABLES]
+    tables.append(toml_value(context, "Cargo.toml", "workspace", "dependencies"))
+    return "managed with Cargo" if any(tables) else None
+
+
+def _builds_a_binary(context: Context) -> bool:
+    """A binary's builds should be reproducible, so it commits Cargo.lock; a library's users resolve their own."""
+    has_bin_table = context.project.exists("Cargo.toml") and "[[bin]]" in context.project.read_text("Cargo.toml")
+    return has_bin_table or any(BINARY_SOURCES.search(path) for path in context.tracked_files)
+
+
+def _cargo_lock(context: Context) -> str | None:
+    return "Cargo.lock" if context.committed("Cargo.lock") else None
+
+
+DEPENDENCIES = DependencyManagement(
+    managed=_declares_dependencies,
+    locked=_cargo_lock,
+    lock_required=_builds_a_binary,
+    lock_hint="commit Cargo.lock, so the binary is always built with the dependencies it was tested with",
+)
+
 STATIC_ANALYSIS = StaticAnalysis(
     analyzers=(
         Analyzer(
@@ -211,6 +240,7 @@ RUST = Ecosystem(
         DEPENDENCY_AUDIT,
         FunctionLimits(),
         STATIC_ANALYSIS,
+        DEPENDENCIES,
         TARGET_DIRECTORY,
         LICENSE,
     ),

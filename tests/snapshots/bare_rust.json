@@ -89,6 +89,13 @@
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
     },
+    "dependency-management": {
+      "details": [
+        "commit Cargo.lock, so the binary is always built with the dependencies it was tested with"
+      ],
+      "message": "dependencies are managed with Cargo but not locked",
+      "status": "WARN"
+    },
     "dependency-updates": {
       "details": [
         "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"

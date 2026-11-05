@@ -94,6 +94,13 @@
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
     },
+    "dependency-management": {
+      "details": [
+        "commit go.sum, which holds the checksum of every module go.mod requires"
+      ],
+      "message": "dependencies are managed with Go modules but not locked",
+      "status": "WARN"
+    },
     "dependency-updates": {
       "details": [
         "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
