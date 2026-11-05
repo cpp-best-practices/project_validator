@@ -85,14 +85,20 @@ class Project:
             if entry.is_file() and entry.name.endswith(suffixes)
         )
 
-    def files(self) -> list[str]:
-        """Every file of the project, skipping hidden, excluded and vendored directories and build trees."""
-        return sorted(self._walk_files())
+    def size(self, relative: str) -> int:
+        return (self.root / relative).stat().st_size
+
+    def files(self, *, hidden: frozenset[str] = frozenset()) -> list[str]:
+        """Every file of the project, skipping hidden, excluded and vendored directories and build trees.
+
+        `hidden` names hidden top-level directories (`.github`) to include all the same.
+        """
+        return sorted(self._walk_files(hidden))
 
     def cmake_files(self) -> list[str]:
         return [path for path in self.files() if _is_cmake_file(PurePosixPath(path).name)]
 
-    def _walk_files(self) -> Iterator[str]:
+    def _walk_files(self, hidden: frozenset[str]) -> Iterator[str]:
         from project_validator.ecosystems import is_build_tree
 
         for directory, subdirectories, files in os.walk(self.root):
@@ -101,7 +107,7 @@ class Project:
             subdirectories[:] = [
                 name
                 for name in subdirectories
-                if not name.startswith(".")
+                if (not name.startswith(".") or (current == self.root and name in hidden))
                 and name not in _SKIPPED_DIRECTORIES
                 and relative / name not in self.excluded
                 and not is_build_tree(current / name)

@@ -186,6 +186,11 @@
       "message": "not applicable to Go (applies to C, C++)",
       "status": "SKIP"
     },
+    "data-wellformed": {
+      "details": [],
+      "message": "5 data files parse (YAML: 5)",
+      "status": "PASS"
+    },
     "dependency-audit": {
       "details": [],
       "message": "CI audits the dependencies with govulncheck",

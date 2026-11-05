@@ -59,6 +59,11 @@
       "message": "not applicable to Go (applies to C, C++)",
       "status": "SKIP"
     },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
     "dependency-audit": {
       "details": [
         "consider running govulncheck ./... in CI (golang/govulncheck-action)"
