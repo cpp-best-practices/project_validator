@@ -7,6 +7,7 @@ from collections.abc import Mapping
 
 from project_validator.ci import CiProvider, Job, build_job
 from project_validator.platforms import detect_operating_systems
+from project_validator.text import pattern
 
 type Combination = dict[str, object]
 
@@ -125,4 +126,11 @@ def parse_workflow(document: object) -> list[Job]:
     ]
 
 
-GITHUB_ACTIONS = CiProvider(name="GitHub Actions", directories=(".github/workflows",), parse_yaml=parse_workflow)
+GITHUB_ACTIONS = CiProvider(
+    name="GitHub Actions",
+    directories=(".github/workflows",),
+    parse_yaml=parse_workflow,
+    # zizmor also finds security problems in workflows: template injection, credentials persisted by checkout, ...
+    linters=(pattern("actionlint", r"\bactionlint\b"), pattern("zizmor", r"\bzizmor\b")),
+    lint_hint="GitHub Actions: run actionlint (rhysd/actionlint) or zizmor (zizmorcore/zizmor-action) in CI",
+)

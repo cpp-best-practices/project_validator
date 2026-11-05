@@ -8,12 +8,17 @@ on:
   schedule:
     - cron: "0 6 * * 1"
 
+permissions:
+  contents: read
+
 jobs:
   pip-audit:
     name: pip-audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-python@v7
         with:
@@ -26,4 +31,7 @@ jobs:
         run: pip-audit --progress-spinner off .
 
       - name: Audit the tools CI installs
-        run: pip-audit --progress-spinner off $(printf -- '-r %s ' .github/requirements/*.txt)
+        run: |
+          requirements=()
+          for file in .github/requirements/*.txt; do requirements+=(-r "$file"); done
+          pip-audit --progress-spinner off "${requirements[@]}"

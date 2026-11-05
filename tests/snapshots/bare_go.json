@@ -25,6 +25,11 @@
       "message": "not applicable to Go (applies to C, C++, Rust)",
       "status": "SKIP"
     },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
     "ci-present": {
       "details": [],
       "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",

@@ -5,12 +5,23 @@
     ],
     "ci": {
       "files": [
+        ".github/workflows/ci-lint.yml",
         ".github/workflows/ci.yml",
         ".github/workflows/codeql.yml",
         ".github/workflows/copy-paste-detection.yml",
         ".github/workflows/function-limits.yml"
       ],
       "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
         {
           "compilers": [
             "gcc"
@@ -271,8 +282,14 @@
       "message": "all 6 OS/Rust toolchain combination(s) build Debug and Release, each with and without sanitizers",
       "status": "PASS"
     },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
     "ci-present": {
       "details": [
+        ".github/workflows/ci-lint.yml",
         ".github/workflows/ci.yml",
         ".github/workflows/codeql.yml",
         ".github/workflows/copy-paste-detection.yml",
@@ -308,7 +325,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "6 data files parse (TOML: 1, YAML: 5)",
+      "message": "7 data files parse (TOML: 1, YAML: 6)",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -347,6 +364,7 @@
     },
     "platform-matrix": {
       "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no Rust toolchain",
         ".github/workflows/ci.yml: test (ubuntu-latest, stable, ): linux / stable",
         ".github/workflows/ci.yml: test (ubuntu-latest, stable, -Zsanitizer=address): linux / stable",
         ".github/workflows/ci.yml: test (ubuntu-latest, nightly, ): linux / nightly",

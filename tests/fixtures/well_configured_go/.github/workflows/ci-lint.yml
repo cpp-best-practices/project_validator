@@ -1,0 +1,8 @@
+on: [push, pull_request]
+jobs:
+  ci-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pipx run zizmor .github
+      - uses: rhysd/actionlint@v1.7.12
