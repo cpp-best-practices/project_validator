@@ -281,6 +281,11 @@
       "message": "Python tests found in 1 file(s)",
       "status": "PASS"
     },
+    "type-checking": {
+      "details": [],
+      "message": "mypy (pyproject.toml) runs; strict mode bonus: mypy strict = true in pyproject.toml",
+      "status": "PASS"
+    },
     "vcs-ignore": {
       "details": [],
       "message": ".gitignore ignores __pycache__/",

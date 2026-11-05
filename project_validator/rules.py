@@ -181,6 +181,18 @@ class Analyzer:
     configured: Callable[[Context], str | None] = _nothing
     shortfall: Callable[[Context], str | None] = _nothing
 
+    def runs_in(self, texts: Iterable[str]) -> bool:
+        return any(self.runs.search(text) for text in texts)
+
+    def named(self, context: Context) -> str:
+        """Its name, and the file that configures it."""
+        config = self.configured(context)
+        return f"{self.name} ({config})" if config else self.name
+
+    def not_running(self, context: Context) -> str:
+        config = self.configured(context)
+        return f"{self.name} is configured ({config}) but does not run" if config else f"{self.name} does not run"
+
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class StaticAnalysis:
@@ -193,6 +205,20 @@ class StaticAnalysis:
     texts: Evidence
     hint: str
     all_required: bool = False
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class TypeChecking:
+    """The static type checkers of a dynamically typed ecosystem, and where its strict mode, a bonus, is enabled.
+
+    `strict` names where strict checking is enabled, if anywhere.
+    """
+
+    checkers: tuple[Analyzer, ...]
+    texts: Evidence
+    strict: Callable[[Context], str | None]
+    hint: str
+    strict_hint: str
 
 
 # Scanners that audit the dependencies of many ecosystems at once, from their manifests and lockfiles.

@@ -1,12 +1,13 @@
 """Python: packaged with pyproject.toml or setup.py, judged by the interpreter versions CI runs."""
 
 import re
+from collections.abc import Callable
 from fnmatch import fnmatch
 from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
+from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing, toml_value
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
@@ -18,6 +19,7 @@ from project_validator.rules import (
     SecurityLints,
     StaticAnalysis,
     TestSuite,
+    TypeChecking,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -187,6 +189,59 @@ STATIC_ANALYSIS = StaticAnalysis(
     hint="consider running ruff check (or pylint or flake8) in CI",
 )
 
+# mypy reads its [mypy] section from these files, and [tool.mypy] from pyproject.toml.
+MYPY_INI_FILES = ("mypy.ini", ".mypy.ini", "setup.cfg")
+MYPY_STRICT_SETTING = re.compile(r"^\[mypy\][^\[]*^\s*strict\s*=\s*(?:true|1|yes|on)\b", re.MULTILINE | re.IGNORECASE)
+MYPY_STRICT_FLAG = re.compile(r"\bmypy\b[^\n]*\s--strict\b")
+PYRIGHT_STRICT_MODE = re.compile(r"""\btypeCheckingMode["']?\s*[:=]\s*["'](?:strict|all)["']""")
+
+
+def _strict_type_checking(context: Context) -> str | None:
+    """Where strict type checking is enabled: mypy's strict setting or flag, or pyright's strict mode."""
+    if toml_value(context, "pyproject.toml", "tool", "mypy", "strict") is True:
+        return "mypy strict = true in pyproject.toml"
+    strict_files = (
+        *((path, MYPY_STRICT_SETTING, "mypy strict = true") for path in MYPY_INI_FILES),
+        *((path, PYRIGHT_STRICT_MODE, "pyright typeCheckingMode") for path in ("pyrightconfig.json", "pyproject.toml")),
+    )
+    for path, setting, name in strict_files:
+        if context.project.exists(path) and setting.search(context.project.read_text(path)):
+            return f"{name} in {path}"
+    return "mypy --strict" if any(map(MYPY_STRICT_FLAG.search, ci_and_hook_texts(context))) else None
+
+
+def _tool_configuration(name: str, *files: str) -> Callable[[Context], str | None]:
+    return configuration(files, {"pyproject.toml": _section(f"tool.{name}")})
+
+
+TYPE_CHECKING = TypeChecking(
+    checkers=(
+        Analyzer(
+            name="mypy",
+            runs=re.compile(r"\b(?:d?mypy|mirrors-mypy)\b"),
+            configured=configuration(
+                ("mypy.ini", ".mypy.ini"), {"pyproject.toml": _section("tool.mypy"), "setup.cfg": _section("mypy")}
+            ),
+        ),
+        Analyzer(
+            name="pyright",
+            runs=re.compile(r"\b(?:based)?pyright\b"),
+            configured=configuration(
+                ("pyrightconfig.json",),
+                {"pyproject.toml": re.compile(r"^\s*\[tool\.(?:based)?pyright\b", re.MULTILINE)},
+            ),
+        ),
+        Analyzer(
+            name="pyrefly", runs=re.compile(r"\bpyrefly\b"), configured=_tool_configuration("pyrefly", "pyrefly.toml")
+        ),
+        Analyzer(name="ty", runs=re.compile(r"\bty\s+check\b"), configured=_tool_configuration("ty", "ty.toml")),
+    ),
+    texts=ci_and_hook_texts,
+    strict=_strict_type_checking,
+    hint="consider running a type checker in CI: mypy, pyright (or basedpyright), pyrefly or ty",
+    strict_hint="consider enabling strict mode: strict = true in [tool.mypy], or pyright's typeCheckingMode = strict",
+)
+
 PYTHON = Ecosystem(
     label="Python",
     languages=frozenset({"Python"}),
@@ -213,6 +268,7 @@ PYTHON = Ecosystem(
         DEPENDENCY_AUDIT,
         FunctionLimits(),
         STATIC_ANALYSIS,
+        TYPE_CHECKING,
         BYTECODE,
         LICENSE,
     ),

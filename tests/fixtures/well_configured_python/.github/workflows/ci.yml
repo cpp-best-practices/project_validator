@@ -15,5 +15,6 @@ jobs:
       - run: pip-audit -r requirements-dev.txt
       - run: ruff format --check
       - run: ruff check
+      - run: mypy src
       - run: lizard --length 30 --warnings_only .
       - run: python -W error -m coverage run -m pytest
