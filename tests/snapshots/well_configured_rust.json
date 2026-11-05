@@ -333,6 +333,13 @@
       "message": "hardening options are enabled: release overflow-checks",
       "status": "PASS"
     },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci.yml: test (ubuntu-latest, stable, ): linux / stable",

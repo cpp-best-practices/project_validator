@@ -88,6 +88,13 @@
       "message": "no hardening options found; enable release overflow-checks",
       "status": "FAIL"
     },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",

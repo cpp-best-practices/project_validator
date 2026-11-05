@@ -19,6 +19,7 @@ from project_validator.rules import (
     WarningPolicy,
     directories,
     ignored_at_top_level,
+    toml_license,
 )
 from project_validator.text import Pattern, pattern
 
@@ -153,6 +154,8 @@ BYTECODE = BuildOutputs(
     hint="consider ignoring __pycache__/ and *.py[cod]",
 )
 
+LICENSE = toml_license("pyproject.toml", "project")
+
 PYTHON = Ecosystem(
     label="Python",
     languages=frozenset({"Python"}),
@@ -179,5 +182,6 @@ PYTHON = Ecosystem(
         DEPENDENCY_AUDIT,
         FunctionLimits(),
         BYTECODE,
+        LICENSE,
     ),
 )

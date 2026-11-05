@@ -1,5 +1,6 @@
 [project]
 name = 'app'
+license = 'MIT'
 
 [tool.coverage.run]
 branch = true

@@ -213,6 +213,13 @@
       "message": "hardening options are enabled: -buildmode=pie",
       "status": "PASS"
     },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci.yml: test (ubuntu-latest, 1.22): linux / 1.22",

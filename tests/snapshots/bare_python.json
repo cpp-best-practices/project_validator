@@ -88,6 +88,13 @@
       "message": "not applicable to Python (applies to C, C++, Go, Rust)",
       "status": "SKIP"
     },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",

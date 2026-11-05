@@ -407,6 +407,13 @@
       "message": "hardening options are enabled: _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
       "status": "PASS"
     },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, ON): linux / gcc",
