@@ -14,6 +14,11 @@ class YamlSupportTests(unittest.TestCase):
             yaml_support.load("a: 1")
         self.assertEqual(str(raised.exception), yaml_support.MISSING_MESSAGE)
 
+    def test_checking_without_pyyaml_explains_how_to_install_it(self) -> None:
+        with mock.patch.object(yaml_support, "_yaml", None), self.assertRaises(yaml_support.YamlError) as raised:
+            yaml_support.check_documents("a: 1")
+        self.assertEqual(str(raised.exception), yaml_support.MISSING_MESSAGE)
+
     def test_invalid_yaml_is_reported_on_one_line(self) -> None:
         with self.assertRaises(yaml_support.YamlError) as raised:
             yaml_support.load("a: [unclosed\n")

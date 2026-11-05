@@ -59,6 +59,11 @@
       "message": "C++ compiler extensions are never disabled; add set(CMAKE_CXX_EXTENSIONS OFF)",
       "status": "FAIL"
     },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
     "dependency-audit": {
       "details": [],
       "message": "not applicable to C, C++ (applies to Go, Python, Rust)",

@@ -380,6 +380,11 @@
       "message": "C++ compiler extensions are disabled globally with set(CMAKE_CXX_EXTENSIONS OFF)",
       "status": "PASS"
     },
+    "data-wellformed": {
+      "details": [],
+      "message": "4 data files parse (YAML: 4)",
+      "status": "PASS"
+    },
     "dependency-audit": {
       "details": [],
       "message": "not applicable to C, C++ (applies to Go, Python, Rust)",
