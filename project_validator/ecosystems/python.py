@@ -152,6 +152,7 @@ BYTECODE = BuildOutputs(
     globs=ignored_at_top_level(r"__pycache__|\*\.py(?:c|\[[cod]+\])"),
     paths=(*directories("__pycache__"), "module.pyc"),
     hint="consider ignoring __pycache__/ and *.py[cod]",
+    artifacts=("__pycache__/", "*.pyc", "*.pyo", "*.egg-info/", "/dist/", "/build/"),
 )
 
 LICENSE = toml_license("pyproject.toml", "project")

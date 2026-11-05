@@ -308,6 +308,11 @@
       "message": "CI enforces the rustfmt style",
       "status": "PASS"
     },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Rust lint settings are enabled: cargo clippy -D warnings clippy::pedantic",

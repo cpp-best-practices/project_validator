@@ -172,6 +172,11 @@
       "message": "CI enforces the ruff format style",
       "status": "PASS"
     },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Python warning settings are enabled: -W error",

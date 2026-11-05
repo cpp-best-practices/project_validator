@@ -161,6 +161,7 @@ TARGET_DIRECTORY = BuildOutputs(
     globs=ignored_at_top_level("target"),
     paths=directories("target"),
     hint="consider ignoring /target",
+    artifacts=("/target/",),
 )
 
 LICENSE = toml_license("Cargo.toml", "package")

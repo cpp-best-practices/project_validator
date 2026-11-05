@@ -188,6 +188,11 @@
       "message": "CI enforces the gofmt style",
       "status": "PASS"
     },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Go linters are enabled: go vet, staticcheck",

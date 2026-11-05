@@ -149,6 +149,7 @@ BUILD_OUTPUTS = BuildOutputs(
     globs=ignored_at_top_level(r"\*\.test|\*\.out|bin"),
     paths=(*directories("bin"), "app.test", "coverage.out"),
     hint="consider ignoring *.test and *.out (and bin/ if binaries are built there)",
+    artifacts=("*.test", "*.out", "/bin/"),
 )
 
 _GO_VERSION = r"(\d+\.\d+(?:\.\d+|\.x)?|stable|oldstable)"

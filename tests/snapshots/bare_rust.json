@@ -47,6 +47,14 @@
       "message": "CI never runs rustfmt; its formatting is not enforced",
       "status": "FAIL"
     },
+    "committed-artifacts": {
+      "details": [
+        "target/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Rust lint settings found; enable at least cargo clippy -D warnings clippy::pedantic",
