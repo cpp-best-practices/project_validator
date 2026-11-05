@@ -45,6 +45,8 @@ class CiProvider:
     # The tools that lint this provider's configuration when CI (or a pre-commit hook) runs them, and how to add one.
     linters: tuple[Pattern, ...] = ()
     lint_hint: str = ""
+    # The status badge images this provider serves for a README.
+    badges: tuple[Pattern, ...] = ()
     # The reusable steps (`owner/repo@ref`) a parsed configuration document uses, for providers that have them.
     step_references: Callable[[object], list[str]] | None = None
 

@@ -139,6 +139,14 @@
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"
     },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
     "tests-run": {
       "details": [],
       "message": "no Go tests found (Test functions in *_test.go files)",
