@@ -59,6 +59,11 @@
       "message": "not applicable to Rust (applies to C, C++)",
       "status": "SKIP"
     },
+    "data-wellformed": {
+      "details": [],
+      "message": "1 data file parses (TOML: 1)",
+      "status": "PASS"
+    },
     "dependency-audit": {
       "details": [
         "consider running cargo audit (rustsec/audit-check) or cargo deny check advisories in CI"
