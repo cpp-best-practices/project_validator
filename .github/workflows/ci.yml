@@ -149,6 +149,24 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
+  secret-scanning:
+    name: secret scanning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The commits of a push or pull request are scanned, so their history is needed.
+          fetch-depth: 0
+          persist-credentials: false
+
+      # The action runs the latest TruffleHog image unless told which: pin it to the release's digest. Update it
+      # together with the action.
+      - name: Scan the new commits for secrets
+        uses: trufflesecurity/trufflehog@ea68ca03c865c5f324e86e849ced20ed3cf9dbbb # v3.99.8
+        with:
+          version: 3.99.8@sha256:674b2f187620a19df77f44cf9a7d77efcc581a5662accef2f2739cbb46ba4a3a
+          extra_args: --results=verified,unknown
+
   self-validation:
     name: self-validation
     runs-on: ubuntu-latest

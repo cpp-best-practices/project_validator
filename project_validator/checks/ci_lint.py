@@ -1,10 +1,8 @@
 """CI lints its own configuration, so a broken or unsafe pipeline is caught before it runs."""
 
 from project_validator.core import Context, Result, Status, check
-from project_validator.evidence import existing_texts
+from project_validator.evidence import PRE_COMMIT_CONFIGURATION, existing_texts
 from project_validator.text import matching_names
-
-PRE_COMMIT_CONFIGURATION = (".pre-commit-config.yaml", ".pre-commit-config.yml")
 
 
 @check(name="ci-lint", description="CI lints its own configuration (e.g. actionlint or zizmor)")

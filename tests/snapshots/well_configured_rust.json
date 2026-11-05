@@ -389,6 +389,11 @@
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Rust toolchain(s) (nightly, stable), 6 combination(s)",
       "status": "PASS"
     },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
     "security-policy": {
       "details": [],
       "message": "SECURITY.md says how to report a vulnerability",
