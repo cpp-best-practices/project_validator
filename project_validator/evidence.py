@@ -30,6 +30,9 @@ def toml_value(context: Context, path: str, *keys: str) -> object | None:
     return value
 
 
+# pre-commit's configuration: a hook it runs counts as evidence much as a CI step does.
+PRE_COMMIT_CONFIGURATION = (".pre-commit-config.yaml", ".pre-commit-config.yml")
+
 # Where GitHub, GitLab and other forges look for a project's community documents (SECURITY.md, ...).
 DOCUMENT_DIRECTORIES = ("", ".github", "docs")
 
