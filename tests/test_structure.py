@@ -117,6 +117,7 @@ class ProjectStructureTests(unittest.TestCase):
         self.assertEqual(
             ci["files"],
             [
+                ".github/workflows/ci-lint.yml",
                 ".github/workflows/ci.yml",
                 ".github/workflows/codeql-analysis.yml",
                 ".github/workflows/copy-paste-detection.yml",

@@ -5,12 +5,23 @@
     ],
     "ci": {
       "files": [
+        ".github/workflows/ci-lint.yml",
         ".github/workflows/ci.yml",
         ".github/workflows/codeql.yml",
         ".github/workflows/copy-paste-detection.yml",
         ".github/workflows/function-limits.yml"
       ],
       "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
         {
           "compilers": [
             "gcc"
@@ -151,8 +162,14 @@
       "message": "not applicable to Go (applies to C, C++, Rust)",
       "status": "SKIP"
     },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
     "ci-present": {
       "details": [
+        ".github/workflows/ci-lint.yml",
         ".github/workflows/ci.yml",
         ".github/workflows/codeql.yml",
         ".github/workflows/copy-paste-detection.yml",
@@ -188,7 +205,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "5 data files parse (YAML: 5)",
+      "message": "6 data files parse (YAML: 6)",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -227,6 +244,7 @@
     },
     "platform-matrix": {
       "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no Go version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 1.22): linux / 1.22",
         ".github/workflows/ci.yml: test (ubuntu-latest, 1.23): linux / 1.23",
         ".github/workflows/ci.yml: test (macos-latest, 1.22): macos / 1.22",

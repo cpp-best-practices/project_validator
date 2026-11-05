@@ -14,6 +14,7 @@ from project_validator.platforms import (
     detect_operating_systems,
     detect_toolchains,
 )
+from project_validator.text import Pattern
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -41,6 +42,9 @@ class CiProvider:
     directories: tuple[str, ...] = ()
     suffixes: tuple[str, ...] = (".yml", ".yaml")
     parse_yaml: YamlParser | None = None
+    # The tools that lint this provider's configuration when CI (or a pre-commit hook) runs them, and how to add one.
+    linters: tuple[Pattern, ...] = ()
+    lint_hint: str = ""
 
     def config_files(self, project: Project) -> list[str]:
         found = [path for path in self.files if project.exists(path)]

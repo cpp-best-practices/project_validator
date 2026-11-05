@@ -1,0 +1,2 @@
+actionlint-py==1.7.12.25
+zizmor==1.32.0
