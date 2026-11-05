@@ -223,6 +223,11 @@
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Python version(s) (3.13, 3.14), 6 combination(s)",
       "status": "PASS"
     },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
     "security-scanning": {
       "details": [],
       "message": "CI runs code security scanning with CodeQL",

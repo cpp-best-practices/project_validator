@@ -6,6 +6,7 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result, check
 from project_validator.ecosystems import ecosystems_for, registered, rules_of
+from project_validator.evidence import documents
 from project_validator.rules import DeclaredLicense
 
 # LICENSE, LICENSE.md, LICENSE-MIT, LICENCE, COPYING, COPYING.LESSER, UNLICENSE, ...
@@ -48,11 +49,7 @@ HINT = "add a LICENSE file with the text of a license (see https://choosealicens
 
 def license_files(context: Context) -> list[str]:
     """The license files at the root of the project and, for REUSE, in LICENSES/."""
-    project = context.project
-    root = [
-        path.name for path in sorted(project.root.iterdir()) if path.is_file() and LICENSE_FILE.fullmatch(path.name)
-    ]
-    return [*root, *project.files_in(REUSE_DIRECTORY, (".txt", ".md", ""))]
+    return [*documents(context, LICENSE_FILE, ("",)), *context.project.files_in(REUSE_DIRECTORY, (".txt", ".md", ""))]
 
 
 def recognised(context: Context, path: str) -> frozenset[str]:
