@@ -213,6 +213,11 @@
       "message": "hardening options are enabled: -buildmode=pie",
       "status": "PASS"
     },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
     "license": {
       "details": [
         "LICENSE"

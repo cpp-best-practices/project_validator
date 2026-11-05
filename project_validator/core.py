@@ -2,6 +2,8 @@
 
 import enum
 import os
+import shutil
+import subprocess
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from functools import cached_property
@@ -43,11 +45,16 @@ class Result:
         return Result(status=self.status, message=self.message, details=self.details + details)
 
 
+DEFAULT_MAX_FILE_SIZE = 5 * 1024 * 1024
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Options:
     build: bool = False
     cmake: str = "cmake"
     ctest: str = "ctest"
+    # Committed files larger than this, in bytes, belong in Git LFS or DVC.
+    max_file_size: int = DEFAULT_MAX_FILE_SIZE
 
 
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})
@@ -94,6 +101,22 @@ class Project:
         `hidden` names hidden top-level directories (`.github`) to include all the same.
         """
         return sorted(self._walk_files(hidden))
+
+    def tracked_files(self) -> list[str]:
+        """The files git tracks in the project, or every file when it is not a git checkout; exclusions apply."""
+        git = shutil.which("git")
+        if git is None:
+            return self.files()
+        listed = subprocess.run(  # noqa: S603 - argv list, no shell
+            [git, "-C", str(self.root), "ls-files", "-z"], capture_output=True, check=False
+        )
+        if listed.returncode != 0:
+            return self.files()
+        paths = listed.stdout.decode("utf-8", errors="replace").split("\0")
+        return sorted(path for path in paths if path and not self._excludes(path) and (self.root / path).is_file())
+
+    def _excludes(self, relative: str) -> bool:
+        return any(parent in self.excluded for parent in PurePosixPath(relative).parents)
 
     def cmake_files(self) -> list[str]:
         return [path for path in self.files() if _is_cmake_file(PurePosixPath(path).name)]

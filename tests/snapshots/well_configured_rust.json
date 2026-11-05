@@ -333,6 +333,11 @@
       "message": "hardening options are enabled: release overflow-checks",
       "status": "PASS"
     },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
     "license": {
       "details": [
         "LICENSE"

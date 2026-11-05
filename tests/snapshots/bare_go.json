@@ -90,6 +90,11 @@
       "message": "Go programs are not built as position-independent executables",
       "status": "FAIL"
     },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
     "license": {
       "details": [
         "add a LICENSE file with the text of a license (see https://choosealicense.com)"
