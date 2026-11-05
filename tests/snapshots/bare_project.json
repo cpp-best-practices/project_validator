@@ -47,6 +47,14 @@
       "message": "no clang-format configuration found; formatting is not defined",
       "status": "FAIL"
     },
+    "committed-artifacts": {
+      "details": [
+        "main.o",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no compiler warning flags found; enable at least -Wall -Wextra -Wpedantic -Wshadow -Wconversion",

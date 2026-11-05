@@ -17,7 +17,12 @@
     "languages": [
       "Go"
     ],
-    "unrecognised_suffixes": []
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".out"
+      }
+    ]
   },
   "results": {
     "action-pinning": {
@@ -45,6 +50,14 @@
         "consider a CI job that fails when gofmt -l . lists files (test -z \"$(gofmt -l .)\")"
       ],
       "message": "CI never runs gofmt; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "coverage.out",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
       "status": "FAIL"
     },
     "compiler-warnings": {

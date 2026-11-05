@@ -47,6 +47,11 @@
       "message": "no clang-format configuration found; formatting is not defined",
       "status": "FAIL"
     },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no compiler warning flags found; enable at least -Wall -Wextra -Wpedantic -Wshadow -Wconversion",

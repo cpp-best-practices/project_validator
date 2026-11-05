@@ -9,6 +9,8 @@ supplied by the profile's build systems instead (see `project_validator.ecosyste
 import re
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
+from fnmatch import fnmatchcase
+from pathlib import PurePosixPath
 from typing import TYPE_CHECKING, Protocol
 
 from project_validator.core import Context, Result
@@ -199,12 +201,29 @@ class BuildOutputs:
     """The build outputs of an ecosystem that must never be committed, and the ignore entries that ignore them.
 
     A glob entry ignores the outputs when it is one of `globs`; a regular expression when it matches one of `paths`.
+    `artifacts` recognise committed outputs (see `artifact`).
     """
 
     name: str
     globs: re.Pattern[str]
     paths: tuple[str, ...]
     hint: str
+    artifacts: tuple[str, ...] = ()
+
+    def artifact(self, path: str) -> str | None:
+        """The build output `path` is, or is inside, as one of `artifacts` names it; None when it is not one.
+
+        A glob without a slash names a file anywhere; one ending in a slash, a directory anywhere, and one that also
+        starts with a slash, a directory at the top of the project. A file in an output directory is the outermost
+        such directory.
+        """
+        parts = PurePosixPath(path).parts
+        directories = [glob for glob in self.artifacts if glob.endswith("/")]
+        for depth, part in enumerate(parts[:-1]):
+            if any(fnmatchcase(part, glob.strip("/")) for glob in directories if depth == 0 or glob[0] != "/"):
+                return "/".join(parts[: depth + 1]) + "/"
+        files = (glob for glob in self.artifacts if not glob.endswith("/"))
+        return path if any(fnmatchcase(parts[-1], glob) for glob in files) else None
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

@@ -92,6 +92,11 @@ BUILD_DIRECTORY = BuildOutputs(
     globs=ignored_at_top_level(r"(?:\[Bb\]uild|_?build|out|cmake-build)(?:[-_*][\w*-]*)?"),
     paths=directories("build", "out", "_build", "cmake-build-debug"),
     hint="consider ignoring the build directory (e.g. build/ and out/)",
+    artifacts=(
+        *("*.o", "*.obj", "*.a", "*.lib", "*.so", "*.so.*", "*.dylib", "*.dll", "*.exe", "*.pdb", "*.ilk"),
+        *("CMakeCache.txt", "CMakeFiles/", "CMakeUserPresets.json", "cmake-build-*/"),
+        *("/build/", "/out/", "/builddir/"),
+    ),
 )
 
 # `.h` is deliberately absent: it is used by both C and C++.

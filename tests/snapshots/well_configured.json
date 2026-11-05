@@ -382,6 +382,11 @@
       "message": ".clang-format is defined and CI runs clang-format",
       "status": "PASS"
     },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wshadow -Wconversion /W4 /permissive-",
