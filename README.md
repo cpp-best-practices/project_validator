@@ -181,6 +181,9 @@ ZIG = Ecosystem(
 
 ## Development
 
+[docs/architecture.md](docs/architecture.md) describes how the validator is put together, and the design it is
+moving to.
+
 ```sh
 python3 -W error -m unittest
 ```
