@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from project_validator.ci import CiAnalysis, CiFile, CiProvider
+    from project_validator.facts import Facts
     from project_validator.structure import ProjectStructure
 
 
@@ -159,6 +160,13 @@ class Context:
         from project_validator.ci import parse_jobs
 
         return parse_jobs(self.project, self.ci_files)
+
+    @cached_property
+    def facts(self) -> Facts:
+        """The fact database (see `project_validator.facts`); for now, what the CI configuration shows."""
+        from project_validator.ci import ci_facts
+
+        return ci_facts(self.project, self.ci_files)
 
     @cached_property
     def ci_texts(self) -> tuple[str, ...]:

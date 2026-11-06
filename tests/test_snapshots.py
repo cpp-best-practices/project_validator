@@ -22,6 +22,7 @@ def snapshot_of(fixture: Path) -> dict[str, object]:
     reports = run_checks(discover().checks, context)
     return {
         "map": context.structure.as_dict(),
+        "facts": context.facts.as_dicts(),
         "results": {
             report.check.name: {
                 "status": str(report.result.status),

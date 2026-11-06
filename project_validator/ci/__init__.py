@@ -1,11 +1,14 @@
 """Pluggable CI providers: each one knows where its configuration lives and how to turn it into jobs."""
 
-from collections.abc import Callable
+import re
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass, replace
 
 from project_validator import yaml_support
 from project_validator.build_configurations import BuildConfiguration, detect_configurations
 from project_validator.core import Project
+from project_validator.facts import NOTHING, CiJob, Command, Fact, Facts, Origin, Unknown, collected
+from project_validator.facts.shell import ShellCommand, split_script
 from project_validator.platforms import (
     RUNNER_DEFAULT_COMPILERS,
     Toolchain,
@@ -33,6 +36,8 @@ class Job:
 
 
 type YamlParser = Callable[[object], list[Job]]
+# Facts from a parsed configuration document at a path (see `project_validator.facts`).
+type FactExtractor = Callable[[str, object], Iterable[Fact]]
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -49,6 +54,7 @@ class CiProvider:
     badges: tuple[Pattern, ...] = ()
     # The reusable steps (`owner/repo@ref`) a parsed configuration document uses, for providers that have them.
     step_references: Callable[[object], list[str]] | None = None
+    facts: FactExtractor | None = None
 
     def config_files(self, project: Project) -> list[str]:
         found = [path for path in self.files if project.exists(path)]
@@ -139,3 +145,63 @@ def parse_jobs(project: Project, ci_files: tuple[CiFile, ...]) -> CiAnalysis:
         jobs.extend(file_jobs)
         notes.extend(file_notes)
     return CiAnalysis(jobs=tuple(jobs), notes=tuple(dict.fromkeys(notes)))
+
+
+def strings(value: object) -> dict[str, str]:
+    """A YAML mapping of names to scalars (an `env:` or `with:` block) as strings; anything else as nothing."""
+    if not isinstance(value, Mapping):
+        return {}
+    return {str(key): str(item).lower() if isinstance(item, bool) else str(item) for key, item in value.items()}
+
+
+def script_facts(
+    script: str,
+    *,
+    job: str,
+    origin: Origin,
+    env: Mapping[str, str] = NOTHING,
+    directory: str | None = None,
+    condition: str | None = None,
+    opaque: re.Pattern[str] | None = None,
+) -> Iterator[Fact]:
+    """The commands of a shell script a job runs; a line that cannot be split is recorded as unknown.
+
+    `opaque` matches the expressions the CI service evaluates before the shell runs (see `split_script`).
+    """
+    for found in split_script(script, opaque):
+        if isinstance(found, ShellCommand):
+            yield Command(
+                origin=origin,
+                job=job,
+                argv=found.argv,
+                line=found.line,
+                env={**env, **dict(found.env)},
+                directory=directory,
+                condition=condition,
+            )
+        else:
+            yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
+
+
+def _file_facts(project: Project, ci_file: CiFile) -> Iterable[Fact]:
+    provider = ci_file.provider
+    origin = Origin(path=ci_file.path)
+    if provider.parse_yaml is None or provider.facts is None:
+        return (
+            CiJob(
+                origin=origin, id=ci_file.path, provider=provider.name, name=ci_file.path, os="unknown", heuristic=True
+            ),
+            Unknown(
+                origin=origin, subject="the jobs and commands", reason=f"{provider.name} configuration is not parsed"
+            ),
+        )
+    try:
+        document = yaml_support.load(project.read_text(ci_file.path))
+    except yaml_support.YamlError as error:
+        return (Unknown(origin=origin, subject="the jobs and commands", reason=f"invalid YAML ({error})"),)
+    return provider.facts(ci_file.path, document)
+
+
+def ci_facts(project: Project, ci_files: tuple[CiFile, ...]) -> Facts:
+    """What the CI configuration shows: its jobs, and the commands and reusable steps each one runs."""
+    return collected(_file_facts(project, ci_file) for ci_file in ci_files)
