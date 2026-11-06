@@ -1,0 +1,196 @@
+{
+  "map": {
+    "build_systems": [
+      "SwiftPM"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Swift": [
+        "build file Package.swift",
+        ".swift files"
+      ]
+    },
+    "languages": [
+      "Swift"
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs swift format lint --strict (or swiftformat --lint)"
+      ],
+      "message": "CI never runs swift-format or SwiftFormat; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        ".build/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Swift warning settings found; enable at least SwiftLint, complete concurrency checking",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding PMD CPD (pmd cpd --language cpp), jscpd, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [],
+      "message": "no region coverage reporting found in CI configuration or the Xcode schemes",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Swift (applies to C, C++)",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [
+        "consider running osv-scanner in CI, which audits the packages Package.resolved pins"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    "dependency-management": {
+      "details": [
+        "commit Package.resolved, so the application is built with the package versions it was tested with"
+      ],
+      "message": "dependencies are managed with SwiftPM but not locked",
+      "status": "WARN"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is never limited; run SwiftLint or lizard --length 30 in CI",
+      "status": "FAIL"
+    },
+    "hardening": {
+      "details": [
+        "build releases with -O (the default), which keeps bounds, overflow and exclusivity checks"
+      ],
+      "message": "Swift's runtime safety checks are compiled away: -Ounchecked",
+      "status": "FAIL"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running swiftlint --strict in CI (or the SwiftLint build tool plugin)"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no Swift tests found (XCTestCase classes or Swift Testing @Test functions)",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Swift (applies to JavaScript, PHP, Python, Ruby, TypeScript)",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "build with -Xswiftc -warnings-as-errors (SwiftPM 6.2: treatAllWarnings(as: .error); Xcode: SWIFT_TREAT_WARNINGS_AS_ERRORS = YES)"
+      ],
+      "message": "warnings are not treated as errors in CI configuration, Package.swift or the Xcode build settings",
+      "status": "FAIL"
+    }
+  }
+}
