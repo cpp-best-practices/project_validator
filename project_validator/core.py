@@ -163,10 +163,13 @@ class Context:
 
     @cached_property
     def facts(self) -> Facts:
-        """The fact database (see `project_validator.facts`); for now, what the CI configuration shows."""
+        """The fact database (see `project_validator.facts`): what the CI configuration shows, with the commands each
+        command runs in turn."""
         from project_validator.ci import ci_facts
+        from project_validator.facts import Facts
+        from project_validator.facts.expansion import built_in_expanders, expanded
 
-        return ci_facts(self.project, self.ci_files)
+        return Facts(tuple(expanded(ci_facts(self.project, self.ci_files), self, built_in_expanders())))
 
     @cached_property
     def ci_texts(self) -> tuple[str, ...]:

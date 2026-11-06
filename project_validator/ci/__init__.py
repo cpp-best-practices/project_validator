@@ -1,14 +1,12 @@
 """Pluggable CI providers: each one knows where its configuration lives and how to turn it into jobs."""
 
-import re
-from collections.abc import Callable, Iterable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, replace
 
 from project_validator import yaml_support
 from project_validator.build_configurations import BuildConfiguration, detect_configurations
 from project_validator.core import Project
-from project_validator.facts import NOTHING, CiJob, Command, Fact, Facts, Origin, Unknown, collected
-from project_validator.facts.shell import ShellCommand, split_script
+from project_validator.facts import CiJob, Fact, Facts, Origin, Unknown, collected
 from project_validator.platforms import (
     RUNNER_DEFAULT_COMPILERS,
     Toolchain,
@@ -152,35 +150,6 @@ def strings(value: object) -> dict[str, str]:
     if not isinstance(value, Mapping):
         return {}
     return {str(key): str(item).lower() if isinstance(item, bool) else str(item) for key, item in value.items()}
-
-
-def script_facts(
-    script: str,
-    *,
-    job: str,
-    origin: Origin,
-    env: Mapping[str, str] = NOTHING,
-    directory: str | None = None,
-    condition: str | None = None,
-    opaque: re.Pattern[str] | None = None,
-) -> Iterator[Fact]:
-    """The commands of a shell script a job runs; a line that cannot be split is recorded as unknown.
-
-    `opaque` matches the expressions the CI service evaluates before the shell runs (see `split_script`).
-    """
-    for found in split_script(script, opaque):
-        if isinstance(found, ShellCommand):
-            yield Command(
-                origin=origin,
-                job=job,
-                argv=found.argv,
-                line=found.line,
-                env={**env, **dict(found.env)},
-                directory=directory,
-                condition=condition,
-            )
-        else:
-            yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
 
 
 def _file_facts(project: Project, ci_file: CiFile) -> Iterable[Fact]:

@@ -20,6 +20,7 @@ from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.javascript import DEPENDENCIES, JAVASCRIPT_AND_TYPESCRIPT, NODE_MODULES, TYPE_CHECKING
+from project_validator.facts import Command, Unknown
 from tests.support import (
     GITHUB_WORKFLOW,
     github_job,
@@ -295,3 +296,62 @@ class OutputTests(unittest.TestCase):
         }
         result = self._run(platform_matrix, files)
         self.assertIn("3 runtime version(s) (2.5.0, 22, lts/*)", result.message)
+
+
+DENO_TASKS = '{\n  // tasks\n  "tasks": {"fmt": "deno fmt --check", "check": {"command": "deno check main.ts"}}\n}\n'
+PACKAGES = {
+    "package.json": json.dumps(
+        {"scripts": {"pretest": "tsc --noEmit", "test": "vitest run", "posttest": "c8 report", "lint": "eslint ."}}
+    ),
+    "web/package.json": json.dumps({"scripts": {"build": "vite build"}}),
+    "deno.jsonc": DENO_TASKS,
+}
+
+
+class ScriptExpansionTests(unittest.TestCase):
+    """The package.json scripts and deno.json tasks a CI command runs are commands of the job too."""
+
+    def _expanded(self, *steps: str) -> list[tuple[str, ...]]:
+        with temp_project({**PACKAGES, **github_job("ubuntu-latest", *steps)}) as root:
+            facts = make_context(root).facts
+        return [command.argv for command in facts.of(Command) if command.via]
+
+    def test_npm_runs_a_script_between_its_pre_and_post_scripts(self) -> None:
+        expected = [("tsc", "--noEmit"), ("vitest", "run"), ("c8", "report")]
+        for step in ("npm test", "npm t", "npm run test", "yarn test"):
+            with self.subTest(step=step):
+                self.assertEqual(self._expanded(step), expected)
+
+    def test_pnpm_and_bun_run_only_the_script(self) -> None:
+        for step in ("pnpm test", "pnpm run test", "bun run test"):
+            with self.subTest(step=step):
+                self.assertEqual(self._expanded(step), [("vitest", "run")])
+
+    def test_a_package_manager_pointed_at_a_directory_reads_its_package(self) -> None:
+        self.assertEqual(self._expanded("npm --prefix web run build", "pnpm -C web build"), [("vite", "build")] * 2)
+
+    def test_deno_tasks(self) -> None:
+        self.assertEqual(
+            self._expanded("deno task fmt", "deno task check"),
+            [("deno", "fmt", "--check"), ("deno", "check", "main.ts")],
+        )
+
+    def test_package_manager_commands_are_not_scripts(self) -> None:
+        commands = (
+            "npm --version",
+            "npm ci",
+            "npm run",
+            "pnpm install",
+            "yarn add left-pad",
+            "bun test",
+            "pnpm vitest",
+        )
+        self.assertEqual(self._expanded(*commands), [])
+
+    def test_a_script_that_does_not_exist_is_unknown(self) -> None:
+        with temp_project({**PACKAGES, **github_job("ubuntu-latest", "npm run build", "deno task nope")}) as root:
+            unknown = make_context(root).facts.of(Unknown)
+        self.assertEqual(
+            [(fact.subject, fact.reason) for fact in unknown],
+            [("the script build", "package.json has none"), ("the task nope", "no deno.json defines it")],
+        )

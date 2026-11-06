@@ -42,7 +42,7 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 |---|---|
 | `--list` | list the available checks; with `--format json`, also the ecosystems each one applies to |
 | `--map` | print the detected project structure as JSON: languages, build systems, the signals that recognised each ecosystem, the file suffixes no ecosystem recognises, and the CI providers, jobs and toolchains |
-| `--facts` | print the facts found about the project as JSON, each with where it was found: for now the CI jobs (one per matrix combination), the commands and actions each runs, and what could not be read (see [docs/architecture.md](docs/architecture.md)) |
+| `--facts` | print the facts found about the project as JSON, each with where it was found: for now the CI jobs (one per matrix combination), the commands and actions each runs, the commands those run in turn (package scripts, Deno tasks, Composer scripts, Make targets, pre-commit hooks), and what could not be read (see [docs/architecture.md](docs/architecture.md)) |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
 | `--format text\|json` | output format |
 | `--color auto\|always\|never` | color the text output (needs rich); `auto` colors only on a terminal when `NO_COLOR` is unset |

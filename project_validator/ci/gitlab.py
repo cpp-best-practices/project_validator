@@ -5,8 +5,9 @@ import json
 import re
 from collections.abc import Iterator, Mapping
 
-from project_validator.ci import CiProvider, Job, build_job, script_facts, strings
+from project_validator.ci import CiProvider, Job, build_job, strings
 from project_validator.facts import CiJob, Fact, Origin, Unknown
+from project_validator.facts.expansion import script_facts
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
 

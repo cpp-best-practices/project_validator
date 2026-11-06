@@ -67,6 +67,8 @@ class Command(Fact):
     directory: str | None = None
     # The condition the step runs under (GitHub's `if:`), as written after matrix values are substituted.
     condition: str | None = None
+    # The commands that ran this one in turn, outermost first (CI's `npm test`, then the package's test script).
+    via: tuple[Origin, ...] = ()
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
