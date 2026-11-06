@@ -5,15 +5,12 @@ commands are facts like those CI runs directly, in the same job, with `via` nami
 Expansion repeats on what it finds, and stops where a definition would run itself again.
 """
 
-import importlib
-import pkgutil
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
-from types import ModuleType
 from typing import TYPE_CHECKING
 
-from project_validator.facts import NOTHING, Command, Fact, Origin, Unknown
+from project_validator.facts import NOTHING, Command, Fact, Origin, Unknown, resolved
 from project_validator.facts.shell import ShellCommand, split_script
 
 if TYPE_CHECKING:
@@ -40,7 +37,14 @@ class Invocation:
     origin: Origin
 
 
-type Expansion = Script | Invocation | Unknown
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Launched:
+    """The command a launcher runs from its own arguments (`bundle exec rake` runs `rake`), where the launcher is."""
+
+    argv: tuple[str, ...]
+
+
+type Expansion = Script | Invocation | Launched | Unknown
 type Expand = Callable[[Command, Context], Iterable[Expansion] | None]
 
 
@@ -87,12 +91,13 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
     via = (*command.via, command.origin)
     if isinstance(expansion, Unknown):
         yield expansion
-    elif isinstance(expansion, Invocation):
+    elif isinstance(expansion, (Invocation, Launched)):
+        found = expansion if isinstance(expansion, Invocation) else command
         yield Command(
-            origin=expansion.origin,
+            origin=found.origin,
             job=command.job,
             argv=expansion.argv,
-            line=expansion.line,
+            line=found.line,
             env=command.env,
             directory=command.directory,
             condition=command.condition,
@@ -117,8 +122,12 @@ def expand_command(command: Command, context: Context, expanders: Iterable[Comma
     chain = (*command.via, command.origin)
     for expander in expanders:
         expansions = list(expander.expand(command, context) or ())
-        if any(not isinstance(found, Unknown) and found.origin in chain for found in expansions):
+        if any(isinstance(found, (Script, Invocation)) and found.origin in chain for found in expansions):
             continue  # a definition that runs itself, which is followed once
+        # A launcher runs a shorter command than its own, so launching ends.
+        expansions = [
+            found for found in expansions if not isinstance(found, Launched) or len(found.argv) < len(command.argv)
+        ]
         for expansion in expansions:
             for child in _children(command, expansion):
                 yield child
@@ -135,25 +144,60 @@ def expanded(facts: Iterable[Fact], context: Context, expanders: Iterable[Comman
             yield from expand_command(fact, context, expanders)
 
 
-# The packages whose modules may define command expanders, besides the profiles.
-_PACKAGES = ("project_validator.build_systems", "project_validator.tools")
-
-
-def _modules() -> Iterator[ModuleType]:
-    from project_validator.ecosystems import PROFILES
-
-    for package_name in _PACKAGES:
-        package = importlib.import_module(package_name)
-        for info in sorted(pkgutil.iter_modules(package.__path__), key=lambda module: module.name):
-            yield importlib.import_module(f"{package_name}.{info.name}")
-    for name in PROFILES:
-        yield importlib.import_module(f"project_validator.ecosystems.{name}")
-
-
 def built_in_expanders() -> tuple[CommandExpander, ...]:
     """Every command expander defined by a module of the shared build systems, the shared tools or a profile."""
-    found = (value for module in _modules() for value in vars(module).values())
-    return tuple(dict.fromkeys(value for value in found if isinstance(value, CommandExpander)))
+    from project_validator.components import built_in
+
+    return built_in(CommandExpander)
+
+
+def launcher(
+    name: str, prefixes: Iterable[tuple[str, ...]], with_values: frozenset[str] = frozenset()
+) -> CommandExpander:
+    """An expander of the launchers whose commands start with one of `prefixes` (`("bundle", "exec")`): each runs the
+    command its first positional argument starts. `with_values` are the launcher's options that take a value.
+    """
+    starts = tuple(prefixes)
+
+    def expand(command: Command, _: Context) -> list[Expansion] | None:
+        argv = resolved(command)
+        prefix = next((start for start in starts if _starts_with(argv, start)), None)
+        if prefix is None:
+            return None
+        rest = iter(argv[len(prefix) :])
+        for word in rest:
+            if word == "--" or not word.startswith("-"):
+                launched = (*(() if word == "--" else (word,)), *rest)
+                return [Launched(argv=launched)] if launched else []
+            if word in with_values:
+                next(rest, None)
+        return []
+
+    return CommandExpander(name=name, expand=expand)
+
+
+def _starts_with(argv: tuple[str, ...], prefix: tuple[str, ...]) -> bool:
+    return len(argv) > len(prefix) and program(argv) == prefix[0] and argv[1 : len(prefix)] == prefix[1:]
+
+
+def program(argv: tuple[str, ...]) -> str:
+    """The name of the program `argv` runs, without its directory or a Windows suffix (`./vendor/bin/phpunit`)."""
+    name = argv[0].replace("\\", "/").rsplit("/", 1)[-1] if argv else ""
+    for suffix in (".exe", ".cmd", ".bat"):
+        name = name.removesuffix(suffix)
+    return name
+
+
+def has_option(argv: tuple[str, ...], *names: str) -> bool:
+    """Whether `argv` gives one of the options `names`, alone or with a value (`--name=value`)."""
+    return any(word in names or word.partition("=")[0] in names for word in argv[1:])
+
+
+def short_flags(argv: tuple[str, ...]) -> frozenset[str]:
+    """The one-letter flags given in `argv`, together or apart (`-bc`, `-b -c`)."""
+    return frozenset(
+        letter for word in argv[1:] if word.startswith("-") and not word.startswith("--") for letter in word[1:]
+    )
 
 
 def positional(argv: tuple[str, ...], with_values: frozenset[str] = frozenset()) -> tuple[list[str], dict[str, str]]:
@@ -189,12 +233,17 @@ __all__ = [
     "CommandExpander",
     "Expansion",
     "Invocation",
+    "Launched",
     "Script",
     "built_in_expanders",
     "expand_command",
     "expanded",
     "found_at",
+    "has_option",
     "joined",
+    "launcher",
     "positional",
+    "program",
     "script_facts",
+    "short_flags",
 ]

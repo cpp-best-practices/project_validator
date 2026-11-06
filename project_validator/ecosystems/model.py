@@ -21,6 +21,7 @@ __all__ = [
     "check_each_ecosystem",
     "combined",
     "ecosystems_for",
+    "labelled",
     "languages_of",
     "toolchain_versions",
     "versions_axis",
@@ -157,12 +158,15 @@ def combined(results: Mapping[Ecosystem, Result]) -> Result:
         results = judged
     if len(results) == 1:
         return next(iter(results.values()))
+    return labelled({ecosystem.label: result for ecosystem, result in results.items()})
+
+
+def labelled(results: Mapping[str, Result]) -> Result:
+    """One result for several subjects, each named by its label: the worst status wins."""
     return Result(
         status=max((result.status for result in results.values()), key=_severity),
-        message="; ".join(f"{ecosystem.label}: {result.message}" for ecosystem, result in results.items()),
-        details=tuple(
-            f"{ecosystem.label}: {detail}" for ecosystem, result in results.items() for detail in result.details
-        ),
+        message="; ".join(f"{label}: {result.message}" for label, result in results.items()),
+        details=tuple(f"{label}: {detail}" for label, result in results.items() for detail in result.details),
     )
 
 

@@ -1,4 +1,41 @@
 {
+  "answers": {
+    "coverage": [
+      {
+        "branch": {
+          "answer": "no",
+          "known": [
+            "SimpleCov enable_coverage :branch"
+          ],
+          "tools": []
+        },
+        "language": "Ruby",
+        "line": {
+          "answer": "no",
+          "known": [
+            "SimpleCov"
+          ],
+          "tools": []
+        },
+        "path": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "region": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "statement": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "unknowns": []
+      }
+    ]
+  },
   "facts": [],
   "map": {
     "build_systems": [
@@ -74,8 +111,10 @@
       "status": "WARN"
     },
     "coverage": {
-      "details": [],
-      "message": "no branch coverage reporting found in .simplecov or the test helpers",
+      "details": [
+        "known to report branch coverage: SimpleCov enable_coverage :branch"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

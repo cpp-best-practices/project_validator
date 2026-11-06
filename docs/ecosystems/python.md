@@ -8,7 +8,9 @@ Recognised by `.py` sources, `pyproject.toml` or `setup.py`.
 
 ## `coverage`
 
-`coverage run --branch`, `--cov-branch` or `branch = true`.
+coverage.py (`coverage run --branch`, or `branch = true` in the configuration it reads: `.coveragerc`, else the first of
+setup.cfg, tox.ini and pyproject.toml with coverage settings) or pytest-cov (`--cov --cov-branch`, also from pytest's
+`addopts`), run directly, as `python -m`, or through uv, Poetry, Pipenv, PDM, Hatch or pipx.
 
 ## `platform-matrix`
 

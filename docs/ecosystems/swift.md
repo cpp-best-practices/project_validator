@@ -10,7 +10,7 @@ settings and schemes count as CI configuration.
 ## `coverage`
 
 Swift's coverage counts regions, not branches, so Swift needs region coverage: `swift test --enable-code-coverage`,
-`xcodebuild -enableCodeCoverage YES`, or a scheme's `codeCoverageEnabled`.
+or `xcodebuild test` with `-enableCodeCoverage YES` or a scheme (or test plan) that turns code coverage on.
 
 ## `platform-matrix`
 

@@ -1,4 +1,47 @@
 {
+  "answers": {
+    "coverage": [
+      {
+        "branch": {
+          "answer": "yes",
+          "known": [
+            "coverage run --branch",
+            "pytest --cov --cov-branch"
+          ],
+          "tools": [
+            "coverage.py"
+          ]
+        },
+        "language": "Python",
+        "line": {
+          "answer": "yes",
+          "known": [
+            "coverage run",
+            "pytest --cov"
+          ],
+          "tools": [
+            "coverage.py"
+          ]
+        },
+        "path": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "region": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "statement": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "unknowns": []
+      }
+    ]
+  },
   "facts": [
     {
       "env": {},
@@ -35,6 +78,22 @@
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
       "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
     },
     {
       "condition": null,
@@ -114,6 +173,25 @@
     },
     {
       "argv": [
+        "pip",
+        "install",
+        "--require-hashes",
+        "-r",
+        "requirements-dev.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "python -m pip install --require-hashes -r requirements-dev.txt",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
         "bandit",
         "-c",
         "pyproject.toml",
@@ -223,6 +301,24 @@
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": []
+    },
+    {
+      "argv": [
+        "coverage",
+        "run",
+        "-m",
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     },
     {
       "env": {},
@@ -278,6 +374,25 @@
     },
     {
       "argv": [
+        "pip",
+        "install",
+        "--require-hashes",
+        "-r",
+        "requirements-dev.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "python -m pip install --require-hashes -r requirements-dev.txt",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
         "bandit",
         "-c",
         "pyproject.toml",
@@ -387,6 +502,24 @@
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": []
+    },
+    {
+      "argv": [
+        "coverage",
+        "run",
+        "-m",
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     },
     {
       "env": {},
@@ -442,6 +575,25 @@
     },
     {
       "argv": [
+        "pip",
+        "install",
+        "--require-hashes",
+        "-r",
+        "requirements-dev.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "python -m pip install --require-hashes -r requirements-dev.txt",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
         "bandit",
         "-c",
         "pyproject.toml",
@@ -551,6 +703,24 @@
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": []
+    },
+    {
+      "argv": [
+        "coverage",
+        "run",
+        "-m",
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     },
     {
       "env": {},
@@ -606,6 +776,25 @@
     },
     {
       "argv": [
+        "pip",
+        "install",
+        "--require-hashes",
+        "-r",
+        "requirements-dev.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "python -m pip install --require-hashes -r requirements-dev.txt",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
         "bandit",
         "-c",
         "pyproject.toml",
@@ -715,6 +904,24 @@
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": []
+    },
+    {
+      "argv": [
+        "coverage",
+        "run",
+        "-m",
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     },
     {
       "env": {},
@@ -770,6 +977,25 @@
     },
     {
       "argv": [
+        "pip",
+        "install",
+        "--require-hashes",
+        "-r",
+        "requirements-dev.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "python -m pip install --require-hashes -r requirements-dev.txt",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
         "bandit",
         "-c",
         "pyproject.toml",
@@ -879,6 +1105,24 @@
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": []
+    },
+    {
+      "argv": [
+        "coverage",
+        "run",
+        "-m",
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     },
     {
       "env": {},
@@ -934,6 +1178,25 @@
     },
     {
       "argv": [
+        "pip",
+        "install",
+        "--require-hashes",
+        "-r",
+        "requirements-dev.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "python -m pip install --require-hashes -r requirements-dev.txt",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
         "bandit",
         "-c",
         "pyproject.toml",
@@ -1043,6 +1306,24 @@
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": []
+    },
+    {
+      "argv": [
+        "coverage",
+        "run",
+        "-m",
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     },
     {
       "env": {},
@@ -1119,6 +1400,144 @@
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
       "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "read": [
+        "pyproject.toml"
+      ],
+      "tool": "coverage.py",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "read": [
+        "pyproject.toml"
+      ],
+      "tool": "coverage.py",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "read": [
+        "pyproject.toml"
+      ],
+      "tool": "coverage.py",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "read": [
+        "pyproject.toml"
+      ],
+      "tool": "coverage.py",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "read": [
+        "pyproject.toml"
+      ],
+      "tool": "coverage.py",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "read": [
+        "pyproject.toml"
+      ],
+      "tool": "coverage.py",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     }
   ],
   "map": {
@@ -1311,7 +1730,7 @@
     },
     "coverage": {
       "details": [],
-      "message": "branch coverage is reported with coverage.py branch = true",
+      "message": "branch coverage is reported with coverage.py",
       "status": "PASS"
     },
     "cxx-extensions": {

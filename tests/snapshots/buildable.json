@@ -1,4 +1,104 @@
 {
+  "answers": {
+    "coverage": [
+      {
+        "branch": {
+          "answer": "no",
+          "known": [
+            "gcovr --xml",
+            "lcov --rc branch_coverage=1",
+            "gcov --branch-counts",
+            "llvm-cov report"
+          ],
+          "tools": []
+        },
+        "language": "C",
+        "line": {
+          "answer": "no",
+          "known": [
+            "gcovr",
+            "lcov",
+            "gcov",
+            "llvm-cov report"
+          ],
+          "tools": []
+        },
+        "path": {
+          "answer": "no",
+          "known": [
+            "lcov --mcdc-coverage",
+            "gcov --conditions",
+            "llvm-cov show -show-mcdc",
+            "gcc -fcondition-coverage",
+            "gcc -fpath-coverage",
+            "clang -fcoverage-mcdc"
+          ],
+          "tools": []
+        },
+        "region": {
+          "answer": "no",
+          "known": [
+            "llvm-cov report"
+          ],
+          "tools": []
+        },
+        "statement": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "unknowns": []
+      },
+      {
+        "branch": {
+          "answer": "no",
+          "known": [
+            "gcovr --xml",
+            "lcov --rc branch_coverage=1",
+            "gcov --branch-counts",
+            "llvm-cov report"
+          ],
+          "tools": []
+        },
+        "language": "C++",
+        "line": {
+          "answer": "no",
+          "known": [
+            "gcovr",
+            "lcov",
+            "gcov",
+            "llvm-cov report"
+          ],
+          "tools": []
+        },
+        "path": {
+          "answer": "no",
+          "known": [
+            "lcov --mcdc-coverage",
+            "gcov --conditions",
+            "llvm-cov show -show-mcdc",
+            "gcc -fcondition-coverage",
+            "gcc -fpath-coverage",
+            "clang -fcoverage-mcdc"
+          ],
+          "tools": []
+        },
+        "region": {
+          "answer": "no",
+          "known": [
+            "llvm-cov report"
+          ],
+          "tools": []
+        },
+        "statement": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "unknowns": []
+      }
+    ]
+  },
   "facts": [],
   "map": {
     "build_systems": [
@@ -66,8 +166,10 @@
       "status": "WARN"
     },
     "coverage": {
-      "details": [],
-      "message": "no branch coverage reporting found in CI configuration or CMake files",
+      "details": [
+        "known to report branch coverage: gcovr --xml, lcov --rc branch_coverage=1, gcov --branch-counts, llvm-cov report"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

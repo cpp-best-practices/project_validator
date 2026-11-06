@@ -10,6 +10,7 @@ import re
 from collections.abc import Iterator
 from dataclasses import dataclass
 
+from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import (
@@ -20,14 +21,23 @@ from project_validator.evidence import (
     json_value,
     scripts_run,
 )
-from project_validator.facts import Command, Origin, Unknown
-from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, positional
+from project_validator.facts import Command, Origin, Unknown, resolved
+from project_validator.facts.coverage import CoverageTool, Granularity, Measure, Measurement, measured
+from project_validator.facts.expansion import (
+    CommandExpander,
+    Expansion,
+    Script,
+    found_at,
+    joined,
+    launcher,
+    positional,
+    program,
+)
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     Analyzer,
     BuildOutputs,
-    CoverageTools,
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
@@ -249,30 +259,110 @@ TESTS = TestSuite(
     texts=_run_texts,
 )
 
-# Istanbul (nyc, jest, vitest's istanbul provider) and V8 coverage (c8, vitest, node, deno) both report branches.
-COVERAGE_CONFIG_FILES = tuple(
-    f"{tool}.config.{suffix}" for tool in ("jest", "vitest", "vite") for suffix in ("js", "cjs", "mjs", "ts", "mts")
+JEST_CONFIG_FILES = tuple(f"jest.config.{suffix}" for suffix in ("js", "cjs", "mjs", "ts", "mts", "cts", "json"))
+VITEST_CONFIG_FILES = tuple(
+    f"{tool}.config.{suffix}" for tool in ("vitest", "vite") for suffix in ("js", "cjs", "mjs", "ts", "mts", "cts")
 )
+_JEST_COLLECTS = re.compile(r"[\"']?collectCoverage[\"']?\s*:\s*true\b")
+_VITEST_ENABLES = re.compile(r"\bcoverage\s*:\s*\{[^}]*\benabled\s*:\s*true\b")
+BOTH = (Granularity.LINE, Granularity.BRANCH)
 
 
-def _coverage_texts(context: Context) -> tuple[str, ...]:
-    return (*_run_texts(context), *existing_texts(context, (PACKAGE_JSON, *COVERAGE_CONFIG_FILES)))
+def _asks_for_coverage(argv: tuple[str, ...], *flags: str) -> bool:
+    return any(word in flags or word in (f"{flag}=true" for flag in flags) for word in argv)
 
 
-COVERAGE = CoverageTools(
-    searched="CI configuration, the package scripts it runs, or the test runner's settings",
-    texts=_coverage_texts,
-    branch=(
-        pattern("c8", r"(?<![\w./@-])c8\s"),
-        pattern("nyc", r"(?<![\w./@-])nyc\s"),
-        pattern("jest --coverage", r"\bjest\b[^\n]*\s--coverage\b|[\"']?collectCoverage[\"']?\s*:\s*true\b"),
-        pattern(
-            "vitest --coverage",
-            r"\bvitest\b[^\n]*\s--coverage\b|\bcoverage\s*:\s*\{[^}]*\benabled\s*:\s*true\b",
-        ),
-        pattern("deno test --coverage", r"\bdeno\s+test\b[^\n]*\s--coverage\b"),
-        pattern("node --experimental-test-coverage", r"\bnode\b[^\n]*\s--experimental-test-coverage\b"),
+def _test_runner(name: str, flags: tuple[str, ...], files: tuple[str, ...], enabled: re.Pattern[str]) -> Measure:
+    """A test runner that reports coverage when one of `flags` asks it to, or when its configuration (the file it is
+    given, else the first of `files`) has it on (heuristically: the configuration is code)."""
+
+    def measures(command: Command, context: Context) -> Measurement | None:
+        argv = resolved(command)
+        if program(argv) != name:
+            return None
+        if _asks_for_coverage(argv, *flags):
+            return measured(*BOTH)
+        path = found_at(context, command.directory, option_values(argv, "--config", "-c") or files)
+        if path is not None and enabled.search(context.project.read_text(path)):
+            return measured(*BOTH, read=[path], heuristic=True)
+        manifest = joined(command.directory, PACKAGE_JSON)
+        if name == "jest" and json_value(context, manifest, "jest", "collectCoverage") is True:
+            return measured(*BOTH, read=[manifest])
+        return None
+
+    return measures
+
+
+def _instrumenter(name: str) -> Measure:
+    """c8 or nyc, which run a command and report its coverage."""
+
+    def measures(command: Command, _: Context) -> Measurement | None:
+        return measured(*BOTH) if program(resolved(command)) == name else None
+
+    return measures
+
+
+def _deno(command: Command, _: Context) -> Measurement | None:
+    argv = resolved(command)
+    asked = any(word.partition("=")[0] == "--coverage" for word in argv)
+    return measured(*BOTH) if program(argv) == "deno" and argv[1:2] == ("test",) and asked else None
+
+
+def _node(command: Command, _: Context) -> Measurement | None:
+    argv = resolved(command)
+    return measured(*BOTH) if program(argv) == "node" and "--experimental-test-coverage" in argv else None
+
+
+def _bun(command: Command, _: Context) -> Measurement | None:
+    """Bun's test runner counts lines (and functions), not branches."""
+    argv = resolved(command)
+    return (
+        measured(Granularity.LINE)
+        if program(argv) == "bun" and argv[1:2] == ("test",) and "--coverage" in argv
+        else None
+    )
+
+
+def _reports_branches(name: str, how: str, measures: Measure) -> CoverageTool:
+    return CoverageTool(
+        name=name, languages=JS_LANGUAGES, can={Granularity.LINE: how, Granularity.BRANCH: how}, measures=measures
+    )
+
+
+JS_LANGUAGES = frozenset({JAVASCRIPT, TYPESCRIPT})
+# Istanbul (nyc, Jest, Vitest's istanbul provider) and V8 coverage (c8, Vitest, Node.js, Deno) both count branches.
+C8 = _reports_branches("c8", "c8", _instrumenter("c8"))
+NYC = _reports_branches("nyc", "nyc", _instrumenter("nyc"))
+JEST = _reports_branches(
+    "Jest",
+    "jest --coverage",
+    _test_runner("jest", ("--coverage", "--collectCoverage"), JEST_CONFIG_FILES, _JEST_COLLECTS),
+)
+VITEST = _reports_branches(
+    "Vitest",
+    "vitest --coverage",
+    _test_runner("vitest", ("--coverage", "--coverage.enabled"), VITEST_CONFIG_FILES, _VITEST_ENABLES),
+)
+DENO_TEST = _reports_branches("deno test", "deno test --coverage", _deno)
+NODE_TEST = _reports_branches("node --test", "node --test --experimental-test-coverage", _node)
+BUN_TEST = CoverageTool(
+    name="bun test", languages=JS_LANGUAGES, can={Granularity.LINE: "bun test --coverage"}, measures=_bun
+)
+# The commands that run a package's binary (`npx c8`).
+PACKAGE_RUNNERS = launcher(
+    "package runners",
+    (
+        ("npx",),
+        ("pnpx",),
+        ("bunx",),
+        ("npm", "exec"),
+        ("pnpm", "exec"),
+        ("pnpm", "dlx"),
+        ("yarn", "exec"),
+        ("yarn", "dlx"),
+        ("bun", "x"),
     ),
+    with_values=frozenset({"-p", "--package", "-c", "--call"}),
 )
 
 ESLINT_CONFIG_FILES = (
@@ -484,7 +574,6 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
     rules=(
         versions_axis("runtime version", "JavaScript runtime"),
         FORMATTERS,
-        COVERAGE,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

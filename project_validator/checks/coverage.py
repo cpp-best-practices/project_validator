@@ -1,21 +1,32 @@
-from project_validator.core import Context, Result
-from project_validator.ecosystems import practice
-from project_validator.rules import CoverageTools
-from project_validator.text import matching_names
+from project_validator.core import Check, Context, Result
+from project_validator.ecosystems import check_each_ecosystem, registered
+from project_validator.ecosystems.model import labelled
+from project_validator.facts.coverage import built_in_coverage_tools
+from project_validator.policy import judge_coverage
+from project_validator.questions.coverage import coverage_answer
 
 
-@practice(
+def _judge(languages: frozenset[str], context: Context) -> Result:
+    """The coverage policy's judgement of each of `languages` the project uses, one result when they agree."""
+    tools = built_in_coverage_tools()
+    results = {
+        language: judge_coverage(coverage_answer(language, context.facts, tools))
+        for language in sorted(languages & context.structure.languages)
+    }
+    if len(set(results.values())) == 1:
+        return next(iter(results.values()))
+    return labelled(results)
+
+
+def _run(context: Context) -> Result:
+    measured = coverage.languages
+    judged = {ecosystem: ecosystem.languages & measured for ecosystem in registered() if ecosystem.languages & measured}
+    return check_each_ecosystem(context, judged, _judge)
+
+
+coverage = Check(
     name="coverage",
-    description="CI reports branch coverage (or the finest the ecosystem measures; path coverage is a bonus)",
-    rule=CoverageTools,
+    description="CI reports branch coverage (or the finest the language's tools measure; path coverage is a bonus)",
+    run=_run,
+    languages=frozenset().union(*(tool.languages for tool in built_in_coverage_tools())),
 )
-def coverage(tools: CoverageTools, context: Context) -> Result:
-    texts = tools.texts(context)
-    branch_tools = matching_names(texts, tools.branch)
-    if not branch_tools:
-        return Result.failed(f"no {tools.granularity} coverage reporting found in {tools.searched}")
-
-    message = f"{tools.granularity} coverage is reported with {', '.join(branch_tools)}"
-    if path_tools := matching_names(texts, tools.path):
-        return Result.passed(f"{message}; path coverage bonus: {', '.join(path_tools)}")
-    return Result.passed(message, *([tools.path_hint] if tools.path_hint else []))

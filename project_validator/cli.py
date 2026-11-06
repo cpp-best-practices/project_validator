@@ -11,6 +11,7 @@ from project_validator import pretty, yaml_support
 from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, Options, Project
 from project_validator.ecosystems import applies_to
 from project_validator.plugins import PluginError, discover
+from project_validator.questions.answers import answers
 from project_validator.runner import Report, SelectionError, run_checks, select, succeeded
 
 EXIT_SUCCESS = 0
@@ -37,14 +38,22 @@ def _mebibytes(value: str) -> int:
     return int(size * 1024 * 1024)
 
 
+# What --map, --facts and --answers print.
+_DUMPS = {
+    "map": "the detected project structure",
+    "facts": "the facts found about the project",
+    "answers": "the answers to every question about the project",
+}
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="project_validator", description="Validate a project's build, CI and tooling against best practices."
     )
     parser.add_argument("path", nargs="?", default=".", type=Path, help="project to validate (default: .)")
     parser.add_argument("--list", action="store_true", help="list the checks (as JSON: with what each applies to)")
-    parser.add_argument("--map", action="store_true", help="print the detected project structure as JSON and exit")
-    parser.add_argument("--facts", action="store_true", help="print the facts found about the project as JSON and exit")
+    for name, what in _DUMPS.items():
+        parser.add_argument(f"--{name}", action="store_true", help=f"print {what} as JSON and exit")
     parser.add_argument("--only", action="append", default=[], metavar="CHECKS", help="run only these checks")
     parser.add_argument("--skip", action="append", default=[], metavar="CHECKS", help="do not run these checks")
     parser.add_argument("--format", choices=("text", "json"), default="text", help="output format")
@@ -154,6 +163,15 @@ def _print_reports(reports: list[Report], arguments: argparse.Namespace) -> None
         _print_text(reports, _use_color(arguments.color))
 
 
+def _dump(context: Context, arguments: argparse.Namespace) -> object:
+    """What --facts, --answers or --map prints."""
+    if arguments.facts:
+        return context.facts.as_dicts()
+    if arguments.answers:
+        return answers(context)
+    return context.structure.as_dict()
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     arguments = parser.parse_args(argv)
@@ -177,9 +195,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     project = Project(arguments.path.resolve(), frozenset(arguments.exclude))
     context = Context(project, plugins.providers, _options(arguments))
-    if arguments.facts or arguments.map:
-        found = context.facts.as_dicts() if arguments.facts else context.structure.as_dict()
-        print(json.dumps(found, indent=2))
+    if arguments.facts or arguments.map or arguments.answers:
+        print(json.dumps(_dump(context, arguments), indent=2))
         return EXIT_SUCCESS
     reports = run_checks(selected, context)
     _print_reports(reports, arguments)

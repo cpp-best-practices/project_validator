@@ -81,11 +81,20 @@ class ToolTests(unittest.TestCase):
         self.assertEqual(run_in_layout(self, SWIFTPM, TESTS_RUN, {}).status, Status.FAIL)
 
     def test_coverage_counts_regions(self) -> None:
-        expected = Result.passed("region coverage is reported with swift test --enable-code-coverage")
+        expected = Result.passed("region coverage is reported with swift test")
         self.assertEqual(run_in_layout(self, SWIFTPM, COVERAGE, _ci("swift test --enable-code-coverage")), expected)
         scheme = {"App.xcodeproj/xcshareddata/xcschemes/App.xcscheme": '<TestAction codeCoverageEnabled = "YES">'}
-        self.assertEqual(run_in_layout(self, XCODE, COVERAGE, scheme).status, Status.PASS)
-        self.assertEqual(run_in_layout(self, XCODE, COVERAGE, _ci("xcodebuild test")).status, Status.FAIL)
+        for files in (
+            {**scheme, **_ci("xcodebuild -scheme App test")},
+            _ci("xcodebuild test -scheme Other -enableCodeCoverage YES"),
+        ):
+            with self.subTest(files=files):
+                result = run_in_layout(self, XCODE, COVERAGE, files)
+                self.assertEqual(result, Result.passed("region coverage is reported with Xcode"))
+        # The scheme counts when CI tests with it.
+        for files in (scheme, _ci("xcodebuild test"), {**scheme, **_ci("xcodebuild -scheme Other test")}):
+            with self.subTest(files=files):
+                self.assertEqual(run_in_layout(self, XCODE, COVERAGE, files).status, Status.FAIL)
 
     def test_swiftlint_and_complete_concurrency_checking(self) -> None:
         swift6 = run_in_layout(self, SWIFTPM, COMPILER_WARNINGS, _ci("swiftlint --strict"))

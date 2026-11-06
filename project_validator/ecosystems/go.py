@@ -6,12 +6,14 @@ from pathlib import PurePosixPath
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
+from project_validator.facts import Command, resolved
+from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
+from project_validator.facts.expansion import has_option, program
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     Analyzer,
     BuildOutputs,
-    CoverageTools,
     DependencyAudit,
     DependencyManagement,
     Formatter,
@@ -21,6 +23,7 @@ from project_validator.rules import (
     StaticAnalysis,
     TestSuite,
     WarningPolicy,
+    ci_configuration,
     directories,
     ignored_at_top_level,
 )
@@ -32,10 +35,6 @@ GO_MODULES = BuildSystem(
 
 GOLANGCI_CONFIG_FILES = (".golangci.yml", ".golangci.yaml", ".golangci.toml", ".golangci.json")
 RUNS_GOLANGCI_LINT = r"\bgolangci-lint\b(?!\s+fmt)|\bgolangci/golangci-lint-action\b"
-
-
-def _ci_texts(context: Context) -> tuple[str, ...]:
-    return context.ci_texts
 
 
 def _no_config(_: Context) -> str | None:
@@ -57,11 +56,22 @@ GOFMT = Formatter(
 )
 
 # The go tool measures statement coverage only.
-COVERAGE = CoverageTools(
-    searched="CI configuration",
-    texts=_ci_texts,
-    granularity="statement",
-    branch=(pattern("go test -cover", r"\bgo\s+test\b[^\n]*\s-(?:cover|coverprofile|covermode)\b"),),
+_COVER = ("-cover", "-coverprofile", "-covermode", "-coverpkg")
+
+
+def _go_cover(command: Command, _: Context) -> Measurement | None:
+    """`go test -cover` (or `go build -cover`), which counts statements (and so lines): nothing finer."""
+    argv = resolved(command)
+    if program(argv) != "go" or argv[1:2] not in (("test",), ("build",)) or not has_option(argv, *_COVER):
+        return None
+    return measured(Granularity.LINE, Granularity.STATEMENT)
+
+
+GO_COVER = CoverageTool(
+    name="go test -cover",
+    languages=frozenset({"Go"}),
+    can={Granularity.LINE: "go test -cover", Granularity.STATEMENT: "go test -cover"},
+    measures=_go_cover,
 )
 
 GO_TEST = re.compile(r"^func\s+(?:Test|Fuzz|Example)\w*\s*\(", re.MULTILINE)
@@ -129,7 +139,7 @@ def _position_independent(context: Context) -> Result:
     )
 
 
-HARDENING = Hardening(texts=_ci_texts, judge=_position_independent)
+HARDENING = Hardening(texts=ci_configuration, judge=_position_independent)
 
 FUNLEN = re.compile(r"(?<![\w-])funlen\b")
 
@@ -222,7 +232,6 @@ GO = Ecosystem(
     rules=(
         versions_axis("Go version", "Go"),
         GOFMT,
-        COVERAGE,
         TESTS,
         WARNINGS,
         HARDENING,

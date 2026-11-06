@@ -10,7 +10,7 @@ from pathlib import Path
 import project_validator
 from project_validator import ecosystems
 from project_validator.core import Context
-from project_validator.ecosystems import BUILT_IN, PROFILES, Ecosystem
+from project_validator.ecosystems import BUILT_IN, PROFILES, Ecosystem, languages_of
 from project_validator.rules import Formatter
 from tests import layouts as tests_layouts
 
@@ -71,11 +71,15 @@ class ArchitectureTests(unittest.TestCase):
                 self.assertEqual(profiles, [])
 
     def test_checks_never_name_languages(self) -> None:
-        """Even a practice only one ecosystem has, such as cxx-extensions, gets its languages from the registry."""
+        """Even a practice only one ecosystem has, such as cxx-extensions, gets its languages from the registry (or
+        from the components that measure them)."""
+        languages = languages_of(BUILT_IN)
         for path in sorted(CHECKS.glob("*.py")):
             with self.subTest(check=path.stem):
+                text = path.read_text(encoding="utf-8")
                 self.assertNotIn("project_validator.ecosystems.C_FAMILY", _imported_modules(path))
-                self.assertNotIn("languages=", path.read_text(encoding="utf-8").replace("languages=languages_of", ""))
+                self.assertNotRegex(text, r"languages=(?:frozenset\(\s*)?[{\[(]")
+                self.assertEqual([language for language in languages if f'"{language}"' in text], [])
 
     def test_rules_never_import_the_ecosystems(self) -> None:
         imported = _imported_modules(PACKAGE / "rules.py")

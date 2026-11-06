@@ -11,13 +11,14 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import configuration, existing_texts, first_existing
 from project_validator.facts import Command, resolved
+from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
+from project_validator.facts.expansion import has_option, program
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     Analyzer,
     BuildOutputs,
     BuildTypes,
-    CoverageTools,
     DependencyAudit,
     DependencyManagement,
     Formatter,
@@ -123,19 +124,51 @@ TESTS = TestSuite(
     runner="swift test or xcodebuild test",
 )
 
+
+def _swift_test(command: Command, _: Context) -> Measurement | None:
+    argv = resolved(command)
+    if program(argv) != "swift" or argv[1:2] != ("test",) or not has_option(argv, "--enable-code-coverage"):
+        return None
+    return measured(Granularity.LINE, Granularity.REGION)
+
+
+_SCHEME_COVERAGE = re.compile(r"\bcodeCoverageEnabled\s*=\s*\"YES\"|\"codeCoverage\"\s*:\s*(?:true|\{)")
+
+
+def _xcodebuild(command: Command, context: Context) -> Measurement | None:
+    """`xcodebuild test`, with code coverage turned on by its options, the scheme it runs or that scheme's test
+    plan (any scheme or test plan when it names none)."""
+    argv = resolved(command)
+    if program(argv) != "xcodebuild" or not {"test", "test-without-building"} & set(argv):
+        return None
+    if "YES" in option_values(argv, "-enableCodeCoverage"):
+        return measured(Granularity.LINE, Granularity.REGION)
+    schemes = tuple(f"/{name}.xcscheme" for name in option_values(argv, "-scheme")) or (".xcscheme",)
+    settings = [path for path in context.project.files() if path.endswith((*schemes, ".xctestplan"))]
+    enabled = [path for path in settings if _SCHEME_COVERAGE.search(context.project.read_text(path))]
+    return measured(Granularity.LINE, Granularity.REGION, read=enabled) if enabled else None
+
+
 # Swift's coverage instrumentation counts regions (each branch of a condition is a region); llvm-cov shows no
-# branches for Swift.
-COVERAGE = CoverageTools(
-    searched="CI configuration or the Xcode schemes",
-    texts=_build_texts,
-    granularity="region",
-    branch=(
-        pattern("swift test --enable-code-coverage", r"\bswift\s+test\b[^\n]*--enable-code-coverage\b"),
-        pattern(
-            "Xcode code coverage",
-            r"-enableCodeCoverage\s+YES\b|\bcodeCoverageEnabled\s*=\s*\"YES\"",
-        ),
-    ),
+# branch coverage for Swift.
+SWIFT_ONLY = frozenset({SWIFT_LANGUAGE})
+SWIFTPM_COVERAGE = CoverageTool(
+    name="swift test",
+    languages=SWIFT_ONLY,
+    can={
+        Granularity.LINE: "swift test --enable-code-coverage",
+        Granularity.REGION: "swift test --enable-code-coverage",
+    },
+    measures=_swift_test,
+)
+XCODE_COVERAGE = CoverageTool(
+    name="Xcode",
+    languages=SWIFT_ONLY,
+    can={
+        Granularity.LINE: "xcodebuild test -enableCodeCoverage YES",
+        Granularity.REGION: "xcodebuild test -enableCodeCoverage YES",
+    },
+    measures=_xcodebuild,
 )
 
 RUNS_SWIFTLINT = r"(?<![\w-])swiftlint\b(?!\.yml)(?![^\n]*\s(?:--fix|autocorrect)\b)|\bSwiftLintPlugin\b"
@@ -271,7 +304,6 @@ SWIFT = Ecosystem(
         SWIFT_TOOLCHAINS,
         BuildTypes(axis=SWIFT_TOOLCHAINS),
         FORMATTERS,
-        COVERAGE,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

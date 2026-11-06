@@ -1,4 +1,43 @@
 {
+  "answers": {
+    "coverage": [
+      {
+        "branch": {
+          "answer": "no",
+          "known": [
+            "jacoco:report or jacocoTestReport",
+            "koverXmlReport"
+          ],
+          "tools": []
+        },
+        "language": "Java",
+        "line": {
+          "answer": "no",
+          "known": [
+            "jacoco:report or jacocoTestReport",
+            "koverXmlReport"
+          ],
+          "tools": []
+        },
+        "path": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "region": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "statement": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "unknowns": []
+      }
+    ]
+  },
   "facts": [],
   "map": {
     "build_systems": [
@@ -68,8 +107,10 @@
       "status": "WARN"
     },
     "coverage": {
-      "details": [],
-      "message": "no branch coverage reporting found in CI configuration, or the Maven or Gradle build CI runs",
+      "details": [
+        "known to report branch coverage: jacoco:report or jacocoTestReport, koverXmlReport"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

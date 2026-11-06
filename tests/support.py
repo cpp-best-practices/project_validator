@@ -198,3 +198,12 @@ def github_job(runs_on: str, *steps: str, matrix: Mapping[str, object] | None = 
     if matrix is not None:
         job["strategy"] = {"matrix": matrix}
     return {GITHUB_WORKFLOW: json.dumps({"jobs": {"build": job}})}
+
+
+def ci_running(provider: str, *commands: str) -> dict[str, str]:
+    """A CI configuration of `provider` (see `CI_FILES`) with a job that runs `commands`."""
+    if provider == "GitHub Actions":
+        return github_job("ubuntu-latest", *commands)
+    if provider == "GitLab CI":
+        return {CI_FILES[provider]: json.dumps({"test": {"script": list(commands)}})}
+    return {CI_FILES[provider]: "".join(f"script: {command}\n" for command in commands)}

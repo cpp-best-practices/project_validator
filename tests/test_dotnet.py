@@ -118,9 +118,20 @@ class TestAndCoverageTests(unittest.TestCase):
             _ci("dotnet-coverage collect dotnet test"),
             _ci("dotnet test --coverage --coverage-output-format cobertura"),
             {**settings, **_ci("dotnet test --settings coverage.runsettings")},
+            {
+                **settings,
+                **_props("RunSettingsFilePath=./coverage.runsettings"),
+                **_ci("dotnet test"),
+            },
+            {**_props("CollectCoverage=true"), **_ci("dotnet test")},
+            _ci("coverlet tests/bin/App.Tests.dll --target dotnet"),
         ):
             with self.subTest(files=files):
                 self.assertEqual(run_as(self, COVERAGE, files, DOTNET).status, Status.PASS)
+        # Settings count when CI runs the tests that read them.
+        for files in (settings, {**settings, **_ci("dotnet test")}, _props("CollectCoverage=true")):
+            with self.subTest(files=files):
+                self.assertEqual(run_as(self, COVERAGE, files, DOTNET).status, Status.FAIL)
 
 
 class SecurityAndAnalysisTests(unittest.TestCase):
