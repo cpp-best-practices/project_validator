@@ -24,7 +24,8 @@ class WarningsAsErrorsTests(unittest.TestCase):
     # equivalents are judged by compiler-warnings.
     def test_declares_the_languages_it_judges(self) -> None:
         self.assertEqual(
-            warnings_as_errors.languages, C_FAMILY | {"JavaScript", "TypeScript", "Java", "Kotlin", "PHP", "C#", "F#"}
+            warnings_as_errors.languages,
+            C_FAMILY | {"JavaScript", "TypeScript", "Java", "Kotlin", "PHP", "C#", "F#", "Swift"},
         )
 
     def test_fails_without_warnings_as_errors(self) -> None:

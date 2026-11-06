@@ -28,6 +28,7 @@ from tests.support import (
     WELL_CONFIGURED_PYTHON,
     WELL_CONFIGURED_RUBY,
     WELL_CONFIGURED_RUST,
+    WELL_CONFIGURED_SWIFT,
     ProjectLayout,
     layout_project,
     requires_rich,
@@ -40,7 +41,20 @@ COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 SKIPPED_BY_PROFILE = {"F#": {"function-limits"}}
 NOT_APPLICABLE = {
     language: {found.name for found in LANGUAGE_SPECIFIC_CHECKS if language not in found.languages}
-    for language in ("Python", "Rust", "Go", "JavaScript", "TypeScript", "Java", "Kotlin", "PHP", "Ruby", "C#", "F#")
+    for language in (
+        "Python",
+        "Rust",
+        "Go",
+        "JavaScript",
+        "TypeScript",
+        "Java",
+        "Kotlin",
+        "PHP",
+        "Ruby",
+        "C#",
+        "F#",
+        "Swift",
+    )
 }
 
 
@@ -82,6 +96,7 @@ class CliTests(unittest.TestCase):
             "Ruby": WELL_CONFIGURED_RUBY,
             "C#": WELL_CONFIGURED_DOTNET,
             "F#": WELL_CONFIGURED_DOTNET,
+            "Swift": WELL_CONFIGURED_SWIFT,
         }
         for layout in OTHER_LANGUAGE_LAYOUTS:
             [language] = layout.languages
@@ -244,7 +259,10 @@ class ListTests(unittest.TestCase):
         matrix = {row["check"]: row["applies_to"] for row in json.loads(output)}
         self.assertEqual(matrix["ci-present"], [])
         self.assertEqual(
-            matrix["coverage"], ["C/C++", "Python", "Rust", "Go", "JavaScript/TypeScript", "JVM", "PHP", "Ruby", ".NET"]
+            matrix["coverage"],
+            ["C/C++", "Python", "Rust", "Go", "JavaScript/TypeScript", "JVM", "PHP", "Ruby", ".NET", "Swift"],
         )
-        self.assertEqual(matrix["warnings-as-errors"], ["C/C++", "JavaScript/TypeScript", "JVM", "PHP", ".NET"])
-        self.assertEqual(matrix["ci-build-types"], ["C/C++", "Rust"])
+        self.assertEqual(
+            matrix["warnings-as-errors"], ["C/C++", "JavaScript/TypeScript", "JVM", "PHP", ".NET", "Swift"]
+        )
+        self.assertEqual(matrix["ci-build-types"], ["C/C++", "Rust", "Swift"])
