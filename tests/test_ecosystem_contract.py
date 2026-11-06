@@ -6,7 +6,16 @@ Adding an ecosystem means adding its profile and these two fixtures; no check ne
 import unittest
 
 from project_validator.core import Status
-from project_validator.ecosystems import BUILT_IN, C_AND_CXX, GO, PYTHON, RUST, Ecosystem, applies_to
+from project_validator.ecosystems import (
+    BUILT_IN,
+    C_AND_CXX,
+    GO,
+    JAVASCRIPT_AND_TYPESCRIPT,
+    PYTHON,
+    RUST,
+    Ecosystem,
+    applies_to,
+)
 from project_validator.plugins import discover
 from project_validator.runner import run_checks
 from tests.support import FIXTURES, make_context
@@ -17,6 +26,7 @@ FIXTURES_OF = {
     PYTHON: ("well_configured_python", "bare_python"),
     RUST: ("well_configured_rust", "bare_rust"),
     GO: ("well_configured_go", "bare_go"),
+    JAVASCRIPT_AND_TYPESCRIPT: ("well_configured_javascript", "bare_javascript"),
 }
 
 

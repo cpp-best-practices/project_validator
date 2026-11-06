@@ -1,0 +1,311 @@
+{
+  "map": {
+    "build_systems": [
+      "npm"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 22)",
+          "os": "linux",
+          "toolchains": [
+            "JavaScript runtime 22"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 24)",
+          "os": "linux",
+          "toolchains": [
+            "JavaScript runtime 24"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 22)",
+          "os": "macos",
+          "toolchains": [
+            "JavaScript runtime 22"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 24)",
+          "os": "macos",
+          "toolchains": [
+            "JavaScript runtime 24"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 22)",
+          "os": "windows",
+          "toolchains": [
+            "JavaScript runtime 22"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 24)",
+          "os": "windows",
+          "toolchains": [
+            "JavaScript runtime 24"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "JavaScript/TypeScript": [
+        "build file package.json",
+        ".js files",
+        ".ts files"
+      ]
+    },
+    "languages": [
+      "JavaScript",
+      "TypeScript"
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 6 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript (applies to C, C++, Rust)",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "CI enforces the prettier style",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict JavaScript linters are enabled: eslint",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "branch coverage is reported with vitest --coverage",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript (applies to C, C++)",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "8 data files parse (JSON: 3, YAML: 5)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "CI audits the dependencies with npm audit",
+      "status": "PASS"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "dependencies are declared in package.json and locked in package-lock.json",
+      "status": "PASS"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with lizard --length 30",
+      "status": "PASS"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript (applies to C, C++, Go, Rust)",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no runtime version",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 22): linux / 22",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 24): linux / 24",
+        ".github/workflows/ci.yml: test (macos-latest, 22): macos / 22",
+        ".github/workflows/ci.yml: test (macos-latest, 24): macos / 24",
+        ".github/workflows/ci.yml: test (windows-latest, 22): windows / 22",
+        ".github/workflows/ci.yml: test (windows-latest, 24): windows / 24",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no runtime version",
+        ".github/workflows/function-limits.yml: function-limits: linux / no runtime version"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 2 runtime version(s) (22, 24), 6 combination(s)",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "security lints are enabled: eslint-plugin-security",
+      "status": "PASS"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "eslint (eslint.config.js) runs",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "JavaScript or TypeScript tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "tsc (tsconfig.json) runs; strict mode bonus: \"strict\": true in tsconfig.json",
+      "status": "PASS"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores node_modules/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with eslint --max-warnings 0",
+      "status": "PASS"
+    }
+  }
+}

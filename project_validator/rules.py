@@ -61,11 +61,17 @@ def versions_axis(noun: str, language: str) -> ToolchainAxis:
     return ToolchainAxis(noun=noun, of_job=of_job, runner_default=_never)
 
 
+def ci_configuration(context: Context) -> tuple[str, ...]:
+    """The texts of the project's CI configuration."""
+    return context.ci_texts
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Formatter:
     """Where an ecosystem's formatting style is defined, and the CI commands that enforce it.
 
-    A formatter with a `default_style` defines the formatting even without a configuration file.
+    A formatter with a `default_style` defines the formatting even without a configuration file. Its commands are
+    searched in `texts`: CI configuration, unless the ecosystem's CI runs them through scripts it can read.
     """
 
     name: str
@@ -73,6 +79,7 @@ class Formatter:
     runs: tuple[Pattern, ...]
     hint: str
     default_style: bool = False
+    texts: Evidence = ci_configuration
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

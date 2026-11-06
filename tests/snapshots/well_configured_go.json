@@ -305,7 +305,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to Go (applies to Python)",
+      "message": "not applicable to Go (applies to JavaScript, Python, TypeScript)",
       "status": "SKIP"
     },
     "vcs-ignore": {
@@ -315,7 +315,7 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Go (applies to C, C++)",
+      "message": "not applicable to Go (applies to C, C++, JavaScript, TypeScript)",
       "status": "SKIP"
     }
   }

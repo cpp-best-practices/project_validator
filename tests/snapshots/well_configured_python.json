@@ -298,7 +298,7 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Python (applies to C, C++)",
+      "message": "not applicable to Python (applies to C, C++, JavaScript, TypeScript)",
       "status": "SKIP"
     }
   }

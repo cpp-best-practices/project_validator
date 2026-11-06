@@ -54,3 +54,17 @@ def _keep_unless_comment(match: re.Match[str]) -> str:
 
 def strip_cmake_comments(text: str) -> str:
     return _CMAKE_TOKENS.sub(_keep_unless_comment, text)
+
+
+# A string, a comment, or a comma that only whitespace separates from the closing bracket.
+_JSONC_TOKENS = re.compile(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/|,(?=\s*[}\]])', re.DOTALL)
+
+
+def _blank_unless_string(match: re.Match[str]) -> str:
+    token = match[0]
+    return token if token.startswith('"') else re.sub(r"[^\n]", " ", token)
+
+
+def strip_json_comments(text: str) -> str:
+    """JSON with comments and trailing commas as plain JSON; comments become blanks, so positions are kept."""
+    return _JSONC_TOKENS.sub(_blank_unless_string, _JSONC_TOKENS.sub(_blank_unless_string, text))
