@@ -19,10 +19,14 @@ class WarningsAsErrorsTests(unittest.TestCase):
             self, warnings_as_errors, files, c_family_layouts_built_with(warnings_as_errors, "CMake")
         )
 
-    # -Werror and /WX are C/C++ compiler flags, and eslint --max-warnings 0 fails JavaScript linting on a warning;
-    # other languages' equivalents are judged by compiler-warnings.
+    # -Werror and /WX are C/C++ compiler flags, and the JVM and .NET compilers have their own; eslint --max-warnings 0
+    # fails JavaScript linting on a warning, and PHPUnit's failOn* settings fail PHP tests on one. Other languages'
+    # equivalents are judged by compiler-warnings.
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(warnings_as_errors.languages, C_FAMILY | {"JavaScript", "TypeScript"})
+        self.assertEqual(
+            warnings_as_errors.languages,
+            C_FAMILY | {"JavaScript", "TypeScript", "Java", "Kotlin", "PHP", "C#", "F#", "Swift"},
+        )
 
     def test_fails_without_warnings_as_errors(self) -> None:
         result = self._run(BARE_PROJECT)

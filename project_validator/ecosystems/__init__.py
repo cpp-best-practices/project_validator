@@ -8,8 +8,10 @@ from pathlib import Path
 
 from project_validator.core import Check, CheckFunction, Context, Result, Status
 from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.dotnet import DOTNET
 from project_validator.ecosystems.go import GO
 from project_validator.ecosystems.javascript import JAVASCRIPT_AND_TYPESCRIPT
+from project_validator.ecosystems.jvm import JVM
 from project_validator.ecosystems.model import (
     C_FAMILY,
     BuildSystem,
@@ -22,10 +24,13 @@ from project_validator.ecosystems.model import (
     languages_of,
     toolchain_versions,
 )
+from project_validator.ecosystems.php import PHP
 from project_validator.ecosystems.python import PYTHON
+from project_validator.ecosystems.ruby import RUBY
 from project_validator.ecosystems.rust import RUST
+from project_validator.ecosystems.swift import SWIFT
 
-BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT)
+BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM, PHP, RUBY, DOTNET, SWIFT)
 
 _registered: list[Ecosystem] = list(BUILT_IN)
 
@@ -169,6 +174,16 @@ def judge_ecosystem[R](
     return Result(status=Status.SKIP, message=f"not applicable to {ecosystem.label} built with {used}")
 
 
+def judge_each_ecosystem[R](context: Context, kind: type[R], judge: Judge[R]) -> Result:
+    """`judge` of the rule of type `kind` of each ecosystem the project uses, for the build systems it uses (see
+    `judge_ecosystem`): the worst result wins, and findings are labelled."""
+    structure = context.structure
+    used = ecosystems_for(structure.languages, providers(kind))
+    return combined(
+        {ecosystem: judge_ecosystem(ecosystem, kind, judge, context, structure.build_systems) for ecosystem in used}
+    )
+
+
 def practice[R](
     *, name: str, description: str, rule: type[R], aliases: tuple[str, ...] = ()
 ) -> Callable[[Judge[R]], Check]:
@@ -180,14 +195,7 @@ def practice[R](
 
     def wrap(judge: Judge[R]) -> Check:
         def run(context: Context) -> Result:
-            structure = context.structure
-            used = ecosystems_for(structure.languages, providers(rule))
-            return combined(
-                {
-                    ecosystem: judge_ecosystem(ecosystem, rule, judge, context, structure.build_systems)
-                    for ecosystem in used
-                }
-            )
+            return judge_each_ecosystem(context, rule, judge)
 
         languages = languages_of(providers(rule))
         return Check(name=name, description=description, run=run, languages=languages, rule=rule, aliases=aliases)
@@ -204,10 +212,15 @@ __all__ = [
     "BUILT_IN",
     "C_AND_CXX",
     "C_FAMILY",
+    "DOTNET",
     "GO",
     "JAVASCRIPT_AND_TYPESCRIPT",
+    "JVM",
+    "PHP",
     "PYTHON",
+    "RUBY",
     "RUST",
+    "SWIFT",
     "BuildSystem",
     "Ecosystem",
     "RegistryError",
@@ -222,6 +235,7 @@ __all__ = [
     "ecosystems_for",
     "is_build_tree",
     "isolated_registry",
+    "judge_each_ecosystem",
     "judge_ecosystem",
     "languages_of",
     "practice",

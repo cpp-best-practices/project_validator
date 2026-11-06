@@ -4,5 +4,6 @@
   "format": ["python"],
   "gitignore": true,
   "ignore": ["**/__pycache__/**", "**/.venv/**", "**/*.egg-info/**"],
+  "ignorePattern": ["from [\\w.]+ import \\([^)]*\\)"],
   "path": ["project_validator", "tests"]
 }

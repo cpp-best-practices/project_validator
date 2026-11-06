@@ -107,11 +107,16 @@ class CoverageTools:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class TestSuite:
-    """How an ecosystem's tests are found, and how CI is recognised running them."""
+    """How an ecosystem's tests are found, and how CI is recognised running them.
+
+    Their runners are searched in `texts`: CI configuration, unless the ecosystem's CI runs them through scripts it
+    can read.
+    """
 
     found: Callable[[Context], Result]
     runs: tuple[Pattern, ...]
     runner: str
+    texts: Evidence = ci_configuration
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -165,10 +170,15 @@ class SecurityLints:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class DependencyAudit:
-    """The tools that check an ecosystem's dependencies against known vulnerabilities when CI runs them."""
+    """The tools that check an ecosystem's dependencies against known vulnerabilities when CI runs them.
+
+    They are searched in `texts`: CI configuration, unless the ecosystem's CI runs them through files it can read,
+    such as a build that runs its plugins.
+    """
 
     tools: tuple[Pattern, ...]
     hint: str
+    texts: Evidence = ci_configuration
 
 
 def _nothing(_: Context) -> str | None:

@@ -20,10 +20,15 @@ from tests.support import (
     OTHER_LANGUAGE_LAYOUTS,
     PROJECT_LAYOUTS,
     WELL_CONFIGURED,
+    WELL_CONFIGURED_DOTNET,
     WELL_CONFIGURED_GO,
     WELL_CONFIGURED_JAVASCRIPT,
+    WELL_CONFIGURED_JVM,
+    WELL_CONFIGURED_PHP,
     WELL_CONFIGURED_PYTHON,
+    WELL_CONFIGURED_RUBY,
     WELL_CONFIGURED_RUST,
+    WELL_CONFIGURED_SWIFT,
     ProjectLayout,
     layout_project,
     requires_rich,
@@ -32,9 +37,24 @@ from tests.support import (
 LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages)
 COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
+# Language -> the checks that apply to it but that its profile skips: no known tool limits F# function length.
+SKIPPED_BY_PROFILE = {"F#": {"function-limits"}}
 NOT_APPLICABLE = {
     language: {found.name for found in LANGUAGE_SPECIFIC_CHECKS if language not in found.languages}
-    for language in ("Python", "Rust", "Go", "JavaScript", "TypeScript")
+    for language in (
+        "Python",
+        "Rust",
+        "Go",
+        "JavaScript",
+        "TypeScript",
+        "Java",
+        "Kotlin",
+        "PHP",
+        "Ruby",
+        "C#",
+        "F#",
+        "Swift",
+    )
 }
 
 
@@ -70,6 +90,13 @@ class CliTests(unittest.TestCase):
             "Go": WELL_CONFIGURED_GO,
             "JavaScript": WELL_CONFIGURED_JAVASCRIPT,
             "TypeScript": WELL_CONFIGURED_JAVASCRIPT,
+            "Java": WELL_CONFIGURED_JVM,
+            "Kotlin": WELL_CONFIGURED_JVM,
+            "PHP": WELL_CONFIGURED_PHP,
+            "Ruby": WELL_CONFIGURED_RUBY,
+            "C#": WELL_CONFIGURED_DOTNET,
+            "F#": WELL_CONFIGURED_DOTNET,
+            "Swift": WELL_CONFIGURED_SWIFT,
         }
         for layout in OTHER_LANGUAGE_LAYOUTS:
             [language] = layout.languages
@@ -147,7 +174,8 @@ class CliTests(unittest.TestCase):
                     self.assertEqual(code, EXIT_FAILURE, output)
                     for name in COMPILER_CHECKS.split(","):
                         skipped = f"[SKIP] {name}:" in output
-                        self.assertEqual(skipped, name in NOT_APPLICABLE[language], name)
+                        expected = NOT_APPLICABLE[language] | SKIPPED_BY_PROFILE.get(language, set())
+                        self.assertEqual(skipped, name in expected, name)
 
     def test_compiler_checks_run_for_c_family_languages(self) -> None:
         for layout in C_FAMILY_LAYOUTS:
@@ -230,6 +258,11 @@ class ListTests(unittest.TestCase):
         self.assertEqual(code, EXIT_SUCCESS)
         matrix = {row["check"]: row["applies_to"] for row in json.loads(output)}
         self.assertEqual(matrix["ci-present"], [])
-        self.assertEqual(matrix["coverage"], ["C/C++", "Python", "Rust", "Go", "JavaScript/TypeScript"])
-        self.assertEqual(matrix["warnings-as-errors"], ["C/C++", "JavaScript/TypeScript"])
-        self.assertEqual(matrix["ci-build-types"], ["C/C++", "Rust"])
+        self.assertEqual(
+            matrix["coverage"],
+            ["C/C++", "Python", "Rust", "Go", "JavaScript/TypeScript", "JVM", "PHP", "Ruby", ".NET", "Swift"],
+        )
+        self.assertEqual(
+            matrix["warnings-as-errors"], ["C/C++", "JavaScript/TypeScript", "JVM", "PHP", ".NET", "Swift"]
+        )
+        self.assertEqual(matrix["ci-build-types"], ["C/C++", "Rust", "Swift"])
