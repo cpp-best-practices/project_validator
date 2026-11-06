@@ -3,7 +3,10 @@ from pathlib import Path, PurePosixPath
 
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Context, Options, Project, Result, Status
-from project_validator.ecosystems import C_AND_CXX, C_FAMILY, PYTHON, RUST
+from project_validator.ecosystems import C_FAMILY
+from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.python import PYTHON
+from project_validator.ecosystems.rust import RUST
 from project_validator.plugins import discover
 from tests.support import (
     NO_FILES,
@@ -26,7 +29,7 @@ def _run_with(test: unittest.TestCase, ignore_file: str, text: str) -> Result:
 
 class VcsIgnoreTests(unittest.TestCase):
     def test_declares_the_languages_it_judges(self) -> None:
-        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        # Profiles and plugins add languages, so only the stable ones are pinned.
         self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, vcs_ignore.languages)
 
     def test_fails_without_an_ignore_file_in_every_layout(self) -> None:

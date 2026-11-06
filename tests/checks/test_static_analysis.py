@@ -2,10 +2,14 @@ import unittest
 
 from project_validator.checks.static_analysis import static_analysis
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_AND_CXX, C_FAMILY, GO, PYTHON, RUST
+from project_validator.ecosystems import C_FAMILY
+from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.ecosystems.c_cpp.clang_tidy import STATIC_ANALYSIS as C_AND_CXX_ANALYSIS
+from project_validator.ecosystems.go import GO
 from project_validator.ecosystems.go import STATIC_ANALYSIS as GO_ANALYSIS
+from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.python import STATIC_ANALYSIS as PYTHON_ANALYSIS
+from project_validator.ecosystems.rust import RUST
 from project_validator.ecosystems.rust import STATIC_ANALYSIS as RUST_ANALYSIS
 from tests.support import (
     BARE_PROJECT,

@@ -19,7 +19,7 @@ class StatusBadgesTests(unittest.TestCase):
         self.assertEqual(status_badges.languages, frozenset())
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
-        result = status_badges.run(make_context(FIXTURES / "well_configured"))
+        result = status_badges.run(make_context(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(result, Result.passed("README.md shows CI (GitHub Actions) and quality (Codecov) badges"))
 
     def test_fails_without_a_readme_or_badges(self) -> None:

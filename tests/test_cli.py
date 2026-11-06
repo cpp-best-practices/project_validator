@@ -9,8 +9,9 @@ from unittest import mock
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
-from project_validator.ecosystems import C_FAMILY
+from project_validator.ecosystems import C_FAMILY, applies_to
 from project_validator.plugins import discover
+from tests.layouts.model import ProjectLayout
 from tests.support import (
     BARE_PROJECT,
     C_FAMILY_LAYOUTS,
@@ -20,41 +21,19 @@ from tests.support import (
     OTHER_LANGUAGE_LAYOUTS,
     PROJECT_LAYOUTS,
     WELL_CONFIGURED,
-    WELL_CONFIGURED_DOTNET,
-    WELL_CONFIGURED_GO,
-    WELL_CONFIGURED_JAVASCRIPT,
-    WELL_CONFIGURED_JVM,
-    WELL_CONFIGURED_PHP,
     WELL_CONFIGURED_PYTHON,
-    WELL_CONFIGURED_RUBY,
-    WELL_CONFIGURED_RUST,
-    WELL_CONFIGURED_SWIFT,
-    ProjectLayout,
     layout_project,
     requires_rich,
+    well_configured,
 )
 
 LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages)
 COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
-# Language -> the checks that apply to it but that its profile skips: no known tool limits F# function length.
-SKIPPED_BY_PROFILE = {"F#": {"function-limits"}}
 NOT_APPLICABLE = {
     language: {found.name for found in LANGUAGE_SPECIFIC_CHECKS if language not in found.languages}
-    for language in (
-        "Python",
-        "Rust",
-        "Go",
-        "JavaScript",
-        "TypeScript",
-        "Java",
-        "Kotlin",
-        "PHP",
-        "Ruby",
-        "C#",
-        "F#",
-        "Swift",
-    )
+    for layout in OTHER_LANGUAGE_LAYOUTS
+    for language in layout.languages
 }
 
 
@@ -84,23 +63,9 @@ class CliTests(unittest.TestCase):
                 self.assertIn("[PASS] coverage:", output)
 
     def test_well_configured_projects_in_other_languages_pass_strictly(self) -> None:
-        projects = {
-            "Python": WELL_CONFIGURED_PYTHON,
-            "Rust": WELL_CONFIGURED_RUST,
-            "Go": WELL_CONFIGURED_GO,
-            "JavaScript": WELL_CONFIGURED_JAVASCRIPT,
-            "TypeScript": WELL_CONFIGURED_JAVASCRIPT,
-            "Java": WELL_CONFIGURED_JVM,
-            "Kotlin": WELL_CONFIGURED_JVM,
-            "PHP": WELL_CONFIGURED_PHP,
-            "Ruby": WELL_CONFIGURED_RUBY,
-            "C#": WELL_CONFIGURED_DOTNET,
-            "F#": WELL_CONFIGURED_DOTNET,
-            "Swift": WELL_CONFIGURED_SWIFT,
-        }
         for layout in OTHER_LANGUAGE_LAYOUTS:
             [language] = layout.languages
-            with layout_project(self, layout, projects[language]) as root:
+            with layout_project(self, layout, well_configured(layout)) as root:
                 code, output, _ = run_cli("--strict", str(root))
                 self.assertEqual(code, EXIT_SUCCESS, output)
                 for name in COMPILER_CHECKS.split(","):
@@ -144,7 +109,7 @@ class CliTests(unittest.TestCase):
                 )
 
     def test_map_prints_the_project_structure(self) -> None:
-        code, output, _ = run_cli("--map", str(FIXTURES / "well_configured"))
+        code, output, _ = run_cli("--map", str(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(code, EXIT_SUCCESS)
         mapped = json.loads(output)
         self.assertEqual(mapped["languages"], ["C", "C++"])
@@ -174,7 +139,7 @@ class CliTests(unittest.TestCase):
                     self.assertEqual(code, EXIT_FAILURE, output)
                     for name in COMPILER_CHECKS.split(","):
                         skipped = f"[SKIP] {name}:" in output
-                        expected = NOT_APPLICABLE[language] | SKIPPED_BY_PROFILE.get(language, set())
+                        expected = NOT_APPLICABLE[language] | layout.skipped
                         self.assertEqual(skipped, name in expected, name)
 
     def test_compiler_checks_run_for_c_family_languages(self) -> None:
@@ -201,14 +166,14 @@ class CliTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, EXIT_USAGE)
 
     def test_max_file_size_sets_the_large_file_limit(self) -> None:
-        code, output, _ = run_cli("--only", "large-files", "--max-file-size", "0.5", str(FIXTURES / "bare_project"))
+        code, output, _ = run_cli("--only", "large-files", "--max-file-size", "0.5", str(FIXTURES / "bare_c_cpp"))
         self.assertEqual(
             (code, output.strip()), (EXIT_SUCCESS, "[PASS] large-files: no committed file is larger than 512 KiB")
         )
 
     @requires_rich
     def test_color_always_beautifies_the_output(self) -> None:
-        code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured"))
+        code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
         applicable = [found for found in discover().checks if not found.languages or found.languages & C_FAMILY]
@@ -216,33 +181,33 @@ class CliTests(unittest.TestCase):
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
         for choice in ("never", "auto"):
-            _, output, _ = run_cli("--color", choice, str(FIXTURES / "well_configured"))
+            _, output, _ = run_cli("--color", choice, str(FIXTURES / "well_configured_c_cpp"))
             self.assertNotIn("\x1b[", output)
             self.assertIn("[PASS] coverage:", output)
 
     def test_color_auto_is_used_for_a_terminal_unless_no_color_is_set(self) -> None:
         with mock.patch.object(pretty, "available", return_value=False):
             with mock.patch.dict("os.environ", {}, clear=True):
-                self.assertIn("install rich", run_cli(str(FIXTURES / "well_configured"), terminal=True)[2])
+                self.assertIn("install rich", run_cli(str(FIXTURES / "well_configured_c_cpp"), terminal=True)[2])
             with mock.patch.dict("os.environ", {"NO_COLOR": "1"}):
-                self.assertEqual(run_cli(str(FIXTURES / "well_configured"), terminal=True)[2], "")
+                self.assertEqual(run_cli(str(FIXTURES / "well_configured_c_cpp"), terminal=True)[2], "")
 
     def test_color_without_rich_falls_back_to_plain_text_and_says_so(self) -> None:
         with mock.patch.object(pretty, "_rich", None):
-            code, output, errors = run_cli("--color", "always", str(FIXTURES / "well_configured"))
+            code, output, errors = run_cli("--color", "always", str(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("[PASS] coverage:", output)
         self.assertIn("install rich", errors)
 
     def test_missing_pyyaml_is_an_error_instead_of_reduced_accuracy(self) -> None:
         with mock.patch.object(yaml_support, "_yaml", None):
-            code, output, error = run_cli(str(FIXTURES / "well_configured"))
+            code, output, error = run_cli(str(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual((code, output), (EXIT_USAGE, ""))
         self.assertIn("PyYAML", error)
 
     def test_pyyaml_can_not_be_disabled(self) -> None:
         with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
-            main(["--no-yaml", str(FIXTURES / "well_configured")])
+            main(["--no-yaml", str(FIXTURES / "well_configured_c_cpp")])
 
 
 class DependencyTests(unittest.TestCase):
@@ -257,12 +222,7 @@ class ListTests(unittest.TestCase):
         code, output, _ = run_cli("--list", "--format", "json")
         self.assertEqual(code, EXIT_SUCCESS)
         matrix = {row["check"]: row["applies_to"] for row in json.loads(output)}
+        self.assertEqual(matrix, {found.name: list(applies_to(found)) for found in discover().checks})
         self.assertEqual(matrix["ci-present"], [])
-        self.assertEqual(
-            matrix["coverage"],
-            ["C/C++", "Python", "Rust", "Go", "JavaScript/TypeScript", "JVM", "PHP", "Ruby", ".NET", "Swift"],
-        )
-        self.assertEqual(
-            matrix["warnings-as-errors"], ["C/C++", "JavaScript/TypeScript", "JVM", "PHP", ".NET", "Swift"]
-        )
-        self.assertEqual(matrix["ci-build-types"], ["C/C++", "Rust", "Swift"])
+        self.assertIn("C/C++", matrix["ci-build-types"])
+        self.assertNotIn("Python", matrix["ci-build-types"])

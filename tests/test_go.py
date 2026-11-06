@@ -11,7 +11,7 @@ from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.tests_run import tests_run
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems import GO
+from project_validator.ecosystems.go import GO
 from tests.support import GITHUB_WORKFLOW, github_job, run_as
 
 TEST_FILE = {"app_test.go": 'package app\n\nimport "testing"\n\nfunc TestAdd(t *testing.T) {}\n'}

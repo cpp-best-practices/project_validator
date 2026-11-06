@@ -2,8 +2,10 @@ import unittest
 
 from project_validator.checks.type_checking import type_checking
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_AND_CXX, GO, PYTHON, RUST
-from project_validator.ecosystems.python import TYPE_CHECKING
+from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.go import GO
+from project_validator.ecosystems.python import PYTHON, TYPE_CHECKING
+from project_validator.ecosystems.rust import RUST
 from tests.support import FIXTURES, WELL_CONFIGURED_PYTHON, github_job, make_context, run_as
 
 HINT = TYPE_CHECKING.hint
@@ -29,7 +31,7 @@ class TypeCheckingTests(unittest.TestCase):
         self.assertEqual(self._run(WELL_CONFIGURED_PYTHON), expected)
 
     def test_compiled_ecosystems_are_skipped(self) -> None:
-        self.assertEqual(type_checking.run(make_context(FIXTURES / "well_configured")).status, Status.SKIP)
+        self.assertEqual(type_checking.run(make_context(FIXTURES / "well_configured_c_cpp")).status, Status.SKIP)
 
     def test_fails_when_no_type_checker_runs(self) -> None:
         self.assertEqual(self._run(_ci("pytest")), Result.failed("no type checker runs", HINT))

@@ -4,8 +4,7 @@ import json
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems import PHP
-from project_validator.ecosystems.php import DEPENDENCIES, TYPE_CHECKING, VENDOR
+from project_validator.ecosystems.php import DEPENDENCIES, PHP, TYPE_CHECKING, VENDOR
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, run_as, run_in_layout
 
 (

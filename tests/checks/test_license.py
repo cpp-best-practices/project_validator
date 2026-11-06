@@ -5,7 +5,7 @@ from project_validator.checks.license import license_
 from project_validator.core import Result, Status
 from tests.support import FIXTURES, make_context, temp_project
 
-MIT = (FIXTURES / "well_configured" / "LICENSE").read_text(encoding="utf-8")
+MIT = (FIXTURES / "well_configured_c_cpp" / "LICENSE").read_text(encoding="utf-8")
 APACHE = "                                 Apache License\n                           Version 2.0, January 2004\n"
 
 # SPDX identifier -> the opening of the license's text, as it appears in a license file.

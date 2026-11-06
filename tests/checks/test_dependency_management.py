@@ -4,11 +4,14 @@ from collections.abc import Mapping
 
 from project_validator.checks.dependency_management import VENDOR_HINT, dependency_management
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_FAMILY, GO, PYTHON, RUST
+from project_validator.ecosystems import C_FAMILY
 from project_validator.ecosystems.c_cpp.dependencies import DEPENDENCIES as C_AND_CXX_DEPENDENCIES
 from project_validator.ecosystems.go import DEPENDENCIES as GO_DEPENDENCIES
+from project_validator.ecosystems.go import GO
 from project_validator.ecosystems.python import DEPENDENCIES as PYTHON_DEPENDENCIES
+from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import DEPENDENCIES as RUST_DEPENDENCIES
+from project_validator.ecosystems.rust import RUST
 from tests.support import (
     FIXTURES,
     WELL_CONFIGURED,
@@ -36,7 +39,7 @@ class DependencyManagementTests(unittest.TestCase):
 
     def test_the_fixtures(self) -> None:
         cases = {
-            "well_configured": Result.passed("dependencies are managed with FetchContent"),
+            "well_configured_c_cpp": Result.passed("dependencies are managed with FetchContent"),
             "well_configured_python": Result.passed(
                 "dependencies are declared in pyproject.toml and locked in uv.lock"
             ),
@@ -46,7 +49,7 @@ class DependencyManagementTests(unittest.TestCase):
         for fixture, expected in cases.items():
             with self.subTest(fixture):
                 self.assertEqual(dependency_management.run(make_context(FIXTURES / fixture)), expected)
-        for fixture in ("bare_project", "bare_python", "bare_rust", "bare_go"):
+        for fixture in ("bare_c_cpp", "bare_python", "bare_rust", "bare_go"):
             with self.subTest(fixture):
                 self.assertEqual(dependency_management.run(make_context(FIXTURES / fixture)).status, Status.WARN)
 

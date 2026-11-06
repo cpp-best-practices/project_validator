@@ -54,7 +54,7 @@ class ActionPinningTests(unittest.TestCase):
         self.assertEqual(action_pinning.languages, frozenset())
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
-        result = action_pinning.run(make_context(FIXTURES / "well_configured"))
+        result = action_pinning.run(make_context(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(result, Result.passed("all 7 actions are pinned to a commit"))
 
     def test_is_skipped_without_a_ci_provider_that_has_reusable_steps(self) -> None:
