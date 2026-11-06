@@ -2,48 +2,54 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "c8",
-            "nyc",
-            "jest --coverage",
-            "vitest --coverage",
-            "deno test --coverage",
-            "node --test --experimental-test-coverage"
-          ],
-          "tools": []
-        },
         "language": "JavaScript",
-        "line": {
-          "answer": "no",
-          "known": [
-            "c8",
-            "nyc",
-            "jest --coverage",
-            "vitest --coverage",
-            "deno test --coverage",
-            "node --test --experimental-test-coverage",
-            "bun test --coverage"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "c8",
+                "nyc",
+                "jest --coverage",
+                "vitest --coverage",
+                "deno test --coverage",
+                "node --test --experimental-test-coverage"
+              ],
+              "tools": []
+            },
+            "language": "JavaScript",
+            "line": {
+              "answer": "no",
+              "known": [
+                "c8",
+                "nyc",
+                "jest --coverage",
+                "vitest --coverage",
+                "deno test --coverage",
+                "node --test --experimental-test-coverage",
+                "bun test --coverage"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -70,6 +76,16 @@
       "suffix": ".info"
     },
     {
+      "build_systems": [
+        "npm"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "JavaScript"
+      ],
+      "origin": "."
+    },
+    {
       "kind": "ConfigurationFile",
       "origin": "package.json",
       "reader": "Jest"
@@ -92,6 +108,17 @@
     },
     "languages": [
       "JavaScript"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "npm"
+        ],
+        "directory": ".",
+        "languages": [
+          "JavaScript"
+        ]
+      }
     ],
     "unrecognised_suffixes": [
       {

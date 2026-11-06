@@ -9,14 +9,15 @@ from collections.abc import Callable, Iterator
 from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
 
-from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
-from project_validator.facts.expansion import joined, program
+from project_validator.facts.arguments import option_values, program
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.expansion import joined
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
+from project_validator.facts.tools import Run
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -168,7 +169,7 @@ def _relative(setting: Setting) -> str:
     return joined(directory, str(setting.value).replace("\\", "/").removeprefix("./"))
 
 
-def _coverlet(command: Command, facts: Facts) -> Measurement | None:
+def _coverlet(command: Command, facts: Facts) -> Run | None:
     """coverlet: its data collector (`--collect "XPlat Code Coverage"`, or a .runsettings that adds it), its MSBuild
     integration (`CollectCoverage=true` on the command line or in the project settings), or its console tool."""
     if program(resolved(command)) == "coverlet":
@@ -194,7 +195,7 @@ def _coverlet(command: Command, facts: Facts) -> Measurement | None:
     return measured(Granularity.LINE, Granularity.BRANCH, read=read) if read else None
 
 
-def _microsoft_coverage(command: Command, _: Facts) -> Measurement | None:
+def _microsoft_coverage(command: Command, _: Facts) -> Run | None:
     """Microsoft code coverage: `dotnet-coverage collect`, or Microsoft.Testing.Platform's `dotnet test --coverage`."""
     argv = resolved(command)
     collects = program(argv) == "dotnet-coverage" and argv[1:2] == ("collect",)
@@ -204,7 +205,7 @@ def _microsoft_coverage(command: Command, _: Facts) -> Measurement | None:
 
 
 DOTNET_LANGUAGES = frozenset({CSHARP, FSHARP})
-COVERLET = CoverageTool(
+COVERLET = coverage_tool(
     name="coverlet",
     languages=DOTNET_LANGUAGES,
     can={
@@ -214,7 +215,7 @@ COVERLET = CoverageTool(
     measures=_coverlet,
     reads=("MSBuild", "VSTest"),
 )
-MICROSOFT_CODE_COVERAGE = CoverageTool(
+MICROSOFT_CODE_COVERAGE = coverage_tool(
     name="Microsoft code coverage",
     languages=DOTNET_LANGUAGES,
     can={Granularity.LINE: "dotnet-coverage collect", Granularity.BRANCH: "dotnet-coverage collect"},

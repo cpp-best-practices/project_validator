@@ -4,6 +4,7 @@ Everything the validator knows about one ecosystem lives in that ecosystem's pro
 """
 
 import re
+import tomllib
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -30,6 +31,21 @@ __all__ = [
 C_FAMILY = frozenset({"C", "C++"})
 
 
+def toml_members(*table: str) -> Callable[[str], tuple[str, ...]]:
+    """Workspace members listed under `members` in TOML `table` (Cargo's `workspace`, uv's `tool.uv.workspace`)."""
+
+    def members(text: str) -> tuple[str, ...]:
+        try:
+            value: object = tomllib.loads(text)
+        except tomllib.TOMLDecodeError:
+            return ()
+        for key in (*table, "members"):
+            value = value.get(key) if isinstance(value, Mapping) else None
+        return tuple(str(member) for member in value) if isinstance(value, list) else ()
+
+    return members
+
+
 def _reject_duplicate_rules(owner: str, rules: tuple[object, ...]) -> None:
     kinds = [type(rule) for rule in rules]
     if duplicates := sorted({kind.__name__ for kind in kinds if kinds.count(kind) > 1}):
@@ -49,6 +65,8 @@ class BuildSystem:
     The languages it builds are `languages`, plus those `declared_languages` reads from one of its build files.
     A directory for which `is_build_tree` is true holds its build output and is never inspected.
     `build_types` reads the build types (`debug`, `release`) a command of the build system builds.
+    `members` reads, from a build file, the directories (globs relative to it) of the workspace it declares; each
+    member is a unit of the project of its own (see `project_validator.facts.structure.Unit`).
     `rules` are those of its ecosystem's practices that depend on the build system (see `Ecosystem.rule_for`).
     """
 
@@ -58,6 +76,7 @@ class BuildSystem:
     declared_languages: Callable[[str], frozenset[str]] | None = None
     is_build_tree: Callable[[Path], bool] | None = None
     build_types: Callable[[Command], frozenset[str]] | None = None
+    members: Callable[[str], tuple[str, ...]] | None = None
     rules: tuple[object, ...] = field(default=(), repr=False)
 
     def __post_init__(self) -> None:

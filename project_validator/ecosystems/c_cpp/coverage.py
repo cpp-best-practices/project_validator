@@ -6,11 +6,12 @@ They move to the shared tools and toolchains once a second language uses them (F
 import re
 from collections.abc import Callable, Iterable
 
-from project_validator.build_configurations import option_values
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
-from project_validator.facts.expansion import has_option, joined, program, short_flags
+from project_validator.facts.arguments import has_option, option_values, program, short_flags
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.expansion import joined
 from project_validator.facts.settings import SettingsReader, key_value_settings, matched_settings
+from project_validator.facts.tools import Run, Tool
 from project_validator.text import strip_cmake_comments
 
 C_AND_CXX = frozenset({"C", "C++"})
@@ -81,7 +82,7 @@ def _configuration(tool: str, command: Command, facts: Facts, named: list[str], 
     return facts.settings(tool, paths=named[:1] or [joined(command.directory, default)])
 
 
-def _gcovr(command: Command, facts: Facts) -> Measurement | None:
+def _gcovr(command: Command, facts: Facts) -> Run | None:
     argv = resolved(command)
     if program(argv) not in _GCOVR:
         return None
@@ -99,7 +100,7 @@ def _rc_enabled(settings: list[str], *names: str) -> bool:
     return any(re.fullmatch(rf"(?:lcov_)?(?:{'|'.join(names)})\s*=\s*1", setting.strip()) for setting in settings)
 
 
-def _lcov(command: Command, facts: Facts) -> Measurement | None:
+def _lcov(command: Command, facts: Facts) -> Run | None:
     argv = resolved(command)
     if program(argv) not in _LCOV_PROGRAMS:
         return None
@@ -110,14 +111,14 @@ def _lcov(command: Command, facts: Facts) -> Measurement | None:
     return measured(LINE, BRANCH if branch else None, PATH if path else None, read=read)
 
 
-def _gcov_options(argv: tuple[str, ...]) -> Measurement:
+def _gcov_options(argv: tuple[str, ...]) -> Run:
     letters = short_flags(argv)
     branch = bool(letters & {"b", "c"}) or has_option(argv, "--branch-probabilities", "--branch-counts")
     path = "g" in letters or has_option(argv, "--conditions") or any(word.startswith("--prime-paths") for word in argv)
     return measured(LINE, BRANCH if branch else None, PATH if path else None)
 
 
-def _gcov(command: Command, _: Facts) -> Measurement | None:
+def _gcov(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
     if re.fullmatch(r"(?:\w+-)*gcov(?:-\d+)?", program(argv)):
         return _gcov_options(argv)
@@ -127,7 +128,7 @@ def _gcov(command: Command, _: Facts) -> Measurement | None:
 _LLVM_COV = re.compile(r"llvm-cov(?:-\d+)?")
 
 
-def _llvm_cov(command: Command, _: Facts) -> Measurement | None:
+def _llvm_cov(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
     if not _LLVM_COV.fullmatch(program(argv)) or len(argv) < 2:
         return None
@@ -151,12 +152,12 @@ def _cmake_configures(argv: tuple[str, ...]) -> bool:
     return program(argv) == "cmake" and not has_option(argv, *excluded)
 
 
-def _instrumentation(flag: str) -> CoverageTool:
+def _instrumentation(flag: str) -> Tool:
     """A compiler flag that instruments for path coverage: on a command line, in an environment variable a build
     reads, or in the CMake files a configuration reads."""
     found = re.compile(rf"(?<![\w-]){re.escape(flag)}\b")
 
-    def measures(command: Command, facts: Facts) -> Measurement | None:
+    def measures(command: Command, facts: Facts) -> Run | None:
         argv = resolved(command)
         if any(found.search(word) for word in (*argv, *command.env.values())):
             return measured(PATH, heuristic=True)
@@ -165,32 +166,32 @@ def _instrumentation(flag: str) -> CoverageTool:
         return None
 
     name = f"{_COMPILERS[flag]} {flag}"
-    return CoverageTool(name=name, languages=C_AND_CXX, can={PATH: name}, measures=measures, reads=("CMake",))
+    return coverage_tool(name=name, languages=C_AND_CXX, can={PATH: name}, measures=measures, reads=("CMake",))
 
 
 _COMPILERS = {"-fcondition-coverage": "gcc", "-fpath-coverage": "gcc", "-fcoverage-mcdc": "clang"}
 
-GCOVR = CoverageTool(
+GCOVR = coverage_tool(
     name="gcovr",
     languages=C_AND_CXX,
     can={LINE: "gcovr", BRANCH: "gcovr --xml"},
     measures=_gcovr,
     reads=("gcovr",),
 )
-LCOV = CoverageTool(
+LCOV = coverage_tool(
     name="lcov",
     languages=C_AND_CXX,
     can={LINE: "lcov", BRANCH: "lcov --rc branch_coverage=1", PATH: "lcov --mcdc-coverage"},
     measures=_lcov,
     reads=("lcov",),
 )
-GCOV = CoverageTool(
+GCOV = coverage_tool(
     name="gcov",
     languages=C_AND_CXX,
     can={LINE: "gcov", BRANCH: "gcov --branch-counts", PATH: "gcov --conditions"},
     measures=_gcov,
 )
-LLVM_COV = CoverageTool(
+LLVM_COV = coverage_tool(
     name="llvm-cov",
     languages=C_AND_CXX,
     can={

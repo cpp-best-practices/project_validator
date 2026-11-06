@@ -11,7 +11,8 @@ from project_validator import yaml_support
 from project_validator.core import Context
 from project_validator.evidence import PRE_COMMIT_CONFIGURATION
 from project_validator.facts import Command, Origin, Unknown
-from project_validator.facts.expansion import CommandExpander, Expansion, Invocation, Script, found_at, positional
+from project_validator.facts.arguments import positional
+from project_validator.facts.expansion import CommandExpander, Expansion, Invocation, Script, found_at
 
 _PROGRAMS = frozenset({"pre-commit", "prek"})
 # The stages `pre-commit run` runs when no --hook-stage is given; hooks without `stages` run in every stage.

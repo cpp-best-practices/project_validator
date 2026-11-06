@@ -7,11 +7,13 @@ import re
 from collections import Counter
 from collections.abc import Iterator
 from dataclasses import dataclass
+from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator.core import Project
-from project_validator.ecosystems import Ecosystem, registered
+from project_validator.ecosystems import Ecosystem, build_systems, registered
 from project_validator.facts import Fact, Facts, Origin
+from project_validator.facts.tools import within
 
 # Suffixes of files that are not source code of any language: documents, styles, media, archives, binaries and plain
 # data or configuration. They, and editor backups (`main.cpp~`), are never reported as unrecognised.
@@ -63,6 +65,25 @@ class ContentLanguages(Fact):
 
     ecosystem: str
     languages: frozenset[str]
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Unit(Fact):
+    """A unit of the project: a directory ("." for the root) that is built on its own, with its build systems and
+    the languages of the sources in it (outside the units below it).
+
+    A unit is the outermost directory with a build system's files (a CMake project's subdirectories, a Maven
+    project's modules belong to it), or a member of a workspace a build file declares (npm workspaces, Cargo and uv
+    workspaces, go.work). Sources outside every unit, and languages only content shows, belong to the root unit. A
+    project with one unit is judged as before; a monorepo or a mixed-language project is judged unit by unit.
+    """
+
+    build_systems: tuple[str, ...]
+    languages: frozenset[str]
+
+    @property
+    def directory(self) -> str:
+        return self.origin.path
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -156,6 +177,71 @@ def _unrecognised(files: list[str], accounted: set[str], recognised: set[str]) -
         yield UnrecognisedSuffix(origin=Origin(path="."), suffix=suffix, files=count)
 
 
+def _directory(build: BuildFile) -> str:
+    """The directory a build file (or build directory, `App.xcodeproj/`) belongs to."""
+    return str(PurePosixPath(build.origin.path.rstrip("/")).parent)
+
+
+def _members(project: Project, build: BuildFile) -> list[str]:
+    """The workspace member directories a build file declares, relative to the project."""
+    system = next((found for found in build_systems() if found.name == build.build_system), None)
+    if system is None or system.members is None or build.origin.path.endswith("/"):
+        return []
+    base = _directory(build)
+    patterns = [
+        str(PurePosixPath(base, pattern.removeprefix("./")))
+        for pattern in system.members(project.read_text(build.origin.path))
+    ]
+    return [pattern.removeprefix("./") for pattern in patterns]
+
+
+def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[str, list[str]], set[str]]:
+    """Unit directory -> its build systems (each build system's outermost directories, and workspace members), and
+    the directories of the build files that declare a workspace."""
+    roots: dict[str, list[str]] = {}
+    workspaces: set[str] = set()
+    for system in dict.fromkeys(build.build_system for build in builds):
+        own = [build for build in builds if build.build_system == system]
+        directories = set(map(_directory, own))
+        members = []
+        for build in own:
+            if declared := _members(project, build):
+                workspaces.add(_directory(build))
+                members += declared
+        for directory in sorted(directories):
+            declared_member = any(fnmatchcase(directory, pattern) for pattern in members)
+            outer = not any(other != directory and within(directory, other) for other in directories)
+            if declared_member or outer:
+                roots.setdefault(directory, []).append(system)
+    return roots, workspaces
+
+
+def _units(project: Project, facts: Facts) -> Iterator[Unit]:
+    roots, workspaces = _unit_roots(project, facts.of(BuildFile))
+
+    def owner(path: str) -> str:
+        return max(
+            (root for root in roots if within(path, root)), key=lambda root: (root != ".", len(root)), default="."
+        )
+
+    languages: dict[str, set[str]] = {root: set() for root in roots}
+    for source in facts.of(SourceFile):
+        if source.language is not None and not source.vendored:
+            languages.setdefault(owner(source.path), set()).add(source.language)
+    # What a build file builds counts for its unit too, unless the build file only declares a workspace.
+    for build in facts.of(BuildFile):
+        if (directory := _directory(build)) not in workspaces or languages.get(directory):
+            languages.setdefault(owner(directory), set()).update(build.languages)
+    for content in facts.of(ContentLanguages):
+        languages.setdefault(".", set()).update(content.languages)
+    for directory in sorted(languages, key=lambda root: (root != ".", root)):
+        yield Unit(
+            origin=Origin(path=directory),
+            build_systems=tuple(roots.get(directory, ())),
+            languages=frozenset(languages[directory]),
+        )
+
+
 def structure_facts(project: Project) -> Iterator[Fact]:
     """The build files, the source files with their languages, what the content shows, the ambiguous sources of the
     ecosystems those show, and the unrecognised suffixes."""
@@ -168,6 +254,7 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     yield from ambiguous
     recognised = {PurePosixPath(source.path).suffix for source in (*plain.of(SourceFile), *ambiguous)}
     yield from _unrecognised(files, {path for _, path in found}, recognised)
+    yield from _units(project, Facts((*plain, *ambiguous)))
 
 
 __all__ = [
@@ -176,6 +263,7 @@ __all__ = [
     "BuildFile",
     "ContentLanguages",
     "SourceFile",
+    "Unit",
     "UnrecognisedSuffix",
     "is_vendored",
     "project_languages",

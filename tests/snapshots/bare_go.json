@@ -2,37 +2,43 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
         "language": "Go",
-        "line": {
-          "answer": "no",
-          "known": [
-            "go test -cover"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "no",
-          "known": [
-            "go test -cover"
-          ],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Go",
+            "line": {
+              "answer": "no",
+              "known": [
+                "go test -cover"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "no",
+              "known": [
+                "go test -cover"
+              ],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -64,6 +70,16 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".out"
+    },
+    {
+      "build_systems": [
+        "Go modules"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Go"
+      ],
+      "origin": "."
     }
   ],
   "map": {
@@ -83,6 +99,17 @@
     },
     "languages": [
       "Go"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Go modules"
+        ],
+        "directory": ".",
+        "languages": [
+          "Go"
+        ]
+      }
     ],
     "unrecognised_suffixes": [
       {

@@ -3,11 +3,11 @@
 import re
 from pathlib import PurePosixPath
 
-from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.c_cpp.compiler_flags import WARNINGS_AS_ERRORS
 from project_validator.ecosystems.model import BuildSystem
 from project_validator.facts import Command, resolved
+from project_validator.facts.arguments import option_values
 from project_validator.rules import CompilerExtensions, TestSuite, WarningsAsErrors
 from project_validator.text import Pattern, matching_names, pattern
 

@@ -10,7 +10,8 @@ from dataclasses import dataclass, field
 
 from project_validator.core import Context
 from project_validator.facts import Command, Origin, Unknown
-from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, positional
+from project_validator.facts.arguments import positional
+from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at
 
 MAKEFILES = ("GNUmakefile", "makefile", "Makefile")
 _PROGRAMS = frozenset({"make", "gmake", "mingw32-make"})

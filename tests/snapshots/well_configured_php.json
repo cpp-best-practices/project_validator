@@ -2,45 +2,51 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "phpunit --path-coverage"
-          ],
-          "tools": [
-            "PHPUnit"
-          ]
-        },
         "language": "PHP",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "phpunit --coverage-clover"
-          ],
-          "tools": [
-            "PHPUnit"
-          ]
-        },
-        "path": {
-          "answer": "yes",
-          "known": [
-            "phpunit --path-coverage"
-          ],
-          "tools": [
-            "PHPUnit"
-          ]
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "phpunit --path-coverage"
+              ],
+              "tools": [
+                "PHPUnit"
+              ]
+            },
+            "language": "PHP",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "phpunit --coverage-clover"
+              ],
+              "tools": [
+                "PHPUnit"
+              ]
+            },
+            "path": {
+              "answer": "yes",
+              "known": [
+                "phpunit --path-coverage"
+              ],
+              "tools": [
+                "PHPUnit"
+              ]
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -72,6 +78,16 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".dist"
+    },
+    {
+      "build_systems": [
+        "Composer"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "."
     },
     {
       "env": {},
@@ -1470,19 +1486,24 @@
       "reader": "PHPUnit"
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1490,19 +1511,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1510,19 +1536,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1530,19 +1561,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1550,19 +1586,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1570,19 +1611,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1733,6 +1779,17 @@
     },
     "languages": [
       "PHP"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Composer"
+        ],
+        "directory": ".",
+        "languages": [
+          "PHP"
+        ]
+      }
     ],
     "unrecognised_suffixes": [
       {

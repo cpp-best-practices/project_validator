@@ -2,39 +2,45 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "dotnet test --collect \"XPlat Code Coverage\"",
-            "dotnet-coverage collect"
-          ],
-          "tools": []
-        },
         "language": "C#",
-        "line": {
-          "answer": "no",
-          "known": [
-            "dotnet test --collect \"XPlat Code Coverage\"",
-            "dotnet-coverage collect"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "dotnet test --collect \"XPlat Code Coverage\"",
+                "dotnet-coverage collect"
+              ],
+              "tools": []
+            },
+            "language": "C#",
+            "line": {
+              "answer": "no",
+              "known": [
+                "dotnet test --collect \"XPlat Code Coverage\"",
+                "dotnet-coverage collect"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": "src/App",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -51,6 +57,16 @@
       "language": "C#",
       "origin": "src/App/Calculator.cs",
       "vendored": false
+    },
+    {
+      "build_systems": [
+        "MSBuild"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "C#"
+      ],
+      "origin": "src/App"
     },
     {
       "kind": "ConfigurationFile",
@@ -82,6 +98,17 @@
     },
     "languages": [
       "C#"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "MSBuild"
+        ],
+        "directory": "src/App",
+        "languages": [
+          "C#"
+        ]
+      }
     ],
     "unrecognised_suffixes": []
   },

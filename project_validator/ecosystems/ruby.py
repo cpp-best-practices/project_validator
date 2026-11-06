@@ -13,9 +13,11 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
 from project_validator.facts import Command, Facts, Setting, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
-from project_validator.facts.expansion import joined, launcher, program
+from project_validator.facts.arguments import program
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.settings import SettingsReader, matched_settings, settings
+from project_validator.facts.tools import Run
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -121,7 +123,7 @@ SIMPLECOV_SETTINGS = SettingsReader(
 )
 
 
-def _simplecov(command: Command, facts: Facts) -> Measurement | None:
+def _simplecov(command: Command, facts: Facts) -> Run | None:
     """SimpleCov, started by .simplecov or a test helper when CI runs the tests; it counts lines unless told to count
     branches too."""
     argv = resolved(command)
@@ -134,7 +136,7 @@ def _simplecov(command: Command, facts: Facts) -> Measurement | None:
     return measured(Granularity.LINE, Granularity.BRANCH if branch else None, read=read)
 
 
-SIMPLECOV = CoverageTool(
+SIMPLECOV = coverage_tool(
     name="SimpleCov",
     languages=frozenset({"Ruby"}),
     can={Granularity.LINE: "SimpleCov", Granularity.BRANCH: "SimpleCov enable_coverage :branch"},

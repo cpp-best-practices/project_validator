@@ -161,10 +161,10 @@ except where a step deliberately changes results and says so.
       reading them structurally is the toolchain step (5).
 3. **Coverage end to end.** Coverage extractors for every supported language, the coverage question and its policy;
    the `coverage` check moves to them and the `CoverageTools` rules are deleted.
-   - A `CoverageTool` (`project_validator/facts/coverage.py`) records the languages it measures and each
-     granularity it can measure (line, statement, region, branch, path) with how to ask for it, and claims the
-     commands that run it by program and subcommand. A claimed command becomes a `CoverageMeasured` fact, joined
-     with the configuration that command reads (`pytest` with its `addopts` and coverage.py's settings, `phpunit`
+   - A coverage tool records the languages it measures and each granularity it can measure (line, statement,
+     region, branch, path) with how to ask for it, and claims the commands that run it by program and subcommand
+     (since 3¾ an ordinary `Tool` with a `coverage` aspect). A claimed command is a run, joined with the
+     configuration that command reads (`pytest` with its `addopts` and coverage.py's settings, `phpunit`
      with its XML, `dotnet test` with the MSBuild settings and `.runsettings`, `xcodebuild test` with the scheme,
      `cmake` configuring with the CMake files): a setting alone, which nothing CI runs reads, counts for nothing.
    - Launchers are command expanders that yield `Launched` commands: `bundle exec rake` runs `rake`, `npx c8` runs
@@ -201,8 +201,35 @@ except where a step deliberately changes results and says so.
      file. Each declares the settings tools it `reads`, which scopes the unknowns that matter to its answers.
    - **Questions are components** (`Question` in `project_validator/questions`), found like the others, so
      `--answers` lists whatever questions exist.
+
+   **3¾. One tool model, and units.** So that no practice builds its own copy of the machinery, and so that
+   monorepos and mixed-language projects are judged where their code is:
+   - **One tool model** (`project_validator/facts/tools.py`). A `Tool` records the languages it handles and, per
+     *aspect* it can provide (`coverage` now; `lint`, `format`, `analysis`, `audit`, `type-check` as practices
+     move), the levels it can provide and how to ask for each. It claims commands (`claims(command, facts)`) and
+     reads only facts. A claimed command is a `ToolRun`: job, tool, languages, the aspects and levels that run
+     provides, the settings files it read, and its scope (its working directory). Each question reads the runs of
+     its aspect; a tool that serves several practices (ruff formats and lints) is one tool with several aspects.
+     Coverage is spelled with `coverage_tool` and `measured` (`project_validator/facts/coverage.py`), which only
+     fill in the `coverage` aspect.
+   - **One way a command runs another.** Wrappers (`sudo`, `env CC=clang`, `nice`, `emcmake`, `xvfb-run`,
+     `ccache`; `project_validator/tools/wrappers.py`) are launchers like `bundle exec` and `npx`: the command they
+     run is a `Launched` command of its own, with the variables they set. `resolved` only substitutes variables.
+   - **One way to read a command line** (`project_validator/facts/arguments.py`): `program`, `option_values`,
+     `has_option`, `short_flags`, `positional`.
+   - **Units** (`Unit` facts, `project_validator/facts/structure.py`). A unit is the outermost directory with a
+     build system's files (a CMake project's subdirectories and a Maven project's modules belong to it), or a
+     member of a workspace a build file declares (`BuildSystem.members`: npm, yarn and bun workspaces, Cargo and
+     uv workspaces, go.work). A unit's languages are those of its own sources (outside the units below it), and
+     what its build files build unless they only declare a workspace; sources outside every unit belong to the
+     root unit. `--map` lists the units.
+   - **Questions answer per language per unit.** A run covers its working directory, what is below it, and the
+     unit it is in, so a run from the root covers every unit, and a run in `packages/a` covers only that package.
+     A project with one unit is judged as before. In a monorepo, findings name the unit (`packages/b: no branch
+     coverage …`); in a mixed-language project each language is judged in the units that have it (a C++ project
+     with Python bindings in `python/` needs Python coverage there).
 4. **The remaining practices**, one at a time, each deleting its rule type from `rules.py`. Each becomes settings
-   readers and tools over the shared facts, a question and a policy.
+   readers, an aspect of the shared `Tool` model, a question answered per language per unit, and a policy.
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice
