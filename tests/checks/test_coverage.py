@@ -1,7 +1,7 @@
 import unittest
 
 from project_validator.checks.coverage import coverage
-from project_validator.core import Result, Status
+from project_validator.core import Options, Result, Status
 from project_validator.ecosystems import C_FAMILY
 from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.ecosystems.python import PYTHON
@@ -19,6 +19,7 @@ from tests.support import (
     run_in_every_layout,
 )
 
+ALLOW_UNKNOWN = Options(allow_unknown=True)
 C_PATH_HINT = (
     "consider adding path coverage (e.g. lcov --mcdc-coverage, gcov --conditions, llvm-cov show -show-mcdc, "
     "gcc -fcondition-coverage, gcc -fpath-coverage, clang -fcoverage-mcdc)"
@@ -26,8 +27,8 @@ C_PATH_HINT = (
 
 
 class CoverageTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]) -> Result:
-        return run_in_every_layout(self, coverage, files)
+    def _run(self, files: dict[str, str], options: Options | None = None) -> Result:
+        return run_in_every_layout(self, coverage, files, options=options)
 
     def test_declares_the_languages_it_judges(self) -> None:
         # Coverage tools add languages, so only the stable ones are pinned.
@@ -36,18 +37,23 @@ class CoverageTests(unittest.TestCase):
     def test_fails_without_branch_coverage_and_says_what_is_reported(self) -> None:
         for provider in CI_FILES:
             with self.subTest(ci=provider):
-                result = self._run(ci_running(provider, "gcovr --txt-metric line"))
+                result = self._run(ci_running(provider, "gcovr --txt-metric line"), ALLOW_UNKNOWN)
                 self.assertEqual(result.status, Status.FAIL)
                 self.assertIn("line coverage is reported with gcovr", result.details)
 
-    def test_what_ci_configuration_that_is_not_parsed_hides_is_unknown(self) -> None:
+    def test_what_ci_configuration_that_is_not_parsed_hides_is_an_error_unless_allowed(self) -> None:
         for provider in UNSTRUCTURED_CI_FILES:
             with self.subTest(ci=provider):
                 result = self._run(ci_running(provider, "gcovr"))
+                self.assertEqual(result.status, Status.ERROR)
                 self.assertEqual(
-                    result.message, "no branch coverage reporting found in what CI runs that could be read"
+                    result.message,
+                    "whether CI reports branch coverage is unknown: some of what it runs could not be read",
                 )
-                self.assertTrue(result.details[-1].startswith("not read: the jobs and commands:"), result.details)
+                self.assertTrue(result.details[0].startswith("not read: the jobs and commands:"), result.details)
+                self.assertEqual(result.details[-1], "--allow-unknown judges only what could be read")
+                allowed = self._run(ci_running(provider, "gcovr"), ALLOW_UNKNOWN)
+                self.assertEqual(allowed.message, "no branch coverage reporting found in what CI runs")
 
     def test_branch_coverage_without_path_coverage_suggests_it(self) -> None:
         for provider in CI_FILES:
@@ -121,7 +127,7 @@ class CoverageTests(unittest.TestCase):
     def test_python_branch_coverage_does_not_count_for_c_and_cxx(self) -> None:
         for provider in CI_FILES:
             with self.subTest(ci=provider):
-                result = self._run(ci_running(provider, "coverage run --branch -m pytest --cov-branch"))
+                result = self._run(ci_running(provider, "coverage run --branch -m pytest --cov-branch"), ALLOW_UNKNOWN)
                 self.assertEqual(result.status, Status.FAIL)
 
 

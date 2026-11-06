@@ -58,6 +58,8 @@ class Options:
     max_file_size: int = DEFAULT_MAX_FILE_SIZE
     # Actions published by GitHub (actions/, github/) may be pinned to tags.
     allow_official_tags: bool = False
+    # Judge answers that depend on configuration that could not be read by what could, instead of erroring.
+    allow_unknown: bool = False
 
 
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})

@@ -24,6 +24,7 @@ from tests.support import (
     WELL_CONFIGURED_PYTHON,
     layout_project,
     requires_rich,
+    temp_project,
     well_configured,
 )
 
@@ -100,6 +101,17 @@ class CliTests(unittest.TestCase):
                 code, output, _ = run_cli("--format", "json", "--only", "ci-present,coverage", str(root))
                 self.assertEqual(code, EXIT_FAILURE)
                 self.assertEqual([entry["check"] for entry in json.loads(output)], ["ci-present", "coverage"])
+
+    def test_an_unknown_answer_is_an_error_unless_allowed(self) -> None:
+        # Jenkinsfiles are scanned heuristically, so what their jobs run is not known for certain.
+        files = {"main.c": "int main(void) { return 0; }\n", "Jenkinsfile": "sh 'gcovr'\n"}
+        with temp_project(files) as root:
+            code, output, _ = run_cli("--only", "coverage", str(root))
+            self.assertEqual(code, EXIT_FAILURE)
+            self.assertIn("[ERROR] coverage: whether CI reports branch coverage is unknown", output)
+            code, output, _ = run_cli("--only", "coverage", "--allow-unknown", str(root))
+            self.assertEqual(code, EXIT_FAILURE)
+            self.assertIn("[FAIL] coverage: no branch coverage reporting found in what CI runs", output)
 
     def test_skipping_every_failure_succeeds(self) -> None:
         for layout in PROJECT_LAYOUTS:

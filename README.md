@@ -53,6 +53,7 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 | `--strict` | treat warnings as failures |
 | `--max-file-size MIB` | committed files larger than this belong in Git LFS or DVC (default: 5) |
 | `--allow-official-tags` | let the actions GitHub publishes (`actions/`, `github/`) be pinned to tags |
+| `--allow-unknown` | judge by what could be read when an answer depends on CI configuration that could not be (a provider scanned heuristically, a matrix computed by an expression, a reusable workflow in another repository). Without it, such an answer is an `ERROR`: a gap in the validator's tooling, not a finding about the project |
 | `--cmake PATH` / `--ctest PATH` | the executables used by `--build` |
 | `--plugin-dir DIR` | load extra checks and CI providers from `DIR/*.py` |
 
