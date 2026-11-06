@@ -170,6 +170,18 @@ PROJECT_LAYOUTS = (
         build_systems=frozenset({"Bundler"}),
     ),
     ProjectLayout(
+        name="MSBuild C#",
+        files={"src/App/App.csproj": "<Project/>\n", "src/App/Program.cs": ""},
+        languages=frozenset({"C#"}),
+        build_systems=frozenset({"MSBuild"}),
+    ),
+    ProjectLayout(
+        name="MSBuild F#",
+        files={"App.fsproj": "<Project/>\n", "Program.fs": ""},
+        languages=frozenset({"F#"}),
+        build_systems=frozenset({"MSBuild"}),
+    ),
+    ProjectLayout(
         name="Unrecognised language",
         files={"README.md": "", "src/main.zig": ""},
         languages=frozenset(),
@@ -266,6 +278,7 @@ WELL_CONFIGURED_JAVASCRIPT = fixture_files("well_configured_javascript")
 WELL_CONFIGURED_JVM = fixture_files("well_configured_jvm")
 WELL_CONFIGURED_PHP = fixture_files("well_configured_php")
 WELL_CONFIGURED_RUBY = fixture_files("well_configured_ruby")
+WELL_CONFIGURED_DOTNET = fixture_files("well_configured_dotnet")
 
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}

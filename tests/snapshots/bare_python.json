@@ -188,7 +188,7 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Python (applies to C, C++, Java, JavaScript, Kotlin, PHP, TypeScript)",
+      "message": "not applicable to Python (applies to C, C#, C++, F#, Java, JavaScript, Kotlin, PHP, TypeScript)",
       "status": "SKIP"
     }
   }
