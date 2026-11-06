@@ -1,4 +1,2543 @@
 {
+  "facts": [
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "gcc",
+        "os": "ubuntu-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (ubuntu-latest, gcc, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=gcc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "gcc",
+        "os": "ubuntu-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (ubuntu-latest, gcc, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=gcc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "gcc",
+        "os": "ubuntu-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (ubuntu-latest, gcc, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=gcc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "gcc",
+        "os": "ubuntu-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (ubuntu-latest, gcc, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=gcc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "clang",
+        "os": "ubuntu-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (ubuntu-latest, clang, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=clang",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "clang",
+        "os": "ubuntu-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (ubuntu-latest, clang, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=clang",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[6]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "clang",
+        "os": "ubuntu-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (ubuntu-latest, clang, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=clang",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[7]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "clang",
+        "os": "ubuntu-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (ubuntu-latest, clang, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=clang",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[8]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "gcc",
+        "os": "macos-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (macos-latest, gcc, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=gcc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[9]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "gcc",
+        "os": "macos-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (macos-latest, gcc, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=gcc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[10]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "gcc",
+        "os": "macos-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (macos-latest, gcc, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=gcc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[11]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "gcc",
+        "os": "macos-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (macos-latest, gcc, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=gcc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[12]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "clang",
+        "os": "macos-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (macos-latest, clang, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=clang",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[13]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "clang",
+        "os": "macos-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (macos-latest, clang, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=clang",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[14]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "clang",
+        "os": "macos-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (macos-latest, clang, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=clang",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[15]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "clang",
+        "os": "macos-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (macos-latest, clang, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=clang",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[16]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "msvc",
+        "os": "windows-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (windows-latest, msvc, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=msvc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=msvc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[17]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Release",
+        "compiler": "msvc",
+        "os": "windows-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (windows-latest, msvc, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=msvc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=msvc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[18]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "msvc",
+        "os": "windows-latest",
+        "sanitizers": "ON"
+      },
+      "name": "test (windows-latest, msvc, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=msvc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=ON"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=msvc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[19]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "build_type": "Debug",
+        "compiler": "msvc",
+        "os": "windows-latest",
+        "sanitizers": "OFF"
+      },
+      "name": "test (windows-latest, msvc, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-DCMAKE_CXX_COMPILER=msvc",
+        "-DENABLE_COVERAGE=ON",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DENABLE_SANITIZERS=OFF"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Command",
+      "line": "cmake -S . -B build -DCMAKE_CXX_COMPILER=msvc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Command",
+      "line": "cmake --build build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build",
+        "--output-on-failure"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Command",
+      "line": "ctest --test-dir build --output-on-failure",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Command",
+      "line": "gcovr --fail-under-branch 80",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "run-clang-tidy",
+        "-p",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Command",
+      "line": "run-clang-tidy -p build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cppcheck",
+        "--project=build/compile_commands.json",
+        "--error-exitcode=1"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Command",
+      "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:format",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "format",
+      "origin": ".github/workflows/ci.yml:jobs.format",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "find",
+        ".",
+        "-name",
+        "*.cpp"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Command",
+      "line": "find . -name '*.cpp' | xargs clang-format --dry-run -Werror",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[1].run"
+    },
+    {
+      "argv": [
+        "xargs",
+        "clang-format",
+        "--dry-run",
+        "-Werror"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Command",
+      "line": "find . -name '*.cpp' | xargs clang-format --dry-run -Werror",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[1].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/codeql-analysis.yml:analyze",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "analyze",
+      "origin": ".github/workflows/codeql-analysis.yml:jobs.analyze",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/codeql-analysis.yml:analyze",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/codeql-analysis.yml:jobs.analyze.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "languages": "cpp"
+      },
+      "job": ".github/workflows/codeql-analysis.yml:analyze",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/codeql-analysis.yml:jobs.analyze.steps[1]",
+      "uses": "github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/codeql-analysis.yml:analyze",
+      "kind": "Command",
+      "line": "cmake -S . -B build && cmake --build build",
+      "origin": ".github/workflows/codeql-analysis.yml:jobs.analyze.steps[2].run"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/codeql-analysis.yml:analyze",
+      "kind": "Command",
+      "line": "cmake -S . -B build && cmake --build build",
+      "origin": ".github/workflows/codeql-analysis.yml:jobs.analyze.steps[2].run"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/codeql-analysis.yml:analyze",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/codeql-analysis.yml:jobs.analyze.steps[3]",
+      "uses": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:cpd",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "cpd",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.cpd",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:cpd",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.cpd.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pmd",
+        "cpd",
+        "--language",
+        "cpp",
+        "--minimum-tokens",
+        "100",
+        "--dir",
+        "src",
+        "--dir",
+        "include"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:cpd",
+      "kind": "Command",
+      "line": "pmd cpd --language cpp --minimum-tokens 100 --dir src --dir include",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.cpd.steps[1].run"
+    }
+  ],
   "map": {
     "build_systems": [
       "CMake"

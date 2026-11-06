@@ -218,6 +218,13 @@ class DependencyTests(unittest.TestCase):
 
 
 class ListTests(unittest.TestCase):
+    def test_facts_are_printed_as_json(self) -> None:
+        code, output, _ = run_cli("--facts", str(FIXTURES / "well_configured_c_cpp"))
+        self.assertEqual(code, EXIT_SUCCESS)
+        facts = json.loads(output)
+        self.assertIn("CiJob", {fact["kind"] for fact in facts})
+        self.assertTrue(all("origin" in fact for fact in facts))
+
     def test_list_as_json_is_the_support_matrix(self) -> None:
         code, output, _ = run_cli("--list", "--format", "json")
         self.assertEqual(code, EXIT_SUCCESS)
