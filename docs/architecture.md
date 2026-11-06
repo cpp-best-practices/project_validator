@@ -1,0 +1,149 @@
+# Architecture
+
+project_validator learns as much as it can about a project into a database of facts, answers questions about the
+project from those facts, and judges the answers against a policy. Knowing how to read a build system, a tool or a CI
+configuration is kept apart from deciding what a well-run project needs.
+
+```
+ project files ──► extractors ──► facts ──► questions ──► answers ──► policy ──► check results
+                   (parse)        (database)  (query)     (machine-     (judge)
+                                                          readable)
+```
+
+This document describes the target design and the migration to it. Sections marked **Today** describe the code as it
+is; the rest is the design new work moves towards.
+
+## Why
+
+Today each language profile (`project_validator/ecosystems/<name>.py`) supplies a typed rule to each practice: the
+regular expressions that recognise its tools, where to look for them, and what counts as passing. Detection and
+requirements are mixed in one object, so:
+
+- Adding a language touched about 25 shared files: the registry, test tables, the README's per-check rows, and the
+  snapshot of every other fixture (the skip message listed every language). Two profiles developed side by side
+  conflicted in all of them.
+- Knowledge that is not about one language had to live in one: CMake belongs to the C/C++ profile, although it also
+  builds Fortran, CUDA and Swift; gcov, llvm-cov, lizard and the sanitizers are copied or special-cased per profile;
+  the CI layer parses Cargo, SwiftPM and Xcode build types itself.
+- A profile that cannot meet a requirement (Go has no branch coverage, nothing measures F# function length) needs a
+  special case, in the profile and in the tests.
+
+## Layers
+
+### Extractors
+
+An extractor reads one kind of thing it understands and records facts. Extractors are the plugin surface: adding a
+language, a build system, a tool or a CI provider means adding extractors, and nothing else changes.
+
+| Kind | Reads | Examples |
+|---|---|---|
+| CI provider | CI configuration | GitHub Actions, GitLab CI, CircleCI: jobs, their OS, toolchains and environment, and the commands each step runs |
+| Command expansion | what a command runs in turn | npm, Deno and Composer scripts, Rake tasks, Make recipes, CMake presets, Maven lifecycle phases, pre-commit hooks |
+| Build system | build files | CMake, Meson, Bazel, Cargo, Gradle, Maven, MSBuild, SwiftPM, Xcode: the languages built, settings and their scope, build types, build trees and outputs, the test runner |
+| Toolchain | compiler and interpreter settings | GCC, Clang, MSVC, gfortran, rustc, swiftc, CPython: warning, hardening, sanitizer and coverage instrumentation flags |
+| Tool | a tool's invocation and configuration | gcovr, coverage.py, eslint, clang-tidy, lizard, osv-scanner, SwiftLint: what it measures or enforces, and for which files |
+| Language | source files | which languages a project uses, by suffix and by content |
+| Repository | the files themselves | committed artifacts, ignore rules, licences, security policy, large files |
+
+Extractors run in stages, and each one declares the fact types it reads and writes: files and recognition, then build
+systems and CI, then command expansion, then tool runs and settings, then the joins that decide what is in effect.
+
+A component lives with the only language that uses it (Cargo, Composer, Bundler) until a second language needs it;
+then a small refactor moves it into a shared module before the second language is added.
+
+### Facts
+
+A fact is a typed, immutable record. Every fact has:
+
+- **a subject**: what was found, e.g. "gcovr runs with branch metrics", "`-Werror` is set", "job `linux-gcc13`
+  exists".
+- **a scope**: the languages, files or targets it covers, and the CI jobs (OS, toolchain, build configuration) it
+  is in effect for. Scope is what lets one fact serve several languages: `add_compile_options(-Werror)` in CMake
+  covers every language CMake compiles with a GCC-style compiler, Fortran included; `CMAKE_CXX_FLAGS` covers C++
+  only.
+- **provenance**: how it was found, for results and their details, e.g. `.github/workflows/ci.yml` job `test` →
+  step 4 → `npm test` → `package.json` `scripts.test` → `vitest --coverage`.
+- **confidence**: read from structured data, or matched by a heuristic.
+
+A setting is in effect only when something CI runs reads it: an eslint configuration that enables
+`max-lines-per-function` counts once eslint runs in a CI job, directly or through a script CI runs. Settings and
+invocations are joined to decide what is in effect.
+
+What could not be read is recorded too: a matrix computed by an expression, a reusable workflow in another
+repository, a command no extractor understands. Absence of a fact is "no" only where nothing is unknown.
+
+Commands are split into arguments, and extractors claim them by program and subcommand, rather than searching
+command lines for a flag anywhere on the line.
+
+Facts are Python dataclasses held in memory, with a small query helper. They can be exported as JSON.
+
+### Questions
+
+A question is a query over the facts that answers one thing about the project, per language: "what coverage is
+reported for Python?", "are warnings errors for C++?", "which OS/toolchain/configuration combinations does CI build?"
+Questions are the stable, machine-readable interface; checks and other consumers depend on them, never on
+extractors.
+
+An answer is one of:
+
+- **yes**, with the facts that show it;
+- **no**;
+- **unknown**, with the reason (an unreadable matrix, a remote workflow);
+- **impossible**: no known tool can provide it for the language. Go's tools measure statements, not branches; Swift's
+  measure regions; nothing measures F# function length.
+
+"Impossible" follows from what the known tools can do: tools declare their capability by facts that do not name our
+languages (the file suffixes lizard parses, the lockfiles osv-scanner reads, the languages CodeQL analyses), so a new
+language picks up every tool that already supports it. The same capabilities give the suggestions in results: "tools
+known to report branch coverage for Rust: cargo-llvm-cov, grcov".
+
+### Policy
+
+A policy maps answers to statuses. For coverage: branch coverage is required (or the finest granularity possible for
+the language, when branch coverage is impossible), and path or MC/DC coverage is a bonus. Checks become thin: a check
+names its question and its policy and formats the result. `--strict` and `--warnings-as-errors` adjust the policy,
+not the questions. The policy is built in to begin with; it is a separate layer so that it can be made configurable
+later without touching extraction.
+
+### Worked example: branch coverage in this repository
+
+1. The GitHub Actions extractor records the job `coverage` and its command
+   `["coverage", "run", "--branch", "-m", "unittest"]`.
+2. The coverage.py extractor claims programs named `coverage` and records that coverage.py runs in that job, measuring
+   branches, for Python.
+3. The `pyproject.toml` extractor records `[tool.coverage.run] branch = true`, a coverage.py setting that joins the
+   run.
+4. The coverage question answers for Python: lines yes, branches yes, paths impossible.
+5. The coverage policy requires branches: PASS, with no path coverage suggestion, because none is possible.
+
+## Invariants
+
+Tests keep these from step 1 of the migration on:
+
+- Adding a language, build system, tool or CI provider adds modules and fixtures and edits no shared list: built-in
+  profiles and checks are discovered, and tests and documentation derive their expectations from the registry.
+- A result names only the project's own languages; nothing in one fixture's results changes when an unrelated
+  language is added.
+- Checks do not name languages or tools.
+
+## Migration
+
+Each step is one pull request with every gate green. The snapshots (`tests/snapshots`) must be reproduced exactly,
+except where a step deliberately changes results and says so.
+
+1. **Discovery and derived expectations.** Built-in profiles are discovered like checks; tests and the README derive
+   their language lists from the registry; the skip message stops listing every language.
+2. **Facts and the CI command graph.** The fact store, CI job and command facts with provenance and unknowns, and
+   command expansion (package scripts, Composer scripts, Rake, Make, CMake presets, Maven phases, pre-commit). Job
+   build types come from the build systems.
+3. **Coverage end to end.** Coverage extractors for every supported language, the coverage question and its policy;
+   the `coverage` check moves to them and the `CoverageTools` rules are deleted.
+4. **The remaining practices**, one at a time, each deleting its rule type from `rules.py`.
+5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
+   MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
+6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice
+   dispatch are removed.
+7. **Proof**: add Fortran using only extractors and a recognition module.
+
+`project-validator facts --json` and `project-validator answers --json` expose the database and the answers once
+step 3 lands.
