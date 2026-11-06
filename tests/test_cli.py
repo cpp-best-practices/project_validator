@@ -23,6 +23,7 @@ from tests.support import (
     WELL_CONFIGURED_GO,
     WELL_CONFIGURED_JAVASCRIPT,
     WELL_CONFIGURED_JVM,
+    WELL_CONFIGURED_PHP,
     WELL_CONFIGURED_PYTHON,
     WELL_CONFIGURED_RUST,
     ProjectLayout,
@@ -35,7 +36,7 @@ COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
 NOT_APPLICABLE = {
     language: {found.name for found in LANGUAGE_SPECIFIC_CHECKS if language not in found.languages}
-    for language in ("Python", "Rust", "Go", "JavaScript", "TypeScript", "Java", "Kotlin")
+    for language in ("Python", "Rust", "Go", "JavaScript", "TypeScript", "Java", "Kotlin", "PHP")
 }
 
 
@@ -73,6 +74,7 @@ class CliTests(unittest.TestCase):
             "TypeScript": WELL_CONFIGURED_JAVASCRIPT,
             "Java": WELL_CONFIGURED_JVM,
             "Kotlin": WELL_CONFIGURED_JVM,
+            "PHP": WELL_CONFIGURED_PHP,
         }
         for layout in OTHER_LANGUAGE_LAYOUTS:
             [language] = layout.languages
@@ -233,6 +235,6 @@ class ListTests(unittest.TestCase):
         self.assertEqual(code, EXIT_SUCCESS)
         matrix = {row["check"]: row["applies_to"] for row in json.loads(output)}
         self.assertEqual(matrix["ci-present"], [])
-        self.assertEqual(matrix["coverage"], ["C/C++", "Python", "Rust", "Go", "JavaScript/TypeScript", "JVM"])
-        self.assertEqual(matrix["warnings-as-errors"], ["C/C++", "JavaScript/TypeScript", "JVM"])
+        self.assertEqual(matrix["coverage"], ["C/C++", "Python", "Rust", "Go", "JavaScript/TypeScript", "JVM", "PHP"])
+        self.assertEqual(matrix["warnings-as-errors"], ["C/C++", "JavaScript/TypeScript", "JVM", "PHP"])
         self.assertEqual(matrix["ci-build-types"], ["C/C++", "Rust"])

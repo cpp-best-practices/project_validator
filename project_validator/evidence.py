@@ -3,7 +3,7 @@
 import json
 import re
 import tomllib
-from collections.abc import Callable, Iterable, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 
 from project_validator.core import Context
 from project_validator.text import strip_json_comments
@@ -90,3 +90,29 @@ def documents(context: Context, name: re.Pattern[str], directories: Iterable[str
             names = sorted(entry.name for entry in folder.iterdir() if entry.is_file() and name.fullmatch(entry.name))
             found += [f"{directory}/{entry}" if directory else entry for entry in names]
     return found
+
+
+def _nothing_related(_: str) -> Iterator[str]:
+    return iter(())
+
+
+def scripts_run(
+    texts: Iterable[str],
+    scripts: Mapping[str, str],
+    called: Callable[[str], Iterable[str]],
+    related: Callable[[str], Iterable[str]] = _nothing_related,
+) -> tuple[str, ...]:
+    """The texts of the `scripts` (name -> script) that `texts` run, with the scripts those run in turn.
+
+    `called` names the scripts a text runs (`npm run lint` runs lint); `related` names the scripts that running a
+    script runs too (its pre and post scripts). A script that does not exist is not run.
+    """
+    pending = [name for text in texts for name in called(text)]
+    run: dict[str, None] = {}
+    while pending:
+        name = pending.pop()
+        if name in run or name not in scripts:
+            continue
+        run[name] = None
+        pending += [*related(name), *called(scripts[name])]
+    return tuple(scripts[name] for name in run)

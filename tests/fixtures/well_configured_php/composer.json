@@ -1,0 +1,30 @@
+{
+    "name": "example/app",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.3",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^12.2",
+        "vimeo/psalm": "^6.12"
+    },
+    "autoload": {
+        "psr-4": {"App\\": "src/"}
+    },
+    "autoload-dev": {
+        "psr-4": {"App\\Tests\\": "tests/"}
+    },
+    "scripts": {
+        "cs": "php-cs-fixer check",
+        "analyse": [
+            "phpstan analyse",
+            "psalm --taint-analysis"
+        ],
+        "test": "phpunit --coverage-clover coverage.xml --path-coverage",
+        "check": ["@cs", "@analyse", "@test"]
+    }
+}

@@ -173,7 +173,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to Java (applies to JavaScript, Python, TypeScript)",
+      "message": "not applicable to Java (applies to JavaScript, PHP, Python, TypeScript)",
       "status": "SKIP"
     },
     "vcs-ignore": {
