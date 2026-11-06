@@ -31,8 +31,8 @@ class ProjectStructure:
     unrecognised_suffixes: tuple[tuple[str, int], ...]
     # Source files of other projects (vendored, minified), which make no language the project's.
     vendored: tuple[str, ...]
-    # (directory, build systems, languages) of each unit of the project: one for most, several for a monorepo.
-    units: tuple[tuple[str, tuple[str, ...], frozenset[str]], ...]
+    # Each unit of the project: one for most, several for a monorepo or a mixed-language project.
+    units: tuple[Unit, ...]
     ci_providers: tuple[str, ...]
     ci_files: tuple[str, ...]
     ci_jobs: tuple[Job, ...]
@@ -47,8 +47,13 @@ class ProjectStructure:
             ],
             **({"vendored": list(self.vendored)} if self.vendored else {}),
             "units": [
-                {"directory": directory, "build_systems": list(systems), "languages": sorted(languages)}
-                for directory, systems, languages in self.units
+                {
+                    "directory": unit.directory,
+                    "role": unit.role,
+                    "build_systems": list(unit.build_systems),
+                    "languages": sorted(unit.languages),
+                }
+                for unit in self.units
             ],
             "ci": {
                 "providers": list(self.ci_providers),
@@ -140,7 +145,7 @@ def map_project(facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis
         recognised_by=_signals(facts),
         unrecognised_suffixes=tuple((found.suffix, found.files) for found in facts.of(UnrecognisedSuffix)),
         vendored=tuple(vendored),
-        units=tuple((unit.directory, unit.build_systems, unit.languages) for unit in facts.of(Unit)),
+        units=facts.of(Unit),
         ci_providers=tuple(dict.fromkeys(ci_file.provider.name for ci_file in ci_files)),
         ci_files=tuple(ci_file.path for ci_file in ci_files),
         ci_jobs=analysis.jobs,

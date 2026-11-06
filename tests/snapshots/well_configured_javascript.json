@@ -125,21 +125,21 @@
       "kind": "SourceFile",
       "language": "JavaScript",
       "origin": "eslint.config.js",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TypeScript",
       "origin": "src/add.test.ts",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TypeScript",
       "origin": "src/add.ts",
-      "vendored": false
+      "role": "product"
     },
     {
       "build_systems": [
@@ -150,7 +150,8 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -1794,7 +1795,8 @@
         "languages": [
           "JavaScript",
           "TypeScript"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": []

@@ -54,6 +54,28 @@ class EngineTests(unittest.TestCase):
         )
         self.assertEqual(launched[("cmake", "-S", ".")], {"CC": "clang", "CXX": "clang++"})
 
+    def test_cd_changes_where_the_rest_of_the_script_runs(self) -> None:
+        files = {
+            "web/ui/package.json": '{"scripts": {"lint": "eslint ."}}',
+            **github_job("ubuntu-latest", "cd web/ui && npm run lint\ncd ../.. && pwd\ncd $GITHUB_WORKSPACE/web && ls"),
+        }
+        commands = [(command.argv, command.directory) for command in _facts(files).of(Command)]
+        self.assertIn((("eslint", "."), "web/ui"), commands)
+        self.assertIn((("pwd",), "."), commands)
+        self.assertIn((("ls",), "web"), commands)
+
+    def test_what_runs_outside_the_project_is_not_expanded(self) -> None:
+        for script in (
+            "cd /tmp/other && make",
+            "cd $HOME && make",
+            "cd ../sibling && make",
+            "cd build && make",
+            "make -C build",
+        ):
+            with self.subTest(script=script):
+                found = _facts({"Makefile": "all:\n\techo hi\n", **github_job("ubuntu-latest", script)})
+                self.assertEqual((_expanded(found), found.of(Unknown)), ([], ()))
+
     def test_a_definition_that_runs_itself_is_followed_once(self) -> None:
         files = {"Makefile": "all:\n\t$(MAKE) all\n\techo done\n", **github_job("ubuntu-latest", "make")}
         self.assertEqual(_expanded(_facts(files)), [("make", "all"), ("echo", "done")])

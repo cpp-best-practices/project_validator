@@ -60,21 +60,21 @@
       "kind": "SourceFile",
       "language": "Go",
       "origin": "app.go",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Go",
       "origin": "app_test.go",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Go",
       "origin": "cmd/app/main.go",
-      "vendored": false
+      "role": "product"
     },
     {
       "build_systems": [
@@ -84,7 +84,8 @@
       "languages": [
         "Go"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -1583,7 +1584,8 @@
         "directory": ".",
         "languages": [
           "Go"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": []

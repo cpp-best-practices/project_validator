@@ -56,7 +56,7 @@
       "kind": "SourceFile",
       "language": "Java",
       "origin": "src/main/java/com/example/App.java",
-      "vendored": false
+      "role": "product"
     },
     {
       "build_systems": [
@@ -66,7 +66,8 @@
       "languages": [
         "Java"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "kind": "ConfigurationFile",
@@ -99,7 +100,8 @@
         "directory": ".",
         "languages": [
           "Java"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": []

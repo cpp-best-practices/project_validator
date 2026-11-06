@@ -10,7 +10,7 @@ from project_validator.facts.settings import (
     key_value_settings,
     toml_settings,
 )
-from project_validator.facts.structure import SourceFile, is_vendored
+from project_validator.facts.structure import SourceFile, role
 from project_validator.questions import built_in_questions
 from tests.support import github_job, make_context, temp_project
 
@@ -154,21 +154,34 @@ class ReaderTests(unittest.TestCase):
 
 
 class StructureTests(unittest.TestCase):
-    def test_vendored_code_is_recorded_but_adds_no_language(self) -> None:
-        for path, vendored in (
-            ("web/coi-serviceworker.min.js", True),
-            ("lib/jquery-min.js", True),
-            ("third_party/json/json.hpp", True),
-            ("src/vendor/x.php", True),
-            ("src/minimal.js", False),
-            ("src/main.cpp", False),
+    def test_the_role_of_code_is_told_by_the_directories_it_is_in(self) -> None:
+        for path, expected in (
+            ("web/coi-serviceworker.min.js", "vendored"),
+            ("lib/jquery-min.js", "vendored"),
+            ("third_party/json/json.hpp", "vendored"),
+            ("deps/jemalloc/src/arena.c", "vendored"),
+            ("tests/test_app.py", "test"),
+            ("platform-tooling-support-tests/projects/vintage/src/A.java", "test"),
+            ("examples/minimal/server.ts", "example"),
+            ("docs/mkdocs/scripts/build.py", "docs"),
+            ("tools/gen.py", "tooling"),
+            ("benches/parse.rs", "benchmark"),
+            ("src/minimal.js", "product"),
+            ("src/main.cpp", "product"),
+            ("src/main/java/com/example/App.java", "product"),
+            ("src/test/java/com/example/AppTest.java", "product"),
+            ("src/vendor/x.php", "vendored"),
         ):
             with self.subTest(path=path):
-                self.assertEqual(is_vendored(path), vendored)
+                self.assertEqual(role(path), expected)
+        directories = (role("examples", directory=True), role("."), role(".", directory=True))
+        self.assertEqual(directories, ("example", "product", "product"))
+
+    def test_vendored_code_is_recorded_but_adds_no_language(self) -> None:
         with temp_project({"main.c": "", "web/sw.min.js": ""}) as root:
             context = make_context(root)
-            sources = {(source.path, source.vendored) for source in context.facts.of(SourceFile)}
-            self.assertEqual(sources, {("main.c", False), ("web/sw.min.js", True)})
+            sources = {(source.path, source.role) for source in context.facts.of(SourceFile)}
+            self.assertEqual(sources, {("main.c", "product"), ("web/sw.min.js", "vendored")})
             self.assertEqual(context.structure.languages, frozenset({"C"}))
             self.assertEqual(context.structure.as_dict()["vendored"], ["web/sw.min.js"])
 

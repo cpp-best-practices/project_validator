@@ -64,14 +64,14 @@
       "kind": "SourceFile",
       "language": "PHP",
       "origin": "src/Calculator.php",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "PHP",
       "origin": "tests/CalculatorTest.php",
-      "vendored": false
+      "role": "test"
     },
     {
       "files": 2,
@@ -87,7 +87,8 @@
       "languages": [
         "PHP"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -1788,7 +1789,8 @@
         "directory": ".",
         "languages": [
           "PHP"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": [

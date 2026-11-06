@@ -76,8 +76,10 @@ def built_in_tools() -> tuple[Tool, ...]:
 
 
 def _scope(command: Command) -> tuple[str, ...]:
-    directory = (command.directory or "").strip("/").removeprefix("./")
-    return (str(PurePosixPath(directory or ".")),)
+    directory = command.directory or "."
+    if directory.startswith(("/", "..")):
+        return ()  # outside the project: it covers none of the project's code
+    return (str(PurePosixPath(directory.removeprefix("./") or ".")),)
 
 
 def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun]:

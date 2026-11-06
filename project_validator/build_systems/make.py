@@ -4,6 +4,7 @@ Rules are read as written: variables are not expanded (except `$(MAKE)`, which r
 conditionals and included makefiles are not followed.
 """
 
+import posixpath
 import re
 from collections.abc import Iterator
 from dataclasses import dataclass, field
@@ -11,7 +12,7 @@ from dataclasses import dataclass, field
 from project_validator.core import Context
 from project_validator.facts import Command, Origin, Unknown
 from project_validator.facts.arguments import positional
-from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at
+from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, inside, joined
 
 MAKEFILES = ("GNUmakefile", "makefile", "Makefile")
 _PROGRAMS = frozenset({"make", "gmake", "mingw32-make"})
@@ -86,8 +87,12 @@ def _recipes(makefile: Makefile, path: str, target: str, visited: set[str]) -> I
 _OPTIONS = frozenset({"-C", "--directory", "-f", "--file", "-j", "--jobs"})
 
 
-def _makefile(command: Command, context: Context, options: dict[str, str]) -> str | None:
-    directory = options.get("-C") or options.get("--directory") or command.directory
+def _directory(command: Command, options: dict[str, str]) -> str:
+    """Where make runs: `-C` is relative to the directory the command runs in."""
+    return posixpath.normpath(joined(command.directory, options.get("-C") or options.get("--directory") or "."))
+
+
+def _makefile(context: Context, directory: str, options: dict[str, str]) -> str | None:
     named = options.get("-f") or options.get("--file")
     return found_at(context, directory, [named] if named else MAKEFILES)
 
@@ -97,7 +102,9 @@ def _make_targets(command: Command, context: Context) -> Iterator[Expansion] | N
     if not command.argv or command.argv[0] not in _PROGRAMS:
         return None
     words, options = positional(command.argv, _OPTIONS)
-    if (path := _makefile(command, context, options)) is None:
+    if not inside(context, directory := _directory(command, options)):
+        return None  # a build tree CI generates, or another checkout: not the project's makefiles
+    if (path := _makefile(context, directory, options)) is None:
         return iter((Unknown(origin=command.origin, subject="the makefile", reason="none is found where make runs"),))
     makefile = parse_makefile(context.project.read_text(path))
     goals = [word for word in words if "=" not in word] or ([makefile.default] if makefile.default else [])

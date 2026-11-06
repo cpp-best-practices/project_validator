@@ -37,5 +37,5 @@ source = ["project_validator"]
 relative_files = true
 
 [tool.coverage.report]
-fail_under = 95
+fail_under = 99
 show_missing = true

@@ -73,7 +73,7 @@
       "kind": "SourceFile",
       "language": "Rust",
       "origin": "src/lib.rs",
-      "vendored": false
+      "role": "product"
     },
     {
       "build_systems": [
@@ -83,7 +83,8 @@
       "languages": [
         "Rust"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -2530,7 +2531,8 @@
         "directory": ".",
         "languages": [
           "Rust"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": []

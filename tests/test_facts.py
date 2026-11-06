@@ -65,6 +65,23 @@ class ShellTests(unittest.TestCase):
         [unsplittable] = split_script("echo ${{ 'a' }} 'open", EXPRESSION)
         self.assertEqual(unsplittable, Unsplittable(line="echo ${{ 'a' }} 'open", reason="No closing quotation"))
 
+    def test_quoted_and_escaped_operator_characters_are_text(self) -> None:
+        for script, expected in (
+            ("awk -F '|' '{print $1}' f", [("awk", "-F", "|", "{print $1}", "f")]),
+            ("find . -exec rm {} ';' && ls", [("find", ".", "-exec", "rm", "{}", ";"), ("ls",)]),
+            ("find . -exec rm {} \\; | wc", [("find", ".", "-exec", "rm", "{}", ";"), ("wc",)]),
+            ('echo "a > b" "x\\"|y" > out', [("echo", "a > b", 'x"|y')]),
+            ("X='a;b' run", [("run",)]),
+        ):
+            with self.subTest(script=script):
+                self.assertEqual(self._split(script), expected)
+
+    def test_a_quoted_string_may_span_lines(self) -> None:
+        script = 'gh api x --jq ".runs[]\n | .id" | xargs echo\nls\n'
+        self.assertEqual(
+            self._split(script), [("gh", "api", "x", "--jq", ".runs[]\n | .id"), ("xargs", "echo"), ("ls",)]
+        )
+
     def test_an_unbalanced_quote_cannot_be_split(self) -> None:
         self.assertEqual(
             list(split_script('echo "open')), [Unsplittable(line='echo "open', reason="No closing quotation")]

@@ -67,7 +67,7 @@
       "kind": "SourceFile",
       "language": "JavaScript",
       "origin": "src/index.js",
-      "vendored": false
+      "role": "product"
     },
     {
       "files": 1,
@@ -83,7 +83,8 @@
       "languages": [
         "JavaScript"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "kind": "ConfigurationFile",
@@ -117,7 +118,8 @@
         "directory": ".",
         "languages": [
           "JavaScript"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": [
