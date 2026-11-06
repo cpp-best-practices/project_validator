@@ -44,6 +44,21 @@
   },
   "facts": [
     {
+      "build_system": "Python packaging",
+      "kind": "BuildFile",
+      "languages": [
+        "Python"
+      ],
+      "origin": "pyproject.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Python",
+      "origin": "tests/test_app.py",
+      "vendored": false
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -1418,6 +1433,24 @@
       "via": [
         ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
       ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "coverage.py"
+    },
+    {
+      "heuristic": false,
+      "key": "run.branch",
+      "kind": "Setting",
+      "origin": "pyproject.toml:run.branch",
+      "tool": "coverage.py",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pytest"
     },
     {
       "granularities": [

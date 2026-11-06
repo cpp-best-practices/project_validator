@@ -6,15 +6,17 @@ CI configuration when CI runs the build far enough to run them.
 """
 
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, first_existing
-from project_validator.facts import Command, resolved
+from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.coverage import CoverageTool, Granularity, Measure, Measurement, measured
 from project_validator.facts.expansion import positional, program
+from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -225,21 +227,76 @@ def _verifies(kind: str, steps: list[str]) -> bool:
     return bool(set(steps) & ({"verify", "install", "deploy"} if kind == "maven" else {"build", "check"}))
 
 
-def _jvm_coverage(runs: str, bound: str) -> Measure:
-    """A coverage tool whose report a goal or task `runs`, or which the build files bind (`bound`) to the
-    verification CI runs."""
-    report, binding = re.compile(runs), _setting("", bound).regex
+_PLUGIN_BLOCK = re.compile(r"<plugin>(.*?)</plugin>", re.DOTALL)
+_ARTIFACT = re.compile(r"<artifactId>\s*([\w.-]+)\s*</artifactId>")
+_GOAL = re.compile(r"<goal>\s*([\w.:-]+)\s*</goal>")
 
-    def measures(command: Command, context: Context) -> Measurement | None:
+
+def _read_maven_plugins(path: str, text: str) -> Iterator[Setting]:
+    """Each plugin a POM declares, with the goals its executions bind (`plugin.<artifactId>`); matched in its text
+    when it does not parse."""
+    root = xml_root("Maven", path, text)
+    if isinstance(root, Unknown):
+        blocks = ((_ARTIFACT.search(block), _GOAL.findall(block)) for block in _PLUGIN_BLOCK.findall(text))
+        found = ((f"plugin.{artifact[1]}", tuple(goals)) for artifact, goals in blocks if artifact)
+        yield from settings("Maven", path, found, heuristic=True)
+        return
+    for plugin in root.iter("plugin"):
+        artifact = (plugin.findtext("artifactId") or "").strip()
+        goals = tuple((goal.text or "").strip() for goal in plugin.iter("goal"))
+        yield from settings("Maven", path, ((f"plugin.{artifact}", goals),))
+
+
+MAVEN_PLUGINS = SettingsReader(name="Maven", files=(POM,), read=_read_maven_plugins)
+_GRADLE_PLUGIN_ID = re.compile(GRADLE_PLUGIN.format(r"([\w.-]+)"))
+_GRADLE_TASK_LINK = re.compile(r"\b(?:finalizedBy|dependsOn)\b\s*\(?\s*(?:tasks\.(?:named\s*\(\s*)?)?[\"']?(\w+)")
+
+
+def _read_gradle_settings(path: str, text: str) -> Iterator[Setting]:
+    """The plugins a Gradle build applies, and the tasks it links to others (`finalizedBy`): matched in its code."""
+    yield from matched_settings(
+        "Gradle", path, text, {"plugin": (_GRADLE_PLUGIN_ID, None), "task": (_GRADLE_TASK_LINK, None)}
+    )
+
+
+GRADLE_SETTINGS = SettingsReader(name="Gradle", files=GRADLE_BUILD_FILES, read=_read_gradle_settings)
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class _Wiring:
+    """How a JVM coverage tool runs: a goal or task that writes its report (`report`), or a Maven plugin (with a goal
+    matching `bound_goal`, when given) or Gradle plugin or linked task that the verification CI runs brings in."""
+
+    report: re.Pattern[str]
+    maven_plugin: str
+    bound_goal: re.Pattern[str] | None
+    gradle_plugin: str | None = None
+
+
+def _wired(wiring: _Wiring, kind: str, facts: Facts) -> list[Setting]:
+    if kind == "maven":
+        plugins = facts.where(Setting, tool="Maven", key=f"plugin.{wiring.maven_plugin}")
+        goal = wiring.bound_goal
+        return [found for found in plugins if goal is None or any(map(goal.fullmatch, found.value))]  # type: ignore[call-overload]
+    applied = [
+        found for found in facts.where(Setting, tool="Gradle", key="plugin") if found.value == wiring.gradle_plugin
+    ]
+    linked = [
+        found for found in facts.where(Setting, tool="Gradle", key="task") if wiring.report.fullmatch(str(found.value))
+    ]
+    return [*applied, *linked]
+
+
+def _jvm_coverage(wiring: _Wiring) -> Measure:
+    def measures(command: Command, facts: Facts) -> Measurement | None:
         found = _build_steps(command)
         if found is None:
             return None
         kind, steps = found
-        if any(report.fullmatch(step) for step in steps):
+        if any(wiring.report.fullmatch(step) for step in steps):
             return measured(Granularity.LINE, Granularity.BRANCH)
-        if _verifies(kind, steps):
-            files = [path for path in _build_files(context) if binding.search(context.project.read_text(path))]
-            return measured(Granularity.LINE, Granularity.BRANCH, read=files, heuristic=True) if files else None
+        if _verifies(kind, steps) and (read := _wired(wiring, kind, facts)):
+            return measured(Granularity.LINE, Granularity.BRANCH, read=read)
         return None
 
     return measures
@@ -255,18 +312,29 @@ JACOCO = CoverageTool(
         Granularity.BRANCH: "jacoco:report or jacocoTestReport",
     },
     measures=_jvm_coverage(
-        r"(?:org\.jacoco:)?jacoco(?:-maven-plugin)?(?::[^:]+)?:report[\w-]*|jacoco\w*Report",
-        rf"\bjacocoTestReport\b|{_bound_goal('jacoco-maven-plugin', 'report[\\w-]*')}",
+        _Wiring(
+            report=re.compile(r"(?:org\.jacoco:)?jacoco(?:-maven-plugin)?(?::[^:]+)?:report[\w-]*|jacoco\w*Report"),
+            maven_plugin="jacoco-maven-plugin",
+            bound_goal=re.compile(r"report[\w-]*"),
+        )
     ),
+    reads=("Maven", "Gradle"),
 )
 KOVER = CoverageTool(
     name="Kover",
     languages=JVM_LANGUAGES,
     can={Granularity.LINE: "koverXmlReport", Granularity.BRANCH: "koverXmlReport"},
     measures=_jvm_coverage(
-        r"kover\w*Report|(?:org\.jetbrains\.kotlinx:)?kover(?:-maven-plugin)?(?::[^:]+)?:report[\w-]*",
-        r"\borg\.jetbrains\.kotlinx\.kover\b|<artifactId>kover-maven-plugin</artifactId>",
+        _Wiring(
+            report=re.compile(
+                r"kover\w*Report|(?:org\.jetbrains\.kotlinx:)?kover(?:-maven-plugin)?(?::[^:]+)?:report[\w-]*"
+            ),
+            maven_plugin="kover-maven-plugin",
+            bound_goal=None,
+            gradle_plugin="org.jetbrains.kotlinx.kover",
+        )
     ),
+    reads=("Maven", "Gradle"),
 )
 
 XLINT = _setting("-Xlint:all", r"-Xlint(?::all)?(?![:\w-])")

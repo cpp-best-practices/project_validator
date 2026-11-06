@@ -55,6 +55,21 @@
   },
   "facts": [
     {
+      "build_system": "Cargo",
+      "kind": "BuildFile",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "Cargo.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Rust",
+      "origin": "src/lib.rs",
+      "vendored": false
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",

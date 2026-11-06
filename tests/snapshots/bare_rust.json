@@ -45,7 +45,30 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "Cargo",
+      "kind": "BuildFile",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "Cargo.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Rust",
+      "origin": "src/lib.rs",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Rust",
+      "origin": "src/main.rs",
+      "vendored": false
+    }
+  ],
   "map": {
     "build_systems": [
       "Cargo"

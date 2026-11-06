@@ -7,7 +7,7 @@ CI runs count as CI configuration wherever a rule reads more than CI configurati
 
 import json
 import re
-from collections.abc import Iterator
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 
 from project_validator.build_configurations import option_values
@@ -21,7 +21,7 @@ from project_validator.evidence import (
     json_value,
     scripts_run,
 )
-from project_validator.facts import Command, Origin, Unknown, resolved
+from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
 from project_validator.facts.coverage import CoverageTool, Granularity, Measure, Measurement, measured
 from project_validator.facts.expansion import (
     CommandExpander,
@@ -33,6 +33,7 @@ from project_validator.facts.expansion import (
     positional,
     program,
 )
+from project_validator.facts.settings import Read, SettingsReader, json_settings, matched_settings
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -268,27 +269,65 @@ _VITEST_ENABLES = re.compile(r"\bcoverage\s*:\s*\{[^}]*\benabled\s*:\s*true\b")
 BOTH = (Granularity.LINE, Granularity.BRANCH)
 
 
+def _named_config(name: str) -> Callable[[Command], list[str]]:
+    """The configuration file a command of the runner `name` names (`--config`), relative to the project."""
+
+    def named(command: Command) -> list[str]:
+        argv = resolved(command)
+        return (
+            [joined(command.directory, path) for path in option_values(argv, "--config", "-c")]
+            if program(argv) == name
+            else []
+        )
+
+    return named
+
+
+def _runner_settings(tool: str, key: str, pattern: re.Pattern[str]) -> Read:
+    """A runner's settings: a JSON configuration (or package.json's `jest`) as written, code matched by `pattern`."""
+
+    def read(path: str, text: str) -> Iterable[Fact]:
+        if path.endswith(PACKAGE_JSON):
+            return json_settings(tool, path, text, "jest")
+        if path.endswith(".json"):
+            return json_settings(tool, path, text)
+        return matched_settings(tool, path, text, {key: (pattern, True)})
+
+    return read
+
+
+JEST_SETTINGS = SettingsReader(
+    name="Jest",
+    files=(*JEST_CONFIG_FILES, PACKAGE_JSON),
+    read=_runner_settings("Jest", "collectCoverage", _JEST_COLLECTS),
+    named_by=_named_config("jest"),
+)
+VITEST_SETTINGS = SettingsReader(
+    name="Vitest",
+    files=VITEST_CONFIG_FILES,
+    read=_runner_settings("Vitest", "coverage.enabled", _VITEST_ENABLES),
+    named_by=_named_config("vitest"),
+)
+
+
 def _asks_for_coverage(argv: tuple[str, ...], *flags: str) -> bool:
     return any(word in flags or word in (f"{flag}=true" for flag in flags) for word in argv)
 
 
-def _test_runner(name: str, flags: tuple[str, ...], files: tuple[str, ...], enabled: re.Pattern[str]) -> Measure:
-    """A test runner that reports coverage when one of `flags` asks it to, or when its configuration (the file it is
-    given, else the first of `files`) has it on (heuristically: the configuration is code)."""
+def _test_runner(name: str, tool: str, flags: tuple[str, ...], files: tuple[str, ...], key: str) -> Measure:
+    """A test runner that reports coverage when one of `flags` asks it to, or when the configuration it reads (the
+    file it is given, else the first of `files`; for Jest, else package.json's `jest`) turns `key` on."""
 
-    def measures(command: Command, context: Context) -> Measurement | None:
+    def measures(command: Command, facts: Facts) -> Measurement | None:
         argv = resolved(command)
         if program(argv) != name:
             return None
         if _asks_for_coverage(argv, *flags):
             return measured(*BOTH)
-        path = found_at(context, command.directory, option_values(argv, "--config", "-c") or files)
-        if path is not None and enabled.search(context.project.read_text(path)):
-            return measured(*BOTH, read=[path], heuristic=True)
-        manifest = joined(command.directory, PACKAGE_JSON)
-        if name == "jest" and json_value(context, manifest, "jest", "collectCoverage") is True:
-            return measured(*BOTH, read=[manifest])
-        return None
+        candidates = _named_config(name)(command) or [joined(command.directory, file) for file in files]
+        configuration = facts.first_file(tool, candidates) or joined(command.directory, PACKAGE_JSON)
+        setting = facts.setting(tool, key, paths=[configuration])
+        return measured(*BOTH, read=[setting]) if setting is not None and setting.value is True else None
 
     return measures
 
@@ -296,24 +335,24 @@ def _test_runner(name: str, flags: tuple[str, ...], files: tuple[str, ...], enab
 def _instrumenter(name: str) -> Measure:
     """c8 or nyc, which run a command and report its coverage."""
 
-    def measures(command: Command, _: Context) -> Measurement | None:
+    def measures(command: Command, _: Facts) -> Measurement | None:
         return measured(*BOTH) if program(resolved(command)) == name else None
 
     return measures
 
 
-def _deno(command: Command, _: Context) -> Measurement | None:
+def _deno(command: Command, _: Facts) -> Measurement | None:
     argv = resolved(command)
     asked = any(word.partition("=")[0] == "--coverage" for word in argv)
     return measured(*BOTH) if program(argv) == "deno" and argv[1:2] == ("test",) and asked else None
 
 
-def _node(command: Command, _: Context) -> Measurement | None:
+def _node(command: Command, _: Facts) -> Measurement | None:
     argv = resolved(command)
     return measured(*BOTH) if program(argv) == "node" and "--experimental-test-coverage" in argv else None
 
 
-def _bun(command: Command, _: Context) -> Measurement | None:
+def _bun(command: Command, _: Facts) -> Measurement | None:
     """Bun's test runner counts lines (and functions), not branches."""
     argv = resolved(command)
     return (
@@ -323,9 +362,13 @@ def _bun(command: Command, _: Context) -> Measurement | None:
     )
 
 
-def _reports_branches(name: str, how: str, measures: Measure) -> CoverageTool:
+def _reports_branches(name: str, how: str, measures: Measure, reads: tuple[str, ...] = ()) -> CoverageTool:
     return CoverageTool(
-        name=name, languages=JS_LANGUAGES, can={Granularity.LINE: how, Granularity.BRANCH: how}, measures=measures
+        name=name,
+        languages=JS_LANGUAGES,
+        can={Granularity.LINE: how, Granularity.BRANCH: how},
+        measures=measures,
+        reads=reads,
     )
 
 
@@ -336,12 +379,14 @@ NYC = _reports_branches("nyc", "nyc", _instrumenter("nyc"))
 JEST = _reports_branches(
     "Jest",
     "jest --coverage",
-    _test_runner("jest", ("--coverage", "--collectCoverage"), JEST_CONFIG_FILES, _JEST_COLLECTS),
+    _test_runner("jest", "Jest", ("--coverage", "--collectCoverage"), JEST_CONFIG_FILES, "collectCoverage"),
+    reads=("Jest",),
 )
 VITEST = _reports_branches(
     "Vitest",
     "vitest --coverage",
-    _test_runner("vitest", ("--coverage", "--coverage.enabled"), VITEST_CONFIG_FILES, _VITEST_ENABLES),
+    _test_runner("vitest", "Vitest", ("--coverage", "--coverage.enabled"), VITEST_CONFIG_FILES, "coverage.enabled"),
+    reads=("Vitest",),
 )
 DENO_TEST = _reports_branches("deno test", "deno test --coverage", _deno)
 NODE_TEST = _reports_branches("node --test", "node --test --experimental-test-coverage", _node)

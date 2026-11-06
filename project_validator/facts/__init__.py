@@ -7,7 +7,7 @@ questions query them (see docs/architecture.md). Nothing here judges a project.
 import dataclasses
 import re
 from collections.abc import Iterable, Iterator, Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from types import MappingProxyType
 
 type Location = tuple[str | int, ...]
@@ -102,23 +102,88 @@ class ActionStep(Fact):
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Unknown(Fact):
-    """Something an extractor could not read, so that its absence is not taken for "no"."""
+    """Something an extractor could not read, so that its absence is not taken for "no".
+
+    `tools` names the tools whose settings could not be read; none means it may hide anything.
+    """
 
     subject: str
     reason: str
+    tools: tuple[str, ...] = ()
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Setting(Fact):
+    """A setting of a tool, as a configuration file writes it: `key` is dotted (`run.branch`) and `value` is a string,
+    number, boolean, or tuple of those. `heuristic` settings are matched in text that is not parsed (code)."""
+
+    tool: str
+    key: str
+    value: object
+    heuristic: bool = False
+
+    @property
+    def path(self) -> str:
+        return self.origin.path
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class ConfigurationFile(Fact):
+    """A file a settings reader (`reader`, named after its tool) read, whatever it holds."""
+
+    reader: str
+
+    @property
+    def path(self) -> str:
+        return self.origin.path
+
+
 class Facts:
-    """Every fact about one project, in the order the extractors recorded them."""
+    """Every fact about one project, in the order the extractors recorded them, with the queries questions use."""
 
-    all: tuple[Fact, ...] = field(default=())
+    __slots__ = ("_kinds", "all")
 
-    def of[F: Fact](self, kind: type[F]) -> tuple[F, ...]:
-        return tuple(fact for fact in self.all if isinstance(fact, kind))
+    def __init__(self, found: Iterable[Fact] = ()) -> None:
+        self.all = tuple(found)
+        self._kinds: dict[type[Fact], tuple[Fact, ...]] = {}
 
     def __iter__(self) -> Iterator[Fact]:
         return iter(self.all)
+
+    def __add__(self, more: Iterable[Fact]) -> Facts:
+        return Facts((*self.all, *more))
+
+    def of[F: Fact](self, kind: type[F]) -> tuple[F, ...]:
+        """The facts of `kind` (or a subclass), in order."""
+        if kind not in self._kinds:
+            self._kinds[kind] = tuple(fact for fact in self.all if isinstance(fact, kind))
+        return self._kinds[kind]  # type: ignore[return-value]
+
+    def where[F: Fact](self, kind: type[F], **fields: object) -> tuple[F, ...]:
+        """The facts of `kind` whose `fields` have the values given."""
+        return tuple(
+            fact for fact in self.of(kind) if all(getattr(fact, name) == value for name, value in fields.items())
+        )
+
+    def settings(self, tool: str, *, paths: Iterable[str] | None = None) -> tuple[Setting, ...]:
+        """The settings of `tool`, in the files `paths` (in that order) or anywhere."""
+        found = self.where(Setting, tool=tool)
+        if paths is None:
+            return found
+        return tuple(setting for path in dict.fromkeys(paths) for setting in found if setting.path == path)
+
+    def setting(self, tool: str, key: str, *, paths: Iterable[str] | None = None) -> Setting | None:
+        """The first setting of `tool` called `key`, in the files `paths` (in that order) or anywhere."""
+        return next((setting for setting in self.settings(tool, paths=paths) if setting.key == key), None)
+
+    def first_file(self, reader: str, paths: Iterable[str]) -> str | None:
+        """The first of `paths` that `reader` read: the file a tool reads when it reads the first that exists."""
+        read = {found.path for found in self.where(ConfigurationFile, reader=reader)}
+        return next((path for path in paths if path in read), None)
+
+    def configured(self, tool: str, paths: Iterable[str]) -> str | None:
+        """The first of `paths` that has a setting of `tool`: the file the tool reads, when it reads the first."""
+        return next((setting.path for setting in self.settings(tool, paths=paths)), None)
 
     def as_dicts(self) -> list[dict[str, object]]:
         return [as_dict(fact) for fact in self.all]
@@ -154,9 +219,11 @@ __all__ = [
     "ActionStep",
     "CiJob",
     "Command",
+    "ConfigurationFile",
     "Fact",
     "Facts",
     "Origin",
+    "Setting",
     "Unknown",
     "as_dict",
     "collected",

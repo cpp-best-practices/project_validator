@@ -1,7 +1,9 @@
-"""Components (command expanders, coverage tools) are found in the modules that define them, never listed.
+"""Components (command expanders, settings readers, coverage tools, questions) are found in the modules that define
+them, never listed.
 
 A component lives in a module of the shared build systems (`project_validator.build_systems`), the shared tools
-(`project_validator.tools`), or the profile of the only language that uses it (see docs/architecture.md).
+(`project_validator.tools`), the questions (`project_validator.questions`), or the profile of the only language that
+uses it (see docs/architecture.md).
 """
 
 import importlib
@@ -11,7 +13,7 @@ from functools import cache
 from types import ModuleType
 
 # The packages whose modules may define components, besides the profiles.
-_PACKAGES = ("project_validator.build_systems", "project_validator.tools")
+_PACKAGES = ("project_validator.build_systems", "project_validator.tools", "project_validator.questions")
 
 
 def _modules() -> Iterator[ModuleType]:

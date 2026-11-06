@@ -1,19 +1,16 @@
 """Coverage facts: what each coverage tool that CI runs measures, and what each known tool can measure.
 
 A `CoverageTool` records its whole upstream capability, keyed by the languages it measures (never by a profile), and
-claims the commands that run it. A command it claims becomes a `CoverageMeasured` fact, joined with the
-configuration that command reads: a setting counts only when CI runs the tool that reads it.
+claims the commands that run it. A command it claims becomes a `CoverageMeasured` fact, joined with the settings
+(see `project_validator.facts.settings`) that command reads: a setting counts only when CI runs the tool that reads
+it. Tools read nothing but the facts.
 """
 
 import enum
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
-from project_validator.facts import Command, Fact, Facts, Origin
-
-if TYPE_CHECKING:
-    from project_validator.core import Context
+from project_validator.facts import Command, Fact, Facts, Origin, Setting
 
 
 class Granularity(enum.StrEnum):
@@ -43,18 +40,20 @@ class Measurement:
     heuristic: bool = False
 
 
-type Measure = Callable[[Command, Context], Measurement | None]
+type Measure = Callable[[Command, Facts], Measurement | None]
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class CoverageTool:
-    """A coverage tool: the languages it measures, each granularity it can measure with how to ask for it, and
-    `measures`, which reads a command that runs it (None for a command that does not)."""
+    """A coverage tool: the languages it measures, each granularity it can measure with how to ask for it,
+    `measures`, which reads a command that runs it (None for a command that does not), and the tools whose settings
+    it reads (`reads`), whose unreadable settings make its answers unknown."""
 
     name: str
     languages: frozenset[str]
     can: Mapping[Granularity, str]
     measures: Measure
+    reads: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -77,12 +76,12 @@ def built_in_coverage_tools() -> tuple[CoverageTool, ...]:
     return built_in(CoverageTool)
 
 
-def coverage_facts(facts: Facts, context: Context, tools: Iterable[CoverageTool]) -> Iterator[CoverageMeasured]:
+def coverage_facts(facts: Facts, tools: Iterable[CoverageTool]) -> Iterator[CoverageMeasured]:
     """What the coverage tools among `tools` measure in each command of `facts` that runs one."""
     tools = tuple(tools)
     for command in facts.of(Command):
         for tool in tools:
-            measured = tool.measures(command, context)
+            measured = tool.measures(command, facts)
             if measured is not None and measured.granularities:
                 yield CoverageMeasured(
                     origin=command.origin,
@@ -96,12 +95,18 @@ def coverage_facts(facts: Facts, context: Context, tools: Iterable[CoverageTool]
                 )
 
 
-def measured(*granularities: Granularity | None, read: Iterable[str] = (), heuristic: bool = False) -> Measurement:
-    """A measurement of the `granularities` that are not None."""
+def measured(
+    *granularities: Granularity | None, read: Iterable[Setting | str] = (), heuristic: bool = False
+) -> Measurement:
+    """A measurement of the `granularities` that are not None, from the settings (or files) `read`; it is heuristic
+    when one of those settings is."""
+    read = tuple(read)
+    paths = (found.path if isinstance(found, Setting) else found for found in read)
+    guessed = any(isinstance(found, Setting) and found.heuristic for found in read)
     return Measurement(
         granularities=frozenset(found for found in granularities if found is not None),
-        read=tuple(dict.fromkeys(read)),
-        heuristic=heuristic,
+        read=tuple(dict.fromkeys(paths)),
+        heuristic=heuristic or guessed,
     )
 
 

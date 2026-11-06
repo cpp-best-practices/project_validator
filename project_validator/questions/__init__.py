@@ -5,6 +5,12 @@ extractors (see docs/architecture.md).
 """
 
 import enum
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Protocol
+
+if TYPE_CHECKING:
+    from project_validator.facts import Facts
 
 
 class Answer(enum.StrEnum):
@@ -17,4 +23,24 @@ class Answer(enum.StrEnum):
     IMPOSSIBLE = "impossible"
 
 
-__all__ = ["Answer"]
+class Answered(Protocol):
+    def as_dict(self) -> dict[str, object]: ...
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Question:
+    """A question about the project, answered per language from the facts. Questions are found, never listed."""
+
+    name: str
+    description: str
+    answer: Callable[[str, Facts], Answered]
+
+
+def built_in_questions() -> tuple[Question, ...]:
+    """Every question defined by a module of `project_validator.questions`."""
+    from project_validator.components import built_in
+
+    return built_in(Question)
+
+
+__all__ = ["Answer", "Answered", "Question", "built_in_questions"]

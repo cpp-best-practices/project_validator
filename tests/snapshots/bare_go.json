@@ -36,7 +36,36 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "Go modules",
+      "kind": "BuildFile",
+      "languages": [
+        "Go"
+      ],
+      "origin": "go.mod"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Go",
+      "origin": "app.go",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Go",
+      "origin": "cmd/app/main.go",
+      "vendored": false
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".out"
+    }
+  ],
   "map": {
     "build_systems": [
       "Go modules"

@@ -7,7 +7,7 @@ from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import configuration, existing_texts, first_existing, toml_value
-from project_validator.facts import Command, resolved
+from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
 from project_validator.facts.expansion import has_option, program
 from project_validator.rules import (
@@ -86,20 +86,20 @@ def _cargo(command: Command, name: str) -> tuple[str, ...] | None:
     return argv[1:] if argv[:2] == ("cargo", name) else None
 
 
-def _cargo_llvm_cov(command: Command, _: Context) -> Measurement | None:
+def _cargo_llvm_cov(command: Command, _: Facts) -> Measurement | None:
     if (argv := _cargo(command, "llvm-cov")) is None:
         return None
     branch = has_option(argv, "--branch")
     return measured(LINE, REGION, BRANCH if branch else None, PATH if has_option(argv, "--mcdc") else None)
 
 
-def _cargo_tarpaulin(command: Command, _: Context) -> Measurement | None:
+def _cargo_tarpaulin(command: Command, _: Facts) -> Measurement | None:
     if (argv := _cargo(command, "tarpaulin")) is None:
         return None
     return measured(LINE, BRANCH if has_option(argv, "--branch", "-b") else None)
 
 
-def _grcov(command: Command, _: Context) -> Measurement | None:
+def _grcov(command: Command, _: Facts) -> Measurement | None:
     argv = resolved(command)
     if program(argv) != "grcov":
         return None
@@ -109,7 +109,7 @@ def _grcov(command: Command, _: Context) -> Measurement | None:
 _MCDC = re.compile(r"-Z\s*coverage-options=\S*mcdc")
 
 
-def _rustc_mcdc(command: Command, _: Context) -> Measurement | None:
+def _rustc_mcdc(command: Command, _: Facts) -> Measurement | None:
     """rustc's MC/DC instrumentation, on a command line or in RUSTFLAGS."""
     words = (" ".join(resolved(command)), command.env.get("RUSTFLAGS", ""))
     return measured(PATH) if any(_MCDC.search(word) for word in words) else None
