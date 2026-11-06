@@ -14,6 +14,7 @@ from project_validator.ecosystems import (
     JVM,
     PHP,
     PYTHON,
+    RUBY,
     RUST,
     Ecosystem,
     applies_to,
@@ -31,6 +32,7 @@ FIXTURES_OF = {
     JAVASCRIPT_AND_TYPESCRIPT: ("well_configured_javascript", "bare_javascript"),
     JVM: ("well_configured_jvm", "bare_jvm"),
     PHP: ("well_configured_php", "bare_php"),
+    RUBY: ("well_configured_ruby", "bare_ruby"),
 }
 
 
