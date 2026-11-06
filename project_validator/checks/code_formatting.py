@@ -11,7 +11,7 @@ from project_validator.text import matching_names
 )
 def code_formatting(formatter: Formatter, context: Context) -> Result:
     config = formatter.config_file(context)
-    tools = matching_names(context.ci_texts, formatter.runs)
+    tools = matching_names(formatter.texts(context), formatter.runs)
     if tools and config is not None:
         return Result.passed(f"{config} is defined and CI runs {', '.join(tools)}")
     if tools and formatter.default_style:

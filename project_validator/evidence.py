@@ -1,10 +1,12 @@
 """Gathering the files whose text a rule searches for evidence."""
 
+import json
 import re
 import tomllib
 from collections.abc import Callable, Iterable, Mapping
 
 from project_validator.core import Context
+from project_validator.text import strip_json_comments
 
 
 def first_existing(context: Context, names: Iterable[str]) -> str | None:
@@ -15,6 +17,15 @@ def existing_texts(context: Context, names: Iterable[str]) -> tuple[str, ...]:
     return tuple(context.project.read_text(name) for name in names if context.project.exists(name))
 
 
+def _at(value: object, keys: tuple[str, ...]) -> object | None:
+    """The value at `keys` in nested tables; None when one is missing."""
+    for key in keys:
+        if not isinstance(value, dict):
+            return None
+        value = value.get(key)
+    return value
+
+
 def toml_value(context: Context, path: str, *keys: str) -> object | None:
     """The value at `keys` in the TOML file `path`; None when the file, or the value, is missing or does not parse."""
     if not context.project.exists(path):
@@ -23,11 +34,20 @@ def toml_value(context: Context, path: str, *keys: str) -> object | None:
         value: object = tomllib.loads(context.project.read_text(path))
     except tomllib.TOMLDecodeError:
         return None
-    for key in keys:
-        if not isinstance(value, dict):
-            return None
-        value = value.get(key)
-    return value
+    return _at(value, keys)
+
+
+def json_value(context: Context, path: str, *keys: str, comments: bool = False) -> object | None:
+    """The value at `keys` in the JSON file `path` (with `comments`, JSON with comments and trailing commas); None
+    when the file, or the value, is missing or does not parse."""
+    if not context.project.exists(path):
+        return None
+    text = context.project.read_text(path)
+    try:
+        value: object = json.loads(strip_json_comments(text) if comments else text)
+    except json.JSONDecodeError:
+        return None
+    return _at(value, keys)
 
 
 # pre-commit's configuration: a hook it runs counts as evidence much as a CI step does.

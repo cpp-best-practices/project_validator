@@ -1,7 +1,6 @@
 """Every JSON, TOML, YAML and XML file parses: real validation, since a broken data file is a bug."""
 
 import json
-import re
 import tomllib
 from collections import Counter
 from collections.abc import Callable, Mapping
@@ -11,6 +10,7 @@ from xml.parsers import expat
 
 from project_validator import yaml_support
 from project_validator.core import Context, Result, check
+from project_validator.text import strip_json_comments
 
 # Hidden directories that hold configuration worth parsing (CI, editors, dev containers).
 CONFIGURATION_DIRECTORIES = frozenset({".github", ".gitlab", ".circleci", ".buildkite", ".devcontainer", ".vscode"})
@@ -33,24 +33,10 @@ def _decoded(data: bytes) -> str:
         raise _ParseError(f"not UTF-8 ({error.reason} at byte {error.start})") from error
 
 
-# A string, a comment, or a comma that only whitespace separates from the closing bracket.
-_JSONC_TOKENS = re.compile(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/|,(?=\s*[}\]])', re.DOTALL)
-
-
-def _without_comments(text: str) -> str:
-    """JSON with comments and trailing commas as plain JSON; comments become blanks, so positions are kept."""
-
-    def blank(match: re.Match[str]) -> str:
-        token = match[0]
-        return token if token.startswith('"') else re.sub(r"[^\n]", " ", token)
-
-    return _JSONC_TOKENS.sub(blank, _JSONC_TOKENS.sub(blank, text))
-
-
 def _parse_json(data: bytes, *, comments: bool = False) -> None:
     text = _decoded(data)
     try:
-        json.loads(_without_comments(text) if comments else text)
+        json.loads(strip_json_comments(text) if comments else text)
     except json.JSONDecodeError as error:
         raise _ParseError(error.msg, error.lineno, error.colno) from error
 

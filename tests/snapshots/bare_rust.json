@@ -174,7 +174,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to Rust (applies to Python)",
+      "message": "not applicable to Rust (applies to JavaScript, Python, TypeScript)",
       "status": "SKIP"
     },
     "vcs-ignore": {
@@ -186,7 +186,7 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Rust (applies to C, C++)",
+      "message": "not applicable to Rust (applies to C, C++, JavaScript, TypeScript)",
       "status": "SKIP"
     }
   }

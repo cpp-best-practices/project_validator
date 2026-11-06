@@ -134,6 +134,18 @@ PROJECT_LAYOUTS = (
         build_systems=frozenset({"Go modules"}),
     ),
     ProjectLayout(
+        name="npm JavaScript",
+        files={"package.json": '{"main": "index.js"}\n', "index.js": ""},
+        languages=frozenset({"JavaScript"}),
+        build_systems=frozenset({"npm"}),
+    ),
+    ProjectLayout(
+        name="Deno TypeScript",
+        files={"deno.json": "{}\n", "main.ts": ""},
+        languages=frozenset({"TypeScript"}),
+        build_systems=frozenset({"Deno"}),
+    ),
+    ProjectLayout(
         name="Unrecognised language",
         files={"README.md": "", "src/main.zig": ""},
         languages=frozenset(),
@@ -226,6 +238,7 @@ BARE_PROJECT = fixture_files("bare_project")
 WELL_CONFIGURED_PYTHON = fixture_files("well_configured_python")
 WELL_CONFIGURED_RUST = fixture_files("well_configured_rust")
 WELL_CONFIGURED_GO = fixture_files("well_configured_go")
+WELL_CONFIGURED_JAVASCRIPT = fixture_files("well_configured_javascript")
 
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}

@@ -1,0 +1,202 @@
+{
+  "map": {
+    "build_systems": [
+      "npm"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "JavaScript/TypeScript": [
+        "build file package.json",
+        ".js files"
+      ]
+    },
+    "languages": [
+      "JavaScript"
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".info"
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to JavaScript (applies to C, C++, Rust)",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs prettier --check . (or biome ci, deno fmt --check or dprint check)"
+      ],
+      "message": "CI never runs prettier, biome, deno fmt or dprint; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "coverage/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no JavaScript linters found; enable at least eslint",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding PMD CPD (pmd cpd --language cpp), jscpd, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [],
+      "message": "no branch coverage reporting found in CI configuration, the package scripts it runs, or the test runner's settings",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to JavaScript (applies to C, C++)",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "1 data file parses (JSON: 1)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [
+        "consider running npm audit (or pnpm audit, yarn npm audit or bun audit) in CI"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    "dependency-management": {
+      "details": [
+        "commit the package manager's lockfile (package-lock.json, pnpm-lock.yaml, yarn.lock, bun.lock or deno.lock) and install from it in CI (npm ci, pnpm install --frozen-lockfile, yarn install --immutable)"
+      ],
+      "message": "dependencies are declared in package.json but not locked",
+      "status": "WARN"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is never limited; enable eslint's max-lines-per-function rule or run lizard --length 30 in CI",
+      "status": "FAIL"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to JavaScript (applies to C, C++, Go, Rust)",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
+        "or enable each language's security lints (JavaScript/TypeScript: eslint-plugin-security, semgrep JavaScript rules)"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running eslint (or biome lint, or deno lint) in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no JavaScript or TypeScript tests found (*.test.*, *.spec.* or __tests__/ files)",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [
+        "consider running tsc --noEmit in CI (JavaScript is checked with checkJs in a jsconfig.json, or deno check)"
+      ],
+      "message": "no type checker runs",
+      "status": "FAIL"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "run eslint with --max-warnings 0 (or biome ci, or deno lint), so that a lint warning fails CI"
+      ],
+      "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+      "status": "FAIL"
+    }
+  }
+}

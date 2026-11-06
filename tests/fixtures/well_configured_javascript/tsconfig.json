@@ -1,0 +1,10 @@
+{
+  // Type check everything; the build writes dist/.
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "nodenext",
+    "strict": true,
+    "outDir": "dist",
+  },
+  "include": ["src"],
+}

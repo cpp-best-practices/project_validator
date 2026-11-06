@@ -133,7 +133,10 @@ class EcosystemPluginTests(unittest.TestCase):
 
     def test_a_plugin_ecosystem_is_registered_and_practices_apply_to_it(self) -> None:
         plugins = self._discover_zig()
-        self.assertEqual([ecosystem.label for ecosystem in registered()], ["C/C++", "Python", "Rust", "Go", "Zig"])
+        self.assertEqual(
+            [ecosystem.label for ecosystem in registered()],
+            ["C/C++", "Python", "Rust", "Go", "JavaScript/TypeScript", "Zig"],
+        )
         formatting = next(found for found in plugins.checks if found.name == "code-formatting")
         self.assertIn("Zig", formatting.languages)
         self.assertIn("Zig", applies_to(formatting))
@@ -154,7 +157,10 @@ class EcosystemPluginTests(unittest.TestCase):
     def test_loading_a_plugin_again_replaces_its_ecosystem(self) -> None:
         self._discover_zig()
         self._discover_zig()
-        self.assertEqual([ecosystem.label for ecosystem in registered()], ["C/C++", "Python", "Rust", "Go", "Zig"])
+        self.assertEqual(
+            [ecosystem.label for ecosystem in registered()],
+            ["C/C++", "Python", "Rust", "Go", "JavaScript/TypeScript", "Zig"],
+        )
 
     def test_rejects_an_ecosystem_with_a_built_in_label(self) -> None:
         clash = ECOSYSTEM_PLUGIN.replace('label="Zig"', 'label="Python"')
