@@ -165,10 +165,15 @@ class SecurityLints:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class DependencyAudit:
-    """The tools that check an ecosystem's dependencies against known vulnerabilities when CI runs them."""
+    """The tools that check an ecosystem's dependencies against known vulnerabilities when CI runs them.
+
+    They are searched in `texts`: CI configuration, unless the ecosystem's CI runs them through files it can read,
+    such as a build that runs its plugins.
+    """
 
     tools: tuple[Pattern, ...]
     hint: str
+    texts: Evidence = ci_configuration
 
 
 def _nothing(_: Context) -> str | None:
