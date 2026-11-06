@@ -75,7 +75,10 @@ class Project:
     excluded: frozenset[PurePosixPath] = frozenset()
 
     def exists(self, relative: str) -> bool:
-        return (self.root / relative).is_file()
+        """Whether the file exists, with its name spelled exactly so (`makefile` is not `Makefile`, even where file
+        names are compared without case, as on Windows and macOS)."""
+        path = self.root / relative
+        return path.is_file() and path.name in os.listdir(path.parent)
 
     def read_text(self, relative: str) -> str:
         return (self.root / relative).read_text(encoding="utf-8", errors="replace")
