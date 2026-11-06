@@ -182,6 +182,18 @@ PROJECT_LAYOUTS = (
         build_systems=frozenset({"MSBuild"}),
     ),
     ProjectLayout(
+        name="SwiftPM",
+        files={"Package.swift": "// swift-tools-version:6.0\n", "Sources/App/main.swift": ""},
+        languages=frozenset({"Swift"}),
+        build_systems=frozenset({"SwiftPM"}),
+    ),
+    ProjectLayout(
+        name="Xcode Swift",
+        files={"App.xcodeproj/project.pbxproj": "", "App/AppDelegate.swift": ""},
+        languages=frozenset({"Swift"}),
+        build_systems=frozenset({"Xcode"}),
+    ),
+    ProjectLayout(
         name="Unrecognised language",
         files={"README.md": "", "src/main.zig": ""},
         languages=frozenset(),
@@ -279,6 +291,7 @@ WELL_CONFIGURED_JVM = fixture_files("well_configured_jvm")
 WELL_CONFIGURED_PHP = fixture_files("well_configured_php")
 WELL_CONFIGURED_RUBY = fixture_files("well_configured_ruby")
 WELL_CONFIGURED_DOTNET = fixture_files("well_configured_dotnet")
+WELL_CONFIGURED_SWIFT = fixture_files("well_configured_swift")
 
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}

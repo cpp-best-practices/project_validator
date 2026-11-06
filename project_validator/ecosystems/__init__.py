@@ -28,8 +28,9 @@ from project_validator.ecosystems.php import PHP
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.ruby import RUBY
 from project_validator.ecosystems.rust import RUST
+from project_validator.ecosystems.swift import SWIFT
 
-BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM, PHP, RUBY, DOTNET)
+BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM, PHP, RUBY, DOTNET, SWIFT)
 
 _registered: list[Ecosystem] = list(BUILT_IN)
 
@@ -219,6 +220,7 @@ __all__ = [
     "PYTHON",
     "RUBY",
     "RUST",
+    "SWIFT",
     "BuildSystem",
     "Ecosystem",
     "RegistryError",

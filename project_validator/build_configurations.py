@@ -1,4 +1,5 @@
-"""Recognising the CMake build types, Cargo profiles and sanitizer settings a CI job builds with."""
+"""Recognising the CMake build types, Cargo profiles, SwiftPM and Xcode configurations and sanitizer settings a CI
+job builds with."""
 
 import re
 from collections.abc import Iterable
@@ -19,6 +20,11 @@ _BUILD_TYPE_SOURCES = re.compile(
 _CARGO_COMMANDS = re.compile(r"\bcargo\s+(?:\+\S+\s+)?(?:build|test|run|nextest\s+run)\b([^\\\n\"&;|]*)")
 _CARGO_RELEASE = re.compile(r"--release\b|--profile[=\s]+release\b")
 _CARGO_OTHER_PROFILE = re.compile(r"--profile\b")
+
+# SwiftPM builds debug unless told otherwise; xcodebuild is judged only when it names its configuration.
+_SWIFT_COMMANDS = re.compile(r"\bswift\s+(?:build|test|run)\b([^\\\n\"&;|]*)")
+_SWIFT_CONFIGURATION = re.compile(r"(?:\s-c|--configuration)[=\s]+(debug|release)\b", re.IGNORECASE)
+_XCODEBUILD_CONFIGURATION = re.compile(r"\bxcodebuild\b[^\\\n\"&;|]*\s-configuration\s+[\"']?(\w+)", re.IGNORECASE)
 
 _DISABLED = r"(?!(?:off|false|no|none|0)\b)"
 _SANITIZERS_ENABLED = re.compile(
@@ -50,10 +56,19 @@ def _cargo_build_types(texts: Iterable[str]) -> set[str]:
     return {profile for profile in profiles if profile is not None}
 
 
+def _swift_build_types(texts: Iterable[str]) -> set[str]:
+    configurations = (
+        _SWIFT_CONFIGURATION.search(match[1]) for text in texts for match in _SWIFT_COMMANDS.finditer(text)
+    )
+    swiftpm = {found[1].lower() if found else "debug" for found in configurations}
+    xcode = (match[1].lower() for text in texts for match in _XCODEBUILD_CONFIGURATION.finditer(text))
+    return swiftpm | {BUILD_TYPE_KINDS[value] for value in xcode if value in BUILD_TYPE_KINDS}
+
+
 def detect_build_types(*texts: str) -> set[str]:
     values = (value for text in texts for match in _BUILD_TYPE_SOURCES.finditer(text) for value in match.groups())
     cmake = {BUILD_TYPE_KINDS[value.lower()] for value in values if value and value.lower() in BUILD_TYPE_KINDS}
-    return cmake | _cargo_build_types(texts)
+    return cmake | _cargo_build_types(texts) | _swift_build_types(texts)
 
 
 def sanitizers_enabled(texts: Iterable[str]) -> bool:

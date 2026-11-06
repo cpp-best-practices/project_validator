@@ -152,7 +152,7 @@
     },
     "ci-build-types": {
       "details": [],
-      "message": "not applicable to C# (applies to C, C++, Rust)",
+      "message": "not applicable to C# (applies to C, C++, Rust, Swift)",
       "status": "SKIP"
     },
     "ci-lint": {
@@ -229,7 +229,7 @@
     },
     "hardening": {
       "details": [],
-      "message": "not applicable to C# (applies to C, C++, Go, Rust)",
+      "message": "not applicable to C# (applies to C, C++, Go, Rust, Swift)",
       "status": "SKIP"
     },
     "large-files": {
