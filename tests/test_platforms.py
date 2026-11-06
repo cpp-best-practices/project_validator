@@ -19,6 +19,12 @@ class PlatformDetectionTests(unittest.TestCase):
 
     def test_tools_named_after_compilers_are_not_compilers(self) -> None:
         self.assertEqual(detect_compilers("clang-format clang-tidy clangd gcovr llvm-cov"), [])
+        self.assertEqual(detect_compilers("CLANG_TIDY_VERSION: 19.1.1"), [])
+
+    def test_setup_cpp_names_clang_llvm(self) -> None:
+        self.assertEqual(detect_compilers("compiler: llvm-19.1.1"), ["clang"])
+        self.assertEqual(detect_compilers("./setup_cpp_linux --compiler llvm --cmake true"), ["clang"])
+        self.assertEqual(detect_compilers("gcov_executable: llvm-cov gcov"), [])
 
 
 class ToolchainDetectionTests(unittest.TestCase):

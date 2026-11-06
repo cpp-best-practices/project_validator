@@ -1,7 +1,10 @@
+import json
 import unittest
 
 from project_validator.build_configurations import BuildConfiguration
-from project_validator.ci.gitlab import expand_parallel, parse_pipeline
+from project_validator.ci import Job
+from project_validator.ci.gitlab import expand_parallel
+from tests.support import ci_jobs
 
 
 class ExpandParallelTests(unittest.TestCase):
@@ -17,7 +20,11 @@ class ExpandParallelTests(unittest.TestCase):
         )
 
 
-class ParsePipelineTests(unittest.TestCase):
+def parse_pipeline(pipeline: object) -> tuple[Job, ...]:
+    return ci_jobs({".gitlab-ci.yml": json.dumps(pipeline)})
+
+
+class PipelineJobTests(unittest.TestCase):
     def test_parses_jobs_and_skips_hidden_trigger_and_reserved_keys(self) -> None:
         pipeline = {
             "stages": ["test"],

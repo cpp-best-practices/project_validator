@@ -145,8 +145,13 @@ except where a step deliberately changes results and says so.
       Composer scripts in the PHP profile, Make in `project_validator/build_systems`, pre-commit in
       `project_validator/tools`. Rake tasks, Maven lifecycle phases and CMake presets follow when their profiles
       move onto facts; presets and phases are settings rather than commands.
-   3. Job build types and toolchains come from the command facts and the build systems, not from text searches of
-      the whole job.
+   3. The jobs the checks judge are built from the facts. A GitHub step or job whose condition is false for a
+      combination yields no facts, and known expressions are evaluated (`project_validator/ci/github_expressions.py`).
+      A job's evidence is what it runs: commands (with the variables its environment defines), image, environment,
+      and action inputs whose values are known; step names and conditions are not evidence. Each build system reads
+      the build types from its own commands (`BuildSystem.build_types`). Compilers and toolchain versions are still
+      matched in that evidence, matrix values first (an action input that is switched off is not evidence);
+      reading them structurally is the toolchain step (5).
 3. **Coverage end to end.** Coverage extractors for every supported language, the coverage question and its policy;
    the `coverage` check moves to them and the `CoverageTools` rules are deleted.
 4. **The remaining practices**, one at a time, each deleting its rule type from `rules.py`.

@@ -3,9 +3,11 @@
 import re
 from pathlib import Path, PurePosixPath
 
+from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import configuration, existing_texts, first_existing, toml_value
+from project_validator.facts import Command, resolved
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
@@ -35,7 +37,28 @@ def is_cargo_target(directory: Path) -> bool:
     )
 
 
-CARGO = BuildSystem(name="Cargo", files=("Cargo.toml",), languages=frozenset({"Rust"}), is_build_tree=is_cargo_target)
+_CARGO_BUILDS = (("build",), ("test",), ("run",), ("nextest", "run"))
+
+
+def cargo_build_types(command: Command) -> frozenset[str]:
+    """The profile `cargo build`, `test`, `run` or `nextest run` builds: release with `--release` or
+    `--profile release`, debug without either, and neither with another profile."""
+    argv = [word for word in resolved(command) if not word.startswith("+")]
+    if argv[:1] != ["cargo"] or not any(tuple(argv[1 : 1 + len(sub)]) == sub for sub in _CARGO_BUILDS):
+        return frozenset()
+    profiles = option_values(tuple(argv), "--profile")
+    if "--release" in argv or "release" in profiles:
+        return frozenset({"release"})
+    return frozenset() if profiles else frozenset({"debug"})
+
+
+CARGO = BuildSystem(
+    name="Cargo",
+    files=("Cargo.toml",),
+    languages=frozenset({"Rust"}),
+    is_build_tree=is_cargo_target,
+    build_types=cargo_build_types,
+)
 
 _RUST_VERSION = r"(stable|beta|nightly|\d+\.\d+(?:\.\d+)?)"
 

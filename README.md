@@ -93,10 +93,15 @@ What each check accepts for a language is on that ecosystem's page in [docs/ecos
 
 CI detection is pluggable too. GitHub Actions workflows (including `strategy.matrix`
 with `include`/`exclude`) and GitLab CI pipelines (including `parallel: matrix:`)
-are parsed as YAML. Azure Pipelines, AppVeyor, CircleCI, Travis CI,
-Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected
-and scanned heuristically. A job that names no compiler is counted with its runner's
-default compiler (gcc on Linux, AppleClang on macOS, MSVC on Windows).
+are parsed as YAML. A job is judged by what it runs: its commands (and the commands those run in turn), its image,
+environment and actions. A GitHub step or job whose `if:` is false for a matrix combination does not run in it
+(`runner.os`, `matrix.*`, `env.*` and `contains`/`startsWith`/`endsWith` are evaluated; conditions on anything else
+are kept), and expressions whose values are known are evaluated the way GitHub evaluates them before a step runs.
+Each build system reads the build types from its own commands (`-DCMAKE_BUILD_TYPE`, `--config`, `ctest -C`,
+`meson setup --buildtype`, `cargo --release`, `swift build -c`, `xcodebuild -configuration`). Azure Pipelines,
+AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected
+and scanned heuristically. A job that names no compiler is counted with its runner's default compiler (gcc on Linux,
+AppleClang on macOS, MSVC on Windows).
 
 Known limitations:
 

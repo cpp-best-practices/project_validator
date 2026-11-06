@@ -3,9 +3,11 @@
 import re
 from pathlib import PurePosixPath
 
+from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.c_cpp.compiler_flags import WARNINGS_AS_ERRORS
 from project_validator.ecosystems.model import BuildSystem
+from project_validator.facts import Command, resolved
 from project_validator.rules import CompilerExtensions, TestSuite, WarningsAsErrors
 from project_validator.text import Pattern, matching_names, pattern
 
@@ -99,9 +101,30 @@ MESON_WARNINGS_AS_ERRORS = WarningsAsErrors(
 )
 
 # Meson builds only the languages its project() declares.
+# Meson's build types, by the kind of build each is; `plain` and `custom` say nothing about optimisation.
+_MESON_BUILD_TYPES = {"debug": "debug", "debugoptimized": "release", "release": "release", "minsize": "release"}
+
+
+def meson_build_types(command: Command) -> frozenset[str]:
+    """The build type `meson setup` (or `meson configure`) chooses: `--buildtype` or `-Dbuildtype`; `meson setup`
+    without one builds Meson's default, debug."""
+    argv = resolved(command)
+    if argv[:1] != ("meson",) or len(argv) < 2 or argv[1] not in ("setup", "configure"):
+        return frozenset()
+    chosen = [
+        *option_values(argv, "--buildtype"),
+        *(word.split("=", 1)[1] for word in argv if word.startswith("-Dbuildtype=")),
+    ]
+    chosen += [value.split("=", 1)[1] for value in option_values(argv, "-D") if value.startswith("buildtype=")]
+    if not chosen and argv[1] == "setup":
+        chosen = ["debug"]
+    return frozenset(_MESON_BUILD_TYPES[value] for value in chosen if value in _MESON_BUILD_TYPES)
+
+
 MESON = BuildSystem(
     name="Meson",
     files=(BUILD_FILE, "meson.options"),
     declared_languages=meson_declared_languages,
+    build_types=meson_build_types,
     rules=(MESON_TESTS, CompilerExtensions(judge=_extensions_disabled), MESON_WARNINGS_AS_ERRORS),
 )
