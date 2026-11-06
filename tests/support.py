@@ -146,6 +146,18 @@ PROJECT_LAYOUTS = (
         build_systems=frozenset({"Deno"}),
     ),
     ProjectLayout(
+        name="Maven Java",
+        files={"pom.xml": "<project/>\n", "src/main/java/App.java": ""},
+        languages=frozenset({"Java"}),
+        build_systems=frozenset({"Maven"}),
+    ),
+    ProjectLayout(
+        name="Gradle Kotlin",
+        files={"settings.gradle.kts": "", "build.gradle.kts": "", "src/main/kotlin/App.kt": ""},
+        languages=frozenset({"Kotlin"}),
+        build_systems=frozenset({"Gradle"}),
+    ),
+    ProjectLayout(
         name="Unrecognised language",
         files={"README.md": "", "src/main.zig": ""},
         languages=frozenset(),
@@ -239,6 +251,7 @@ WELL_CONFIGURED_PYTHON = fixture_files("well_configured_python")
 WELL_CONFIGURED_RUST = fixture_files("well_configured_rust")
 WELL_CONFIGURED_GO = fixture_files("well_configured_go")
 WELL_CONFIGURED_JAVASCRIPT = fixture_files("well_configured_javascript")
+WELL_CONFIGURED_JVM = fixture_files("well_configured_jvm")
 
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}
@@ -257,6 +270,19 @@ def run_as(
     layouts = layouts_checked_as(selected, *ecosystems)
     test.assertTrue(layouts, f"no layout is judged as {[ecosystem.label for ecosystem in ecosystems]}")
     return run_in_every_layout(test, selected, files, layouts, options)
+
+
+def run_in_layout(test: unittest.TestCase, name: str, selected: Check, files: Mapping[str, str]) -> Result:
+    """The result of `selected` in a project of the layout called `name` with `files` added."""
+    layouts = tuple(layout for layout in PROJECT_LAYOUTS if layout.name == name)
+    test.assertTrue(layouts, f"no layout is called {name}")
+    return run_in_every_layout(test, selected, files, layouts)
+
+
+def checks_named(*names: str) -> tuple[Check, ...]:
+    """The checks called `names`, in that order."""
+    found = {found.name: found for found in discover().checks}
+    return tuple(found[name] for name in names)
 
 
 def github_job(runs_on: str, *steps: str, matrix: Mapping[str, object] | None = None) -> dict[str, str]:

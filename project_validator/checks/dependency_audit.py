@@ -10,6 +10,6 @@ from project_validator.text import matching_names
     rule=DependencyAudit,
 )
 def dependency_audit(audit: DependencyAudit, context: Context) -> Result:
-    if tools := matching_names(context.ci_texts, audit.tools):
+    if tools := matching_names(audit.texts(context), audit.tools):
         return Result.passed(f"CI audits the dependencies with {', '.join(tools)}")
     return Result.warned("no dependency vulnerability audit found in CI configuration", audit.hint)

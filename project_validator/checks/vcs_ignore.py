@@ -4,7 +4,7 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
 from project_validator.core import Context, Result
-from project_validator.ecosystems import check_each_ecosystem, ecosystem_check, rules_of
+from project_validator.ecosystems import ecosystem_check, judge_each_ecosystem
 from project_validator.rules import BuildOutputs
 
 
@@ -180,4 +180,4 @@ def vcs_ignore(context: Context) -> Result:
             f"no version control ignore file found ({IGNORE_FILE_NAMES}); build outputs can be committed by accident",
             "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs",
         )
-    return check_each_ecosystem(context, rules_of(BuildOutputs), _outputs_ignored)
+    return judge_each_ecosystem(context, BuildOutputs, _outputs_ignored)

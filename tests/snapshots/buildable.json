@@ -81,7 +81,7 @@
     },
     "dependency-audit": {
       "details": [],
-      "message": "not applicable to C, C++ (applies to Go, JavaScript, Python, Rust, TypeScript)",
+      "message": "not applicable to C, C++ (applies to Go, Java, JavaScript, Kotlin, Python, Rust, TypeScript)",
       "status": "SKIP"
     },
     "dependency-management": {

@@ -23,11 +23,10 @@ from project_validator.ecosystems import JAVASCRIPT_AND_TYPESCRIPT
 from project_validator.ecosystems.javascript import DEPENDENCIES, NODE_MODULES, TYPE_CHECKING
 from tests.support import (
     GITHUB_WORKFLOW,
-    PROJECT_LAYOUTS,
     github_job,
     make_context,
     run_as,
-    run_in_every_layout,
+    run_in_layout,
     temp_project,
 )
 
@@ -171,12 +170,6 @@ class FunctionLimitTests(unittest.TestCase):
                 self.assertIn("max-lines-per-function", result.message)
 
 
-def _in_layout(test: unittest.TestCase, name: str, selected: Check, files: dict[str, str]) -> Result:
-    """The result of `selected` in a project of the layout called `name` with `files` added."""
-    layouts = tuple(layout for layout in PROJECT_LAYOUTS if layout.name == name)
-    return run_in_every_layout(test, selected, files, layouts)
-
-
 class StaticAnalysisTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
         return run_as(self, selected, files, JAVASCRIPT_AND_TYPESCRIPT)
@@ -184,7 +177,7 @@ class StaticAnalysisTests(unittest.TestCase):
     def test_a_linter_is_the_static_analyzer(self) -> None:
         files = {"eslint.config.js": "export default [];\n", **_scripts(lint="eslint ."), **_ci("npm run lint")}
         self.assertEqual(self._run(static_analysis, files), Result.passed("eslint (eslint.config.js) runs"))
-        warned = _in_layout(self, "npm JavaScript", static_analysis, {"biome.json": "{}"})
+        warned = run_in_layout(self, "npm JavaScript", static_analysis, {"biome.json": "{}"})
         self.assertEqual(warned.message, "biome lint is configured (biome.json) but does not run")
 
     def test_security_lints_are_a_plugin_or_semgrep_rules(self) -> None:
@@ -193,19 +186,19 @@ class StaticAnalysisTests(unittest.TestCase):
             _ci("semgrep scan --config p/typescript"),
         ):
             with self.subTest(files=files):
-                self.assertEqual(_in_layout(self, "npm JavaScript", security_scanning, files).status, Status.PASS)
+                self.assertEqual(run_in_layout(self, "npm JavaScript", security_scanning, files).status, Status.PASS)
         self.assertEqual(
-            _in_layout(self, "npm JavaScript", security_scanning, _ci("semgrep scan --config p/python")).status,
+            run_in_layout(self, "npm JavaScript", security_scanning, _ci("semgrep scan --config p/python")).status,
             Status.WARN,
         )
 
 
 class TypeCheckingTests(unittest.TestCase):
     def _npm(self, files: dict[str, str]) -> Result:
-        return _in_layout(self, "npm JavaScript", type_checking, files)
+        return run_in_layout(self, "npm JavaScript", type_checking, files)
 
     def _deno(self, files: dict[str, str]) -> Result:
-        return _in_layout(self, "Deno TypeScript", type_checking, files)
+        return run_in_layout(self, "Deno TypeScript", type_checking, files)
 
     def test_tsc_type_checks_and_strict_mode_is_the_bonus(self) -> None:
         typecheck = {**_scripts(typecheck="tsc --noEmit"), **_ci("pnpm typecheck")}
@@ -232,7 +225,7 @@ class TypeCheckingTests(unittest.TestCase):
 
 class DependencyTests(unittest.TestCase):
     def _npm(self, selected: Check, files: dict[str, str]) -> Result:
-        return _in_layout(self, "npm JavaScript", selected, files)
+        return run_in_layout(self, "npm JavaScript", selected, files)
 
     def test_declared_dependencies_must_be_locked_even_in_a_library(self) -> None:
         declared = _package(main="index.js", peerDependencies={"react": "^19"})
@@ -246,7 +239,7 @@ class DependencyTests(unittest.TestCase):
     def test_deno_imports_are_dependencies(self) -> None:
         files = {"deno.jsonc": '{"imports": {"@std/assert": "jsr:@std/assert@1"}}', "deno.lock": "{}"}
         expected = Result.passed("dependencies are declared in deno.jsonc and locked in deno.lock")
-        self.assertEqual(_in_layout(self, "Deno TypeScript", dependency_management, files), expected)
+        self.assertEqual(run_in_layout(self, "Deno TypeScript", dependency_management, files), expected)
 
     def test_without_dependencies_there_is_nothing_to_lock(self) -> None:
         self.assertEqual(self._npm(dependency_management, {}), Result.passed("no dependencies are declared"))

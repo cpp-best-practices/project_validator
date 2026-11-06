@@ -11,6 +11,7 @@ from project_validator.ecosystems import (
     C_AND_CXX,
     GO,
     JAVASCRIPT_AND_TYPESCRIPT,
+    JVM,
     PYTHON,
     RUST,
     Ecosystem,
@@ -27,6 +28,7 @@ FIXTURES_OF = {
     RUST: ("well_configured_rust", "bare_rust"),
     GO: ("well_configured_go", "bare_go"),
     JAVASCRIPT_AND_TYPESCRIPT: ("well_configured_javascript", "bare_javascript"),
+    JVM: ("well_configured_jvm", "bare_jvm"),
 }
 
 
