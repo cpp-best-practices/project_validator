@@ -181,7 +181,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to Go (applies to JavaScript, Python, TypeScript)",
+      "message": "not applicable to Go (applies to JavaScript, PHP, Python, TypeScript)",
       "status": "SKIP"
     },
     "vcs-ignore": {
@@ -193,7 +193,7 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Go (applies to C, C++, Java, JavaScript, Kotlin, TypeScript)",
+      "message": "not applicable to Go (applies to C, C++, Java, JavaScript, Kotlin, PHP, TypeScript)",
       "status": "SKIP"
     }
   }

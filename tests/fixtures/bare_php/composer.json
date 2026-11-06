@@ -1,0 +1,7 @@
+{
+    "name": "example/app",
+    "type": "project",
+    "require": {
+        "psr/log": "^3.0"
+    }
+}

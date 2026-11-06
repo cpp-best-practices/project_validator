@@ -158,6 +158,12 @@ PROJECT_LAYOUTS = (
         build_systems=frozenset({"Gradle"}),
     ),
     ProjectLayout(
+        name="Composer PHP",
+        files={"composer.json": "{}\n", "src/App.php": ""},
+        languages=frozenset({"PHP"}),
+        build_systems=frozenset({"Composer"}),
+    ),
+    ProjectLayout(
         name="Unrecognised language",
         files={"README.md": "", "src/main.zig": ""},
         languages=frozenset(),
@@ -252,6 +258,7 @@ WELL_CONFIGURED_RUST = fixture_files("well_configured_rust")
 WELL_CONFIGURED_GO = fixture_files("well_configured_go")
 WELL_CONFIGURED_JAVASCRIPT = fixture_files("well_configured_javascript")
 WELL_CONFIGURED_JVM = fixture_files("well_configured_jvm")
+WELL_CONFIGURED_PHP = fixture_files("well_configured_php")
 
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}

@@ -12,6 +12,7 @@ from project_validator.ecosystems import (
     GO,
     JAVASCRIPT_AND_TYPESCRIPT,
     JVM,
+    PHP,
     PYTHON,
     RUST,
     Ecosystem,
@@ -29,6 +30,7 @@ FIXTURES_OF = {
     GO: ("well_configured_go", "bare_go"),
     JAVASCRIPT_AND_TYPESCRIPT: ("well_configured_javascript", "bare_javascript"),
     JVM: ("well_configured_jvm", "bare_jvm"),
+    PHP: ("well_configured_php", "bare_php"),
 }
 
 

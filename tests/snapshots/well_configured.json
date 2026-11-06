@@ -414,7 +414,7 @@
     },
     "dependency-audit": {
       "details": [],
-      "message": "not applicable to C, C++ (applies to Go, Java, JavaScript, Kotlin, Python, Rust, TypeScript)",
+      "message": "not applicable to C, C++ (applies to Go, Java, JavaScript, Kotlin, PHP, Python, Rust, TypeScript)",
       "status": "SKIP"
     },
     "dependency-management": {
@@ -513,7 +513,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to C, C++ (applies to JavaScript, Python, TypeScript)",
+      "message": "not applicable to C, C++ (applies to JavaScript, PHP, Python, TypeScript)",
       "status": "SKIP"
     },
     "vcs-ignore": {

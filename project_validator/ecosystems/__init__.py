@@ -23,10 +23,11 @@ from project_validator.ecosystems.model import (
     languages_of,
     toolchain_versions,
 )
+from project_validator.ecosystems.php import PHP
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 
-BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM)
+BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM, PHP)
 
 _registered: list[Ecosystem] = list(BUILT_IN)
 
@@ -211,6 +212,7 @@ __all__ = [
     "GO",
     "JAVASCRIPT_AND_TYPESCRIPT",
     "JVM",
+    "PHP",
     "PYTHON",
     "RUST",
     "BuildSystem",

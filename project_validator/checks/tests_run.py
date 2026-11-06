@@ -12,6 +12,6 @@ from project_validator.text import matching_names
 )
 def tests_run(suite: TestSuite, context: Context) -> Result:
     result = suite.found(context)
-    if result.status != Status.PASS or matching_names(context.ci_texts, suite.runs):
+    if result.status != Status.PASS or matching_names(suite.texts(context), suite.runs):
         return result
     return Result.warned(f"{result.message}, but no CI configuration runs {suite.runner}", *result.details)
