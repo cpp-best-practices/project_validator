@@ -16,7 +16,7 @@ class SecretScanningTests(unittest.TestCase):
         self.assertEqual(secret_scanning.languages, frozenset())
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
-        result = secret_scanning.run(make_context(FIXTURES / "well_configured"))
+        result = secret_scanning.run(make_context(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(result, Result.passed("secrets are scanned for with gitleaks"))
 
     def test_warns_without_a_secret_scanner(self) -> None:

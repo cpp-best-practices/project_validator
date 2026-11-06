@@ -3,8 +3,7 @@
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems import RUBY
-from project_validator.ecosystems.ruby import BUNDLE, DEPENDENCIES, TYPE_CHECKING
+from project_validator.ecosystems.ruby import BUNDLE, DEPENDENCIES, RUBY, TYPE_CHECKING
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, run_as, run_in_layout
 
 (

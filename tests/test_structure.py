@@ -33,7 +33,7 @@ def _check(name: str, languages: frozenset[str] = frozenset()) -> Check:
 
 class ProjectStructureTests(unittest.TestCase):
     def test_cmake_project_is_c_family(self) -> None:
-        structure = make_context(FIXTURES / "well_configured").structure
+        structure = make_context(FIXTURES / "well_configured_c_cpp").structure
         self.assertEqual(structure.languages, C_FAMILY)
         self.assertEqual(structure.build_systems, frozenset({"CMake"}))
         self.assertEqual(structure.ci_providers, ("GitHub Actions",))
@@ -110,7 +110,7 @@ class ProjectStructureTests(unittest.TestCase):
                 self.assertEqual(mapped["ci"], {"providers": [], "files": [], "jobs": []})
 
     def test_map_is_serialisable(self) -> None:
-        mapped = make_context(FIXTURES / "well_configured").structure.as_dict()
+        mapped = make_context(FIXTURES / "well_configured_c_cpp").structure.as_dict()
         self.assertEqual(mapped["languages"], ["C", "C++"])
         self.assertEqual(mapped["build_systems"], ["CMake"])
         ci = cast(dict[str, Any], mapped["ci"])
@@ -127,10 +127,6 @@ class ProjectStructureTests(unittest.TestCase):
         self.assertEqual(set(job), {"name", "os", "compilers", "toolchains", "ecosystems", "configurations"})
 
 
-# (languages, check) that a profile skips although the check applies: no known tool limits F# function length.
-SKIPPED_BY_PROFILES = {(frozenset({"F#"}), "function-limits")}
-
-
 class LanguageApplicabilityTests(unittest.TestCase):
     def test_c_family_checks_are_skipped_for_other_and_unrecognised_languages(self) -> None:
         for layout in (*OTHER_LANGUAGE_LAYOUTS, *UNRECOGNISED_LAYOUTS):
@@ -138,7 +134,7 @@ class LanguageApplicabilityTests(unittest.TestCase):
                 result = run_check(_check("warnings", C_FAMILY), make_context(root))
                 self.assertEqual(result.status, Status.SKIP)
                 found = ", ".join(sorted(layout.languages)) or "a project of no recognised language"
-                self.assertEqual(result.message, f"not applicable to {found} (applies to C, C++)")
+                self.assertEqual(result.message, f"not applicable to {found}")
 
     def test_c_family_checks_run_for_c_family_languages(self) -> None:
         for layout in C_FAMILY_LAYOUTS:
@@ -176,11 +172,11 @@ class LanguageApplicabilityTests(unittest.TestCase):
                 for found in discover().checks:
                     expected = found.languages
                     outside = bool(expected) and not expected & layout.languages
-                    skipped = outside or (layout.languages, found.name) in SKIPPED_BY_PROFILES
+                    skipped = outside or found.name in layout.skipped
                     self.assertEqual(run_check(found, context).status == Status.SKIP, skipped, found.name)
 
     def test_matching_checks_run(self) -> None:
-        context = make_context(FIXTURES / "well_configured")
+        context = make_context(FIXTURES / "well_configured_c_cpp")
         self.assertEqual(run_check(_check("cpp", frozenset({"C++"})), context).status, Status.PASS)
 
     def test_only_language_agnostic_checks_run_when_no_language_is_recognised(self) -> None:

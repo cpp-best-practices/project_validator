@@ -1,43 +1,20 @@
 """What every built-in ecosystem promises: a project that follows its practices passes, and a bare one does not.
 
-Adding an ecosystem means adding its profile and these two fixtures; no check needs to change.
+Adding an ecosystem means adding its profile and these two fixtures, named after the profile's module; no check
+needs to change.
 """
 
 import unittest
 
 from project_validator.core import Status
-from project_validator.ecosystems import (
-    BUILT_IN,
-    C_AND_CXX,
-    DOTNET,
-    GO,
-    JAVASCRIPT_AND_TYPESCRIPT,
-    JVM,
-    PHP,
-    PYTHON,
-    RUBY,
-    RUST,
-    SWIFT,
-    Ecosystem,
-    applies_to,
-)
+from project_validator.ecosystems import PROFILES, Ecosystem, applies_to
 from project_validator.plugins import discover
 from project_validator.runner import run_checks
 from tests.support import FIXTURES, make_context
 
-# Ecosystem -> (a project that follows all of its practices, a project that follows none of them).
-FIXTURES_OF = {
-    C_AND_CXX: ("well_configured", "bare_project"),
-    PYTHON: ("well_configured_python", "bare_python"),
-    RUST: ("well_configured_rust", "bare_rust"),
-    GO: ("well_configured_go", "bare_go"),
-    JAVASCRIPT_AND_TYPESCRIPT: ("well_configured_javascript", "bare_javascript"),
-    JVM: ("well_configured_jvm", "bare_jvm"),
-    PHP: ("well_configured_php", "bare_php"),
-    RUBY: ("well_configured_ruby", "bare_ruby"),
-    DOTNET: ("well_configured_dotnet", "bare_dotnet"),
-    SWIFT: ("well_configured_swift", "bare_swift"),
-}
+# Ecosystem -> (a project that follows all of its practices, a project that follows none of them), named after the
+# profile's module.
+FIXTURES_OF = {ecosystem: (f"well_configured_{name}", f"bare_{name}") for name, ecosystem in PROFILES.items()}
 
 
 def _statuses(fixture: str) -> dict[str, tuple[Status, str]]:
@@ -55,7 +32,6 @@ def _judges(ecosystem: Ecosystem) -> dict[str, bool]:
 
 class EcosystemContractTests(unittest.TestCase):
     def test_every_built_in_ecosystem_has_fixtures(self) -> None:
-        self.assertEqual(set(FIXTURES_OF), set(BUILT_IN))
         for fixtures in FIXTURES_OF.values():
             for fixture in fixtures:
                 self.assertTrue((FIXTURES / fixture).is_dir(), fixture)

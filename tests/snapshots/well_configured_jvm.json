@@ -152,7 +152,7 @@
     },
     "ci-build-types": {
       "details": [],
-      "message": "not applicable to Java (applies to C, C++, Rust, Swift)",
+      "message": "not applicable to Java",
       "status": "SKIP"
     },
     "ci-lint": {
@@ -197,7 +197,7 @@
     },
     "cxx-extensions": {
       "details": [],
-      "message": "not applicable to Java (applies to C, C++)",
+      "message": "not applicable to Java",
       "status": "SKIP"
     },
     "data-wellformed": {
@@ -229,7 +229,7 @@
     },
     "hardening": {
       "details": [],
-      "message": "not applicable to Java (applies to C, C++, Go, Rust, Swift)",
+      "message": "not applicable to Java",
       "status": "SKIP"
     },
     "large-files": {
@@ -291,7 +291,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to Java (applies to JavaScript, PHP, Python, Ruby, TypeScript)",
+      "message": "not applicable to Java",
       "status": "SKIP"
     },
     "vcs-ignore": {

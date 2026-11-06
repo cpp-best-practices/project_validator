@@ -2,7 +2,8 @@ import unittest
 
 from project_validator.checks.hardening import hardening
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_FAMILY, RUST
+from project_validator.ecosystems import C_FAMILY
+from project_validator.ecosystems.rust import RUST
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,
@@ -29,7 +30,7 @@ LINUX_CI = "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run
 
 class HardeningTests(unittest.TestCase):
     def test_declares_the_languages_it_judges(self) -> None:
-        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        # Profiles and plugins add languages, so only the stable ones are pinned.
         self.assertLessEqual(C_FAMILY | {"Rust", "Go"}, hardening.languages)
 
     # Binary hardening is what the build inserts into a binary. Python builds none: its security lints are judged by

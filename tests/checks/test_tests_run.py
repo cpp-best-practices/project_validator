@@ -5,7 +5,10 @@ from unittest import mock
 
 from project_validator.checks.tests_run import tests_run
 from project_validator.core import Options, Result, Status
-from project_validator.ecosystems import C_AND_CXX, C_FAMILY, PYTHON, RUST
+from project_validator.ecosystems import C_FAMILY
+from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.python import PYTHON
+from project_validator.ecosystems.rust import RUST
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,
@@ -26,7 +29,7 @@ class CtestRunsTests(unittest.TestCase):
         return run_in_every_layout(self, tests_run, files, c_family_layouts_built_with(tests_run, "CMake"))
 
     def test_declares_the_languages_it_judges(self) -> None:
-        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        # Profiles and plugins add languages, so only the stable ones are pinned.
         self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, tests_run.languages)
 
     def test_passes_when_tests_are_registered_and_run_in_ci(self) -> None:

@@ -131,8 +131,10 @@ Tests keep these from step 1 of the migration on:
 Each step is one pull request with every gate green. The snapshots (`tests/snapshots`) must be reproduced exactly,
 except where a step deliberately changes results and says so.
 
-1. **Discovery and derived expectations.** Built-in profiles are discovered like checks; tests and the README derive
-   their language lists from the registry; the skip message stops listing every language.
+1. **Discovery and derived expectations.** Built-in profiles are discovered like checks; each profile's fixtures,
+   test layouts (`tests/layouts/<name>.py`) and documentation page (`docs/ecosystems/<name>.md`) are named after its
+   module; tests derive their language lists from the registry; the README describes each check without per-language
+   detail; the skip message stops listing every language.
 2. **Facts and the CI command graph.** The fact store, CI job and command facts with provenance and unknowns, and
    command expansion (package scripts, Composer scripts, Rake, Make, CMake presets, Maven phases, pre-commit). Job
    build types come from the build systems.

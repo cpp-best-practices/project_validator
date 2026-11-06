@@ -2,7 +2,10 @@ import unittest
 
 from project_validator.checks.dependency_audit import dependency_audit
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_FAMILY, GO, PYTHON, RUST, Ecosystem
+from project_validator.ecosystems import C_FAMILY, Ecosystem
+from project_validator.ecosystems.go import GO
+from project_validator.ecosystems.python import PYTHON
+from project_validator.ecosystems.rust import RUST
 from tests.support import CI_FILES, GITHUB_WORKFLOW, WELL_CONFIGURED_PYTHON, run_as
 
 ECOSYSTEMS = (PYTHON, RUST, GO)
@@ -13,7 +16,7 @@ class DependencyAuditTests(unittest.TestCase):
         return run_as(self, dependency_audit, files, ecosystem)
 
     def test_declares_the_languages_it_judges(self) -> None:
-        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        # Profiles and plugins add languages, so only the stable ones are pinned.
         self.assertLessEqual({"Python", "Rust", "Go"}, dependency_audit.languages)
         # C and C++ have no common dependency manifest to audit.
         self.assertFalse(C_FAMILY & dependency_audit.languages)

@@ -4,13 +4,13 @@ from project_validator.checks.security_scanning import security_scanning
 from project_validator.core import Result, Status
 from project_validator.ecosystems import ecosystems_for, rules_of
 from project_validator.rules import SecurityLints
+from tests.layouts.model import ProjectLayout
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,
     GITHUB_WORKFLOW,
     PROJECT_LAYOUTS,
     WELL_CONFIGURED,
-    ProjectLayout,
     make_context,
     run_in_every_layout,
     temp_project,
@@ -130,4 +130,4 @@ class SecurityLintTests(unittest.TestCase):
         }
         with temp_project(files) as root:
             result = security_scanning.run(make_context(root))
-        self.assertEqual(result, Result.passed("security lints are enabled: Python: bandit security lints; Go: gosec"))
+        self.assertEqual(result, Result.passed("security lints are enabled: Go: gosec; Python: bandit security lints"))

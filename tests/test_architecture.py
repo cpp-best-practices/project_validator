@@ -10,12 +10,13 @@ from pathlib import Path
 import project_validator
 from project_validator import ecosystems
 from project_validator.core import Context
-from project_validator.ecosystems import BUILT_IN, Ecosystem
+from project_validator.ecosystems import BUILT_IN, PROFILES, Ecosystem
 from project_validator.rules import Formatter
+from tests import layouts as tests_layouts
 
 PACKAGE = Path(project_validator.__file__).parent
 CHECKS = PACKAGE / "checks"
-PROFILES = frozenset(
+PROFILE_MODULES = frozenset(
     f"project_validator.ecosystems.{module.name}"
     for module in pkgutil.iter_modules(ecosystems.__path__)
     if module.name != "model"
@@ -34,7 +35,7 @@ def _imported_modules(path: Path) -> set[str]:
 
 
 def _is_profile(module: str) -> bool:
-    return any(module == profile or module.startswith(f"{profile}.") for profile in PROFILES)
+    return any(module == profile or module.startswith(f"{profile}.") for profile in PROFILE_MODULES)
 
 
 def _all_modules() -> list[str]:
@@ -85,6 +86,25 @@ class ArchitectureTests(unittest.TestCase):
         for module in _all_modules():
             with self.subTest(module=module):
                 _import_fresh(module)
+
+
+class ProfileTests(unittest.TestCase):
+    """A profile is found by its module, so adding one edits no shared list."""
+
+    def test_each_profile_module_defines_one_ecosystem(self) -> None:
+        for name in sorted(PROFILES):
+            module = importlib.import_module(f"project_validator.ecosystems.{name}")
+            with self.subTest(profile=name):
+                found = {id(value) for value in vars(module).values() if isinstance(value, Ecosystem)}
+                self.assertEqual(found, {id(PROFILES[name])})
+
+    def test_every_profile_is_built_in(self) -> None:
+        self.assertEqual(set(BUILT_IN), set(PROFILES.values()))
+        self.assertEqual({f"project_validator.ecosystems.{name}" for name in PROFILES}, PROFILE_MODULES)
+
+    def test_every_profile_has_test_layouts(self) -> None:
+        layouts = {module.name for module in pkgutil.iter_modules(tests_layouts.__path__)} - {"model"}
+        self.assertEqual(layouts, set(PROFILES))
 
 
 class EcosystemRuleTests(unittest.TestCase):

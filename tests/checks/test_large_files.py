@@ -33,7 +33,7 @@ class LargeFilesTests(unittest.TestCase):
         self.assertEqual(large_files.languages, frozenset())
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
-        result = large_files.run(make_context(FIXTURES / "well_configured"))
+        result = large_files.run(make_context(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(result, Result.passed("no committed file is larger than 5 MiB"))
         self.assertEqual(DEFAULT_MAX_FILE_SIZE, 5 * 1024 * 1024)
 
