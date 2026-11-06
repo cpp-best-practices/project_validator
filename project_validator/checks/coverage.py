@@ -1,4 +1,4 @@
-from project_validator.core import Check, Context, Result
+from project_validator.core import Check, Context, Result, Status
 from project_validator.ecosystems import check_each_ecosystem, registered
 from project_validator.ecosystems.model import labelled
 from project_validator.facts.tools import built_in_tools
@@ -26,6 +26,10 @@ def _judge(languages: frozenset[str], context: Context) -> Result:
         (answer.language, answer.unit): judge_coverage(answer, allow_unknown=context.options.allow_unknown)
         for answer in answers
     }
+    if not results:
+        return Result(
+            status=Status.SKIP, message="only the docs, tooling, examples or test fixtures use these languages"
+        )
     if len(set(results.values())) == 1:
         return next(iter(results.values()))
     named = {language for language, _ in results}, {unit for _, unit in results}

@@ -9,7 +9,10 @@ import json
 import re
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
+from fnmatch import fnmatchcase
+from pathlib import PurePosixPath
 
+from project_validator import yaml_support
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import (
@@ -147,11 +150,15 @@ class _ScriptRun:
     explicit: bool
 
 
+# Options that select workspace packages, with the value they take.
+_SELECTION_OPTIONS = frozenset({"--filter", "-F", "--workspace", "-w"})
+
+
 def _script_named(argv: tuple[str, ...]) -> _ScriptRun | None:
-    words, options = positional(argv, _DIRECTORY_OPTIONS)
+    words, options = positional(argv, _DIRECTORY_OPTIONS | _SELECTION_OPTIONS)
     if not words:
         return None
-    directory = next((value for value in options.values() if value), None)
+    directory = next((value for name, value in options.items() if value and name in _DIRECTORY_OPTIONS), None)
     program, first = argv[0], words[0]
     if first in _NPM_RUN:
         return _ScriptRun(words[1], directory, explicit=True) if len(words) > 1 else None
@@ -162,11 +169,50 @@ def _script_named(argv: tuple[str, ...]) -> _ScriptRun | None:
     return None if first in _OWN_COMMANDS[program] else _ScriptRun(first, directory, explicit=False)
 
 
+def workspace_members(context: Context, directory: str | None) -> list[str]:
+    """The directories of the workspace packages the package.json (or pnpm-workspace.yaml) in `directory` declares."""
+    patterns = (
+        list(_workspaces(context.project.read_text(path)))
+        if context.project.exists(path := joined(directory, PACKAGE_JSON))
+        else []
+    )
+    if context.project.exists(pnpm := joined(directory, "pnpm-workspace.yaml")):
+        try:
+            declared = yaml_support.load(context.project.read_text(pnpm))
+        except yaml_support.YamlError:
+            declared = None
+        packages = declared.get("packages") if isinstance(declared, dict) else None
+        patterns += [str(pattern) for pattern in packages] if isinstance(packages, list) else []
+    globs = [
+        joined(directory, pattern.removeprefix("./").rstrip("/")) for pattern in patterns if not pattern.startswith("!")
+    ]
+    manifests = (path for path in context.project.files() if path.endswith(f"/{PACKAGE_JSON}"))
+    members = (str(PurePosixPath(path).parent) for path in manifests)
+    return sorted({member for member in members if any(fnmatchcase(member, glob) for glob in globs)})
+
+
+# Options that run a script in every workspace package (or the ones a filter names, all of which are taken).
+_WORKSPACE_FLAGS = frozenset({"-r", "--recursive", "--filter", "-F", "--workspaces", "-ws", "--workspace", "-w"})
+
+
+def _in_workspaces(command: Command, context: Context, name: str) -> list[Expansion]:
+    """The script `name` of each workspace package that has it."""
+    found: list[Expansion] = []
+    for member in workspace_members(context, command.directory):
+        path = joined(member, PACKAGE_JSON)
+        if (script := _json_strings(json_value(context, path, "scripts")).get(name)) is not None:
+            found.append(Script(text=script, origin=Origin(path=path, at=("scripts", name)), directory=member))
+    return found
+
+
 def _package_scripts(command: Command, context: Context) -> Iterator[Expansion] | None:
     """`npm test`, `npm run lint`, `pnpm lint`, `yarn run lint`, `bun run lint`: the package.json scripts they run,
-    with npm's and yarn's pre and post scripts around them."""
+    with npm's and yarn's pre and post scripts around them; with `-r`, `--filter` or `--workspaces`, the scripts of
+    the workspace packages."""
     if not command.argv or command.argv[0] not in ("npm", *_OWN_COMMANDS) or not (run := _script_named(command.argv)):
         return None
+    if any(word.partition("=")[0] in _WORKSPACE_FLAGS for word in command.argv[1:]):
+        return iter(_in_workspaces(command, context, run.name))
     path = joined(run.directory or command.directory, PACKAGE_JSON)
     scripts = _json_strings(json_value(context, path, "scripts"))
     if run.name not in scripts:
@@ -182,6 +228,31 @@ def _package_scripts(command: Command, context: Context) -> Iterator[Expansion] 
 
 
 PACKAGE_SCRIPTS = CommandExpander(name="package.json scripts", expand=_package_scripts)
+# Monorepo task runners, which run a script in each workspace package that has it.
+_TASK_RUNNERS = frozenset({"turbo", "lerna", "nx"})
+_TASK_OPTIONS = frozenset({"-t", "--target", "--targets", "--filter", "--scope", "--projects", "-p", "--parallel"})
+
+
+def _tasks(runner: str, words: list[str], options: dict[str, str]) -> list[str]:
+    """The tasks a task runner runs: `turbo run a b` (or `turbo a b`), `lerna run a`, `nx run-many -t a,b`."""
+    if runner == "nx":
+        targets = options.get("-t") or options.get("--target") or options.get("--targets") or ""
+        return [task for task in targets.split(",") if task] if words[:1] in (["run-many"], ["affected"]) else []
+    if words[:1] == ["run"]:
+        return words[1:]
+    return words if runner == "turbo" else []
+
+
+def _workspace_tasks(command: Command, context: Context) -> list[Expansion] | None:
+    """Each workspace package's script for each task a monorepo task runner runs."""
+    argv = resolved(command)
+    if (runner := program(argv)) not in _TASK_RUNNERS:
+        return None
+    words, options = positional(argv, _TASK_OPTIONS)
+    return [found for task in _tasks(runner, words, options) for found in _in_workspaces(command, context, task)]
+
+
+WORKSPACE_TASKS = CommandExpander(name="workspace task runners", expand=_workspace_tasks)
 
 
 def _task(value: object) -> str | None:

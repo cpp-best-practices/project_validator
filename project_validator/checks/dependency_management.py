@@ -2,10 +2,10 @@
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems import check_each_ecosystem, ecosystem_check, rules_of
+from project_validator.facts.structure import VENDOR_DIRECTORIES
 from project_validator.rules import DependencyManagement
 
 # Top-level directories that usually hold third-party code copied into the repository.
-VENDOR_DIRECTORIES = ("third_party", "third-party", "3rdparty", "external", "extern", "vendor")
 SUBMODULES = ".gitmodules"
 VENDOR_HINT = "fetch third-party code with the ecosystem's package manager instead of committing a copy of it"
 

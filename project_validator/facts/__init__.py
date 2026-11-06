@@ -101,11 +101,15 @@ class ActionStep(Fact):
 class Unknown(Fact):
     """Something an extractor could not read, so that its absence is not taken for "no".
 
-    `tools` names the tools whose settings could not be read; none means it may hide anything.
+    `hides` says what it may hide: whole `jobs` (a reusable workflow in another repository, a provider scanned
+    heuristically), `commands` of a job (a line that cannot be split, a script that cannot be expanded), the
+    `matrix` values of a job, or `settings` of the `tools` named. A question counts the unknowns that may hide what it
+    asks about.
     """
 
     subject: str
     reason: str
+    hides: str = "commands"
     tools: tuple[str, ...] = ()
 
 

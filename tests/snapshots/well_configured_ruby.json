@@ -68,21 +68,21 @@
       "kind": "SourceFile",
       "language": "Ruby",
       "origin": "lib/app.rb",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Ruby",
       "origin": "spec/app_spec.rb",
-      "vendored": false
+      "role": "test"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Ruby",
       "origin": "spec/spec_helper.rb",
-      "vendored": false
+      "role": "test"
     },
     {
       "files": 1,
@@ -98,7 +98,8 @@
       "languages": [
         "Ruby"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -1408,7 +1409,8 @@
         "directory": ".",
         "languages": [
           "Ruby"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": [

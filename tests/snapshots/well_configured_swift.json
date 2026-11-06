@@ -62,28 +62,28 @@
       "kind": "SourceFile",
       "language": "Swift",
       "origin": "Package.swift",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Swift",
       "origin": "Sources/App/main.swift",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Swift",
       "origin": "Sources/AppCore/Calculator.swift",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Swift",
       "origin": "Tests/AppCoreTests/CalculatorTests.swift",
-      "vendored": false
+      "role": "test"
     },
     {
       "files": 1,
@@ -99,7 +99,8 @@
       "languages": [
         "Swift"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -2438,7 +2439,8 @@
         "directory": ".",
         "languages": [
           "Swift"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": [

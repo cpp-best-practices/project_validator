@@ -56,7 +56,7 @@
       "kind": "SourceFile",
       "language": "Ruby",
       "origin": "app.rb",
-      "vendored": false
+      "role": "product"
     },
     {
       "files": 1,
@@ -72,7 +72,8 @@
       "languages": [
         "Ruby"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     }
   ],
   "map": {
@@ -101,7 +102,8 @@
         "directory": ".",
         "languages": [
           "Ruby"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": [

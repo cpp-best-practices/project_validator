@@ -5,6 +5,7 @@ commands are facts like those CI runs directly, in the same job, with `via` nami
 Expansion repeats on what it finds, and stops where a definition would run itself again.
 """
 
+import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
@@ -76,6 +77,7 @@ def script_facts(
     """
     for found in split_script(script, opaque):
         if isinstance(found, ShellCommand):
+            directory = _changed(directory, found.argv)
             yield Command(
                 origin=origin,
                 job=job,
@@ -88,6 +90,28 @@ def script_facts(
             )
         else:
             yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
+
+
+# Where a CI service checks the project out, written as a variable.
+_WORKSPACES = frozenset({"$GITHUB_WORKSPACE", "${GITHUB_WORKSPACE}", "$CI_PROJECT_DIR", "${CI_PROJECT_DIR}"})
+
+
+def _changed(directory: str | None, argv: tuple[str, ...]) -> str | None:
+    """The directory the commands after `argv` run in: `cd` changes it for the rest of the script. A directory that
+    cannot be told (`cd $HOME`, `cd -`) is outside the project; `..` that leaves the project is too."""
+    if argv[:1] != ("cd",) or len(argv) != 2:
+        return directory
+    target = argv[1].rstrip("/")
+    if target in _WORKSPACES or target.split("/", 1)[0] in _WORKSPACES:
+        target = target.split("/", 1)[1] if "/" in target else "."
+        return posixpath.normpath(target)
+    if target.startswith(("/", "$", "~", "-")):
+        return OUTSIDE
+    return posixpath.normpath(joined(directory, target))
+
+
+# The directory of a command that runs outside the project (`cd /tmp`, `cd $HOME`).
+OUTSIDE = "/"
 
 
 def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
@@ -119,8 +143,21 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
         )
 
 
+def inside(context: Context, directory: str | None) -> bool:
+    """Whether `directory` is one of the project's own (a command elsewhere runs another checkout or a generated build
+    tree, whose definitions are not the project's)."""
+    if directory in (None, "", "."):
+        return True
+    if directory.startswith(("/", "..")):
+        return False
+    return (context.project.root / directory).is_dir()
+
+
 def expand_command(command: Command, context: Context, expanders: Iterable[CommandExpander]) -> Iterator[Fact]:
-    """What `command` runs in turn, through every expander that recognises it, depth first."""
+    """What `command` runs in turn, through every expander that recognises it, depth first. A command run outside the
+    project's own directories is not expanded."""
+    if not inside(context, command.directory):
+        return
     expanders = tuple(expanders)
     chain = (*command.via, command.origin)
     for expander in expanders:

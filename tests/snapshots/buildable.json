@@ -130,7 +130,8 @@
         "C",
         "C++"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "kind": "ConfigurationFile",
@@ -165,7 +166,8 @@
         "languages": [
           "C",
           "C++"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": []

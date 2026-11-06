@@ -223,6 +223,23 @@ except where a step deliberately changes results and says so.
      uv workspaces, go.work). A unit's languages are those of its own sources (outside the units below it), and
      what its build files build unless they only declare a workspace; sources outside every unit belong to the
      root unit. `--map` lists the units.
+   - **Roles.** Every source file and unit has a role, told by the directories it is in (above any source root
+     such as `src` or `lib`, so `com/example/App.java` is product code): `product`, `test` (tests and test-fixture
+     projects), `example`, `docs`, `tooling`, `benchmark`, or `vendored` (below a vendor directory anywhere, or a
+     minified bundle). Auxiliary code adds no language to the unit it is in, and only product units are held to
+     coverage: a C++ library's Python docs scripts do not need Python coverage, and a test-fixture project needs
+     none of its own.
+   - **Unknowns say what they may hide** (`Unknown.hides`): whole `jobs`, `commands` of a job, a job's `matrix`
+     values, or `settings` of named tools. A question counts only the unknowns that may hide what it asks about:
+     an unreadable matrix does not make coverage unknown, and a broken `phpunit.xml` does not make a Python
+     project's coverage unknown.
+   - **Reading more of what CI runs.** A quoted string may span lines, and quoted or escaped operator characters
+     are text (`awk -F '|'`, `find -exec … ';'`). `cd` changes where the rest of a script runs. Commands in a
+     directory the project does not contain (another checkout, a build tree CI generates, `cd /tmp`) are not
+     expanded and cover none of the project's code. A job that calls a reusable workflow of the same repository
+     runs that workflow's jobs; a workflow that runs only `on: workflow_call` runs only where it is called.
+     Workspace-wide script runs (`pnpm -r`, `--filter`, `npm --workspaces`, `turbo run`, `lerna run`,
+     `nx run-many`) run each workspace package's script (npm, yarn and bun workspaces, `pnpm-workspace.yaml`).
    - **Questions answer per language per unit.** A run covers its working directory, what is below it, and the
      unit it is in, so a run from the root covers every unit, and a run in `packages/a` covers only that package.
      A project with one unit is judged as before. In a monorepo, findings name the unit (`packages/b: no branch

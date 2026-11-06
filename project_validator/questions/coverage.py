@@ -82,12 +82,12 @@ def coverage_answer(language: str, facts: Facts, tools: Iterable[Tool], unit: st
     runs = tuple(
         run for run in facts.of(ToolRun) if COVERAGE in run.provides and language in run.languages and run.covers(unit)
     )
-    # What was not read matters when it may hide anything, or holds settings a known tool reads.
+    # What was not read matters when it may hide a run (a job or a command), or settings a known tool reads.
     reads = {name for tool in known for name in (tool.name, *tool.reads)}
     unknowns = tuple(
         f"{fact.subject}: {fact.reason} ({fact.origin})"
         for fact in facts.of(Unknown)
-        if not fact.tools or reads & set(fact.tools)
+        if fact.hides in ("jobs", "commands") or (fact.hides == "settings" and reads & set(fact.tools))
     )
     return CoverageAnswer(
         language=language,
@@ -98,8 +98,12 @@ def coverage_answer(language: str, facts: Facts, tools: Iterable[Tool], unit: st
 
 
 def units_of(language: str, facts: Facts) -> tuple[str, ...]:
-    """The units of the project that have `language` (the root unit when none does)."""
-    return tuple(unit.directory for unit in facts.of(Unit) if language in unit.languages) or (".",)
+    """The product units of the project that have `language`: none when the language is only in its docs, tooling,
+    examples, benchmarks or test fixtures. A project with no product unit at all (only scripts, say) is all product;
+    a project with no units is one, its root."""
+    units = facts.of(Unit)
+    product = [unit for unit in units if unit.role == "product"] or [unit for unit in units if unit.role != "vendored"]
+    return tuple(unit.directory for unit in product if language in unit.languages) if units else (".",)
 
 
 def language_coverage(language: str, facts: Facts) -> LanguageCoverage:

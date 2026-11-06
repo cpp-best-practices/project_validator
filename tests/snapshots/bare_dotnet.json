@@ -56,7 +56,7 @@
       "kind": "SourceFile",
       "language": "C#",
       "origin": "src/App/Calculator.cs",
-      "vendored": false
+      "role": "product"
     },
     {
       "build_systems": [
@@ -66,7 +66,8 @@
       "languages": [
         "C#"
       ],
-      "origin": "src/App"
+      "origin": "src/App",
+      "role": "product"
     },
     {
       "kind": "ConfigurationFile",
@@ -107,7 +108,8 @@
         "directory": "src/App",
         "languages": [
           "C#"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": []

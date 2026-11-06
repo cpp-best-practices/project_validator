@@ -58,7 +58,7 @@
       "kind": "SourceFile",
       "language": "PHP",
       "origin": "src/Calculator.php",
-      "vendored": false
+      "role": "product"
     },
     {
       "files": 1,
@@ -74,7 +74,8 @@
       "languages": [
         "PHP"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     }
   ],
   "map": {
@@ -103,7 +104,8 @@
         "directory": ".",
         "languages": [
           "PHP"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": [

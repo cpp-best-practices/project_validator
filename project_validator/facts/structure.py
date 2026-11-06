@@ -33,22 +33,68 @@ NOT_SOURCE_SUFFIXES = frozenset(
 )
 # Code the project carries but does not write: minified bundles, and the directories that hold other projects' code.
 _MINIFIED = re.compile(r"[.-]min\.[^.]+$")
-VENDOR_DIRECTORIES = frozenset({"vendor", "vendored", "third_party", "third-party", "thirdparty", "3rdparty"})
+VENDOR_DIRECTORIES = (
+    "third_party",
+    "third-party",
+    "thirdparty",
+    "3rdparty",
+    "external",
+    "extern",
+    "vendor",
+    "vendored",
+    "deps",
+)
+# The role of the code below a directory with one of these names (see `role`).
+_ROLES = {
+    **dict.fromkeys(VENDOR_DIRECTORIES, "vendored"),
+    **dict.fromkeys(("test", "tests", "testing", "testdata", "spec", "specs", "__tests__", "fixtures"), "test"),
+    **dict.fromkeys(("example", "examples", "sample", "samples", "demo", "demos"), "example"),
+    **dict.fromkeys(("doc", "docs", "documentation", "website"), "docs"),
+    **dict.fromkeys(("tools", "tooling", "scripts"), "tooling"),
+    **dict.fromkeys(("bench", "benches", "benchmark", "benchmarks"), "benchmark"),
+}
+# Roles whose code is not the product: it needs no coverage of its own, and adds no language to the unit it is in.
+AUXILIARY = frozenset({"vendored", "example", "docs", "tooling", "benchmark"})
+
+
+# Directories that hold a unit's sources: below them, directory names are the code's own (`com/example/App.java`).
+_SOURCE_ROOTS = frozenset({"src", "lib", "source", "sources", "main", "include", "pkg", "internal", "app"})
+
+
+def role(path: str, *, directory: bool = False) -> str:
+    """What the code at `path` is for: `vendored` code of other projects (below a vendor directory anywhere, or a
+    minified bundle), else by the outermost directory that tells, above any source root (`src`, `lib`): the
+    `product`, its `test`s (and test fixtures), an `example`, `docs`, `tooling` or a `benchmark`. For a directory,
+    its own name counts too."""
+    posix = PurePosixPath(path)
+    parts = [part.lower() for part in (posix.parts if directory else posix.parts[:-1])]
+    if any(_ROLES.get(part) == "vendored" for part in parts) or (not directory and _MINIFIED.search(posix.name)):
+        return "vendored"
+    for part in parts:
+        if part in _SOURCE_ROOTS:
+            break
+        if found := _ROLES.get(part) or ("test" if part.endswith(("-tests", "_tests")) else None):
+            return found
+    return "product"
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class SourceFile(Fact):
-    """A source file and its language (None for a file of an ecosystem that adds no language, such as a `.h` file of
-    a C++ project). `ambiguous` files count once their ecosystem is recognised another way; `vendored` files (other
-    projects' code, minified bundles) are recorded but make no language the project's."""
+    """A source file, its language (None for a file of an ecosystem that adds no language, such as a `.h` file of a
+    C++ project) and its `role` (see `role`). `ambiguous` files count once their ecosystem is recognised another
+    way; vendored files (other projects' code, minified bundles) are recorded but make no language the project's."""
 
     language: str | None
     ambiguous: bool = False
-    vendored: bool = False
+    role: str = "product"
 
     @property
     def path(self) -> str:
         return self.origin.path
+
+    @property
+    def vendored(self) -> bool:
+        return self.role == "vendored"
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -75,11 +121,15 @@ class Unit(Fact):
     A unit is the outermost directory with a build system's files (a CMake project's subdirectories, a Maven
     project's modules belong to it), or a member of a workspace a build file declares (npm workspaces, Cargo and uv
     workspaces, go.work). Sources outside every unit, and languages only content shows, belong to the root unit. A
-    project with one unit is judged as before; a monorepo or a mixed-language project is judged unit by unit.
+    unit's languages are those of its own code: sources with an auxiliary role (docs, tooling, examples, benchmarks)
+    count only in a unit with that role, and vendored code in none. A project with one unit is judged as before; a
+    monorepo or a mixed-language project is judged unit by unit.
     """
 
     build_systems: tuple[str, ...]
     languages: frozenset[str]
+    # What the unit is for, by its directory (see `role`): only `product` units are held to most practices.
+    role: str = "product"
 
     @property
     def directory(self) -> str:
@@ -92,11 +142,6 @@ class UnrecognisedSuffix(Fact):
 
     suffix: str
     files: int
-
-
-def is_vendored(path: str) -> bool:
-    posix = PurePosixPath(path)
-    return bool(_MINIFIED.search(posix.name)) or bool(VENDOR_DIRECTORIES & set(posix.parts[:-1]))
 
 
 def _build_files(project: Project, files: list[str]) -> Iterator[tuple[BuildFile | None, str]]:
@@ -130,7 +175,7 @@ def _ambiguous(files: list[str], confirmed: list[Ecosystem]) -> Iterator[SourceF
             for path in files:
                 if PurePosixPath(path).suffix == suffix:
                     origin = Origin(path=path)
-                    yield SourceFile(origin=origin, language=language, ambiguous=True, vendored=is_vendored(path))
+                    yield SourceFile(origin=origin, language=language, ambiguous=True, role=role(path))
 
 
 def project_languages(facts: Facts) -> frozenset[str]:
@@ -153,7 +198,7 @@ def _sources(files: list[str]) -> Iterator[SourceFile]:
     known = _source_suffixes()
     for path in files:
         if (suffix := PurePosixPath(path).suffix) in known:
-            yield SourceFile(origin=Origin(path=path), language=known[suffix], vendored=is_vendored(path))
+            yield SourceFile(origin=Origin(path=path), language=known[suffix], role=role(path))
 
 
 def _content(project: Project) -> Iterator[ContentLanguages]:
@@ -226,8 +271,11 @@ def _units(project: Project, facts: Facts) -> Iterator[Unit]:
 
     languages: dict[str, set[str]] = {root: set() for root in roots}
     for source in facts.of(SourceFile):
-        if source.language is not None and not source.vendored:
-            languages.setdefault(owner(source.path), set()).add(source.language)
+        unit = owner(source.path)
+        # Auxiliary code (docs, tooling) counts only in a unit of that role; vendored code is in no unit of its own.
+        counts = source.role not in AUXILIARY or source.role == role(unit, directory=True)
+        if source.language is not None and counts:
+            languages.setdefault(unit, set()).add(source.language)
     # What a build file builds counts for its unit too, unless the build file only declares a workspace.
     for build in facts.of(BuildFile):
         if (directory := _directory(build)) not in workspaces or languages.get(directory):
@@ -235,7 +283,10 @@ def _units(project: Project, facts: Facts) -> Iterator[Unit]:
     for content in facts.of(ContentLanguages):
         languages.setdefault(".", set()).update(content.languages)
     for directory in sorted(languages, key=lambda root: (root != ".", root)):
+        if (purpose := role(directory, directory=True)) == "vendored":
+            continue
         yield Unit(
+            role=purpose,
             origin=Origin(path=directory),
             build_systems=tuple(roots.get(directory, ())),
             languages=frozenset(languages[directory]),
@@ -258,6 +309,7 @@ def structure_facts(project: Project) -> Iterator[Fact]:
 
 
 __all__ = [
+    "AUXILIARY",
     "NOT_SOURCE_SUFFIXES",
     "VENDOR_DIRECTORIES",
     "BuildFile",
@@ -265,7 +317,7 @@ __all__ = [
     "SourceFile",
     "Unit",
     "UnrecognisedSuffix",
-    "is_vendored",
     "project_languages",
+    "role",
     "structure_facts",
 ]

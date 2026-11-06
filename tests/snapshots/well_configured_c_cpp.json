@@ -147,7 +147,7 @@
       "kind": "SourceFile",
       "language": null,
       "origin": "cmake/Dependencies.cmake",
-      "vendored": false
+      "role": "product"
     },
     {
       "build_systems": [
@@ -158,7 +158,8 @@
         "C",
         "C++"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -4234,7 +4235,8 @@
         "languages": [
           "C",
           "C++"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": []

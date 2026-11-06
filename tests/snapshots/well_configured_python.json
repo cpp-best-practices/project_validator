@@ -62,7 +62,7 @@
       "kind": "SourceFile",
       "language": "Python",
       "origin": "tests/test_app.py",
-      "vendored": false
+      "role": "test"
     },
     {
       "build_systems": [
@@ -72,7 +72,8 @@
       "languages": [
         "Python"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -1767,7 +1768,8 @@
         "directory": ".",
         "languages": [
           "Python"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": []

@@ -6,7 +6,7 @@ import re
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, replace
 
-from project_validator.ci import CiProvider, strings
+from project_validator.ci import CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import ActionStep, CiJob, Fact, Origin, Unknown
 from project_validator.facts.expansion import script_facts
@@ -103,17 +103,25 @@ def _job_label(name: str, combination: Combination) -> str:
     return f"{name} ({_combination_label(combination)})"
 
 
-def _job_facts(path: str, job_id: str, job: Mapping[str, object], workflow_env: object) -> Iterator[Fact]:
+def _job_facts(
+    path: str, job_id: str, job: Mapping[str, object], workflow_env: object, caller: str = ""
+) -> Iterator[Fact]:
+    """The facts of one job; `caller` names the job that calls the workflow, for a reusable workflow's jobs."""
     origin = Origin(path=path, at=("jobs", job_id))
     strategy = job.get("strategy")
     combinations = expand_matrix(strategy.get("matrix") if isinstance(strategy, Mapping) else None)
     if combinations is None:
         name = f"{job.get('name', job_id)} (matrix computed by an expression)"
-        yield CiJob(origin=origin, id=f"{path}:{job_id}", provider=GITHUB_ACTIONS.name, name=name, os="unknown")
-        yield Unknown(origin=origin, subject=f"the matrix of job {job_id}", reason="it is computed by an expression")
+        yield CiJob(origin=origin, id=f"{caller}{path}:{job_id}", provider=GITHUB_ACTIONS.name, name=name, os="unknown")
+        yield Unknown(
+            origin=origin,
+            subject=f"the matrix of job {job_id}",
+            reason="it is computed by an expression",
+            hides="matrix",
+        )
         return
     for index, combination in enumerate(combinations):
-        identity = f"{path}:{job_id}" if len(combinations) == 1 else f"{path}:{job_id}[{index}]"
+        identity = f"{caller}{path}:{job_id}" + ("" if len(combinations) == 1 else f"[{index}]")
         yield from _Combination(origin, identity, combination).facts(job, workflow_env)
 
 
@@ -202,21 +210,51 @@ class _Combination:
             )
 
 
-def workflow_facts(path: str, document: object) -> Iterator[Fact]:
-    """The jobs of a workflow, one per matrix combination, with the commands and actions each one runs."""
+# GitHub runs at most this many levels of reusable workflows.
+_CALL_DEPTH = 4
+
+
+def _only_called(document: Mapping[object, object]) -> bool:
+    """Whether a workflow runs only when another calls it (`on: workflow_call`)."""
+    triggers = document.get("on", document.get(True))  # YAML 1.1 reads a bare `on` as true
+    names = [triggers] if isinstance(triggers, str) else list(triggers) if isinstance(triggers, (list, Mapping)) else []
+    return names == ["workflow_call"]
+
+
+def _local_workflow(uses: object) -> str | None:
+    """The path of a reusable workflow in the same repository (`./.github/workflows/build.yml`), else None."""
+    text = str(uses)
+    for prefix in ("./", "$/"):
+        if text.startswith(prefix) and "@" not in text:
+            return text.removeprefix(prefix)
+    return None
+
+
+def workflow_facts(path: str, document: object, load: Load | None = None, caller: str = "") -> Iterator[Fact]:
+    """The jobs of a workflow, one per matrix combination, with the commands and actions each one runs. A job that
+    calls a reusable workflow of the same repository runs that workflow's jobs (read with `load`); one in another
+    repository is unknown."""
     if not isinstance(document, Mapping) or not isinstance(jobs := document.get("jobs"), Mapping):
         return
+    if not caller and _only_called(document):
+        return  # its jobs run where another workflow calls it
     for job_id, job in jobs.items():
         if not isinstance(job, Mapping):
             continue
-        if "uses" in job:
-            yield Unknown(
-                origin=Origin(path=path, at=("jobs", str(job_id))),
-                subject=f"job {job_id}",
-                reason=f"it calls the reusable workflow {job['uses']}, which is not read",
-            )
+        if "uses" not in job:
+            yield from _job_facts(path, str(job_id), job, document.get("env"), caller)
             continue
-        yield from _job_facts(path, str(job_id), job, document.get("env"))
+        called = _local_workflow(job["uses"])
+        within_depth = caller.count(" → ") < _CALL_DEPTH
+        if called is not None and load is not None and within_depth and (target := load(called)) is not None:
+            yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id} → ")
+            continue
+        yield Unknown(
+            origin=Origin(path=path, at=("jobs", str(job_id))),
+            subject=f"job {job_id}",
+            reason=f"it calls the reusable workflow {job['uses']}, which is not read",
+            hides="jobs",
+        )
 
 
 def _uses(entries: object) -> list[str]:

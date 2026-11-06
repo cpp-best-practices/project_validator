@@ -56,14 +56,14 @@
       "kind": "SourceFile",
       "language": "Go",
       "origin": "app.go",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Go",
       "origin": "cmd/app/main.go",
-      "vendored": false
+      "role": "product"
     },
     {
       "files": 1,
@@ -79,7 +79,8 @@
       "languages": [
         "Go"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     }
   ],
   "map": {
@@ -108,7 +109,8 @@
         "directory": ".",
         "languages": [
           "Go"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": [

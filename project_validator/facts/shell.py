@@ -1,8 +1,9 @@
 """Splitting the shell scripts CI runs into commands, the way a POSIX shell splits simple commands.
 
-Only what the validator needs is understood: line continuations, comments, quoting, and the operators that separate
-commands (`;`, `&&`, `||`, `|`, `&`). Leading `NAME=value` assignments are the command's environment. Compound
-commands (`if`, `for`, `case`) and here-documents are not interpreted; their lines are split like any other.
+Only what the validator needs is understood: line continuations, comments, quoting (a quoted string may span
+lines), and the operators that separate commands (`;`, `&&`, `||`, `|`, `&`). Leading `NAME=value` assignments are
+the command's environment. Compound commands (`if`, `for`, `case`) and here-documents are not interpreted; their
+lines are split like any other.
 """
 
 import re
@@ -35,11 +36,34 @@ class Unsplittable:
     reason: str
 
 
+_OPERATOR_CHARACTERS = ";&|()<>"
+# Operator characters that are quoted or escaped are text: they stand in for them while the line is split.
+_STAND_INS = {character: chr(0xE000 + index) for index, character in enumerate(_OPERATOR_CHARACTERS)}
+_RESTORED = str.maketrans({stand_in: character for character, stand_in in _STAND_INS.items()})
+
+
+def _protected(line: str) -> str:
+    """`line` with the operator characters that are quoted (`awk -F '|'`) or escaped (`\\;`) replaced by stand-ins."""
+    out: list[str] = []
+    quote: str | None = None
+    escaped = False
+    for character in line:
+        if escaped or (quote is not None and character != quote):
+            out.append(_STAND_INS.get(character, character))
+            escaped = character == "\\" and quote == '"' and not escaped
+            continue
+        escaped = character == "\\" and quote is None
+        if character in "'\"":
+            quote = None if quote == character else character
+        out.append(character)
+    return "".join(out)
+
+
 def _words(line: str) -> list[str]:
-    lexer = shlex.shlex(line, posix=True, punctuation_chars=";&|()<>")
+    lexer = shlex.shlex(_protected(line), posix=True, punctuation_chars=_OPERATOR_CHARACTERS)
     lexer.whitespace_split = True
     lexer.commenters = "#"
-    return list(lexer)
+    return list(lexer)  # quoted operator characters stay stand-ins until the commands are split (see `_command`)
 
 
 def _without_redirections(words: list[str]) -> list[str]:
@@ -66,10 +90,10 @@ def _command(words: list[str], line: str) -> ShellCommand | None:
     env = []
     while words and _ASSIGNMENT.match(words[0]):
         name, value = words[0].split("=", 1)
-        env.append((name, value))
+        env.append((name, value.translate(_RESTORED)))
         words = words[1:]
-    words = [word for word in words if word not in {"(", ")"}]
-    return ShellCommand(argv=tuple(words), env=tuple(env), line=line) if words else None
+    argv = tuple(word.translate(_RESTORED) for word in words if word not in {"(", ")"})
+    return ShellCommand(argv=argv, env=tuple(env), line=line) if argv else None
 
 
 def _commands_of(words: list[str], line: str) -> Iterator[ShellCommand]:
@@ -111,14 +135,28 @@ def split_script(script: str, opaque: re.Pattern[str] | None = None) -> Iterator
             return f"__opaque_{len(hidden) - 1}__"
 
         script = opaque.sub(hide, script)
-    for raw in _CONTINUATION.sub(" ", script).splitlines():
-        line = raw.strip()
-        if not line or line.startswith("#"):
-            continue
-        try:
-            words = _words(line)
-        except ValueError as error:
-            yield Unsplittable(line=_PLACEHOLDER.sub(lambda match: hidden[int(match[1])], line), reason=str(error))
+    for line, words in _lines(_CONTINUATION.sub(" ", script).splitlines()):
+        if isinstance(words, ValueError):
+            yield Unsplittable(line=_PLACEHOLDER.sub(lambda match: hidden[int(match[1])], line), reason=str(words))
             continue
         for command in _commands_of(words, line):
             yield _restored(command, hidden)
+
+
+def _lines(raw: list[str]) -> Iterator[tuple[str, list[str] | ValueError]]:
+    """Each line with its words; a quoted string that is still open at the end of a line goes on to the next."""
+    lines = iter(raw)
+    for first in lines:
+        line = first.strip()
+        if not line or line.startswith("#"):
+            continue
+        while True:
+            try:
+                yield line, _words(line)
+                break
+            except ValueError as error:
+                following = next(lines, None)
+                if following is None or "quotation" not in str(error):
+                    yield line, error
+                    break
+                line = f"{line}\n{following}"

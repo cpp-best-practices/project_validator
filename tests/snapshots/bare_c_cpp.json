@@ -126,7 +126,7 @@
       "kind": "SourceFile",
       "language": "C++",
       "origin": "third_party/json/json.hpp",
-      "vendored": true
+      "role": "vendored"
     },
     {
       "build_systems": [
@@ -137,7 +137,8 @@
         "C",
         "C++"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "kind": "ConfigurationFile",
@@ -172,7 +173,8 @@
         "languages": [
           "C",
           "C++"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": [],

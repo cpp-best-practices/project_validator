@@ -58,7 +58,7 @@
       "kind": "SourceFile",
       "language": "Python",
       "origin": "src/app/__init__.py",
-      "vendored": false
+      "role": "product"
     },
     {
       "build_systems": [
@@ -68,7 +68,8 @@
       "languages": [
         "Python"
       ],
-      "origin": "."
+      "origin": ".",
+      "role": "product"
     },
     {
       "kind": "ConfigurationFile",
@@ -107,7 +108,8 @@
         "directory": ".",
         "languages": [
           "Python"
-        ]
+        ],
+        "role": "product"
       }
     ],
     "unrecognised_suffixes": []
