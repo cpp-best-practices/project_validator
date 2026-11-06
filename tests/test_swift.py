@@ -2,10 +2,18 @@
 
 import unittest
 
-from project_validator.build_configurations import detect_build_types
 from project_validator.core import Result, Status
-from project_validator.ecosystems.swift import DEPENDENCIES, SWIFT
-from tests.support import GITHUB_WORKFLOW, checks_named, github_job, make_context, run_as, run_in_layout, temp_project
+from project_validator.ecosystems.swift import DEPENDENCIES, SWIFT, swiftpm_build_types, xcode_build_types
+from tests.support import (
+    GITHUB_WORKFLOW,
+    checks_named,
+    command,
+    github_job,
+    make_context,
+    run_as,
+    run_in_layout,
+    temp_project,
+)
 
 (
     CODE_FORMATTING,
@@ -48,18 +56,20 @@ class RecognitionTests(unittest.TestCase):
         self.assertEqual((structure.languages, structure.build_systems), (frozenset({"Swift"}), frozenset({"Xcode"})))
 
     def test_swiftpm_and_xcode_configurations_are_build_types(self) -> None:
-        self.assertEqual(detect_build_types("swift build", "swift test -c release"), {"debug", "release"})
-        self.assertEqual(detect_build_types("swift build --configuration=release"), {"release"})
-        self.assertEqual(detect_build_types("xcodebuild -scheme App -configuration Debug test"), {"debug"})
+        self.assertEqual(swiftpm_build_types(command("swift build")), {"debug"})
+        self.assertEqual(swiftpm_build_types(command("swift test -c release")), {"release"})
+        self.assertEqual(swiftpm_build_types(command("swift build --configuration=release")), {"release"})
+        self.assertEqual(swiftpm_build_types(command("swift package resolve")), set())
+        self.assertEqual(xcode_build_types(command("xcodebuild -scheme App -configuration Debug test")), {"debug"})
         # Without -configuration, the scheme decides, which CI configuration does not show.
-        self.assertEqual(detect_build_types("xcodebuild -scheme App test"), set())
+        self.assertEqual(xcode_build_types(command("xcodebuild -scheme App test")), set())
 
 
 class ToolTests(unittest.TestCase):
     def test_formatters_must_fail_on_findings(self) -> None:
-        for command in ("swift-format lint -s -r Sources", "swift format lint --strict -r .", "swiftformat --lint ."):
-            with self.subTest(command=command):
-                self.assertEqual(run_as(self, CODE_FORMATTING, _ci(command), SWIFT).status, Status.PASS)
+        for line in ("swift-format lint -s -r Sources", "swift format lint --strict -r .", "swiftformat --lint ."):
+            with self.subTest(line=line):
+                self.assertEqual(run_as(self, CODE_FORMATTING, _ci(line), SWIFT).status, Status.PASS)
         self.assertEqual(run_as(self, CODE_FORMATTING, _ci("swift format lint -r ."), SWIFT).status, Status.FAIL)
 
     def test_tests_are_xctest_cases_or_swift_testing_functions(self) -> None:

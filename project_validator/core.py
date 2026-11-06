@@ -160,9 +160,10 @@ class Context:
 
     @cached_property
     def ci_analysis(self) -> CiAnalysis:
-        from project_validator.ci import parse_jobs
+        """The CI jobs the facts show, as the checks judge them."""
+        from project_validator.ci import ci_analysis
 
-        return parse_jobs(self.project, self.ci_files)
+        return ci_analysis(self.facts, self.project)
 
     @cached_property
     def facts(self) -> Facts:

@@ -2,13 +2,15 @@
 
 import re
 from collections.abc import Iterable
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
+from project_validator.build_configurations import build_type_kinds, option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.c_cpp.compiler_flags import PRESET_FILES
 from project_validator.ecosystems.c_cpp.ctest import CTEST
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem
 from project_validator.evidence import existing_texts
+from project_validator.facts import Command, resolved
 from project_validator.rules import CompilerExtensions
 from project_validator.text import Pattern, matching_names, pattern
 
@@ -64,6 +66,29 @@ def _extensions_disabled(context: Context) -> Result:
     return Result.failed(f"{label} compiler extensions are never disabled; add {global_fix}")
 
 
+_BUILD_TYPE_DEFINITION = re.compile(r"^(?:-D\s*)?CMAKE_BUILD_TYPE(?::\w+)?=(.*)$")
+
+
+def _program(argv: tuple[str, ...]) -> str:
+    return PurePosixPath(argv[0].replace("\\", "/")).name.removesuffix(".exe") if argv else ""
+
+
+def cmake_build_types(command: Command) -> frozenset[str]:
+    """The build types a cmake or ctest command builds or tests: `-DCMAKE_BUILD_TYPE=` (or the `CMAKE_BUILD_TYPE`
+    environment variable) when configuring, `--config` when building or installing, `-C` when testing."""
+    argv = resolved(command)
+    program = _program(argv)
+    if program == "ctest":
+        return build_type_kinds(*option_values(argv, "-C", "--build-config"))
+    if program != "cmake":
+        return frozenset()
+    defined = [match[1] for word in argv if (match := _BUILD_TYPE_DEFINITION.match(word))]
+    configuring = not {"--build", "--install", "-E", "-P"} & set(argv)
+    if configuring and not defined and "CMAKE_BUILD_TYPE" in command.env:
+        defined = [command.env["CMAKE_BUILD_TYPE"]]
+    return build_type_kinds(*defined, *option_values(argv, "--config"))
+
+
 def is_cmake_build_tree(directory: Path) -> bool:
     return (directory / "CMakeCache.txt").is_file()
 
@@ -73,5 +98,6 @@ CMAKE = BuildSystem(
     files=("CMakeLists.txt",),
     languages=C_FAMILY,
     is_build_tree=is_cmake_build_tree,
+    build_types=cmake_build_types,
     rules=(CTEST, CompilerExtensions(judge=_extensions_disabled)),
 )

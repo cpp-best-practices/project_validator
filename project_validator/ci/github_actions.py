@@ -4,9 +4,10 @@ import itertools
 import json
 import re
 from collections.abc import Iterator, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
-from project_validator.ci import CiProvider, Job, build_job, strings
+from project_validator.ci import CiProvider, strings
+from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import ActionStep, CiJob, Fact, Origin, Unknown
 from project_validator.facts.expansion import script_facts
 from project_validator.platforms import detect_operating_systems
@@ -102,45 +103,13 @@ def _job_label(name: str, combination: Combination) -> str:
     return f"{name} ({_combination_label(combination)})"
 
 
-def _job_text(job: Mapping[str, object]) -> str:
-    return json.dumps({key: value for key, value in job.items() if key != "strategy"}, default=str)
-
-
-def _expand_job(job_id: str, job: Mapping[str, object]) -> list[Job]:
-    name = str(job.get("name", job_id))
-    strategy = job.get("strategy")
-    combinations = expand_matrix(strategy.get("matrix") if isinstance(strategy, Mapping) else None)
-    if combinations is None:
-        return [Job(name=f"{name} (matrix computed by an expression)", os="unknown", compilers=frozenset())]
-
-    text = _job_text(job)
-    return [
-        build_job(
-            _job_label(name, combination),
-            _runner_os(job, combination),
-            json.dumps(combination, default=str),
-            substitute_matrix(text, combination),
-        )
-        for combination in combinations
-    ]
-
-
-def parse_workflow(document: object) -> list[Job]:
-    if not isinstance(document, Mapping) or not isinstance(jobs := document.get("jobs"), Mapping):
-        return []
-    return [
-        expanded
-        for job_id, job in jobs.items()
-        if isinstance(job, Mapping) and "uses" not in job
-        for expanded in _expand_job(str(job_id), job)
-    ]
-
-
 def _job_facts(path: str, job_id: str, job: Mapping[str, object], workflow_env: object) -> Iterator[Fact]:
     origin = Origin(path=path, at=("jobs", job_id))
     strategy = job.get("strategy")
     combinations = expand_matrix(strategy.get("matrix") if isinstance(strategy, Mapping) else None)
     if combinations is None:
+        name = f"{job.get('name', job_id)} (matrix computed by an expression)"
+        yield CiJob(origin=origin, id=f"{path}:{job_id}", provider=GITHUB_ACTIONS.name, name=name, os="unknown")
         yield Unknown(origin=origin, subject=f"the matrix of job {job_id}", reason="it is computed by an expression")
         return
     for index, combination in enumerate(combinations):
@@ -155,9 +124,17 @@ class _Combination:
     origin: Origin
     identity: str
     combination: Combination
+    # What the job's conditions and expressions can be evaluated with, once its environment is known.
+    known: Known | None = None
 
     def substitute(self, text: str) -> str:
-        return substitute_matrix(text, self.combination, missing="")
+        """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
+        text = substitute_matrix(text, self.combination, missing="")
+        if (known := self.known) is None:
+            return text
+        return EXPRESSION.sub(
+            lambda match: value if (value := rendered(match[0], known)) is not None else match[0], text
+        )
 
     def substituted(self, value: object) -> dict[str, str]:
         return {key: self.substitute(text) for key, text in strings(value).items()}
@@ -165,30 +142,49 @@ class _Combination:
     def optional(self, value: object) -> str | None:
         return self.substitute(value) if isinstance(value, str) else None
 
+    def runs(self, condition: object, known: Known) -> bool | None:
+        """Whether a job or step with `condition` runs in this combination; None when the checkout does not show it.
+
+        A condition that is not a string (`if: true`) is YAML's own value."""
+        if condition is None:
+            return True
+        return evaluate(condition, known) if isinstance(condition, str) else bool(condition)
+
     def facts(self, job: Mapping[str, object], workflow_env: object) -> Iterator[Fact]:
-        container = job.get("container")
         env = {**self.substituted(workflow_env), **self.substituted(job.get("env"))}
+        os = _runner_os(job, self.combination)
+        known = Known(os=os, matrix=self.combination, env=env)
+        if self.runs(job.get("if"), known) is False:
+            return
+        yield from replace(self, known=known).job_facts(job, known)
+
+    def job_facts(self, job: Mapping[str, object], known: Known) -> Iterator[Fact]:
+        container = job.get("container")
         yield CiJob(
             origin=self.origin,
             id=self.identity,
             provider=GITHUB_ACTIONS.name,
             name=_job_label(str(job.get("name", self.origin.at[-1])), self.combination),
-            os=_runner_os(job, self.combination),
+            os=known.os,
             matrix={
                 key: value if isinstance(value, str) else json.dumps(value) for key, value in self.combination.items()
             },
             image=self.optional(container.get("image") if isinstance(container, Mapping) else container),
-            env=env,
+            env=self.substituted(known.env),
         )
         steps = job.get("steps")
         for number, step in enumerate(steps if isinstance(steps, list) else []):
             if isinstance(step, Mapping):
                 yield from self.step_facts(
-                    Origin(path=self.origin.path, at=(*self.origin.at, "steps", number)), step, env
+                    Origin(path=self.origin.path, at=(*self.origin.at, "steps", number)), step, known
                 )
 
-    def step_facts(self, origin: Origin, step: Mapping[str, object], env: Mapping[str, str]) -> Iterator[Fact]:
-        condition = self.optional(step.get("if"))
+    def step_facts(self, origin: Origin, step: Mapping[str, object], known: Known) -> Iterator[Fact]:
+        """The facts of a step that runs, or may run, in this combination; its condition is kept while unknown."""
+        runs = self.runs(step.get("if"), known)
+        if runs is False:
+            return
+        condition = None if runs else self.optional(step.get("if"))
         if "uses" in step:
             inputs = self.substituted(step.get("with"))
             yield ActionStep(
@@ -199,7 +195,7 @@ class _Combination:
                 self.substitute(run),
                 job=self.identity,
                 origin=Origin(path=origin.path, at=(*origin.at, "run")),
-                env={**env, **self.substituted(step.get("env"))},
+                env={**known.env, **self.substituted(step.get("env"))},
                 directory=self.optional(step.get("working-directory")),
                 condition=condition,
                 opaque=EXPRESSION,
@@ -240,7 +236,6 @@ def action_references(document: object) -> list[str]:
 GITHUB_ACTIONS = CiProvider(
     name="GitHub Actions",
     directories=(".github/workflows",),
-    parse_yaml=parse_workflow,
     # zizmor also finds security problems in workflows: template injection, credentials persisted by checkout, ...
     linters=(pattern("actionlint", r"\bactionlint\b"), pattern("zizmor", r"\bzizmor\b")),
     lint_hint="GitHub Actions: run actionlint (rhysd/actionlint) or zizmor (zizmorcore/zizmor-action) in CI",

@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from project_validator.core import Context, Project, Result, Status
+from project_validator.facts import Command
 from project_validator.rules import ToolchainAxis, toolchain_versions, versions_axis
 
 __all__ = [
@@ -46,6 +47,7 @@ class BuildSystem:
     in `/` for a directory (`*.xcodeproj/`), which is recognised by the files inside it.
     The languages it builds are `languages`, plus those `declared_languages` reads from one of its build files.
     A directory for which `is_build_tree` is true holds its build output and is never inspected.
+    `build_types` reads the build types (`debug`, `release`) a command of the build system builds.
     `rules` are those of its ecosystem's practices that depend on the build system (see `Ecosystem.rule_for`).
     """
 
@@ -54,6 +56,7 @@ class BuildSystem:
     languages: frozenset[str] = frozenset()
     declared_languages: Callable[[str], frozenset[str]] | None = None
     is_build_tree: Callable[[Path], bool] | None = None
+    build_types: Callable[[Command], frozenset[str]] | None = None
     rules: tuple[object, ...] = field(default=(), repr=False)
 
     def __post_init__(self) -> None:
