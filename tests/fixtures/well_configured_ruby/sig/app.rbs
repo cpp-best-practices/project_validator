@@ -1,0 +1,3 @@
+module App
+  def self.add: (Integer left, Integer right) -> Integer
+end

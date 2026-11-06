@@ -291,7 +291,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to Java (applies to JavaScript, PHP, Python, TypeScript)",
+      "message": "not applicable to Java (applies to JavaScript, PHP, Python, Ruby, TypeScript)",
       "status": "SKIP"
     },
     "vcs-ignore": {

@@ -431,7 +431,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to Rust (applies to JavaScript, PHP, Python, TypeScript)",
+      "message": "not applicable to Rust (applies to JavaScript, PHP, Python, Ruby, TypeScript)",
       "status": "SKIP"
     },
     "vcs-ignore": {

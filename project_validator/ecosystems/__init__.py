@@ -25,9 +25,10 @@ from project_validator.ecosystems.model import (
 )
 from project_validator.ecosystems.php import PHP
 from project_validator.ecosystems.python import PYTHON
+from project_validator.ecosystems.ruby import RUBY
 from project_validator.ecosystems.rust import RUST
 
-BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM, PHP)
+BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM, PHP, RUBY)
 
 _registered: list[Ecosystem] = list(BUILT_IN)
 
@@ -214,6 +215,7 @@ __all__ = [
     "JVM",
     "PHP",
     "PYTHON",
+    "RUBY",
     "RUST",
     "BuildSystem",
     "Ecosystem",

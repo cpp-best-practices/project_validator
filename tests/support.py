@@ -164,6 +164,12 @@ PROJECT_LAYOUTS = (
         build_systems=frozenset({"Composer"}),
     ),
     ProjectLayout(
+        name="Bundler Ruby",
+        files={"Gemfile": "", "lib/app.rb": ""},
+        languages=frozenset({"Ruby"}),
+        build_systems=frozenset({"Bundler"}),
+    ),
+    ProjectLayout(
         name="Unrecognised language",
         files={"README.md": "", "src/main.zig": ""},
         languages=frozenset(),
@@ -259,6 +265,7 @@ WELL_CONFIGURED_GO = fixture_files("well_configured_go")
 WELL_CONFIGURED_JAVASCRIPT = fixture_files("well_configured_javascript")
 WELL_CONFIGURED_JVM = fixture_files("well_configured_jvm")
 WELL_CONFIGURED_PHP = fixture_files("well_configured_php")
+WELL_CONFIGURED_RUBY = fixture_files("well_configured_ruby")
 
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}
