@@ -27,7 +27,7 @@
     },
     "ci-build-types": {
       "details": [],
-      "message": "not applicable to Python (applies to C, C++, Rust)",
+      "message": "not applicable to Python (applies to C, C++, Rust, Swift)",
       "status": "SKIP"
     },
     "ci-lint": {
@@ -110,7 +110,7 @@
     },
     "hardening": {
       "details": [],
-      "message": "not applicable to Python (applies to C, C++, Go, Rust)",
+      "message": "not applicable to Python (applies to C, C++, Go, Rust, Swift)",
       "status": "SKIP"
     },
     "large-files": {
@@ -188,7 +188,7 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Python (applies to C, C++, Java, JavaScript, Kotlin, TypeScript)",
+      "message": "not applicable to Python (applies to C, C#, C++, F#, Java, JavaScript, Kotlin, PHP, Swift, TypeScript)",
       "status": "SKIP"
     }
   }

@@ -11,7 +11,14 @@ from collections.abc import Iterator
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing, json_value
+from project_validator.evidence import (
+    ci_and_hook_texts,
+    configuration,
+    existing_texts,
+    first_existing,
+    json_value,
+    scripts_run,
+)
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -84,24 +91,14 @@ def _named_scripts(text: str) -> Iterator[str]:
         yield NPM_LIFECYCLE_ALIASES.get(name, name)
 
 
-def _scripts_run(context: Context, texts: tuple[str, ...]) -> tuple[str, ...]:
-    """The scripts that `texts` run, with the scripts those run in turn and their pre and post scripts."""
-    scripts = _scripts(context)
-    pending = [name for text in texts for name in _named_scripts(text)]
-    run: dict[str, None] = {}
-    while pending:
-        name = pending.pop()
-        if name in run or name not in scripts:
-            continue
-        run[name] = None
-        pending += [f"pre{name}", f"post{name}", *_named_scripts(scripts[name])]
-    return tuple(scripts[name] for name in run)
+def _pre_and_post(name: str) -> tuple[str, ...]:
+    return (f"pre{name}", f"post{name}")
 
 
 def _run_texts(context: Context) -> tuple[str, ...]:
     """CI configuration, pre-commit hooks, and the package scripts they run."""
     texts = ci_and_hook_texts(context)
-    return (*texts, *_scripts_run(context, texts))
+    return (*texts, *scripts_run(texts, _scripts(context), _named_scripts, _pre_and_post))
 
 
 PRETTIER_CONFIG_FILES = tuple(
@@ -161,6 +158,7 @@ TESTS = TestSuite(
     found=_javascript_tests,
     runs=RUNS_TESTS,
     runner="jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)",
+    texts=_run_texts,
 )
 
 # Istanbul (nyc, jest, vitest's istanbul provider) and V8 coverage (c8, vitest, node, deno) both report branches.
