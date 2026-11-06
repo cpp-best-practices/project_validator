@@ -1,5 +1,9 @@
-"""Policy: how answers (see `project_validator.questions`) are judged. Built in for now; kept apart from the questions
-so that it can be made configurable without touching extraction."""
+"""Policy: how answers (see `project_validator.questions`) are judged. Built in, apart from `--allow-unknown`; kept
+apart from the questions so that it can be made configurable without touching extraction.
+
+An unknown answer is a gap in the validator's tooling (configuration it cannot read), not a finding about the
+project, so it is an error unless the user allows unknowns; then it is judged by what could be read.
+"""
 
 from project_validator.core import Result, Status
 from project_validator.facts.coverage import Granularity
@@ -14,29 +18,35 @@ def required_coverage(answer: CoverageAnswer) -> Granularity | None:
     return possible[-1] if possible else None
 
 
-def _missing(answer: CoverageAnswer, required: Granularity) -> Result:
+def _missing(answer: CoverageAnswer, required: Granularity, *, allow_unknown: bool) -> Result:
     coarser = (
         f"{granularity} coverage is reported with {', '.join(answer[granularity].tools)}"
         for granularity in answer.possible()
         if granularity.rank < required.rank and answer[granularity].answer is Answer.YES
     )
     known = f"known to report {required} coverage: {', '.join(answer[required].known)}"
-    if answer[required].answer is Answer.UNKNOWN:
-        unread = (f"not read: {unknown}" for unknown in answer.unknowns)
-        return Result.failed(
-            f"no {required} coverage reporting found in what CI runs that could be read", *coarser, known, *unread
+    if answer[required].answer is Answer.UNKNOWN and not allow_unknown:
+        return Result(
+            status=Status.ERROR,
+            message=f"whether CI reports {required} coverage is unknown: some of what it runs could not be read",
+            details=(
+                *(f"not read: {unknown}" for unknown in answer.unknowns),
+                *coarser,
+                known,
+                "--allow-unknown judges only what could be read",
+            ),
         )
     return Result.failed(f"no {required} coverage reporting found in what CI runs", *coarser, known)
 
 
-def judge_coverage(answer: CoverageAnswer) -> Result:
+def judge_coverage(answer: CoverageAnswer, *, allow_unknown: bool = False) -> Result:
     """Required coverage passes, and path coverage is a bonus where a known tool measures it; a language no known
-    tool measures is skipped."""
+    tool measures is skipped. An unknown answer is an error unless `allow_unknown`."""
     required = required_coverage(answer)
     if required is None:
         return Result(status=Status.SKIP, message=f"no known tool measures the coverage of {answer.language}")
     if answer[required].answer is not Answer.YES:
-        return _missing(answer, required)
+        return _missing(answer, required, allow_unknown=allow_unknown)
     message = f"{required} coverage is reported with {', '.join(answer[required].tools)}"
     path = answer[Granularity.PATH]
     if path.answer is Answer.YES:

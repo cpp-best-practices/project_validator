@@ -91,6 +91,11 @@ def _add_check_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--allow-official-tags", action="store_true", help="let actions from actions/ and github/ be pinned to tags"
     )
+    parser.add_argument(
+        "--allow-unknown",
+        action="store_true",
+        help="judge by what could be read when an answer depends on configuration that could not be (else an error)",
+    )
 
 
 def _options(arguments: argparse.Namespace) -> Options:
@@ -100,6 +105,7 @@ def _options(arguments: argparse.Namespace) -> Options:
         ctest=arguments.ctest,
         max_file_size=arguments.max_file_size,
         allow_official_tags=arguments.allow_official_tags,
+        allow_unknown=arguments.allow_unknown,
     )
 
 

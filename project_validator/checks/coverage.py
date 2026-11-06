@@ -10,7 +10,9 @@ def _judge(languages: frozenset[str], context: Context) -> Result:
     """The coverage policy's judgement of each of `languages` the project uses, one result when they agree."""
     tools = built_in_coverage_tools()
     results = {
-        language: judge_coverage(coverage_answer(language, context.facts, tools))
+        language: judge_coverage(
+            coverage_answer(language, context.facts, tools), allow_unknown=context.options.allow_unknown
+        )
         for language in sorted(languages & context.structure.languages)
     }
     if len(set(results.values())) == 1:

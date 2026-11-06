@@ -105,6 +105,11 @@ names its question and its policy and formats the result. `--strict` and `--warn
 not the questions. The policy is built in to begin with; it is a separate layer so that it can be made configurable
 later without touching extraction.
 
+An **unknown** answer is a gap in the validator's tooling (configuration it cannot read, such as a CI provider it
+only scans heuristically, or a matrix computed by an expression), not a finding about the project. So it is an
+`ERROR`, which fails the run and names what was not read, unless the user passes `--allow-unknown`; then the answer
+is judged by what could be read, as a no.
+
 ### Worked example: branch coverage in this repository
 
 1. The GitHub Actions extractor records the job `coverage` and its command
@@ -167,8 +172,8 @@ except where a step deliberately changes results and says so.
      shared build systems and tools and in the profiles (and their modules), never listed.
    - The coverage question (`project_validator/questions/coverage.py`) answers per language and granularity; the
      policy (`project_validator/policy.py`) requires branch coverage, or the finest granularity a known tool can
-     measure, and reports path coverage as a bonus. An unknown answer fails like a no, with what was not read in the
-     details; making it a warning is a policy decision left for when policy becomes configurable.
+     measure, and reports path coverage as a bonus. An unknown answer is an error, naming what was not read
+     (see Policy).
    - `--answers` prints the answers. C and C++ coverage tools stay in the C/C++ profile (`c_cpp/coverage.py`) until
      step 5 shares them with Fortran.
 4. **The remaining practices**, one at a time, each deleting its rule type from `rules.py`.
