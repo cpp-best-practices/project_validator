@@ -75,7 +75,8 @@ repository, a command no extractor understands. Absence of a fact is "no" only w
 Commands are split into arguments, and extractors claim them by program and subcommand, rather than searching
 command lines for a flag anywhere on the line.
 
-Facts are Python dataclasses held in memory, with a small query helper. They can be exported as JSON.
+Facts are Python dataclasses held in memory (`project_validator.facts.Facts`), queried by kind and field, by tool
+setting and by the file a tool reads (see step 3½). They are exported as JSON by `--facts`.
 
 ### Questions
 
@@ -176,7 +177,32 @@ except where a step deliberately changes results and says so.
      (see Policy).
    - `--answers` prints the answers. C and C++ coverage tools stay in the C/C++ profile (`c_cpp/coverage.py`) until
      step 5 shares them with Fortran.
-4. **The remaining practices**, one at a time, each deleting its rule type from `rules.py`.
+
+   **3½. Foundations: structure and settings as facts, and the query layer.** Step 3 showed that without shared
+   layers each question would read files and join settings in its own extractor. Before the remaining practices
+   move:
+   - **Structure facts** (`project_validator/facts/structure.py`): every source file with its language
+     (`SourceFile`), every build file with the languages it builds (`BuildFile`), what content probes found
+     (`ContentLanguages`), and the suffixes no ecosystem accounts for. Vendored code (a `vendor`/`third_party`-style
+     directory, a minified `*.min.js`) is recorded but makes no language the project's. The project map (`--map`)
+     is a view over these facts, with the vendored files listed.
+   - **Setting facts** (`project_validator/facts/settings.py`): a `SettingsReader` component reads one tool's
+     settings from the files it reads by default and from the configuration files CI commands name
+     (`--rcfile`, `-c`, `--settings`). Each file read is a `ConfigurationFile` fact; each setting a `Setting`
+     (tool, dotted key, value, origin), flagged `heuristic` when matched in code (a Jest config, a Gradle script).
+     Format helpers cover TOML, INI, JSON, XML and `key = value` files. A file that does not parse is an `Unknown`
+     scoped to its tool, so it makes unknown only the answers that depend on that tool.
+   - **Queries** (`Facts`): indexed by kind, with `where(kind, **fields)`, `settings(tool, paths=…)`,
+     `setting(tool, key, paths=…)`, `configured(tool, paths)` (the first file with the tool's settings) and
+     `first_file(reader, paths)` (the first file that exists).
+   - **Extraction stages** (`Context.facts`): structure, then CI and command expansion, then settings (which
+     need the commands that name configuration files), then the tools those commands run.
+   - **Coverage, rebuilt on them**: coverage tools are pure functions of a command and the facts; none reads a
+     file. Each declares the settings tools it `reads`, which scopes the unknowns that matter to its answers.
+   - **Questions are components** (`Question` in `project_validator/questions`), found like the others, so
+     `--answers` lists whatever questions exist.
+4. **The remaining practices**, one at a time, each deleting its rule type from `rules.py`. Each becomes settings
+   readers and tools over the shared facts, a question and a policy.
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice

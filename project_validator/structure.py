@@ -1,14 +1,20 @@
 """The map of a project (languages, build systems, CI) that checks are written against."""
 
-from collections import Counter
-from collections.abc import Iterable, Mapping
-from dataclasses import dataclass, field
+from collections.abc import Iterator, Mapping
+from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
-from project_validator.core import Project
 from project_validator.ecosystems import BuildSystem, build_systems, registered
+from project_validator.facts import Facts
+from project_validator.facts.structure import (
+    BuildFile,
+    ContentLanguages,
+    SourceFile,
+    UnrecognisedSuffix,
+    project_languages,
+)
 
 if TYPE_CHECKING:
     from project_validator.ci import CiAnalysis, CiFile, Job
@@ -22,6 +28,8 @@ class ProjectStructure:
     recognised_by: Mapping[str, tuple[str, ...]]
     # (suffix, number of files) of the files no ecosystem accounts for, most common first.
     unrecognised_suffixes: tuple[tuple[str, int], ...]
+    # Source files of other projects (vendored, minified), which make no language the project's.
+    vendored: tuple[str, ...]
     ci_providers: tuple[str, ...]
     ci_files: tuple[str, ...]
     ci_jobs: tuple[Job, ...]
@@ -34,6 +42,7 @@ class ProjectStructure:
             "unrecognised_suffixes": [
                 {"suffix": suffix, "files": count} for suffix, count in self.unrecognised_suffixes
             ],
+            **({"vendored": list(self.vendored)} if self.vendored else {}),
             "ci": {
                 "providers": list(self.ci_providers),
                 "files": list(self.ci_files),
@@ -53,22 +62,6 @@ def _job_as_dict(job: Job) -> dict[str, object]:
     }
 
 
-# Suffixes of files that are not source code of any language: documents, styles, media, archives, binaries and plain
-# data or configuration. They, and editor backups (`main.cpp~`), are never reported as unrecognised.
-NOT_SOURCE_SUFFIXES = frozenset(
-    {
-        *(".md", ".markdown", ".rst", ".txt", ".adoc", ".dox", ".pdf", ".html", ".htm"),
-        *(".css", ".scss", ".sass", ".less", ".map"),
-        *(".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".webp", ".bmp", ".mp3", ".mp4", ".wav"),
-        *(".ttf", ".otf", ".woff", ".woff2"),
-        *(".zip", ".gz", ".tgz", ".bz2", ".xz", ".7z", ".tar", ".whl", ".jar"),
-        *(".exe", ".dll", ".so", ".dylib", ".a", ".o", ".obj", ".lib", ".pdb", ".class", ".pyc"),
-        *(".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf", ".xml", ".csv", ".tsv", ".lock", ".env"),
-        *(".log", ".diff", ".patch", ".orig", ".bak", ".swp"),
-        # Templates (config.h.in, MANIFEST.in) can belong to any language.
-        ".in",
-    }
-)
 _GLOB_CHARACTERS = frozenset("*?[")
 
 
@@ -103,99 +96,43 @@ def build_files() -> BuildFiles:
     )
 
 
-def source_suffixes() -> dict[str, str]:
-    """Source file suffix -> its language, for every registered ecosystem."""
-    return {
-        suffix: language for ecosystem in registered() for suffix, language in (ecosystem.source_suffixes or {}).items()
-    }
+def _found_signals(facts: Facts) -> Iterator[tuple[frozenset[str], str]]:
+    """(languages, signal) in the order they recognise: build files, source suffixes, content, then the ambiguous
+    suffixes that count once an ecosystem is recognised another way."""
+    for build in facts.of(BuildFile):
+        kind = "build directory" if build.origin.path.endswith("/") else "build file"
+        yield build.languages, f"{kind} {PurePosixPath(build.origin.path).name}"
+    # (suffix, language, ambiguous) of the project's own sources, in the order they were found.
+    sources = dict.fromkeys(
+        (PurePosixPath(source.path).suffix, source.language, source.ambiguous)
+        for source in facts.of(SourceFile)
+        if source.language is not None and not source.vendored
+    )
+    for suffix, language in sorted((suffix, language) for suffix, language, ambiguous in sources if not ambiguous):
+        yield frozenset({language}), f"{suffix} files"
+    yield from ((content.languages, "content") for content in facts.of(ContentLanguages))
+    yield from ((frozenset({language}), f"{suffix} files") for suffix, language, ambiguous in sources if ambiguous)
 
 
-@dataclass(slots=True)
-class _Recognition:
-    """What a project was recognised as so far, and the signals that showed it, per ecosystem."""
-
-    languages: set[str] = field(default_factory=set)
-    build_systems: set[str] = field(default_factory=set)
-    signals: dict[str, dict[str, None]] = field(default_factory=dict)
-    recognised_suffixes: set[str] = field(default_factory=set)
-
-    def add(self, languages: Iterable[str], signal: str) -> None:
-        languages = set(languages)
-        self.languages |= languages
+def _signals(facts: Facts) -> dict[str, tuple[str, ...]]:
+    """Ecosystem label -> the signals that recognised it."""
+    signals: dict[str, dict[str, None]] = {}
+    for languages, signal in _found_signals(facts):
         for ecosystem in registered():
             if ecosystem.languages & languages:
-                self.signals.setdefault(ecosystem.label, {})[signal] = None
+                signals.setdefault(ecosystem.label, {})[signal] = None
+    return {label: tuple(found) for label, found in signals.items()}
 
 
-def _recognise_build_files(project: Project, files: list[str], recognised: _Recognition) -> set[str]:
-    """Recognise the build systems whose build files are present; the files that are build files are returned."""
-    known = build_files()
-    build_file_paths = set()
-    for path in files:
-        for build_file, system in known.matches(path):
-            build_file_paths.add(path)
-            recognised.build_systems.add(system.name)
-            if build_file.endswith("/"):
-                recognised.add(system.languages, f"build directory {PurePosixPath(build_file).name}")
-                continue
-            declared = system.declared_languages(project.read_text(path)) if system.declared_languages else frozenset()
-            recognised.add(system.languages | declared, f"build file {PurePosixPath(path).name}")
-    return build_file_paths
-
-
-def _recognise_sources(files: list[str], recognised: _Recognition) -> None:
-    known = source_suffixes()
-    for suffix in sorted({PurePosixPath(path).suffix for path in files} & known.keys()):
-        recognised.add((known[suffix],), f"{suffix} files")
-        recognised.recognised_suffixes.add(suffix)
-
-
-def _recognise_content(project: Project, recognised: _Recognition) -> None:
-    for ecosystem in registered():
-        if ecosystem.detect is not None and (languages := ecosystem.detect(project) & ecosystem.languages):
-            recognised.add(languages, "content")
-
-
-def _recognise_ambiguous_suffixes(files: list[str], recognised: _Recognition) -> None:
-    """Count the ambiguous suffixes of the ecosystems already recognised another way."""
-    present = {PurePosixPath(path).suffix for path in files}
-    confirmed = [ecosystem for ecosystem in registered() if ecosystem.languages & recognised.languages]
-    for ecosystem in confirmed:
-        for suffix, language in sorted((ecosystem.ambiguous_suffixes or {}).items()):
-            if suffix in present:
-                recognised.recognised_suffixes.add(suffix)
-                if language is not None:
-                    recognised.add((language,), f"{suffix} files")
-
-
-def _unrecognised_suffixes(
-    files: list[str], build_file_paths: set[str], recognised: _Recognition
-) -> list[tuple[str, int]]:
-    """The suffixes of the files no ecosystem accounts for, most common first."""
-    counts = Counter(
-        suffix
-        for path in files
-        if path not in build_file_paths
-        and (suffix := PurePosixPath(path).suffix)
-        and suffix not in recognised.recognised_suffixes
-        and suffix.lower() not in NOT_SOURCE_SUFFIXES
-        and not suffix.endswith("~")
-    )
-    return sorted(counts.items(), key=lambda item: (-item[1], item[0]))
-
-
-def map_project(project: Project, ci_files: tuple[CiFile, ...], analysis: CiAnalysis) -> ProjectStructure:
-    files = project.files()
-    recognised = _Recognition()
-    build_file_paths = _recognise_build_files(project, files, recognised)
-    _recognise_sources(files, recognised)
-    _recognise_content(project, recognised)
-    _recognise_ambiguous_suffixes(files, recognised)
+def map_project(facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis) -> ProjectStructure:
+    """The project map: a view over the structure facts, and the CI the facts show."""
+    vendored = [source.path for source in facts.of(SourceFile) if source.vendored]
     return ProjectStructure(
-        languages=frozenset(recognised.languages),
-        build_systems=frozenset(recognised.build_systems),
-        recognised_by={label: tuple(signals) for label, signals in recognised.signals.items()},
-        unrecognised_suffixes=tuple(_unrecognised_suffixes(files, build_file_paths, recognised)),
+        languages=project_languages(facts),
+        build_systems=frozenset(build.build_system for build in facts.of(BuildFile)),
+        recognised_by=_signals(facts),
+        unrecognised_suffixes=tuple((found.suffix, found.files) for found in facts.of(UnrecognisedSuffix)),
+        vendored=tuple(vendored),
         ci_providers=tuple(dict.fromkeys(ci_file.provider.name for ci_file in ci_files)),
         ci_files=tuple(ci_file.path for ci_file in ci_files),
         ci_jobs=analysis.jobs,

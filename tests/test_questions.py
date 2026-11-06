@@ -4,7 +4,7 @@ import unittest
 from unittest import mock
 
 from project_validator.checks.coverage import coverage
-from project_validator.core import Context, Result, Status
+from project_validator.core import Result, Status
 from project_validator.facts import Command, Facts, Origin, Unknown
 from project_validator.facts.coverage import CoverageMeasured, CoverageTool, Granularity, Measurement, measured
 from project_validator.policy import judge_coverage, required_coverage
@@ -15,7 +15,7 @@ from tests.support import github_job, make_context, temp_project
 ORIGIN = Origin(path="ci.yml", at=("jobs", "test"))
 
 
-def _never(_: Command, __: Context) -> Measurement | None:
+def _never(_: Command, __: Facts) -> Measurement | None:
     return None
 
 

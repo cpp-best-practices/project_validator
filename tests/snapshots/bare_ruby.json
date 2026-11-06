@@ -36,7 +36,29 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "Bundler",
+      "kind": "BuildFile",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": "Gemfile"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Ruby",
+      "origin": "app.rb",
+      "vendored": false
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".gem"
+    }
+  ],
   "map": {
     "build_systems": [
       "Bundler"

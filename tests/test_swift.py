@@ -83,7 +83,8 @@ class ToolTests(unittest.TestCase):
     def test_coverage_counts_regions(self) -> None:
         expected = Result.passed("region coverage is reported with swift test")
         self.assertEqual(run_in_layout(self, SWIFTPM, COVERAGE, _ci("swift test --enable-code-coverage")), expected)
-        scheme = {"App.xcodeproj/xcshareddata/xcschemes/App.xcscheme": '<TestAction codeCoverageEnabled = "YES">'}
+        enabled = '<Scheme><TestAction codeCoverageEnabled = "YES"/></Scheme>'
+        scheme = {"App.xcodeproj/xcshareddata/xcschemes/App.xcscheme": enabled}
         for files in (
             {**scheme, **_ci("xcodebuild -scheme App test")},
             _ci("xcodebuild test -scheme Other -enableCodeCoverage YES"),

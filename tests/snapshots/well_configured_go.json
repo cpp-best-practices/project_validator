@@ -42,6 +42,35 @@
   },
   "facts": [
     {
+      "build_system": "Go modules",
+      "kind": "BuildFile",
+      "languages": [
+        "Go"
+      ],
+      "origin": "go.mod"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Go",
+      "origin": "app.go",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Go",
+      "origin": "app_test.go",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Go",
+      "origin": "cmd/app/main.go",
+      "vendored": false
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",

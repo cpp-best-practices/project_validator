@@ -99,7 +99,22 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "CMake",
+      "kind": "BuildFile",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": "CMakeLists.txt"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CMake flags"
+    }
+  ],
   "map": {
     "build_systems": [
       "CMake"

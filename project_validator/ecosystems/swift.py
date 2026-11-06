@@ -4,15 +4,17 @@ A Swift build reads its settings from Package.swift or the Xcode project, so tho
 """
 
 import re
+from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.build_configurations import build_type_kinds, option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import configuration, existing_texts, first_existing
-from project_validator.facts import Command, resolved
+from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
 from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
 from project_validator.facts.expansion import has_option, program
+from project_validator.facts.settings import SettingsReader, json_settings, settings, xml_root
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -125,32 +127,52 @@ TESTS = TestSuite(
 )
 
 
-def _swift_test(command: Command, _: Context) -> Measurement | None:
+def _swift_test(command: Command, _: Facts) -> Measurement | None:
     argv = resolved(command)
     if program(argv) != "swift" or argv[1:2] != ("test",) or not has_option(argv, "--enable-code-coverage"):
         return None
     return measured(Granularity.LINE, Granularity.REGION)
 
 
-_SCHEME_COVERAGE = re.compile(r"\bcodeCoverageEnabled\s*=\s*\"YES\"|\"codeCoverage\"\s*:\s*(?:true|\{)")
+def _read_xcode_settings(path: str, text: str) -> Iterator[Fact]:
+    """A scheme's test action attributes, or a test plan's options."""
+    if path.endswith(".xctestplan"):
+        yield from json_settings("Xcode", path, text)
+        return
+    root = xml_root("Xcode", path, text)
+    if isinstance(root, Unknown):
+        yield root
+        return
+    for action in root.iter("TestAction"):
+        yield from settings("Xcode", path, ((f"TestAction.{name}", value) for name, value in action.attrib.items()))
 
 
-def _xcodebuild(command: Command, context: Context) -> Measurement | None:
-    """`xcodebuild test`, with code coverage turned on by its options, the scheme it runs or that scheme's test
-    plan (any scheme or test plan when it names none)."""
+XCODE_TEST_SETTINGS = SettingsReader(name="Xcode", files=("*.xcscheme", "*.xctestplan"), read=_read_xcode_settings)
+
+
+def _turns_on_coverage(setting: Setting) -> bool:
+    if setting.key == "TestAction.codeCoverageEnabled":
+        return setting.value == "YES"
+    return setting.key.startswith("defaultOptions.codeCoverage") and setting.value is not False
+
+
+def _xcodebuild(command: Command, facts: Facts) -> Measurement | None:
+    """`xcodebuild test`, with code coverage turned on by its options, the scheme it runs or a test plan (any scheme
+    when it names none)."""
     argv = resolved(command)
     if program(argv) != "xcodebuild" or not {"test", "test-without-building"} & set(argv):
         return None
     if "YES" in option_values(argv, "-enableCodeCoverage"):
         return measured(Granularity.LINE, Granularity.REGION)
     schemes = tuple(f"/{name}.xcscheme" for name in option_values(argv, "-scheme")) or (".xcscheme",)
-    settings = [path for path in context.project.files() if path.endswith((*schemes, ".xctestplan"))]
-    enabled = [path for path in settings if _SCHEME_COVERAGE.search(context.project.read_text(path))]
-    return measured(Granularity.LINE, Granularity.REGION, read=enabled) if enabled else None
+    read = [
+        setting
+        for setting in facts.settings("Xcode")
+        if setting.path.endswith((*schemes, ".xctestplan")) and _turns_on_coverage(setting)
+    ]
+    return measured(Granularity.LINE, Granularity.REGION, read=read) if read else None
 
 
-# Swift's coverage instrumentation counts regions (each branch of a condition is a region); llvm-cov shows no
-# branch coverage for Swift.
 SWIFT_ONLY = frozenset({SWIFT_LANGUAGE})
 SWIFTPM_COVERAGE = CoverageTool(
     name="swift test",
@@ -169,6 +191,7 @@ XCODE_COVERAGE = CoverageTool(
         Granularity.REGION: "xcodebuild test -enableCodeCoverage YES",
     },
     measures=_xcodebuild,
+    reads=("Xcode",),
 )
 
 RUNS_SWIFTLINT = r"(?<![\w-])swiftlint\b(?!\.yml)(?![^\n]*\s(?:--fix|autocorrect)\b)|\bSwiftLintPlugin\b"

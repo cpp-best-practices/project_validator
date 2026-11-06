@@ -6,7 +6,7 @@ from pathlib import PurePosixPath
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
-from project_validator.facts import Command, resolved
+from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
 from project_validator.facts.expansion import has_option, program
 from project_validator.rules import (
@@ -59,7 +59,7 @@ GOFMT = Formatter(
 _COVER = ("-cover", "-coverprofile", "-covermode", "-coverpkg")
 
 
-def _go_cover(command: Command, _: Context) -> Measurement | None:
+def _go_cover(command: Command, _: Facts) -> Measurement | None:
     """`go test -cover` (or `go build -cover`), which counts statements (and so lines): nothing finer."""
     argv = resolved(command)
     if program(argv) != "go" or argv[1:2] not in (("test",), ("build",)) or not has_option(argv, *_COVER):

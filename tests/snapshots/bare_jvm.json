@@ -38,7 +38,26 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "Maven",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "pom.xml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Java",
+      "origin": "src/main/java/com/example/App.java",
+      "vendored": false
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Maven"
+    }
+  ],
   "map": {
     "build_systems": [
       "Maven"

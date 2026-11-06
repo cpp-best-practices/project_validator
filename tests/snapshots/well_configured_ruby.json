@@ -42,6 +42,49 @@
   },
   "facts": [
     {
+      "build_system": "Bundler",
+      "kind": "BuildFile",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": "Gemfile"
+    },
+    {
+      "build_system": "Bundler",
+      "kind": "BuildFile",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": "app.gemspec"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Ruby",
+      "origin": "lib/app.rb",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Ruby",
+      "origin": "spec/app_spec.rb",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Ruby",
+      "origin": "spec/spec_helper.rb",
+      "vendored": false
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".rbs"
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -1023,6 +1066,27 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "spec/spec_helper.rb",
+      "reader": "SimpleCov"
+    },
+    {
+      "heuristic": true,
+      "key": "start",
+      "kind": "Setting",
+      "origin": "spec/spec_helper.rb:start",
+      "tool": "SimpleCov",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "enable_coverage",
+      "kind": "Setting",
+      "origin": "spec/spec_helper.rb:enable_coverage",
+      "tool": "SimpleCov",
+      "value": "branch"
     },
     {
       "granularities": [

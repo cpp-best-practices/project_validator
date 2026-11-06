@@ -4,8 +4,8 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from project_validator.facts import Facts, Unknown
-from project_validator.facts.coverage import CoverageMeasured, CoverageTool, Granularity
-from project_validator.questions import Answer
+from project_validator.facts.coverage import CoverageMeasured, CoverageTool, Granularity, built_in_coverage_tools
+from project_validator.questions import Answer, Question
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -57,7 +57,13 @@ def coverage_answer(language: str, facts: Facts, tools: Iterable[CoverageTool]) 
     """What coverage CI reports for `language`, by the facts, and what the known `tools` could report."""
     known = tuple(tool for tool in tools if language in tool.languages)
     measured = tuple(fact for fact in facts.of(CoverageMeasured) if language in fact.languages)
-    unknowns = tuple(f"{fact.subject}: {fact.reason} ({fact.origin})" for fact in facts.of(Unknown))
+    # What was not read matters when it may hide anything, or holds settings a known tool reads.
+    reads = {name for tool in known for name in (tool.name, *tool.reads)}
+    unknowns = tuple(
+        f"{fact.subject}: {fact.reason} ({fact.origin})"
+        for fact in facts.of(Unknown)
+        if not fact.tools or reads & set(fact.tools)
+    )
     return CoverageAnswer(
         language=language,
         granularities={
@@ -67,4 +73,14 @@ def coverage_answer(language: str, facts: Facts, tools: Iterable[CoverageTool]) 
     )
 
 
-__all__ = ["CoverageAnswer", "GranularityAnswer", "coverage_answer"]
+def _answer_coverage(language: str, facts: Facts) -> CoverageAnswer:
+    return coverage_answer(language, facts, built_in_coverage_tools())
+
+
+COVERAGE = Question(
+    name="coverage",
+    description="What coverage does CI report for the language, at each granularity (line to path)?",
+    answer=_answer_coverage,
+)
+
+__all__ = ["COVERAGE", "CoverageAnswer", "GranularityAnswer", "coverage_answer"]

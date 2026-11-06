@@ -188,9 +188,14 @@ class PythonCoverageTests(unittest.TestCase):
             with self.subTest(line=line):
                 self.assertEqual(self._run(github_job("ubuntu-latest", line)).status, Status.FAIL)
 
-    def test_settings_that_do_not_parse_set_nothing(self) -> None:
+    def test_settings_that_do_not_parse_are_unknown(self) -> None:
         broken = {"setup.cfg": "[coverage:run\nbranch = true\n", **github_job("ubuntu-latest", "coverage run -m x")}
-        self.assertEqual(self._run(broken).status, Status.FAIL)
+        result = self._run(broken)
+        self.assertEqual(result.status, Status.ERROR)
+        self.assertTrue(result.details[0].startswith("not read: the coverage.py settings: "), result.details)
+        # Settings of tools that do not measure the language's coverage do not matter.
+        unrelated = {"phpunit.xml": "<phpunit>", **github_job("ubuntu-latest", "coverage run --branch -m x")}
+        self.assertEqual(self._run(unrelated).status, Status.PASS)
 
     def test_line_coverage_fails(self) -> None:
         result = self._run(

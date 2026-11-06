@@ -38,7 +38,34 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "MSBuild",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "src/App/App.csproj"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "C#",
+      "origin": "src/App/Calculator.cs",
+      "vendored": false
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "MSBuild"
+    },
+    {
+      "heuristic": false,
+      "key": "TargetFramework",
+      "kind": "Setting",
+      "origin": "src/App/App.csproj:TargetFramework",
+      "tool": "MSBuild",
+      "value": "net10.0"
+    }
+  ],
   "map": {
     "build_systems": [
       "MSBuild"

@@ -38,7 +38,33 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "Python packaging",
+      "kind": "BuildFile",
+      "languages": [
+        "Python"
+      ],
+      "origin": "pyproject.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Python",
+      "origin": "src/app/__init__.py",
+      "vendored": false
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "coverage.py"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pytest"
+    }
+  ],
   "map": {
     "build_systems": [
       "Python packaging"

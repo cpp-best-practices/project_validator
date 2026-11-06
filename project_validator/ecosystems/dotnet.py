@@ -5,7 +5,7 @@ Directory.Build.props, so those count as CI configuration when CI builds the pro
 """
 
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
 
@@ -13,9 +13,10 @@ from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts
-from project_validator.facts import Command, resolved
+from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
-from project_validator.facts.expansion import program
+from project_validator.facts.expansion import joined, program
+from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -120,7 +121,29 @@ TESTS = TestSuite(found=_dotnet_tests, runs=(pattern("dotnet test", r"\bdotnet\s
 
 # coverlet and Microsoft's code coverage (dotnet-coverage, Microsoft.Testing.Platform) both count branches.
 _COLLECT_COVERAGE = re.compile(_property("CollectCoverage", "true"), re.IGNORECASE)
-_RUN_SETTINGS = re.compile(r"<RunSettingsFilePath>\s*([^<]+?)\s*</RunSettingsFilePath>")
+_ELEMENT = re.compile(r"<(\w+)>\s*([^<]*?)\s*</\1>")
+_FRIENDLY_NAME = re.compile(r"""friendlyName\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
+
+
+def _read_msbuild_properties(path: str, text: str) -> Iterator[Setting]:
+    """The properties a project file or shared MSBuild file sets; matched in its text when it does not parse."""
+    root = xml_root("MSBuild", path, text)
+    if isinstance(root, Unknown):
+        found = ((match[1], match[2]) for match in _ELEMENT.finditer(text))
+        yield from settings("MSBuild", path, found, heuristic=True)
+        return
+    properties = ((child.tag, (child.text or "").strip()) for group in root.iter("PropertyGroup") for child in group)
+    yield from settings("MSBuild", path, properties)
+
+
+def _read_run_settings(path: str, text: str) -> Iterator[Setting]:
+    """The data collectors a .runsettings file adds, by friendly name."""
+    root = xml_root("VSTest", path, text)
+    if isinstance(root, Unknown):
+        yield from matched_settings("VSTest", path, text, {"DataCollector": (_FRIENDLY_NAME, None)})
+        return
+    names = (collector.get("friendlyName", "") for collector in root.iter("DataCollector"))
+    yield from settings("VSTest", path, (("DataCollector", name) for name in names))
 
 
 def _dotnet_test(command: Command) -> tuple[str, ...] | None:
@@ -128,16 +151,24 @@ def _dotnet_test(command: Command) -> tuple[str, ...] | None:
     return argv if program(argv) == "dotnet" and argv[1:2] == ("test",) else None
 
 
-def _run_settings(context: Context, argv: tuple[str, ...], projects: list[str]) -> list[str]:
-    """The .runsettings files a test run reads: the one it is given, or those its projects name."""
-    named = option_values(argv, "--settings", "-s")
-    named += [match[1] for path in projects for match in _RUN_SETTINGS.finditer(context.project.read_text(path))]
-    return [
-        path for path in (name.replace("\\", "/").removeprefix("./") for name in named) if context.project.exists(path)
-    ]
+def _named_run_settings(command: Command) -> list[str]:
+    argv = _dotnet_test(command) or ()
+    return [joined(command.directory, path) for path in option_values(argv, "--settings", "-s")]
 
 
-def _coverlet(command: Command, context: Context) -> Measurement | None:
+MSBUILD_PROPERTIES = SettingsReader(name="MSBuild", files=SETTINGS_FILES, read=_read_msbuild_properties)
+RUN_SETTINGS = SettingsReader(
+    name="VSTest", files=("*.runsettings",), read=_read_run_settings, named_by=_named_run_settings
+)
+
+
+def _relative(setting: Setting) -> str:
+    """A path a setting names, relative to the project (MSBuild paths are relative to the file that sets them)."""
+    directory = str(PurePosixPath(setting.path).parent)
+    return joined(directory, str(setting.value).replace("\\", "/").removeprefix("./"))
+
+
+def _coverlet(command: Command, facts: Facts) -> Measurement | None:
     """coverlet: its data collector (`--collect "XPlat Code Coverage"`, or a .runsettings that adds it), its MSBuild
     integration (`CollectCoverage=true` on the command line or in the project settings), or its console tool."""
     if program(resolved(command)) == "coverlet":
@@ -149,17 +180,21 @@ def _coverlet(command: Command, context: Context) -> Measurement | None:
         return measured(Granularity.LINE, Granularity.BRANCH)
     if _COLLECT_COVERAGE.search(" ".join(argv)):
         return measured(Granularity.LINE, Granularity.BRANCH)
-    projects = _settings_files(context)
-    read = [path for path in projects if _COLLECT_COVERAGE.search(context.project.read_text(path))]
+    read = [
+        setting
+        for setting in facts.where(Setting, tool="MSBuild", key="CollectCoverage")
+        if str(setting.value).lower() == "true"
+    ]
+    named = [_relative(setting) for setting in facts.where(Setting, tool="MSBuild", key="RunSettingsFilePath")]
     read += [
-        path
-        for path in _run_settings(context, argv, projects)
-        if "xplat code coverage" in context.project.read_text(path).lower()
+        setting
+        for setting in facts.settings("VSTest", paths=[*_named_run_settings(command), *named])
+        if str(setting.value).lower() == "xplat code coverage"
     ]
     return measured(Granularity.LINE, Granularity.BRANCH, read=read) if read else None
 
 
-def _microsoft_coverage(command: Command, _: Context) -> Measurement | None:
+def _microsoft_coverage(command: Command, _: Facts) -> Measurement | None:
     """Microsoft code coverage: `dotnet-coverage collect`, or Microsoft.Testing.Platform's `dotnet test --coverage`."""
     argv = resolved(command)
     collects = program(argv) == "dotnet-coverage" and argv[1:2] == ("collect",)
@@ -177,6 +212,7 @@ COVERLET = CoverageTool(
         Granularity.BRANCH: 'dotnet test --collect "XPlat Code Coverage"',
     },
     measures=_coverlet,
+    reads=("MSBuild", "VSTest"),
 )
 MICROSOFT_CODE_COVERAGE = CoverageTool(
     name="Microsoft code coverage",

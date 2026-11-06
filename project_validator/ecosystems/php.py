@@ -18,18 +18,18 @@ from project_validator.evidence import (
     json_value,
     scripts_run,
 )
-from project_validator.facts import Command, Origin, Unknown, resolved
+from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
 from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
 from project_validator.facts.expansion import (
     CommandExpander,
     Expansion,
     Script,
-    found_at,
     has_option,
     joined,
     positional,
     program,
 )
+from project_validator.facts.settings import SettingsReader, settings, xml_root
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -188,24 +188,49 @@ def _php_tests(context: Context) -> Result:
 TESTS = TestSuite(found=_php_tests, runs=RUNS_TESTS, runner="phpunit, pest or composer test", texts=_run_texts)
 
 _PHPUNIT_PROGRAMS = frozenset({"phpunit", "pest", "paratest"})
-_COVERAGE_REPORT = re.compile(r"<coverage\b[^>]*>(?:(?!</coverage>).)*<report\b", re.DOTALL)
-_PATH_COVERAGE = re.compile(r"<coverage\b[^>]*\bpathCoverage\s*=\s*[\"']true[\"']")
+_CONFIGURATION_OPTIONS = frozenset({"--configuration", "-c"})
 
 
-def _phpunit(command: Command, context: Context) -> Measurement | None:
-    """PHPUnit (or Pest, or ParaTest) reporting coverage, from its options or its XML configuration. It counts
-    branches and paths together (with Xdebug), when asked for path coverage; otherwise lines."""
+def _read_phpunit_settings(path: str, text: str) -> Iterator[Fact]:
+    """The coverage settings of a PHPUnit configuration: `<coverage>`'s attributes, and the reports it writes."""
+    root = xml_root("PHPUnit", path, text)
+    if isinstance(root, Unknown):
+        yield root
+        return
+    for coverage in root.iter("coverage"):
+        yield from settings("PHPUnit", path, ((f"coverage.{name}", value) for name, value in coverage.attrib.items()))
+        reports = tuple(child.tag for report in coverage.iter("report") for child in report)
+        if reports:
+            yield from settings("PHPUnit", path, (("coverage.report", reports),))
+
+
+def _named_configuration(command: Command) -> list[str]:
+    argv = resolved(command)
+    if program(argv) not in _PHPUNIT_PROGRAMS:
+        return []
+    return [joined(command.directory, path) for path in positional(argv, _CONFIGURATION_OPTIONS)[1].values()]
+
+
+PHPUNIT_SETTINGS = SettingsReader(
+    name="PHPUnit", files=PHPUNIT_CONFIG_FILES, read=_read_phpunit_settings, named_by=_named_configuration
+)
+
+
+def _phpunit(command: Command, facts: Facts) -> Measurement | None:
+    """PHPUnit (or Pest, or ParaTest) reporting coverage, from its options or the configuration it reads (the one it
+    is given, else the first of phpunit.xml, phpunit.xml.dist and phpunit.dist.xml). It counts branches and paths
+    together (with Xdebug), when asked for path coverage; otherwise lines."""
     argv = resolved(command)
     if program(argv) not in _PHPUNIT_PROGRAMS:
         return None
-    named = positional(argv, frozenset({"--configuration", "-c"}))[1]
-    configuration = found_at(context, command.directory, list(named.values()) or PHPUNIT_CONFIG_FILES)
-    text = context.project.read_text(configuration) if configuration else ""
+    candidates = _named_configuration(command) or [joined(command.directory, name) for name in PHPUNIT_CONFIG_FILES]
+    configuration = facts.first_file("PHPUnit", candidates)
+    read = facts.settings("PHPUnit", paths=[configuration]) if configuration else ()
     reports = any(word.startswith("--coverage-") or word == "--coverage" for word in argv)
-    if not (reports or _COVERAGE_REPORT.search(text)):
+    if not (reports or any(setting.key == "coverage.report" for setting in read)):
         return None
-    path = has_option(argv, "--path-coverage") or bool(_PATH_COVERAGE.search(text))
-    read = [configuration] if configuration else ()
+    configured = any(setting.key == "coverage.pathCoverage" and setting.value == "true" for setting in read)
+    path = has_option(argv, "--path-coverage") or configured
     return measured(Granularity.LINE, *((Granularity.BRANCH, Granularity.PATH) if path else ()), read=read)
 
 
@@ -218,6 +243,7 @@ PHPUNIT = CoverageTool(
         Granularity.PATH: "phpunit --path-coverage",
     },
     measures=_phpunit,
+    reads=("PHPUnit",),
 )
 
 # E_ALL & ~E_DEPRECATED leaves some out.

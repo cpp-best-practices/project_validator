@@ -44,6 +44,26 @@
   },
   "facts": [
     {
+      "build_system": "Maven",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "pom.xml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Java",
+      "origin": "src/main/java/com/example/App.java",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Java",
+      "origin": "src/test/java/com/example/AppTest.java",
+      "vendored": false
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -547,11 +567,73 @@
       "via": []
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Maven"
+    },
+    {
+      "heuristic": false,
+      "key": "plugin.maven-compiler-plugin",
+      "kind": "Setting",
+      "origin": "pom.xml:plugin.maven-compiler-plugin",
+      "tool": "Maven",
+      "value": []
+    },
+    {
+      "heuristic": false,
+      "key": "plugin.spotless-maven-plugin",
+      "kind": "Setting",
+      "origin": "pom.xml:plugin.spotless-maven-plugin",
+      "tool": "Maven",
+      "value": [
+        "check"
+      ]
+    },
+    {
+      "heuristic": false,
+      "key": "plugin.jacoco-maven-plugin",
+      "kind": "Setting",
+      "origin": "pom.xml:plugin.jacoco-maven-plugin",
+      "tool": "Maven",
+      "value": [
+        "prepare-agent",
+        "report"
+      ]
+    },
+    {
+      "heuristic": false,
+      "key": "plugin.spotbugs-maven-plugin",
+      "kind": "Setting",
+      "origin": "pom.xml:plugin.spotbugs-maven-plugin",
+      "tool": "Maven",
+      "value": [
+        "check"
+      ]
+    },
+    {
+      "heuristic": false,
+      "key": "plugin.findsecbugs-plugin",
+      "kind": "Setting",
+      "origin": "pom.xml:plugin.findsecbugs-plugin",
+      "tool": "Maven",
+      "value": []
+    },
+    {
+      "heuristic": false,
+      "key": "plugin.dependency-check-maven",
+      "kind": "Setting",
+      "origin": "pom.xml:plugin.dependency-check-maven",
+      "tool": "Maven",
+      "value": [
+        "check"
+      ]
+    },
+    {
       "granularities": [
         "branch",
         "line"
       ],
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "CoverageMeasured",
       "languages": [
@@ -570,7 +652,7 @@
         "branch",
         "line"
       ],
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "CoverageMeasured",
       "languages": [
@@ -589,7 +671,7 @@
         "branch",
         "line"
       ],
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "CoverageMeasured",
       "languages": [
@@ -608,7 +690,7 @@
         "branch",
         "line"
       ],
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "CoverageMeasured",
       "languages": [
@@ -627,7 +709,7 @@
         "branch",
         "line"
       ],
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "CoverageMeasured",
       "languages": [
@@ -646,7 +728,7 @@
         "branch",
         "line"
       ],
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "CoverageMeasured",
       "languages": [

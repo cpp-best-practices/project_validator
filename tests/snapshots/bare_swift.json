@@ -38,7 +38,30 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "SwiftPM",
+      "kind": "BuildFile",
+      "languages": [
+        "Swift"
+      ],
+      "origin": "Package.swift"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Swift",
+      "origin": "Package.swift",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Swift",
+      "origin": "Sources/App/main.swift",
+      "vendored": false
+    }
+  ],
   "map": {
     "build_systems": [
       "SwiftPM"
