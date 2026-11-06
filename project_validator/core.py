@@ -174,15 +174,15 @@ class Context:
         commands name included), and the tools those commands run."""
         from project_validator.ci import ci_facts
         from project_validator.facts import Facts
-        from project_validator.facts.coverage import built_in_coverage_tools, coverage_facts
         from project_validator.facts.expansion import built_in_expanders, expanded
         from project_validator.facts.settings import built_in_settings_readers, settings_facts
         from project_validator.facts.structure import structure_facts
+        from project_validator.facts.tools import built_in_tools, tool_runs
 
         found = Facts(structure_facts(self.project))
         found += expanded(ci_facts(self.project, self.ci_files), self, built_in_expanders())
         found += settings_facts(self.project, built_in_settings_readers(), found)
-        return found + coverage_facts(found, built_in_coverage_tools())
+        return found + tool_runs(found, built_in_tools())
 
     @cached_property
     def ci_texts(self) -> tuple[str, ...]:

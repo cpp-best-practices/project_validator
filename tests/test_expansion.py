@@ -4,7 +4,8 @@ import unittest
 
 from project_validator.build_systems.make import parse_makefile
 from project_validator.facts import Command, Facts, Origin, Unknown
-from project_validator.facts.expansion import CommandExpander, built_in_expanders, positional
+from project_validator.facts.arguments import positional
+from project_validator.facts.expansion import CommandExpander, built_in_expanders
 from tests.support import GITHUB_WORKFLOW, github_job, make_context, temp_project
 
 
@@ -37,6 +38,21 @@ class EngineTests(unittest.TestCase):
         )
         self.assertEqual(str(formatting.origin), "Makefile:format[6]")
         self.assertEqual(formatting.job, f"{GITHUB_WORKFLOW}:build")
+
+    def test_launchers_and_wrappers_run_the_command_that_follows(self) -> None:
+        files = github_job(
+            "ubuntu-latest", "sudo -u ci env CC=clang CXX=clang++ emcmake cmake -S .", "npx --yes", "nice -n 5"
+        )
+        launched = {command.argv: command.env for command in _facts(files).of(Command) if command.via}
+        self.assertEqual(
+            list(launched),
+            [
+                ("env", "CC=clang", "CXX=clang++", "emcmake", "cmake", "-S", "."),
+                ("emcmake", "cmake", "-S", "."),
+                ("cmake", "-S", "."),
+            ],
+        )
+        self.assertEqual(launched[("cmake", "-S", ".")], {"CC": "clang", "CXX": "clang++"})
 
     def test_a_definition_that_runs_itself_is_followed_once(self) -> None:
         files = {"Makefile": "all:\n\t$(MAKE) all\n\techo done\n", **github_job("ubuntu-latest", "make")}

@@ -2,39 +2,45 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "coverage run --branch",
-            "pytest --cov --cov-branch"
-          ],
-          "tools": []
-        },
         "language": "Python",
-        "line": {
-          "answer": "no",
-          "known": [
-            "coverage run",
-            "pytest --cov"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "coverage run --branch",
+                "pytest --cov --cov-branch"
+              ],
+              "tools": []
+            },
+            "language": "Python",
+            "line": {
+              "answer": "no",
+              "known": [
+                "coverage run",
+                "pytest --cov"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -53,6 +59,16 @@
       "language": "Python",
       "origin": "src/app/__init__.py",
       "vendored": false
+    },
+    {
+      "build_systems": [
+        "Python packaging"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Python"
+      ],
+      "origin": "."
     },
     {
       "kind": "ConfigurationFile",
@@ -82,6 +98,17 @@
     },
     "languages": [
       "Python"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Python packaging"
+        ],
+        "directory": ".",
+        "languages": [
+          "Python"
+        ]
+      }
     ],
     "unrecognised_suffixes": []
   },

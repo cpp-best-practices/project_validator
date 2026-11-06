@@ -10,7 +10,6 @@ import re
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 
-from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import (
@@ -22,18 +21,11 @@ from project_validator.evidence import (
     scripts_run,
 )
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measure, Measurement, measured
-from project_validator.facts.expansion import (
-    CommandExpander,
-    Expansion,
-    Script,
-    found_at,
-    joined,
-    launcher,
-    positional,
-    program,
-)
+from project_validator.facts.arguments import option_values, positional, program
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
 from project_validator.facts.settings import Read, SettingsReader, json_settings, matched_settings
+from project_validator.facts.tools import Claim, Run, Tool
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -74,7 +66,19 @@ def _declared_by_package(text: str) -> frozenset[str]:
     return frozenset({JAVASCRIPT}) if is_package else frozenset()
 
 
-NPM = BuildSystem(name="npm", files=(PACKAGE_JSON,), declared_languages=_declared_by_package)
+def _workspaces(text: str) -> tuple[str, ...]:
+    """The workspaces a package.json declares (npm, yarn and bun: `workspaces`, as a list or under `packages`)."""
+    try:
+        manifest = json.loads(text)
+    except json.JSONDecodeError:
+        return ()
+    found = manifest.get("workspaces") if isinstance(manifest, dict) else None
+    if isinstance(found, dict):
+        found = found.get("packages")
+    return tuple(str(member) for member in found) if isinstance(found, list) else ()
+
+
+NPM = BuildSystem(name="npm", files=(PACKAGE_JSON,), declared_languages=_declared_by_package, members=_workspaces)
 DENO = BuildSystem(name="Deno", files=DENO_CONFIG_FILES, languages=frozenset({TYPESCRIPT}))
 
 
@@ -314,11 +318,11 @@ def _asks_for_coverage(argv: tuple[str, ...], *flags: str) -> bool:
     return any(word in flags or word in (f"{flag}=true" for flag in flags) for word in argv)
 
 
-def _test_runner(name: str, tool: str, flags: tuple[str, ...], files: tuple[str, ...], key: str) -> Measure:
+def _test_runner(name: str, tool: str, flags: tuple[str, ...], files: tuple[str, ...], key: str) -> Claim:
     """A test runner that reports coverage when one of `flags` asks it to, or when the configuration it reads (the
     file it is given, else the first of `files`; for Jest, else package.json's `jest`) turns `key` on."""
 
-    def measures(command: Command, facts: Facts) -> Measurement | None:
+    def measures(command: Command, facts: Facts) -> Run | None:
         argv = resolved(command)
         if program(argv) != name:
             return None
@@ -332,27 +336,27 @@ def _test_runner(name: str, tool: str, flags: tuple[str, ...], files: tuple[str,
     return measures
 
 
-def _instrumenter(name: str) -> Measure:
+def _instrumenter(name: str) -> Claim:
     """c8 or nyc, which run a command and report its coverage."""
 
-    def measures(command: Command, _: Facts) -> Measurement | None:
+    def measures(command: Command, _: Facts) -> Run | None:
         return measured(*BOTH) if program(resolved(command)) == name else None
 
     return measures
 
 
-def _deno(command: Command, _: Facts) -> Measurement | None:
+def _deno(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
     asked = any(word.partition("=")[0] == "--coverage" for word in argv)
     return measured(*BOTH) if program(argv) == "deno" and argv[1:2] == ("test",) and asked else None
 
 
-def _node(command: Command, _: Facts) -> Measurement | None:
+def _node(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
     return measured(*BOTH) if program(argv) == "node" and "--experimental-test-coverage" in argv else None
 
 
-def _bun(command: Command, _: Facts) -> Measurement | None:
+def _bun(command: Command, _: Facts) -> Run | None:
     """Bun's test runner counts lines (and functions), not branches."""
     argv = resolved(command)
     return (
@@ -362,8 +366,8 @@ def _bun(command: Command, _: Facts) -> Measurement | None:
     )
 
 
-def _reports_branches(name: str, how: str, measures: Measure, reads: tuple[str, ...] = ()) -> CoverageTool:
-    return CoverageTool(
+def _reports_branches(name: str, how: str, measures: Claim, reads: tuple[str, ...] = ()) -> Tool:
+    return coverage_tool(
         name=name,
         languages=JS_LANGUAGES,
         can={Granularity.LINE: how, Granularity.BRANCH: how},
@@ -390,7 +394,7 @@ VITEST = _reports_branches(
 )
 DENO_TEST = _reports_branches("deno test", "deno test --coverage", _deno)
 NODE_TEST = _reports_branches("node --test", "node --test --experimental-test-coverage", _node)
-BUN_TEST = CoverageTool(
+BUN_TEST = coverage_tool(
     name="bun test", languages=JS_LANGUAGES, can={Granularity.LINE: "bun test --coverage"}, measures=_bun
 )
 # The commands that run a package's binary (`npx c8`).

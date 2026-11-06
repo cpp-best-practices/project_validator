@@ -19,17 +19,11 @@ from project_validator.evidence import (
     scripts_run,
 )
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
-from project_validator.facts.expansion import (
-    CommandExpander,
-    Expansion,
-    Script,
-    has_option,
-    joined,
-    positional,
-    program,
-)
+from project_validator.facts.arguments import has_option, positional, program
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.settings import SettingsReader, settings, xml_root
+from project_validator.facts.tools import Run
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -216,7 +210,7 @@ PHPUNIT_SETTINGS = SettingsReader(
 )
 
 
-def _phpunit(command: Command, facts: Facts) -> Measurement | None:
+def _phpunit(command: Command, facts: Facts) -> Run | None:
     """PHPUnit (or Pest, or ParaTest) reporting coverage, from its options or the configuration it reads (the one it
     is given, else the first of phpunit.xml, phpunit.xml.dist and phpunit.dist.xml). It counts branches and paths
     together (with Xdebug), when asked for path coverage; otherwise lines."""
@@ -234,7 +228,7 @@ def _phpunit(command: Command, facts: Facts) -> Measurement | None:
     return measured(Granularity.LINE, *((Granularity.BRANCH, Granularity.PATH) if path else ()), read=read)
 
 
-PHPUNIT = CoverageTool(
+PHPUNIT = coverage_tool(
     name="PHPUnit",
     languages=frozenset({"PHP"}),
     can={

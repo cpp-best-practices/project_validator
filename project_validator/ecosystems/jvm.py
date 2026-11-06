@@ -14,9 +14,10 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, first_existing
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measure, Measurement, measured
-from project_validator.facts.expansion import positional, program
+from project_validator.facts.arguments import positional, program
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
+from project_validator.facts.tools import Claim, Run
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -287,8 +288,8 @@ def _wired(wiring: _Wiring, kind: str, facts: Facts) -> list[Setting]:
     return [*applied, *linked]
 
 
-def _jvm_coverage(wiring: _Wiring) -> Measure:
-    def measures(command: Command, facts: Facts) -> Measurement | None:
+def _jvm_coverage(wiring: _Wiring) -> Claim:
+    def measures(command: Command, facts: Facts) -> Run | None:
         found = _build_steps(command)
         if found is None:
             return None
@@ -304,7 +305,7 @@ def _jvm_coverage(wiring: _Wiring) -> Measure:
 
 # JaCoCo and Kover count branches; neither reports path coverage.
 JVM_LANGUAGES = frozenset({JAVA, KOTLIN})
-JACOCO = CoverageTool(
+JACOCO = coverage_tool(
     name="JaCoCo",
     languages=JVM_LANGUAGES,
     can={
@@ -320,7 +321,7 @@ JACOCO = CoverageTool(
     ),
     reads=("Maven", "Gradle"),
 )
-KOVER = CoverageTool(
+KOVER = coverage_tool(
     name="Kover",
     languages=JVM_LANGUAGES,
     can={Granularity.LINE: "koverXmlReport", Granularity.BRANCH: "koverXmlReport"},

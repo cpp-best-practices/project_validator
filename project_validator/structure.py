@@ -12,6 +12,7 @@ from project_validator.facts.structure import (
     BuildFile,
     ContentLanguages,
     SourceFile,
+    Unit,
     UnrecognisedSuffix,
     project_languages,
 )
@@ -30,6 +31,8 @@ class ProjectStructure:
     unrecognised_suffixes: tuple[tuple[str, int], ...]
     # Source files of other projects (vendored, minified), which make no language the project's.
     vendored: tuple[str, ...]
+    # (directory, build systems, languages) of each unit of the project: one for most, several for a monorepo.
+    units: tuple[tuple[str, tuple[str, ...], frozenset[str]], ...]
     ci_providers: tuple[str, ...]
     ci_files: tuple[str, ...]
     ci_jobs: tuple[Job, ...]
@@ -43,6 +46,10 @@ class ProjectStructure:
                 {"suffix": suffix, "files": count} for suffix, count in self.unrecognised_suffixes
             ],
             **({"vendored": list(self.vendored)} if self.vendored else {}),
+            "units": [
+                {"directory": directory, "build_systems": list(systems), "languages": sorted(languages)}
+                for directory, systems, languages in self.units
+            ],
             "ci": {
                 "providers": list(self.ci_providers),
                 "files": list(self.ci_files),
@@ -133,6 +140,7 @@ def map_project(facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis
         recognised_by=_signals(facts),
         unrecognised_suffixes=tuple((found.suffix, found.files) for found in facts.of(UnrecognisedSuffix)),
         vendored=tuple(vendored),
+        units=tuple((unit.directory, unit.build_systems, unit.languages) for unit in facts.of(Unit)),
         ci_providers=tuple(dict.fromkeys(ci_file.provider.name for ci_file in ci_files)),
         ci_files=tuple(ci_file.path for ci_file in ci_files),
         ci_jobs=analysis.jobs,

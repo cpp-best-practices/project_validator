@@ -2,37 +2,43 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "SimpleCov enable_coverage :branch"
-          ],
-          "tools": []
-        },
         "language": "Ruby",
-        "line": {
-          "answer": "no",
-          "known": [
-            "SimpleCov"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "SimpleCov enable_coverage :branch"
+              ],
+              "tools": []
+            },
+            "language": "Ruby",
+            "line": {
+              "answer": "no",
+              "known": [
+                "SimpleCov"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -57,6 +63,16 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".gem"
+    },
+    {
+      "build_systems": [
+        "Bundler"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": "."
     }
   ],
   "map": {
@@ -76,6 +92,17 @@
     },
     "languages": [
       "Ruby"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Bundler"
+        ],
+        "directory": ".",
+        "languages": [
+          "Ruby"
+        ]
+      }
     ],
     "unrecognised_suffixes": [
       {

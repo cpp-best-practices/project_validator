@@ -2,100 +2,112 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "c8",
-            "nyc",
-            "jest --coverage",
-            "vitest --coverage",
-            "deno test --coverage",
-            "node --test --experimental-test-coverage"
-          ],
-          "tools": [
-            "Vitest"
-          ]
-        },
         "language": "JavaScript",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "c8",
-            "nyc",
-            "jest --coverage",
-            "vitest --coverage",
-            "deno test --coverage",
-            "node --test --experimental-test-coverage",
-            "bun test --coverage"
-          ],
-          "tools": [
-            "Vitest"
-          ]
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "c8",
+                "nyc",
+                "jest --coverage",
+                "vitest --coverage",
+                "deno test --coverage",
+                "node --test --experimental-test-coverage"
+              ],
+              "tools": [
+                "Vitest"
+              ]
+            },
+            "language": "JavaScript",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "c8",
+                "nyc",
+                "jest --coverage",
+                "vitest --coverage",
+                "deno test --coverage",
+                "node --test --experimental-test-coverage",
+                "bun test --coverage"
+              ],
+              "tools": [
+                "Vitest"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       },
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "c8",
-            "nyc",
-            "jest --coverage",
-            "vitest --coverage",
-            "deno test --coverage",
-            "node --test --experimental-test-coverage"
-          ],
-          "tools": [
-            "Vitest"
-          ]
-        },
         "language": "TypeScript",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "c8",
-            "nyc",
-            "jest --coverage",
-            "vitest --coverage",
-            "deno test --coverage",
-            "node --test --experimental-test-coverage",
-            "bun test --coverage"
-          ],
-          "tools": [
-            "Vitest"
-          ]
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "c8",
+                "nyc",
+                "jest --coverage",
+                "vitest --coverage",
+                "deno test --coverage",
+                "node --test --experimental-test-coverage"
+              ],
+              "tools": [
+                "Vitest"
+              ]
+            },
+            "language": "TypeScript",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "c8",
+                "nyc",
+                "jest --coverage",
+                "vitest --coverage",
+                "deno test --coverage",
+                "node --test --experimental-test-coverage",
+                "bun test --coverage"
+              ],
+              "tools": [
+                "Vitest"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -128,6 +140,17 @@
       "language": "TypeScript",
       "origin": "src/add.ts",
       "vendored": false
+    },
+    {
+      "build_systems": [
+        "npm"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "."
     },
     {
       "env": {},
@@ -1472,114 +1495,144 @@
       "reader": "Jest"
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "JavaScript",
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "Vitest",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "JavaScript",
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "Vitest",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "JavaScript",
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "Vitest",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "JavaScript",
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "Vitest",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "JavaScript",
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "Vitest",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "JavaScript",
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "Vitest",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
@@ -1731,6 +1784,18 @@
     "languages": [
       "JavaScript",
       "TypeScript"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "npm"
+        ],
+        "directory": ".",
+        "languages": [
+          "JavaScript",
+          "TypeScript"
+        ]
+      }
     ],
     "unrecognised_suffixes": []
   },

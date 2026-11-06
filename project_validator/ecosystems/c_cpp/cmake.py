@@ -2,15 +2,16 @@
 
 import re
 from collections.abc import Iterable
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
-from project_validator.build_configurations import build_type_kinds, option_values
+from project_validator.build_configurations import build_type_kinds
 from project_validator.core import Context, Result
 from project_validator.ecosystems.c_cpp.compiler_flags import PRESET_FILES
 from project_validator.ecosystems.c_cpp.ctest import CTEST
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem
 from project_validator.evidence import existing_texts
 from project_validator.facts import Command, resolved
+from project_validator.facts.arguments import option_values, program
 from project_validator.rules import CompilerExtensions
 from project_validator.text import Pattern, matching_names, pattern
 
@@ -69,18 +70,14 @@ def _extensions_disabled(context: Context) -> Result:
 _BUILD_TYPE_DEFINITION = re.compile(r"^(?:-D\s*)?CMAKE_BUILD_TYPE(?::\w+)?=(.*)$")
 
 
-def _program(argv: tuple[str, ...]) -> str:
-    return PurePosixPath(argv[0].replace("\\", "/")).name.removesuffix(".exe") if argv else ""
-
-
 def cmake_build_types(command: Command) -> frozenset[str]:
     """The build types a cmake or ctest command builds or tests: `-DCMAKE_BUILD_TYPE=` (or the `CMAKE_BUILD_TYPE`
     environment variable) when configuring, `--config` when building or installing, `-C` when testing."""
     argv = resolved(command)
-    program = _program(argv)
-    if program == "ctest":
+    name = program(argv)
+    if name == "ctest":
         return build_type_kinds(*option_values(argv, "-C", "--build-config"))
-    if program != "cmake":
+    if name != "cmake":
         return frozenset()
     defined = [match[1] for word in argv if (match := _BUILD_TYPE_DEFINITION.match(word))]
     configuring = not {"--build", "--install", "-E", "-P"} & set(argv)

@@ -7,14 +7,15 @@ import re
 from collections.abc import Iterator
 from pathlib import PurePosixPath
 
-from project_validator.build_configurations import build_type_kinds, option_values
+from project_validator.build_configurations import build_type_kinds
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import configuration, existing_texts, first_existing
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
-from project_validator.facts.expansion import has_option, program
+from project_validator.facts.arguments import has_option, option_values, program
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.settings import SettingsReader, json_settings, settings, xml_root
+from project_validator.facts.tools import Run
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -127,7 +128,7 @@ TESTS = TestSuite(
 )
 
 
-def _swift_test(command: Command, _: Facts) -> Measurement | None:
+def _swift_test(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
     if program(argv) != "swift" or argv[1:2] != ("test",) or not has_option(argv, "--enable-code-coverage"):
         return None
@@ -156,7 +157,7 @@ def _turns_on_coverage(setting: Setting) -> bool:
     return setting.key.startswith("defaultOptions.codeCoverage") and setting.value is not False
 
 
-def _xcodebuild(command: Command, facts: Facts) -> Measurement | None:
+def _xcodebuild(command: Command, facts: Facts) -> Run | None:
     """`xcodebuild test`, with code coverage turned on by its options, the scheme it runs or a test plan (any scheme
     when it names none)."""
     argv = resolved(command)
@@ -174,7 +175,7 @@ def _xcodebuild(command: Command, facts: Facts) -> Measurement | None:
 
 
 SWIFT_ONLY = frozenset({SWIFT_LANGUAGE})
-SWIFTPM_COVERAGE = CoverageTool(
+SWIFTPM_COVERAGE = coverage_tool(
     name="swift test",
     languages=SWIFT_ONLY,
     can={
@@ -183,7 +184,7 @@ SWIFTPM_COVERAGE = CoverageTool(
     },
     measures=_swift_test,
 )
-XCODE_COVERAGE = CoverageTool(
+XCODE_COVERAGE = coverage_tool(
     name="Xcode",
     languages=SWIFT_ONLY,
     can={

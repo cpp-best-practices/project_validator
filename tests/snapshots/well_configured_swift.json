@@ -2,43 +2,49 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
         "language": "Swift",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "swift test --enable-code-coverage",
-            "xcodebuild test -enableCodeCoverage YES"
-          ],
-          "tools": [
-            "swift test"
-          ]
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "yes",
-          "known": [
-            "swift test --enable-code-coverage",
-            "xcodebuild test -enableCodeCoverage YES"
-          ],
-          "tools": [
-            "swift test"
-          ]
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Swift",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "swift test --enable-code-coverage",
+                "xcodebuild test -enableCodeCoverage YES"
+              ],
+              "tools": [
+                "swift test"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "yes",
+              "known": [
+                "swift test --enable-code-coverage",
+                "xcodebuild test -enableCodeCoverage YES"
+              ],
+              "tools": [
+                "swift test"
+              ]
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -84,6 +90,16 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".resolved"
+    },
+    {
+      "build_systems": [
+        "SwiftPM"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Swift"
+      ],
+      "origin": "."
     },
     {
       "env": {},
@@ -1887,194 +1903,254 @@
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[9]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[10]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[11]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Swift"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "swift test",
       "via": []
     }
@@ -2353,6 +2429,17 @@
     },
     "languages": [
       "Swift"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "SwiftPM"
+        ],
+        "directory": ".",
+        "languages": [
+          "Swift"
+        ]
+      }
     ],
     "unrecognised_suffixes": [
       {

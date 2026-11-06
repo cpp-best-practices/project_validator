@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from project_validator.facts import NOTHING, Command, Fact, Origin, Unknown, resolved
+from project_validator.facts.arguments import program
 from project_validator.facts.shell import ShellCommand, split_script
 
 if TYPE_CHECKING:
@@ -39,9 +40,11 @@ class Invocation:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Launched:
-    """The command a launcher runs from its own arguments (`bundle exec rake` runs `rake`), where the launcher is."""
+    """The command a launcher runs from its own arguments (`bundle exec rake` runs `rake`), where the launcher is,
+    with the variables the launcher sets for it (`env CC=clang make`)."""
 
     argv: tuple[str, ...]
+    env: Mapping[str, str] = NOTHING
 
 
 type Expansion = Script | Invocation | Launched | Unknown
@@ -98,7 +101,7 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
             job=command.job,
             argv=expansion.argv,
             line=found.line,
-            env=command.env,
+            env={**command.env, **expansion.env} if isinstance(expansion, Launched) else command.env,
             directory=command.directory,
             condition=command.condition,
             via=via,
@@ -151,70 +154,41 @@ def built_in_expanders() -> tuple[CommandExpander, ...]:
     return built_in(CommandExpander)
 
 
+_ASSIGNMENT = re.compile(r"([A-Za-z_]\w*)=(.*)", re.DOTALL)
+
+
 def launcher(
     name: str, prefixes: Iterable[tuple[str, ...]], with_values: frozenset[str] = frozenset()
 ) -> CommandExpander:
     """An expander of the launchers whose commands start with one of `prefixes` (`("bundle", "exec")`): each runs the
-    command its first positional argument starts. `with_values` are the launcher's options that take a value.
+    command its first positional argument starts, with the variables assigned before it (`env CC=clang make`).
+    `with_values` are the launcher's options that take a value.
     """
     starts = tuple(prefixes)
 
     def expand(command: Command, _: Context) -> list[Expansion] | None:
         argv = resolved(command)
         prefix = next((start for start in starts if _starts_with(argv, start)), None)
-        if prefix is None:
-            return None
-        rest = iter(argv[len(prefix) :])
-        for word in rest:
-            if word == "--" or not word.startswith("-"):
-                launched = (*(() if word == "--" else (word,)), *rest)
-                return [Launched(argv=launched)] if launched else []
-            if word in with_values:
-                next(rest, None)
-        return []
+        return None if prefix is None else _launched(argv[len(prefix) :], with_values)
 
     return CommandExpander(name=name, expand=expand)
 
 
+def _launched(words: tuple[str, ...], with_values: frozenset[str]) -> list[Expansion]:
+    rest, env = iter(words), {}
+    for word in rest:
+        if (assignment := _ASSIGNMENT.fullmatch(word)) is not None:
+            env[assignment[1]] = assignment[2]
+        elif word == "--" or not word.startswith("-"):
+            launched = (*(() if word == "--" else (word,)), *rest)
+            return [Launched(argv=launched, env=env)] if launched else []
+        elif word in with_values:
+            next(rest, None)
+    return []
+
+
 def _starts_with(argv: tuple[str, ...], prefix: tuple[str, ...]) -> bool:
     return len(argv) > len(prefix) and program(argv) == prefix[0] and argv[1 : len(prefix)] == prefix[1:]
-
-
-def program(argv: tuple[str, ...]) -> str:
-    """The name of the program `argv` runs, without its directory or a Windows suffix (`./vendor/bin/phpunit`)."""
-    name = argv[0].replace("\\", "/").rsplit("/", 1)[-1] if argv else ""
-    for suffix in (".exe", ".cmd", ".bat"):
-        name = name.removesuffix(suffix)
-    return name
-
-
-def has_option(argv: tuple[str, ...], *names: str) -> bool:
-    """Whether `argv` gives one of the options `names`, alone or with a value (`--name=value`)."""
-    return any(word in names or word.partition("=")[0] in names for word in argv[1:])
-
-
-def short_flags(argv: tuple[str, ...]) -> frozenset[str]:
-    """The one-letter flags given in `argv`, together or apart (`-bc`, `-b -c`)."""
-    return frozenset(
-        letter for word in argv[1:] if word.startswith("-") and not word.startswith("--") for letter in word[1:]
-    )
-
-
-def positional(argv: tuple[str, ...], with_values: frozenset[str] = frozenset()) -> tuple[list[str], dict[str, str]]:
-    """The positional arguments after the program, and the values of the options in `with_values`.
-
-    `--opt=value` and `--opt value` are both read; other options are skipped.
-    """
-    words: list[str] = []
-    options: dict[str, str] = {}
-    arguments = iter(argv[1:])
-    for word in arguments:
-        name, equals, value = word.partition("=")
-        if name in with_values:
-            options[name] = value if equals else next(arguments, "")
-        elif not word.startswith("-"):
-            words.append(word)
-    return words, options
 
 
 def found_at(context: Context, directory: str | None, names: Iterable[str]) -> str | None:
@@ -239,11 +213,7 @@ __all__ = [
     "expand_command",
     "expanded",
     "found_at",
-    "has_option",
     "joined",
     "launcher",
-    "positional",
-    "program",
     "script_facts",
-    "short_flags",
 ]

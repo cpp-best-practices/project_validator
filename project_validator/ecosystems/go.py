@@ -7,8 +7,9 @@ from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
 from project_validator.facts import Command, Facts, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
-from project_validator.facts.expansion import has_option, program
+from project_validator.facts.arguments import has_option, program
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.tools import Run
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -29,8 +30,21 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern, matching_names, pattern
 
+_USE = re.compile(r"^\s*(?:use\s+)?(?:\(\s*)?(\.{1,2}/[^\s)]*|\.)\s*\)?\s*$", re.MULTILINE)
+
+
+def _go_work_members(text: str) -> tuple[str, ...]:
+    """The modules a go.work file uses (`use ./api`, or a `use (...)` block)."""
+    if not re.search(r"^\s*use\b", text, re.MULTILINE):
+        return ()
+    return tuple(match[1] for match in _USE.finditer(text) if match[1] != ".")
+
+
 GO_MODULES = BuildSystem(
-    name="Go modules", files=("go.mod", "go.sum", "go.work", "go.work.sum"), languages=frozenset({"Go"})
+    name="Go modules",
+    files=("go.mod", "go.sum", "go.work", "go.work.sum"),
+    languages=frozenset({"Go"}),
+    members=_go_work_members,
 )
 
 GOLANGCI_CONFIG_FILES = (".golangci.yml", ".golangci.yaml", ".golangci.toml", ".golangci.json")
@@ -59,7 +73,7 @@ GOFMT = Formatter(
 _COVER = ("-cover", "-coverprofile", "-covermode", "-coverpkg")
 
 
-def _go_cover(command: Command, _: Facts) -> Measurement | None:
+def _go_cover(command: Command, _: Facts) -> Run | None:
     """`go test -cover` (or `go build -cover`), which counts statements (and so lines): nothing finer."""
     argv = resolved(command)
     if program(argv) != "go" or argv[1:2] not in (("test",), ("build",)) or not has_option(argv, *_COVER):
@@ -67,7 +81,7 @@ def _go_cover(command: Command, _: Facts) -> Measurement | None:
     return measured(Granularity.LINE, Granularity.STATEMENT)
 
 
-GO_COVER = CoverageTool(
+GO_COVER = coverage_tool(
     name="go test -cover",
     languages=frozenset({"Go"}),
     can={Granularity.LINE: "go test -cover", Granularity.STATEMENT: "go test -cover"},

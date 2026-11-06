@@ -2,39 +2,45 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "phpunit --path-coverage"
-          ],
-          "tools": []
-        },
         "language": "PHP",
-        "line": {
-          "answer": "no",
-          "known": [
-            "phpunit --coverage-clover"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "no",
-          "known": [
-            "phpunit --path-coverage"
-          ],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "phpunit --path-coverage"
+              ],
+              "tools": []
+            },
+            "language": "PHP",
+            "line": {
+              "answer": "no",
+              "known": [
+                "phpunit --coverage-clover"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "no",
+              "known": [
+                "phpunit --path-coverage"
+              ],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -59,6 +65,16 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".cache"
+    },
+    {
+      "build_systems": [
+        "Composer"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "."
     }
   ],
   "map": {
@@ -78,6 +94,17 @@
     },
     "languages": [
       "PHP"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Composer"
+        ],
+        "directory": ".",
+        "languages": [
+          "PHP"
+        ]
+      }
     ],
     "unrecognised_suffixes": [
       {

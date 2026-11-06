@@ -2,10 +2,11 @@
 
 import unittest
 
-from project_validator.build_configurations import BuildConfiguration, build_type_kinds, option_values
+from project_validator.build_configurations import BuildConfiguration, build_type_kinds
 from project_validator.ecosystems.c_cpp.cmake import cmake_build_types
 from project_validator.ecosystems.c_cpp.meson import meson_build_types
 from project_validator.ecosystems.rust import cargo_build_types
+from project_validator.facts.arguments import option_values
 from tests.support import ci_jobs, command, github_job
 
 
@@ -13,9 +14,11 @@ class CMakeBuildTypeTests(unittest.TestCase):
     def test_the_build_type_a_configuration_defines(self) -> None:
         self.assertEqual(cmake_build_types(command("cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo")), {"release"})
         self.assertEqual(cmake_build_types(command("cmake -S . -D CMAKE_BUILD_TYPE=Debug")), {"debug"})
-        self.assertEqual(
-            cmake_build_types(command("emcmake cmake -DCMAKE_BUILD_TYPE=$TYPE", {"TYPE": "Debug"})), {"debug"}
-        )
+        self.assertEqual(cmake_build_types(command("cmake -DCMAKE_BUILD_TYPE=$TYPE", {"TYPE": "Debug"})), {"debug"})
+
+    def test_a_wrapped_configuration_is_read_where_the_wrapper_runs_it(self) -> None:
+        [job] = ci_jobs(github_job("ubuntu-latest", "emcmake cmake -S . -DCMAKE_BUILD_TYPE=Release"))
+        self.assertEqual({configuration.build_type for configuration in job.configurations}, {"release"})
 
     def test_the_environment_variable_counts_when_configuring(self) -> None:
         self.assertEqual(

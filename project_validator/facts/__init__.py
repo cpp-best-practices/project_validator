@@ -73,21 +73,18 @@ class Command(Fact):
 
 
 _VARIABLE = re.compile(r"\$(?:\{(\w+)\}|(\w+))")
-# Programs that run the command that follows them.
-_WRAPPERS = frozenset({"sudo", "time", "nice", "env", "emcmake", "emmake", "scan-build", "xvfb-run", "catchsegv"})
 
 
 def resolved(command: Command) -> tuple[str, ...]:
-    """The command's arguments with the shell variables its environment defines (`$BUILD_TYPE`) put in place, and
-    without the programs that only run the command that follows them (`sudo`, `emcmake`)."""
+    """The command's arguments with the shell variables its environment defines (`$BUILD_TYPE`) put in place.
+
+    A command that runs another (`sudo make`, `bundle exec rake`) is expanded into that command by a launcher (see
+    `project_validator.facts.expansion.launcher`)."""
 
     def value(match: re.Match[str]) -> str:
         return command.env.get(match[1] or match[2], match[0])
 
-    words = [_VARIABLE.sub(value, word) for word in command.argv]
-    while len(words) > 1 and (words[0] in _WRAPPERS or (words[0] != command.argv[0] and "=" in words[0])):
-        words = words[1:]
-    return tuple(words)
+    return tuple(_VARIABLE.sub(value, word) for word in command.argv)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
