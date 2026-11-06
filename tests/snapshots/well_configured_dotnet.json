@@ -1,0 +1,308 @@
+{
+  "map": {
+    "build_systems": [
+      "MSBuild"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 9.0.x)",
+          "os": "linux",
+          "toolchains": [
+            ".NET SDK 9.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 10.0.x)",
+          "os": "linux",
+          "toolchains": [
+            ".NET SDK 10.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 9.0.x)",
+          "os": "macos",
+          "toolchains": [
+            ".NET SDK 9.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 10.0.x)",
+          "os": "macos",
+          "toolchains": [
+            ".NET SDK 10.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 9.0.x)",
+          "os": "windows",
+          "toolchains": [
+            ".NET SDK 9.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 10.0.x)",
+          "os": "windows",
+          "toolchains": [
+            ".NET SDK 10.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      ".NET": [
+        ".cs files"
+      ]
+    },
+    "languages": [
+      "C#"
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 6 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to C# (applies to C, C++, Rust)",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": ".editorconfig is defined and CI runs dotnet format",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict .NET analyzer settings are enabled: AnalysisMode Recommended or All, EnforceCodeStyleInBuild, Nullable enable",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "branch coverage is reported with coverlet",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to C# (applies to C, C++)",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "7 data files parse (JSON: 2, YAML: 5)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "CI audits the dependencies with NuGet audit of every package",
+      "status": "PASS"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "dependencies are managed with NuGet and locked in 2 packages.lock.json files",
+      "status": "PASS"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with lizard --length 30",
+      "status": "PASS"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to C# (applies to C, C++, Go, Rust)",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no .NET SDK version",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 9.0.x): linux / 9.0.x",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 10.0.x): linux / 10.0.x",
+        ".github/workflows/ci.yml: test (macos-latest, 9.0.x): macos / 9.0.x",
+        ".github/workflows/ci.yml: test (macos-latest, 10.0.x): macos / 10.0.x",
+        ".github/workflows/ci.yml: test (windows-latest, 9.0.x): windows / 9.0.x",
+        ".github/workflows/ci.yml: test (windows-latest, 10.0.x): windows / 10.0.x",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no .NET SDK version",
+        ".github/workflows/function-limits.yml: function-limits: linux / no .NET SDK version"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 2 .NET SDK version(s) (10.0.x, 9.0.x), 6 combination(s)",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "security lints are enabled: .NET security analyzers",
+      "status": "PASS"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "Roslynator runs",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": ".NET tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to C# (applies to JavaScript, PHP, Python, Ruby, TypeScript)",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores [Bb]in/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with TreatWarningsAsErrors",
+      "status": "PASS"
+    }
+  }
+}
