@@ -9,15 +9,18 @@ from collections.abc import Callable
 from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
 
+from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts
+from project_validator.facts import Command, resolved
+from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
+from project_validator.facts.expansion import program
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     Analyzer,
     BuildOutputs,
-    CoverageTools,
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
@@ -71,12 +74,6 @@ def _build_texts(context: Context) -> tuple[str, ...]:
     return (*texts, *(context.project.read_text(path) for path in _settings_files(context)))
 
 
-def _coverage_texts(context: Context) -> tuple[str, ...]:
-    """The build's texts, and the .runsettings files that configure test runs."""
-    settings = [path for path in context.project.files() if path.endswith(".runsettings")]
-    return (*_build_texts(context), *(context.project.read_text(path) for path in settings))
-
-
 def _with_files(*files: str) -> Callable[[Context], tuple[str, ...]]:
     def texts(context: Context) -> tuple[str, ...]:
         return (*_build_texts(context), *existing_texts(context, files))
@@ -121,15 +118,71 @@ def _dotnet_tests(context: Context) -> Result:
 
 TESTS = TestSuite(found=_dotnet_tests, runs=(pattern("dotnet test", r"\bdotnet\s+test\b"),), runner="dotnet test")
 
-# coverlet, Microsoft's dotnet-coverage and Microsoft.Testing.Platform's coverage all count branches.
-COVERAGE = CoverageTools(
-    searched="CI configuration, the MSBuild settings it builds with, or a .runsettings file",
-    texts=_coverage_texts,
-    branch=(
-        pattern("coverlet", rf"XPlat Code Coverage|{_property('CollectCoverage', 'true')}"),
-        pattern("dotnet-coverage", r"\bdotnet-coverage\s+collect\b"),
-        pattern("Microsoft.Testing.Platform --coverage", r"\bdotnet\s+test\b[^\n]*\s--coverage\b"),
-    ),
+# coverlet and Microsoft's code coverage (dotnet-coverage, Microsoft.Testing.Platform) both count branches.
+_COLLECT_COVERAGE = re.compile(_property("CollectCoverage", "true"), re.IGNORECASE)
+_RUN_SETTINGS = re.compile(r"<RunSettingsFilePath>\s*([^<]+?)\s*</RunSettingsFilePath>")
+
+
+def _dotnet_test(command: Command) -> tuple[str, ...] | None:
+    argv = resolved(command)
+    return argv if program(argv) == "dotnet" and argv[1:2] == ("test",) else None
+
+
+def _run_settings(context: Context, argv: tuple[str, ...], projects: list[str]) -> list[str]:
+    """The .runsettings files a test run reads: the one it is given, or those its projects name."""
+    named = option_values(argv, "--settings", "-s")
+    named += [match[1] for path in projects for match in _RUN_SETTINGS.finditer(context.project.read_text(path))]
+    return [
+        path for path in (name.replace("\\", "/").removeprefix("./") for name in named) if context.project.exists(path)
+    ]
+
+
+def _coverlet(command: Command, context: Context) -> Measurement | None:
+    """coverlet: its data collector (`--collect "XPlat Code Coverage"`, or a .runsettings that adds it), its MSBuild
+    integration (`CollectCoverage=true` on the command line or in the project settings), or its console tool."""
+    if program(resolved(command)) == "coverlet":
+        return measured(Granularity.LINE, Granularity.BRANCH)
+    if (argv := _dotnet_test(command)) is None:
+        return None
+    collectors = [*option_values(argv, "--collect"), *(word[10:] for word in argv if word.startswith("--collect:"))]
+    if any(collector.strip("\"'").lower() == "xplat code coverage" for collector in collectors):
+        return measured(Granularity.LINE, Granularity.BRANCH)
+    if _COLLECT_COVERAGE.search(" ".join(argv)):
+        return measured(Granularity.LINE, Granularity.BRANCH)
+    projects = _settings_files(context)
+    read = [path for path in projects if _COLLECT_COVERAGE.search(context.project.read_text(path))]
+    read += [
+        path
+        for path in _run_settings(context, argv, projects)
+        if "xplat code coverage" in context.project.read_text(path).lower()
+    ]
+    return measured(Granularity.LINE, Granularity.BRANCH, read=read) if read else None
+
+
+def _microsoft_coverage(command: Command, _: Context) -> Measurement | None:
+    """Microsoft code coverage: `dotnet-coverage collect`, or Microsoft.Testing.Platform's `dotnet test --coverage`."""
+    argv = resolved(command)
+    collects = program(argv) == "dotnet-coverage" and argv[1:2] == ("collect",)
+    if collects or (_dotnet_test(command) is not None and "--coverage" in argv):
+        return measured(Granularity.LINE, Granularity.BRANCH)
+    return None
+
+
+DOTNET_LANGUAGES = frozenset({CSHARP, FSHARP})
+COVERLET = CoverageTool(
+    name="coverlet",
+    languages=DOTNET_LANGUAGES,
+    can={
+        Granularity.LINE: 'dotnet test --collect "XPlat Code Coverage"',
+        Granularity.BRANCH: 'dotnet test --collect "XPlat Code Coverage"',
+    },
+    measures=_coverlet,
+)
+MICROSOFT_CODE_COVERAGE = CoverageTool(
+    name="Microsoft code coverage",
+    languages=DOTNET_LANGUAGES,
+    can={Granularity.LINE: "dotnet-coverage collect", Granularity.BRANCH: "dotnet-coverage collect"},
+    measures=_microsoft_coverage,
 )
 
 ANALYSIS_MODE = Pattern(
@@ -287,7 +340,6 @@ DOTNET = Ecosystem(
     rules=(
         versions_axis(".NET SDK version", ".NET SDK"),
         FORMATTERS,
-        COVERAGE,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

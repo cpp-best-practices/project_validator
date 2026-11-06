@@ -8,7 +8,8 @@ Recognised by `.rs` sources and Cargo (`Cargo.toml`).
 
 ## `coverage`
 
-cargo-llvm-cov, cargo-tarpaulin or grcov with `--branch`. MC/DC coverage (`cargo llvm-cov --mcdc`) is a bonus.
+cargo-llvm-cov, cargo-tarpaulin or grcov with `--branch`. MC/DC coverage (`cargo llvm-cov --mcdc`, or
+`-Zcoverage-options=mcdc` in RUSTFLAGS) is a bonus.
 
 ## `platform-matrix`
 

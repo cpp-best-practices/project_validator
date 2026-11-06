@@ -35,6 +35,7 @@ python3 -m project_validator path/to/project
 python3 -m project_validator --list
 python3 -m project_validator --map path/to/project
 python3 -m project_validator --facts path/to/project
+python3 -m project_validator --answers path/to/project
 python3 -m project_validator --only coverage,platform-matrix --format json path/to/project
 ```
 
@@ -42,7 +43,8 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 |---|---|
 | `--list` | list the available checks; with `--format json`, also the ecosystems each one applies to |
 | `--map` | print the detected project structure as JSON: languages, build systems, the signals that recognised each ecosystem, the file suffixes no ecosystem recognises, and the CI providers, jobs and toolchains |
-| `--facts` | print the facts found about the project as JSON, each with where it was found: for now the CI jobs (one per matrix combination), the commands and actions each runs, the commands those run in turn (package scripts, Deno tasks, Composer scripts, Make targets, pre-commit hooks), and what could not be read (see [docs/architecture.md](docs/architecture.md)) |
+| `--facts` | print the facts found about the project as JSON, each with where it was found: for now the CI jobs (one per matrix combination), the commands and actions each runs, the commands those run in turn (package scripts, Deno tasks, Composer scripts, Make targets, pre-commit hooks), what the coverage tools CI runs measure, and what could not be read (see [docs/architecture.md](docs/architecture.md)) |
+| `--answers` | print the answers to the questions about the project as JSON, per language: for now, what coverage CI reports at each granularity (line, statement, region, branch, path), each `yes`, `no`, `unknown` (something that could report it was not read) or `impossible` (no known tool measures it for the language), with the tools that report it and how the known tools would |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
 | `--format text\|json` | output format |
 | `--color auto\|always\|never` | color the text output (needs rich); `auto` colors only on a terminal when `NO_COLOR` is unset |
@@ -64,7 +66,7 @@ What each check accepts for a language is on that ecosystem's page in [docs/ecos
 |---|---|
 | `ci-present` | at least one CI configuration is found |
 | `tests-run` | tests exist and CI runs them (`ctest-runs` is accepted as an old name). Warns when CI never runs the tests |
-| `coverage` | CI reports branch coverage, or the finest coverage the ecosystem's tools can measure when they cannot measure branches. Path or MC/DC coverage is reported as a bonus |
+| `coverage` | A coverage tool CI runs reports branch coverage, or the finest coverage any known tool can measure for the language when none measures branches. Path or MC/DC coverage is a bonus. A setting counts when CI runs the tool that reads it |
 | `platform-matrix` | CI covers at least 2 operating systems, 2 toolchains (compilers, or the ecosystem's language versions) and 3 OS/toolchain combinations |
 | `ci-build-types` | every OS/toolchain combination in CI builds Debug and Release, each with and without sanitizers |
 | `compiler-warnings` | a strict warning set is enabled. Warns listing what is missing |

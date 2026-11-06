@@ -8,12 +8,13 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import configuration, existing_texts, first_existing, toml_value
 from project_validator.facts import Command, resolved
+from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
+from project_validator.facts.expansion import has_option, program
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
     BuildOutputs,
     BuildTypes,
-    CoverageTools,
     DependencyAudit,
     DependencyManagement,
     Formatter,
@@ -23,6 +24,7 @@ from project_validator.rules import (
     StaticAnalysis,
     TestSuite,
     WarningPolicy,
+    ci_configuration,
     directories,
     ignored_at_top_level,
     toml_license,
@@ -78,23 +80,68 @@ RUSTFMT = Formatter(
 )
 
 
-def _ci_texts(context: Context) -> tuple[str, ...]:
-    return context.ci_texts
+def _cargo(command: Command, name: str) -> tuple[str, ...] | None:
+    """The arguments after `cargo [+toolchain] name`, when the command runs that cargo subcommand."""
+    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    return argv[1:] if argv[:2] == ("cargo", name) else None
 
 
-COVERAGE = CoverageTools(
-    searched="CI configuration",
-    texts=_ci_texts,
-    branch=(
-        pattern("cargo-llvm-cov", r"\bcargo\s+(\+\S+\s+)?llvm-cov\b[^\n]*--branch\b"),
-        pattern("cargo-tarpaulin", r"\bcargo\s+(\+\S+\s+)?tarpaulin\b[^\n]*(--branch\b|\s-b\b)"),
-        pattern("grcov", r"\bgrcov\b[^\n]*--branch\b"),
-    ),
-    path=(
-        pattern("cargo-llvm-cov MC/DC", r"\bllvm-cov\b[^\n]*--mcdc\b"),
-        pattern("rustc MC/DC", r"-Z\s*coverage-options=\S*mcdc"),
-    ),
-    path_hint="consider adding MC/DC coverage (e.g. cargo llvm-cov --mcdc)",
+def _cargo_llvm_cov(command: Command, _: Context) -> Measurement | None:
+    if (argv := _cargo(command, "llvm-cov")) is None:
+        return None
+    branch = has_option(argv, "--branch")
+    return measured(LINE, REGION, BRANCH if branch else None, PATH if has_option(argv, "--mcdc") else None)
+
+
+def _cargo_tarpaulin(command: Command, _: Context) -> Measurement | None:
+    if (argv := _cargo(command, "tarpaulin")) is None:
+        return None
+    return measured(LINE, BRANCH if has_option(argv, "--branch", "-b") else None)
+
+
+def _grcov(command: Command, _: Context) -> Measurement | None:
+    argv = resolved(command)
+    if program(argv) != "grcov":
+        return None
+    return measured(LINE, BRANCH if has_option(argv, "--branch") else None)
+
+
+_MCDC = re.compile(r"-Z\s*coverage-options=\S*mcdc")
+
+
+def _rustc_mcdc(command: Command, _: Context) -> Measurement | None:
+    """rustc's MC/DC instrumentation, on a command line or in RUSTFLAGS."""
+    words = (" ".join(resolved(command)), command.env.get("RUSTFLAGS", ""))
+    return measured(PATH) if any(_MCDC.search(word) for word in words) else None
+
+
+LINE, REGION, BRANCH, PATH = Granularity.LINE, Granularity.REGION, Granularity.BRANCH, Granularity.PATH
+RUST_LANGUAGE = frozenset({"Rust"})
+CARGO_LLVM_COV = CoverageTool(
+    name="cargo-llvm-cov",
+    languages=RUST_LANGUAGE,
+    can={
+        LINE: "cargo llvm-cov",
+        REGION: "cargo llvm-cov",
+        BRANCH: "cargo llvm-cov --branch",
+        PATH: "cargo llvm-cov --mcdc",
+    },
+    measures=_cargo_llvm_cov,
+)
+CARGO_TARPAULIN = CoverageTool(
+    name="cargo-tarpaulin",
+    languages=RUST_LANGUAGE,
+    can={LINE: "cargo tarpaulin", BRANCH: "cargo tarpaulin --branch"},
+    measures=_cargo_tarpaulin,
+)
+GRCOV = CoverageTool(
+    name="grcov", languages=RUST_LANGUAGE, can={LINE: "grcov", BRANCH: "grcov --branch"}, measures=_grcov
+)
+RUSTC_MCDC = CoverageTool(
+    name="rustc MC/DC",
+    languages=RUST_LANGUAGE,
+    can={PATH: "RUSTFLAGS=-Zcoverage-options=mcdc"},
+    measures=_rustc_mcdc,
 )
 
 RUST_TEST = re.compile(r"#\[(?:\w+::)*test\b")
@@ -231,7 +278,7 @@ STATIC_ANALYSIS = StaticAnalysis(
             ),
         ),
     ),
-    texts=_ci_texts,
+    texts=ci_configuration,
     hint="consider running cargo clippy in CI",
 )
 
@@ -255,7 +302,6 @@ RUST = Ecosystem(
         RUST_TOOLCHAINS,
         BuildTypes(axis=RUST_TOOLCHAINS),
         RUSTFMT,
-        COVERAGE,
         TESTS,
         WARNINGS,
         HARDENING,

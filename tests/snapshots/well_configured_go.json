@@ -1,4 +1,45 @@
 {
+  "answers": {
+    "coverage": [
+      {
+        "branch": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "language": "Go",
+        "line": {
+          "answer": "yes",
+          "known": [
+            "go test -cover"
+          ],
+          "tools": [
+            "go test -cover"
+          ]
+        },
+        "path": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "region": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "statement": {
+          "answer": "yes",
+          "known": [
+            "go test -cover"
+          ],
+          "tools": [
+            "go test -cover"
+          ]
+        },
+        "unknowns": []
+      }
+    ]
+  },
   "facts": [
     {
       "env": {},
@@ -35,6 +76,22 @@
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
       "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
     },
     {
       "condition": null,
@@ -1103,6 +1160,24 @@
       "via": []
     },
     {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/function-limits.yml:function-limits",
@@ -1141,6 +1216,23 @@
     },
     {
       "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
         "lizard",
         "--length",
         "30",
@@ -1154,6 +1246,102 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "granularities": [
+        "line",
+        "statement"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "read": [],
+      "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "granularities": [
+        "line",
+        "statement"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "read": [],
+      "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "granularities": [
+        "line",
+        "statement"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "read": [],
+      "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "granularities": [
+        "line",
+        "statement"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "read": [],
+      "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "granularities": [
+        "line",
+        "statement"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "read": [],
+      "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "granularities": [
+        "line",
+        "statement"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "read": [],
+      "tool": "go test -cover",
       "via": []
     }
   ],

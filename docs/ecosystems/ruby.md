@@ -9,7 +9,8 @@ Rakefile's test tasks when CI runs rake.
 
 ## `coverage`
 
-SimpleCov with `enable_coverage :branch` (in `.simplecov` or a test helper).
+SimpleCov with `enable_coverage :branch` (in `.simplecov` or a test helper), when CI runs the tests (`rspec`, `rake`,
+`rails test`, also through `bundle exec`).
 
 ## `platform-matrix`
 

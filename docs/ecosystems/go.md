@@ -8,7 +8,8 @@ Recognised by `.go` sources and Go modules (`go.mod`).
 
 ## `coverage`
 
-Go's tools measure statements only, so Go needs statement coverage: `go test -cover` or `-coverprofile`.
+Go's tools measure statements only, so Go needs statement coverage: `go test` (or `go build`) with `-cover`,
+`-coverprofile`, `-covermode` or `-coverpkg`.
 
 ## `platform-matrix`
 

@@ -10,9 +10,10 @@ Recognised by `.js`, `.ts` and related sources, `package.json` or `deno.json`. T
 
 ## `coverage`
 
-c8, nyc, `jest --coverage` (or `collectCoverage: true`), `vitest --coverage` (or coverage `enabled: true`),
-`deno test --coverage` or `node --experimental-test-coverage`, in CI, the package scripts it runs, or the test
-runner's configuration.
+c8, nyc, Jest (`--coverage`, or `collectCoverage: true` in the configuration it reads, or package.json's `jest`), Vitest
+(`--coverage`, or coverage `enabled: true` in the configuration it reads), `deno test --coverage` or
+`node --test --experimental-test-coverage`, run by CI directly, through `npx` and the other package runners, or
+through the package scripts it runs. `bun test --coverage` counts lines only.
 
 ## `platform-matrix`
 

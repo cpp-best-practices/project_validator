@@ -11,7 +11,8 @@ wired in.
 
 ## `coverage`
 
-JaCoCo (`jacoco-maven-plugin` with its `report` goal, `jacocoTestReport`) or Kover.
+JaCoCo (`jacoco:report`, `jacocoTestReport`, or `jacoco-maven-plugin` with its `report` goal bound when CI runs
+`mvn verify`) or Kover (a `kover…Report` task, or its plugin when CI runs `gradle check`).
 
 ## `platform-matrix`
 

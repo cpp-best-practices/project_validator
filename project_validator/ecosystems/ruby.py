@@ -10,12 +10,14 @@ import re
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
+from project_validator.facts import Command, resolved
+from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
+from project_validator.facts.expansion import joined, launcher, program
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     Analyzer,
     BuildOutputs,
-    CoverageTools,
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
@@ -96,16 +98,33 @@ TESTS = TestSuite(found=_ruby_tests, runs=RUNS_TESTS, runner="rspec, rake test o
 TEST_HELPERS = (".simplecov", "spec/spec_helper.rb", "spec/rails_helper.rb", "test/test_helper.rb")
 
 
-def _helper_texts(context: Context) -> tuple[str, ...]:
-    return existing_texts(context, TEST_HELPERS)
+# The commands that run Ruby tests, and so the test helpers that start SimpleCov.
+_TEST_RUNNERS = frozenset({"rspec", "rake", "rails", "ruby", "cucumber", "parallel_rspec", "turbo_tests", "m"})
+SIMPLECOV_STARTED = re.compile(r"\bSimpleCov\.start\b")
+SIMPLECOV_BRANCHES = re.compile(r"\b(?:enable|primary)_coverage\s*\(?\s*:branch\b")
 
 
-# SimpleCov counts lines unless told to count branches too; it reports no path coverage.
-COVERAGE = CoverageTools(
-    searched=".simplecov or the test helpers",
-    texts=_helper_texts,
-    branch=(pattern("SimpleCov", r"\benable_coverage\s*\(?\s*:branch\b"),),
+def _simplecov(command: Command, context: Context) -> Measurement | None:
+    """SimpleCov, started by .simplecov or a test helper when CI runs the tests; it counts lines unless told to count
+    branches too."""
+    argv = resolved(command)
+    if program(argv) not in _TEST_RUNNERS or (program(argv) == "rails" and argv[1:2] != ("test",)):
+        return None
+    helpers = [path for path in TEST_HELPERS if context.project.exists(joined(command.directory, path))]
+    texts = [context.project.read_text(joined(command.directory, path)) for path in helpers]
+    if not (helpers[:1] == [".simplecov"] or any(SIMPLECOV_STARTED.search(text) for text in texts)):
+        return None
+    branch = any(SIMPLECOV_BRANCHES.search(text) for text in texts)
+    return measured(Granularity.LINE, Granularity.BRANCH if branch else None, read=helpers, heuristic=True)
+
+
+SIMPLECOV = CoverageTool(
+    name="SimpleCov",
+    languages=frozenset({"Ruby"}),
+    can={Granularity.LINE: "SimpleCov", Granularity.BRANCH: "SimpleCov enable_coverage :branch"},
+    measures=_simplecov,
 )
+BUNDLE_EXEC = launcher("bundle exec", (("bundle", "exec"), ("bundler", "exec")))
 
 RUBY_WARNINGS = Pattern(
     "Ruby warnings",
@@ -268,7 +287,6 @@ RUBY = Ecosystem(
     rules=(
         versions_axis("Ruby version", RUBY_LANGUAGE),
         FORMATTERS,
-        COVERAGE,
         TESTS,
         WARNINGS,
         SECURITY_LINTS,

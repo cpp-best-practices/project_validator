@@ -1,4 +1,41 @@
 {
+  "answers": {
+    "coverage": [
+      {
+        "branch": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "language": "Go",
+        "line": {
+          "answer": "no",
+          "known": [
+            "go test -cover"
+          ],
+          "tools": []
+        },
+        "path": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "region": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "statement": {
+          "answer": "no",
+          "known": [
+            "go test -cover"
+          ],
+          "tools": []
+        },
+        "unknowns": []
+      }
+    ]
+  },
   "facts": [],
   "map": {
     "build_systems": [
@@ -74,8 +111,10 @@
       "status": "WARN"
     },
     "coverage": {
-      "details": [],
-      "message": "no statement coverage reporting found in CI configuration",
+      "details": [
+        "known to report statement coverage: go test -cover"
+      ],
+      "message": "no statement coverage reporting found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

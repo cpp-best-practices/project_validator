@@ -90,22 +90,6 @@ class BuildTypes:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class CoverageTools:
-    """How an ecosystem reports branch coverage, and the path (or MC/DC) coverage that is a bonus on top of it.
-
-    An ecosystem whose tools cannot measure branches names the finest `granularity` they can measure instead, e.g.
-    statement coverage for Go; `branch` then holds the patterns that report it.
-    """
-
-    searched: str
-    texts: Evidence
-    branch: tuple[Pattern, ...]
-    granularity: str = "branch"
-    path: tuple[Pattern, ...] = ()
-    path_hint: str | None = None
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
 class TestSuite:
     """How an ecosystem's tests are found, and how CI is recognised running them.
 

@@ -1,4 +1,47 @@
 {
+  "answers": {
+    "coverage": [
+      {
+        "branch": {
+          "answer": "yes",
+          "known": [
+            "jacoco:report or jacocoTestReport",
+            "koverXmlReport"
+          ],
+          "tools": [
+            "JaCoCo"
+          ]
+        },
+        "language": "Java",
+        "line": {
+          "answer": "yes",
+          "known": [
+            "jacoco:report or jacocoTestReport",
+            "koverXmlReport"
+          ],
+          "tools": [
+            "JaCoCo"
+          ]
+        },
+        "path": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "region": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "statement": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "unknowns": []
+      }
+    ]
+  },
   "facts": [
     {
       "env": {},
@@ -35,6 +78,22 @@
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
       "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
     },
     {
       "condition": null,
@@ -399,6 +458,24 @@
       "via": []
     },
     {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/function-limits.yml:function-limits",
@@ -437,6 +514,23 @@
     },
     {
       "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
         "lizard",
         "--length",
         "30",
@@ -450,6 +544,120 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "read": [
+        "pom.xml"
+      ],
+      "tool": "JaCoCo",
+      "via": []
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "read": [
+        "pom.xml"
+      ],
+      "tool": "JaCoCo",
+      "via": []
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "read": [
+        "pom.xml"
+      ],
+      "tool": "JaCoCo",
+      "via": []
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "read": [
+        "pom.xml"
+      ],
+      "tool": "JaCoCo",
+      "via": []
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "read": [
+        "pom.xml"
+      ],
+      "tool": "JaCoCo",
+      "via": []
+    },
+    {
+      "granularities": [
+        "branch",
+        "line"
+      ],
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "CoverageMeasured",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "read": [
+        "pom.xml"
+      ],
+      "tool": "JaCoCo",
       "via": []
     }
   ],

@@ -1,4 +1,43 @@
 {
+  "answers": {
+    "coverage": [
+      {
+        "branch": {
+          "answer": "no",
+          "known": [
+            "dotnet test --collect \"XPlat Code Coverage\"",
+            "dotnet-coverage collect"
+          ],
+          "tools": []
+        },
+        "language": "C#",
+        "line": {
+          "answer": "no",
+          "known": [
+            "dotnet test --collect \"XPlat Code Coverage\"",
+            "dotnet-coverage collect"
+          ],
+          "tools": []
+        },
+        "path": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "region": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "statement": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "unknowns": []
+      }
+    ]
+  },
   "facts": [],
   "map": {
     "build_systems": [
@@ -68,8 +107,10 @@
       "status": "WARN"
     },
     "coverage": {
-      "details": [],
-      "message": "no branch coverage reporting found in CI configuration, the MSBuild settings it builds with, or a .runsettings file",
+      "details": [
+        "known to report branch coverage: dotnet test --collect \"XPlat Code Coverage\", dotnet-coverage collect"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {
