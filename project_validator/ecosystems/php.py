@@ -18,6 +18,8 @@ from project_validator.evidence import (
     json_value,
     scripts_run,
 )
+from project_validator.facts import Command, Origin, Unknown
+from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined, positional
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -75,6 +77,60 @@ def _run_texts(context: Context) -> tuple[str, ...]:
     """CI configuration, pre-commit hooks, and the Composer scripts they run."""
     texts = ci_and_hook_texts(context)
     return (*texts, *scripts_run(texts, _scripts(context), _called))
+
+
+# Composer's own commands, which are not script names; `install` and `update` run their event scripts.
+_COMPOSER_COMMANDS = frozenset(
+    {"require", "remove", "dump-autoload", "dumpautoload", "validate", "show", "outdated", "audit", "config", "exec"}
+    | {"global", "init", "create-project", "self-update", "diagnose", "licenses", "depends", "why", "fund"}
+)
+_EVENTS = {"install": ("pre-install-cmd", "post-install-cmd"), "update": ("pre-update-cmd", "post-update-cmd")}
+_CALLBACK = re.compile(r"^[\w\\]+::\w+$")
+
+
+def _entry_text(entry: str) -> str | None:
+    """A script entry as shell text: `@lint` runs the lint script, `@composer` and `@php` run those programs, and a
+    PHP callback (`Vendor\\Class::method`) or `@putenv` runs no command."""
+    if _CALLBACK.match(entry) or entry.startswith("@putenv"):
+        return None
+    if entry.startswith("@"):
+        name, _, rest = entry[1:].partition(" ")
+        return f"{name} {rest}".strip() if name in ("composer", "php") else f"composer run-script {entry[1:]}"
+    return entry
+
+
+def _script_names(words: list[str]) -> tuple[list[str], bool]:
+    """The scripts a Composer command runs, and whether it names one explicitly (so that it must exist)."""
+    if words[0] in ("run-script", "run"):
+        return words[1:2], True
+    return list(_EVENTS.get(words[0], words[:1])), False
+
+
+def _entries(path: str, name: str, value: object) -> Iterator[Script]:
+    entries = value if isinstance(value, list) else [value]
+    for index, entry in enumerate(entries):
+        if isinstance(entry, str) and (text := _entry_text(entry)) is not None:
+            at = ("scripts", name, index) if isinstance(value, list) else ("scripts", name)
+            yield Script(text=text, origin=Origin(path=path, at=at))
+
+
+def _composer_scripts(command: Command, context: Context) -> Iterator[Expansion] | None:
+    """`composer test`, `composer run-script lint`, `composer install`: the Composer scripts they run."""
+    if command.argv[:1] != ("composer",):
+        return None
+    words, options = positional(command.argv, frozenset({"--working-dir", "-d"}))
+    if not words or words[0] in _COMPOSER_COMMANDS:
+        return None
+    path = joined(options.get("--working-dir") or options.get("-d") or command.directory, COMPOSER_JSON)
+    scripts = json_value(context, path, "scripts")
+    scripts = scripts if isinstance(scripts, dict) else {}
+    names, explicit = _script_names(words)
+    if explicit and names and names[0] not in scripts:
+        return iter((Unknown(origin=command.origin, subject=f"the script {names[0]}", reason=f"{path} has none"),))
+    return (script for name in names if name in scripts for script in _entries(path, name, scripts[name]))
+
+
+COMPOSER_SCRIPTS = CommandExpander(name="Composer scripts", expand=_composer_scripts)
 
 
 def _with_files(*files: str) -> Evidence:

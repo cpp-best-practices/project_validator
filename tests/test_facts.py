@@ -195,7 +195,7 @@ class GitLabFactTests(unittest.TestCase):
         mac:
           tags: [macos]
           extends: .template
-          script: make
+          script: ctest
         .template:
           script: never
         """
@@ -223,7 +223,7 @@ class GitLabFactTests(unittest.TestCase):
                 ("apt-get", "update"),
                 ("cmake", "-S", ".", "-B", "build", "-DCMAKE_CXX_COMPILER=clang++"),
                 ("apt-get", "update"),
-                ("make",),
+                ("ctest",),
             ],
         )
         self.assertEqual(str(self.facts.of(Command)[0].origin), ".gitlab-ci.yml:default.before_script[0]")
@@ -249,9 +249,9 @@ class OtherProviderFactTests(unittest.TestCase):
         self.assertEqual(facts.of(Unknown)[0].reason, "Travis CI configuration is not parsed")
 
     def test_malformed_documents_yield_what_they_can(self) -> None:
-        workflow = "jobs:\n  odd: text\n  build:\n    runs-on: ubuntu-latest\n    steps: [text, {run: make}]\n"
+        workflow = "jobs:\n  odd: text\n  build:\n    runs-on: ubuntu-latest\n    steps: [text, {run: ctest}]\n"
         facts = _facts({GITHUB_WORKFLOW: workflow, ".github/workflows/list.yml": "- a\n", ".gitlab-ci.yml": "- a\n"})
-        self.assertEqual(_argvs(facts), [("make",)])
+        self.assertEqual(_argvs(facts), [("ctest",)])
         self.assertEqual([type(fact) for fact in facts], [CiJob, Command])
 
     def test_invalid_yaml_is_unknown(self) -> None:
@@ -283,6 +283,7 @@ class SerialisationTests(unittest.TestCase):
                 "env": {},
                 "directory": None,
                 "condition": None,
+                "via": [],
             },
         )
         self.assertEqual(str(Origin(path="ci.yml")), "ci.yml")

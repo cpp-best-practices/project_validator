@@ -5,7 +5,8 @@ import unittest
 
 from project_validator.core import Result, Status
 from project_validator.ecosystems.php import DEPENDENCIES, PHP, TYPE_CHECKING, VENDOR
-from tests.support import GITHUB_WORKFLOW, checks_named, github_job, run_as, run_in_layout
+from project_validator.facts import Command, Facts, Unknown
+from tests.support import GITHUB_WORKFLOW, checks_named, github_job, make_context, run_as, run_in_layout, temp_project
 
 (
     CODE_FORMATTING,
@@ -228,3 +229,40 @@ class OutputTests(unittest.TestCase):
                 """
         }
         self.assertIn("2 PHP version(s) (8.3, 8.4)", run_as(self, PLATFORM_MATRIX, files, PHP).message)
+
+
+SCRIPTS: dict[str, str | list[str]] = {
+    "test": ["@lint", "phpunit --path-coverage", "App\\Tests\\Hooks::after", "@putenv XDEBUG_MODE=coverage"],
+    "lint": "@php vendor/bin/phpstan analyse",
+    "post-install-cmd": "@composer dump-autoload",
+}
+
+
+class ScriptExpansionTests(unittest.TestCase):
+    """The Composer scripts a CI command runs are commands of the job too."""
+
+    def _facts(self, *steps: str) -> Facts:
+        with temp_project({**_scripts(**SCRIPTS), **github_job("ubuntu-latest", *steps)}) as root:
+            return make_context(root).facts
+
+    def test_a_script_runs_its_commands_and_the_scripts_it_names(self) -> None:
+        for step in ("composer test", "composer run-script test", "composer run test"):
+            with self.subTest(step=step):
+                expanded = [command.argv for command in self._facts(step).of(Command) if command.via]
+                self.assertEqual(
+                    expanded,
+                    [
+                        ("composer", "run-script", "lint"),
+                        ("php", "vendor/bin/phpstan", "analyse"),
+                        ("phpunit", "--path-coverage"),
+                    ],
+                )
+
+    def test_install_runs_its_event_scripts(self) -> None:
+        expanded = [command.argv for command in self._facts("composer install").of(Command) if command.via]
+        self.assertEqual(expanded, [("composer", "dump-autoload")])
+
+    def test_composer_commands_are_not_scripts_and_a_missing_script_is_unknown(self) -> None:
+        facts = self._facts("composer validate --strict", "composer run-script deploy")
+        self.assertEqual([command.argv for command in facts.of(Command) if command.via], [])
+        self.assertEqual([fact.subject for fact in facts.of(Unknown)], ["the script deploy"])

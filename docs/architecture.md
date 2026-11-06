@@ -139,8 +139,12 @@ except where a step deliberately changes results and says so.
    1. The fact store (`project_validator/facts`) and the CI facts: each provider extracts its jobs (one per matrix
       combination), the commands each one runs (split by `project_validator/facts/shell.py`) with the step's
       condition, the actions it uses with their inputs, and what it could not read. `--facts` prints them.
-   2. Command expansion: package scripts, Composer scripts, Rake, Make, CMake presets, Maven phases and pre-commit
-      hooks add the commands they run, each with the chain that led to it.
+   2. Command expansion (`project_validator/facts/expansion.py`): a `CommandExpander` says what a command runs in
+      turn, and the commands found are expanded again, each with `via`, the chain that led to it. Expanders live
+      with what they know and are found, not listed: package.json scripts and Deno tasks in the JavaScript profile,
+      Composer scripts in the PHP profile, Make in `project_validator/build_systems`, pre-commit in
+      `project_validator/tools`. Rake tasks, Maven lifecycle phases and CMake presets follow when their profiles
+      move onto facts; presets and phases are settings rather than commands.
    3. Job build types and toolchains come from the command facts and the build systems, not from text searches of
       the whole job.
 3. **Coverage end to end.** Coverage extractors for every supported language, the coverage question and its policy;
