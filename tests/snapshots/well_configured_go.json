@@ -164,7 +164,7 @@
     },
     "ci-build-types": {
       "details": [],
-      "message": "not applicable to Go (applies to C, C++, Rust)",
+      "message": "not applicable to Go (applies to C, C++, Rust, Swift)",
       "status": "SKIP"
     },
     "ci-lint": {
@@ -315,7 +315,7 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Go (applies to C, C++, Java, JavaScript, Kotlin, PHP, TypeScript)",
+      "message": "not applicable to Go (applies to C, C#, C++, F#, Java, JavaScript, Kotlin, PHP, Swift, TypeScript)",
       "status": "SKIP"
     }
   }

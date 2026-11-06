@@ -9,6 +9,7 @@ from project_validator.core import Status
 from project_validator.ecosystems import (
     BUILT_IN,
     C_AND_CXX,
+    DOTNET,
     GO,
     JAVASCRIPT_AND_TYPESCRIPT,
     JVM,
@@ -16,6 +17,7 @@ from project_validator.ecosystems import (
     PYTHON,
     RUBY,
     RUST,
+    SWIFT,
     Ecosystem,
     applies_to,
 )
@@ -33,6 +35,8 @@ FIXTURES_OF = {
     JVM: ("well_configured_jvm", "bare_jvm"),
     PHP: ("well_configured_php", "bare_php"),
     RUBY: ("well_configured_ruby", "bare_ruby"),
+    DOTNET: ("well_configured_dotnet", "bare_dotnet"),
+    SWIFT: ("well_configured_swift", "bare_swift"),
 }
 
 

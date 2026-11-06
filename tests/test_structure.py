@@ -127,6 +127,10 @@ class ProjectStructureTests(unittest.TestCase):
         self.assertEqual(set(job), {"name", "os", "compilers", "toolchains", "ecosystems", "configurations"})
 
 
+# (languages, check) that a profile skips although the check applies: no known tool limits F# function length.
+SKIPPED_BY_PROFILES = {(frozenset({"F#"}), "function-limits")}
+
+
 class LanguageApplicabilityTests(unittest.TestCase):
     def test_c_family_checks_are_skipped_for_other_and_unrecognised_languages(self) -> None:
         for layout in (*OTHER_LANGUAGE_LAYOUTS, *UNRECOGNISED_LAYOUTS):
@@ -172,7 +176,8 @@ class LanguageApplicabilityTests(unittest.TestCase):
                 for found in discover().checks:
                     expected = found.languages
                     outside = bool(expected) and not expected & layout.languages
-                    self.assertEqual(run_check(found, context).status == Status.SKIP, outside, found.name)
+                    skipped = outside or (layout.languages, found.name) in SKIPPED_BY_PROFILES
+                    self.assertEqual(run_check(found, context).status == Status.SKIP, skipped, found.name)
 
     def test_matching_checks_run(self) -> None:
         context = make_context(FIXTURES / "well_configured")

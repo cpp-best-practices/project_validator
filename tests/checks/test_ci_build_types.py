@@ -28,7 +28,7 @@ class CiBuildTypesTests(unittest.TestCase):
 
     # Only compiled languages have build types.
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(ci_build_types.languages, C_FAMILY | {"Rust"})
+        self.assertEqual(ci_build_types.languages, C_FAMILY | {"Rust", "Swift"})
 
     def test_fails_without_ci(self) -> None:
         self.assertEqual(self._run(BARE_PROJECT).status, Status.FAIL)

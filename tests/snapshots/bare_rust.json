@@ -186,7 +186,7 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Rust (applies to C, C++, Java, JavaScript, Kotlin, PHP, TypeScript)",
+      "message": "not applicable to Rust (applies to C, C#, C++, F#, Java, JavaScript, Kotlin, PHP, Swift, TypeScript)",
       "status": "SKIP"
     }
   }
