@@ -8,6 +8,7 @@ from pathlib import Path
 
 from project_validator.core import Check, CheckFunction, Context, Result, Status
 from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.dotnet import DOTNET
 from project_validator.ecosystems.go import GO
 from project_validator.ecosystems.javascript import JAVASCRIPT_AND_TYPESCRIPT
 from project_validator.ecosystems.jvm import JVM
@@ -25,9 +26,11 @@ from project_validator.ecosystems.model import (
 )
 from project_validator.ecosystems.php import PHP
 from project_validator.ecosystems.python import PYTHON
+from project_validator.ecosystems.ruby import RUBY
 from project_validator.ecosystems.rust import RUST
+from project_validator.ecosystems.swift import SWIFT
 
-BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM, PHP)
+BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM, PHP, RUBY, DOTNET, SWIFT)
 
 _registered: list[Ecosystem] = list(BUILT_IN)
 
@@ -209,12 +212,15 @@ __all__ = [
     "BUILT_IN",
     "C_AND_CXX",
     "C_FAMILY",
+    "DOTNET",
     "GO",
     "JAVASCRIPT_AND_TYPESCRIPT",
     "JVM",
     "PHP",
     "PYTHON",
+    "RUBY",
     "RUST",
+    "SWIFT",
     "BuildSystem",
     "Ecosystem",
     "RegistryError",
