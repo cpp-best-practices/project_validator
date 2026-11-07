@@ -15,6 +15,30 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "Ruby warnings",
+                  "RuboCop or Standard"
+                ]
+              }
+            ],
+            "language": "Ruby",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Ruby",
@@ -389,6 +413,12 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Ruby",
+        "units": []
       }
     ]
   },

@@ -13,6 +13,34 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "go vet": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "staticcheck": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Go",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Go",
@@ -408,6 +436,12 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Go",
+        "units": []
       }
     ]
   },

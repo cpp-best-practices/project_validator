@@ -40,6 +40,8 @@ class Value:
     when: Condition = ALWAYS
     origin: Origin | None = None
     choice: int = 0
+    # The quoted argument it is a value of (its index), which is one argument whatever value it takes; -1 for others.
+    argument: int = -1
 
 
 _ESCAPES = {"t": "\t", "n": "\n", "r": "\r", "0": "\0"}

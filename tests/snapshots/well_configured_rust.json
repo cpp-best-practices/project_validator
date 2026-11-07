@@ -13,6 +13,37 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-D warnings": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "cargo clippy": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "clippy::pedantic": [
+                    "Cargo.toml"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Rust",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Rust",
@@ -410,6 +441,12 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Rust",
+        "units": []
       }
     ]
   },
@@ -2815,6 +2852,19 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
+      "reader": "Rust lint settings"
+    },
+    {
+      "heuristic": true,
+      "key": "clippy::pedantic",
+      "kind": "Setting",
+      "origin": "Cargo.toml",
+      "tool": "Rust lint settings",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
       "reader": "Rust lints"
     },
     {
@@ -2875,6 +2925,11 @@
         "MIT"
       ],
       "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/lib.rs",
+      "reader": "Rust lint settings"
     },
     {
       "kind": "ConfigurationFile",

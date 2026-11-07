@@ -20,6 +20,8 @@ from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
+from project_validator.facts.practices import Practice, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -27,7 +29,6 @@ from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.rules import (
     BuildTypes,
     Hardening,
-    WarningPolicy,
     directories,
     ignored_at_top_level,
 )
@@ -207,12 +208,17 @@ RUST_LINTS = (
 )
 
 
-def _required_lints(_: Context) -> tuple[Pattern, ...]:
-    return RUST_LINTS
-
-
-WARNINGS = WarningPolicy(
-    kind="Rust lint settings", recognised=RUST_LINTS, required=_required_lints, texts=_settings_texts
+RUST_LINT_SETTINGS_FILES = (*CARGO_CONFIG_FILES, "Cargo.toml", "lib.rs", "main.rs")
+_RUST_LINTS = tuple(required(lint) for lint in RUST_LINTS)
+RUST_WARNING_SETTINGS = requirement_reader("Rust lint settings", RUST_LINT_SETTINGS_FILES, _RUST_LINTS)
+WARNINGS = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=RUST_LANGUAGE,
+    kind="Rust lint settings",
+    requirements=always(*_RUST_LINTS),
+    reads=(RUST_WARNING_SETTINGS.name,),
+    separator=" ",
+    hint='run cargo clippy, deny warnings (-D warnings or [lints.rust] warnings = "deny") and enable clippy::pedantic',
 )
 
 # Overflow checks are compiled into the binary; release builds leave them out unless the profile asks for them.
@@ -426,7 +432,6 @@ RUST = Ecosystem(
     rules=(
         RUST_TOOLCHAINS,
         BuildTypes(axis=RUST_TOOLCHAINS),
-        WARNINGS,
         HARDENING,
     ),
 )

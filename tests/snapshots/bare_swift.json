@@ -15,6 +15,30 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "SwiftLint",
+                  "complete concurrency checking"
+                ]
+              }
+            ],
+            "language": "Swift",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Swift",
@@ -332,6 +356,29 @@
           }
         ]
       }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "-warnings-as-errors"
+                ]
+              }
+            ],
+            "language": "Swift",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -375,6 +422,11 @@
       ],
       "origin": ".build/",
       "output": "the .build directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "Swift build settings"
     },
     {
       "kind": "ConfigurationFile",

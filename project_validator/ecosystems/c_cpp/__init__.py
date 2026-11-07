@@ -8,7 +8,7 @@ import re
 from typing import TYPE_CHECKING
 
 from project_validator.ecosystems.c_cpp.cmake import CMAKE
-from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, WARNINGS, WARNINGS_AS_ERRORS
+from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, builds_c_or_cxx
 from project_validator.ecosystems.c_cpp.meson import MESON
 from project_validator.ecosystems.model import C_FAMILY, Ecosystem, ToolchainAxis
 from project_validator.facts.outputs import BuildOutput
@@ -29,18 +29,12 @@ CI_USAGE = re.compile(
 )
 
 
-def _builds_c_or_cxx(job: Job) -> bool:
-    """A job that names a compiler builds C/C++; one that only uses its runner's default compiler builds C/C++
-    unless it is seen using another ecosystem's tools and not C/C++ build tools."""
-    return not job.default_compiler or not job.ecosystems or "C/C++" in job.ecosystems
-
-
 def _compilers(job: Job) -> frozenset[str]:
-    return job.compilers if _builds_c_or_cxx(job) else frozenset()
+    return job.compilers if builds_c_or_cxx(job) else frozenset()
 
 
 def _uses_runner_default_compiler(job: Job) -> bool:
-    return job.default_compiler and _builds_c_or_cxx(job)
+    return job.default_compiler and builds_c_or_cxx(job)
 
 
 COMPILERS = ToolchainAxis(noun="compiler", of_job=_compilers, runner_default=_uses_runner_default_compiler)
@@ -91,8 +85,6 @@ C_AND_CXX = Ecosystem(
     rules=(
         COMPILERS,
         BuildTypes(axis=COMPILERS),
-        WARNINGS,
-        WARNINGS_AS_ERRORS,
         HARDENING,
     ),
 )

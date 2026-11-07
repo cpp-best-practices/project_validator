@@ -13,6 +13,34 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "SwiftLint": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "complete concurrency checking": [
+                    "Package.swift"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Swift",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Swift",
@@ -397,6 +425,31 @@
               }
             },
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-warnings-as-errors": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Swift",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -2794,6 +2847,19 @@
       "kind": "Locked",
       "manager": "SwiftPM",
       "origin": "Package.resolved"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "Swift build settings"
+    },
+    {
+      "heuristic": true,
+      "key": "complete concurrency checking",
+      "kind": "Setting",
+      "origin": "Package.swift",
+      "tool": "Swift build settings",
+      "value": true
     },
     {
       "kind": "ConfigurationFile",

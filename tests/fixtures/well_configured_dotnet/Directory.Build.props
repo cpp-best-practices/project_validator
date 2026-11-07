@@ -5,6 +5,8 @@
     <AnalysisModeSecurity>All</AnalysisModeSecurity>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- F#'s own warnings, which the .NET analyzers do not cover. -->
+    <WarnOn>3390</WarnOn>
     <NuGetAuditMode>all</NuGetAuditMode>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

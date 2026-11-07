@@ -265,7 +265,11 @@ class Evaluation:
     # --- the functions that set something
 
     def project(self, call: syntax.Call, frame: Frame) -> Choices:
-        self._options(self.keyword(call, "default_options", frame), frame, "project", None, default=True)
+        """The project's default options; Meson's own default `warning_level` is 1."""
+        options = self.keyword(call, "default_options", frame)
+        if not any(key == "warning_level" for value, _ in elements(options) for key, _ in pairs(value)):
+            self.observer.setting(frame, "project", "warning_level", "1", None, default=True)
+        self._options(options, frame, "project", None, default=True)
         return single(Object("project"))
 
     def _options(self, choices: Choices, frame: Frame, name: str, target: str | None, *, default: bool) -> None:

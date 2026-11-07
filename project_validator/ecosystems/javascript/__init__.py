@@ -15,11 +15,7 @@ from pathlib import PurePosixPath
 from project_validator import yaml_support
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import (
-    ci_and_hook_texts,
-    json_value,
-    scripts_run,
-)
+from project_validator.evidence import json_value
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
 from project_validator.facts.arguments import option_values, positional, program
 from project_validator.facts.audit import audited, auditor
@@ -29,6 +25,9 @@ from project_validator.facts.expansion import CommandExpander, Expansion, Script
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
+from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
+from project_validator.facts.practices import Practice, Requirement, always, met, required
 from project_validator.facts.settings import (
     Read,
     SettingsReader,
@@ -42,12 +41,10 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, defined_by, starts, when
 from project_validator.rules import (
-    WarningPolicy,
-    WarningsAsErrors,
     directories,
     ignored_at_top_level,
 )
-from project_validator.text import Pattern, matching_names, pattern, strip_json_comments
+from project_validator.text import pattern, strip_json_comments
 from project_validator.tools.audits import multi_ecosystem_audits
 
 JAVASCRIPT = "JavaScript"
@@ -89,13 +86,6 @@ def _json_strings(value: object) -> dict[str, str]:
     return {key: item for key, item in value.items() if isinstance(item, str)} if isinstance(value, dict) else {}
 
 
-def _scripts(context: Context) -> dict[str, str]:
-    """The package.json scripts and deno.json tasks, by name."""
-    tasks = (json_value(context, path, "tasks", comments=True) for path in DENO_CONFIG_FILES)
-    found = {name: script for value in tasks for name, script in _json_strings(value).items()}
-    return {**found, **_json_strings(json_value(context, PACKAGE_JSON, "scripts"))}
-
-
 # `npm test`, `npm run lint`, `pnpm lint`, `yarn run lint`, `bun run lint`, `deno task lint`.
 RUNS_SCRIPT = re.compile(
     r"\bnpm\s+(?:run(?:-script)?\s+(?P<npm>[\w:.-]+)|(?P<npm_lifecycle>test|t|start)\b)"
@@ -104,22 +94,6 @@ RUNS_SCRIPT = re.compile(
     r"|\bdeno\s+task\s+(?P<deno>[\w:.-]+)"
 )
 NPM_LIFECYCLE_ALIASES = {"t": "test"}
-
-
-def _named_scripts(text: str) -> Iterator[str]:
-    for match in RUNS_SCRIPT.finditer(text):
-        name = next(group for group in match.groups() if group)
-        yield NPM_LIFECYCLE_ALIASES.get(name, name)
-
-
-def _pre_and_post(name: str) -> tuple[str, ...]:
-    return (f"pre{name}", f"post{name}")
-
-
-def _run_texts(context: Context) -> tuple[str, ...]:
-    """CI configuration, pre-commit hooks, and the package scripts they run."""
-    texts = ci_and_hook_texts(context)
-    return (*texts, *scripts_run(texts, _scripts(context), _named_scripts, _pre_and_post))
 
 
 # How a command names the package script it runs: the scripts npm runs by name, and the commands each package
@@ -531,25 +505,40 @@ LINTERS = (
 )
 
 
-def _linters_required(context: Context) -> tuple[Pattern, ...]:
+def _linters_required(facts: Facts, _compiler: str | None) -> tuple[Requirement, ...]:
     """One linter is enough: the ones that run, or eslint when none does."""
-    texts = _run_texts(context)
-    return tuple(linter for linter in LINTERS if matching_names(texts, (linter,))) or LINTERS[:1]
+    linters = tuple(
+        required(linter, in_files=False, tools=(tool,)) for linter, tool in zip(LINTERS, _LINTER_TOOLS, strict=True)
+    )
+    running = tuple(linter for linter in linters if met(WARNINGS, linter, facts, None))
+    return running or linters[:1]
+
+
+# The tools that run each of LINTERS.
+_LINTER_TOOLS = ("eslint", "biome", "deno lint")
 
 
 # JavaScript has no compiler warnings; its linters report what other compilers warn about.
-WARNINGS = WarningPolicy(
-    kind="JavaScript linters", recognised=LINTERS, required=_linters_required, texts=_run_texts, separator=", "
+# JavaScript has no compiler warnings; its linters report what other compilers warn about.
+WARNINGS = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=JS_LANGUAGES,
+    kind="JavaScript linters",
+    requirements=_linters_required,
+    hint="run eslint (or biome lint, or deno lint) in CI",
 )
 
-WARNINGS_AS_ERRORS = WarningsAsErrors(
-    flags=(
-        pattern("eslint --max-warnings 0", rf"{RUNS_ESLINT}[^\n]*\s--max-warnings[=\s]+0\b"),
-        pattern("biome ci", r"\bbiome\s+ci\b|\bbiome\b[^\n]*\s--error-on-warnings\b"),
+WARNINGS_AS_ERRORS = Practice(
+    name=WARNINGS_AS_ERRORS_PRACTICE,
+    languages=JS_LANGUAGES,
+    kind="warnings as errors",
+    requirements=always(
+        required(pattern("eslint --max-warnings 0", rf"{RUNS_ESLINT}[^\n]*\s--max-warnings[=\s]+0\b"), in_files=False),
+        required(pattern("biome ci", r"\bbiome\s+ci\b|\bbiome\b[^\n]*\s--error-on-warnings\b"), in_files=False),
         # deno lint fails on any finding.
-        pattern("deno lint", RUNS_DENO_LINT),
+        required(pattern("deno lint", RUNS_DENO_LINT), in_files=False),
     ),
-    texts=_run_texts,
+    any_one=True,
     searched="CI configuration or the package scripts it runs",
     hint="run eslint with --max-warnings 0 (or biome ci, or deno lint), so that a lint warning fails CI",
 )
@@ -665,9 +654,5 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
             r"|\bdeno\s+(?:test|task|run|check|lint|fmt)\b|\bbun\s+(?:install|test|run)\b"
         ),
     ),
-    rules=(
-        versions_axis("runtime version", "JavaScript runtime"),
-        WARNINGS,
-        WARNINGS_AS_ERRORS,
-    ),
+    rules=(versions_axis("runtime version", "JavaScript runtime"),),
 )

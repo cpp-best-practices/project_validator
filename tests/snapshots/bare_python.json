@@ -15,6 +15,29 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "-W error"
+                ]
+              }
+            ],
+            "language": "Python",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Python",
@@ -412,6 +435,12 @@
           }
         ]
       }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Python",
+        "units": []
+      }
     ]
   },
   "facts": [
@@ -468,6 +497,11 @@
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
       "reader": "pytest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "Python warning settings"
     },
     {
       "kind": "ConfigurationFile",

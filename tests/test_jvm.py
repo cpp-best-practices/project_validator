@@ -160,8 +160,8 @@ class WarningTests(unittest.TestCase):
         result = _maven(self, COMPILER_WARNINGS, {**flags, **_ci("mvn test")})
         self.assertEqual(result, Result.passed("strict JVM compiler warnings are enabled: -Xlint:all"))
         self.assertEqual(_maven(self, WARNINGS_AS_ERRORS, {**flags, **_ci("mvn test")}).status, Status.PASS)
-        # The build files count only when CI builds the project.
-        self.assertEqual(_maven(self, COMPILER_WARNINGS, flags).status, Status.FAIL)
+        # The build's settings are the project's, whether or not CI builds it.
+        self.assertEqual(_maven(self, COMPILER_WARNINGS, flags).status, Status.PASS)
 
     def test_kotlin_warns_by_default_and_fails_on_warnings_when_told(self) -> None:
         build = _gradle('plugins { kotlin("jvm") }\nkotlin { compilerOptions { allWarningsAsErrors = true } }\n')
@@ -171,10 +171,14 @@ class WarningTests(unittest.TestCase):
         result = _gradle_kotlin(self, WARNINGS_AS_ERRORS, files)
         self.assertEqual(result, Result.passed("warnings are treated as errors with allWarningsAsErrors"))
 
-    def test_mixed_java_and_kotlin_still_need_xlint(self) -> None:
+    def test_mixed_java_and_kotlin_are_each_judged_by_their_own_warnings(self) -> None:
         files = {"src/main/java/A.java": "", **_gradle('plugins { kotlin("jvm") }\n'), **_ci("./gradlew build")}
         result = _gradle_kotlin(self, COMPILER_WARNINGS, files)
-        self.assertEqual(result.message, "missing JVM compiler warnings: -Xlint:all")
+        self.assertEqual(
+            result.message,
+            "Java: no JVM compiler warnings found; enable at least -Xlint:all; "
+            "Kotlin: strict JVM compiler warnings are enabled: Kotlin's default warnings",
+        )
 
 
 class SecurityTests(unittest.TestCase):

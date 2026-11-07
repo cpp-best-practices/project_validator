@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from project_validator.checks.compiler_warnings import compiler_warnings
@@ -9,9 +10,11 @@ from project_validator.ecosystems.rust import RUST
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,
-    GITHUB_WORKFLOW,
     WELL_CONFIGURED,
     WELL_CONFIGURED_RUST,
+    c_family_layouts_built_with,
+    ci_running,
+    github_job,
     run_as,
     run_in_every_layout,
 )
@@ -23,10 +26,21 @@ class CompilerWarningsTests(unittest.TestCase):
         self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, compiler_warnings.languages)
 
     GCC_FLAGS = "-Wall -Wextra -Wpedantic -Wshadow -Wconversion"
-    MSVC_CI = "jobs:\n  build:\n    runs-on: windows-latest\n    steps:\n      - run: cmake -S . -B build\n"
+    # Linux (GCC by default) and Windows (MSVC by default).
+    MSVC_CI = json.dumps(
+        {
+            "jobs": {
+                "linux": {"runs-on": "ubuntu-latest", "steps": [{"run": "cmake -S . -B build"}]},
+                "windows": {"runs-on": "windows-latest", "steps": [{"run": "cmake -S . -B build"}]},
+            }
+        }
+    )
 
+    # Meson passes -Wall unless told otherwise (its warning_level is 1), so Meson projects are judged on their own.
     def _run(self, files: dict[str, str]) -> Result:
-        return run_in_every_layout(self, compiler_warnings, files)
+        return run_in_every_layout(
+            self, compiler_warnings, files, c_family_layouts_built_with(compiler_warnings, "CMake")
+        )
 
     def test_fails_when_no_warning_flags_are_found(self) -> None:
         result = self._run(BARE_PROJECT)
@@ -78,9 +92,10 @@ class CompilerWarningsTests(unittest.TestCase):
         result = self._run(
             {"CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n", ".github/workflows/ci.yml": self.MSVC_CI}
         )
-        self.assertEqual(result.status, Status.WARN)
-        self.assertIn("/W4", result.message)
-        self.assertIn("/permissive-", result.message)
+        self.assertEqual(
+            result,
+            Result.warned("missing compiler warning flags: /W4, /permissive- for msvc", f"found {self.GCC_FLAGS}"),
+        )
 
     def test_msvc_in_ci_passes_with_msvc_flags(self) -> None:
         result = self._run(
@@ -111,17 +126,47 @@ class CompilerWarningsTests(unittest.TestCase):
         result = self._run(
             {
                 "CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n",
-                ".github/workflows/ci.yml": (
-                    "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make\n"
-                ),
+                **github_job("ubuntu-latest", "make"),
             }
         )
         self.assertEqual(result.status, Status.PASS)
 
-    def test_only_unrequired_msvc_flags_warn_rather_than_fail(self) -> None:
+    def test_flags_of_a_compiler_ci_does_not_use_do_not_count(self) -> None:
         result = self._run({"CMakeLists.txt": "add_compile_options(/W4 /permissive-)\n"})
-        self.assertEqual(result.status, Status.WARN)
+        self.assertEqual(result.status, Status.FAIL)
         self.assertIn("-Wall", result.message)
+
+    def test_each_compiler_ci_uses_is_judged_by_the_flags_set_for_it(self) -> None:
+        result = self._run(
+            {
+                "CMakeLists.txt": (
+                    f"if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)\n  add_compile_options({self.GCC_FLAGS})\nendif()\n"
+                ),
+                **github_job("ubuntu-latest", "CXX=clang++ cmake -S . -B build", matrix={"compiler": ["gcc", "clang"]}),
+            }
+        )
+        self.assertEqual(
+            result,
+            Result.warned(
+                "missing compiler warning flags: -Wall, -Wextra, -Wpedantic, -Wshadow, -Wconversion for clang",
+                f"found {self.GCC_FLAGS}",
+            ),
+        )
+
+    def test_meson_passes_wall_unless_told_otherwise(self) -> None:
+        layouts = c_family_layouts_built_with(compiler_warnings, "Meson")
+        result = run_in_every_layout(self, compiler_warnings, {}, layouts)
+        self.assertEqual(result.status, Status.WARN)
+        self.assertEqual(result.details, ("found -Wall",))
+
+    def test_meson_warning_levels_pass_their_flags(self) -> None:
+        build = (
+            "project('app', 'cpp', default_options: ['warning_level=3'])\n"
+            "add_project_arguments('-Wshadow', '-Wconversion', language: 'cpp')\n"
+        )
+        layouts = c_family_layouts_built_with(compiler_warnings, "Meson")
+        result = run_in_every_layout(self, compiler_warnings, {"meson.build": build}, layouts)
+        self.assertEqual(result, Result.passed(f"strict compiler warning flags are enabled: {self.GCC_FLAGS}"))
 
 
 class PythonCompilerWarningsTests(unittest.TestCase):
@@ -130,9 +175,9 @@ class PythonCompilerWarningsTests(unittest.TestCase):
 
     def test_warnings_as_errors_in_any_spelling_passes(self) -> None:
         spellings = {
-            "python -W error": {GITHUB_WORKFLOW: "run: python3.14 -X dev -W error -m unittest\n"},
-            "pytest -W error": {GITHUB_WORKFLOW: "run: pytest -q -W error\n"},
-            "PYTHONWARNINGS": {GITHUB_WORKFLOW: "env:\n  PYTHONWARNINGS: error\n"},
+            "python -W error": github_job("ubuntu-latest", "python3.14 -X dev -W error -m unittest"),
+            "pytest -W error": github_job("ubuntu-latest", "pytest -q -W error"),
+            "PYTHONWARNINGS": github_job("ubuntu-latest", "PYTHONWARNINGS=error python -m pytest"),
             "pyproject filterwarnings": {"pyproject.toml": "[tool.pytest.ini_options]\nfilterwarnings = ['error']\n"},
             "pytest.ini filterwarnings": {"pytest.ini": "[pytest]\nfilterwarnings =\n    error\n"},
         }
@@ -142,12 +187,12 @@ class PythonCompilerWarningsTests(unittest.TestCase):
                 self.assertEqual(self._run(files), expected)
 
     def test_warnings_as_errors_in_any_ci_passes(self) -> None:
-        for provider, path in CI_FILES.items():
+        for provider in CI_FILES:
             with self.subTest(ci=provider):
-                self.assertEqual(self._run({path: "script: python -W error -m pytest\n"}).status, Status.PASS)
+                self.assertEqual(self._run(ci_running(provider, "python -W error -m pytest")).status, Status.PASS)
 
     def test_fails_when_warnings_are_not_errors(self) -> None:
-        result = self._run({GITHUB_WORKFLOW: "run: python -W ignore -m pytest && cmake -DCMAKE_CXX_FLAGS=-Werror\n"})
+        result = self._run(github_job("ubuntu-latest", "python -W ignore -m pytest && cmake -DCMAKE_CXX_FLAGS=-Werror"))
         self.assertEqual(result, Result.failed("no Python warning settings found; enable at least -W error"))
 
     def test_c_and_cxx_flags_do_not_count(self) -> None:
@@ -168,7 +213,7 @@ class RustCompilerWarningsTests(unittest.TestCase):
         files = {
             ".cargo/config.toml": '[build]\nrustflags = ["-D", "warnings"]\n',
             "src/lib.rs": "#![warn(clippy::pedantic)]\n",
-            GITHUB_WORKFLOW: "run: cargo clippy\n",
+            **github_job("ubuntu-latest", "cargo clippy"),
         }
         self.assertEqual(self._run(files).status, Status.PASS)
 
@@ -176,17 +221,17 @@ class RustCompilerWarningsTests(unittest.TestCase):
         settings = {"Cargo.toml": '[lints.rust]\nwarnings = "deny"\n', "src/main.rs": "#![deny(warnings)]\n"}
         for name, text in settings.items():
             with self.subTest(name):
-                result = self._run({name: text, GITHUB_WORKFLOW: "run: cargo clippy -- -W clippy::pedantic\n"})
+                result = self._run({name: text, **github_job("ubuntu-latest", "cargo clippy -- -W clippy::pedantic")})
                 self.assertEqual(result.status, Status.PASS)
 
     def test_warns_and_lists_missing_lints(self) -> None:
-        result = self._run({GITHUB_WORKFLOW: "run: cargo clippy -- -Dwarnings\n"})
+        result = self._run(github_job("ubuntu-latest", "cargo clippy -- -Dwarnings"))
         self.assertEqual(
             result, Result.warned("missing Rust lint settings: clippy::pedantic", "found cargo clippy -D warnings")
         )
 
     def test_fails_without_lint_settings(self) -> None:
-        result = self._run({GITHUB_WORKFLOW: "run: cargo build -Dwarnings_as_errors\n"})
+        result = self._run(github_job("ubuntu-latest", "cargo build -Dwarnings_as_errors"))
         self.assertEqual(
             result,
             Result.failed("no Rust lint settings found; enable at least cargo clippy -D warnings clippy::pedantic"),

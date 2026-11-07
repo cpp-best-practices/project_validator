@@ -13,6 +13,34 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "RuboCop or Standard": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "Ruby warnings": [
+                    ".rspec"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Ruby",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Ruby",
@@ -483,6 +511,12 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Ruby",
+        "units": []
       }
     ]
   },
@@ -1764,6 +1798,19 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": ".rspec",
+      "reader": "Ruby warning settings"
+    },
+    {
+      "heuristic": true,
+      "key": "Ruby warnings",
+      "kind": "Setting",
+      "origin": ".rspec",
+      "tool": "Ruby warning settings",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": ".rubocop.yml",
       "reader": "RuboCop"
     },
@@ -1896,6 +1943,11 @@
       "origin": "spec/spec_helper.rb:enable_coverage",
       "tool": "SimpleCov",
       "value": "branch"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "spec/spec_helper.rb",
+      "reader": "Ruby warning settings"
     },
     {
       "kind": "ConfigurationFile",

@@ -9,9 +9,7 @@ import re
 from collections.abc import Iterator
 from pathlib import PurePosixPath
 
-from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, existing_texts
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, positional, program
@@ -23,12 +21,13 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
+from project_validator.facts.practices import Practice, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    WarningPolicy,
     directories,
     ignored_at_top_level,
 )
@@ -43,18 +42,6 @@ GEMFILE = "Gemfile"
 BUNDLER = BuildSystem(name="Bundler", files=(GEMFILE, "*.gemspec"), languages=RUBY_ONLY)
 RAKEFILES = ("Rakefile", "rakefile", "Rakefile.rb")
 RUNS_RAKE = re.compile(r"(?<![\w-])rake\b")
-
-
-def _rake_texts(context: Context) -> tuple[str, ...]:
-    """The Rakefile and the task files it loads from rakelib/."""
-    tasks = (path for path in context.project.files() if path.startswith("rakelib/") and path.endswith(".rake"))
-    return existing_texts(context, (*RAKEFILES, *tasks))
-
-
-def _run_texts(context: Context) -> tuple[str, ...]:
-    """CI configuration and pre-commit hooks, with the Rakefile when CI runs rake."""
-    texts = ci_and_hook_texts(context)
-    return (*texts, *_rake_texts(context)) if any(map(RUNS_RAKE.search, texts)) else texts
 
 
 RUBOCOP_CONFIG = ".rubocop.yml"
@@ -264,21 +251,17 @@ RUBY_WARNINGS = Pattern(
 RUBY_LINTER = pattern("RuboCop or Standard", rf"{RUNS_RUBOCOP}|{RUNS_STANDARD}")
 
 
-def _required_warnings(_: Context) -> tuple[Pattern, ...]:
-    return (RUBY_WARNINGS, RUBY_LINTER)
-
-
-def _warning_texts(context: Context) -> tuple[str, ...]:
-    return (*_run_texts(context), *existing_texts(context, (".rspec", *TEST_HELPERS)))
-
-
 # Ruby warns only when asked to; a linter reports what other compilers warn about.
-WARNINGS = WarningPolicy(
+RUBY_WARNING_SETTINGS = requirement_reader(
+    "Ruby warning settings", (".rspec", *TEST_HELPERS), (required(RUBY_WARNINGS),)
+)
+WARNINGS = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=RUBY_ONLY,
     kind="Ruby warning settings",
-    recognised=(RUBY_WARNINGS, RUBY_LINTER),
-    required=_required_warnings,
-    texts=_warning_texts,
-    separator=", ",
+    requirements=always(required(RUBY_WARNINGS), required(RUBY_LINTER, in_files=False, tools=("RuboCop", "Standard"))),
+    reads=(RUBY_WARNING_SETTINGS.name,),
+    hint="run Ruby with -w (RUBYOPT=-w, or --warnings in .rspec) and run RuboCop or Standard",
 )
 
 AUDITORS = (
@@ -461,8 +444,5 @@ RUBY = Ecosystem(
         versions=(re.compile(rf"\bruby-version\W+{_RUBY_VERSION}"), re.compile(r"\bruby:(\d+\.\d+(?:\.\d+)?)")),
         usage=re.compile(r"\bbundle\s+(?:exec|install)\b|\bsetup-ruby\b|(?<![\w-])(?:rake|rspec)\b"),
     ),
-    rules=(
-        versions_axis("Ruby version", RUBY_LANGUAGE),
-        WARNINGS,
-    ),
+    rules=(versions_axis("Ruby version", RUBY_LANGUAGE),),
 )
