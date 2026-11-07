@@ -47,7 +47,34 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "npm",
+      "kind": "BuildFile",
+      "languages": [
+        "JavaScript"
+      ],
+      "origin": "package.json"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JavaScript",
+      "origin": "src/index.js",
+      "vendored": false
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".info"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "Jest"
+    }
+  ],
   "map": {
     "build_systems": [
       "npm"

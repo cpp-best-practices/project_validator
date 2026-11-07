@@ -169,15 +169,20 @@ class Context:
 
     @cached_property
     def facts(self) -> Facts:
-        """The fact database (see `project_validator.facts`): what the CI configuration shows, with the commands each
-        command runs in turn."""
+        """The fact database (see `project_validator.facts`), extracted in stages: the project's structure, the CI
+        jobs and what they run (with what that runs in turn), the settings the configuration files hold (those
+        commands name included), and the tools those commands run."""
         from project_validator.ci import ci_facts
         from project_validator.facts import Facts
         from project_validator.facts.coverage import built_in_coverage_tools, coverage_facts
         from project_validator.facts.expansion import built_in_expanders, expanded
+        from project_validator.facts.settings import built_in_settings_readers, settings_facts
+        from project_validator.facts.structure import structure_facts
 
-        found = Facts(tuple(expanded(ci_facts(self.project, self.ci_files), self, built_in_expanders())))
-        return Facts((*found, *coverage_facts(found, self, built_in_coverage_tools())))
+        found = Facts(structure_facts(self.project))
+        found += expanded(ci_facts(self.project, self.ci_files), self, built_in_expanders())
+        found += settings_facts(self.project, built_in_settings_readers(), found)
+        return found + coverage_facts(found, built_in_coverage_tools())
 
     @cached_property
     def ci_texts(self) -> tuple[str, ...]:
@@ -187,7 +192,7 @@ class Context:
     def structure(self) -> ProjectStructure:
         from project_validator.structure import map_project
 
-        return map_project(self.project, self.ci_files, self.ci_analysis)
+        return map_project(self.facts, self.ci_files, self.ci_analysis)
 
     @cached_property
     def tracked_files(self) -> tuple[str, ...]:

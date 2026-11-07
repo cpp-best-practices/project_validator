@@ -99,7 +99,29 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "CMake",
+      "kind": "BuildFile",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": "CMakeLists.txt"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "C++",
+      "origin": "third_party/json/json.hpp",
+      "vendored": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CMake flags"
+    }
+  ],
   "map": {
     "build_systems": [
       "CMake"
@@ -111,15 +133,17 @@
     },
     "ecosystems": {
       "C/C++": [
-        "build file CMakeLists.txt",
-        ".hpp files"
+        "build file CMakeLists.txt"
       ]
     },
     "languages": [
       "C",
       "C++"
     ],
-    "unrecognised_suffixes": []
+    "unrecognised_suffixes": [],
+    "vendored": [
+      "third_party/json/json.hpp"
+    ]
   },
   "results": {
     "action-pinning": {

@@ -38,7 +38,29 @@
       }
     ]
   },
-  "facts": [],
+  "facts": [
+    {
+      "build_system": "Composer",
+      "kind": "BuildFile",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "PHP",
+      "origin": "src/Calculator.php",
+      "vendored": false
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".cache"
+    }
+  ],
   "map": {
     "build_systems": [
       "Composer"

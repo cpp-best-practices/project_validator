@@ -2,7 +2,7 @@
 
 import re
 import shlex
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from fnmatch import fnmatch
 from pathlib import PurePosixPath
 
@@ -14,20 +14,20 @@ from project_validator.evidence import (
     configuration,
     existing_texts,
     first_existing,
-    ini_value,
     toml_value,
 )
-from project_validator.facts import Command, resolved
+from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
 from project_validator.facts.expansion import (
     CommandExpander,
     Expansion,
     Launched,
-    found_at,
     has_option,
+    joined,
     launcher,
     program,
 )
+from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
@@ -73,87 +73,96 @@ RUFF_OR_BLACK = Formatter(
 )
 
 _TRUE = frozenset({"true", "1", "yes", "on"})
+COVERAGE_FILES = (".coveragerc", "setup.cfg", "tox.ini", "pyproject.toml")
 
 
-def _coverage_setting(context: Context, path: str, key: str) -> object | None:
-    """A coverage.py `[run]` setting in the configuration file `path`, as coverage.py reads that kind of file."""
+def _coverage_sections(path: str) -> Callable[[str], str | None]:
+    """The INI sections coverage.py reads in `path`: `[run]` in its own file, `[coverage:run]` in any."""
+    own = PurePosixPath(path).name not in ("setup.cfg", "tox.ini")
+
+    def prefix(section: str) -> str | None:
+        if section.startswith("coverage:"):
+            return f"{section.removeprefix('coverage:')}."
+        return f"{section}." if own else None
+
+    return prefix
+
+
+def _read_coverage_settings(path: str, text: str) -> Iterator[Fact]:
     if path.endswith(".toml"):
-        return toml_value(context, path, "tool", "coverage", "run", key)
-    if PurePosixPath(path).name in ("setup.cfg", "tox.ini"):
-        return ini_value(context, path, "coverage:run", key)
-    return ini_value(context, path, "run", key) or ini_value(context, path, "coverage:run", key)
+        return toml_settings("coverage.py", path, text, "tool", "coverage")
+    return ini_settings("coverage.py", path, text, _coverage_sections(path))
 
 
-def _coverage_configuration(context: Context, directory: str | None, named: str | None) -> str | None:
-    """The file coverage.py reads its settings from: the one it is given, else .coveragerc, else the first of
-    setup.cfg, tox.ini and pyproject.toml with coverage settings."""
-    if named:
-        return found_at(context, directory, (named,))
-    if found := found_at(context, directory, (".coveragerc",)):
-        return found
-    shared = (
-        path for name in ("setup.cfg", "tox.ini", "pyproject.toml") if (path := found_at(context, directory, (name,)))
-    )
-    return next((path for path in shared if "coverage" in context.project.read_text(path)), None)
-
-
-def _measures_branches(context: Context, configuration: str | None) -> bool:
-    setting = _coverage_setting(context, configuration, "branch") if configuration else None
-    return setting is True or str(setting).strip().lower() in _TRUE
-
-
-def _coverage_py(command: Command, context: Context) -> Measurement | None:
+def _named_rcfile(command: Command) -> list[str]:
     argv = resolved(command)
-    if program(argv) != "coverage" or len(argv) < 2 or argv[1] != "run":
-        return None
-    named = next(iter(option_values(argv, "--rcfile")), command.env.get("COVERAGE_RCFILE"))
-    configuration = _coverage_configuration(context, command.directory, named)
-    branch = has_option(argv, "--branch") or _measures_branches(context, configuration)
-    return measured(
-        Granularity.LINE, Granularity.BRANCH if branch else None, read=[configuration] if configuration else ()
-    )
+    if program(argv) not in ("coverage", "pytest", "py.test"):
+        return []
+    named = [*option_values(argv, "--rcfile", "--cov-config"), *filter(None, [command.env.get("COVERAGE_RCFILE")])]
+    return [joined(command.directory, path) for path in named]
 
 
-# Where pytest reads its options (`addopts`): the first of these files with a pytest section.
-_PYTEST_CONFIGURATION = (
-    ("pytest.ini", "pytest"),
-    ("pyproject.toml", ""),
-    ("tox.ini", "pytest"),
-    ("setup.cfg", "tool:pytest"),
+COVERAGE_PY_SETTINGS = SettingsReader(
+    name="coverage.py", files=COVERAGE_FILES, read=_read_coverage_settings, named_by=_named_rcfile
+)
+
+# pytest reads its options from the first of these files with a pytest section.
+_PYTEST_SECTIONS = {"pytest.ini": "pytest", "tox.ini": "pytest", "setup.cfg": "tool:pytest"}
+
+
+def _read_pytest_settings(path: str, text: str) -> Iterator[Fact]:
+    if path.endswith(".toml"):
+        return toml_settings("pytest", path, text, "tool", "pytest", "ini_options")
+    wanted = _PYTEST_SECTIONS[PurePosixPath(path).name]
+    return ini_settings("pytest", path, text, lambda section: "" if section == wanted else None)
+
+
+PYTEST_SETTINGS = SettingsReader(
+    name="pytest", files=("pytest.ini", "pyproject.toml", "tox.ini", "setup.cfg"), read=_read_pytest_settings
 )
 
 
-def _pytest_options(context: Context, directory: str | None) -> tuple[tuple[str, ...], str | None]:
-    """The options pytest's configuration adds to every run, and the file they are in."""
-    for name, section in _PYTEST_CONFIGURATION:
-        path = found_at(context, directory, (name,))
-        if path is None:
-            continue
-        options = (
-            toml_value(context, path, "tool", "pytest", "ini_options", "addopts")
-            if not section
-            else ini_value(context, path, section, "addopts")
-        )
-        if options is not None:
-            words = options if isinstance(options, list) else shlex.split(str(options))
-            return tuple(str(word) for word in words), path
-    return (), None
+def _coverage_settings(command: Command, facts: Facts, named: str | None) -> Setting | None:
+    """coverage.py's `run.branch` setting in the file it reads: the one it is given, else .coveragerc, else the first
+    of setup.cfg, tox.ini and pyproject.toml with coverage settings."""
+    candidates = [named] if named else [joined(command.directory, name) for name in COVERAGE_FILES]
+    configuration = facts.configured("coverage.py", candidates)
+    return facts.setting("coverage.py", "run.branch", paths=[configuration]) if configuration else None
 
 
-def _pytest_cov(command: Command, context: Context) -> Measurement | None:
+def _branches(setting: Setting | None) -> bool:
+    return setting is not None and (setting.value is True or str(setting.value).strip().lower() in _TRUE)
+
+
+def _measured_lines_and(branch: bool, *read: Setting | None) -> Measurement:
+    return measured(
+        Granularity.LINE, Granularity.BRANCH if branch else None, read=[found for found in read if found is not None]
+    )
+
+
+def _coverage_py(command: Command, facts: Facts) -> Measurement | None:
+    argv = resolved(command)
+    if program(argv) != "coverage" or argv[1:2] != ("run",):
+        return None
+    named = _named_rcfile(command)
+    setting = _coverage_settings(command, facts, named[0] if named else None)
+    return _measured_lines_and(has_option(argv, "--branch") or _branches(setting), setting)
+
+
+def _pytest_cov(command: Command, facts: Facts) -> Measurement | None:
     argv = resolved(command)
     if program(argv) not in ("pytest", "py.test"):
         return None
-    added, options_file = _pytest_options(context, command.directory)
-    words = (*argv, *added)
+    files = [joined(command.directory, name) for name in ("pytest.ini", "pyproject.toml", "tox.ini", "setup.cfg")]
+    configuration = facts.configured("pytest", files)
+    addopts = facts.setting("pytest", "addopts", paths=[configuration]) if configuration else None
+    added = addopts.value if addopts is not None else ()
+    words = (*argv, *(added if isinstance(added, tuple) else shlex.split(str(added))))
     if not has_option(words, "--cov"):
         return None
-    configuration = _coverage_configuration(
-        context, command.directory, next(iter(option_values(words, "--cov-config")), None)
-    )
-    branch = has_option(words, "--cov-branch") or _measures_branches(context, configuration)
-    read = [path for path in (options_file, configuration) if path]
-    return measured(Granularity.LINE, Granularity.BRANCH if branch else None, read=read)
+    named = [joined(command.directory, path) for path in option_values(tuple(words), "--cov-config")]
+    setting = _coverage_settings(command, facts, named[0] if named else None)
+    return _measured_lines_and(has_option(words, "--cov-branch") or _branches(setting), setting, addopts)
 
 
 COVERAGE_PY = CoverageTool(
@@ -161,12 +170,14 @@ COVERAGE_PY = CoverageTool(
     languages=frozenset({"Python"}),
     can={Granularity.LINE: "coverage run", Granularity.BRANCH: "coverage run --branch"},
     measures=_coverage_py,
+    reads=("coverage.py",),
 )
 PYTEST_COV = CoverageTool(
     name="pytest-cov",
     languages=frozenset({"Python"}),
     can={Granularity.LINE: "pytest --cov", Granularity.BRANCH: "pytest --cov --cov-branch"},
     measures=_pytest_cov,
+    reads=("pytest", "coverage.py"),
 )
 
 _PYTHON = re.compile(r"python(?:\d+(?:\.\d+)?)?|pypy\d*|py")

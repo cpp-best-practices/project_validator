@@ -44,6 +44,48 @@
   },
   "facts": [
     {
+      "build_system": "SwiftPM",
+      "kind": "BuildFile",
+      "languages": [
+        "Swift"
+      ],
+      "origin": "Package.swift"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Swift",
+      "origin": "Package.swift",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Swift",
+      "origin": "Sources/App/main.swift",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Swift",
+      "origin": "Sources/AppCore/Calculator.swift",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Swift",
+      "origin": "Tests/AppCoreTests/CalculatorTests.swift",
+      "vendored": false
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".resolved"
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",

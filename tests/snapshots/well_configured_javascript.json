@@ -101,6 +101,35 @@
   },
   "facts": [
     {
+      "build_system": "npm",
+      "kind": "BuildFile",
+      "languages": [
+        "JavaScript"
+      ],
+      "origin": "package.json"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JavaScript",
+      "origin": "eslint.config.js",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TypeScript",
+      "origin": "src/add.test.ts",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TypeScript",
+      "origin": "src/add.ts",
+      "vendored": false
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -1436,6 +1465,11 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "Jest"
     },
     {
       "granularities": [

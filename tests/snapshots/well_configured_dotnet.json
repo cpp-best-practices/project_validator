@@ -44,6 +44,38 @@
   },
   "facts": [
     {
+      "build_system": "MSBuild",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "Directory.Build.props"
+    },
+    {
+      "build_system": "MSBuild",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "src/App/App.csproj"
+    },
+    {
+      "build_system": "MSBuild",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "tests/App.Tests/App.Tests.csproj"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "C#",
+      "origin": "src/App/Calculator.cs",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "C#",
+      "origin": "tests/App.Tests/CalculatorTests.cs",
+      "vendored": false
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -809,6 +841,109 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "MSBuild"
+    },
+    {
+      "heuristic": false,
+      "key": "Nullable",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:Nullable",
+      "tool": "MSBuild",
+      "value": "enable"
+    },
+    {
+      "heuristic": false,
+      "key": "AnalysisMode",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:AnalysisMode",
+      "tool": "MSBuild",
+      "value": "All"
+    },
+    {
+      "heuristic": false,
+      "key": "AnalysisModeSecurity",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:AnalysisModeSecurity",
+      "tool": "MSBuild",
+      "value": "All"
+    },
+    {
+      "heuristic": false,
+      "key": "EnforceCodeStyleInBuild",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:EnforceCodeStyleInBuild",
+      "tool": "MSBuild",
+      "value": "true"
+    },
+    {
+      "heuristic": false,
+      "key": "TreatWarningsAsErrors",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:TreatWarningsAsErrors",
+      "tool": "MSBuild",
+      "value": "true"
+    },
+    {
+      "heuristic": false,
+      "key": "NuGetAuditMode",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:NuGetAuditMode",
+      "tool": "MSBuild",
+      "value": "all"
+    },
+    {
+      "heuristic": false,
+      "key": "RestorePackagesWithLockFile",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:RestorePackagesWithLockFile",
+      "tool": "MSBuild",
+      "value": "true"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageLicenseExpression",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:PackageLicenseExpression",
+      "tool": "MSBuild",
+      "value": "MIT"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "MSBuild"
+    },
+    {
+      "heuristic": false,
+      "key": "TargetFramework",
+      "kind": "Setting",
+      "origin": "src/App/App.csproj:TargetFramework",
+      "tool": "MSBuild",
+      "value": "net10.0"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "MSBuild"
+    },
+    {
+      "heuristic": false,
+      "key": "TargetFramework",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:TargetFramework",
+      "tool": "MSBuild",
+      "value": "net10.0"
+    },
+    {
+      "heuristic": false,
+      "key": "IsPackable",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:IsPackable",
+      "tool": "MSBuild",
+      "value": "false"
     },
     {
       "granularities": [

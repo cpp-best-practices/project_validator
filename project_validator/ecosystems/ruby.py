@@ -6,13 +6,16 @@ configuration when CI runs rake.
 """
 
 import re
+from collections.abc import Iterator
+from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
-from project_validator.facts import Command, resolved
+from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
 from project_validator.facts.expansion import joined, launcher, program
+from project_validator.facts.settings import SettingsReader, matched_settings, settings
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -104,18 +107,31 @@ SIMPLECOV_STARTED = re.compile(r"\bSimpleCov\.start\b")
 SIMPLECOV_BRANCHES = re.compile(r"\b(?:enable|primary)_coverage\s*\(?\s*:branch\b")
 
 
-def _simplecov(command: Command, context: Context) -> Measurement | None:
+def _read_simplecov_settings(path: str, text: str) -> Iterator[Setting]:
+    """Whether a test helper (or .simplecov, which SimpleCov loads when it starts) starts SimpleCov, and whether it
+    counts branches: matched in Ruby code."""
+    started = SIMPLECOV_STARTED.search(text) or path.endswith(".simplecov")
+    patterns = {"enable_coverage": (SIMPLECOV_BRANCHES, "branch")}
+    yield from settings("SimpleCov", path, (("start", True),) if started else (), heuristic=True)
+    yield from matched_settings("SimpleCov", path, text, patterns)
+
+
+SIMPLECOV_SETTINGS = SettingsReader(
+    name="SimpleCov", files=tuple(PurePosixPath(path).name for path in TEST_HELPERS), read=_read_simplecov_settings
+)
+
+
+def _simplecov(command: Command, facts: Facts) -> Measurement | None:
     """SimpleCov, started by .simplecov or a test helper when CI runs the tests; it counts lines unless told to count
     branches too."""
     argv = resolved(command)
     if program(argv) not in _TEST_RUNNERS or (program(argv) == "rails" and argv[1:2] != ("test",)):
         return None
-    helpers = [path for path in TEST_HELPERS if context.project.exists(joined(command.directory, path))]
-    texts = [context.project.read_text(joined(command.directory, path)) for path in helpers]
-    if not (helpers[:1] == [".simplecov"] or any(SIMPLECOV_STARTED.search(text) for text in texts)):
+    read = facts.settings("SimpleCov", paths=[joined(command.directory, path) for path in TEST_HELPERS])
+    if not any(setting.key == "start" for setting in read):
         return None
-    branch = any(SIMPLECOV_BRANCHES.search(text) for text in texts)
-    return measured(Granularity.LINE, Granularity.BRANCH if branch else None, read=helpers, heuristic=True)
+    branch = any(setting.key == "enable_coverage" for setting in read)
+    return measured(Granularity.LINE, Granularity.BRANCH if branch else None, read=read)
 
 
 SIMPLECOV = CoverageTool(
@@ -123,6 +139,7 @@ SIMPLECOV = CoverageTool(
     languages=frozenset({"Ruby"}),
     can={Granularity.LINE: "SimpleCov", Granularity.BRANCH: "SimpleCov enable_coverage :branch"},
     measures=_simplecov,
+    reads=("SimpleCov",),
 )
 BUNDLE_EXEC = launcher("bundle exec", (("bundle", "exec"), ("bundler", "exec")))
 

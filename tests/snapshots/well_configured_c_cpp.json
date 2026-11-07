@@ -113,6 +113,31 @@
   },
   "facts": [
     {
+      "build_system": "CMake",
+      "kind": "BuildFile",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": "CMakeLists.txt"
+    },
+    {
+      "build_system": "CMake",
+      "kind": "BuildFile",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": "test/CMakeLists.txt"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "cmake/Dependencies.cmake",
+      "vendored": false
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -2793,6 +2818,117 @@
       "via": []
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CMake flags"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-Wall"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-Wextra"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-Wpedantic"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-Wshadow"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-Wconversion"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-fstack-protector-strong"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-fcf-protection"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-fstack-clash-protection"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "--coverage"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-fcondition-coverage"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "--coverage"
+    },
+    {
+      "heuristic": true,
+      "key": "flag",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:flag",
+      "tool": "CMake",
+      "value": "-Werror"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "cmake/Dependencies.cmake",
+      "reader": "CMake flags"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "test/CMakeLists.txt",
+      "reader": "CMake flags"
+    },
+    {
       "granularities": [
         "path"
       ],
@@ -2805,9 +2941,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -2842,9 +2976,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -2879,9 +3011,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -2916,9 +3046,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -2953,9 +3081,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -2990,9 +3116,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3027,9 +3151,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3064,9 +3186,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3101,9 +3221,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3138,9 +3256,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3175,9 +3291,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3212,9 +3326,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3249,9 +3361,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3286,9 +3396,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3323,9 +3431,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3360,9 +3466,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3397,9 +3501,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3434,9 +3536,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3471,9 +3571,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3508,9 +3606,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3545,9 +3641,7 @@
       ],
       "origin": ".github/workflows/codeql-analysis.yml:jobs.analyze.steps[2].run",
       "read": [
-        "CMakeLists.txt",
-        "cmake/Dependencies.cmake",
-        "test/CMakeLists.txt"
+        "CMakeLists.txt"
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []

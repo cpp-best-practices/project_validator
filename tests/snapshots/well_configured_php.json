@@ -46,6 +46,34 @@
   },
   "facts": [
     {
+      "build_system": "Composer",
+      "kind": "BuildFile",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "PHP",
+      "origin": "src/Calculator.php",
+      "vendored": false
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "PHP",
+      "origin": "tests/CalculatorTest.php",
+      "vendored": false
+    },
+    {
+      "files": 2,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".dist"
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -1437,6 +1465,11 @@
       "via": []
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "phpunit.xml.dist",
+      "reader": "PHPUnit"
+    },
+    {
       "granularities": [
         "branch",
         "line",
@@ -1449,9 +1482,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
-      "read": [
-        "phpunit.xml.dist"
-      ],
+      "read": [],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1471,9 +1502,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
-      "read": [
-        "phpunit.xml.dist"
-      ],
+      "read": [],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1493,9 +1522,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
-      "read": [
-        "phpunit.xml.dist"
-      ],
+      "read": [],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1515,9 +1542,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
-      "read": [
-        "phpunit.xml.dist"
-      ],
+      "read": [],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1537,9 +1562,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
-      "read": [
-        "phpunit.xml.dist"
-      ],
+      "read": [],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1559,9 +1582,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
-      "read": [
-        "phpunit.xml.dist"
-      ],
+      "read": [],
       "tool": "PHPUnit",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",

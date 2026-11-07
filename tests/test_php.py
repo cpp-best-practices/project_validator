@@ -91,7 +91,7 @@ class TestAndCoverageTests(unittest.TestCase):
     def test_branch_coverage_needs_path_coverage_which_is_also_the_bonus(self) -> None:
         expected = Result.passed("branch coverage is reported with PHPUnit; path coverage bonus: PHPUnit")
         configured = {
-            "phpunit.xml.dist": '<phpunit><coverage pathCoverage="true"><report><clover/></report></coverage>'
+            "phpunit.xml.dist": '<phpunit><coverage pathCoverage="true"><report><clover/></report></coverage></phpunit>'
         }
         for files in (
             _ci("vendor/bin/phpunit --coverage-html cov --path-coverage"),

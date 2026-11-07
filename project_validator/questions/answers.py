@@ -2,8 +2,7 @@
 
 from typing import TYPE_CHECKING
 
-from project_validator.facts.coverage import built_in_coverage_tools
-from project_validator.questions.coverage import coverage_answer
+from project_validator.questions import built_in_questions
 
 if TYPE_CHECKING:
     from project_validator.core import Context
@@ -11,9 +10,11 @@ if TYPE_CHECKING:
 
 def answers(context: Context) -> dict[str, object]:
     """For each question, its answer for each of the project's languages."""
-    tools = built_in_coverage_tools()
     languages = sorted(context.structure.languages)
-    return {"coverage": [coverage_answer(language, context.facts, tools).as_dict() for language in languages]}
+    return {
+        question.name: [question.answer(language, context.facts).as_dict() for language in languages]
+        for question in built_in_questions()
+    }
 
 
 __all__ = ["answers"]

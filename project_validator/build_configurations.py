@@ -43,7 +43,7 @@ def _value(word: str, following: str | None, name: str) -> str | None:
 
 def option_values(argv: tuple[str, ...], *names: str) -> list[str]:
     """The values of options `names` in `argv`, written `--name value`, `--name=value` or (one letter) `-Cvalue`."""
-    following = [*argv[1:], None]
+    following = [*argv[1:], None][: len(argv)]
     return [
         value
         for word, after in zip(argv, following, strict=True)
