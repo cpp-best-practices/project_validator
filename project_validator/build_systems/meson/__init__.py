@@ -177,4 +177,17 @@ def _run_targets(command: Command, context: Context) -> list[Expansion] | None:
 
 RUN_TARGETS = CommandExpander(name="Meson run targets", expand=_run_targets)
 
-__all__ = ["BUILD_SYSTEM", "MESON", "OPTION_FILES", "RUN_TARGETS", "declared_languages", "meson_project"]
+# Defined in `build` (which reads declared languages from here), found here.
+from project_validator.build_systems.meson.build import MESON as MESON_BUILD_SYSTEM  # noqa: E402
+from project_validator.build_systems.meson.build import MESON_TESTS  # noqa: E402
+
+__all__ = [
+    "BUILD_SYSTEM",
+    "MESON",
+    "MESON_BUILD_SYSTEM",
+    "MESON_TESTS",
+    "OPTION_FILES",
+    "RUN_TARGETS",
+    "declared_languages",
+    "meson_project",
+]

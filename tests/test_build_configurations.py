@@ -3,8 +3,8 @@
 import unittest
 
 from project_validator.build_configurations import BuildConfiguration, build_type_kinds
-from project_validator.ecosystems.c_cpp.cmake import cmake_build_types
-from project_validator.ecosystems.c_cpp.meson import meson_build_types
+from project_validator.build_systems.cmake.build import cmake_build_types
+from project_validator.build_systems.meson.build import meson_build_types
 from project_validator.ecosystems.rust import cargo_build_types
 from project_validator.facts.arguments import option_values
 from tests.support import ci_jobs, command, github_job

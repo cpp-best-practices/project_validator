@@ -175,8 +175,8 @@ except where a step deliberately changes results and says so.
      policy (`project_validator/policy/coverage.py`) requires branch coverage, or the finest granularity a known tool
      can measure, and reports path coverage as a bonus. An unknown answer is an error, naming what was not read
      (see Policy).
-   - `--answers` prints the answers. C and C++ coverage tools stay in the C/C++ profile (`c_cpp/coverage.py`) until
-     step 5 shares them with Fortran.
+   - `--answers` prints the answers. gcov, gcovr, lcov and llvm-cov are shared tools (`tools/coverage.py`): gcov's
+     family covers what GCC compiles, Fortran included.
 
    **3½. Foundations: structure and settings as facts, and the query layer.** Step 3 showed that without shared
    layers each question would read files and join settings in its own extractor. Before the remaining practices
@@ -466,6 +466,11 @@ except where a step deliberately changes results and says so.
      `Ecosystem.rules`, `rule_for`) are gone: every check is a question and its policy.
 6. **Profiles shrink** to language recognition and the language's own tools: what they still hold that several
    ecosystems share moves to the shared build systems and tools.
+   - The project-wide checks (copy-paste detection, secret scanning, CI linting) name the tools CI commands, steps
+     and pre-commit hooks run, from facts; no check reads CI text any more.
+   - CMake and Meson are whole build systems in `project_validator/build_systems` (their definitions, build types,
+     ctest and `meson test`), and `BuildSystem` itself lives there (`build_systems/model.py`); the C/C++ profile keeps
+     recognition, its formatters, analyzers and package managers, and its practices.
 7. **Proof**: add Fortran using only extractors and a recognition module.
 
 `--facts` and `--answers` expose the database and the answers.
