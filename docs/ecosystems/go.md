@@ -36,7 +36,9 @@ lizard runs with a length limit, or golangci-lint runs with `funlen` enabled.
 
 ## `static-analysis`
 
-golangci-lint with linters enabled beyond its defaults (`enable:` or `default: all` in a `.golangci.yml`).
+golangci-lint (`golangci-lint run`, `go run …/golangci-lint@v… run`, or the `golangci/golangci-lint-action`
+action) with linters enabled beyond its defaults (`linters.enable`, `enable-all` or `default: all` in a
+`.golangci.yml`, `.toml` or `.json`).
 
 ## `security-scanning`
 

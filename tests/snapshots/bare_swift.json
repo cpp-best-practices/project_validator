@@ -48,20 +48,71 @@
         "language": "Swift",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "swift-format",
-              "SwiftFormat"
-            ],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "SwiftFormat": "swiftformat --lint",
-              "swift-format": "swift format lint --strict"
+              "SwiftFormat": {
+                "can": {
+                  "apply": "swiftformat",
+                  "check": "swiftformat --lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "swift-format": {
+                "can": {
+                  "apply": "swift format -i",
+                  "check": "swift format lint --strict"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "Swift",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "SwiftLint": {
+                "can": {
+                  "checks": "swiftlint --strict (or the SwiftLint build tool plugin)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Swift",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Swift",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -102,6 +153,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "SwiftLint plugin"
     }
   ],
   "map": {
@@ -154,7 +210,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
       "status": "FAIL"
     },
     "code-formatting": {
@@ -274,7 +330,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider running swiftlint --strict in CI (or the SwiftLint build tool plugin)"
+        "consider running swiftlint --strict (or the SwiftLint build tool plugin) in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"

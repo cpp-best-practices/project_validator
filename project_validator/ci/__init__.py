@@ -57,12 +57,16 @@ class CiProvider:
     # The reusable steps (`owner/repo@ref`) a parsed configuration document uses, for providers that have them.
     step_references: Callable[[object], list[str]] | None = None
     facts: FactExtractor | None = None
+    # Whether a configuration file's text shows the provider is used, for a file that may exist without it (a
+    # `.pre-commit-config.yaml` is pre-commit.ci's only with a `ci:` section).
+    recognises: Callable[[str], bool] | None = None
 
     def config_files(self, project: Project) -> list[str]:
         found = [path for path in self.files if project.exists(path)]
         for directory in self.directories:
             found.extend(project.files_in(directory, self.suffixes))
-        return found
+        recognises = self.recognises
+        return found if recognises is None else [path for path in found if recognises(project.read_text(path))]
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -157,12 +161,12 @@ def _job(job: CiJob, facts: tuple[Fact, ...], project: Project) -> Job:
 
 
 def ci_analysis(facts: Facts, project: Project) -> CiAnalysis:
-    """The CI jobs the facts show, with what each one builds and runs; and what was read only heuristically."""
+    """The CI jobs that build the project, with what each one builds and runs; and what was read only heuristically."""
     by_job: dict[str, list[Fact]] = {}
     for fact in facts:
         if (job := getattr(fact, "job", None)) is not None:
             by_job.setdefault(job, []).append(fact)
-    jobs = tuple(_job(job, tuple(by_job.get(job.id, ())), project) for job in facts.of(CiJob))
+    jobs = tuple(_job(job, tuple(by_job.get(job.id, ())), project) for job in facts.of(CiJob) if job.builds)
     notes = (f"{fact.origin.path}: {fact.reason}" for fact in facts.of(Unknown) if fact.subject == _JOBS)
     return CiAnalysis(jobs=jobs, notes=tuple(dict.fromkeys(notes)))
 

@@ -1,6 +1,5 @@
 """clang-tidy's readability-function-size check, which limits C/C++ function length when clang-tidy runs."""
 
-import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
@@ -8,8 +7,7 @@ from fnmatch import fnmatchcase
 from project_validator import yaml_support
 from project_validator.core import Context, Project, Result
 from project_validator.ecosystems.c_cpp.compiler_flags import build_texts
-from project_validator.evidence import configuration
-from project_validator.rules import SUGGESTED_LIZARD, Analyzer, FunctionLimits, StaticAnalysis
+from project_validator.rules import SUGGESTED_LIZARD, FunctionLimits
 from project_validator.text import matching_names, pattern
 
 CLANG_TIDY_CONFIG = ".clang-tidy"
@@ -93,27 +91,3 @@ def _clang_tidy_limits_enforced(context: Context) -> Result:
 
 
 FUNCTION_LIMITS = FunctionLimits(without_lizard=_clang_tidy_limits_enforced)
-
-
-def _without_configuration(context: Context) -> str | None:
-    if context.project.exists(CLANG_TIDY_CONFIG):
-        return None
-    return f"clang-tidy has no {CLANG_TIDY_CONFIG}, so it runs only its default checks"
-
-
-# clang-tidy and cppcheck find different bugs, so both should run.
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        Analyzer(
-            name="clang-tidy",
-            runs=RUNS_CLANG_TIDY.regex,
-            configured=configuration((CLANG_TIDY_CONFIG,)),
-            shortfall=_without_configuration,
-        ),
-        Analyzer(name="cppcheck", runs=re.compile(r"\bcppcheck\b|_CPPCHECK\b", re.IGNORECASE)),
-    ),
-    texts=build_texts,
-    hint="consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy) and cppcheck "
-    "(CMAKE_CXX_CPPCHECK) in CI",
-    all_required=True,
-)

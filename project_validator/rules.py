@@ -149,63 +149,6 @@ class DependencyAudit:
     texts: Evidence = ci_configuration
 
 
-def _nothing(_: Context) -> str | None:
-    return None
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class Analyzer:
-    """A static analyzer (a linter), and how it is seen running.
-
-    `configured` names the file that configures it, if any; `shortfall` says why it falls short when it runs, e.g.
-    that it runs only its default checks.
-    """
-
-    name: str
-    runs: re.Pattern[str]
-    configured: Callable[[Context], str | None] = _nothing
-    shortfall: Callable[[Context], str | None] = _nothing
-
-    def runs_in(self, texts: Iterable[str]) -> bool:
-        return any(self.runs.search(text) for text in texts)
-
-    def named(self, context: Context) -> str:
-        """Its name, and the file that configures it."""
-        config = self.configured(context)
-        return f"{self.name} ({config})" if config else self.name
-
-    def not_running(self, context: Context) -> str:
-        config = self.configured(context)
-        return f"{self.name} is configured ({config}) but does not run" if config else f"{self.name} does not run"
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class StaticAnalysis:
-    """The static analyzers of an ecosystem, and the texts in which they are seen running.
-
-    One running analyzer is enough, unless `all_required`: their checks complement each other.
-    """
-
-    analyzers: tuple[Analyzer, ...]
-    texts: Evidence
-    hint: str
-    all_required: bool = False
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class TypeChecking:
-    """The static type checkers of a dynamically typed ecosystem, and where its strict mode, a bonus, is enabled.
-
-    `strict` names where strict checking is enabled, if anywhere.
-    """
-
-    checkers: tuple[Analyzer, ...]
-    texts: Evidence
-    strict: Callable[[Context], str | None]
-    hint: str
-    strict_hint: str
-
-
 def _always(_: Context) -> bool:
     return True
 

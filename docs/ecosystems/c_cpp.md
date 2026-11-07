@@ -62,8 +62,10 @@ runs.
 
 ## `static-analysis`
 
-Both clang-tidy (`CMAKE_CXX_CLANG_TIDY`, `run-clang-tidy`, or `clang-tidy` in CI) with its checks chosen in a
-`.clang-tidy`, and cppcheck (`CMAKE_CXX_CPPCHECK` or `cppcheck` in CI).
+Both clang-tidy and cppcheck: run directly (`clang-tidy`, `run-clang-tidy`, `cppcheck`), through the
+`cpp-linter/cpp-linter-action`, `ZedThree/clang-tidy-review` or `deep5050/cppcheck-action` actions, or by a build CI
+configures with `CMAKE_CXX_CLANG_TIDY` / `CMAKE_CXX_CPPCHECK` (on the `cmake` command line, or in the CMake files or
+presets: heuristic until CMake is read structurally). clang-tidy needs its checks chosen in a `.clang-tidy`.
 
 ## `dependency-management`
 

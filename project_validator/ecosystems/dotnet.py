@@ -13,23 +13,22 @@ from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, existing_texts
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
+from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
-from project_validator.facts.tools import Run, defined_by
+from project_validator.facts.tools import Claim, Definition, Run, defined_by
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
-    Analyzer,
     BuildOutputs,
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    StaticAnalysis,
     TestSuite,
     WarningPolicy,
     WarningsAsErrors,
@@ -136,18 +135,27 @@ TESTS = TestSuite(found=_dotnet_tests, runs=(pattern("dotnet test", r"\bdotnet\s
 # coverlet and Microsoft's code coverage (dotnet-coverage, Microsoft.Testing.Platform) both count branches.
 _COLLECT_COVERAGE = re.compile(_property("CollectCoverage", "true"), re.IGNORECASE)
 _ELEMENT = re.compile(r"<(\w+)>\s*([^<]*?)\s*</\1>")
+_REFERENCE = re.compile(r"""<(?:Global)?PackageReference\s+(?:Include|Update)\s*=\s*["']([^"']+)""")
 _FRIENDLY_NAME = re.compile(r"""friendlyName\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
 
 
 def _read_msbuild_properties(path: str, text: str) -> Iterator[Setting]:
-    """The properties a project file or shared MSBuild file sets; matched in its text when it does not parse."""
+    """The properties a project file or shared MSBuild file sets, and the packages it references; matched in its
+    text when it does not parse."""
     root = xml_root("MSBuild", path, text)
     if isinstance(root, Unknown):
         found = ((match[1], match[2]) for match in _ELEMENT.finditer(text))
         yield from settings("MSBuild", path, found, heuristic=True)
+        yield from matched_settings("MSBuild", path, text, {"PackageReference": (_REFERENCE, None)})
         return
     properties = ((child.tag, (child.text or "").strip()) for group in root.iter("PropertyGroup") for child in group)
     yield from settings("MSBuild", path, properties)
+    references = (
+        reference.get("Include") or reference.get("Update") or ""
+        for kind in ("PackageReference", "GlobalPackageReference")
+        for reference in root.iter(kind)
+    )
+    yield from settings("MSBuild", path, (("PackageReference", name) for name in references if name))
 
 
 def _read_run_settings(path: str, text: str) -> Iterator[Setting]:
@@ -311,21 +319,57 @@ def _fsharp_only(context: Context) -> Result:
     return Result(status=Status.SKIP, message="no known tool limits the length of F# functions")
 
 
-def _package(name: str) -> re.Pattern[str]:
-    return re.compile(rf"""Include\s*=\s*["']{re.escape(name)}\b""", re.IGNORECASE)
+# The commands that build a project, and so run the analyzers its packages add.
+_BUILDS = frozenset({"build", "test", "pack", "publish", "run", "msbuild"})
 
 
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        Analyzer(name="Roslynator", runs=_package("Roslynator")),
-        Analyzer(name="SonarAnalyzer", runs=_package("SonarAnalyzer")),
-        Analyzer(name="StyleCop.Analyzers", runs=_package("StyleCop.Analyzers")),
-        Analyzer(name="Meziantou.Analyzer", runs=_package("Meziantou.Analyzer")),
-        Analyzer(name="FSharpLint", runs=re.compile(r"\bfsharplint\s+lint\b", re.IGNORECASE)),
+def _analyzer_package(prefix: str) -> Claim:
+    """An analyzer a NuGet package adds to the compiler, which runs on every build of a project that references it."""
+
+    def analyses(command: Command, facts: Facts) -> Run | None:
+        argv = resolved(command)
+        builds = program(argv) in ("msbuild", "MSBuild") or (
+            program(argv) == "dotnet" and argv[1:2] and argv[1] in _BUILDS
+        )
+        references = facts.where(Setting, tool="MSBuild", key="PackageReference")
+        read = [found for found in references if str(found.value).lower().startswith(prefix.lower())]
+        return analysed(read=read) if builds and read else None
+
+    return analyses
+
+
+def _analyzer_definition(prefix: str) -> Definition:
+    def found(facts: Facts) -> Iterator[str]:
+        references = facts.where(Setting, tool="MSBuild", key="PackageReference")
+        return (found.path for found in references if str(found.value).lower().startswith(prefix.lower()))
+
+    return Definition(found=found)
+
+
+# The SDK's own analyzers are judged by compiler-warnings; static analysis asks for a package beyond them.
+DOTNET_ANALYZERS = tuple(
+    analyzer(
+        name=name,
+        languages=frozenset({CSHARP}),
+        how=name,
+        analyses=_analyzer_package(prefix),
+        rules=_analyzer_definition(prefix),
+        reads=("MSBuild",),
+    )
+    for name, prefix in (
+        ("Roslynator", "Roslynator"),
+        ("SonarAnalyzer", "SonarAnalyzer"),
+        ("StyleCop.Analyzers", "StyleCop.Analyzers"),
+        ("Meziantou.Analyzer", "Meziantou.Analyzer"),
+    )
+)
+FSHARPLINT = analyzer(
+    name="FSharpLint",
+    languages=frozenset({FSHARP}),
+    how="dotnet fsharplint lint",
+    analyses=lambda command, _facts: (
+        analysed() if command.argv[:2] in (("fsharplint", "lint"), ("dotnet", "fsharplint")) else None
     ),
-    texts=_build_texts,
-    hint="consider an analyzer package beyond the SDK's own (Roslynator, SonarAnalyzer, StyleCop.Analyzers or "
-    "Meziantou.Analyzer; FSharpLint for F#)",
 )
 
 PACKAGE_REFERENCE = re.compile(r"<PackageReference\b")
@@ -395,7 +439,6 @@ DOTNET = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_fsharp_only),
-        STATIC_ANALYSIS,
         DEPENDENCIES,
         BUILD_OUTPUT,
         LICENSE,

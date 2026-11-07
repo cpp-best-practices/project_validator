@@ -39,7 +39,8 @@ lizard runs with a length limit.
 
 ## `static-analysis`
 
-`cargo clippy`.
+`cargo clippy` (with any toolchain), or a clippy action; its lints configured in `clippy.toml` or the
+`[lints.clippy]` table of Cargo.toml.
 
 ## `security-scanning`
 

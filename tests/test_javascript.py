@@ -19,7 +19,7 @@ from project_validator.checks.type_checking import type_checking
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems.javascript import DEPENDENCIES, JAVASCRIPT_AND_TYPESCRIPT, NODE_MODULES, TYPE_CHECKING
+from project_validator.ecosystems.javascript import DEPENDENCIES, JAVASCRIPT_AND_TYPESCRIPT, NODE_MODULES
 from project_validator.facts import Command, Unknown
 from tests.support import (
     GITHUB_WORKFLOW,
@@ -28,6 +28,15 @@ from tests.support import (
     run_as,
     run_in_layout,
     temp_project,
+)
+
+TYPE_HINT = (
+    "consider running a type checker in CI: tsc --noEmit (JavaScript is checked with checkJs in a "
+    "jsconfig.json) or deno check"
+)
+STRICT_HINT = (
+    'consider enabling strict mode: "strict": true in the compilerOptions of tsconfig.json or deno check '
+    "(strict by default)"
 )
 
 STRICT_TSCONFIG = {"tsconfig.json": '{\n  // checked strictly\n  "compilerOptions": {"strict": true,},\n}\n'}
@@ -191,7 +200,7 @@ class StaticAnalysisTests(unittest.TestCase):
         files = {"eslint.config.js": "export default [];\n", **_scripts(lint="eslint ."), **_ci("npm run lint")}
         self.assertEqual(self._run(static_analysis, files), Result.passed("eslint (eslint.config.js) runs"))
         warned = run_in_layout(self, "npm JavaScript", static_analysis, {"biome.json": "{}"})
-        self.assertEqual(warned.message, "biome lint is configured (biome.json) but does not run")
+        self.assertEqual(warned.message, "biome is configured (biome.json) but does not run")
 
     def test_security_lints_are_a_plugin_or_semgrep_rules(self) -> None:
         for files in (
@@ -215,25 +224,25 @@ class TypeCheckingTests(unittest.TestCase):
 
     def test_tsc_type_checks_and_strict_mode_is_the_bonus(self) -> None:
         typecheck = {**_scripts(typecheck="tsc --noEmit"), **_ci("pnpm typecheck")}
-        expected = 'tsc (tsconfig.json) runs; strict mode bonus: "strict": true in tsconfig.json'
+        expected = "tsc (tsconfig.json) runs; strict mode bonus: tsc (tsconfig.json)"
         self.assertEqual(self._npm({**STRICT_TSCONFIG, **typecheck}), Result.passed(expected))
 
     def test_the_strictest_base_configuration_is_strict(self) -> None:
         for extends in ('"@tsconfig/strictest/tsconfig.json"', '["@tsconfig/node22", "@tsconfig/strictest"]'):
             with self.subTest(extends=extends):
                 files = {"jsconfig.json": f'{{"extends": {extends}}}', **_ci("npx tsc -p jsconfig.json")}
-                self.assertIn("@tsconfig/strictest in jsconfig.json", self._npm(files).message)
+                self.assertIn("strict mode bonus: tsc (jsconfig.json)", self._npm(files).message)
 
     def test_without_strict_mode_it_is_suggested(self) -> None:
         files = {"tsconfig.json": '{"extends": "./base.json"}', **_ci("npx vue-tsc --noEmit")}
-        self.assertEqual(self._npm(files), Result.passed("tsc (tsconfig.json) runs", TYPE_CHECKING.strict_hint))
-        self.assertEqual(self._npm(_ci("npm ci")), Result.failed("no type checker runs", TYPE_CHECKING.hint))
+        self.assertEqual(self._npm(files), Result.passed("tsc (tsconfig.json) runs", STRICT_HINT))
+        self.assertEqual(self._npm(_ci("npm ci")), Result.failed("no type checker runs", TYPE_HINT))
 
     def test_deno_checks_strictly_unless_told_not_to(self) -> None:
-        strict = "deno check (deno.json) runs; strict mode bonus: Deno's default strict mode (deno.json)"
+        strict = "deno check runs; strict mode bonus: deno check"
         self.assertEqual(self._deno(_ci("deno test")), Result.passed(strict))
         lax = {"deno.json": '{"compilerOptions": {"strict": false}}', **_ci("deno check main.ts")}
-        self.assertEqual(self._deno(lax).details, (TYPE_CHECKING.strict_hint,))
+        self.assertEqual(self._deno(lax).details, (STRICT_HINT,))
 
 
 class DependencyTests(unittest.TestCase):

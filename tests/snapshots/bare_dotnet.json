@@ -48,20 +48,92 @@
         "language": "C#",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "dotnet format",
-              "CSharpier"
-            ],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "CSharpier": "csharpier check .",
-              "dotnet format": "dotnet format --verify-no-changes"
+              "CSharpier": {
+                "can": {
+                  "apply": "csharpier format .",
+                  "check": "csharpier check ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dotnet format": {
+                "can": {
+                  "apply": "dotnet format",
+                  "check": "dotnet format --verify-no-changes"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "C#",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
+            "unit": "src/App",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "Meziantou.Analyzer": {
+                "can": {
+                  "checks": "Meziantou.Analyzer"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Roslynator": {
+                "can": {
+                  "checks": "Roslynator"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "SonarAnalyzer": {
+                "can": {
+                  "checks": "SonarAnalyzer"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "StyleCop.Analyzers": {
+                "can": {
+                  "checks": "StyleCop.Analyzers"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C#",
+            "level": "checks",
+            "runs": {},
+            "unit": "src/App",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C#",
+            "level": "checks",
+            "runs": {},
             "unit": "src/App",
             "unknowns": []
           }
@@ -106,6 +178,14 @@
       "origin": "src/App/App.csproj:TargetFramework",
       "tool": "MSBuild",
       "value": "net10.0"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "src/App/App.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "Newtonsoft.Json"
     }
   ],
   "map": {
@@ -157,7 +237,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
       "status": "FAIL"
     },
     "code-formatting": {
@@ -276,7 +356,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider an analyzer package beyond the SDK's own (Roslynator, SonarAnalyzer, StyleCop.Analyzers or Meziantou.Analyzer; FSharpLint for F#)"
+        "consider running Roslynator, SonarAnalyzer, StyleCop.Analyzers or Meziantou.Analyzer in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"

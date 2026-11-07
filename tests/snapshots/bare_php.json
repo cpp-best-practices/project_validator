@@ -48,22 +48,117 @@
         "language": "PHP",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "PHP-CS-Fixer",
-              "PHP_CodeSniffer",
-              "Pint"
-            ],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "PHP-CS-Fixer": "php-cs-fixer check",
-              "PHP_CodeSniffer": "phpcs",
-              "Pint": "pint --test"
+              "PHP-CS-Fixer": {
+                "can": {
+                  "apply": "php-cs-fixer fix",
+                  "check": "php-cs-fixer check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "PHP_CodeSniffer": {
+                "can": {
+                  "apply": "phpcbf",
+                  "check": "phpcs"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Pint": {
+                "can": {
+                  "apply": "pint",
+                  "check": "pint --test"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "PHP",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "PHPMD": {
+                "can": {
+                  "checks": "phpmd"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "PHPStan": {
+                "can": {
+                  "checks": "phpstan analyse"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Phan": {
+                "can": {
+                  "checks": "phan"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Psalm": {
+                "can": {
+                  "checks": "psalm"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "PHPStan": {
+                "can": {
+                  "checks": "phpstan analyse",
+                  "strict": "level: 8 (or max) in phpstan.neon"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Psalm": {
+                "can": {
+                  "checks": "psalm",
+                  "strict": "errorLevel=\"2\" in psalm.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -160,7 +255,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
       "status": "FAIL"
     },
     "code-formatting": {
@@ -279,7 +374,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider running PHPStan or Psalm (or PHPMD, or Phan) in CI"
+        "consider running phpstan analyse, psalm, phpmd or phan in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"
@@ -299,7 +394,7 @@
     },
     "type-checking": {
       "details": [
-        "consider running PHPStan (or Psalm) in CI"
+        "consider running a type checker in CI: phpstan analyse or psalm"
       ],
       "message": "no type checker runs",
       "status": "FAIL"

@@ -52,28 +52,126 @@
         "language": "Java",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "Spotless",
-              "fmt-maven-plugin",
-              "google-java-format"
-            ],
+            "answer": "yes",
             "defined": {
               "Spotless": [
                 "pom.xml"
               ]
             },
-            "enforced": "yes",
             "known": {
-              "Spotless": "mvn spotless:check or gradle spotlessCheck",
-              "fmt-maven-plugin": "mvn fmt:check",
-              "google-java-format": "google-java-format --set-exit-if-changed"
+              "Spotless": {
+                "can": {
+                  "apply": "spotless:apply",
+                  "check": "mvn spotless:check or gradle spotlessCheck"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "fmt-maven-plugin": {
+                "can": {
+                  "apply": "mvn fmt:format",
+                  "check": "mvn fmt:check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "google-java-format": {
+                "can": {
+                  "apply": "google-java-format --replace",
+                  "check": "google-java-format --set-exit-if-changed"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "Java",
-            "tools": [
-              "Spotless"
-            ],
-            "undefined": [],
+            "level": "check",
+            "runs": {
+              "Spotless": {
+                "levels": [
+                  "check"
+                ],
+                "read": [
+                  "pom.xml"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "SpotBugs": [
+                "pom.xml"
+              ]
+            },
+            "known": {
+              "Checkstyle": {
+                "can": {
+                  "checks": "Checkstyle (maven-checkstyle-plugin bound to check, or Gradle's checkstyle plugin)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Error Prone": {
+                "can": {
+                  "checks": "Error Prone (a compiler plugin, run by every build)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "PMD": {
+                "can": {
+                  "checks": "PMD (maven-pmd-plugin bound to check, or Gradle's pmd plugin)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "SpotBugs": {
+                "can": {
+                  "checks": "SpotBugs (spotbugs-maven-plugin bound to check, or the com.github.spotbugs Gradle plugin)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Java",
+            "level": "checks",
+            "runs": {
+              "SpotBugs": {
+                "levels": [
+                  "checks"
+                ],
+                "read": [
+                  "pom.xml"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Java",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -114,6 +212,7 @@
       "role": "product"
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -190,6 +289,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[0]",
@@ -240,6 +340,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[1]",
@@ -290,6 +391,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[2]",
@@ -340,6 +442,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[3]",
@@ -390,6 +493,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[4]",
@@ -440,6 +544,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[5]",
@@ -490,6 +595,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -546,6 +652,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/function-limits.yml:function-limits",
@@ -679,6 +786,11 @@
       ]
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Error Prone"
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -723,6 +835,29 @@
         "."
       ],
       "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "SpotBugs",
       "via": []
     },
     {
@@ -774,6 +909,29 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "SpotBugs",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
@@ -817,6 +975,29 @@
         "."
       ],
       "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "SpotBugs",
       "via": []
     },
     {
@@ -868,6 +1049,29 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "SpotBugs",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
@@ -915,6 +1119,29 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "SpotBugs",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
@@ -958,6 +1185,29 @@
         "."
       ],
       "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "SpotBugs",
       "via": []
     }
   ],
@@ -1250,7 +1500,7 @@
     },
     "static-analysis": {
       "details": [],
-      "message": "SpotBugs runs",
+      "message": "SpotBugs (pom.xml) runs",
       "status": "PASS"
     },
     "status-badges": {
