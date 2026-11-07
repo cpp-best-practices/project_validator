@@ -24,6 +24,7 @@ from project_validator.evidence import (
 )
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
 from project_validator.facts.arguments import option_values, positional, program
+from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
@@ -38,13 +39,11 @@ from project_validator.facts.settings import (
     unreadable,
 )
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Claim, Run, Tool, defined_by
+from project_validator.facts.tools import Claim, Run, Tool, defined_by, starts, when
 from project_validator.rules import (
-    MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     BuildOutputs,
     DeclaredLicense,
-    DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
@@ -54,6 +53,7 @@ from project_validator.rules import (
     ignored_at_top_level,
 )
 from project_validator.text import Pattern, matching_names, pattern
+from project_validator.tools.audits import multi_ecosystem_audits
 
 JAVASCRIPT = "JavaScript"
 TYPESCRIPT = "TypeScript"
@@ -575,16 +575,26 @@ SECURITY_LINTS = SecurityLints(
     ),
 )
 
-DEPENDENCY_AUDIT = DependencyAudit(
-    tools=(
-        # npm audit signatures checks provenance, not known vulnerabilities.
-        pattern("npm audit", r"\bnpm\s+audit\b(?!\s+signatures)"),
-        pattern("pnpm audit", r"\bpnpm\s+audit\b"),
-        pattern("yarn audit", r"\byarn\s+(?:npm\s+)?audit\b"),
-        pattern("bun audit", r"\bbun\s+audit\b"),
-        *MULTI_ECOSYSTEM_AUDITS,
+
+def _npm_audit(command: Command, _facts: Facts) -> Run | None:
+    """`npm audit`; `npm audit signatures` checks provenance, not vulnerabilities."""
+    argv = resolved(command)
+    return audited() if starts(("npm", "audit"))(command) and argv[2:3] != ("signatures",) else None
+
+
+AUDITORS = (
+    auditor(name="npm audit", languages=JS_LANGUAGES, how="npm audit", audits=_npm_audit),
+    *(
+        auditor(
+            name=" ".join(prefix), languages=JS_LANGUAGES, how=" ".join(prefix), audits=when(starts(prefix), audited)
+        )
+        for prefix in (("pnpm", "audit"), ("yarn", "npm", "audit"), ("bun", "audit"))
     ),
-    hint="consider running npm audit (or pnpm audit, yarn npm audit or bun audit) in CI",
+    # yarn classic's own audit.
+    auditor(
+        name="yarn audit", languages=JS_LANGUAGES, how="yarn audit", audits=when(starts(("yarn", "audit")), audited)
+    ),
+    *multi_ecosystem_audits(JS_LANGUAGES),
 )
 
 # The rule's options are "off", 0, or anything else (a severity, or a severity and its limit).
@@ -687,7 +697,6 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         SECURITY_LINTS,
-        DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_max_lines_per_function),
         DEPENDENCIES,
         NODE_MODULES,

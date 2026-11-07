@@ -43,6 +43,46 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Swift",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Swift",
@@ -288,7 +328,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running osv-scanner in CI, which audits the packages Package.resolved pins"
+        "consider running in CI: osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

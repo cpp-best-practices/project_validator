@@ -45,6 +45,60 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "bundler-audit": {
+                "can": {
+                  "runs": "bundle audit check --update"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "runs",
+            "runs": {
+              "bundler-audit": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Ruby",
@@ -1484,6 +1538,28 @@
       ]
     },
     {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bundler-audit",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1582,6 +1658,28 @@
       "tool": "Steep",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bundler-audit",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
       ]
     },
     {
@@ -1686,6 +1784,28 @@
       ]
     },
     {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bundler-audit",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1787,6 +1907,28 @@
       ]
     },
     {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bundler-audit",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1888,6 +2030,28 @@
       ]
     },
     {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bundler-audit",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -1986,6 +2150,28 @@
       "tool": "Steep",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bundler-audit",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
       ]
     }
   ],

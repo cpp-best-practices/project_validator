@@ -15,18 +15,17 @@ from project_validator.evidence import ci_and_hook_texts, existing_texts, first_
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, positional, program
+from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Claim, Run, combined, defined_by, either
+from project_validator.facts.tools import Claim, Run, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     BuildOutputs,
     DeclaredLicense,
-    DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
@@ -35,6 +34,7 @@ from project_validator.rules import (
     ignored_at_top_level,
 )
 from project_validator.text import Pattern, matching_names, pattern
+from project_validator.tools.audits import multi_ecosystem_audits
 
 RUBY_LANGUAGE = "Ruby"
 RUBY_ONLY = frozenset({RUBY_LANGUAGE})
@@ -282,10 +282,14 @@ WARNINGS = WarningPolicy(
     separator=", ",
 )
 
-DEPENDENCY_AUDIT = DependencyAudit(
-    tools=(pattern("bundler-audit", r"\bbundler?-audit\b|\bbundle\s+(?:exec\s+)?audit\b"), *MULTI_ECOSYSTEM_AUDITS),
-    hint="consider running bundle audit check --update in CI (bundler-audit)",
-    texts=_run_texts,
+AUDITORS = (
+    auditor(
+        name="bundler-audit",
+        languages=RUBY_ONLY,
+        how="bundle audit check --update",
+        audits=when(starts(("bundler-audit",), ("bundle-audit",), ("bundle", "audit")), audited),
+    ),
+    *multi_ecosystem_audits(RUBY_ONLY),
 )
 
 # RuboCop's Security cops are on by default.
@@ -439,7 +443,6 @@ RUBY = Ecosystem(
         versions_axis("Ruby version", RUBY_LANGUAGE),
         WARNINGS,
         SECURITY_LINTS,
-        DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_method_length_enforced),
         DEPENDENCIES,
         BUNDLE,

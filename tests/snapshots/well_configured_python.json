@@ -47,6 +47,67 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pip-audit": {
+                "can": {
+                  "runs": "pip-audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "safety": {
+                "can": {
+                  "runs": "safety scan"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "runs",
+            "runs": {
+              "pip-audit": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Python",
@@ -1838,6 +1899,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pip-audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "format": [
@@ -1949,6 +2030,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pip-audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "format": [
@@ -2060,6 +2161,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pip-audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "format": [
@@ -2171,6 +2292,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pip-audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "format": [
@@ -2282,6 +2423,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pip-audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "format": [
@@ -2385,6 +2546,26 @@
         ".github/workflows/ci.yml:jobs.test.steps[9].run",
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pip-audit",
+      "via": []
     },
     {
       "heuristic": false,
