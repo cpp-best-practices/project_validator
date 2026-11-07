@@ -85,15 +85,40 @@ _VARIABLE = re.compile(r"\$(?:\{(\w+)\}|(\w+))")
 
 
 def resolved(command: Command) -> tuple[str, ...]:
-    """The command's arguments with the shell variables its environment defines (`$BUILD_TYPE`) put in place.
+    """The command's arguments with the shell variables its environment defines (`$BUILD_TYPE`) put in place; a
+    word that is one variable becomes the words of its value.
 
     A command that runs another (`sudo make`, `bundle exec rake`) is expanded into that command by a launcher (see
     `project_validator.facts.expansion.launcher`)."""
+    if not any("$" in word for word in command.argv):
+        return command.argv
+    # Every tool asks of every command: each command is resolved once (it is kept, so its id stays its own).
+    cached = _RESOLVED.get(id(command))
+    if cached is not None and cached[0] is command:
+        return cached[1]
+    if len(_RESOLVED) > _MOST_RESOLVED:
+        _RESOLVED.clear()
+    found = _resolve(command)
+    _RESOLVED[id(command)] = (command, found)
+    return found
 
+
+_RESOLVED: dict[int, tuple[Command, tuple[str, ...]]] = {}
+_MOST_RESOLVED = 500_000
+
+
+def _resolve(command: Command) -> tuple[str, ...]:
     def value(match: re.Match[str]) -> str:
         return command.env.get(match[1] or match[2], match[0])
 
-    return tuple(_VARIABLE.sub(value, word) for word in command.argv)
+    def words(word: str) -> tuple[str, ...]:
+        """A word that is one variable splits into the words of its value, as the shell splits an unquoted
+        expansion (`$CABAL v2-test` with `CABAL="cabal -v"`)."""
+        expanded = _VARIABLE.sub(value, word)
+        whole = _VARIABLE.fullmatch(word) is not None and expanded != word
+        return tuple(expanded.split()) if whole and expanded.strip() else (expanded,)
+
+    return tuple(found for word in command.argv for found in words(word))
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

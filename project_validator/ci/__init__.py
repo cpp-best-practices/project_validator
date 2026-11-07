@@ -158,12 +158,28 @@ def _configurations(commands: Iterable[Command], evidence: str) -> set[BuildConf
     return {BuildConfiguration(build_type=build_type, sanitizers=sanitizers) for build_type in types}
 
 
+def _decoded(value: str) -> object:
+    """A matrix value as it was written: one that is a list or a mapping is held as JSON."""
+    if value[:1] in ("{", "["):
+        try:
+            return json.loads(value)
+        except json.JSONDecodeError:
+            return value
+    return value
+
+
+def _matrix_text(matrix: Mapping[str, str]) -> str:
+    """A job's matrix values as JSON, with those that are objects in place rather than JSON within JSON (so that
+    `versions: {ghc: "9.6"}` reads `"ghc": "9.6"`)."""
+    return json.dumps({key: _decoded(value) for key, value in matrix.items()})
+
+
 def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project) -> Job:
     """A job as the checks see it. A parsed job's compilers and toolchains are named by its matrix values first,
     then by what it runs; a heuristic job's by the whole file."""
     commands = [fact for fact in facts if isinstance(fact, Command)]
     evidence = _evidence(job, facts)
-    texts = (project.read_text(job.origin.path),) if job.heuristic else (json.dumps(dict(job.matrix)), evidence)
+    texts = (project.read_text(job.origin.path),) if job.heuristic else (_matrix_text(job.matrix), evidence)
     compilers = next((found for text in texts if (found := detect_compilers(text))), [])
     return _job_with_compilers(
         job,
