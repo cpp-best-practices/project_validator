@@ -47,7 +47,7 @@ def _build_outputs(build_system: str, directory: str, *more: str) -> BuildOutput
     return BuildOutput(
         name=f"the {directory} directory",
         languages=JVM_LANGUAGES,
-        build_system=build_system,
+        build_systems=frozenset({build_system}),
         globs=ignored_at_top_level(directory),
         paths=directories(directory),
         hint=f"consider ignoring {' and '.join((f'{directory}/', *more))}",

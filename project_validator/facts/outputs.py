@@ -51,8 +51,8 @@ def _regex_matches_any(pattern: str, paths: Iterable[str]) -> bool:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class BuildOutput:
-    """The build output called `name` that the builds of `languages` write (with `build_system`, those of that build
-    system only), which must never be committed.
+    """The build output called `name` that the builds of `languages` write (with `build_systems`, those of one of
+    them only: an hpack package is built by Stack or Cabal), which must never be committed.
 
     A glob ignore entry ignores it when `globs` matches it whole; a regular expression when it matches one of
     `paths`. `artifacts` recognise it among the tracked files (see `artifact`), except files named one of
@@ -66,7 +66,7 @@ class BuildOutput:
     hint: str
     artifacts: tuple[str, ...] = ()
     not_artifacts: tuple[str, ...] = ()
-    build_system: str | None = None
+    build_systems: frozenset[str] = frozenset()
 
     def ignored_by(self, entry: IgnoreEntry) -> bool:
         if entry.syntax is Syntax.REGEX:
@@ -112,8 +112,8 @@ def outputs_of(language: str, build_systems: frozenset[str], outputs: Iterable[B
     """The build outputs of `language` for a project built with `build_systems`: those of the build systems it uses,
     or, when none of them has one, the language's own."""
     found = [output for output in outputs if language in output.languages]
-    used = [output for output in found if output.build_system in build_systems]
-    return tuple(used or [output for output in found if output.build_system is None])
+    used = [output for output in found if output.build_systems & build_systems]
+    return tuple(used or [output for output in found if not output.build_systems])
 
 
 __all__ = [

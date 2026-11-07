@@ -74,6 +74,9 @@ class PackageManager:
     lock_hint: str = ""
     suggested: bool = False
     verified_by: Callable[[Command], bool] = _never
+    # Whether a lockfile deeper in a unit locks it (`requirements/dev.txt`), or only those beside or below it (a
+    # `cabal.project.freeze` locks the project beside it).
+    nested_locks: bool = True
     vendor_outputs: tuple[str, ...] = ()
 
 

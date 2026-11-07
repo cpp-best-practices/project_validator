@@ -77,10 +77,10 @@ class _Unit:
         auxiliary = role(path) in AUXILIARY and self.role not in AUXILIARY
         return owner(directory_of(path), self.units) == self.unit and not auxiliary
 
-    def locked_by(self, path: str) -> bool:
-        """Whether a committed lockfile locks the unit: it is in the unit's directory or above it, or the unit's
-        own."""
-        return path not in self.untracked and (within(self.unit, directory_of(path)) or self.owns(path))
+    def locked_by(self, path: str, *, nested: bool = True) -> bool:
+        """Whether a committed lockfile locks the unit: it is in the unit's directory or above it, or (for a manager
+        whose lockfiles lock from deeper in the unit: `requirements/*.txt`) the unit's own."""
+        return path not in self.untracked and (within(self.unit, directory_of(path)) or (nested and self.owns(path)))
 
 
 def _lock_required(manager: PackageManager, facts: Facts, place: _Unit) -> bool:
@@ -100,9 +100,11 @@ def _locks(managers: tuple[PackageManager, ...], facts: Facts, place: _Unit) -> 
     """What locks the unit's dependencies: its lockfiles, but those in hidden directories (CI's own, such as an
     action's lockfile or the hash-pinned requirements CI installs) only when no other does; or CI commands that verify
     them."""
-    names = {manager.name for manager in managers}
+    nested = {manager.name: manager.nested_locks for manager in managers}
     found = [
-        fact.origin.path for fact in facts.of(Locked) if fact.manager in names and place.locked_by(fact.origin.path)
+        fact.origin.path
+        for fact in facts.of(Locked)
+        if fact.manager in nested and place.locked_by(fact.origin.path, nested=nested[fact.manager])
     ]
     files = [path for path in found if not _hidden(path)] or found
     verified = (

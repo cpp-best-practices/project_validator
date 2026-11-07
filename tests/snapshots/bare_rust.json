@@ -453,15 +453,6 @@
     {
       "kind": "CommittedOutput",
       "languages": [
-        "Java",
-        "Kotlin"
-      ],
-      "origin": "target/",
-      "output": "the target directory"
-    },
-    {
-      "kind": "CommittedOutput",
-      "languages": [
         "Rust"
       ],
       "origin": "target/",

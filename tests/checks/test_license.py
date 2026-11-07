@@ -6,7 +6,7 @@ from project_validator.core import Result, Status
 from project_validator.policy.license import HINT
 from project_validator.questions import Answer
 from project_validator.questions.license import licenses as license_answers
-from tests.support import FIXTURES, make_context, temp_project
+from tests.support import FIXTURES, fixture_files, make_context, temp_project
 
 MIT = (FIXTURES / "well_configured_c_cpp" / "LICENSE").read_text(encoding="utf-8")
 APACHE = "                                 Apache License\n                           Version 2.0, January 2004\n"
@@ -179,3 +179,20 @@ class NearestLicenseTests(unittest.TestCase):
         self.assertEqual((javascript.answer, python.answer), (Answer.NO, Answer.YES))
         self.assertEqual(python.licenses(), frozenset({"MIT"}))
         self.assertEqual(javascript.as_dict()["mismatches"][0]["manifest"], "package.json")  # type: ignore[index]
+
+
+class MonorepoLicenseTests(unittest.TestCase):
+    def test_packages_licensed_without_a_root_license_warn(self) -> None:
+        mit = fixture_files("well_configured_go")["LICENSE"]
+        files = {
+            "Cargo.toml": '[workspace]\nmembers = ["a", "b"]\n',
+            **{f"{name}/Cargo.toml": f'[package]\nname = "{name}"\n' for name in ("a", "b")},
+            **{f"{name}/src/lib.rs": "" for name in ("a", "b")},
+            "a/LICENSE": mit,
+            "b/LICENSE": mit,
+        }
+        with temp_project(files) as root:
+            result = license_.run(make_context(root))
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn("no license file at the root; 2 package license file(s) (MIT)", result.message)
+        self.assertIn("a/LICENSE", result.details)
