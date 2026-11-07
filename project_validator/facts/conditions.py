@@ -14,24 +14,44 @@ from itertools import groupby
 
 from project_validator.build_configurations import BUILD_TYPE_KINDS
 
-# The values each dimension can take; "other" stands for those a build system names but none of these is.
+# The values each dimension starts with; "other" stands for every value not named. The dimensions are open: a value
+# a condition names joins its dimension (a profile's compiler, GHC, or language, Haskell), after "other", and a
+# condition made before it was named holds for it as it holds for "other".
 OTHER = "other"
 COMPILERS = ("gcc", "clang", "appleclang", "msvc", "intel", "flang", OTHER)
 PLATFORMS = ("linux", "macos", "windows", "emscripten", OTHER)
 CONFIGURATIONS = (*BUILD_TYPE_KINDS, OTHER)
 LANGUAGES = ("C", "C++", "CUDA", "Objective-C", "Objective-C++", "Fortran", "Assembly", OTHER)
-DIMENSIONS: Mapping[str, tuple[str, ...]] = {
-    "compilers": COMPILERS,
-    "platforms": PLATFORMS,
-    "configurations": CONFIGURATIONS,
-    "languages": LANGUAGES,
+_VALUES: dict[str, list[str]] = {
+    "compilers": list(COMPILERS),
+    "platforms": list(PLATFORMS),
+    "configurations": list(CONFIGURATIONS),
+    "languages": list(LANGUAGES),
 }
+# Where "other" is among each dimension's values: values named later come after it.
+_OTHER_INDEX = {name: values.index(OTHER) for name, values in _VALUES.items()}
+
+
+class _Dimensions(Mapping[str, tuple[str, ...]]):
+    """Each dimension's values, as known now."""
+
+    def __getitem__(self, name: str) -> tuple[str, ...]:
+        return tuple(_VALUES[name])
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(_VALUES)
+
+    def __len__(self) -> int:
+        return len(_VALUES)
+
+
+DIMENSIONS: Mapping[str, tuple[str, ...]] = _Dimensions()
 NOT = "NOT "
 # At most this many disjuncts are written out for one condition.
 MOST_DISJUNCTS = 64
 
 _FALSE, _TRUE = 0, 1
-_DIMENSION_NAMES = tuple(DIMENSIONS)
+_DIMENSION_NAMES = tuple(_VALUES)
 _BOOLEAN = (False, True)
 
 
@@ -48,7 +68,19 @@ class _Diagram:
     def values(self, variable: int) -> tuple[object, ...]:
         return DIMENSIONS[_DIMENSION_NAMES[variable]] if variable < len(_DIMENSION_NAMES) else _BOOLEAN
 
+    def canonical(self, variable: int, children: tuple[int, ...]) -> tuple[int, ...]:
+        """A dimension's children without the trailing values that branch as "other" does, so that a node made
+        before a value was named and one made after are the same node."""
+        if variable >= len(_DIMENSION_NAMES):
+            return children
+        other = _OTHER_INDEX[_DIMENSION_NAMES[variable]]
+        end = len(children)
+        while end > other + 1 and children[end - 1] == children[other]:
+            end -= 1
+        return children[:end]
+
     def node(self, variable: int, children: tuple[int, ...]) -> int:
+        children = self.canonical(variable, children)
         if all(child == children[0] for child in children):
             return children[0]
         key = (variable, children)
@@ -69,7 +101,10 @@ class _Diagram:
     def child(self, node: int, variable: int, index: int) -> int:
         """`node`'s branch for the `index`th value of `variable` (itself, when it does not branch on `variable`)."""
         found, children = self.nodes[node]
-        return children[index] if found == variable else node
+        if found != variable:
+            return node
+        # A value named after the node was made branches as "other" does.
+        return children[index] if index < len(children) else children[_OTHER_INDEX[_DIMENSION_NAMES[variable]]]
 
     def apply(self, operation: str, first: int, second: int) -> int:
         terminal = _terminal(operation, first, second)
@@ -147,6 +182,8 @@ def only(dimension: str, values: Iterable[str]) -> Condition:
     """The builds whose `dimension` takes one of `values`."""
     allowed = frozenset(values)
     variable = _DIMENSION_NAMES.index(dimension)
+    known = _VALUES[dimension]
+    known += sorted(allowed - set(known))
     return Condition(_DIAGRAM.node(variable, tuple(int(value in allowed) for value in DIMENSIONS[dimension])))
 
 
@@ -166,6 +203,7 @@ def _branches(node: int) -> Iterator[tuple[tuple[str, frozenset[str]], int]]:
     if variable < len(_DIMENSION_NAMES):
         dimension = _DIMENSION_NAMES[variable]
         values = DIMENSIONS[dimension]
+        children = tuple(_DIAGRAM.child(node, variable, index) for index in range(len(values)))
         ordered = sorted(range(len(children)), key=children.__getitem__)
         for child, indexes in groupby(ordered, key=children.__getitem__):
             yield (dimension, frozenset(values[index] for index in indexes)), child

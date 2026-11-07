@@ -29,8 +29,8 @@ class Flag:
     @property
     def standalone(self) -> re.Pattern[str]:
         """The flag in a command line, standing alone (`-Wshadow`, not `-Wshadow=local`; `-Werror`, not
-        `-Werror=format`)."""
-        return re.compile(rf"(?<![\w/:=-])(?:{self.spellings})(?![\w=:-])")
+        `-Werror=format`) or as an option's value (`--ghc-options=-Wall`, `CXXFLAGS=-Wall`)."""
+        return re.compile(rf"(?<![\w/:-])(?:{self.spellings})(?![\w=:-])")
 
 
 GCC_WARNINGS = (
@@ -42,7 +42,7 @@ GCC_WARNINGS = (
 )
 MSVC_WARNINGS = (Flag("/W4", "/W4|/Wall"), Flag("/permissive-", "/permissive-"))
 GCC_WARNINGS_AS_ERRORS = Flag("-Werror", "-Werror")
-MSVC_WARNINGS_AS_ERRORS = Flag("/WX", "[/-]WX")
+MSVC_WARNINGS_AS_ERRORS = Flag("/WX", "[/-]WX", ("/WX", "-WX"))
 
 
 # Binary hardening: checked library calls, stack and control-flow protection, library assertions; MSVC's equivalents.
@@ -97,6 +97,23 @@ WARNINGS_AS_ERRORS_BY_COMPILER: ByCompiler = (
     (frozenset({MSVC}), (MSVC_WARNINGS_AS_ERRORS.name,)),
 )
 
+# The build system settings a command line sets the flags with: Meson's `warning_level` (by the GCC-style flags each
+# level passes) and `werror`, and CMake's `COMPILE_WARNING_AS_ERROR`; and the text that finds them in a command.
+_LEVELS = {"-Wall": "[123]|everything", "-Wextra": "[23]|everything", "-Wpedantic": "3|everything"}
+WARNING_LEVEL_HINTS = ("-Dwarning_level=", "--warnlevel")
+WARNINGS_AS_ERRORS_SETTINGS = (
+    r"(?<![\w-])--werror\b|-Dwerror=true\b",
+    r"COMPILE_WARNING_AS_ERROR(?::BOOL)?=(?i:on|true|yes|1)\b",
+)
+WARNINGS_AS_ERRORS_SETTING_HINTS = ("--werror", "-Dwerror=", "COMPILE_WARNING_AS_ERROR")
+
+
+def warning_level_settings(flag: Flag) -> tuple[str, ...]:
+    """The Meson warning levels, on a command line, that pass the GCC-style `flag`."""
+    level = _LEVELS.get(flag.name)
+    return (rf"(?:-Dwarning_level=|--warnlevel[=\s])(?:{level})\b",) if level else ()
+
+
 __all__ = [
     "FHARDENED",
     "GCC_HARDENING",
@@ -106,9 +123,13 @@ __all__ = [
     "MSVC_HARDENING",
     "MSVC_WARNINGS",
     "WARNINGS_AS_ERRORS_BY_COMPILER",
+    "WARNINGS_AS_ERRORS_SETTINGS",
+    "WARNINGS_AS_ERRORS_SETTING_HINTS",
+    "WARNING_LEVEL_HINTS",
     "ByCompiler",
     "Flag",
     "hardening_flags",
     "warning_flags",
+    "warning_level_settings",
     "warnings_as_errors_flag",
 ]
