@@ -5,30 +5,29 @@ count as CI configuration, as package scripts do for JavaScript.
 """
 
 import re
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import (
     ci_and_hook_texts,
-    configuration,
     existing_texts,
     first_existing,
     json_value,
     scripts_run,
 )
-from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
-from project_validator.facts.arguments import has_option, positional, program
+from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
+from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
+from project_validator.facts.arguments import has_option, option_values, positional, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
-from project_validator.facts.settings import SettingsReader, file_reader, settings, xml_root
-from project_validator.facts.tools import Run, defined_by, either
+from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
+from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
-    Analyzer,
     BuildOutputs,
     DeclaredLicense,
     DependencyAudit,
@@ -36,9 +35,7 @@ from project_validator.rules import (
     Evidence,
     FunctionLimits,
     SecurityLints,
-    StaticAnalysis,
     TestSuite,
-    TypeChecking,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -357,48 +354,76 @@ def _method_length_enforced(context: Context) -> Result:
 
 
 PHPSTAN_CONFIG_FILES = ("phpstan.neon", "phpstan.neon.dist", "phpstan.dist.neon")
-PHPSTAN = Analyzer(
-    name="PHPStan", runs=re.compile(r"\bphpstan\b(?!\.neon)"), configured=configuration(PHPSTAN_CONFIG_FILES)
+_PHPSTAN_LEVEL = re.compile(r"^\s*level:\s*(\w+)\b", re.MULTILINE)
+_PSALM_LEVEL = re.compile(r"""\berrorLevel\s*=\s*["'](\d+)["']""")
+# Strict: PHPStan at level 8 or higher, Psalm at error level 1 or 2.
+_STRICT_PHPSTAN = re.compile(r"[89]|1\d|max")
+_STRICT_PSALM = frozenset({"1", "2"})
+
+PHPSTAN_SETTINGS = SettingsReader(
+    name="PHPStan",
+    files=PHPSTAN_CONFIG_FILES,
+    read=lambda path, text: matched_settings("PHPStan", path, text, {"level": (_PHPSTAN_LEVEL, None)}),
 )
-PSALM = Analyzer(
-    name="Psalm", runs=re.compile(r"(?<![\w-])psalm\b(?!\.xml)"), configured=configuration(PSALM_CONFIG_FILES)
+PSALM_SETTINGS = SettingsReader(
+    name="Psalm",
+    files=PSALM_CONFIG_FILES,
+    read=lambda path, text: matched_settings("Psalm", path, text, {"errorLevel": (_PSALM_LEVEL, None)}),
 )
+PHPMD_FILES = file_reader("PHPMD", PHPMD_CONFIG_FILES)
 
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        PHPSTAN,
-        PSALM,
-        Analyzer(name="PHPMD", runs=RUNS_PHPMD, configured=configuration(PHPMD_CONFIG_FILES)),
-        Analyzer(name="Phan", runs=re.compile(r"(?<![\w-])phan\b")),
-    ),
-    texts=_run_texts,
-    hint="consider running PHPStan or Psalm (or PHPMD, or Phan) in CI",
+
+def _phpstan_strict(argv: tuple[str, ...], facts: Facts) -> list[Setting] | bool:
+    if any(_STRICT_PHPSTAN.fullmatch(level) for level in option_values(argv, "--level", "-l")):
+        return True
+    return [setting for setting in facts.settings("PHPStan") if _STRICT_PHPSTAN.fullmatch(str(setting.value))]
+
+
+def _psalm_strict(_argv: tuple[str, ...], facts: Facts) -> list[Setting] | bool:
+    return [setting for setting in facts.settings("Psalm") if str(setting.value) in _STRICT_PSALM]
+
+
+type _Strict = Callable[[tuple[str, ...], Facts], list[Setting] | bool]
+
+
+def _runs(name: str) -> Callable[[Command, Facts], Run | None]:
+    return lambda command, _facts: analysed() if program(resolved(command)) == name else None
+
+
+def _type_checks(name: str, strict: _Strict) -> Claim:
+    def checks(command: Command, facts: Facts) -> Run | None:
+        argv = resolved(command)
+        if program(argv) != name:
+            return None
+        found = strict(argv, facts)
+        return type_checked(strict=bool(found), read=found if isinstance(found, list) else ())
+
+    return checks
+
+
+def _analyser_and_checker(name: str, strict: _Strict, how: str, strict_how: str) -> Tool:
+    """PHPStan or Psalm: a run analyses the code and type checks it, strictly at a strict level."""
+    command = name.lower()
+    definition = defined_by(files=(name,), settings=(name,))
+    return combined(
+        analyzer(name=name, languages=PHP_ONLY, how=how, analyses=_runs(command), rules=definition, reads=(name,)),
+        type_checker(
+            name=name,
+            languages=PHP_ONLY,
+            can={Strictness.CHECKS: how, Strictness.STRICT: strict_how},
+            checks=_type_checks(command, strict),
+            configuration=definition,
+            reads=(name,),
+        ),
+    )
+
+
+PHPSTAN = _analyser_and_checker("PHPStan", _phpstan_strict, "phpstan analyse", "level: 8 (or max) in phpstan.neon")
+PSALM = _analyser_and_checker("Psalm", _psalm_strict, "psalm", 'errorLevel="2" in psalm.xml')
+PHPMD = analyzer(
+    name="PHPMD", languages=PHP_ONLY, how="phpmd", analyses=_runs("phpmd"), rules=defined_by(files=("PHPMD",))
 )
-
-STRICT_PHPSTAN_LEVEL = re.compile(r"^\s*level:\s*(?:[89]|1\d|max)\b", re.MULTILINE)
-STRICT_PHPSTAN_FLAG = re.compile(r"\bphpstan\b[^\n]*\s(?:--level[=\s]+|-l\s*)(?:[89]|1\d|max)\b")
-STRICT_PSALM_LEVEL = re.compile(r"""\berrorLevel\s*=\s*["'][12]["']""")
-
-
-def _strict_type_checking(context: Context) -> str | None:
-    """PHPStan at level 8 or higher, or Psalm at error level 1 or 2."""
-    for files, strict, name in (
-        (PHPSTAN_CONFIG_FILES, STRICT_PHPSTAN_LEVEL, "PHPStan level"),
-        (PSALM_CONFIG_FILES, STRICT_PSALM_LEVEL, "Psalm errorLevel"),
-    ):
-        config = first_existing(context, files)
-        if config is not None and strict.search(context.project.read_text(config)):
-            return f"{name} in {config}"
-    return "phpstan --level" if any(map(STRICT_PHPSTAN_FLAG.search, _run_texts(context))) else None
-
-
-TYPE_CHECKING = TypeChecking(
-    checkers=(PHPSTAN, PSALM),
-    texts=_run_texts,
-    strict=_strict_type_checking,
-    hint="consider running PHPStan (or Psalm) in CI",
-    strict_hint='consider a strict level: level: 8 (or max) in phpstan.neon, or errorLevel="2" in psalm.xml',
-)
+PHAN = analyzer(name="Phan", languages=PHP_ONLY, how="phan", analyses=_runs("phan"))
 
 # The platform (php, ext-*, lib-*) is not a package Composer installs.
 PLATFORM_PACKAGE = re.compile(r"^(?:php|php-64bit|hhvm|composer(?:-plugin|-runtime)?-api|(?:ext|lib)-.+)$")
@@ -464,8 +489,6 @@ PHP = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_method_length_enforced),
-        STATIC_ANALYSIS,
-        TYPE_CHECKING,
         DEPENDENCIES,
         VENDOR,
         LICENSE,

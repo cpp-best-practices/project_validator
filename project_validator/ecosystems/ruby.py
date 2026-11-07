@@ -11,27 +11,25 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
+from project_validator.evidence import ci_and_hook_texts, existing_texts, first_existing
 from project_validator.facts import Command, Facts, Setting, resolved
-from project_validator.facts.arguments import positional, program
+from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
+from project_validator.facts.arguments import has_option, positional, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings
-from project_validator.facts.tools import Claim, Run, defined_by, either
+from project_validator.facts.tools import Claim, Run, combined, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
-    Analyzer,
     BuildOutputs,
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    StaticAnalysis,
     TestSuite,
-    TypeChecking,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -85,22 +83,39 @@ def _read_rake_tasks(path: str, text: str) -> Iterator[Setting]:
 RAKE_TASKS = SettingsReader(name="Rake", files=(*RAKEFILES, "*.rake"), read=_read_rake_tasks)
 
 
+def _rake_tasks(command: Command, facts: Facts, tool: str) -> list[Setting]:
+    """The tasks of `tool` a Rakefile defines that `rake` runs: those it names, or its default task's."""
+    argv = resolved(command)
+    if program(argv) != "rake":
+        return []
+    targets = set(positional(argv)[0]) or {"default"}
+    if "default" in targets:
+        defaults = (found.value for found in facts.where(Setting, tool="Rake", key="default"))
+        targets |= {str(name) for names in defaults if isinstance(names, tuple) for name in names}
+    return [task for task in facts.where(Setting, tool="Rake", key=f"task.{tool}") if task.value in targets]
+
+
 def _rake_task(tool: str) -> Claim:
     """`rake rubocop`, or `rake` whose default task runs it: the task a Rakefile defines for `tool` checks."""
 
     def formats(command: Command, facts: Facts) -> Run | None:
-        argv = resolved(command)
-        if program(argv) != "rake":
-            return None
-        tasks = facts.where(Setting, tool="Rake", key=f"task.{tool}")
-        targets = set(positional(argv)[0]) or {"default"}
-        if "default" in targets:
-            defaults = (found.value for found in facts.where(Setting, tool="Rake", key="default"))
-            targets |= {str(name) for names in defaults if isinstance(names, tuple) for name in names}
-        read = [task for task in tasks if task.value in targets]
+        read = _rake_tasks(command, facts, tool)
         return formatted(command, facts, checks=True, read=read) if read else None
 
     return formats
+
+
+def _lints(program_name: str, autocorrects: frozenset[str], tool: str) -> Claim:
+    """A linter run that reports what it finds, rather than correcting it, or the Rake task that runs it."""
+
+    def analyses(command: Command, facts: Facts) -> Run | None:
+        argv = resolved(command)
+        if program(argv) == program_name and not has_option(argv, *autocorrects):
+            return analysed()
+        read = _rake_tasks(command, facts, tool)
+        return analysed(read=read) if read else None
+
+    return analyses
 
 
 RUBOCOP_FILES = file_reader("RuboCop", (RUBOCOP_CONFIG,))
@@ -108,24 +123,43 @@ STANDARD_FILES = file_reader("Standard", (".standard.yml",))
 SYNTAX_TREE_FILES = file_reader("syntax_tree", (".streerc",))
 
 # RuboCop and Standard have a default style; syntax_tree's is its own.
-RUBOCOP = format_tool(
-    name="RuboCop",
-    languages=RUBY_ONLY,
-    can={Enforcement.CHECK: "rubocop", Enforcement.APPLY: "rubocop -a"},
-    formats=either(
-        flagged(("rubocop",), applies=("-a", "-A", "--autocorrect", "--autocorrect-all", "-x", "--fix-layout")),
-        _rake_task("RuboCop"),
+_RUBOCOP_CORRECTS = frozenset({"-a", "-A", "--autocorrect", "--autocorrect-all", "-x", "--fix-layout"})
+_STANDARD_CORRECTS = frozenset({"--fix", "--fix-unsafely"})
+RUBOCOP = combined(
+    format_tool(
+        name="RuboCop",
+        languages=RUBY_ONLY,
+        can={Enforcement.CHECK: "rubocop", Enforcement.APPLY: "rubocop -a"},
+        formats=either(flagged(("rubocop",), applies=_RUBOCOP_CORRECTS), _rake_task("RuboCop")),
+        style=defined_by(files=("RuboCop",)),
+        reads=("Rake",),
     ),
-    style=defined_by(files=("RuboCop",)),
-    reads=("Rake",),
+    analyzer(
+        name="RuboCop",
+        languages=RUBY_ONLY,
+        how="rubocop",
+        analyses=_lints("rubocop", _RUBOCOP_CORRECTS, "RuboCop"),
+        rules=defined_by(files=("RuboCop",)),
+        reads=("Rake",),
+    ),
 )
-STANDARD = format_tool(
-    name="Standard",
-    languages=RUBY_ONLY,
-    can={Enforcement.CHECK: "standardrb", Enforcement.APPLY: "standardrb --fix"},
-    formats=either(flagged(("standardrb",), applies=("--fix", "--fix-unsafely")), _rake_task("Standard")),
-    style=defined_by(files=("Standard",)),
-    reads=("Rake",),
+STANDARD = combined(
+    format_tool(
+        name="Standard",
+        languages=RUBY_ONLY,
+        can={Enforcement.CHECK: "standardrb", Enforcement.APPLY: "standardrb --fix"},
+        formats=either(flagged(("standardrb",), applies=_STANDARD_CORRECTS), _rake_task("Standard")),
+        style=defined_by(files=("Standard",)),
+        reads=("Rake",),
+    ),
+    analyzer(
+        name="Standard",
+        languages=RUBY_ONLY,
+        how="standardrb",
+        analyses=_lints("standardrb", _STANDARD_CORRECTS, "Standard"),
+        rules=defined_by(files=("Standard",)),
+        reads=("Rake",),
+    ),
 )
 SYNTAX_TREE = format_tool(
     name="syntax_tree",
@@ -258,38 +292,61 @@ def _method_length_enforced(context: Context) -> Result:
     )
 
 
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        Analyzer(name="RuboCop", runs=re.compile(RUNS_RUBOCOP), configured=configuration((RUBOCOP_CONFIG,))),
-        Analyzer(name="Standard", runs=re.compile(RUNS_STANDARD), configured=configuration((".standard.yml",))),
-        Analyzer(name="Reek", runs=re.compile(r"(?<![\w-])reek\b"), configured=configuration((".reek.yml",))),
-    ),
-    texts=_run_texts,
-    hint="consider running rubocop (or standardrb) in CI",
+REEK_FILES = file_reader("Reek", (".reek.yml",))
+REEK = analyzer(
+    name="Reek",
+    languages=RUBY_ONLY,
+    how="reek",
+    analyses=lambda command, _facts: analysed() if program(resolved(command)) == "reek" else None,
+    rules=defined_by(files=("Reek",)),
 )
 
 SORBET_STRICT = re.compile(r"^#\s*typed:\s*(?:strict|strong)\b", re.MULTILINE)
 STEEP_STRICT = re.compile(r"\bD::Ruby\.strict\b")
 
 
-def _strict_type_checking(context: Context) -> str | None:
-    """Sorbet's strict sigils, or Steep's strict diagnostics."""
-    if context.project.exists("Steepfile") and STEEP_STRICT.search(context.project.read_text("Steepfile")):
-        return "D::Ruby.strict in Steepfile"
-    sources = (path for path in context.project.files() if path.endswith(".rb"))
-    strict = next((path for path in sources if SORBET_STRICT.search(context.project.read_head(path, 512))), None)
-    return f"# typed: strict in {strict}" if strict else None
+def _read_sigils(path: str, text: str) -> Iterator[Setting]:
+    """Sorbet's strictness sigil, in the first lines of a Ruby file (`# typed: strict`)."""
+    return matched_settings("Sorbet", path, text[:512], {"strict": (SORBET_STRICT, True)})
 
 
-TYPE_CHECKING = TypeChecking(
-    checkers=(
-        Analyzer(name="Sorbet", runs=re.compile(r"\bsrb\s+tc\b"), configured=configuration(("sorbet/config",))),
-        Analyzer(name="Steep", runs=re.compile(r"\bsteep\s+check\b"), configured=configuration(("Steepfile",))),
-    ),
-    texts=_run_texts,
-    strict=_strict_type_checking,
-    hint="consider running a type checker in CI: srb tc (Sorbet) or steep check (Steep, with RBS signatures)",
-    strict_hint="consider strict checking: # typed: strict files (Sorbet), or D::Ruby.strict in the Steepfile",
+SORBET_SIGILS = SettingsReader(name="Sorbet", files=("*.rb", "*.rbi"), read=_read_sigils)
+SORBET_FILES = file_reader("Sorbet configuration", ("sorbet/config",))
+STEEPFILE = SettingsReader(
+    name="Steep",
+    files=("Steepfile",),
+    read=lambda path, text: matched_settings("Steep", path, text, {"strict": (STEEP_STRICT, True)}),
+)
+
+
+def _type_checks(prefix: tuple[str, ...], tool: str) -> Claim:
+    def checks(command: Command, facts: Facts) -> Run | None:
+        if resolved(command)[: len(prefix)] != prefix:
+            return None
+        strict = facts.where(Setting, tool=tool, key="strict")[:1]
+        return type_checked(strict=bool(strict), read=strict)
+
+    return checks
+
+
+SORBET = type_checker(
+    name="Sorbet",
+    languages=RUBY_ONLY,
+    can={Strictness.CHECKS: "srb tc (Sorbet)", Strictness.STRICT: "# typed: strict files (Sorbet)"},
+    checks=_type_checks(("srb", "tc"), "Sorbet"),
+    configuration=defined_by(files=("Sorbet configuration",)),
+    reads=("Sorbet",),
+)
+STEEP = type_checker(
+    name="Steep",
+    languages=RUBY_ONLY,
+    can={
+        Strictness.CHECKS: "steep check (Steep, with RBS signatures)",
+        Strictness.STRICT: "D::Ruby.strict in the Steepfile",
+    },
+    checks=_type_checks(("steep", "check"), "Steep"),
+    configuration=defined_by(files=("Steep",)),
+    reads=("Steep",),
 )
 
 GEM = re.compile(r"^\s*gem\s+[\"']", re.MULTILINE)
@@ -365,8 +422,6 @@ RUBY = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_method_length_enforced),
-        STATIC_ANALYSIS,
-        TYPE_CHECKING,
         DEPENDENCIES,
         BUNDLE,
         LICENSE,

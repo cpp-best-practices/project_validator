@@ -10,24 +10,31 @@ from pathlib import PurePosixPath
 from project_validator.build_configurations import build_type_kinds
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import configuration, existing_texts, first_existing
+from project_validator.evidence import existing_texts, first_existing
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
+from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
-from project_validator.facts.settings import SettingsReader, file_reader, json_settings, settings, xml_root
+from project_validator.facts.settings import (
+    SettingsReader,
+    file_reader,
+    json_settings,
+    matched_settings,
+    settings,
+    xml_root,
+)
 from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
-    Analyzer,
     BuildOutputs,
     BuildTypes,
     DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     Hardening,
-    StaticAnalysis,
     TestSuite,
     WarningPolicy,
     WarningsAsErrors,
@@ -285,13 +292,38 @@ def _function_body_length(context: Context) -> Result:
     return Result.failed(f"function length is never limited; run SwiftLint or {SUGGESTED_LIZARD} in CI")
 
 
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        Analyzer(name="SwiftLint", runs=re.compile(RUNS_SWIFTLINT), configured=configuration((SWIFTLINT_CONFIG,))),
-    ),
-    texts=_build_texts,
-    hint="consider running swiftlint --strict in CI (or the SwiftLint build tool plugin)",
+SWIFTLINT_FILES = file_reader("SwiftLint", (SWIFTLINT_CONFIG,))
+_SWIFTLINT_PLUGIN = re.compile(r"\bSwiftLint(?:Build)?Plugin\b")
+SWIFTLINT_PLUGIN = SettingsReader(
+    name="SwiftLint plugin",
+    files=(PACKAGE_SWIFT,),
+    read=lambda path, text: matched_settings("SwiftPM", path, text, {"plugin": (_SWIFTLINT_PLUGIN, "SwiftLint")}),
 )
+# The commands that build a Swift package, and so run its build tool plugins.
+_BUILDS = (("swift", "build"), ("swift", "test"), ("xcodebuild",))
+
+
+def _swiftlint(command: Command, facts: Facts) -> Run | None:
+    """`swiftlint` (or `swiftlint lint`), which reports what it finds unless told to fix it, or a build that runs its
+    build tool plugin."""
+    argv = resolved(command)
+    if program(argv) == "swiftlint":
+        fixes = has_option(argv, "--fix", "--autocorrect") or argv[1:2] in (("--fix",), ("autocorrect",))
+        return None if fixes else analysed()
+    builds = any(argv[: len(prefix)] == prefix for prefix in _BUILDS)
+    read = facts.where(Setting, tool="SwiftPM", key="plugin", value="SwiftLint")
+    return analysed(read=read) if builds and read else None
+
+
+SWIFTLINT_TOOL = analyzer(
+    name="SwiftLint",
+    languages=SWIFT_ONLY,
+    how="swiftlint --strict (or the SwiftLint build tool plugin)",
+    analyses=_swiftlint,
+    rules=defined_by(files=("SwiftLint",)),
+    reads=("SwiftLint plugin",),
+)
+SWIFTLINT_ACTION = Action(name="norio-nomura/action-swiftlint", runs=lambda _inputs: (("swiftlint",),))
 
 # osv-scanner reads Package.resolved; Swift has no audit tool of its own.
 DEPENDENCY_AUDIT = DependencyAudit(
@@ -353,7 +385,6 @@ SWIFT = Ecosystem(
         HARDENING,
         DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_function_body_length),
-        STATIC_ANALYSIS,
         DEPENDENCIES,
     ),
 )

@@ -12,7 +12,7 @@ from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, configuration, first_existing
+from project_validator.evidence import ci_and_hook_texts, first_existing
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
@@ -22,13 +22,11 @@ from project_validator.facts.tools import Claim, Definition, Run, defined_by, ei
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
-    Analyzer,
     BuildOutputs,
     DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    StaticAnalysis,
     TestSuite,
     WarningPolicy,
     WarningsAsErrors,
@@ -118,10 +116,6 @@ def _setting(name: str, regex: str) -> Pattern:
 GRADLE_PLUGIN = r"""(?:id\s*\(?\s*|apply\s+plugin:\s*|plugins\.apply\s*\(\s*)["']{}["']"""
 
 
-def _gradle_plugin(plugin_id: str) -> str:
-    return GRADLE_PLUGIN.format(re.escape(plugin_id))
-
-
 SOURCE_SUFFIXES = (".java", ".kt")
 TEST_SOURCES = re.compile(r"(?:^|/)src/test/(?:java|kotlin)/.+\.(?:java|kt)$")
 # JUnit and TestNG annotate tests; Kotest specs extend a spec style.
@@ -184,7 +178,7 @@ _GRADLE_VALUES = frozenset(
 )
 
 
-def _build_steps(command: Command) -> tuple[str, list[str]] | None:
+def build_steps(command: Command) -> tuple[str, list[str]] | None:
     """Whether a command runs Maven or Gradle, and the goals, phases or tasks it runs."""
     argv = resolved(command)
     name = program(argv)
@@ -237,9 +231,9 @@ GRADLE_SETTINGS = SettingsReader(name="Gradle", files=("*.gradle", "*.gradle.kts
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class _Wiring:
-    """How a JVM coverage tool runs: a goal or task that writes its report (`report`), or a Maven plugin (with a goal
-    matching `bound_goal`, when given) or Gradle plugin or linked task that the verification CI runs brings in."""
+class Wiring:
+    """How a JVM tool runs: a goal or task that runs it (`report`), or a Maven plugin (with a goal matching
+    `bound_goal`, when given) or Gradle plugin or linked task that the verification CI runs brings in."""
 
     report: re.Pattern[str]
     maven_plugin: str
@@ -247,7 +241,7 @@ class _Wiring:
     gradle_plugin: str | None = None
 
 
-def _wired(wiring: _Wiring, kind: str, facts: Facts) -> list[Setting]:
+def _wired(wiring: Wiring, kind: str, facts: Facts) -> list[Setting]:
     if kind == "maven":
         plugins = facts.where(Setting, tool="Maven", key=f"plugin.{wiring.maven_plugin}")
         goal = wiring.bound_goal
@@ -261,10 +255,10 @@ def _wired(wiring: _Wiring, kind: str, facts: Facts) -> list[Setting]:
     return [*applied, *linked]
 
 
-def _runs(wiring: _Wiring, command: Command, facts: Facts) -> tuple[Setting, ...] | None:
+def wired_run(wiring: Wiring, command: Command, facts: Facts) -> tuple[Setting, ...] | None:
     """Whether a Maven or Gradle command runs the wiring's goal or task: directly (reading no settings), or through a
     plugin its verification brings in (reading the settings that wire it). None when it does not."""
-    found = _build_steps(command)
+    found = build_steps(command)
     if found is None:
         return None
     kind, steps = found
@@ -275,9 +269,9 @@ def _runs(wiring: _Wiring, command: Command, facts: Facts) -> tuple[Setting, ...
     return None
 
 
-def _jvm_coverage(wiring: _Wiring) -> Claim:
+def _jvm_coverage(wiring: Wiring) -> Claim:
     def measures(command: Command, facts: Facts) -> Run | None:
-        read = _runs(wiring, command, facts)
+        read = wired_run(wiring, command, facts)
         return None if read is None else measured(Granularity.LINE, Granularity.BRANCH, read=read)
 
     return measures
@@ -293,7 +287,7 @@ JACOCO = coverage_tool(
         Granularity.BRANCH: "jacoco:report or jacocoTestReport",
     },
     measures=_jvm_coverage(
-        _Wiring(
+        Wiring(
             report=re.compile(r"(?:org\.jacoco:)?jacoco(?:-maven-plugin)?(?::[^:]+)?:report[\w-]*|jacoco\w*Report"),
             maven_plugin="jacoco-maven-plugin",
             bound_goal=re.compile(r"report[\w-]*"),
@@ -306,7 +300,7 @@ KOVER = coverage_tool(
     languages=JVM_LANGUAGES,
     can={Granularity.LINE: "koverXmlReport", Granularity.BRANCH: "koverXmlReport"},
     measures=_jvm_coverage(
-        _Wiring(
+        Wiring(
             report=re.compile(
                 r"kover\w*Report|(?:org\.jetbrains\.kotlinx:)?kover(?:-maven-plugin)?(?::[^:]+)?:report[\w-]*"
             ),
@@ -319,23 +313,23 @@ KOVER = coverage_tool(
 )
 
 
-def _build_formatter(check: _Wiring, apply: re.Pattern[str]) -> Claim:
+def _build_formatter(check: Wiring, apply: re.Pattern[str]) -> Claim:
     """A formatter a Maven or Gradle build runs: its check goal or task, directly or bound to the verification the
     build runs; or its apply goal or task."""
 
     def formats(command: Command, facts: Facts) -> Run | None:
-        read = _runs(check, command, facts)
+        read = wired_run(check, command, facts)
         if read is not None:
             return formatted(command, facts, checks=True, read=read)
-        found = _build_steps(command)
+        found = build_steps(command)
         applies = found is not None and any(map(apply.fullmatch, found[1]))
         return formatted(command, facts, checks=False) if applies else None
 
     return formats
 
 
-def _plugin_definition(maven_plugin: str, gradle_plugin: str | None = None) -> Definition:
-    """A formatter a build plugin runs is defined where the build declares the plugin."""
+def plugin_definition(maven_plugin: str, gradle_plugin: str | None = None) -> Definition:
+    """A tool a build plugin runs is defined where the build declares the plugin."""
 
     def found(facts: Facts) -> Iterator[str]:
         yield from (setting.path for setting in facts.where(Setting, tool="Maven", key=f"plugin.{maven_plugin}"))
@@ -351,7 +345,7 @@ SPOTLESS = format_tool(
     languages=JVM_LANGUAGES,
     can={Enforcement.CHECK: "mvn spotless:check or gradle spotlessCheck", Enforcement.APPLY: "spotless:apply"},
     formats=_build_formatter(
-        _Wiring(
+        Wiring(
             report=re.compile(
                 r"(?:com\.diffplug\.spotless:)?spotless(?:-maven-plugin)?(?::[^:]+)?:check|spotlessCheck"
             ),
@@ -361,7 +355,7 @@ SPOTLESS = format_tool(
         ),
         apply=re.compile(r"(?:\S+:)?spotless(?:-maven-plugin)?(?::[^:]+)?:apply|spotlessApply"),
     ),
-    style=_plugin_definition("spotless-maven-plugin", "com.diffplug.spotless"),
+    style=plugin_definition("spotless-maven-plugin", "com.diffplug.spotless"),
     reads=("Maven", "Gradle"),
 )
 FMT_MAVEN_PLUGIN = format_tool(
@@ -369,14 +363,14 @@ FMT_MAVEN_PLUGIN = format_tool(
     languages=frozenset({JAVA}),
     can={Enforcement.CHECK: "mvn fmt:check", Enforcement.APPLY: "mvn fmt:format"},
     formats=_build_formatter(
-        _Wiring(
+        Wiring(
             report=re.compile(r"(?:com\.spotify\.fmt:)?fmt(?:-maven-plugin)?(?::[^:]+)?:check"),
             maven_plugin="fmt-maven-plugin",
             bound_goal=re.compile("check"),
         ),
         apply=re.compile(r"(?:com\.spotify\.fmt:)?fmt(?:-maven-plugin)?(?::[^:]+)?:format"),
     ),
-    style=_plugin_definition("fmt-maven-plugin"),
+    style=plugin_definition("fmt-maven-plugin"),
     reads=("Maven",),
 )
 GOOGLE_JAVA_FORMAT = format_tool(
@@ -403,7 +397,7 @@ KTLINT = format_tool(
     formats=either(
         flagged(("ktlint",), applies=("-F", "--format")),
         _build_formatter(
-            _Wiring(
+            Wiring(
                 report=re.compile(r"ktlint(?:-maven-plugin)?(?::[^:]+)?:check|ktlint\w*Check"),
                 maven_plugin="ktlint-maven-plugin",
                 bound_goal=re.compile("check"),
@@ -412,7 +406,7 @@ KTLINT = format_tool(
             apply=re.compile(r"ktlint(?:-maven-plugin)?(?::[^:]+)?:format|ktlint\w*Format"),
         ),
     ),
-    style=_plugin_definition("ktlint-maven-plugin", "org.jlleitschuh.gradle.ktlint"),
+    style=plugin_definition("ktlint-maven-plugin", "org.jlleitschuh.gradle.ktlint"),
     reads=("Maven", "Gradle"),
 )
 
@@ -512,27 +506,6 @@ def _method_length_enforced(context: Context) -> Result:
     )
 
 
-def _checkstyle_config(context: Context) -> str | None:
-    return next(iter(_checkstyle_configs(context)), None)
-
-
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        Analyzer(name="Error Prone", runs=re.compile(r"\berror_?prone\b|\bnet\.ltgt\.errorprone\b", re.IGNORECASE)),
-        Analyzer(name="SpotBugs", runs=re.compile(r"\bspotbugs\b", re.IGNORECASE)),
-        Analyzer(
-            name="PMD",
-            runs=re.compile(
-                rf"<artifactId>maven-pmd-plugin</artifactId>|\bpmd:check\b|\bpmd\s+check\b|{_gradle_plugin('pmd')}"
-            ),
-        ),
-        Analyzer(name="Checkstyle", runs=RUNS_CHECKSTYLE.regex, configured=_checkstyle_config),
-        Analyzer(name="detekt", runs=RUNS_DETEKT.regex, configured=configuration(DETEKT_CONFIG_FILES)),
-    ),
-    texts=_verification_texts,
-    hint="consider Error Prone, SpotBugs, PMD or Checkstyle (detekt for Kotlin), run by mvn verify or gradle check",
-)
-
 MAVEN_DEPENDENCY = re.compile(r"<dependency>")
 GRADLE_DEPENDENCY = re.compile(r"^\s*(?:implementation|api|compileOnly|runtimeOnly|testImplementation)\b", re.MULTILINE)
 GRADLE_LOCKS = ("gradle/verification-metadata.xml", "gradle.lockfile")
@@ -602,7 +575,6 @@ JVM = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_method_length_enforced),
-        STATIC_ANALYSIS,
         DEPENDENCIES,
         CLASS_FILES,
     ),

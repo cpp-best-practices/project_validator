@@ -48,13 +48,22 @@ class Definition:
     default: bool = True
 
 
-def defined_by(*, files: Iterable[str] = (), settings: Iterable[str] = (), default: bool = True) -> Definition:
-    """Defined by the files the settings readers `files` read (a `.clang-format`, whatever it holds), or by the files
-    that hold settings of the tools `settings` (`[tool.ruff]` in `pyproject.toml`)."""
-    readers, tools = frozenset(files), frozenset(settings)
+def defined_by(
+    *,
+    files: Iterable[str] = (),
+    named: Iterable[str] = (),
+    settings: Iterable[str] = (),
+    default: bool = True,
+) -> Definition:
+    """Defined by the files the settings readers `files` read (a `.clang-format`, whatever it holds), by any read file
+    `named` so (`ty.toml`, even empty), or by the files that hold settings of the tools `settings` (`[tool.ruff]` in
+    `pyproject.toml`)."""
+    readers, names, tools = frozenset(files), frozenset(named), frozenset(settings)
 
     def found(facts: Facts) -> Iterator[str]:
-        yield from (fact.path for fact in facts.of(ConfigurationFile) if fact.reader in readers)
+        for fact in facts.of(ConfigurationFile):
+            if fact.reader in readers or PurePosixPath(fact.path).name in names:
+                yield fact.path
         yield from (setting.path for setting in facts.of(Setting) if setting.tool in tools)
 
     return Definition(found=found, default=default)
@@ -64,8 +73,8 @@ def defined_by(*, files: Iterable[str] = (), settings: Iterable[str] = (), defau
 class Tool:
     """A tool: the languages it handles; `can`, each aspect it can provide with each level and how to ask for it;
     `claims`, which reads a command that runs it (None for a command that does not); `reads`, the tools whose
-    settings it reads, whose unreadable settings make its answers unknown; and `definitions`, where the project
-    defines how it provides an aspect."""
+    settings it reads, whose unreadable settings make its answers unknown; `definitions`, where the project
+    defines how it provides an aspect; and `required`, the aspects it is needed for even when others run."""
 
     name: str
     languages: frozenset[str]
@@ -73,6 +82,9 @@ class Tool:
     claims: Claim
     reads: tuple[str, ...] = ()
     definitions: Mapping[str, Definition] = NOTHING  # type: ignore[assignment]
+    # The aspects for which the tool is required alongside the others: it finds what they do not (clang-tidy and
+    # cppcheck).
+    required: frozenset[str] = frozenset()
 
     def defined(self, aspect: str, facts: Facts) -> tuple[str, ...]:
         """The files that define how the tool provides `aspect`."""
@@ -116,6 +128,36 @@ def owner(directory: str, units: Iterable[str]) -> str:
 def within(path: str, directory: str) -> bool:
     """Whether `path` is `directory` or below it (both relative to the project, "." for its root)."""
     return directory == "." or path == directory or PurePosixPath(path).is_relative_to(directory)
+
+
+def handling(aspect: str) -> Callable[[], frozenset[str]]:
+    """The languages the tools now known handle for `aspect` (plugins add tools, so it is asked when needed)."""
+    return lambda: frozenset().union(*(tool.languages for tool in known_tools() if aspect in tool.can))
+
+
+def combined(*tools: Tool) -> Tool:
+    """One tool with every aspect of `tools`, which spell the same program for different practices (RuboCop formats
+    and lints): a command runs it when one of them claims it, providing what each claims."""
+
+    def claims(command: Command, facts: Facts) -> Run | None:
+        runs = [run for tool in tools if (run := tool.claims(command, facts)) is not None]
+        if not runs:
+            return None
+        return Run(
+            provides={aspect: levels for run in runs for aspect, levels in run.provides.items()},
+            read=tuple(dict.fromkeys(path for run in runs for path in run.read)),
+            heuristic=any(run.heuristic for run in runs),
+        )
+
+    return Tool(
+        name=tools[0].name,
+        languages=frozenset().union(*(tool.languages for tool in tools)),
+        can={aspect: levels for tool in tools for aspect, levels in tool.can.items()},
+        claims=claims,
+        reads=tuple(dict.fromkeys(name for tool in tools for name in tool.reads)),
+        definitions={aspect: found for tool in tools for aspect, found in tool.definitions.items()},
+        required=frozenset().union(*(tool.required for tool in tools)),
+    )
 
 
 def known_tools() -> tuple[Tool, ...]:
@@ -172,8 +214,10 @@ __all__ = [
     "Run",
     "Tool",
     "ToolRun",
+    "combined",
     "defined_by",
     "either",
+    "handling",
     "known_tools",
     "owner",
     "provided",

@@ -9,11 +9,10 @@ fail on `git diff --exit-code`, or commit the changes back. Formatters are ordin
 
 import enum
 from collections.abc import Iterable, Mapping
-from pathlib import PurePosixPath
 
-from project_validator.evidence import PRE_COMMIT_CONFIGURATION
 from project_validator.facts import ActionStep, Command, Facts, Setting, resolved
 from project_validator.facts.arguments import has_option, program
+from project_validator.facts.expansion import from_hook
 from project_validator.facts.tools import Claim, Definition, Run, Tool, provided
 
 FORMAT = "format"
@@ -79,11 +78,6 @@ def changes_enforced(command: Command, facts: Facts) -> bool | None:
     return any(kept) if kept else None
 
 
-def from_hook(command: Command) -> bool:
-    """Whether `command` runs as a pre-commit hook, which fails when it changes a file."""
-    return any(PurePosixPath(origin.path).name in PRE_COMMIT_CONFIGURATION for origin in (*command.via, command.origin))
-
-
 def formatted(
     command: Command,
     facts: Facts,
@@ -134,4 +128,4 @@ def flagged(
     return claims
 
 
-__all__ = ["FORMAT", "Enforcement", "changes_enforced", "flagged", "format_tool", "formatted", "from_hook"]
+__all__ = ["FORMAT", "Enforcement", "changes_enforced", "flagged", "format_tool", "formatted"]

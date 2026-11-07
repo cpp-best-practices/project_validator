@@ -1,24 +1,15 @@
 """Dynamically typed code is statically type checked, so type errors are found before the code runs."""
 
-from project_validator.core import Context, Result
-from project_validator.ecosystems import practice
-from project_validator.rules import TypeChecking
-from project_validator.text import joined
+from project_validator.facts.analysis import TYPE_CHECK
+from project_validator.facts.tools import handling
+from project_validator.judging import answered_check
+from project_validator.policy.analysis import judge_type_checking
+from project_validator.questions.analysis import type_checking as type_checking_answers
 
-
-@practice(
+type_checking = answered_check(
     name="type-checking",
     description="CI runs a static type checker on dynamically typed code (e.g. mypy, pyright), ideally strictly",
-    rule=TypeChecking,
+    languages=handling(TYPE_CHECK),
+    answers=type_checking_answers,
+    judge=lambda answer, allow_unknown: judge_type_checking(answer, allow_unknown=allow_unknown),
 )
-def type_checking(rule: TypeChecking, context: Context) -> Result:
-    texts = rule.texts(context)
-    running = [checker for checker in rule.checkers if checker.runs_in(texts)]
-    if not running:
-        if configured := [checker.not_running(context) for checker in rule.checkers if checker.configured(context)]:
-            return Result.warned("; ".join(configured), rule.hint)
-        return Result.failed("no type checker runs", rule.hint)
-    ran = f"{joined([checker.named(context) for checker in running])} {'runs' if len(running) == 1 else 'run'}"
-    if strict := rule.strict(context):
-        return Result.passed(f"{ran}; strict mode bonus: {strict}")
-    return Result.passed(ran, rule.strict_hint)

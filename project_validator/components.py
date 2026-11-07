@@ -56,7 +56,13 @@ def isolated_plugins() -> Iterator[None]:
 def known[T](kind: type[T]) -> tuple[T, ...]:
     """Every component of type `kind` a built-in module or a plugin module defines."""
     modules = (*_built_in_modules(), *_plugins.values())
-    found = (value for module in modules for value in vars(module).values())
+    # A module may define a family of components as a tuple (one analyzer per NuGet package).
+    found = (
+        item
+        for module in modules
+        for value in vars(module).values()
+        for item in (value if isinstance(value, tuple) else (value,))
+    )
     # A component imported by several modules is found once; components need not be hashable.
     return tuple({id(value): value for value in found if isinstance(value, kind)}.values())
 

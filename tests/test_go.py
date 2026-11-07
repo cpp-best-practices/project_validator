@@ -9,6 +9,7 @@ from project_validator.checks.coverage import coverage
 from project_validator.checks.function_limits import function_limits
 from project_validator.checks.hardening import hardening
 from project_validator.checks.platform_matrix import platform_matrix
+from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Check, Result, Status
@@ -33,6 +34,15 @@ class GoTests(unittest.TestCase):
                 self.assertEqual(self._run(code_formatting, _ci(command)).status, Status.PASS)
         self.assertEqual(self._run(code_formatting, _ci("golangci-lint run")).status, Status.FAIL)
         self.assertEqual(self._run(code_formatting, _ci("gofmt -w . && go fmt ./...")).status, Status.FAIL)
+
+    def test_go_run_launches_the_program_its_package_names(self) -> None:
+        pinned = _ci("go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run ./...")
+        config = {".golangci.yml": "linters:\n  enable: [revive]\n"}
+        self.assertEqual(
+            self._run(static_analysis, {**config, **pinned}), Result.passed("golangci-lint (.golangci.yml) runs")
+        )
+        # The project's own code (`go run .`) is no tool.
+        self.assertEqual(self._run(static_analysis, {**config, **_ci("go run . lint", "go run")}).status, Status.WARN)
 
     def test_golangci_lint_runs_the_formatters_its_configuration_enables(self) -> None:
         action = {

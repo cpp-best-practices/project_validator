@@ -50,28 +50,150 @@
         "language": "Ruby",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "RuboCop",
-              "Standard",
-              "syntax_tree"
-            ],
+            "answer": "yes",
             "defined": {
               "RuboCop": [
                 ".rubocop.yml"
               ]
             },
-            "enforced": "yes",
             "known": {
-              "RuboCop": "rubocop",
-              "Standard": "standardrb",
-              "syntax_tree": "stree check"
+              "RuboCop": {
+                "can": {
+                  "apply": "rubocop -a",
+                  "check": "rubocop"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Standard": {
+                "can": {
+                  "apply": "standardrb --fix",
+                  "check": "standardrb"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "syntax_tree": {
+                "can": {
+                  "apply": "stree write",
+                  "check": "stree check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "Ruby",
-            "tools": [
-              "RuboCop"
-            ],
-            "undefined": [],
+            "level": "check",
+            "runs": {
+              "RuboCop": {
+                "levels": [
+                  "check"
+                ],
+                "read": [
+                  "Rakefile"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "RuboCop": [
+                ".rubocop.yml"
+              ]
+            },
+            "known": {
+              "Reek": {
+                "can": {
+                  "checks": "reek"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "RuboCop": {
+                "can": {
+                  "checks": "rubocop"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Standard": {
+                "can": {
+                  "checks": "standardrb"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "checks",
+            "runs": {
+              "RuboCop": {
+                "levels": [
+                  "checks"
+                ],
+                "read": [
+                  "Rakefile"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "Steep": [
+                "Steepfile"
+              ]
+            },
+            "known": {
+              "Sorbet": {
+                "can": {
+                  "checks": "srb tc (Sorbet)",
+                  "strict": "# typed: strict files (Sorbet)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Steep": {
+                "can": {
+                  "checks": "steep check (Steep, with RBS signatures)",
+                  "strict": "D::Ruby.strict in the Steepfile"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "checks",
+            "runs": {
+              "Steep": {
+                "levels": [
+                  "checks",
+                  "strict"
+                ],
+                "read": [
+                  "Steepfile"
+                ]
+              }
+            },
             "unit": ".",
             "unknowns": []
           }
@@ -135,6 +257,7 @@
       "role": "product"
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -211,6 +334,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[0]",
@@ -341,6 +465,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[1]",
@@ -471,6 +596,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[2]",
@@ -601,6 +727,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[3]",
@@ -731,6 +858,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[4]",
@@ -861,6 +989,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[5]",
@@ -991,6 +1120,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1047,6 +1177,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/function-limits.yml:function-limits",
@@ -1149,6 +1280,29 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "Steepfile",
+      "reader": "Steep"
+    },
+    {
+      "heuristic": true,
+      "key": "strict",
+      "kind": "Setting",
+      "origin": "Steepfile:strict",
+      "tool": "Steep",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/app.rb",
+      "reader": "Sorbet"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "spec/app_spec.rb",
+      "reader": "Sorbet"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "spec/spec_helper.rb",
       "reader": "SimpleCov"
     },
@@ -1169,6 +1323,11 @@
       "value": "branch"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "spec/spec_helper.rb",
+      "reader": "Sorbet"
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1177,6 +1336,9 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "analysis": [
+          "checks"
+        ],
         "format": [
           "check"
         ]
@@ -1195,6 +1357,83 @@
     {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [
+        "spec/spec_helper.rb"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "SimpleCov",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "Steepfile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Steep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
         "Ruby"
@@ -1224,46 +1463,22 @@
       "languages": [
         "Ruby"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
-        "format": [
-          "check"
+        "type-check": [
+          "checks",
+          "strict"
         ]
       },
       "read": [
-        "Rakefile"
+        "Steepfile"
       ],
       "scope": [
         "."
       ],
-      "tool": "RuboCop",
+      "tool": "Steep",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[2].run"
-      ]
-    },
-    {
-      "heuristic": true,
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "ToolRun",
-      "languages": [
-        "Ruby"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
-      "provides": {
-        "coverage": [
-          "branch",
-          "line"
-        ]
-      },
-      "read": [
-        "spec/spec_helper.rb"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "SimpleCov",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
       ]
     },
     {
@@ -1275,6 +1490,9 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "analysis": [
+          "checks"
+        ],
         "format": [
           "check"
         ]
@@ -1317,6 +1535,31 @@
     },
     {
       "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "Steepfile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Steep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
@@ -1324,6 +1567,9 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "analysis": [
+          "checks"
+        ],
         "format": [
           "check"
         ]
@@ -1342,6 +1588,83 @@
     {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [
+        "spec/spec_helper.rb"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "SimpleCov",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "Steepfile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Steep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
         "Ruby"
@@ -1371,46 +1694,22 @@
       "languages": [
         "Ruby"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
-        "format": [
-          "check"
+        "type-check": [
+          "checks",
+          "strict"
         ]
       },
       "read": [
-        "Rakefile"
+        "Steepfile"
       ],
       "scope": [
         "."
       ],
-      "tool": "RuboCop",
+      "tool": "Steep",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[2].run"
-      ]
-    },
-    {
-      "heuristic": true,
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "ToolRun",
-      "languages": [
-        "Ruby"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
-      "provides": {
-        "coverage": [
-          "branch",
-          "line"
-        ]
-      },
-      "read": [
-        "spec/spec_helper.rb"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "SimpleCov",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
       ]
     },
     {
@@ -1422,6 +1721,9 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "analysis": [
+          "checks"
+        ],
         "format": [
           "check"
         ]
@@ -1460,6 +1762,31 @@
       "tool": "SimpleCov",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "Steepfile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Steep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
       ]
     }
   ],
@@ -1774,7 +2101,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "Steep (Steepfile) runs; strict mode bonus: D::Ruby.strict in Steepfile",
+      "message": "Steep (Steepfile) runs; strict mode bonus: Steep (Steepfile)",
       "status": "PASS"
     },
     "vcs-ignore": {

@@ -115,16 +115,21 @@
         "language": "C",
         "units": [
           {
-            "applied": [],
-            "default_style": [],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "clang-format": "clang-format --dry-run -Werror"
+              "clang-format": {
+                "can": {
+                  "apply": "clang-format -i",
+                  "check": "clang-format --dry-run -Werror"
+                },
+                "needs_definition": true,
+                "required": false
+              }
             },
             "language": "C",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -134,16 +139,115 @@
         "language": "C++",
         "units": [
           {
-            "applied": [],
-            "default_style": [],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "clang-format": "clang-format --dry-run -Werror"
+              "clang-format": {
+                "can": {
+                  "apply": "clang-format -i",
+                  "check": "clang-format --dry-run -Werror"
+                },
+                "needs_definition": true,
+                "required": false
+              }
             },
             "language": "C++",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "clang-tidy": {
+                "can": {
+                  "checks": "clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy)"
+                },
+                "needs_definition": true,
+                "required": true
+              },
+              "cppcheck": {
+                "can": {
+                  "checks": "cppcheck (CMAKE_CXX_CPPCHECK)"
+                },
+                "needs_definition": false,
+                "required": true
+              }
+            },
+            "language": "C",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "clang-tidy": {
+                "can": {
+                  "checks": "clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy)"
+                },
+                "needs_definition": true,
+                "required": true
+              },
+              "cppcheck": {
+                "can": {
+                  "checks": "cppcheck (CMAKE_CXX_CPPCHECK)"
+                },
+                "needs_definition": false,
+                "required": true
+              }
+            },
+            "language": "C++",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C++",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -179,6 +283,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CMake analyzers"
     },
     {
       "kind": "ConfigurationFile",
@@ -240,7 +349,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
       "status": "FAIL"
     },
     "code-formatting": {

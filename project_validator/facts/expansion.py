@@ -10,8 +10,10 @@ import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
+from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
+from project_validator.evidence import PRE_COMMIT_CONFIGURATION
 from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, Unknown, resolved
 from project_validator.facts.arguments import program
 from project_validator.facts.shell import ShellCommand, split_script
@@ -218,6 +220,11 @@ def expanded(
                 yield from expand_command(command, context, expanders)
 
 
+def from_hook(command: Command) -> bool:
+    """Whether `command` runs as a pre-commit hook, which fails when it changes a file."""
+    return any(PurePosixPath(origin.path).name in PRE_COMMIT_CONFIGURATION for origin in (*command.via, command.origin))
+
+
 def known_expanders() -> tuple[CommandExpander, ...]:
     """Every command expander defined by a module of the shared build systems, the shared tools or a profile."""
     from project_validator.components import known
@@ -292,6 +299,7 @@ __all__ = [
     "expand_command",
     "expanded",
     "found_at",
+    "from_hook",
     "joined",
     "known_actions",
     "known_expanders",

@@ -7,7 +7,7 @@ CMake project.
 import re
 from typing import TYPE_CHECKING
 
-from project_validator.ecosystems.c_cpp.clang_tidy import FUNCTION_LIMITS, STATIC_ANALYSIS
+from project_validator.ecosystems.c_cpp.clang_tidy import FUNCTION_LIMITS
 from project_validator.ecosystems.c_cpp.cmake import CMAKE
 from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, WARNINGS, WARNINGS_AS_ERRORS
 from project_validator.ecosystems.c_cpp.dependencies import DEPENDENCIES
@@ -96,7 +96,6 @@ C_AND_CXX = Ecosystem(
         WARNINGS_AS_ERRORS,
         HARDENING,
         FUNCTION_LIMITS,
-        STATIC_ANALYSIS,
         DEPENDENCIES,
         BUILD_DIRECTORY,
     ),

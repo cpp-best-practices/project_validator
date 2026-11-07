@@ -40,7 +40,10 @@ default).
 
 ## `static-analysis`
 
-Error Prone, SpotBugs, PMD, Checkstyle or detekt.
+SpotBugs (Java and Kotlin); PMD, Checkstyle and Error Prone (Java); detekt (Kotlin). Each runs by its goal or
+task (`spotbugs:check`, `pmd:check`, `checkstyleMain`, `detekt`), or by the plugin a build's verification brings in
+(bound to `check` in pom.xml, or applied in a Gradle script or convention plugin, run by `mvn verify` or `gradle
+check`). Error Prone, a compiler plugin, runs on every build that compiles.
 
 ## `security-scanning`
 

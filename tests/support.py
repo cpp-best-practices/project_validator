@@ -91,10 +91,11 @@ def _first_config_file(files: tuple[str, ...], directories: tuple[str, ...]) -> 
 
 
 # CI provider name -> a path its configuration is found at.
+# Providers recognised by their configuration's content too (pre-commit.ci's `ci:` section) are tested on their own.
 CI_FILES = {
     provider.name: _first_config_file(provider.files, provider.directories)
     for provider in discover().providers
-    if provider.files or provider.directories
+    if (provider.files or provider.directories) and provider.recognises is None
 }
 
 

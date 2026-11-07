@@ -29,8 +29,9 @@ A lint warning fails CI: `eslint --max-warnings 0`, `biome ci` or `--error-on-wa
 
 ## `type-checking`
 
-`tsc` (JavaScript with `checkJs`), or `deno check` / `deno test`, also through the package scripts CI runs. Strict
-mode is a bonus: `"strict": true` or `@tsconfig/strictest` in `tsconfig.json`, or Deno, strict by default.
+`tsc` or `vue-tsc` (JavaScript with `checkJs`), or `deno check` / `deno test`, also through the package scripts
+CI runs. Strict mode is a bonus: `"strict": true` or `@tsconfig/strictest` in a `tsconfig.json`, or Deno, strict by
+default.
 
 ## `code-formatting`
 
@@ -45,7 +46,8 @@ lizard runs with a length limit, or eslint runs with `max-lines-per-function` en
 
 ## `static-analysis`
 
-eslint, `biome lint` or `deno lint`, in CI, a pre-commit hook or the package scripts CI runs.
+eslint (or `next lint`), oxlint, `biome lint` / `check` / `ci` or `deno lint`, in CI, a pre-commit hook CI runs,
+or the package scripts CI runs.
 
 ## `security-scanning`
 

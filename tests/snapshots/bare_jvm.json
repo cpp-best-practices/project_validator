@@ -48,22 +48,100 @@
         "language": "Java",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "Spotless",
-              "fmt-maven-plugin",
-              "google-java-format"
-            ],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "Spotless": "mvn spotless:check or gradle spotlessCheck",
-              "fmt-maven-plugin": "mvn fmt:check",
-              "google-java-format": "google-java-format --set-exit-if-changed"
+              "Spotless": {
+                "can": {
+                  "apply": "spotless:apply",
+                  "check": "mvn spotless:check or gradle spotlessCheck"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "fmt-maven-plugin": {
+                "can": {
+                  "apply": "mvn fmt:format",
+                  "check": "mvn fmt:check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "google-java-format": {
+                "can": {
+                  "apply": "google-java-format --replace",
+                  "check": "google-java-format --set-exit-if-changed"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "Java",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "Checkstyle": {
+                "can": {
+                  "checks": "Checkstyle (maven-checkstyle-plugin bound to check, or Gradle's checkstyle plugin)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Error Prone": {
+                "can": {
+                  "checks": "Error Prone (a compiler plugin, run by every build)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "PMD": {
+                "can": {
+                  "checks": "PMD (maven-pmd-plugin bound to check, or Gradle's pmd plugin)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "SpotBugs": {
+                "can": {
+                  "checks": "SpotBugs (spotbugs-maven-plugin bound to check, or the com.github.spotbugs Gradle plugin)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Java",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Java",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -100,6 +178,11 @@
       "kind": "ConfigurationFile",
       "origin": "pom.xml",
       "reader": "Maven"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Error Prone"
     }
   ],
   "map": {
@@ -151,7 +234,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
       "status": "FAIL"
     },
     "code-formatting": {
@@ -270,7 +353,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider Error Prone, SpotBugs, PMD or Checkstyle (detekt for Kotlin), run by mvn verify or gradle check"
+        "consider running SpotBugs (spotbugs-maven-plugin bound to check, or the com.github.spotbugs Gradle plugin), PMD (maven-pmd-plugin bound to check, or Gradle's pmd plugin), Checkstyle (maven-checkstyle-plugin bound to check, or Gradle's checkstyle plugin) or Error Prone (a compiler plugin, run by every build) in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"

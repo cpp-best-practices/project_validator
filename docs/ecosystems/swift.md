@@ -45,7 +45,7 @@ lizard runs with a length limit, or SwiftLint runs with `function_body_length` n
 
 ## `static-analysis`
 
-SwiftLint.
+SwiftLint (`swiftlint`, not fixing), or its build tool plugin when CI builds the package.
 
 ## `dependency-management`
 

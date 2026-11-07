@@ -28,8 +28,8 @@ type Read = Callable[[str, str], Iterable[Fact]]
 @dataclass(frozen=True, slots=True, kw_only=True)
 class SettingsReader:
     """`read(path, text)` records the settings of the file `path`. `files` are the names (or globs of names) of the
-    files the tool reads in any directory; `named_by` the configuration files a command names, relative to the
-    project."""
+    files the tool reads in any directory, or the ends of their paths (`sorbet/config`); `named_by` the configuration
+    files a command names, relative to the project."""
 
     name: str
     files: tuple[str, ...]
@@ -54,6 +54,14 @@ def known_settings_readers() -> tuple[SettingsReader, ...]:
     return known(SettingsReader)
 
 
+def _matches(path: str, pattern: str) -> bool:
+    """Whether `path` is a file `pattern` names: by its name (`ruff.toml`, `*.cmake`), or, for a pattern with a
+    directory (`sorbet/config`), by the end of its path."""
+    if "/" in pattern:
+        return fnmatchcase(path, pattern) or fnmatchcase(path, f"*/{pattern}")
+    return fnmatchcase(PurePosixPath(path).name, pattern)
+
+
 def settings_facts(project: Project, readers: Iterable[SettingsReader], commands: Facts) -> Iterator[Fact]:
     """The settings in the files each reader reads by default (outside vendored code), then in the files the commands
     of `commands` name."""
@@ -61,10 +69,7 @@ def settings_facts(project: Project, readers: Iterable[SettingsReader], commands
     # A vendored project's configuration is its own, not this project's.
     own = [path for path in project.files() if role(path) != "vendored"]
     wanted = [
-        (reader, path)
-        for path in own
-        for reader in readers
-        if any(fnmatchcase(PurePosixPath(path).name, pattern) for pattern in reader.files)
+        (reader, path) for path in own for reader in readers if any(_matches(path, pattern) for pattern in reader.files)
     ]
     wanted += [
         (reader, path)

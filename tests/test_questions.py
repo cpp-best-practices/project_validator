@@ -9,7 +9,7 @@ from project_validator.facts import Command, Facts, Origin, Unknown
 from project_validator.facts.coverage import COVERAGE, Granularity, coverage_tool, measured
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import Run, Tool, ToolRun
-from project_validator.policy import judge_coverage, required_coverage
+from project_validator.policy.coverage import judge_coverage, required_coverage
 from project_validator.questions import Answer
 from project_validator.questions.coverage import coverage_answer
 from tests.support import github_job, make_context, temp_project
@@ -103,16 +103,27 @@ class LanguagesOfOneEcosystemTests(unittest.TestCase):
         c_only = coverage_tool(
             name="ccov", languages=frozenset({"C"}), can={BRANCH: "ccov"}, measures=lambda *_: measured(BRANCH)
         )
+        cxx_lines = coverage_tool(
+            name="xxcov", languages=frozenset({"C++"}), can={LINE: "xxcov"}, measures=lambda *_: measured(LINE)
+        )
         files = {"main.c": "", "app.cpp": "", **github_job("ubuntu-latest", "ccov")}
+        with (
+            mock.patch("project_validator.questions.coverage.known_tools", return_value=(c_only, cxx_lines)),
+            mock.patch("project_validator.facts.tools.known_tools", return_value=(c_only, cxx_lines)),
+            temp_project(files) as root,
+        ):
+            result = coverage.run(make_context(root))
+        self.assertEqual(
+            result.message,
+            "C: branch coverage is reported with ccov; C++: line coverage is reported with xxcov",
+        )
+        # A language no known tool handles is not judged by the check at all.
         with (
             mock.patch("project_validator.questions.coverage.known_tools", return_value=(c_only,)),
             mock.patch("project_validator.facts.tools.known_tools", return_value=(c_only,)),
             temp_project(files) as root,
         ):
-            result = coverage.run(make_context(root))
-        self.assertEqual(
-            result.message, "C: branch coverage is reported with ccov; C++: no known tool measures the coverage of C++"
-        )
+            self.assertEqual(coverage.run(make_context(root)).message, "branch coverage is reported with ccov")
 
 
 class UnitTests(unittest.TestCase):

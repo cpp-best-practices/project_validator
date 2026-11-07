@@ -76,8 +76,8 @@ What each check accepts for a language is on that ecosystem's page in [docs/ecos
 | `hardening` | binary hardening is enabled: exploit mitigations that the build inserts into the binary (static analysis and dependency audits are judged by `security-scanning` and `dependency-audit`). Ecosystems that build no native binary are not judged. Warns listing what is missing |
 | `code-formatting` | CI enforces each language's formatting in each unit: a formatter run that fails on unformatted code, or one that rewrites it where the job fails on the change or commits it (a pre-commit hook, `git diff --exit-code`). Its style is defined (e.g. `.clang-format`) or the tool's own. Warns when the style is defined but CI does not enforce it |
 | `function-limits` | function length is limited: lizard runs with a length limit (`lizard --length 30`), or one of the ecosystem's own tools limits it |
-| `static-analysis` | static analyzers run. Warns when an analyzer is configured but does not run, or runs short of what the ecosystem needs; fails when none runs |
-| `type-checking` | CI (or a pre-commit hook) runs a static type checker. Strict mode is a bonus; without it the result suggests it. Warns when a type checker is configured but does not run; fails when none runs. Compiled languages, whose compilers check types, are not judged |
+| `static-analysis` | CI runs a static analyzer on each language in each unit (and every analyzer a language requires: clang-tidy and cppcheck for C/C++), with its checks defined where it has no defaults worth running. Warns when an analyzer is configured but does not run, or runs short; fails when none runs |
+| `type-checking` | CI (or a pre-commit hook CI runs) runs a static type checker on each dynamically typed language in each unit. Strict mode is a bonus; without it the result suggests it. Warns when a type checker is configured but does not run; fails when none runs. Compiled languages, whose compilers check types, are not judged |
 | `action-pinning` | every action and reusable workflow CI uses from another repository is pinned to a full commit SHA (`actions/checkout@<SHA> # v4.2.2`), and every `docker://` image to a digest. Fails when one is pinned to a branch or not at all; warns when one is pinned to a tag or an abbreviated commit (`--allow-official-tags` accepts tags for `actions/` and `github/`). Skipped without GitHub Actions |
 | `ci-lint` | CI (or a pre-commit hook) lints the configuration of each CI provider it uses: GitHub Actions with actionlint or zizmor, GitLab CI with `glab ci lint` or `gitlab-ci-local --preview`, CircleCI with `circleci config validate`. Warns otherwise; skipped without CI, or when no linter is known for the providers used |
 | `copy-paste-detection` | CI runs a duplicate code detector (PMD CPD, jscpd, Duplo, Simian, CCFinderX or SonarQube); warns otherwise |
@@ -103,7 +103,9 @@ are kept), and expressions whose values are known are evaluated the way GitHub e
 Each build system reads the build types from its own commands (`-DCMAKE_BUILD_TYPE`, `--config`, `ctest -C`,
 `meson setup --buildtype`, `cargo --release`, `swift build -c`, `xcodebuild -configuration`). Azure Pipelines,
 AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected
-and scanned heuristically. A job that names no compiler is counted with its runner's default compiler (gcc on Linux,
+and scanned heuristically. pre-commit.ci is the CI of a `.pre-commit-config.yaml` with a `ci:` section: it runs the
+hooks (but `ci.skip`), and builds nothing, so it is no platform or build configuration. A pre-commit hook counts only
+where CI runs it (pre-commit.ci, `pre-commit run` or `pre-commit/action`). A job that names no compiler is counted with its runner's default compiler (gcc on Linux,
 AppleClang on macOS, MSVC on Windows).
 
 Known limitations:

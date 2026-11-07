@@ -1,12 +1,14 @@
 """Rust: built with Cargo, judged by the Rust toolchains CI runs."""
 
 import re
+from collections.abc import Iterator
 from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
-from project_validator.evidence import configuration, existing_texts, toml_value
-from project_validator.facts import Command, Facts, resolved
+from project_validator.evidence import existing_texts, toml_value
+from project_validator.facts import Command, Fact, Facts, resolved
+from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import Action
@@ -15,7 +17,6 @@ from project_validator.facts.settings import SettingsReader, toml_settings
 from project_validator.facts.tools import Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
-    Analyzer,
     BuildOutputs,
     BuildTypes,
     DependencyAudit,
@@ -23,10 +24,8 @@ from project_validator.rules import (
     FunctionLimits,
     Hardening,
     SecurityLints,
-    StaticAnalysis,
     TestSuite,
     WarningPolicy,
-    ci_configuration,
     directories,
     ignored_at_top_level,
     toml_license,
@@ -283,19 +282,38 @@ DEPENDENCIES = DependencyManagement(
     lock_hint="commit Cargo.lock, so the binary is always built with the dependencies it was tested with",
 )
 
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        Analyzer(
-            name="clippy",
-            runs=re.compile(r"\bcargo\s+(?:\+\S+\s+)?clippy\b|\bclippy-check\b"),
-            configured=configuration(
-                ("clippy.toml", ".clippy.toml"),
-                {"Cargo.toml": re.compile(r"^\s*\[(?:workspace\.)?lints\.clippy\]", re.MULTILINE)},
-            ),
-        ),
-    ),
-    texts=ci_configuration,
-    hint="consider running cargo clippy in CI",
+
+def _read_lints(path: str, text: str) -> Iterator[Fact]:
+    """clippy's settings: clippy.toml, or the `[lints.clippy]` (or `[workspace.lints.clippy]`) table of Cargo.toml."""
+    if PurePosixPath(path).name != "Cargo.toml":
+        return toml_settings("clippy", path, text)
+    return (
+        fact
+        for table in (("lints", "clippy"), ("workspace", "lints", "clippy"))
+        for fact in toml_settings("clippy", path, text, *table)
+    )
+
+
+CLIPPY_SETTINGS = SettingsReader(name="clippy", files=("clippy.toml", ".clippy.toml", "Cargo.toml"), read=_read_lints)
+
+
+def _clippy(command: Command, _facts: Facts) -> Run | None:
+    """`cargo clippy`, with any toolchain (`cargo +nightly clippy`)."""
+    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    return analysed() if program(argv) in ("cargo", "cargo-clippy") and "clippy" in argv[:2] else None
+
+
+CLIPPY = analyzer(
+    name="clippy",
+    languages=RUST_LANGUAGE,
+    how="cargo clippy",
+    analyses=_clippy,
+    rules=defined_by(settings=("clippy",)),
+    reads=("clippy",),
+)
+CLIPPY_ACTIONS = tuple(
+    Action(name=name, runs=lambda _inputs: (("cargo", "clippy"),))
+    for name in ("actions-rs/clippy-check", "giraffate/clippy-action", "clechasseur/rs-clippy-check")
 )
 
 RUST = Ecosystem(
@@ -323,7 +341,6 @@ RUST = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(),
-        STATIC_ANALYSIS,
         DEPENDENCIES,
         TARGET_DIRECTORY,
         LICENSE,

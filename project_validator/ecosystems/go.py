@@ -7,25 +7,24 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
+from project_validator.evidence import existing_texts, first_existing
 from project_validator.facts import Command, Fact, Facts, resolved
-from project_validator.facts.arguments import has_option, program
+from project_validator.facts.analysis import analysed, analyzer
+from project_validator.facts.arguments import has_option, positional, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
-from project_validator.facts.expansion import Action
+from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
-from project_validator.facts.tools import Run, defined_by, either
+from project_validator.facts.tools import Definition, Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
-    Analyzer,
     BuildOutputs,
     DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     Hardening,
     SecurityLints,
-    StaticAnalysis,
     TestSuite,
     WarningPolicy,
     ci_configuration,
@@ -59,6 +58,25 @@ RUNS_GOLANGCI_LINT = r"\bgolangci-lint\b(?!\s+fmt)|\bgolangci/golangci-lint-acti
 # gofmt and the tools in its style list the files they would change (`-l`, `-d`), which CI fails on
 # (`test -z "$(gofmt -l .)"`), or rewrite them (`-w`; `go fmt` runs `gofmt -l -w`).
 _GOFMT_STYLE = (("gofmt",), ("gofumpt",), ("goimports",))
+
+_GO_RUN_VALUES = frozenset({"-C", "-exec", "-tags", "-ldflags", "-gcflags", "-mod", "-modfile", "-o", "-p"})
+
+
+def _go_run(command: Command, _context: Context) -> list[Expansion] | None:
+    """`go run <package>[@version] args` and `go tool <name> args` run the program the package's last element names
+    (`go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run`); a local package (`.`) is the
+    project's own code."""
+    argv = resolved(command)
+    if program(argv) != "go" or argv[1:2] not in (("run",), ("tool",)):
+        return None
+    words, _ = positional(argv[1:], _GO_RUN_VALUES)
+    if not words or words[0].startswith((".", "/")) or words[0].endswith(".go"):
+        return []
+    name = words[0].partition("@")[0].rstrip("/").rsplit("/", 1)[-1]
+    return [Launched(argv=(name, *argv[argv.index(words[0]) + 1 :]))]
+
+
+GO_RUN = CommandExpander(name="go run and go tool", expand=_go_run)
 
 # golangci-lint runs the formatters its configuration enables (`formatters.enable` since v2, `linters.enable` before).
 _GOFMT_FORMATTERS = frozenset({"gofmt", "gofumpt", "goimports", "gci", "golines", "swaggo"})
@@ -212,33 +230,29 @@ def _funlen_enforced(context: Context) -> Result:
 
 
 # golangci-lint enables a few linters by default; a configuration that enables more asks for more.
-ENABLES_MORE_LINTERS = re.compile(
-    r"""(?:^|[{,])\s*["']?enable(?:-all)?["']?\s*[:=](?!\s*(?:false\b|\[\s*\]))|\bdefault["']?\s*[:=]\s*["']?all\b""",
-    re.MULTILINE,
-)
+def _more_linters(facts: Facts) -> Iterator[str]:
+    """The golangci-lint configurations that enable linters beyond its defaults (`linters.enable`, `enable-all`, or
+    `linters.default: all`)."""
+    enabling = {"linters.enable", "linters.enable-all"}
+    for setting in facts.settings("golangci-lint"):
+        more = setting.value not in ((), False, None) if setting.key in enabling else setting.value == "all"
+        if setting.key in (*enabling, "linters.default") and more:
+            yield setting.path
 
 
-def _default_linters_only(context: Context) -> str | None:
-    config = first_existing(context, GOLANGCI_CONFIG_FILES)
-    if config is None:
-        return "golangci-lint has no configuration, so it runs only its default linters"
-    if ENABLES_MORE_LINTERS.search(context.project.read_text(config)):
-        return None
-    return f"{config} enables no linters beyond golangci-lint's defaults"
+def _golangci_lint(command: Command, _facts: Facts) -> Run | None:
+    argv = resolved(command)
+    return analysed() if program(argv) == "golangci-lint" and argv[1:2] == ("run",) else None
 
 
 # go vet and staticcheck are required as warnings (see WARNINGS); static analysis asks for golangci-lint's others.
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        Analyzer(
-            name="golangci-lint",
-            runs=re.compile(RUNS_GOLANGCI_LINT),
-            configured=configuration(GOLANGCI_CONFIG_FILES),
-            shortfall=_default_linters_only,
-        ),
-    ),
-    texts=ci_and_hook_texts,
-    hint="consider running golangci-lint in CI, with linters enabled beyond its defaults in a .golangci.yml",
+GOLANGCI_LINT = analyzer(
+    name="golangci-lint",
+    languages=GO_LANGUAGE,
+    how="golangci-lint (with linters enabled beyond its defaults in a .golangci.yml)",
+    analyses=_golangci_lint,
+    rules=Definition(found=_more_linters, default=False),
+    reads=("golangci-lint",),
 )
 
 
@@ -291,7 +305,6 @@ GO = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_funlen_enforced),
-        STATIC_ANALYSIS,
         DEPENDENCIES,
         BUILD_OUTPUTS,
     ),

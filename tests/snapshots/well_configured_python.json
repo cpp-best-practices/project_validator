@@ -52,22 +52,144 @@
         "language": "Python",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "ruff format",
-              "black"
-            ],
+            "answer": "yes",
             "defined": {},
-            "enforced": "yes",
             "known": {
-              "black": "black --check",
-              "ruff format": "ruff format --check"
+              "black": {
+                "can": {
+                  "apply": "black",
+                  "check": "black --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ruff format": {
+                "can": {
+                  "apply": "ruff format",
+                  "check": "ruff format --check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "Python",
-            "tools": [
-              "ruff format"
-            ],
-            "undefined": [],
+            "level": "check",
+            "runs": {
+              "ruff format": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "flake8": {
+                "can": {
+                  "checks": "flake8"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pylint": {
+                "can": {
+                  "checks": "pylint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ruff check": {
+                "can": {
+                  "checks": "ruff check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "checks",
+            "runs": {
+              "ruff check": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "mypy": [
+                "pyproject.toml"
+              ]
+            },
+            "known": {
+              "mypy": {
+                "can": {
+                  "checks": "mypy",
+                  "strict": "strict = true in [tool.mypy] (or mypy --strict)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pyrefly": {
+                "can": {
+                  "checks": "pyrefly check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pyright": {
+                "can": {
+                  "checks": "pyright (or basedpyright)",
+                  "strict": "pyright's typeCheckingMode = strict"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ty": {
+                "can": {
+                  "checks": "ty check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "checks",
+            "runs": {
+              "mypy": {
+                "levels": [
+                  "checks",
+                  "strict"
+                ],
+                "read": [
+                  "pyproject.toml"
+                ]
+              }
+            },
             "unit": ".",
             "unknowns": []
           }
@@ -103,6 +225,7 @@
       "role": "product"
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -179,6 +302,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[0]",
@@ -380,6 +504,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[1]",
@@ -581,6 +706,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[2]",
@@ -782,6 +908,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[3]",
@@ -983,6 +1110,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[4]",
@@ -1184,6 +1312,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[5]",
@@ -1385,6 +1514,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/codeql.yml:analyze",
@@ -1423,6 +1553,7 @@
       "uses": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1507,6 +1638,39 @@
       "reader": "pytest"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pylint"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "mypy"
+    },
+    {
+      "heuristic": false,
+      "key": "strict",
+      "kind": "Setting",
+      "origin": "pyproject.toml:strict",
+      "tool": "mypy",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pyright"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pyrefly"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "ty"
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1524,6 +1688,49 @@
         "."
       ],
       "tool": "ruff format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "pyproject.toml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "mypy",
       "via": []
     },
     {
@@ -1569,6 +1776,49 @@
         "."
       ],
       "tool": "ruff format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "pyproject.toml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "mypy",
       "via": []
     },
     {
@@ -1614,6 +1864,49 @@
         "."
       ],
       "tool": "ruff format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "pyproject.toml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "mypy",
       "via": []
     },
     {
@@ -1659,6 +1952,49 @@
         "."
       ],
       "tool": "ruff format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "pyproject.toml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "mypy",
       "via": []
     },
     {
@@ -1704,6 +2040,49 @@
         "."
       ],
       "tool": "ruff format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "pyproject.toml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "mypy",
       "via": []
     },
     {
@@ -1749,6 +2128,49 @@
         "."
       ],
       "tool": "ruff format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "pyproject.toml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "mypy",
       "via": []
     },
     {
@@ -2078,7 +2500,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "mypy (pyproject.toml) runs; strict mode bonus: mypy strict = true in pyproject.toml",
+      "message": "mypy (pyproject.toml) runs; strict mode bonus: mypy (pyproject.toml)",
       "status": "PASS"
     },
     "vcs-ignore": {

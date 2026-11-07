@@ -50,20 +50,81 @@
         "language": "Go",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "gofmt"
-            ],
+            "answer": "yes",
             "defined": {},
-            "enforced": "yes",
             "known": {
-              "gofmt": "test -z \"$(gofmt -l .)\""
+              "gofmt": {
+                "can": {
+                  "apply": "gofmt -w .",
+                  "check": "test -z \"$(gofmt -l .)\""
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "Go",
-            "tools": [
-              "gofmt"
-            ],
-            "undefined": [],
+            "level": "check",
+            "runs": {
+              "gofmt": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "golangci-lint": [
+                ".golangci.yml"
+              ]
+            },
+            "known": {
+              "golangci-lint": {
+                "can": {
+                  "checks": "golangci-lint (with linters enabled beyond its defaults in a .golangci.yml)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Go",
+            "level": "checks",
+            "runs": {
+              "golangci-lint": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Go",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -113,6 +174,7 @@
       "role": "product"
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -189,6 +251,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[0]",
@@ -284,6 +347,22 @@
     },
     {
       "argv": [
+        "staticcheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "go run honnef.co/go/tools/cmd/staticcheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "build",
         "-buildmode=pie",
@@ -333,6 +412,22 @@
     },
     {
       "argv": [
+        "govulncheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "go run golang.org/x/vuln/cmd/govulncheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "run",
         "github.com/securego/gosec/v2/cmd/gosec@latest",
@@ -346,6 +441,22 @@
       "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
+    },
+    {
+      "argv": [
+        "gosec",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
     },
     {
       "argv": [
@@ -365,6 +476,24 @@
       "via": []
     },
     {
+      "argv": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[1]",
@@ -460,6 +589,22 @@
     },
     {
       "argv": [
+        "staticcheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "go run honnef.co/go/tools/cmd/staticcheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "build",
         "-buildmode=pie",
@@ -509,6 +654,22 @@
     },
     {
       "argv": [
+        "govulncheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "go run golang.org/x/vuln/cmd/govulncheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "run",
         "github.com/securego/gosec/v2/cmd/gosec@latest",
@@ -522,6 +683,22 @@
       "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
+    },
+    {
+      "argv": [
+        "gosec",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
     },
     {
       "argv": [
@@ -541,6 +718,24 @@
       "via": []
     },
     {
+      "argv": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[2]",
@@ -636,6 +831,22 @@
     },
     {
       "argv": [
+        "staticcheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "go run honnef.co/go/tools/cmd/staticcheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "build",
         "-buildmode=pie",
@@ -685,6 +896,22 @@
     },
     {
       "argv": [
+        "govulncheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "go run golang.org/x/vuln/cmd/govulncheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "run",
         "github.com/securego/gosec/v2/cmd/gosec@latest",
@@ -698,6 +925,22 @@
       "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
+    },
+    {
+      "argv": [
+        "gosec",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
     },
     {
       "argv": [
@@ -717,6 +960,24 @@
       "via": []
     },
     {
+      "argv": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[3]",
@@ -812,6 +1073,22 @@
     },
     {
       "argv": [
+        "staticcheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "go run honnef.co/go/tools/cmd/staticcheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "build",
         "-buildmode=pie",
@@ -861,6 +1138,22 @@
     },
     {
       "argv": [
+        "govulncheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "go run golang.org/x/vuln/cmd/govulncheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "run",
         "github.com/securego/gosec/v2/cmd/gosec@latest",
@@ -874,6 +1167,22 @@
       "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
+    },
+    {
+      "argv": [
+        "gosec",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
     },
     {
       "argv": [
@@ -893,6 +1202,24 @@
       "via": []
     },
     {
+      "argv": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[4]",
@@ -988,6 +1315,22 @@
     },
     {
       "argv": [
+        "staticcheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "go run honnef.co/go/tools/cmd/staticcheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "build",
         "-buildmode=pie",
@@ -1037,6 +1380,22 @@
     },
     {
       "argv": [
+        "govulncheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "go run golang.org/x/vuln/cmd/govulncheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "run",
         "github.com/securego/gosec/v2/cmd/gosec@latest",
@@ -1050,6 +1409,22 @@
       "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
+    },
+    {
+      "argv": [
+        "gosec",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
     },
     {
       "argv": [
@@ -1069,6 +1444,24 @@
       "via": []
     },
     {
+      "argv": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[5]",
@@ -1164,6 +1557,22 @@
     },
     {
       "argv": [
+        "staticcheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "go run honnef.co/go/tools/cmd/staticcheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "build",
         "-buildmode=pie",
@@ -1213,6 +1622,22 @@
     },
     {
       "argv": [
+        "govulncheck",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "go run golang.org/x/vuln/cmd/govulncheck@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
+    },
+    {
+      "argv": [
         "go",
         "run",
         "github.com/securego/gosec/v2/cmd/gosec@latest",
@@ -1226,6 +1651,22 @@
       "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
+    },
+    {
+      "argv": [
+        "gosec",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "go run github.com/securego/gosec/v2/cmd/gosec@latest ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
     },
     {
       "argv": [
@@ -1245,6 +1686,24 @@
       "via": []
     },
     {
+      "argv": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run ./...",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/codeql.yml:analyze",
@@ -1283,6 +1742,7 @@
       "uses": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1339,6 +1799,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/function-limits.yml:function-limits",
@@ -1476,6 +1937,28 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "golangci-lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
@@ -1514,6 +1997,28 @@
       ],
       "tool": "go test -cover",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "golangci-lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     },
     {
       "heuristic": false,
@@ -1558,6 +2063,28 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "golangci-lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
@@ -1596,6 +2123,28 @@
       ],
       "tool": "go test -cover",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "golangci-lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     },
     {
       "heuristic": false,
@@ -1640,6 +2189,28 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "golangci-lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
@@ -1678,6 +2249,28 @@
       ],
       "tool": "go test -cover",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "golangci-lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
     }
   ],
   "map": {

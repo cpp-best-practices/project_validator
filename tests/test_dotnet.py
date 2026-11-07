@@ -168,10 +168,14 @@ class SecurityAndAnalysisTests(unittest.TestCase):
 
     def test_an_analyzer_package_is_static_analysis(self) -> None:
         package = _props(items='<ItemGroup><PackageReference Include="StyleCop.Analyzers" /></ItemGroup>')
-        result = run_as(self, STATIC_ANALYSIS, {**package, **_ci(BUILD)}, DOTNET)
-        self.assertEqual(result, Result.passed("StyleCop.Analyzers runs"))
+        result = run_in_layout(self, CSHARP, STATIC_ANALYSIS, {**package, **_ci(BUILD)})
+        self.assertEqual(result, Result.passed("StyleCop.Analyzers (Directory.Build.props) runs"))
+        # Analyzer packages analyse C#; FSharpLint analyses F#.
+        self.assertEqual(run_in_layout(self, FSHARP, STATIC_ANALYSIS, {**package, **_ci(BUILD)}).status, Status.FAIL)
+        fsharplint = _ci("dotnet fsharplint lint App.fsproj")
+        self.assertEqual(run_in_layout(self, FSHARP, STATIC_ANALYSIS, fsharplint).status, Status.PASS)
         self.assertEqual(
-            run_as(self, STATIC_ANALYSIS, _ci("dotnet fsharplint lint App.fsproj"), DOTNET).status, Status.PASS
+            run_in_layout(self, CSHARP, STATIC_ANALYSIS, {**package, **_ci("dotnet restore")}).status, Status.WARN
         )
 
     def test_function_length_is_measured_by_lizard_except_for_fsharp(self) -> None:

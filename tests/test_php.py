@@ -4,7 +4,7 @@ import json
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems.php import DEPENDENCIES, PHP, TYPE_CHECKING, VENDOR
+from project_validator.ecosystems.php import DEPENDENCIES, PHP, VENDOR
 from project_validator.facts import Command, Facts, Unknown
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, make_context, run_as, run_in_layout, temp_project
 
@@ -41,6 +41,9 @@ from tests.support import GITHUB_WORKFLOW, checks_named, github_job, make_contex
 )
 SETUP_PHP_INI = "steps:\n  - uses: shivammathur/setup-php@v2\n    with:\n      ini-values: error_reporting=E_ALL\n"
 PHPUNIT_TEST = {"tests/AppTest.php": "<?php\nfinal class AppTest extends \\PHPUnit\\Framework\\TestCase {}\n"}
+
+TYPE_HINT = "consider running a type checker in CI: phpstan analyse or psalm"
+STRICT_HINT = 'consider enabling strict mode: level: 8 (or max) in phpstan.neon or errorLevel="2" in psalm.xml'
 
 
 def _ci(*steps: str) -> dict[str, str]:
@@ -164,15 +167,15 @@ class AnalysisTests(unittest.TestCase):
 
     def test_phpstan_or_psalm_type_check_and_a_high_level_is_strict(self) -> None:
         cases = {
-            "PHPStan level in phpstan.neon": {"phpstan.neon": "parameters:\n    level: 9\n", **_ci("phpstan")},
-            "Psalm errorLevel in psalm.xml": {"psalm.xml": '<psalm errorLevel="1"/>', **_ci("psalm")},
-            "phpstan --level": _ci("vendor/bin/phpstan analyse --level=max src"),
+            "PHPStan (phpstan.neon)": {"phpstan.neon": "parameters:\n    level: 9\n", **_ci("phpstan")},
+            "Psalm (psalm.xml)": {"psalm.xml": '<psalm errorLevel="1"/>', **_ci("psalm")},
+            "PHPStan": _ci("vendor/bin/phpstan analyse --level=max src"),
         }
         for strict, files in cases.items():
             with self.subTest(strict=strict):
                 self.assertIn(f"strict mode bonus: {strict}", run_as(self, TYPE_CHECKING_CHECK, files, PHP).message)
         lax = run_as(self, TYPE_CHECKING_CHECK, {"phpstan.neon": "parameters:\n    level: 5\n", **_ci("phpstan")}, PHP)
-        self.assertEqual(lax, Result.passed("PHPStan (phpstan.neon) runs", TYPE_CHECKING.strict_hint))
+        self.assertEqual(lax, Result.passed("PHPStan (phpstan.neon) runs", STRICT_HINT))
 
     def test_any_analyzer_counts_as_static_analysis(self) -> None:
         self.assertEqual(run_as(self, STATIC_ANALYSIS, _ci("vendor/bin/phan"), PHP), Result.passed("Phan runs"))

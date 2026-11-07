@@ -192,17 +192,31 @@ class SecurityTests(unittest.TestCase):
         files = {**_pom(pmd), **_ci(MAVEN_VERIFY)}
         result = _maven(self, SECURITY_SCANNING, files)
         self.assertEqual(result, Result.passed("security lints are enabled: PMD security rules"))
-        self.assertEqual(_maven(self, STATIC_ANALYSIS, files), Result.passed("PMD runs"))
+        # A plugin with no execution bound to its check goal never runs; once bound, mvn verify runs it.
+        self.assertEqual(
+            _maven(self, STATIC_ANALYSIS, files),
+            Result.warned("PMD is configured (pom.xml) but does not run", JVM_HINT),
+        )
+        bound = {**_pom(_plugin("maven-pmd-plugin", "check")), **_ci(MAVEN_VERIFY)}
+        self.assertEqual(_maven(self, STATIC_ANALYSIS, bound), Result.passed("PMD (pom.xml) runs"))
 
-    def test_any_analyzer_counts_as_static_analysis(self) -> None:
+    def test_any_analyzer_of_the_language_counts_as_static_analysis(self) -> None:
+        self.assertEqual(run_as(self, STATIC_ANALYSIS, _ci("mvn spotbugs:check"), JVM).status, Status.PASS)
+        # Error Prone, PMD and Checkstyle analyse Java; detekt analyses Kotlin.
         error_prone = {**_gradle('plugins { id("net.ltgt.errorprone") }\n'), **_ci(GRADLE_CHECK)}
-        for files in (error_prone, _ci("mvn spotbugs:check"), _ci("./gradlew detekt")):
-            with self.subTest(files=files):
-                self.assertEqual(run_as(self, STATIC_ANALYSIS, files, JVM).status, Status.PASS)
+        self.assertEqual(_maven(self, STATIC_ANALYSIS, error_prone).status, Status.PASS)
+        self.assertEqual(_gradle_kotlin(self, STATIC_ANALYSIS, error_prone).status, Status.FAIL)
+        self.assertEqual(_gradle_kotlin(self, STATIC_ANALYSIS, _ci("./gradlew detekt")).status, Status.PASS)
+        self.assertEqual(_maven(self, STATIC_ANALYSIS, _ci("./gradlew detekt")).status, Status.FAIL)
         # PMD's copy-paste detector is not its static analysis.
-        self.assertEqual(run_as(self, STATIC_ANALYSIS, _ci("pmd cpd --minimum-tokens 100"), JVM).status, Status.FAIL)
+        self.assertEqual(_maven(self, STATIC_ANALYSIS, _ci("pmd cpd --minimum-tokens 100")).status, Status.FAIL)
 
 
+JVM_HINT = (
+    "consider running SpotBugs (spotbugs-maven-plugin bound to check, or the com.github.spotbugs Gradle plugin), "
+    "PMD (maven-pmd-plugin bound to check, or Gradle's pmd plugin), Checkstyle (maven-checkstyle-plugin bound to "
+    "check, or Gradle's checkstyle plugin) or Error Prone (a compiler plugin, run by every build) in CI"
+)
 CHECKSTYLE = {
     "config/checkstyle/checkstyle.xml": '<module name="MethodLength"><property name="max" value="40"/></module>'
 }

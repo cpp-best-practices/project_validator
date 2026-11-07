@@ -4,13 +4,13 @@ from project_validator.checks.static_analysis import static_analysis
 from project_validator.core import Result, Status
 from project_validator.ecosystems import C_FAMILY
 from project_validator.ecosystems.c_cpp import C_AND_CXX
-from project_validator.ecosystems.c_cpp.clang_tidy import STATIC_ANALYSIS as C_AND_CXX_ANALYSIS
 from project_validator.ecosystems.go import GO
-from project_validator.ecosystems.go import STATIC_ANALYSIS as GO_ANALYSIS
 from project_validator.ecosystems.python import PYTHON
-from project_validator.ecosystems.python import STATIC_ANALYSIS as PYTHON_ANALYSIS
 from project_validator.ecosystems.rust import RUST
-from project_validator.ecosystems.rust import STATIC_ANALYSIS as RUST_ANALYSIS
+from project_validator.facts import Facts
+from project_validator.facts.analysis import ANALYSIS, CHECKS, TYPE_CHECK, Strictness
+from project_validator.policy.analysis import judge_analysis, judge_type_checking
+from project_validator.questions.tooling import tool_answer
 from tests.support import (
     BARE_PROJECT,
     GITHUB_WORKFLOW,
@@ -23,11 +23,17 @@ from tests.support import (
     run_in_every_layout,
 )
 
-C_HINT = C_AND_CXX_ANALYSIS.hint
-PYTHON_HINT = PYTHON_ANALYSIS.hint
-GO_HINT = GO_ANALYSIS.hint
+C_HINT = (
+    "consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy) and cppcheck "
+    "(CMAKE_CXX_CPPCHECK) in CI"
+)
+PYTHON_HINT = "consider running ruff check, pylint or flake8 in CI"
+GO_HINT = "consider running golangci-lint (with linters enabled beyond its defaults in a .golangci.yml) in CI"
+RUST_HINT = "consider running cargo clippy in CI"
+DEFAULTS = "{} has no configuration of its checks, so it runs only its defaults"
 CLANG_TIDY_CONFIG = {".clang-tidy": "Checks: 'bugprone-*'\n"}
 GOLANGCI_CI = github_job("ubuntu-latest", "golangci-lint run ./...")
+CONFIGURES = github_job("ubuntu-latest", "cmake -S . -B build")
 
 
 class StaticAnalysisTests(unittest.TestCase):
@@ -58,7 +64,8 @@ class CAndCxxTests(unittest.TestCase):
         self.assertEqual(result, Result.warned("clang-tidy (.clang-tidy) runs, but cppcheck does not run", C_HINT))
 
     def test_warns_when_a_clang_tidy_configuration_is_not_used(self) -> None:
-        result = self._run({**CLANG_TIDY_CONFIG, "CMakeLists.txt": "set(CMAKE_CXX_CPPCHECK cppcheck)\n"})
+        cmake = {"CMakeLists.txt": "set(CMAKE_CXX_CPPCHECK cppcheck)\n", **CONFIGURES}
+        result = self._run({**CLANG_TIDY_CONFIG, **cmake})
         expected = Result.warned("cppcheck runs, but clang-tidy is configured (.clang-tidy) but does not run", C_HINT)
         self.assertEqual(result, expected)
 
@@ -66,12 +73,37 @@ class CAndCxxTests(unittest.TestCase):
         expected = Result.warned("clang-tidy is configured (.clang-tidy) but does not run", C_HINT)
         self.assertEqual(self._run(CLANG_TIDY_CONFIG), expected)
 
-    def test_warns_when_clang_tidy_runs_without_a_configuration(self) -> None:
-        files = {"CMakeLists.txt": "set(CMAKE_CXX_CLANG_TIDY clang-tidy)\nset(CMAKE_CXX_CPPCHECK cppcheck)\n"}
-        expected = Result.warned(
-            "clang-tidy and cppcheck run, but clang-tidy has no .clang-tidy, so it runs only its default checks", C_HINT
+    def test_a_cmake_variable_runs_an_analyzer_only_where_ci_configures_the_build(self) -> None:
+        cmake = {"CMakeLists.txt": "set(CMAKE_CXX_CPPCHECK cppcheck)\n"}
+        self.assertEqual(self._run(cmake), Result.failed("no static analyzer runs", C_HINT))
+        on_the_command_line = github_job(
+            "ubuntu-latest", "cmake -S . -B b -DCMAKE_CXX_CLANG_TIDY=clang-tidy && cppcheck ."
         )
+        self.assertEqual(self._run({**CLANG_TIDY_CONFIG, **on_the_command_line}).status, Status.PASS)
+
+    def test_warns_when_clang_tidy_runs_without_a_configuration(self) -> None:
+        files = {
+            "CMakeLists.txt": "set(CMAKE_CXX_CLANG_TIDY clang-tidy)\nset(CMAKE_CXX_CPPCHECK cppcheck)\n",
+            **CONFIGURES,
+        }
+        expected = Result.warned(f"clang-tidy and cppcheck run, but {DEFAULTS.format('clang-tidy')}", C_HINT)
         self.assertEqual(self._run(files), expected)
+
+
+class ActionAndAnswerTests(unittest.TestCase):
+    def test_analyzer_actions_run_their_analyzers(self) -> None:
+        workflow = {
+            GITHUB_WORKFLOW: "jobs:\n  l:\n    runs-on: ubuntu-latest\n    steps:\n"
+            "      - uses: cpp-linter/cpp-linter-action@v2\n      - uses: deep5050/cppcheck-action@v3\n"
+        }
+        result = run_in_every_layout(self, static_analysis, {**CLANG_TIDY_CONFIG, **workflow})
+        self.assertEqual(result, Result.passed("clang-tidy (.clang-tidy) and cppcheck run"))
+
+    def test_a_language_no_known_analyzer_handles_is_skipped(self) -> None:
+        answer = tool_answer(ANALYSIS, CHECKS, "Lang", Facts(()), ())
+        self.assertEqual(judge_analysis(answer).status, Status.SKIP)
+        typed = tool_answer(TYPE_CHECK, Strictness.CHECKS, "Lang", Facts(()), ())
+        self.assertEqual(judge_type_checking(typed).message, "no known type checker handles Lang")
 
 
 class PythonTests(unittest.TestCase):
@@ -88,16 +120,33 @@ class PythonTests(unittest.TestCase):
             with self.subTest(command):
                 self.assertEqual(self._run(github_job("ubuntu-latest", command)), Result.passed(message))
 
+    def test_ruff_check_hooks_lint(self) -> None:
+        hooks = (
+            "ci: {}\nrepos:\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n    hooks:\n"
+            "      - id: ruff-check\n"
+        )
+        self.assertEqual(self._run({".pre-commit-config.yaml": hooks}), Result.passed("ruff check runs"))
+
     def test_ruff_format_is_not_linting(self) -> None:
         result = self._run(github_job("ubuntu-latest", "ruff format --check"))
         self.assertEqual(result, Result.failed("no static analyzer runs", PYTHON_HINT))
 
-    def test_a_pre_commit_hook_runs_a_linter(self) -> None:
-        hooks = {
-            ".pre-commit-config.yaml": "repos:\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n"
+    def test_a_pre_commit_hook_runs_a_linter_where_pre_commit_runs(self) -> None:
+        hooks = (
+            "repos:\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n"
             "    hooks:\n      - id: ruff\n      - id: ruff-format\n"
-        }
-        self.assertEqual(self._run(hooks), Result.passed("ruff check runs"))
+        )
+        for files in (
+            {".pre-commit-config.yaml": f"ci:\n  autoupdate_schedule: monthly\n{hooks}"},
+            {".pre-commit-config.yaml": hooks, **github_job("ubuntu-latest", "pre-commit run --all-files")},
+        ):
+            with self.subTest(files=files):
+                self.assertEqual(self._run(files), Result.passed("ruff check runs"))
+        # Hooks that nothing runs (only contributors, locally) are not CI.
+        self.assertEqual(self._run({".pre-commit-config.yaml": hooks}).status, Status.FAIL)
+        # pre-commit.ci skips the hooks its ci.skip names.
+        skipped = {".pre-commit-config.yaml": f"ci:\n  skip: [ruff]\n{hooks}"}
+        self.assertEqual(self._run(skipped).status, Status.FAIL)
 
     def test_warns_when_a_linter_is_configured_but_not_run(self) -> None:
         cases = {
@@ -120,9 +169,13 @@ class RustTests(unittest.TestCase):
         result = run_as(self, static_analysis, github_job("ubuntu-latest", "cargo +nightly clippy"), RUST)
         self.assertEqual(result, Result.passed("clippy runs"))
 
+    def test_clippy_toml_configures_it(self) -> None:
+        files = {"clippy.toml": "msrv = '1.80'\n", **github_job("ubuntu-latest", "cargo clippy -- -D warnings")}
+        self.assertEqual(run_as(self, static_analysis, files, RUST), Result.passed("clippy (clippy.toml) runs"))
+
     def test_fails_without_clippy(self) -> None:
         result = run_as(self, static_analysis, github_job("ubuntu-latest", "cargo test"), RUST)
-        self.assertEqual(result, Result.failed("no static analyzer runs", RUST_ANALYSIS.hint))
+        self.assertEqual(result, Result.failed("no static analyzer runs", RUST_HINT))
 
 
 class GoTests(unittest.TestCase):
@@ -141,27 +194,19 @@ class GoTests(unittest.TestCase):
                 self.assertEqual(self._run({**GOLANGCI_CI, path: text}), Result.passed(f"golangci-lint ({path}) runs"))
 
     def test_warns_with_only_the_default_linters(self) -> None:
-        cases = {
-            "linters:\n  enable: []\n": ".golangci.yml enables no linters beyond golangci-lint's defaults",
-            'version: "2"\nlinters:\n  default: standard\n': (
-                ".golangci.yml enables no linters beyond golangci-lint's defaults"
-            ),
-        }
-        for text, problem in cases.items():
+        expected = Result.warned(f"golangci-lint runs, but {DEFAULTS.format('golangci-lint')}", GO_HINT)
+        for text in ("linters:\n  enable: []\n", 'version: "2"\nlinters:\n  default: standard\n', None):
             with self.subTest(text):
-                result = self._run({**GOLANGCI_CI, ".golangci.yml": text})
-                self.assertEqual(result, Result.warned(f"golangci-lint (.golangci.yml) runs, but {problem}", GO_HINT))
-
-    def test_warns_without_a_configuration(self) -> None:
-        expected = Result.warned(
-            "golangci-lint runs, but golangci-lint has no configuration, so it runs only its default linters", GO_HINT
-        )
-        self.assertEqual(self._run(GOLANGCI_CI), expected)
+                files = GOLANGCI_CI if text is None else {**GOLANGCI_CI, ".golangci.yml": text}
+                self.assertEqual(self._run(files), expected)
 
     def test_go_vet_and_staticcheck_are_not_enough(self) -> None:
         result = self._run(github_job("ubuntu-latest", "go vet ./...", "staticcheck ./..."))
         self.assertEqual(result.status, Status.FAIL)
 
     def test_the_golangci_lint_action_runs_it(self) -> None:
-        files = {GITHUB_WORKFLOW: "jobs:\n  l:\n    steps:\n      - uses: golangci/golangci-lint-action@v8\n"}
+        files = {
+            GITHUB_WORKFLOW: "jobs:\n  l:\n    runs-on: ubuntu-latest\n"
+            "    steps:\n      - uses: golangci/golangci-lint-action@v8\n"
+        }
         self.assertEqual(self._run({**files, ".golangci.yml": "linters:\n  enable: [revive]\n"}).status, Status.PASS)
