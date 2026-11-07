@@ -10,6 +10,7 @@ from types import ModuleType
 
 from project_validator import checks, ci
 from project_validator.ci import CiProvider
+from project_validator.components import add_plugin_modules
 from project_validator.core import Check
 from project_validator.ecosystems import Ecosystem, RegistryError, register, with_registered_languages
 
@@ -66,12 +67,12 @@ def _register_all(ecosystems: list[Ecosystem]) -> None:
 
 
 def discover(plugin_directories: Iterable[Path] = ()) -> Plugins:
-    modules = [
-        *_package_modules(checks),
-        *_package_modules(ci),
-        *(module for directory in plugin_directories for module in _directory_modules(directory)),
-    ]
+    """The checks and CI providers, built in and in the plugin directories; a plugin's ecosystems are registered, and
+    its components (tools, settings readers, expanders, actions) made known."""
+    plugin_modules = [module for directory in plugin_directories for module in _directory_modules(directory)]
+    modules = [*_package_modules(checks), *_package_modules(ci), *plugin_modules]
     _register_all(list(dict.fromkeys(_instances(modules, Ecosystem))))
+    add_plugin_modules(plugin_modules)
     found_checks = [with_registered_languages(found) for found in dict.fromkeys(_instances(modules, Check))]
     _reject_duplicates("check name", [found.name for found in found_checks])
     providers = tuple(dict.fromkeys(_instances(modules, CiProvider)))

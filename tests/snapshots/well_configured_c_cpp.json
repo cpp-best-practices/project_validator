@@ -121,6 +121,58 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [],
+            "defined": {
+              "clang-format": [
+                ".clang-format"
+              ]
+            },
+            "enforced": "yes",
+            "known": {
+              "clang-format": "clang-format --dry-run -Werror"
+            },
+            "language": "C",
+            "tools": [
+              "clang-format"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [],
+            "defined": {
+              "clang-format": [
+                ".clang-format"
+              ]
+            },
+            "enforced": "yes",
+            "known": {
+              "clang-format": "clang-format --dry-run -Werror"
+            },
+            "language": "C++",
+            "tools": [
+              "clang-format"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -2730,6 +2782,23 @@
       "via": []
     },
     {
+      "argv": [
+        "clang-format",
+        "--dry-run",
+        "-Werror"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Command",
+      "line": "find . -name '*.cpp' | xargs clang-format --dry-run -Werror",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[1].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[1].run"
+      ]
+    },
+    {
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/codeql-analysis.yml:analyze",
@@ -2840,6 +2909,11 @@
       "line": "pmd cpd --language cpp --minimum-tokens 100 --dir src --dir include",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.cpd.steps[1].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".clang-format",
+      "reader": "clang-format"
     },
     {
       "kind": "ConfigurationFile",
@@ -3851,6 +3925,29 @@
       ],
       "tool": "gcovr",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[1].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-format",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[1].run"
+      ]
     },
     {
       "heuristic": true,

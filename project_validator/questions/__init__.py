@@ -1,16 +1,19 @@
-"""Questions: queries over the fact database, each answering one thing about the project per language.
+"""Questions: queries over the fact database, each answering one thing about the project per language, in each unit
+of the project that has the language.
 
 Answers are the stable, machine-readable interface (`--answers`); checks judge them by a policy and never read
-extractors (see docs/architecture.md).
+extractors (see docs/architecture.md). What every question needs (the units of a language, the runs of an aspect in
+a unit, the unknowns that matter to some tools) is here, once.
 """
 
 import enum
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
-if TYPE_CHECKING:
-    from project_validator.facts import Facts
+from project_validator.facts import Facts, Unknown
+from project_validator.facts.structure import Unit
+from project_validator.facts.tools import Tool, ToolRun
 
 
 class Answer(enum.StrEnum):
@@ -27,6 +30,60 @@ class Answered(Protocol):
     def as_dict(self) -> dict[str, object]: ...
 
 
+class UnitAnswer(Answered, Protocol):
+    @property
+    def unit(self) -> str: ...
+
+    @property
+    def language(self) -> str: ...
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class LanguageAnswers[A: UnitAnswer]:
+    """A question's answers for one language, one per unit of the project that has it."""
+
+    language: str
+    units: tuple[A, ...]
+
+    def as_dict(self) -> dict[str, object]:
+        return {"language": self.language, "units": [unit.as_dict() for unit in self.units]}
+
+
+def units_of(language: str, facts: Facts) -> tuple[str, ...]:
+    """The product units of the project that have `language`: none when the language is only in its docs, tooling,
+    examples, benchmarks or test fixtures. A project with no product unit at all (only scripts, say) is all product;
+    a project with no units is one, its root."""
+    units = facts.of(Unit)
+    product = [unit for unit in units if unit.role == "product"] or [unit for unit in units if unit.role != "vendored"]
+    return tuple(unit.directory for unit in product if language in unit.languages) if units else (".",)
+
+
+def per_unit[A: UnitAnswer](language: str, facts: Facts, answer: Callable[[str], A]) -> LanguageAnswers[A]:
+    """The answer for `language` in each unit that has it."""
+    return LanguageAnswers(language=language, units=tuple(answer(unit) for unit in units_of(language, facts)))
+
+
+def runs_of(aspect: str, language: str, unit: str, facts: Facts) -> tuple[ToolRun, ...]:
+    """The runs CI makes of tools that provide `aspect` for `language` in `unit` (see `ToolRun.covers`)."""
+    units = [found.directory for found in facts.of(Unit)] or ["."]
+    return tuple(
+        run
+        for run in facts.of(ToolRun)
+        if aspect in run.provides and language in run.languages and run.covers(unit, units)
+    )
+
+
+def unknowns_for(tools: Iterable[Tool], facts: Facts) -> tuple[str, ...]:
+    """What was not read that may hide a run (a job or a command), or the settings the `tools` read, as
+    `subject: reason (origin)`."""
+    reads = {name for tool in tools for name in (tool.name, *tool.reads)}
+    return tuple(
+        f"{fact.subject}: {fact.reason} ({fact.origin})"
+        for fact in facts.of(Unknown)
+        if fact.hides in ("jobs", "commands") or (fact.hides == "settings" and reads & set(fact.tools))
+    )
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Question:
     """A question about the project, answered per language from the facts. Questions are found, never listed."""
@@ -36,11 +93,22 @@ class Question:
     answer: Callable[[str, Facts], Answered]
 
 
-def built_in_questions() -> tuple[Question, ...]:
+def known_questions() -> tuple[Question, ...]:
     """Every question defined by a module of `project_validator.questions`."""
-    from project_validator.components import built_in
+    from project_validator.components import known
 
-    return built_in(Question)
+    return known(Question)
 
 
-__all__ = ["Answer", "Answered", "Question", "built_in_questions"]
+__all__ = [
+    "Answer",
+    "Answered",
+    "LanguageAnswers",
+    "Question",
+    "UnitAnswer",
+    "known_questions",
+    "per_unit",
+    "runs_of",
+    "units_of",
+    "unknowns_for",
+]

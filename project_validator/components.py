@@ -1,22 +1,25 @@
-"""Components (command expanders, settings readers, coverage tools, questions) are found in the modules that define
+"""Components (command expanders, actions, settings readers, tools, questions) are found in the modules that define
 them, never listed.
 
-A component lives in a module of the shared build systems (`project_validator.build_systems`), the shared tools
-(`project_validator.tools`), the questions (`project_validator.questions`), or the profile of the only language that
-uses it (see docs/architecture.md).
+A built-in component lives in a module of the shared build systems (`project_validator.build_systems`), the shared
+tools (`project_validator.tools`), the questions (`project_validator.questions`), or the profile of the only language
+that uses it (see docs/architecture.md). A plugin's components live in its own module (see `add_plugin_modules`).
 """
 
 import importlib
 import pkgutil
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
+from contextlib import contextmanager
 from functools import cache
 from types import ModuleType
 
 # The packages whose modules may define components, besides the profiles.
 _PACKAGES = ("project_validator.build_systems", "project_validator.tools", "project_validator.questions")
+# Plugin modules, by name: a plugin loaded again replaces its earlier module.
+_plugins: dict[str, ModuleType] = {}
 
 
-def _modules() -> Iterator[ModuleType]:
+def _built_in_modules() -> Iterator[ModuleType]:
     from project_validator.ecosystems import PROFILES
 
     for package_name in _PACKAGES:
@@ -31,12 +34,31 @@ def _modules() -> Iterator[ModuleType]:
             yield importlib.import_module(f"{profile.__name__}.{info.name}")
 
 
+def add_plugin_modules(modules: Iterable[ModuleType]) -> None:
+    """Make the components the plugin `modules` define known, alongside the built-in ones."""
+    _plugins.update((module.__name__, module) for module in modules)
+    known.cache_clear()
+
+
+@contextmanager
+def isolated_plugins() -> Iterator[None]:
+    """Undo, on leaving, every plugin module added inside (for tests)."""
+    saved = dict(_plugins)
+    try:
+        yield
+    finally:
+        _plugins.clear()
+        _plugins.update(saved)
+        known.cache_clear()
+
+
 @cache
-def built_in[T](kind: type[T]) -> tuple[T, ...]:
-    """Every component of type `kind` a module of the shared build systems, the shared tools or a profile defines."""
-    found = (value for module in _modules() for value in vars(module).values())
+def known[T](kind: type[T]) -> tuple[T, ...]:
+    """Every component of type `kind` a built-in module or a plugin module defines."""
+    modules = (*_built_in_modules(), *_plugins.values())
+    found = (value for module in modules for value in vars(module).values())
     # A component imported by several modules is found once; components need not be hashable.
     return tuple({id(value): value for value in found if isinstance(value, kind)}.values())
 
 
-__all__ = ["built_in"]
+__all__ = ["add_plugin_modules", "isolated_plugins", "known"]

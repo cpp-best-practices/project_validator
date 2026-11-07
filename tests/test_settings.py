@@ -3,15 +3,16 @@
 import unittest
 
 from project_validator.facts import ConfigurationFile, Facts, Origin, Setting, Unknown
+from project_validator.facts.roles import role
 from project_validator.facts.settings import (
-    built_in_settings_readers,
     ini_settings,
     json_settings,
     key_value_settings,
+    known_settings_readers,
     toml_settings,
 )
-from project_validator.facts.structure import SourceFile, role
-from project_validator.questions import built_in_questions
+from project_validator.facts.structure import SourceFile
+from project_validator.questions import known_questions
 from tests.support import github_job, make_context, temp_project
 
 
@@ -134,13 +135,19 @@ READ = (
 
 class ReaderTests(unittest.TestCase):
     def test_readers_are_found_not_listed(self) -> None:
-        names = {reader.name for reader in built_in_settings_readers()}
+        names = {reader.name for reader in known_settings_readers()}
         self.assertLessEqual({"coverage.py", "pytest", "gcovr", "CMake flags", "MSBuild", "Maven", "Gradle"}, names)
 
     def test_a_configuration_file_a_command_names_is_read(self) -> None:
         files = {"ci/cov.ini": "[run]\nbranch = on\n", **github_job("x", "coverage run --rcfile=ci/cov.ini -m x")}
         self.assertEqual(_settings("ci/cov.ini", files), [("coverage.py", "run.branch", "on")])
         self.assertEqual(_settings("ci/cov.ini", {"ci/cov.ini": "[run]\nbranch = on\n"}), [])
+
+    def test_a_vendored_projects_configuration_is_not_read_unless_a_command_names_it(self) -> None:
+        vendored = {"deps/lib/.coveragerc": "[run]\nbranch = on\n"}
+        self.assertEqual(_settings("deps/lib/.coveragerc", vendored), [])
+        named = {**vendored, **github_job("x", "coverage run --rcfile=deps/lib/.coveragerc -m x")}
+        self.assertEqual(_settings("deps/lib/.coveragerc", named), [("coverage.py", "run.branch", "on")])
 
     def test_build_and_test_settings(self) -> None:
         for path, text, expected in READ:
@@ -188,4 +195,4 @@ class StructureTests(unittest.TestCase):
 
 class QuestionTests(unittest.TestCase):
     def test_questions_are_found_not_listed(self) -> None:
-        self.assertIn("coverage", {question.name for question in built_in_questions()})
+        self.assertIn("coverage", {question.name for question in known_questions()})

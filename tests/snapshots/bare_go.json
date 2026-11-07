@@ -40,6 +40,29 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "gofmt"
+            ],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "gofmt": "test -z \"$(gofmt -l .)\""
+            },
+            "language": "Go",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -143,7 +166,7 @@
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that fails when gofmt -l . lists files (test -z \"$(gofmt -l .)\")"
+        "consider a CI job that runs test -z \"$(gofmt -l .)\""
       ],
       "message": "CI never runs gofmt; its formatting is not enforced",
       "status": "FAIL"

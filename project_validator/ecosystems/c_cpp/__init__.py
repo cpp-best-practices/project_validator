@@ -7,22 +7,18 @@ CMake project.
 import re
 from typing import TYPE_CHECKING
 
-from project_validator.core import Context
 from project_validator.ecosystems.c_cpp.clang_tidy import FUNCTION_LIMITS, STATIC_ANALYSIS
 from project_validator.ecosystems.c_cpp.cmake import CMAKE
 from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, WARNINGS, WARNINGS_AS_ERRORS
 from project_validator.ecosystems.c_cpp.dependencies import DEPENDENCIES
 from project_validator.ecosystems.c_cpp.meson import MESON
 from project_validator.ecosystems.model import C_FAMILY, Ecosystem, ToolchainAxis
-from project_validator.evidence import first_existing
 from project_validator.rules import (
     BuildOutputs,
     BuildTypes,
-    Formatter,
     directories,
     ignored_at_top_level,
 )
-from project_validator.text import pattern
 
 if TYPE_CHECKING:
     from project_validator.ci import Job
@@ -50,18 +46,6 @@ def _uses_runner_default_compiler(job: Job) -> bool:
 
 
 COMPILERS = ToolchainAxis(noun="compiler", of_job=_compilers, runner_default=_uses_runner_default_compiler)
-
-
-def _clang_format_file(context: Context) -> str | None:
-    return first_existing(context, (".clang-format", "_clang-format"))
-
-
-CLANG_FORMAT = Formatter(
-    name="clang-format",
-    config_file=_clang_format_file,
-    runs=(pattern("clang-format", r"(?<![\w.-])clang-format\b"),),
-    hint="consider a CI job that checks formatting (clang-format --dry-run -Werror) or applies it automatically",
-)
 
 
 BUILD_DIRECTORY = BuildOutputs(
@@ -108,7 +92,6 @@ C_AND_CXX = Ecosystem(
     rules=(
         COMPILERS,
         BuildTypes(axis=COMPILERS),
-        CLANG_FORMAT,
         WARNINGS,
         WARNINGS_AS_ERRORS,
         HARDENING,

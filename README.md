@@ -74,7 +74,7 @@ What each check accepts for a language is on that ecosystem's page in [docs/ecos
 | `warnings-as-errors` | warnings fail the build, the lint or the tests |
 | `cxx-extensions` | compiler extensions to the language standard are turned off, so `-std=c++NN` is used rather than `-std=gnu++NN` |
 | `hardening` | binary hardening is enabled: exploit mitigations that the build inserts into the binary (static analysis and dependency audits are judged by `security-scanning` and `dependency-audit`). Ecosystems that build no native binary are not judged. Warns listing what is missing |
-| `code-formatting` | the formatting style is defined and CI runs the formatter. A formatter with a default style passes on CI enforcement alone. Warns when the style is defined but CI does not enforce it |
+| `code-formatting` | CI enforces each language's formatting in each unit: a formatter run that fails on unformatted code, or one that rewrites it where the job fails on the change or commits it (a pre-commit hook, `git diff --exit-code`). Its style is defined (e.g. `.clang-format`) or the tool's own. Warns when the style is defined but CI does not enforce it |
 | `function-limits` | function length is limited: lizard runs with a length limit (`lizard --length 30`), or one of the ecosystem's own tools limits it |
 | `static-analysis` | static analyzers run. Warns when an analyzer is configured but does not run, or runs short of what the ecosystem needs; fails when none runs |
 | `type-checking` | CI (or a pre-commit hook) runs a static type checker. Strict mode is a bonus; without it the result suggests it. Warns when a type checker is configured but does not run; fails when none runs. Compiled languages, whose compilers check types, are not judged |
@@ -117,7 +117,9 @@ Known limitations:
 
 ## Writing a Plugin
 
-Any module-level `Check`, `CiProvider` or `Ecosystem` in a file passed with `--plugin-dir` is picked up:
+Any module-level `Check`, `CiProvider` or `Ecosystem` in a file passed with `--plugin-dir` is picked up, and so is
+any component: a `Tool` (a formatter, a coverage tool), a `SettingsReader`, a `CommandExpander` or an `Action`
+(see [docs/architecture.md](docs/architecture.md)):
 
 ```python
 from project_validator.ci import CiProvider
@@ -136,10 +138,11 @@ def has_readme(context: Context) -> Result:
 ### Adding an ecosystem
 
 Everything the validator knows about a language lives in its profile under `project_validator/ecosystems/`:
-how it is recognised (build systems, source suffixes, how CI names its toolchain versions) and the rules
-it is judged by. The checks are generic: each one judges every ecosystem that has a rule of its type
-(see `project_validator/rules.py`), and does not apply to the others. A plugin can add an ecosystem
-the same way, without changing the validator.
+how it is recognised (build systems, source suffixes, how CI names its toolchain versions), the tools it uses
+(formatters and coverage tools, which say how CI runs them), and the rules it is judged by. The checks are generic:
+each one judges every language a known tool handles, or every ecosystem that has a rule of its type (see
+`project_validator/rules.py`), and does not apply to the others. A plugin can add an ecosystem and its tools the same
+way, without changing the validator.
 
 A built-in profile is found by its module, `project_validator/ecosystems/<name>.py`; it comes with its own
 `tests/layouts/<name>.py`, fixtures `tests/fixtures/well_configured_<name>` and `tests/fixtures/bare_<name>`, and page
@@ -163,13 +166,8 @@ Registering an ecosystem that claims another one's build file or source suffix i
 import re
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.rules import Formatter
-from project_validator.text import pattern
-
-
-def _no_config(context):
-    return None
-
+from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.tools import defined_by
 
 ZIG = Ecosystem(
     label="Zig",
@@ -179,16 +177,15 @@ ZIG = Ecosystem(
     toolchain=ToolchainPatterns(
         language="Zig", versions=(re.compile(r"\bzig-version\W+([\d.x]+)"),), usage=re.compile(r"\bzig\s+build\b")
     ),
-    rules=(
-        versions_axis("Zig version", "Zig"),  # platform-matrix: OS x Zig version
-        Formatter(
-            name="zig fmt",
-            config_file=_no_config,
-            runs=(pattern("zig fmt", r"\bzig\s+fmt\b"),),
-            hint="run zig fmt --check in CI",
-            default_style=True,
-        ),  # code-formatting
-    ),
+    rules=(versions_axis("Zig version", "Zig"),),  # platform-matrix: OS x Zig version
+)
+# code-formatting: zig fmt has one style; `zig fmt --check` fails on unformatted files, `zig fmt` rewrites them.
+ZIG_FMT = format_tool(
+    name="zig fmt",
+    languages=frozenset({"Zig"}),
+    can={Enforcement.CHECK: "zig fmt --check .", Enforcement.APPLY: "zig fmt ."},
+    formats=flagged(("zig", "fmt"), checks=("--check",)),
+    style=defined_by(),
 )
 ```
 

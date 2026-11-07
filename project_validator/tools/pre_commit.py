@@ -5,6 +5,7 @@ in that repository, which is not read; it is recorded by its id, which by conven
 `clang-format`), with its args.
 """
 
+import shlex
 from collections.abc import Iterator, Mapping
 
 from project_validator import yaml_support
@@ -12,7 +13,7 @@ from project_validator.core import Context
 from project_validator.evidence import PRE_COMMIT_CONFIGURATION
 from project_validator.facts import Command, Origin, Unknown
 from project_validator.facts.arguments import positional
-from project_validator.facts.expansion import CommandExpander, Expansion, Invocation, Script, found_at
+from project_validator.facts.expansion import Action, CommandExpander, Expansion, Invocation, Script, found_at
 
 _PROGRAMS = frozenset({"pre-commit", "prek"})
 # The stages `pre-commit run` runs when no --hook-stage is given; hooks without `stages` run in every stage.
@@ -78,3 +79,10 @@ def _pre_commit_hooks(command: Command, context: Context) -> Iterator[Expansion]
 
 
 PRE_COMMIT_HOOKS = CommandExpander(name="pre-commit hooks", expand=_pre_commit_hooks)
+# The pre-commit action runs every hook, or what its `extra_args` say.
+PRE_COMMIT_ACTION = Action(
+    name="pre-commit/action",
+    runs=lambda inputs: (
+        ("pre-commit", "run", "--show-diff-on-failure", *shlex.split(inputs.get("extra_args", "--all-files"))),
+    ),
+)

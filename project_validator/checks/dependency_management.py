@@ -2,7 +2,7 @@
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems import check_each_ecosystem, ecosystem_check, rules_of
-from project_validator.facts.structure import VENDOR_DIRECTORIES
+from project_validator.facts.roles import VENDOR_DIRECTORIES
 from project_validator.rules import DependencyManagement
 
 # Top-level directories that usually hold third-party code copied into the repository.

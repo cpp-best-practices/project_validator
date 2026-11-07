@@ -1,23 +1,12 @@
-from project_validator.core import Context, Result
-from project_validator.ecosystems import practice
-from project_validator.rules import Formatter
-from project_validator.text import matching_names
+from project_validator.facts.tools import known_tools
+from project_validator.judging import answered_check
+from project_validator.policy import judge_formatting
+from project_validator.questions.formatting import formats, language_formatting
 
-
-@practice(
+code_formatting = answered_check(
     name="code-formatting",
     description="Formatting is defined (e.g. .clang-format, ruff, rustfmt) and CI enforces it",
-    rule=Formatter,
+    languages=lambda: frozenset().union(*(tool.languages for tool in known_tools() if formats(tool))),
+    answers=language_formatting,
+    judge=lambda answer, allow_unknown: judge_formatting(answer, allow_unknown=allow_unknown),
 )
-def code_formatting(formatter: Formatter, context: Context) -> Result:
-    config = formatter.config_file(context)
-    tools = matching_names(formatter.texts(context), formatter.runs)
-    if tools and config is not None:
-        return Result.passed(f"{config} is defined and CI runs {', '.join(tools)}")
-    if tools and formatter.default_style:
-        return Result.passed(f"CI enforces the {', '.join(tools)} style")
-    if config is None and formatter.default_style:
-        return Result.failed(f"CI never runs {formatter.name}; its formatting is not enforced", formatter.hint)
-    if config is None:
-        return Result.failed(f"no {formatter.name} configuration found; formatting is not defined", formatter.hint)
-    return Result.warned(f"{config} is defined but CI does not run {formatter.name}", formatter.hint)

@@ -71,6 +71,11 @@ class ToolTests(unittest.TestCase):
             with self.subTest(line=line):
                 self.assertEqual(run_as(self, CODE_FORMATTING, _ci(line), SWIFT).status, Status.PASS)
         self.assertEqual(run_as(self, CODE_FORMATTING, _ci("swift format lint -r ."), SWIFT).status, Status.FAIL)
+        rewritten = run_as(self, CODE_FORMATTING, _ci("swift format -i -r Sources"), SWIFT)
+        self.assertEqual(rewritten.status, Status.FAIL)
+        self.assertIn("CI runs swift-format but only to rewrite files", rewritten.message)
+        committed = _ci("swift format -i -r Sources", "git diff --exit-code")
+        self.assertEqual(run_as(self, CODE_FORMATTING, committed, SWIFT).status, Status.PASS)
 
     def test_tests_are_xctest_cases_or_swift_testing_functions(self) -> None:
         xctest = {"Tests/AppTests/AppTests.swift": "final class AppTests: XCTestCase {}\n"}

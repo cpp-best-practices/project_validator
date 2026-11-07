@@ -30,8 +30,9 @@ C# projects set `AnalysisMode` (or `AnalysisLevel`) to Recommended or All, `Enfo
 
 ## `code-formatting`
 
-`dotnet format --verify-no-changes`, `csharpier check` or `fantomas --check`; they have a default style, so CI
-enforcement alone passes.
+`dotnet format --verify-no-changes` (style in `.editorconfig`) and `csharpier check` (or `--check`) for C#;
+`fantomas --check` for F#; run directly or as `dotnet` local tools. They have a default style, so CI enforcement alone
+passes.
 
 ## `function-limits`
 

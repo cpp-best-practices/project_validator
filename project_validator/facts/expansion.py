@@ -1,6 +1,7 @@
 """Command expansion: the commands a command runs in turn, through package scripts, Make targets or hooks.
 
-A `CommandExpander` knows one way a command runs others (`npm test` runs the package's `test` script). Expanded
+A `CommandExpander` knows one way a command runs others (`npm test` runs the package's `test` script); an `Action`
+knows the command a reusable CI step runs (`psf/black@stable` runs `black --check`). Expanded
 commands are facts like those CI runs directly, in the same job, with `via` naming the commands that led to them.
 Expansion repeats on what it finds, and stops where a definition would run itself again.
 """
@@ -11,7 +12,7 @@ from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from project_validator.facts import NOTHING, Command, Fact, Origin, Unknown, resolved
+from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, Unknown, resolved
 from project_validator.facts.arguments import program
 from project_validator.facts.shell import ShellCommand, split_script
 
@@ -58,6 +59,32 @@ class CommandExpander:
 
     name: str
     expand: Expand
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Action:
+    """A reusable CI step that runs known commands: `runs` returns them from the step's inputs. `name` is the
+    action's repository (`psf/black`), matched without regard to case or version."""
+
+    name: str
+    runs: Callable[[Mapping[str, str]], Iterable[tuple[str, ...]]]
+
+
+def action_commands(step: ActionStep, actions: Iterable[Action]) -> Iterator[Command]:
+    """The commands the `step` runs, as the actions that know it say, where the step is (in its `working-directory`
+    input, for actions that have one)."""
+    repository = step.uses.partition("@")[0].lower()
+    for action in actions:
+        if action.name.lower() == repository:
+            for argv in action.runs(step.inputs):
+                yield Command(
+                    origin=step.origin,
+                    job=step.job,
+                    argv=argv,
+                    line=f"uses: {step.uses}",
+                    directory=step.inputs.get("working-directory") or None,
+                    condition=step.condition,
+                )
 
 
 def script_facts(
@@ -175,20 +202,34 @@ def expand_command(command: Command, context: Context, expanders: Iterable[Comma
                     yield from expand_command(child, context, expanders)
 
 
-def expanded(facts: Iterable[Fact], context: Context, expanders: Iterable[CommandExpander]) -> Iterator[Fact]:
-    """`facts`, each command followed by what it runs in turn."""
-    expanders = tuple(expanders)
+def expanded(
+    facts: Iterable[Fact], context: Context, expanders: Iterable[CommandExpander], actions: Iterable[Action] = ()
+) -> Iterator[Fact]:
+    """`facts`, each command followed by what it runs in turn, and each action step by the commands it runs (and what
+    they run)."""
+    expanders, actions = tuple(expanders), tuple(actions)
     for fact in facts:
         yield fact
         if isinstance(fact, Command):
             yield from expand_command(fact, context, expanders)
+        elif isinstance(fact, ActionStep):
+            for command in action_commands(fact, actions):
+                yield command
+                yield from expand_command(command, context, expanders)
 
 
-def built_in_expanders() -> tuple[CommandExpander, ...]:
+def known_expanders() -> tuple[CommandExpander, ...]:
     """Every command expander defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import built_in
+    from project_validator.components import known
 
-    return built_in(CommandExpander)
+    return known(CommandExpander)
+
+
+def known_actions() -> tuple[Action, ...]:
+    """Every action defined by a module of the shared build systems, the shared tools or a profile."""
+    from project_validator.components import known
+
+    return known(Action)
 
 
 _ASSIGNMENT = re.compile(r"([A-Za-z_]\w*)=(.*)", re.DOTALL)
@@ -241,16 +282,19 @@ def joined(directory: str | None, path: str) -> str:
 
 
 __all__ = [
+    "Action",
     "CommandExpander",
     "Expansion",
     "Invocation",
     "Launched",
     "Script",
-    "built_in_expanders",
+    "action_commands",
     "expand_command",
     "expanded",
     "found_at",
     "joined",
+    "known_actions",
+    "known_expanders",
     "launcher",
     "script_facts",
 ]

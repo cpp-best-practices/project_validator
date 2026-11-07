@@ -57,6 +57,31 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "rustfmt"
+            ],
+            "defined": {},
+            "enforced": "yes",
+            "known": {
+              "rustfmt": "cargo fmt --check"
+            },
+            "language": "Rust",
+            "tools": [
+              "rustfmt"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -1978,6 +2003,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
@@ -1992,6 +2037,26 @@
         "."
       ],
       "tool": "cargo-llvm-cov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
       "via": []
     },
     {
@@ -2024,6 +2089,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
@@ -2038,6 +2123,26 @@
         "."
       ],
       "tool": "cargo-llvm-cov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
       "via": []
     },
     {
@@ -2070,6 +2175,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
@@ -2084,6 +2209,26 @@
         "."
       ],
       "tool": "cargo-llvm-cov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
       "via": []
     },
     {
@@ -2116,6 +2261,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
@@ -2130,6 +2295,26 @@
         "."
       ],
       "tool": "cargo-llvm-cov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
       "via": []
     },
     {
@@ -2162,6 +2347,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
@@ -2176,6 +2381,26 @@
         "."
       ],
       "tool": "cargo-llvm-cov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
       "via": []
     },
     {
@@ -2208,6 +2433,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
@@ -2222,6 +2467,26 @@
         "."
       ],
       "tool": "cargo-llvm-cov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "rustfmt",
       "via": []
     },
     {

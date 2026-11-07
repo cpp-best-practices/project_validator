@@ -48,6 +48,35 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "PHP-CS-Fixer",
+              "PHP_CodeSniffer",
+              "Pint"
+            ],
+            "defined": {},
+            "enforced": "yes",
+            "known": {
+              "PHP-CS-Fixer": "php-cs-fixer check",
+              "PHP_CodeSniffer": "phpcs",
+              "Pint": "pint --test"
+            },
+            "language": "PHP",
+            "tools": [
+              "PHP-CS-Fixer"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -1493,6 +1522,29 @@
       "languages": [
         "PHP"
       ],
+      "origin": "composer.json:scripts.cs",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "PHP-CS-Fixer",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
       "origin": "composer.json:scripts.test",
       "provides": {
         "coverage": [
@@ -1509,6 +1561,29 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[2]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.cs",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "PHP-CS-Fixer",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
       ]
     },
     {
@@ -1543,6 +1618,29 @@
       "languages": [
         "PHP"
       ],
+      "origin": "composer.json:scripts.cs",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "PHP-CS-Fixer",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
       "origin": "composer.json:scripts.test",
       "provides": {
         "coverage": [
@@ -1559,6 +1657,29 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[2]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.cs",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "PHP-CS-Fixer",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
       ]
     },
     {
@@ -1593,6 +1714,29 @@
       "languages": [
         "PHP"
       ],
+      "origin": "composer.json:scripts.cs",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "PHP-CS-Fixer",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
       "origin": "composer.json:scripts.test",
       "provides": {
         "coverage": [
@@ -1609,6 +1753,29 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[2]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.cs",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "PHP-CS-Fixer",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
       ]
     },
     {

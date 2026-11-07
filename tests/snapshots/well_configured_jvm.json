@@ -46,6 +46,39 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "Spotless",
+              "fmt-maven-plugin",
+              "google-java-format"
+            ],
+            "defined": {
+              "Spotless": [
+                "pom.xml"
+              ]
+            },
+            "enforced": "yes",
+            "known": {
+              "Spotless": "mvn spotless:check or gradle spotlessCheck",
+              "fmt-maven-plugin": "mvn fmt:check",
+              "google-java-format": "google-java-format --set-exit-if-changed"
+            },
+            "language": "Java",
+            "tools": [
+              "Spotless"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -671,7 +704,77 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JaCoCo",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -703,6 +806,29 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -720,6 +846,29 @@
     {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -751,9 +900,8 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
-        "coverage": [
-          "branch",
-          "line"
+        "format": [
+          "check"
         ]
       },
       "read": [
@@ -762,7 +910,7 @@
       "scope": [
         "."
       ],
-      "tool": "JaCoCo",
+      "tool": "Spotless",
       "via": []
     },
     {
@@ -787,6 +935,29 @@
         "."
       ],
       "tool": "JaCoCo",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Spotless",
       "via": []
     }
   ],

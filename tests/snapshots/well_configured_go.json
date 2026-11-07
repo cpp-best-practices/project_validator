@@ -44,6 +44,31 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "gofmt"
+            ],
+            "defined": {},
+            "enforced": "yes",
+            "known": {
+              "gofmt": "test -z \"$(gofmt -l .)\""
+            },
+            "language": "Go",
+            "tools": [
+              "gofmt"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -195,6 +220,21 @@
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
       "uses": "actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff"
+    },
+    {
+      "argv": [
+        "gofmt",
+        "-l",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "gofmt -l .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -359,6 +399,21 @@
     },
     {
       "argv": [
+        "gofmt",
+        "-l",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "gofmt -l .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
         "test",
         "-z",
         "$(gofmt -l .)"
@@ -517,6 +572,21 @@
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
       "uses": "actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff"
+    },
+    {
+      "argv": [
+        "gofmt",
+        "-l",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "gofmt -l .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -681,6 +751,21 @@
     },
     {
       "argv": [
+        "gofmt",
+        "-l",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "gofmt -l .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
         "test",
         "-z",
         "$(gofmt -l .)"
@@ -842,6 +927,21 @@
     },
     {
       "argv": [
+        "gofmt",
+        "-l",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "gofmt -l .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
         "test",
         "-z",
         "$(gofmt -l .)"
@@ -1000,6 +1100,21 @@
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
       "uses": "actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff"
+    },
+    {
+      "argv": [
+        "gofmt",
+        "-l",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "gofmt -l .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -1295,6 +1410,50 @@
       "via": []
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": ".golangci.yml",
+      "reader": "golangci-lint"
+    },
+    {
+      "heuristic": false,
+      "key": "version",
+      "kind": "Setting",
+      "origin": ".golangci.yml:version",
+      "tool": "golangci-lint",
+      "value": "2"
+    },
+    {
+      "heuristic": false,
+      "key": "linters.enable",
+      "kind": "Setting",
+      "origin": ".golangci.yml:linters.enable",
+      "tool": "golangci-lint",
+      "value": [
+        "errorlint",
+        "revive"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gofmt",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1313,6 +1472,26 @@
         "."
       ],
       "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gofmt",
       "via": []
     },
     {
@@ -1343,6 +1522,26 @@
       "languages": [
         "Go"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gofmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "coverage": [
@@ -1355,6 +1554,26 @@
         "."
       ],
       "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gofmt",
       "via": []
     },
     {
@@ -1385,6 +1604,26 @@
       "languages": [
         "Go"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gofmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "coverage": [
@@ -1397,6 +1636,26 @@
         "."
       ],
       "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gofmt",
       "via": []
     },
     {
