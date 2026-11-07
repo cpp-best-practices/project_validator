@@ -228,8 +228,6 @@ class Check:
     description: str
     run: CheckFunction = field(repr=False)
     languages: frozenset[str] = frozenset()
-    # The rule type a check judges, for checks that apply wherever an ecosystem has a rule of that type.
-    rule: type[object] | None = None
     # Former names, still accepted by --only and --skip.
     aliases: tuple[str, ...] = ()
     # The languages of the components the check judges, as now known (plugins add components).

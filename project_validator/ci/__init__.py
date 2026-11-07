@@ -9,7 +9,18 @@ from project_validator import yaml_support
 from project_validator.build_configurations import BuildConfiguration, sanitizers_enabled
 from project_validator.core import Project
 from project_validator.ecosystems import build_systems
-from project_validator.facts import ActionStep, CiJob, Command, Fact, Facts, Origin, Unknown, collected, resolved
+from project_validator.facts import (
+    ActionStep,
+    CiConfiguration,
+    CiJob,
+    Command,
+    Fact,
+    Facts,
+    Origin,
+    Unknown,
+    collected,
+    resolved,
+)
 from project_validator.facts.expansion import script_facts
 from project_validator.platforms import (
     RUNNER_DEFAULT_COMPILERS,
@@ -233,5 +244,6 @@ def _loader(project: Project) -> Load:
 
 
 def ci_facts(project: Project, ci_files: tuple[CiFile, ...]) -> Facts:
-    """What the CI configuration shows: its jobs, and the commands and reusable steps each one runs."""
-    return collected(_file_facts(project, ci_file) for ci_file in ci_files)
+    """What the CI configuration shows: its files, its jobs, and the commands and reusable steps each one runs."""
+    files = (CiConfiguration(origin=Origin(path=ci_file.path), provider=ci_file.provider.name) for ci_file in ci_files)
+    return collected((files, *(_file_facts(project, ci_file) for ci_file in ci_files)))

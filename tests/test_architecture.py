@@ -10,7 +10,6 @@ from pathlib import Path
 import project_validator
 from project_validator import ecosystems
 from project_validator.ecosystems import BUILT_IN, PROFILES, Ecosystem, languages_of
-from project_validator.rules import BuildTypes, versions_axis
 from tests import layouts as tests_layouts
 
 PACKAGE = Path(project_validator.__file__).parent
@@ -55,10 +54,6 @@ def _import_fresh(module: str) -> None:
         sys.modules.update(saved)
 
 
-def _rule(name: str) -> BuildTypes:
-    return BuildTypes(axis=versions_axis(name, "X"))
-
-
 class ArchitectureTests(unittest.TestCase):
     def test_checks_never_import_an_ecosystem_profile(self) -> None:
         for path in sorted(CHECKS.glob("*.py")):
@@ -76,10 +71,6 @@ class ArchitectureTests(unittest.TestCase):
                 self.assertNotIn("project_validator.ecosystems.C_FAMILY", _imported_modules(path))
                 self.assertNotRegex(text, r"languages=(?:frozenset\(\s*)?[{\[(]")
                 self.assertEqual([language for language in languages if f'"{language}"' in text], [])
-
-    def test_rules_never_import_the_ecosystems(self) -> None:
-        imported = _imported_modules(PACKAGE / "rules.py")
-        self.assertEqual(sorted(module for module in imported if module.startswith("project_validator.ecosystems")), [])
 
     def test_every_module_imports_on_its_own(self) -> None:
         """An import cycle shows up only for the module that is imported first, so each one is tried first."""
@@ -105,18 +96,3 @@ class ProfileTests(unittest.TestCase):
     def test_every_profile_has_test_layouts(self) -> None:
         layouts = {module.name for module in pkgutil.iter_modules(tests_layouts.__path__)} - {"model"}
         self.assertEqual(layouts, set(PROFILES))
-
-
-class EcosystemRuleTests(unittest.TestCase):
-    def test_an_ecosystem_has_at_most_one_rule_of_each_type(self) -> None:
-        for ecosystem in BUILT_IN:
-            with self.subTest(ecosystem=ecosystem.label):
-                kinds = [type(rule) for rule in ecosystem.rules]
-                self.assertEqual(len(kinds), len(set(kinds)))
-        with self.assertRaisesRegex(ValueError, "several rules of type BuildTypes"):
-            Ecosystem(label="Twice", languages=frozenset({"X"}), rules=(_rule("a"), _rule("b")))
-
-    def test_a_missing_rule_is_none(self) -> None:
-        ecosystem = Ecosystem(label="Bare", languages=frozenset({"X"}))
-        self.assertIsNone(ecosystem.rule(BuildTypes))
-        self.assertEqual(repr(ecosystem), "Ecosystem(Bare)")

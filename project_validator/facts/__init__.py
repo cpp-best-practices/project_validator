@@ -36,6 +36,13 @@ class Fact:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class CiConfiguration(Fact):
+    """A CI configuration file of `provider`, whether or not any job is read from it."""
+
+    provider: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class CiJob(Fact):
     """One CI job as it runs: one combination of its matrix, on one runner.
 
@@ -224,6 +231,7 @@ def collected(groups: Iterable[Iterable[Fact]]) -> Facts:
 __all__ = [
     "NOTHING",
     "ActionStep",
+    "CiConfiguration",
     "CiJob",
     "Command",
     "ConfigurationFile",

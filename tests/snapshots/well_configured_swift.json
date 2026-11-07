@@ -297,6 +297,82 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "Swift toolchain",
+            "language": "Swift",
+            "notes": [],
+            "platforms": [
+              {
+                "Swift toolchain": "6.0",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "Swift toolchain": "6.1",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "Swift toolchain": "6.0",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "Swift toolchain": "6.1",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "Swift toolchain": "6.0",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "windows"
+              },
+              {
+                "Swift toolchain": "6.1",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Swift",
@@ -537,6 +613,31 @@
       "kind": "XCTestCase classes or Swift Testing @Test functions",
       "language": "Swift",
       "origin": "Tests/AppCoreTests/CalculatorTests.swift"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/codeql.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

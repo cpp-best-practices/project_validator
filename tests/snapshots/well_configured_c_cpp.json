@@ -708,6 +708,136 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "compiler",
+            "language": "C",
+            "notes": [],
+            "platforms": [
+              {
+                "compiler": "clang",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "compiler": "gcc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "compiler": "clang",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "compiler": "gcc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "compiler": "msvc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "compiler",
+            "language": "C++",
+            "notes": [],
+            "platforms": [
+              {
+                "compiler": "clang",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "compiler": "gcc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "compiler": "clang",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "compiler": "gcc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "compiler": "msvc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C",
@@ -1172,6 +1302,26 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/codeql-analysis.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

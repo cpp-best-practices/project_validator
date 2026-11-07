@@ -1,54 +1,14 @@
-from project_validator.ci import Job
-from project_validator.core import Context, Result
-from project_validator.ecosystems import ToolchainAxis, practice
+"""CI runs on several operating systems with several compilers (or interpreter and toolchain versions)."""
 
-MINIMUM_OPERATING_SYSTEMS = 2
-MINIMUM_COMPILERS = 2
-MINIMUM_COMBINATIONS = 3
+from project_validator.facts.axes import handled
+from project_validator.judging import answered_check
+from project_validator.policy.platforms import judge_matrix
+from project_validator.questions.platforms import platform_answers
 
-
-def platforms(jobs: tuple[Job, ...], axis: ToolchainAxis) -> set[tuple[str, str]]:
-    """Every (OS, toolchain) pair the jobs run on, leaving out jobs whose OS is unknown."""
-    return {(job.os, toolchain) for job in jobs if job.os != "unknown" for toolchain in axis.of_job(job)}
-
-
-def _describe(job: Job, axis: ToolchainAxis) -> str:
-    toolchains = ", ".join(sorted(axis.of_job(job))) or f"no {axis.noun}"
-    suffix = " (runner default)" if axis.runner_default(job) else ""
-    return f"{job.name}: {job.os} / {toolchains}{suffix}"
-
-
-def _shortfalls(
-    axis: ToolchainAxis, operating_systems: set[str], toolchains: set[str], pairs: set[tuple[str, str]]
-) -> list[str]:
-    requirements = (
-        ("operating systems", len(operating_systems), MINIMUM_OPERATING_SYSTEMS),
-        (axis.plural(), len(toolchains), MINIMUM_COMPILERS),
-        (f"OS/{axis.noun} combinations", len(pairs), MINIMUM_COMBINATIONS),
-    )
-    return [f"at least {minimum} {kind} (found {found})" for kind, found, minimum in requirements if found < minimum]
-
-
-@practice(
+platform_matrix = answered_check(
     name="platform-matrix",
     description="CI runs on several operating systems with several compilers (or interpreter/toolchain versions)",
-    rule=ToolchainAxis,
+    languages=handled(),
+    answers=platform_answers,
+    judge=lambda answer, allow_unknown: judge_matrix(answer, allow_unknown=allow_unknown),
 )
-def platform_matrix(axis: ToolchainAxis, context: Context) -> Result:
-    if not context.ci_files:
-        return Result.failed("no CI configuration found")
-
-    analysis = context.ci_analysis
-    pairs = platforms(analysis.jobs, axis)
-    operating_systems = {os for os, _ in pairs}
-    toolchains = {toolchain for _, toolchain in pairs}
-    summary = (
-        f"{len(operating_systems)} OS(es) ({', '.join(sorted(operating_systems)) or 'none'}), "
-        f"{len(toolchains)} {axis.noun}(s) ({', '.join(sorted(toolchains)) or 'none'}), "
-        f"{len(pairs)} combination(s)"
-    )
-    details = (*analysis.notes, *(_describe(job, axis) for job in analysis.jobs))
-
-    if shortfalls := _shortfalls(axis, operating_systems, toolchains, pairs):
-        return Result.failed(f"CI covers {summary}; expected {', '.join(shortfalls)}", *details)
-    return Result.passed(f"CI covers {summary}", *details)

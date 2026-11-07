@@ -10,13 +10,9 @@ from typing import TYPE_CHECKING
 from project_validator.ecosystems.c_cpp.cmake import CMAKE
 from project_validator.ecosystems.c_cpp.compiler_flags import builds_c_or_cxx
 from project_validator.ecosystems.c_cpp.meson import MESON
-from project_validator.ecosystems.model import C_FAMILY, Ecosystem, ToolchainAxis
-from project_validator.facts.outputs import BuildOutput
-from project_validator.rules import (
-    BuildTypes,
-    directories,
-    ignored_at_top_level,
-)
+from project_validator.ecosystems.model import C_FAMILY, Ecosystem
+from project_validator.facts.axes import ToolchainAxis
+from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 
 if TYPE_CHECKING:
     from project_validator.ci import Job
@@ -37,7 +33,9 @@ def _uses_runner_default_compiler(job: Job) -> bool:
     return job.default_compiler and builds_c_or_cxx(job)
 
 
-COMPILERS = ToolchainAxis(noun="compiler", of_job=_compilers, runner_default=_uses_runner_default_compiler)
+COMPILERS = ToolchainAxis(
+    languages=C_FAMILY, noun="compiler", of_job=_compilers, runner_default=_uses_runner_default_compiler, compiled=True
+)
 
 
 BUILD_DIRECTORY = BuildOutput(
@@ -82,8 +80,4 @@ C_AND_CXX = Ecosystem(
         ".tpp": "C++",
         ".txx": "C++",
     },
-    rules=(
-        COMPILERS,
-        BuildTypes(axis=COMPILERS),
-    ),
 )

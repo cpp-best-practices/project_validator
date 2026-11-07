@@ -292,6 +292,52 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "JDK version",
+            "language": "Java",
+            "notes": [],
+            "platforms": [
+              {
+                "JDK version": "21",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "JDK version": "25",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "JDK version": "21",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "JDK version": "25",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "JDK version": "21",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "JDK version": "25",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Java",
@@ -551,6 +597,26 @@
       "kind": "@Test methods or Kotest specs under src/test/java or src/test/kotlin",
       "language": "Java",
       "origin": "src/test/java/com/example/AppTest.java"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

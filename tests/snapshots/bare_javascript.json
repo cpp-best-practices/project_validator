@@ -305,6 +305,21 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "runtime version",
+            "language": "JavaScript",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "JavaScript",

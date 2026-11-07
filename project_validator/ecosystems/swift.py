@@ -7,16 +7,17 @@ import re
 from collections.abc import Iterator
 
 from project_validator.build_configurations import build_type_kinds
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
+from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
-from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
@@ -32,11 +33,6 @@ from project_validator.facts.settings import (
 )
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by
-from project_validator.rules import (
-    BuildTypes,
-    directories,
-    ignored_at_top_level,
-)
 from project_validator.text import pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
@@ -386,7 +382,7 @@ SWIFTPM_PACKAGES = PackageManager(
     lock_hint="commit Package.resolved, so the application is built with the package versions it was tested with",
 )
 
-SWIFT_TOOLCHAINS = versions_axis("Swift toolchain", SWIFT_LANGUAGE)
+SWIFT_TOOLCHAINS = versions_axis("Swift toolchain", SWIFT_LANGUAGE, SWIFT_ONLY, compiled=True)
 
 SWIFT = Ecosystem(
     label=SWIFT_LANGUAGE,
@@ -402,9 +398,5 @@ SWIFT = Ecosystem(
             re.compile(r"\bXcode_(\d+(?:\.\d+)*)\.app\b"),
         ),
         usage=re.compile(r"\bswift\s+(?:build|test|run|package)\b|\bxcodebuild\b|\bsetup-swift\b"),
-    ),
-    rules=(
-        SWIFT_TOOLCHAINS,
-        BuildTypes(axis=SWIFT_TOOLCHAINS),
     ),
 )
