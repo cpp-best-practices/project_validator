@@ -319,6 +319,17 @@ except where a step deliberately changes results and says so.
      `ty.toml`).
    - Profiles that grew past one module became packages (`python`, `javascript`, `jvm`), each with an `analysis`
      module.
+   - **Reading more of what CI runs** (from the corpus): tox environments (`tox -e`/`-f`/`run`/`p`, the env list,
+     factor-conditional commands, braces, `tox.ini`/`tox.toml`/`[tool.tox]`; a factor from a variable matches every
+     section it may be); the project's shell scripts (`bash ci/lint.sh`, `./ci/lint.sh`); GitLab local `include:`
+     files, `extends:` and `!reference` (YAML values with local tags are `Tagged`; other includes are unknowns that
+     hide jobs); PowerShell scripts (a step's `shell: pwsh`, or a Windows runner's default) split with PowerShell's
+     escape character; and a GitHub job whose matrix is an expression runs its steps with the matrix values unknown
+     (before, its steps were lost).
+   - **Auxiliary code does not speak for a unit**: a run only in an example's or the docs' directory (tsc in
+     `examples/app`) covers no unit of another role, and an auxiliary directory's configuration defines no tool of
+     the unit it is in. tsc reads the configuration it uses (`-p`, or `tsconfig.json` where it runs, and the local
+     ones it extends). Findings list at most three files, and how many more.
 
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.

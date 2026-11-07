@@ -159,7 +159,8 @@ class GitHubActionsFactTests(unittest.TestCase):
         self.assertEqual(jobs[f"{GITHUB_WORKFLOW}:test[1]"].os, "windows")
         self.assertEqual(jobs[f"{GITHUB_WORKFLOW}:container-job"].image, "python:3.14")
         computed = jobs[f"{GITHUB_WORKFLOW}:computed"]
-        self.assertEqual((computed.name, computed.os), ("computed (matrix computed by an expression)", "unknown"))
+        # Its runner is still read; its steps run with their matrix values unknown.
+        self.assertEqual((computed.name, computed.os), ("computed (matrix computed by an expression)", "linux"))
 
     def test_commands_carry_their_step_and_environment(self) -> None:
         commands = [command for command in self.facts.of(Command) if command.job.endswith("test[0]")]
@@ -274,17 +275,38 @@ class GitLabFactTests(unittest.TestCase):
         )
         self.assertEqual(str(self.facts.of(Command)[0].origin), ".gitlab-ci.yml:default.before_script[0]")
 
-    def test_extends_is_not_resolved(self) -> None:
-        self.assertEqual(
-            self.facts.of(Unknown),
-            (
-                Unknown(
-                    origin=Origin(path=".gitlab-ci.yml", at=("mac",)),
-                    subject="job mac",
-                    reason="extends: is not resolved",
-                ),
-            ),
+    def test_extends_merges_the_templates_first(self) -> None:
+        self.assertEqual(self.facts.of(Unknown), ())
+        mac = [command.argv for command in self.facts.where(Command, job=".gitlab-ci.yml:mac")]
+        self.assertEqual(mac, [("apt-get", "update"), ("ctest",)])
+
+    def test_local_includes_references_and_missing_templates(self) -> None:
+        pipeline = (
+            "include:\n  - /ci/build.yml\n  - local: ci/test.yml\n  - project: other/repo\n    file: x.yml\n"
+            "lint:\n  script:\n    - !reference [.setup, script]\n    - ruff check\n"
+            "orphan:\n  extends: .missing\n  script: x\n"
         )
+        facts = _facts(
+            {
+                ".gitlab-ci.yml": pipeline,
+                "ci/build.yml": ".setup:\n  script: [uv sync]\nbuild:\n  script: cmake --build b\n",
+                "ci/test.yml": "test:\n  extends: build\n  script: ctest --test-dir b\n",
+            }
+        )
+        commands = {job: [c.argv for c in facts.where(Command, job=job)] for job in {c.job for c in facts.of(Command)}}
+        self.assertEqual(commands[".gitlab-ci.yml:lint"], [("uv", "sync"), ("ruff", "check")])
+        self.assertEqual(commands["ci/build.yml:build"], [("cmake", "--build", "b")])
+        self.assertEqual(commands["ci/test.yml:test"], [("ctest", "--test-dir", "b")])
+        self.assertEqual(
+            [(unknown.subject, unknown.hides) for unknown in facts.of(Unknown)],
+            [('the include {"project": "other/repo", "file": "x.yml"}', "jobs"), ("job orphan", "commands")],
+        )
+
+    def test_windows_runners_run_powershell(self) -> None:
+        script = 'cmake --build build `\n  --config Release\n$root = "C:\\work\\"'
+        facts = _facts({".gitlab-ci.yml": json.dumps({"win": {"tags": ["windows"], "script": [script]}})})
+        self.assertEqual(facts.of(Unknown), ())
+        self.assertIn(("cmake", "--build", "build", "--config", "Release"), [c.argv for c in facts.of(Command)])
 
 
 class OtherProviderFactTests(unittest.TestCase):

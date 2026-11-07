@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from project_validator.facts import Facts, Unknown
+from project_validator.facts.roles import AUXILIARY, role
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import Tool, ToolRun
 
@@ -63,13 +64,25 @@ def per_unit[A: UnitAnswer](language: str, facts: Facts, answer: Callable[[str],
     return LanguageAnswers(language=language, units=tuple(answer(unit) for unit in units_of(language, facts)))
 
 
+def _auxiliary(run: ToolRun, unit_role: str) -> bool:
+    """Whether a run is only in auxiliary code (tsc in `examples/app`), which says nothing about a unit of another
+    role."""
+    roles = {role(scope, directory=True) for scope in run.scope}
+    return bool(roles) and roles <= AUXILIARY and unit_role not in roles
+
+
 def runs_of(aspect: str, language: str, unit: str, facts: Facts) -> tuple[ToolRun, ...]:
-    """The runs CI makes of tools that provide `aspect` for `language` in `unit` (see `ToolRun.covers`)."""
+    """The runs CI makes of tools that provide `aspect` for `language` in `unit` (see `ToolRun.covers`), but runs
+    only in its auxiliary code (examples, docs, tooling)."""
     units = [found.directory for found in facts.of(Unit)] or ["."]
+    unit_role = next((found.role for found in facts.of(Unit) if found.directory == unit), "product")
     return tuple(
         run
         for run in facts.of(ToolRun)
-        if aspect in run.provides and language in run.languages and run.covers(unit, units)
+        if aspect in run.provides
+        and language in run.languages
+        and run.covers(unit, units)
+        and not _auxiliary(run, unit_role)
     )
 
 

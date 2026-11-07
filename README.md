@@ -95,7 +95,8 @@ What each check accepts for a language is on that ecosystem's page in [docs/ecos
 | `vcs-ignore` | a `.gitignore`, `.hgignore`, `.bzrignore` or `.fossil-settings/ignore-glob` ignores the build outputs of each ecosystem in the project. Warns when an ignore file misses them |
 
 CI detection is pluggable too. GitHub Actions workflows (including `strategy.matrix`
-with `include`/`exclude`) and GitLab CI pipelines (including `parallel: matrix:`)
+with `include`/`exclude`) and GitLab CI pipelines (including `parallel: matrix:`, local `include:` files, `extends:`
+and `!reference`)
 are parsed as YAML. A job is judged by what it runs: its commands (and the commands those run in turn), its image,
 environment and actions. A GitHub step or job whose `if:` is false for a matrix combination does not run in it
 (`runner.os`, `matrix.*`, `env.*` and `contains`/`startsWith`/`endsWith` are evaluated; conditions on anything else
@@ -110,8 +111,9 @@ AppleClang on macOS, MSVC on Windows).
 
 Known limitations:
 
-- GitLab `extends:` is not resolved.
-- A GitHub matrix computed by an expression (`fromJSON(...)`) cannot be expanded; those jobs are reported with an `unknown` OS.
+- A GitLab `include:` from another project, a URL or a template is not read.
+- A GitHub matrix computed by an expression (`fromJSON(...)`) cannot be expanded; those jobs run with their matrix
+  values unknown.
 - Evidence is found by scanning text, so every file under the project is considered;
   use `--exclude` to leave out test fixtures or vendored code.
 - A CI job that names no compiler counts as a C/C++ build with its runner's default compiler,

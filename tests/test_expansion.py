@@ -1,8 +1,10 @@
 """Command expansion: the commands CI's commands run in turn, through Make targets and pre-commit hooks."""
 
 import unittest
+from typing import ClassVar
 
 from project_validator.build_systems.make import parse_makefile
+from project_validator.ecosystems.python.tox import braces
 from project_validator.facts import Command, Facts, Origin, Unknown
 from project_validator.facts.arguments import positional
 from project_validator.facts.expansion import CommandExpander, known_expanders
@@ -205,3 +207,105 @@ class PreCommitTests(unittest.TestCase):
     def test_other_pre_commit_commands_run_no_hooks(self) -> None:
         files = {".pre-commit-config.yaml": self.CONFIG, **github_job("ubuntu-latest", "pre-commit install")}
         self.assertEqual(_expanded(_facts(files)), [])
+
+
+TOX_INI = """\
+[tox]
+env_list =
+    lint,
+    3.1{2-3}-tests,  # each version
+    typing-{mypy,ty}
+
+[testenv]
+commands =
+    tests: pytest {posargs:-n auto}
+    !tests: echo not-tests
+    typing-mypy: mypy src \\
+        tests
+    typing-ty: ty check
+
+[testenv:lint]
+commands = ruff check {toxinidir}
+
+[testenv:3.1{2,3}-tests]
+commands = coverage run -m pytest
+"""
+
+
+def _tox(files: dict[str, str], line: str) -> list[tuple[str, ...]]:
+    commands = _facts({**files, **github_job("ubuntu-latest", line)}).of(Command)
+    return [command.argv for command in commands if command.via]
+
+
+class ToxTests(unittest.TestCase):
+    def test_braces_expand_into_alternatives_and_ranges(self) -> None:
+        self.assertEqual(braces("py3{11-13}-{a,b}"), [f"py3{n}-{x}" for n in (11, 12, 13) for x in "ab"])
+
+    def test_environments_run_their_own_section_or_the_lines_of_their_factors(self) -> None:
+        files = {"tox.ini": TOX_INI}
+        cases = {
+            "tox -e lint": [("ruff", "check", ".")],
+            "tox run -e typing-mypy,typing-ty": [
+                ("echo", "not-tests"),
+                ("mypy", "src", "tests"),
+                ("echo", "not-tests"),
+                ("ty", "check"),
+            ],
+            "tox p -f typing": [
+                ("echo", "not-tests"),
+                ("mypy", "src", "tests"),
+                ("echo", "not-tests"),
+                ("ty", "check"),
+            ],
+            # A factor from a variable matches each section its other parts fit.
+            "tox run -e $PYTHON-tests": [("coverage", "run", "-m", "pytest")],
+            "tox list": [],
+        }
+        for line, expected in cases.items():
+            with self.subTest(line=line):
+                self.assertEqual([argv for argv in _tox(files, line) if argv[0] != "tox"], expected)
+
+    def test_without_an_environment_tox_runs_its_env_list(self) -> None:
+        found = _tox({"tox.ini": TOX_INI}, "uvx tox")
+        self.assertIn(("ruff", "check", "."), found)
+        self.assertIn(("coverage", "run", "-m", "pytest"), found)
+        self.assertIn(("ty", "check"), found)
+
+    def test_toml_configurations(self) -> None:
+        pyproject = '[tool.tox]\nenv_list = ["lint"]\n[tool.tox.env.lint]\ncommands = [["ruff", "check"]]\n'
+        self.assertIn(("ruff", "check"), _tox({"pyproject.toml": pyproject}, "tox"))
+        toml = '[env_run_base]\ncommands = [["pytest", "{posargs}"]]\n'
+        self.assertIn(("pytest", "."), _tox({"tox.toml": toml}, "tox -e py"))
+
+    def test_what_cannot_be_read_is_unknown(self) -> None:
+        for files in ({}, {"pyproject.toml": "[project]\n"}, {"tox.ini": "[tox\n"}, {"tox.toml": "env = ["}):
+            with self.subTest(files=files):
+                unknowns = _facts({**files, **github_job("ubuntu-latest", "tox -e lint")}).of(Unknown)
+                # Other readers of a broken tox.ini report it too.
+                self.assertIn("the tox environments", [unknown.subject for unknown in unknowns])
+        # An environment no section defines runs nothing.
+        self.assertEqual(_tox({"tox.ini": "[tox]\nenv_list = a\n"}, "tox"), [])
+        self.assertEqual(_tox({"tox.toml": "[env.a]\ndescription = 'x'\n"}, "tox -e a"), [])
+
+
+class ShellScriptTests(unittest.TestCase):
+    SCRIPT: ClassVar[dict[str, str]] = {"ci/lint.sh": "#!/usr/bin/env bash\nset -e\nruff check .\n"}
+
+    def test_a_script_of_the_project_runs_its_commands(self) -> None:
+        for line in ("bash ci/lint.sh", "./ci/lint.sh", "sh -e ci/lint.sh", "cd ci && ./lint.sh"):
+            with self.subTest(line=line):
+                found = _tox(self.SCRIPT, line)
+                self.assertIn(("ruff", "check", "."), found)
+
+    def test_other_files_and_inline_scripts_are_not_followed(self) -> None:
+        files = {**self.SCRIPT, "tools/run.py": "print('x')\n", "ci/notes": "ruff check .\n"}
+        for line in (
+            "bash -c 'echo hi'",
+            "./tools/run.py",
+            "/usr/bin/env.sh",
+            "sh ci/missing.sh",
+            "./ci/notes",
+            "bash",
+        ):
+            with self.subTest(line=line):
+                self.assertNotIn(("ruff", "check", "."), _tox(files, line))

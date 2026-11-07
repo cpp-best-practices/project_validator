@@ -3,6 +3,7 @@
 from project_validator.core import Result, Status
 from project_validator.facts.formatting import Enforcement
 from project_validator.policy import alternatives, either, unknown
+from project_validator.policy import files as files_listed
 from project_validator.questions import Answer
 from project_validator.questions.tooling import ToolAnswer
 
@@ -16,7 +17,7 @@ def _enforced(answer: ToolAnswer) -> Result:
     if undefined := answer.undefined():
         return Result.failed(f"no {either(undefined)} configuration found; formatting is not defined", _hint(answer))
     if files := answer.definitions(answer.providing()):
-        return Result.passed(f"{', '.join(files)} is defined and CI runs {tools}")
+        return Result.passed(f"{files_listed(files)} is defined and CI runs {tools}")
     return Result.passed(f"CI enforces the {tools} style")
 
 
@@ -36,7 +37,7 @@ def judge_formatting(answer: ToolAnswer, *, allow_unknown: bool = False) -> Resu
             f"CI runs {', '.join(applied)} but only to rewrite files; nothing fails when they are not formatted", hint
         )
     if files := answer.definitions():
-        return Result.warned(f"{', '.join(files)} is defined but CI does not run {names}", hint)
+        return Result.warned(f"{files_listed(files)} is defined but CI does not run {names}", hint)
     if all(tool.needs_definition for tool in answer.known):
         return Result.failed(f"no {names} configuration found; formatting is not defined", hint)
     return Result.failed(f"CI never runs {names}; its formatting is not enforced", hint)

@@ -227,6 +227,8 @@ PYTHON_RUNNERS = launcher(
             "--python",
             "-p",
             "--group",
+            "--only-group",
+            "--no-group",
             "--extra",
             "--package",
             "--directory",

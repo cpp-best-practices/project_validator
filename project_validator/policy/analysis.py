@@ -4,6 +4,7 @@ and a type checker; strict type checking is a bonus."""
 from project_validator.core import Result, Status
 from project_validator.facts.analysis import CHECKS, Strictness
 from project_validator.policy import both, either, unknown
+from project_validator.policy import files as files_listed
 from project_validator.questions import Answer
 from project_validator.questions.tooling import ToolAnswer
 
@@ -11,7 +12,7 @@ from project_validator.questions.tooling import ToolAnswer
 def _named(answer: ToolAnswer, tool: str) -> str:
     """A tool, with the files that define it."""
     files = answer.definitions((tool,))
-    return f"{tool} ({', '.join(files)})" if files else tool
+    return f"{tool} ({files_listed(files)})" if files else tool
 
 
 def _ran(answer: ToolAnswer) -> str:
@@ -22,7 +23,7 @@ def _ran(answer: ToolAnswer) -> str:
 def _idle(answer: ToolAnswer, tools: tuple[str, ...]) -> list[str]:
     """Each of `tools`, which CI does not run, as configured or not."""
     return [
-        f"{tool} is configured ({', '.join(files)}) but does not run"
+        f"{tool} is configured ({files_listed(files)}) but does not run"
         if (files := answer.definitions((tool,)))
         else f"{tool} does not run"
         for tool in tools
@@ -63,7 +64,7 @@ def judge_type_checking(answer: ToolAnswer, *, allow_unknown: bool = False) -> R
     hint = f"consider running a type checker in CI: {either(answer.how(Strictness.CHECKS))}"
     if answer.answer is Answer.YES:
         if strict := answer.providing(Strictness.STRICT):
-            where = (f"{tool} ({', '.join(read)})" if (read := answer.read_by(tool)) else tool for tool in strict)
+            where = (f"{tool} ({files_listed(read)})" if (read := answer.read_by(tool)) else tool for tool in strict)
             return Result.passed(f"{_ran(answer)}; strict mode bonus: {', '.join(where)}")
         return Result.passed(_ran(answer), f"consider enabling strict mode: {either(answer.how(Strictness.STRICT))}")
     if answer.answer is Answer.UNKNOWN and not allow_unknown:

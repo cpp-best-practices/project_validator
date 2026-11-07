@@ -33,10 +33,17 @@ def both(items: Iterable[str]) -> str:
     return items[0] if len(items) == 1 else f"{', '.join(items[:-1])} and {items[-1]}"
 
 
+def files(paths: Iterable[str], shown: int = 3) -> str:
+    """`a, b, c`, or the first `shown` and how many more."""
+    paths = list(paths)
+    more = len(paths) - shown
+    return ", ".join(paths) if more <= 0 else f"{', '.join(paths[:shown])} and {more} more"
+
+
 def alternatives(ways: Iterable[str]) -> str:
     """`a`, or `a (or b, c)`: the first way, and the others."""
     ways = list(ways)
     return ways[0] if len(ways) == 1 else f"{ways[0]} (or {either(ways[1:])})"
 
 
-__all__ = ["alternatives", "both", "either", "unknown"]
+__all__ = ["alternatives", "both", "either", "files", "unknown"]

@@ -112,14 +112,15 @@ def _job_facts(
     strategy = job.get("strategy")
     combinations = expand_matrix(strategy.get("matrix") if isinstance(strategy, Mapping) else None)
     if combinations is None:
-        name = f"{job.get('name', job_id)} (matrix computed by an expression)"
-        yield CiJob(origin=origin, id=f"{caller}{path}:{job_id}", provider=GITHUB_ACTIONS.name, name=name, os="unknown")
+        # Its steps still run, in combinations that are not known: their matrix values stay as written.
         yield Unknown(
             origin=origin,
             subject=f"the matrix of job {job_id}",
             reason="it is computed by an expression",
             hides="matrix",
         )
+        unknown = _Combination(origin, f"{caller}{path}:{job_id}", {}, load=load, matrix_known=False)
+        yield from unknown.facts(job, workflow_env)
         return
     for index, combination in enumerate(combinations):
         identity = f"{caller}{path}:{job_id}" + ("" if len(combinations) == 1 else f"[{index}]")
@@ -136,10 +137,14 @@ class _Combination:
     # What the job's conditions and expressions can be evaluated with, once its environment is known.
     known: Known | None = None
     load: Load | None = None
+    # Whether the combination's values are known; when not, matrix expressions stay as written.
+    matrix_known: bool = True
+    # The shell the job's steps run in unless a step names its own (`defaults: run: shell:`).
+    shell: str | None = None
 
     def substitute(self, text: str) -> str:
         """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
-        text = substitute_matrix(text, self.combination, missing="")
+        text = substitute_matrix(text, self.combination, missing="" if self.matrix_known else None)
         if (known := self.known) is None:
             return text
         return EXPRESSION.sub(
@@ -166,7 +171,10 @@ class _Combination:
         known = Known(os=os, matrix=self.combination, env=env)
         if self.runs(job.get("if"), known) is False:
             return
-        yield from replace(self, known=known).job_facts(job, known)
+        defaults = job.get("defaults")
+        run = defaults.get("run") if isinstance(defaults, Mapping) else None
+        shell = run.get("shell") if isinstance(run, Mapping) else None
+        yield from replace(self, known=known, shell=str(shell) if shell else None).job_facts(job, known)
 
     def job_facts(self, job: Mapping[str, object], known: Known) -> Iterator[Fact]:
         container = job.get("container")
@@ -174,7 +182,8 @@ class _Combination:
             origin=self.origin,
             id=self.identity,
             provider=GITHUB_ACTIONS.name,
-            name=_job_label(str(job.get("name", self.origin.at[-1])), self.combination),
+            name=_job_label(str(job.get("name", self.origin.at[-1])), self.combination)
+            + ("" if self.matrix_known else " (matrix computed by an expression)"),
             os=known.os,
             matrix={
                 key: value if isinstance(value, str) else json.dumps(value) for key, value in self.combination.items()
@@ -214,7 +223,15 @@ class _Combination:
                 condition=condition,
                 opaque=EXPRESSION,
                 via=via,
+                powershell=self.powershell(step, known),
             )
+
+    def powershell(self, step: Mapping[str, object], known: Known) -> bool:
+        """Whether a step's script is PowerShell: its `shell`, the job's default, or the runner's (pwsh on Windows)."""
+        shell = step.get("shell") or self.shell
+        if shell is None:
+            return known.os == "windows"
+        return str(shell).split()[0] in ("pwsh", "powershell")
 
     def composite_facts(
         self, origin: Origin, directory: str, inputs: Mapping[str, str], known: Known, via: tuple[Origin, ...]
