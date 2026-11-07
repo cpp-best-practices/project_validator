@@ -22,16 +22,6 @@ def matching_names(texts: Iterable[str], patterns: Iterable[Pattern]) -> list[st
     return list(dict.fromkeys(found))
 
 
-def found_and_missing(texts: Iterable[str], patterns: Iterable[Pattern]) -> tuple[list[str], list[str]]:
-    """Names of the patterns found in any text, and of those found in none, both in pattern order."""
-    texts = tuple(texts)
-    found: list[str] = []
-    missing: list[str] = []
-    for p in patterns:
-        (found if any(p.regex.search(text) for text in texts) else missing).append(p.name)
-    return found, missing
-
-
 # A string, a comment, or a comma that only whitespace separates from the closing bracket.
 _JSONC_TOKENS = re.compile(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/|,(?=\s*[}\]])', re.DOTALL)
 

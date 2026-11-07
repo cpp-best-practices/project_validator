@@ -11,9 +11,10 @@ from collections.abc import Iterator, Mapping
 from project_validator import yaml_support
 from project_validator.core import Context
 from project_validator.evidence import PRE_COMMIT_CONFIGURATION
-from project_validator.facts import Command, Origin, Unknown
+from project_validator.facts import Command, Fact, Origin, Setting, Unknown
 from project_validator.facts.arguments import positional
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Invocation, Script, found_at
+from project_validator.facts.settings import SettingsReader
 
 _PROGRAMS = frozenset({"pre-commit", "prek"})
 # The stages `pre-commit run` runs when no --hook-stage is given; hooks without `stages` run in every stage.
@@ -88,3 +89,21 @@ PRE_COMMIT_ACTION = Action(
         ("pre-commit", "run", "--show-diff-on-failure", *shlex.split(inputs.get("extra_args", "--all-files"))),
     ),
 )
+
+
+def _read_hooks(path: str, text: str) -> Iterator[Fact]:
+    """Each hook a pre-commit configuration defines, as its repository, id, entry and arguments: a hook runs before
+    each commit wherever it is installed, whether or not CI runs it too."""
+    try:
+        document = yaml_support.load(text)
+    except yaml_support.YamlError as error:
+        yield Unknown(origin=Origin(path=path), subject="the pre-commit hooks", reason=str(error), hides="settings")
+        return
+    for repo_index, hook_index, repo, hook in _hooks(document):
+        args = hook.get("args")
+        words = [str(hook["id"]), str(hook.get("entry", "")), *(map(str, args) if isinstance(args, list) else ())]
+        origin = Origin(path=path, at=("repos", repo_index, "hooks", hook_index))
+        yield Setting(origin=origin, tool="pre-commit", key="hook", value=" ".join((repo, *words)).strip())
+
+
+PRE_COMMIT_SETTINGS = SettingsReader(name="pre-commit", files=PRE_COMMIT_CONFIGURATION, read=_read_hooks)
