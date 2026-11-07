@@ -33,7 +33,8 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
     },
     {
       "condition": null,
@@ -56,7 +57,8 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "gitleaks git --redact .",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run"
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
     },
     {
       "env": {},
@@ -102,7 +104,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npm ci",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -116,7 +119,25 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npm run format:check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
     },
     {
       "argv": [
@@ -130,7 +151,26 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npm run lint",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
     },
     {
       "argv": [
@@ -144,7 +184,24 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
     },
     {
       "argv": [
@@ -157,7 +214,25 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
     },
     {
       "argv": [
@@ -171,7 +246,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "env": {},
@@ -217,7 +293,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npm ci",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -231,7 +308,25 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npm run format:check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
     },
     {
       "argv": [
@@ -245,7 +340,26 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npm run lint",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
     },
     {
       "argv": [
@@ -259,7 +373,24 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
     },
     {
       "argv": [
@@ -272,7 +403,25 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
     },
     {
       "argv": [
@@ -286,7 +435,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "env": {},
@@ -332,7 +482,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npm ci",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -346,7 +497,25 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npm run format:check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
     },
     {
       "argv": [
@@ -360,7 +529,26 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npm run lint",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
     },
     {
       "argv": [
@@ -374,7 +562,24 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
     },
     {
       "argv": [
@@ -387,7 +592,25 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
     },
     {
       "argv": [
@@ -401,7 +624,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "env": {},
@@ -447,7 +671,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npm ci",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -461,7 +686,25 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npm run format:check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
     },
     {
       "argv": [
@@ -475,7 +718,26 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npm run lint",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
     },
     {
       "argv": [
@@ -489,7 +751,24 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
     },
     {
       "argv": [
@@ -502,7 +781,25 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
     },
     {
       "argv": [
@@ -516,7 +813,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "env": {},
@@ -562,7 +860,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npm ci",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -576,7 +875,25 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npm run format:check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
     },
     {
       "argv": [
@@ -590,7 +907,26 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npm run lint",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
     },
     {
       "argv": [
@@ -604,7 +940,24 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
     },
     {
       "argv": [
@@ -617,7 +970,25 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
     },
     {
       "argv": [
@@ -631,7 +1002,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "env": {},
@@ -677,7 +1049,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npm ci",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -691,7 +1064,25 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npm run format:check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
     },
     {
       "argv": [
@@ -705,7 +1096,26 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npm run lint",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
     },
     {
       "argv": [
@@ -719,7 +1129,24 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
     },
     {
       "argv": [
@@ -732,7 +1159,25 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
     },
     {
       "argv": [
@@ -746,7 +1191,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "env": {},
@@ -783,7 +1229,8 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
     },
     {
       "env": {},
@@ -819,7 +1266,8 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "python -m pip install lizard",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
     },
     {
       "argv": [
@@ -835,7 +1283,8 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run"
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
     }
   ],
   "map": {

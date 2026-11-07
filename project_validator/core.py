@@ -75,7 +75,10 @@ class Project:
     excluded: frozenset[PurePosixPath] = frozenset()
 
     def exists(self, relative: str) -> bool:
-        return (self.root / relative).is_file()
+        """Whether the file exists, with its name spelled exactly so (`makefile` is not `Makefile`, even where file
+        names are compared without case, as on Windows and macOS)."""
+        path = self.root / relative
+        return path.is_file() and path.name in os.listdir(path.parent)
 
     def read_text(self, relative: str) -> str:
         return (self.root / relative).read_text(encoding="utf-8", errors="replace")
@@ -163,10 +166,13 @@ class Context:
 
     @cached_property
     def facts(self) -> Facts:
-        """The fact database (see `project_validator.facts`); for now, what the CI configuration shows."""
+        """The fact database (see `project_validator.facts`): what the CI configuration shows, with the commands each
+        command runs in turn."""
         from project_validator.ci import ci_facts
+        from project_validator.facts import Facts
+        from project_validator.facts.expansion import built_in_expanders, expanded
 
-        return ci_facts(self.project, self.ci_files)
+        return Facts(tuple(expanded(ci_facts(self.project, self.ci_files), self, built_in_expanders())))
 
     @cached_property
     def ci_texts(self) -> tuple[str, ...]:

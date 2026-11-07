@@ -33,7 +33,8 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
     },
     {
       "condition": null,
@@ -56,7 +57,8 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "gitleaks git --redact .",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run"
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
     },
     {
       "env": {},
@@ -104,7 +106,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "composer install --no-interaction",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -117,7 +120,129 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "composer check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "cs"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "composer run-script cs",
+      "origin": "composer.json:scripts.check[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "php-cs-fixer",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "php-cs-fixer check",
+      "origin": "composer.json:scripts.cs",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "composer run-script analyse",
+      "origin": "composer.json:scripts.check[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpstan",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "phpstan analyse",
+      "origin": "composer.json:scripts.analyse[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "psalm",
+        "--taint-analysis"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "psalm --taint-analysis",
+      "origin": "composer.json:scripts.analyse[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "composer run-script test",
+      "origin": "composer.json:scripts.check[2]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpunit",
+        "--coverage-clover",
+        "coverage.xml",
+        "--path-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "phpunit --coverage-clover coverage.xml --path-coverage",
+      "origin": "composer.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
+      ]
     },
     {
       "argv": [
@@ -130,7 +255,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "composer audit",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "env": {},
@@ -178,7 +304,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "composer install --no-interaction",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -191,7 +318,129 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "composer check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "cs"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "composer run-script cs",
+      "origin": "composer.json:scripts.check[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "php-cs-fixer",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "php-cs-fixer check",
+      "origin": "composer.json:scripts.cs",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "composer run-script analyse",
+      "origin": "composer.json:scripts.check[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpstan",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "phpstan analyse",
+      "origin": "composer.json:scripts.analyse[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "psalm",
+        "--taint-analysis"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "psalm --taint-analysis",
+      "origin": "composer.json:scripts.analyse[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "composer run-script test",
+      "origin": "composer.json:scripts.check[2]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpunit",
+        "--coverage-clover",
+        "coverage.xml",
+        "--path-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "phpunit --coverage-clover coverage.xml --path-coverage",
+      "origin": "composer.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
+      ]
     },
     {
       "argv": [
@@ -204,7 +453,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "composer audit",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "env": {},
@@ -252,7 +502,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "composer install --no-interaction",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -265,7 +516,129 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "composer check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "cs"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "composer run-script cs",
+      "origin": "composer.json:scripts.check[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "php-cs-fixer",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "php-cs-fixer check",
+      "origin": "composer.json:scripts.cs",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "composer run-script analyse",
+      "origin": "composer.json:scripts.check[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpstan",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "phpstan analyse",
+      "origin": "composer.json:scripts.analyse[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "psalm",
+        "--taint-analysis"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "psalm --taint-analysis",
+      "origin": "composer.json:scripts.analyse[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "composer run-script test",
+      "origin": "composer.json:scripts.check[2]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpunit",
+        "--coverage-clover",
+        "coverage.xml",
+        "--path-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "phpunit --coverage-clover coverage.xml --path-coverage",
+      "origin": "composer.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
+      ]
     },
     {
       "argv": [
@@ -278,7 +651,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "composer audit",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "env": {},
@@ -326,7 +700,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "composer install --no-interaction",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -339,7 +714,129 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "composer check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "cs"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "composer run-script cs",
+      "origin": "composer.json:scripts.check[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "php-cs-fixer",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "php-cs-fixer check",
+      "origin": "composer.json:scripts.cs",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "composer run-script analyse",
+      "origin": "composer.json:scripts.check[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpstan",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "phpstan analyse",
+      "origin": "composer.json:scripts.analyse[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "psalm",
+        "--taint-analysis"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "psalm --taint-analysis",
+      "origin": "composer.json:scripts.analyse[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "composer run-script test",
+      "origin": "composer.json:scripts.check[2]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpunit",
+        "--coverage-clover",
+        "coverage.xml",
+        "--path-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "phpunit --coverage-clover coverage.xml --path-coverage",
+      "origin": "composer.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
+      ]
     },
     {
       "argv": [
@@ -352,7 +849,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "composer audit",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "env": {},
@@ -400,7 +898,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "composer install --no-interaction",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -413,7 +912,129 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "composer check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "cs"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "composer run-script cs",
+      "origin": "composer.json:scripts.check[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "php-cs-fixer",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "php-cs-fixer check",
+      "origin": "composer.json:scripts.cs",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "composer run-script analyse",
+      "origin": "composer.json:scripts.check[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpstan",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "phpstan analyse",
+      "origin": "composer.json:scripts.analyse[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "psalm",
+        "--taint-analysis"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "psalm --taint-analysis",
+      "origin": "composer.json:scripts.analyse[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "composer run-script test",
+      "origin": "composer.json:scripts.check[2]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpunit",
+        "--coverage-clover",
+        "coverage.xml",
+        "--path-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "phpunit --coverage-clover coverage.xml --path-coverage",
+      "origin": "composer.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
+      ]
     },
     {
       "argv": [
@@ -426,7 +1047,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "composer audit",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "env": {},
@@ -474,7 +1096,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "composer install --no-interaction",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -487,7 +1110,129 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "composer check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "cs"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "composer run-script cs",
+      "origin": "composer.json:scripts.check[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "php-cs-fixer",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "php-cs-fixer check",
+      "origin": "composer.json:scripts.cs",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "composer run-script analyse",
+      "origin": "composer.json:scripts.check[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpstan",
+        "analyse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "phpstan analyse",
+      "origin": "composer.json:scripts.analyse[0]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "psalm",
+        "--taint-analysis"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "psalm --taint-analysis",
+      "origin": "composer.json:scripts.analyse[1]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "argv": [
+        "composer",
+        "run-script",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "composer run-script test",
+      "origin": "composer.json:scripts.check[2]",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "phpunit",
+        "--coverage-clover",
+        "coverage.xml",
+        "--path-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "phpunit --coverage-clover coverage.xml --path-coverage",
+      "origin": "composer.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
+      ]
     },
     {
       "argv": [
@@ -500,7 +1245,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "composer audit",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "env": {},
@@ -537,7 +1283,8 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
     },
     {
       "env": {},
@@ -573,7 +1320,8 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "python -m pip install lizard",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
     },
     {
       "argv": [
@@ -589,7 +1337,8 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run"
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
     }
   ],
   "map": {

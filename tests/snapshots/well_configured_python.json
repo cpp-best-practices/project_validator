@@ -33,7 +33,8 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
     },
     {
       "condition": null,
@@ -56,7 +57,8 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "gitleaks git --redact .",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run"
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
     },
     {
       "env": {},
@@ -107,7 +109,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -123,7 +126,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
     },
     {
       "argv": [
@@ -137,7 +141,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "argv": [
@@ -151,7 +156,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "ruff format --check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
     },
     {
       "argv": [
@@ -164,7 +170,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "ruff check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
     },
     {
       "argv": [
@@ -177,7 +184,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "mypy src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "argv": [
@@ -193,7 +201,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
     },
     {
       "argv": [
@@ -212,7 +221,8 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
     },
     {
       "env": {},
@@ -263,7 +273,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -279,7 +290,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
     },
     {
       "argv": [
@@ -293,7 +305,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "argv": [
@@ -307,7 +320,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "ruff format --check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
     },
     {
       "argv": [
@@ -320,7 +334,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "ruff check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
     },
     {
       "argv": [
@@ -333,7 +348,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "mypy src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "argv": [
@@ -349,7 +365,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
     },
     {
       "argv": [
@@ -368,7 +385,8 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
     },
     {
       "env": {},
@@ -419,7 +437,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -435,7 +454,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
     },
     {
       "argv": [
@@ -449,7 +469,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "argv": [
@@ -463,7 +484,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "ruff format --check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
     },
     {
       "argv": [
@@ -476,7 +498,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "ruff check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
     },
     {
       "argv": [
@@ -489,7 +512,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "mypy src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "argv": [
@@ -505,7 +529,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
     },
     {
       "argv": [
@@ -524,7 +549,8 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
     },
     {
       "env": {},
@@ -575,7 +601,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -591,7 +618,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
     },
     {
       "argv": [
@@ -605,7 +633,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "argv": [
@@ -619,7 +648,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "ruff format --check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
     },
     {
       "argv": [
@@ -632,7 +662,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "ruff check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
     },
     {
       "argv": [
@@ -645,7 +676,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "mypy src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "argv": [
@@ -661,7 +693,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
     },
     {
       "argv": [
@@ -680,7 +713,8 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
     },
     {
       "env": {},
@@ -731,7 +765,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -747,7 +782,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
     },
     {
       "argv": [
@@ -761,7 +797,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "argv": [
@@ -775,7 +812,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "ruff format --check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
     },
     {
       "argv": [
@@ -788,7 +826,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "ruff check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
     },
     {
       "argv": [
@@ -801,7 +840,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "mypy src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "argv": [
@@ -817,7 +857,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
     },
     {
       "argv": [
@@ -836,7 +877,8 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
     },
     {
       "env": {},
@@ -887,7 +929,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
     },
     {
       "argv": [
@@ -903,7 +946,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
     },
     {
       "argv": [
@@ -917,7 +961,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
     },
     {
       "argv": [
@@ -931,7 +976,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "ruff format --check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
     },
     {
       "argv": [
@@ -944,7 +990,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "ruff check",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
     },
     {
       "argv": [
@@ -957,7 +1004,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "mypy src",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
     },
     {
       "argv": [
@@ -973,7 +1021,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
     },
     {
       "argv": [
@@ -992,7 +1041,8 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
     },
     {
       "env": {},
@@ -1067,7 +1117,8 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
     }
   ],
   "map": {

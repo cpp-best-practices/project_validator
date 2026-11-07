@@ -8,6 +8,7 @@ CI runs count as CI configuration wherever a rule reads more than CI configurati
 import json
 import re
 from collections.abc import Iterator
+from dataclasses import dataclass
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
@@ -19,6 +20,8 @@ from project_validator.evidence import (
     json_value,
     scripts_run,
 )
+from project_validator.facts import Command, Origin, Unknown
+from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, positional
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -99,6 +102,91 @@ def _run_texts(context: Context) -> tuple[str, ...]:
     """CI configuration, pre-commit hooks, and the package scripts they run."""
     texts = ci_and_hook_texts(context)
     return (*texts, *scripts_run(texts, _scripts(context), _named_scripts, _pre_and_post))
+
+
+# How a command names the package script it runs: the scripts npm runs by name, and the commands each package
+# manager has besides `run` (which it does not take for script names).
+_NPM_SCRIPT_COMMANDS = {
+    "test": "test",
+    "t": "test",
+    "tst": "test",
+    "start": "start",
+    "stop": "stop",
+    "restart": "restart",
+}
+_NPM_RUN = frozenset({"run", "run-script", "rum", "urn"})
+_OWN_COMMANDS = {
+    "pnpm": frozenset({"install", "i", "add", "remove", "update", "exec", "dlx", "audit", "outdated", "list", "why"}),
+    "yarn": frozenset({"install", "add", "remove", "upgrade", "up", "exec", "dlx", "audit", "npm", "workspaces"}),
+    "bun": frozenset({"install", "i", "add", "remove", "update", "x", "test", "build", "pm", "audit", "outdated"}),
+}
+_DIRECTORY_OPTIONS = frozenset({"--prefix", "--cwd", "-C", "--dir"})
+
+
+@dataclass(frozen=True, slots=True)
+class _ScriptRun:
+    name: str
+    directory: str | None
+    # Named with `run` (or npm's own `test`), so it must exist; pnpm, yarn and bun run a binary of a name that is not
+    # a script.
+    explicit: bool
+
+
+def _script_named(argv: tuple[str, ...]) -> _ScriptRun | None:
+    words, options = positional(argv, _DIRECTORY_OPTIONS)
+    if not words:
+        return None
+    directory = next((value for value in options.values() if value), None)
+    program, first = argv[0], words[0]
+    if first in _NPM_RUN:
+        return _ScriptRun(words[1], directory, explicit=True) if len(words) > 1 else None
+    if program == "npm":
+        return (
+            _ScriptRun(_NPM_SCRIPT_COMMANDS[first], directory, explicit=True) if first in _NPM_SCRIPT_COMMANDS else None
+        )
+    return None if first in _OWN_COMMANDS[program] else _ScriptRun(first, directory, explicit=False)
+
+
+def _package_scripts(command: Command, context: Context) -> Iterator[Expansion] | None:
+    """`npm test`, `npm run lint`, `pnpm lint`, `yarn run lint`, `bun run lint`: the package.json scripts they run,
+    with npm's and yarn's pre and post scripts around them."""
+    if not command.argv or command.argv[0] not in ("npm", *_OWN_COMMANDS) or not (run := _script_named(command.argv)):
+        return None
+    path = joined(run.directory or command.directory, PACKAGE_JSON)
+    scripts = _json_strings(json_value(context, path, "scripts"))
+    if run.name not in scripts:
+        if not run.explicit:
+            return None
+        return iter((Unknown(origin=command.origin, subject=f"the script {run.name}", reason=f"{path} has none"),))
+    names = [f"{prefix}{run.name}" for prefix in (("pre", "", "post") if command.argv[0] in ("npm", "yarn") else ("",))]
+    return (
+        Script(text=scripts[name], origin=Origin(path=path, at=("scripts", name)), directory=run.directory)
+        for name in names
+        if name in scripts
+    )
+
+
+PACKAGE_SCRIPTS = CommandExpander(name="package.json scripts", expand=_package_scripts)
+
+
+def _task(value: object) -> str | None:
+    if isinstance(value, dict):
+        value = value.get("command")
+    return value if isinstance(value, str) else None
+
+
+def _deno_tasks(command: Command, context: Context) -> Iterator[Expansion] | None:
+    """`deno task lint`: the task in deno.json (or deno.jsonc)."""
+    if command.argv[:2] != ("deno", "task") or len(command.argv) < 3:
+        return None
+    name = command.argv[2]
+    path = found_at(context, command.directory, DENO_CONFIG_FILES)
+    if path is None or (text := _task(json_value(context, path, "tasks", name, comments=True))) is None:
+        return iter((Unknown(origin=command.origin, subject=f"the task {name}", reason="no deno.json defines it"),))
+    return iter((Script(text=text, origin=Origin(path=path, at=("tasks", name))),))
+
+
+DENO_TASKS = CommandExpander(name="deno.json tasks", expand=_deno_tasks)
 
 
 PRETTIER_CONFIG_FILES = tuple(

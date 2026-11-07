@@ -6,8 +6,9 @@ import re
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
 
-from project_validator.ci import CiProvider, Job, build_job, script_facts, strings
+from project_validator.ci import CiProvider, Job, build_job, strings
 from project_validator.facts import ActionStep, CiJob, Fact, Origin, Unknown
+from project_validator.facts.expansion import script_facts
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
 

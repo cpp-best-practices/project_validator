@@ -9,6 +9,13 @@ from tests.support import PROJECT_LAYOUTS, layout_project, temp_project
 
 
 class ProjectTests(unittest.TestCase):
+    def test_a_file_exists_only_spelled_as_it_is(self) -> None:
+        with temp_project({"Makefile": ""}) as root:
+            project = Project(root)
+            self.assertEqual(
+                (project.exists("Makefile"), project.exists("makefile"), project.exists("x")), (True, False, False)
+            )
+
     def test_finds_cmake_files_recursively(self) -> None:
         files = {"CMakeLists.txt": "", "src/CMakeLists.txt": "", "cmake/Warnings.cmake": "", "src/main.cpp": ""}
         with temp_project(files) as root:
