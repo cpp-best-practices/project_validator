@@ -15,6 +15,29 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "error_reporting = E_ALL"
+                ]
+              }
+            ],
+            "language": "PHP",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "PHP",
@@ -396,6 +419,30 @@
               "vendor": {}
             },
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "PHPUnit failOnWarning, failOnNotice and failOnDeprecation",
+                  "PHPUnit failOnAllIssues"
+                ]
+              }
+            ],
+            "language": "PHP",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }

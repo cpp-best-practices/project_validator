@@ -18,17 +18,18 @@ from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
+from project_validator.facts.practices import Practice, always, required
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by, either, starts, when
 from project_validator.rules import (
     Hardening,
-    WarningPolicy,
     directories,
     ignored_at_top_level,
 )
-from project_validator.text import Pattern, matching_names, pattern
+from project_validator.text import matching_names, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
@@ -164,10 +165,6 @@ GO_TEST = test_runner(
 )
 
 
-def _lint_texts(context: Context) -> tuple[str, ...]:
-    return (*context.ci_texts, *existing_texts(context, GOLANGCI_CONFIG_FILES))
-
-
 # The Go compiler has no warnings; go vet and staticcheck report what other compilers warn about.
 # golangci-lint runs both by default.
 GO_LINTS = (
@@ -176,12 +173,12 @@ GO_LINTS = (
 )
 
 
-def _required_lints(_: Context) -> tuple[Pattern, ...]:
-    return GO_LINTS
-
-
-WARNINGS = WarningPolicy(
-    kind="Go linters", recognised=GO_LINTS, required=_required_lints, texts=_lint_texts, separator=", "
+WARNINGS = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=GO_LANGUAGE,
+    kind="Go linters",
+    requirements=always(*(required(lint, in_files=False, tools=("golangci-lint",)) for lint in GO_LINTS)),
+    hint="run go vet and staticcheck (golangci-lint runs both) in CI",
 )
 
 
@@ -350,7 +347,6 @@ GO = Ecosystem(
     ),
     rules=(
         versions_axis("Go version", "Go"),
-        WARNINGS,
         HARDENING,
     ),
 )

@@ -15,6 +15,31 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "AnalysisMode Recommended or All",
+                  "EnforceCodeStyleInBuild",
+                  "Nullable enable"
+                ]
+              }
+            ],
+            "language": "C#",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "C#",
@@ -367,6 +392,29 @@
           }
         ]
       }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "TreatWarningsAsErrors"
+                ]
+              }
+            ],
+            "language": "C#",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -431,6 +479,11 @@
       "origin": "src/App/App.csproj:Sdk",
       "tool": "MSBuild",
       "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "MSBuild warning settings"
     },
     {
       "kind": "ConfigurationFile",
@@ -651,7 +704,7 @@
       "details": [
         "set <TreatWarningsAsErrors>true</TreatWarningsAsErrors> in Directory.Build.props"
       ],
-      "message": "warnings are not treated as errors in the MSBuild settings CI builds with, or CI configuration",
+      "message": "warnings are not treated as errors in the MSBuild settings or CI configuration",
       "status": "FAIL"
     }
   }

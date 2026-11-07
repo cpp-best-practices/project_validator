@@ -20,6 +20,12 @@
 
   <build>
     <plugins>
+      <!-- Kotlin sources are compiled with the Kotlin compiler, whose warnings are on by default. -->
+      <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <version>2.2.0</version>
+      </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>

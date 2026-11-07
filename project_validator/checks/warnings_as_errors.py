@@ -1,15 +1,14 @@
-from project_validator.core import Context, Result
-from project_validator.ecosystems import practice
-from project_validator.rules import WarningsAsErrors
-from project_validator.text import matching_names
+"""Warnings fail the build, in at least one configuration."""
 
+from project_validator.facts.practices import WARNINGS_AS_ERRORS, handled
+from project_validator.judging import answered_check
+from project_validator.policy.practices import judge_errors
+from project_validator.questions.practices import error_answers
 
-@practice(
-    name="warnings-as-errors",
+warnings_as_errors = answered_check(
+    name=WARNINGS_AS_ERRORS,
     description="Compiler warnings are treated as errors in at least one configuration",
-    rule=WarningsAsErrors,
+    languages=handled(WARNINGS_AS_ERRORS),
+    answers=error_answers,
+    judge=lambda answer, allow_unknown: judge_errors(answer, allow_unknown=allow_unknown),
 )
-def warnings_as_errors(rule: WarningsAsErrors, context: Context) -> Result:
-    if flags := matching_names(rule.texts(context), rule.flags):
-        return Result.passed(f"warnings are treated as errors with {', '.join(flags)}")
-    return Result.failed(f"warnings are not treated as errors in {rule.searched}", rule.hint)

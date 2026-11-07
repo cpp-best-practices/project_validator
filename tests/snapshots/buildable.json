@@ -24,6 +24,58 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {},
+                "missing": [
+                  "-Wall",
+                  "-Wextra",
+                  "-Wpedantic",
+                  "-Wshadow",
+                  "-Wconversion"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {},
+                "missing": [
+                  "-Wall",
+                  "-Wextra",
+                  "-Wpedantic",
+                  "-Wshadow",
+                  "-Wconversion"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "C",
@@ -615,6 +667,50 @@
           }
         ]
       }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {},
+                "missing": [
+                  "-Werror"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {},
+                "missing": [
+                  "-Werror"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -859,9 +955,9 @@
     },
     "warnings-as-errors": {
       "details": [
-        "add -Werror (GCC/Clang), /WX (MSVC) or set CMAKE_COMPILE_WARNING_AS_ERROR, at least as an option"
+        "add -Werror (GCC/Clang), /WX (MSVC) or set CMAKE_COMPILE_WARNING_AS_ERROR (Meson: werror=true), at least as an option"
       ],
-      "message": "warnings are not treated as errors in CI configuration, CMake files or presets",
+      "message": "warnings are not treated as errors in CI configuration or the build files (CMake files, presets, meson.build)",
       "status": "FAIL"
     }
   }

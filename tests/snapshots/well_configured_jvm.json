@@ -13,6 +13,31 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-Xlint:all": [
+                    "pom.xml"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Java",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Java",
@@ -452,6 +477,33 @@
               }
             },
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-Werror": [
+                    "pom.xml"
+                  ]
+                },
+                "missing": [
+                  "allWarningsAsErrors"
+                ]
+              }
+            ],
+            "language": "Java",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -1235,6 +1287,14 @@
     },
     {
       "heuristic": false,
+      "key": "plugin.kotlin-maven-plugin",
+      "kind": "Setting",
+      "origin": "pom.xml:plugin.kotlin-maven-plugin",
+      "tool": "Maven",
+      "value": []
+    },
+    {
+      "heuristic": false,
       "key": "plugin.maven-compiler-plugin",
       "kind": "Setting",
       "origin": "pom.xml:plugin.maven-compiler-plugin",
@@ -1289,6 +1349,35 @@
       "value": [
         "check"
       ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "JVM warning settings"
+    },
+    {
+      "heuristic": true,
+      "key": "-Xlint:all",
+      "kind": "Setting",
+      "origin": "pom.xml",
+      "tool": "JVM warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "Kotlin's default warnings",
+      "kind": "Setting",
+      "origin": "pom.xml",
+      "tool": "JVM warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "-Werror",
+      "kind": "Setting",
+      "origin": "pom.xml",
+      "tool": "JVM warning settings",
+      "value": true
     },
     {
       "kind": "ConfigurationFile",

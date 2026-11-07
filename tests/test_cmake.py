@@ -209,6 +209,16 @@ class VariableTests(unittest.TestCase):
         requirements = ("the compiler accepts -fstack-protector-strong", "the linker accepts -pie")
         self.assertEqual(_options(found), [("-fstack-protector-strong", None, _requiring(*requirements))])
 
+    def test_separated_arguments(self) -> None:
+        found = _listed(
+            'separate_arguments(FLAGS UNIX_COMMAND "-Wall -Wextra")',
+            'set(MORE "-Wshadow -Wconversion")',
+            "separate_arguments(MORE)",
+            "separate_arguments()",
+            "add_compile_options(${FLAGS} ${MORE})",
+        )
+        self.assertEqual([option for option, _, _ in _options(found)], ["-Wall", "-Wextra", "-Wshadow", "-Wconversion"])
+
     def test_find_program_finds_the_first_name(self) -> None:
         found = _listed(
             "find_program(TIDY NAMES clang-tidy clang-tidy-18)",
@@ -269,22 +279,39 @@ class FunctionTests(unittest.TestCase):
         expected = _requiring("cmake/Warnings.cmake is included", "warnings() is called")
         self.assertEqual(_options(_facts(files)), [("-Wall", None, expected)])
 
-    def test_recursion_and_many_calls_are_cut_short(self) -> None:
+    def test_recursion_and_repeated_calls_are_cut_short(self) -> None:
         lines = (
             "function(again)",
             "  add_compile_options(-Wall)",
             "  again()",
             "endfunction()",
             "again()",
-            "function(once n)",
-            "  target_compile_options(t${n} PRIVATE -g)",
+            "function(once target flag)",
+            "  target_compile_options(${target} PRIVATE ${flag})",
             "endfunction()",
-            "foreach(N 1 2 3)",
-            "  once(${N})",
-            "endforeach()",
+            # A call with the same arguments sets the same again: not followed.
+            "once(t1 -g)",
+            "once(t1 -g)",
+            "once(t2 -O2)",
+            "once(t3 -O3)",
         )
+        expected = [("-Wall", None, ANY), ("-g", "t1", ANY), ("-O2", "t2", ANY)]
         with mock.patch.object(evaluation, "MOST_CALLS", 2):
-            self.assertEqual(_options(_listed(*lines)), [("-Wall", None, ANY), ("-g", "t1", ANY), ("-g", "t2", ANY)])
+            self.assertEqual(_options(_listed(*lines)), expected)
+
+    def test_a_quoted_argument_is_one_whatever_value_it_takes(self) -> None:
+        found = _listed(
+            "if(MSVC)",
+            "  set(FLAGS /O2)",
+            "else()",
+            "  set(FLAGS -O2)",
+            "endif()",
+            "function(build target flags extra)",
+            "  target_compile_options(${target} PRIVATE ${extra})",
+            "endfunction()",
+            'build(app "${FLAGS}" -g)',
+        )
+        self.assertEqual(_options(found), [("-g", "app", ANY)])
 
     def test_parsed_arguments(self) -> None:
         found = _listed(
@@ -375,6 +402,27 @@ class FileTests(unittest.TestCase):
         self.assertEqual(unknown.reason, "evaluation stopped after 3 commands")
 
 
+PROPERTIES = (
+    'set_target_properties(app lib PROPERTIES CXX_EXTENSIONS OFF COMPILE_OPTIONS "-Wall;-Wextra")',
+    "set_target_properties(app)",
+    "set_property(TARGET app APPEND PROPERTY COMPILE_WARNING_AS_ERROR ON)",
+    "set_property(DIRECTORY PROPERTY COMPILE_OPTIONS -Wshadow)",
+    "set_property(GLOBAL PROPERTY CUSTOM x)",
+    "set_property(TARGET app PROPERTY)",
+    "set_property(SOURCE a.cpp PROPERTY COMPILE_OPTIONS -O0)",
+)
+PROPERTY_OPTIONS = [
+    ("-Wall", "app", ANY),
+    ("-Wextra", "app", ANY),
+    ("-Wall", "lib", ANY),
+    ("-Wextra", "lib", ANY),
+    # COMPILE_WARNING_AS_ERROR passes each compiler its flag.
+    ("-Werror", "app", Applies(compilers=frozenset({"gcc", "clang", "appleclang", "intel"}))),
+    ("/WX", "app", MSVC),
+    ("-Wshadow", None, ANY),
+]
+
+
 class CommandTests(unittest.TestCase):
     def test_options_definitions_and_link_options(self) -> None:
         found = _listed(
@@ -405,25 +453,8 @@ class CommandTests(unittest.TestCase):
         )
 
     def test_properties(self) -> None:
-        found = _listed(
-            'set_target_properties(app lib PROPERTIES CXX_EXTENSIONS OFF COMPILE_OPTIONS "-Wall;-Wextra")',
-            "set_target_properties(app)",
-            "set_property(TARGET app APPEND PROPERTY COMPILE_WARNING_AS_ERROR ON)",
-            "set_property(DIRECTORY PROPERTY COMPILE_OPTIONS -Wshadow)",
-            "set_property(GLOBAL PROPERTY CUSTOM x)",
-            "set_property(TARGET app PROPERTY)",
-            "set_property(SOURCE a.cpp PROPERTY COMPILE_OPTIONS -O0)",
-        )
-        self.assertEqual(
-            _options(found),
-            [
-                ("-Wall", "app", ANY),
-                ("-Wextra", "app", ANY),
-                ("-Wall", "lib", ANY),
-                ("-Wextra", "lib", ANY),
-                ("-Wshadow", None, ANY),
-            ],
-        )
+        found = _listed(*PROPERTIES)
+        self.assertEqual(_options(found), PROPERTY_OPTIONS)
         settings = [(fact.name, fact.target, fact.value) for fact in found if isinstance(fact, BuildSetting)]
         self.assertEqual(
             settings,

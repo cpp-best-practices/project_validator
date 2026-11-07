@@ -107,12 +107,16 @@ READ = (
     (
         "App.csproj",
         "<Project><PropertyGroup><Nullable>enable</Nullable></PropertyGroup></Project>",
-        [("MSBuild", "Nullable", "enable")],
+        [("MSBuild", "Nullable", "enable"), ("MSBuild warning settings", "Nullable enable", True)],
     ),
     (
         "App.csproj",
         "<Nullable>enable</Nullable><Other>x</Other>",
-        [("MSBuild", "Nullable", "enable"), ("MSBuild", "Other", "x")],
+        [
+            ("MSBuild", "Nullable", "enable"),
+            ("MSBuild", "Other", "x"),
+            ("MSBuild warning settings", "Nullable enable", True),
+        ],
     ),
     (
         "ci.runsettings",

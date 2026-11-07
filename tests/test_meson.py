@@ -64,6 +64,11 @@ def _described(found: tuple[Fact, ...]) -> list[str]:
 
 GNU = "compilers=appleclang,clang,gcc,intel"
 BRANCHES = [
+    # Meson's default warning_level (1), and werror=true.
+    f"-Wall None compile {GNU}",
+    "/W2 None compile compilers=msvc",
+    f"-Werror None compile {GNU}",
+    "/WX None compile compilers=msvc",
     "/W4 None compile compilers=msvc languages=C++",
     f"-Wall None compile {GNU} languages=C,C++ requires=the compiler accepts -Wall",
     f"-a None compile {GNU} languages=C++ requires=the compiler accepts -a",
@@ -237,7 +242,10 @@ class EvaluationTests(unittest.TestCase):
             "endif",
         )
         self.assertEqual(_described(found), BRANCHES)
-        self.assertEqual(_settings(found), [("cpp_std", "c++20", None, True), ("werror", "true", None, True)])
+        self.assertEqual(
+            _settings(found),
+            [("warning_level", "1", None, True), ("cpp_std", "c++20", None, True), ("werror", "true", None, True)],
+        )
 
     def test_variables_hold_each_value_in_the_builds_it_is_set_in(self) -> None:
         found = _facts(
@@ -283,8 +291,9 @@ class EvaluationTests(unittest.TestCase):
         ).facts
         tests = [fact.origin.path for fact in found if isinstance(fact, Setting)]
         self.assertEqual(tests, ["src/meson.build"])
-        self.assertEqual([option for option, *_ in _options(found)], ["-example"])
-        self.assertEqual(_settings(found), [("hardening", "true", None, True)])
+        # The top-level project() passes Meson's default warning level; examples/ has no project().
+        self.assertEqual([option for option, *_ in _options(found)], ["-Wall", "/W2", "-example"])
+        self.assertEqual(_settings(found), [("warning_level", "1", None, True), ("hardening", "true", None, True)])
 
     def test_what_cannot_be_evaluated_is_unknown(self) -> None:
         [unknown] = (fact for fact in _facts("if x") if isinstance(fact, UnknownFact))

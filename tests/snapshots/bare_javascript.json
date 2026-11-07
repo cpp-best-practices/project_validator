@@ -15,6 +15,29 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "eslint"
+                ]
+              }
+            ],
+            "language": "JavaScript",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "JavaScript",
@@ -442,6 +465,31 @@
               "node_modules": {}
             },
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "eslint --max-warnings 0",
+                  "biome ci",
+                  "deno lint"
+                ]
+              }
+            ],
+            "language": "JavaScript",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }

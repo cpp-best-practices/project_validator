@@ -13,6 +13,31 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-W error": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Python",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Python",
@@ -494,6 +519,12 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Python",
+        "units": []
       }
     ]
   },
@@ -2260,6 +2291,11 @@
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
       "reader": "pytest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "Python warning settings"
     },
     {
       "kind": "ConfigurationFile",

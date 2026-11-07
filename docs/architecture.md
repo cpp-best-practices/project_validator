@@ -441,6 +441,18 @@ except where a step deliberately changes results and says so.
      arguments are `CompilerOption`s; `test()` registers tests; `meson compile <target>` (or `ninja <target>`) runs a
      run target's command. `Dimension` (`project_validator/facts/conditions.py`) is how each build system names a
      dimension's values (CMake's `GNU`, Meson's `gcc`).
+   - Each build system turns its own settings into the compiler options they pass (`implied_options`): CMake's
+     `COMPILE_WARNING_AS_ERROR` passes GCC `-Werror` and MSVC `/WX`, Meson's `warning_level` (1 by default) and
+     `werror` theirs. The C and C++ compilers' flag vocabulary is a shared tool (`project_validator/tools/toolchains.py`).
+   - What CI builds with is a fact: a `Job` holds each CI job's OS, compilers (or the runner's default), toolchains,
+     build configurations and ecosystems, extracted once after the jobs' commands are expanded.
+   - Practices that ask for settings (`compiler-warnings`, `warnings-as-errors`) are `Practice` components
+     (`project_validator/facts/practices.py`) in the profile that knows the language: the `Requirement`s it asks
+     for, all of them or any one, each met by a CI command or reusable step (matched in it, with its variables and
+     inputs), a run of a tool, the profile's settings files (matched heuristically by a `requirement_reader` until
+     they are read structurally), or facts such as the `CompilerOption`s that apply to a compiler. C and C++ are judged
+     for each compiler CI builds with, by the flags that apply to it; every language by its own requirements (Java
+     and Kotlin, C# and F#, apart). The answers are per language (`project_validator/questions/practices.py`).
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice
    dispatch are removed.
 7. **Proof**: add Fortran using only extractors and a recognition module.

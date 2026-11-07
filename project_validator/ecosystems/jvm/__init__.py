@@ -8,11 +8,9 @@ CI configuration when CI runs the build far enough to run them.
 import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
-from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.audit import audited, auditor
@@ -21,12 +19,13 @@ from project_validator.facts.dependencies import Locked, PackageManager, lockfil
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
+from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
+from project_validator.facts.practices import Practice, always, required, requirement_reader
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, either, starts
 from project_validator.rules import (
-    WarningPolicy,
-    WarningsAsErrors,
     directories,
     ignored_at_top_level,
 )
@@ -82,26 +81,6 @@ RUNS_BUILD = re.compile(
     rf"{MVN}\b(?:compile|test|package|verify|install|deploy)\b"
     rf"|{GRADLE_RUN}\b(?:build|check|test|assemble|classes|compile\w*)\b"
 )
-
-
-def _build_files(context: Context) -> tuple[str, ...]:
-    names = {POM, *GRADLE_BUILD_FILES}
-    return tuple(path for path in context.project.files() if PurePosixPath(path).name in names)
-
-
-def _texts_when(runs: re.Pattern[str]) -> Callable[[Context], tuple[str, ...]]:
-    """CI configuration and pre-commit hooks, with the build files when CI runs the build as far as `runs`."""
-
-    def texts(context: Context) -> tuple[str, ...]:
-        found = ci_and_hook_texts(context)
-        if not any(runs.search(text) for text in found):
-            return found
-        return (*found, *(context.project.read_text(path) for path in _build_files(context)))
-
-    return texts
-
-
-_build_texts = _texts_when(RUNS_BUILD)
 
 
 def _setting(name: str, regex: str) -> Pattern:
@@ -417,24 +396,39 @@ KOTLIN_WARNINGS = _setting(
 )
 
 
-def _required_warnings(context: Context) -> tuple[Pattern, ...]:
-    return (XLINT,) if JAVA in context.structure.languages else (KOTLIN_WARNINGS,)
-
-
-WARNINGS = WarningPolicy(
+_JVM_WARNINGS_AS_ERRORS = (
+    required(_setting("-Werror", r"-Werror\b")),
+    required(_setting("allWarningsAsErrors", r"\ballWarningsAsErrors\b(?:\s*(?:=|\.set\s*\()\s*|>\s*)true\b")),
+)
+JVM_WARNING_SETTINGS = requirement_reader(
+    "JVM warning settings",
+    (POM, *GRADLE_BUILD_FILES),
+    (required(XLINT), required(KOTLIN_WARNINGS), *_JVM_WARNINGS_AS_ERRORS),
+)
+JAVA_WARNINGS = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=frozenset({JAVA}),
     kind="JVM compiler warnings",
-    recognised=(XLINT, KOTLIN_WARNINGS),
-    required=_required_warnings,
-    texts=_build_texts,
-    separator=", ",
+    requirements=always(required(XLINT)),
+    reads=(JVM_WARNING_SETTINGS.name,),
+    hint="add -Xlint:all to javac's compilerArgs",
+)
+KOTLIN_WARNINGS_PRACTICE = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=frozenset({KOTLIN}),
+    kind="JVM compiler warnings",
+    requirements=always(required(KOTLIN_WARNINGS)),
+    reads=(JVM_WARNING_SETTINGS.name,),
+    hint="build Kotlin with the Kotlin compiler plugin, whose warnings are on by default",
 )
 
-WARNINGS_AS_ERRORS = WarningsAsErrors(
-    flags=(
-        _setting("-Werror", r"-Werror\b"),
-        _setting("allWarningsAsErrors", r"\ballWarningsAsErrors\b(?:\s*(?:=|\.set\s*\()\s*|>\s*)true\b"),
-    ),
-    texts=_build_texts,
+WARNINGS_AS_ERRORS = Practice(
+    name=WARNINGS_AS_ERRORS_PRACTICE,
+    languages=JVM_LANGUAGES,
+    kind="warnings as errors",
+    requirements=always(*_JVM_WARNINGS_AS_ERRORS),
+    any_one=True,
+    reads=(JVM_WARNING_SETTINGS.name,),
     searched="the Maven or Gradle build, or CI configuration",
     hint="add -Werror to javac's compilerArgs (Kotlin: allWarningsAsErrors = true)",
 )
@@ -548,9 +542,5 @@ JVM = Ecosystem(
         versions=JDK_VERSIONS,
         usage=re.compile(rf"{MAVEN_COMMAND}|{GRADLE_COMMAND}|\bsetup-java\b|\bjavac\b"),
     ),
-    rules=(
-        versions_axis("JDK version", "JDK"),
-        WARNINGS,
-        WARNINGS_AS_ERRORS,
-    ),
+    rules=(versions_axis("JDK version", "JDK"),),
 )

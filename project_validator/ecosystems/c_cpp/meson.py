@@ -5,14 +5,12 @@ from pathlib import PurePosixPath
 
 from project_validator.build_systems.meson import declared_languages
 from project_validator.core import Context, Result
-from project_validator.ecosystems.c_cpp.compiler_flags import WARNINGS_AS_ERRORS
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.testing import test_runner, tested
 from project_validator.facts.tools import Definition, Run
-from project_validator.rules import CompilerExtensions, WarningsAsErrors
-from project_validator.text import Pattern
+from project_validator.rules import CompilerExtensions
 
 BUILD_FILE = "meson.build"
 
@@ -89,22 +87,6 @@ def _extensions_disabled(context: Context) -> Result:
     return Result.failed(f"{language} compiler extensions are never disabled (the compiler's default is used); {fix}")
 
 
-# --- warnings as errors
-
-WERROR = Pattern("werror=true", re.compile(r"(?<![\w-])(?:-D\s*)?werror\s*=\s*true\b|(?<![\w-])--werror\b"))
-
-
-def _warning_texts(context: Context) -> tuple[str, ...]:
-    return (*meson_texts(context), *context.ci_texts)
-
-
-MESON_WARNINGS_AS_ERRORS = WarningsAsErrors(
-    flags=(WERROR, *WARNINGS_AS_ERRORS.flags),
-    texts=_warning_texts,
-    searched="CI configuration or meson.build files",
-    hint="set werror=true in default_options (or pass -Dwerror=true or --werror), at least as an option",
-)
-
 # Meson builds only the languages its project() declares.
 # Meson's build types, by the kind of build each is; `plain` and `custom` say nothing about optimisation.
 _MESON_BUILD_TYPES = {"debug": "debug", "debugoptimized": "release", "release": "release", "minsize": "release"}
@@ -131,5 +113,5 @@ MESON = BuildSystem(
     files=(BUILD_FILE, "meson.options"),
     declared_languages=meson_declared_languages,
     build_types=meson_build_types,
-    rules=(CompilerExtensions(judge=_extensions_disabled), MESON_WARNINGS_AS_ERRORS),
+    rules=(CompilerExtensions(judge=_extensions_disabled),),
 )
