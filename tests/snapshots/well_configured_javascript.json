@@ -668,6 +668,96 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "runtime version",
+            "language": "JavaScript",
+            "notes": [],
+            "platforms": [
+              {
+                "configurations": [],
+                "os": "linux",
+                "runtime version": "22"
+              },
+              {
+                "configurations": [],
+                "os": "linux",
+                "runtime version": "24"
+              },
+              {
+                "configurations": [],
+                "os": "macos",
+                "runtime version": "22"
+              },
+              {
+                "configurations": [],
+                "os": "macos",
+                "runtime version": "24"
+              },
+              {
+                "configurations": [],
+                "os": "windows",
+                "runtime version": "22"
+              },
+              {
+                "configurations": [],
+                "os": "windows",
+                "runtime version": "24"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "runtime version",
+            "language": "TypeScript",
+            "notes": [],
+            "platforms": [
+              {
+                "configurations": [],
+                "os": "linux",
+                "runtime version": "22"
+              },
+              {
+                "configurations": [],
+                "os": "linux",
+                "runtime version": "24"
+              },
+              {
+                "configurations": [],
+                "os": "macos",
+                "runtime version": "22"
+              },
+              {
+                "configurations": [],
+                "os": "macos",
+                "runtime version": "24"
+              },
+              {
+                "configurations": [],
+                "os": "windows",
+                "runtime version": "22"
+              },
+              {
+                "configurations": [],
+                "os": "windows",
+                "runtime version": "24"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "JavaScript",
@@ -1195,6 +1285,26 @@
       "kind": "*.test.*, *.spec.* or __tests__/ files",
       "language": "TypeScript",
       "origin": "src/add.test.ts"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

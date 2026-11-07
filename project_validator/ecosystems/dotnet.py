@@ -9,17 +9,18 @@ from collections.abc import Iterator
 from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.audit import audited, auditor
+from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
-from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
 from project_validator.facts.practices import Practice, always, required, requirement_reader
@@ -27,10 +28,6 @@ from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, starts
-from project_validator.rules import (
-    directories,
-    ignored_at_top_level,
-)
 from project_validator.text import Pattern, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
@@ -491,5 +488,6 @@ DOTNET = Ecosystem(
         ),
         usage=re.compile(r"\bdotnet\s+(?:build|test|restore|publish|pack|run|format)\b|\bsetup-dotnet\b"),
     ),
-    rules=(versions_axis(".NET SDK version", ".NET SDK"),),
 )
+
+DOTNET_SDK_VERSIONS = versions_axis(".NET SDK version", ".NET SDK", DOTNET_LANGUAGES)

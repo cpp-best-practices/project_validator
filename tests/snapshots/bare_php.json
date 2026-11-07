@@ -259,6 +259,21 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "PHP version",
+            "language": "PHP",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "PHP",

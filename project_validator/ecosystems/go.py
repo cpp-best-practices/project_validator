@@ -5,18 +5,19 @@ import shlex
 from collections.abc import Callable, Iterator
 
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, positional, program
 from project_validator.facts.audit import audited, auditor
+from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
-from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import Practice, always, required, requirement_reader
@@ -24,10 +25,6 @@ from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by, either, starts, when
-from project_validator.rules import (
-    directories,
-    ignored_at_top_level,
-)
 from project_validator.text import pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
@@ -352,5 +349,6 @@ GO = Ecosystem(
         versions=(re.compile(rf"\bgo-version\W+{_GO_VERSION}"), re.compile(r"\bgolang:(\d+\.\d+)")),
         usage=re.compile(r"\bgo\s+(?:build|test|vet|run|mod|install|generate)\b|\bsetup-go\b"),
     ),
-    rules=(versions_axis("Go version", "Go"),),
 )
+
+GO_VERSIONS = versions_axis("Go version", "Go", GO_LANGUAGE)

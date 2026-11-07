@@ -9,7 +9,7 @@ import re
 from collections.abc import Callable, Iterator
 
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.evidence import (
     json_value,
 )
@@ -17,13 +17,14 @@ from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unkno
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, option_values, positional, program
 from project_validator.facts.audit import audited, auditor
+from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.limits import Rule, limiter
-from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
 from project_validator.facts.practices import Practice, always, required, requirement_reader
@@ -38,10 +39,6 @@ from project_validator.facts.settings import (
 )
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either, starts, when
-from project_validator.rules import (
-    directories,
-    ignored_at_top_level,
-)
 from project_validator.text import Pattern, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
@@ -568,5 +565,6 @@ PHP = Ecosystem(
         versions=(re.compile(rf"\bphp-version\W+{_PHP_VERSION}"), re.compile(rf"\bphp:{_PHP_VERSION}")),
         usage=re.compile(r"\bcomposer\s+(?:install|update|test|run|audit)\b|\bsetup-php\b|\bvendor/bin/|\bphp\s+-"),
     ),
-    rules=(versions_axis("PHP version", PHP_LANGUAGE),),
 )
+
+PHP_VERSIONS = versions_axis("PHP version", PHP_LANGUAGE, PHP_ONLY)

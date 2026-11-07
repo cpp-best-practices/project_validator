@@ -252,6 +252,21 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "JDK version",
+            "language": "Java",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Java",

@@ -262,6 +262,21 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Rust toolchain",
+            "language": "Rust",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Rust",

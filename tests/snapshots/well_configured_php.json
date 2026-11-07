@@ -293,6 +293,52 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "PHP version",
+            "language": "PHP",
+            "notes": [],
+            "platforms": [
+              {
+                "PHP version": "8.3",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "PHP version": "8.4",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "PHP version": "8.3",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "PHP version": "8.4",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "PHP version": "8.3",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "PHP version": "8.4",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "PHP",
@@ -594,6 +640,26 @@
       "kind": "*Test.php files with PHPUnit test cases or Pest tests",
       "language": "PHP",
       "origin": "tests/CalculatorTest.php"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

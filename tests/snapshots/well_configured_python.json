@@ -276,6 +276,52 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "Python version",
+            "language": "Python",
+            "notes": [],
+            "platforms": [
+              {
+                "Python version": "3.13",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Python version": "3.14",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Python version": "3.13",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Python version": "3.14",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Python version": "3.13",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "Python version": "3.14",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Python",
@@ -565,6 +611,26 @@
       "kind": "test_*.py or *_test.py files",
       "language": "Python",
       "origin": "tests/test_app.py"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/codeql.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

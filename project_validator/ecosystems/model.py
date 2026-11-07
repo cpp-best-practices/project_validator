@@ -6,26 +6,22 @@ Everything the validator knows about one ecosystem lives in that ecosystem's pro
 import re
 import tomllib
 from collections.abc import Callable, Iterable, Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 from project_validator.core import Context, Project, Result, Status
 from project_validator.facts import Command
-from project_validator.rules import ToolchainAxis, toolchain_versions, versions_axis
 
 __all__ = [
     "C_FAMILY",
     "BuildSystem",
     "Ecosystem",
-    "ToolchainAxis",
     "ToolchainPatterns",
     "check_each_ecosystem",
     "combined",
     "ecosystems_for",
     "labelled",
     "languages_of",
-    "toolchain_versions",
-    "versions_axis",
 ]
 
 C_FAMILY = frozenset({"C", "C++"})
@@ -46,16 +42,6 @@ def toml_members(*table: str) -> Callable[[str], tuple[str, ...]]:
     return members
 
 
-def _reject_duplicate_rules(owner: str, rules: tuple[object, ...]) -> None:
-    kinds = [type(rule) for rule in rules]
-    if duplicates := sorted({kind.__name__ for kind in kinds if kinds.count(kind) > 1}):
-        raise ValueError(f"{owner} has several rules of type {', '.join(duplicates)}")
-
-
-def _rule_of[R](rules: tuple[object, ...], kind: type[R]) -> R | None:
-    return next((rule for rule in rules if isinstance(rule, kind)), None)
-
-
 @dataclass(frozen=True, slots=True, kw_only=True)
 class BuildSystem:
     """A build system recognised by its build files, in any directory.
@@ -67,7 +53,6 @@ class BuildSystem:
     `build_types` reads the build types (`debug`, `release`) a command of the build system builds.
     `members` reads, from a build file, the directories (globs relative to it) of the workspace it declares; each
     member is a unit of the project of its own (see `project_validator.facts.structure.Unit`).
-    `rules` are those of its ecosystem's practices that depend on the build system (see `Ecosystem.rule_for`).
     """
 
     name: str
@@ -77,13 +62,6 @@ class BuildSystem:
     is_build_tree: Callable[[Path], bool] | None = None
     build_types: Callable[[Command], frozenset[str]] | None = None
     members: Callable[[str], tuple[str, ...]] | None = None
-    rules: tuple[object, ...] = field(default=(), repr=False)
-
-    def __post_init__(self) -> None:
-        _reject_duplicate_rules(self.name, self.rules)
-
-    def rule[R](self, kind: type[R]) -> R | None:
-        return _rule_of(self.rules, kind)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -98,7 +76,8 @@ class ToolchainPatterns:
 # Ecosystems are registry singletons: they compare and hash by identity.
 @dataclass(frozen=True, slots=True, kw_only=True, eq=False)
 class Ecosystem:
-    """A language ecosystem: how it is recognised, and the rules (see `project_validator.rules`) it is judged by.
+    """A language ecosystem: how it is recognised. What it is judged by are components of its profile (tools,
+    practices, questions' declarations), found rather than listed.
 
     It is recognised by its build systems' files, its `source_suffixes`, and `detect`, a probe that reads the project
     (with `Project.read_head`) and returns the ecosystem's languages it finds, for intent that file names cannot
@@ -106,9 +85,7 @@ class Ecosystem:
     ecosystem uses them too (`.pl`: Perl or Prolog) or they do not tell its languages apart (`.h`: C or C++); each
     maps to the language it adds, or to None for a file of the ecosystem that adds no language.
 
-    `rules` holds at most one rule of each type; a practice whose rule type an ecosystem lacks does not apply to it.
-    Rules that depend on the build system belong to the ecosystem's `build_systems` instead; a project using none of
-    them is judged as if it used `default_build_system`.
+    A project using none of its `build_systems` is taken to use `default_build_system`.
     """
 
     label: str
@@ -121,10 +98,6 @@ class Ecosystem:
     # How a CI job shows it builds with the ecosystem, besides naming or using its toolchain.
     ci_usage: re.Pattern[str] | None = None
     default_build_system: BuildSystem | None = None
-    rules: tuple[object, ...] = field(default=())
-
-    def __post_init__(self) -> None:
-        _reject_duplicate_rules(self.label, self.rules)
 
     def __repr__(self) -> str:
         return f"Ecosystem({self.label})"
@@ -134,23 +107,10 @@ class Ecosystem:
         patterns = (self.ci_usage, *((self.toolchain.usage, *self.toolchain.versions) if self.toolchain else ()))
         return any(pattern.search(text) for pattern in patterns if pattern is not None)
 
-    def rule[R](self, kind: type[R]) -> R | None:
-        """The ecosystem's own rule of type `kind`, whatever the build system."""
-        return _rule_of(self.rules, kind)
-
-    def has_rule(self, kind: type[object]) -> bool:
-        """Whether the ecosystem, or one of its build systems, has a rule of type `kind`."""
-        return self.rule(kind) is not None or any(system.rule(kind) is not None for system in self.build_systems)
-
     def used_build_systems(self, build_systems: frozenset[str]) -> tuple[BuildSystem, ...]:
         """The ecosystem's build systems among `build_systems`, or its default build system when none is."""
         used = tuple(system for system in self.build_systems if system.name in build_systems)
         return used or ((self.default_build_system,) if self.default_build_system else ())
-
-    def rule_for[R](self, kind: type[R], build_systems: frozenset[str]) -> R | None:
-        """The rule of type `kind` for a project using `build_systems`: a used build system's rule comes first."""
-        found = (system.rule(kind) for system in self.used_build_systems(build_systems))
-        return next((rule for rule in found if rule is not None), self.rule(kind))
 
 
 _SEVERITY = (Status.SKIP, Status.PASS, Status.WARN, Status.FAIL, Status.ERROR)
