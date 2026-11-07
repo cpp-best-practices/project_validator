@@ -115,28 +115,60 @@
         "language": "JavaScript",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "prettier",
-              "biome",
-              "deno fmt",
-              "oxfmt",
-              "dprint"
-            ],
+            "answer": "yes",
             "defined": {},
-            "enforced": "yes",
             "known": {
-              "biome": "biome ci",
-              "deno fmt": "deno fmt --check",
-              "dprint": "dprint check",
-              "oxfmt": "oxfmt --check",
-              "prettier": "prettier --check ."
+              "biome": {
+                "can": {
+                  "apply": "biome format --write",
+                  "check": "biome ci"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "deno fmt": {
+                "can": {
+                  "apply": "deno fmt",
+                  "check": "deno fmt --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dprint": {
+                "can": {
+                  "apply": "dprint fmt",
+                  "check": "dprint check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "oxfmt": {
+                "can": {
+                  "apply": "oxfmt",
+                  "check": "oxfmt --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "prettier": {
+                "can": {
+                  "apply": "prettier --write .",
+                  "check": "prettier --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "JavaScript",
-            "tools": [
-              "prettier"
-            ],
-            "undefined": [],
+            "level": "check",
+            "runs": {
+              "prettier": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
             "unit": ".",
             "unknowns": []
           }
@@ -146,28 +178,266 @@
         "language": "TypeScript",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "prettier",
-              "biome",
-              "deno fmt",
-              "oxfmt",
-              "dprint"
-            ],
+            "answer": "yes",
             "defined": {},
-            "enforced": "yes",
             "known": {
-              "biome": "biome ci",
-              "deno fmt": "deno fmt --check",
-              "dprint": "dprint check",
-              "oxfmt": "oxfmt --check",
-              "prettier": "prettier --check ."
+              "biome": {
+                "can": {
+                  "apply": "biome format --write",
+                  "check": "biome ci"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "deno fmt": {
+                "can": {
+                  "apply": "deno fmt",
+                  "check": "deno fmt --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dprint": {
+                "can": {
+                  "apply": "dprint fmt",
+                  "check": "dprint check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "oxfmt": {
+                "can": {
+                  "apply": "oxfmt",
+                  "check": "oxfmt --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "prettier": {
+                "can": {
+                  "apply": "prettier --write .",
+                  "check": "prettier --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "TypeScript",
-            "tools": [
-              "prettier"
-            ],
-            "undefined": [],
+            "level": "check",
+            "runs": {
+              "prettier": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "eslint": [
+                "eslint.config.js"
+              ]
+            },
+            "known": {
+              "biome": {
+                "can": {
+                  "checks": "biome lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "deno lint": {
+                "can": {
+                  "checks": "deno lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "eslint": {
+                "can": {
+                  "checks": "eslint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "oxlint": {
+                "can": {
+                  "checks": "oxlint"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "checks",
+            "runs": {
+              "eslint": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "eslint": [
+                "eslint.config.js"
+              ]
+            },
+            "known": {
+              "biome": {
+                "can": {
+                  "checks": "biome lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "deno lint": {
+                "can": {
+                  "checks": "deno lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "eslint": {
+                "can": {
+                  "checks": "eslint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "oxlint": {
+                "can": {
+                  "checks": "oxlint"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "checks",
+            "runs": {
+              "eslint": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "tsc": [
+                "tsconfig.json"
+              ]
+            },
+            "known": {
+              "deno check": {
+                "can": {
+                  "checks": "deno check",
+                  "strict": "deno check (strict by default)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "tsc": {
+                "can": {
+                  "checks": "tsc --noEmit (JavaScript is checked with checkJs in a jsconfig.json)",
+                  "strict": "\"strict\": true in the compilerOptions of tsconfig.json"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "checks",
+            "runs": {
+              "tsc": {
+                "levels": [
+                  "checks",
+                  "strict"
+                ],
+                "read": [
+                  "tsconfig.json"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "tsc": [
+                "tsconfig.json"
+              ]
+            },
+            "known": {
+              "deno check": {
+                "can": {
+                  "checks": "deno check",
+                  "strict": "deno check (strict by default)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "tsc": {
+                "can": {
+                  "checks": "tsc --noEmit (JavaScript is checked with checkJs in a jsconfig.json)",
+                  "strict": "\"strict\": true in the compilerOptions of tsconfig.json"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "checks",
+            "runs": {
+              "tsc": {
+                "levels": [
+                  "checks",
+                  "strict"
+                ],
+                "read": [
+                  "tsconfig.json"
+                ]
+              }
+            },
             "unit": ".",
             "unknowns": []
           }
@@ -218,6 +488,7 @@
       "role": "product"
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -294,6 +565,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[0]",
@@ -483,6 +755,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[1]",
@@ -672,6 +945,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[2]",
@@ -861,6 +1135,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[3]",
@@ -1050,6 +1325,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[4]",
@@ -1239,6 +1515,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[5]",
@@ -1428,6 +1705,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1484,6 +1762,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/function-limits.yml:function-limits",
@@ -1556,6 +1835,11 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "eslint.config.js",
+      "reader": "eslint"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "package.json",
       "reader": "package.json prettier"
     },
@@ -1563,6 +1847,53 @@
       "kind": "ConfigurationFile",
       "origin": "package.json",
       "reader": "Jest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tsconfig.json",
+      "reader": "TypeScript"
+    },
+    {
+      "heuristic": false,
+      "key": "compilerOptions.target",
+      "kind": "Setting",
+      "origin": "tsconfig.json:compilerOptions.target",
+      "tool": "TypeScript",
+      "value": "es2022"
+    },
+    {
+      "heuristic": false,
+      "key": "compilerOptions.module",
+      "kind": "Setting",
+      "origin": "tsconfig.json:compilerOptions.module",
+      "tool": "TypeScript",
+      "value": "nodenext"
+    },
+    {
+      "heuristic": false,
+      "key": "compilerOptions.strict",
+      "kind": "Setting",
+      "origin": "tsconfig.json:compilerOptions.strict",
+      "tool": "TypeScript",
+      "value": true
+    },
+    {
+      "heuristic": false,
+      "key": "compilerOptions.outDir",
+      "kind": "Setting",
+      "origin": "tsconfig.json:compilerOptions.outDir",
+      "tool": "TypeScript",
+      "value": "dist"
+    },
+    {
+      "heuristic": false,
+      "key": "include",
+      "kind": "Setting",
+      "origin": "tsconfig.json:include",
+      "tool": "TypeScript",
+      "value": [
+        "src"
+      ]
     },
     {
       "heuristic": false,
@@ -1585,6 +1916,55 @@
       "tool": "prettier",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -1632,6 +2012,55 @@
       "tool": "prettier",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -1679,6 +2108,55 @@
       "tool": "prettier",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -1726,6 +2204,55 @@
       "tool": "prettier",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -1773,6 +2300,55 @@
       "tool": "prettier",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -1820,6 +2396,55 @@
       "tool": "prettier",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -2155,7 +2780,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "tsc (tsconfig.json) runs; strict mode bonus: \"strict\": true in tsconfig.json",
+      "message": "tsc (tsconfig.json) runs; strict mode bonus: tsc (tsconfig.json)",
       "status": "PASS"
     },
     "vcs-ignore": {

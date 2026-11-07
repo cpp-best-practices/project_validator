@@ -3,7 +3,7 @@
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems.ruby import BUNDLE, DEPENDENCIES, RUBY, TYPE_CHECKING
+from project_validator.ecosystems.ruby import BUNDLE, DEPENDENCIES, RUBY
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, run_as, run_in_layout
 
 (
@@ -38,6 +38,9 @@ RAKEFILE = {
     "task default: %i[spec rubocop]\n"
 }
 SPEC = {"spec/app_spec.rb": 'RSpec.describe App do\n  it("adds") { expect(1 + 2).to eq(3) }\nend\n'}
+
+TYPE_HINT = "consider running a type checker in CI: srb tc (Sorbet) or steep check (Steep, with RBS signatures)"
+STRICT_HINT = "consider enabling strict mode: # typed: strict files (Sorbet) or D::Ruby.strict in the Steepfile"
 
 
 def _ci(*steps: str) -> dict[str, str]:
@@ -122,12 +125,12 @@ class SecurityAndTypingTests(unittest.TestCase):
         sorbet = {"lib/app.rb": "# typed: strict\nmodule App; end\n", **_ci("bundle exec srb tc")}
         self.assertEqual(
             run_as(self, TYPE_CHECKING_CHECK, sorbet, RUBY),
-            Result.passed("Sorbet runs; strict mode bonus: # typed: strict in lib/app.rb"),
+            Result.passed("Sorbet runs; strict mode bonus: Sorbet (lib/app.rb)"),
         )
         lax = {"Steepfile": "target :lib do\nend\n", **_ci("steep check")}
         self.assertEqual(
             run_as(self, TYPE_CHECKING_CHECK, lax, RUBY),
-            Result.passed("Steep (Steepfile) runs", TYPE_CHECKING.strict_hint),
+            Result.passed("Steep (Steepfile) runs", STRICT_HINT),
         )
 
     def test_reek_is_static_analysis(self) -> None:

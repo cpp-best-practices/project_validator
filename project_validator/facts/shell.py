@@ -2,9 +2,10 @@
 
 Only what the validator needs is understood: line continuations, comments, quoting (a quoted string may span
 lines), the operators that separate commands (`;`, `&&`, `||`, `|`, `&`), and command substitution (`$(…)` and
-backquotes), whose commands run before the command they are part of. Leading `NAME=value` assignments are
-the command's environment. Compound commands (`if`, `for`, `case`) and here-documents are not interpreted; their
-lines are split like any other.
+backquotes), whose commands run before the command they are part of. PowerShell scripts (`powershell=True`) are split
+the same way, with PowerShell's escape character, the backquote, in place of the backslash (which is text there).
+Leading `NAME=value` assignments are the command's environment. Compound commands (`if`, `for`, `case`) and
+here-documents are not interpreted; their lines are split like any other.
 """
 
 import re
@@ -13,6 +14,7 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 
 _CONTINUATION = re.compile(r"\\\r?\n")
+_POWERSHELL_CONTINUATION = re.compile(r"`\r?\n")
 _SEPARATORS = frozenset({";", "&&", "||", "|", "&", ";;", "|&"})
 _ASSIGNMENT = re.compile(r"^[A-Za-z_]\w*=")
 # Words that only introduce or wrap the command that follows.
@@ -43,7 +45,7 @@ _STAND_INS = {character: chr(0xE000 + index) for index, character in enumerate(_
 _RESTORED = str.maketrans({stand_in: character for character, stand_in in _STAND_INS.items()})
 
 
-def _protected(line: str) -> str:
+def _protected(line: str, escape: str = "\\") -> str:
     """`line` with the operator characters that are quoted (`awk -F '|'`) or escaped (`\\;`) replaced by stand-ins."""
     out: list[str] = []
     quote: str | None = None
@@ -51,17 +53,18 @@ def _protected(line: str) -> str:
     for character in line:
         if escaped or (quote is not None and character != quote):
             out.append(_STAND_INS.get(character, character))
-            escaped = character == "\\" and quote == '"' and not escaped
+            escaped = character == escape and quote == '"' and not escaped
             continue
-        escaped = character == "\\" and quote is None
+        escaped = character == escape and quote is None
         if character in "'\"":
             quote = None if quote == character else character
         out.append(character)
     return "".join(out)
 
 
-def _words(line: str) -> list[str]:
-    lexer = shlex.shlex(_protected(line), posix=True, punctuation_chars=_OPERATOR_CHARACTERS)
+def _words(line: str, escape: str = "\\") -> list[str]:
+    lexer = shlex.shlex(_protected(line, escape), posix=True, punctuation_chars=_OPERATOR_CHARACTERS)
+    lexer.escape = escape
     lexer.whitespace_split = True
     lexer.commenters = "#"
     return list(lexer)  # quoted operator characters stay stand-ins until the commands are split (see `_command`)
@@ -142,7 +145,9 @@ class _Hidden:
         )
 
 
-def split_script(script: str, opaque: re.Pattern[str] | None = None) -> Iterator[ShellCommand | Unsplittable]:
+def split_script(
+    script: str, opaque: re.Pattern[str] | None = None, *, powershell: bool = False
+) -> Iterator[ShellCommand | Unsplittable]:
     """The simple commands of `script`, in order, each with the line it was written on; the commands of a command
     substitution come before the command it is part of.
 
@@ -153,30 +158,32 @@ def split_script(script: str, opaque: re.Pattern[str] | None = None) -> Iterator
     # Opaque text first: a Make variable `$(CC)` is not a command substitution.
     if opaque is not None:
         script = opaque.sub(lambda match: hidden.hide(match[0]), script)
-    script = _substitutions(script, hidden.hide)
-    for line, words in _lines(_CONTINUATION.sub(" ", script).splitlines()):
+    escape = "`" if powershell else "\\"
+    script = _substitutions(script, hidden.hide, escape)
+    continuation = _POWERSHELL_CONTINUATION if powershell else _CONTINUATION
+    for line, words in _lines(continuation.sub(" ", script).splitlines(), escape):
         for commands in hidden.substituted(line):
-            yield from split_script(commands, opaque)
+            yield from split_script(commands, opaque, powershell=powershell)
         if isinstance(words, ValueError):
             yield Unsplittable(line=hidden.shown(line), reason=str(words))
             continue
         yield from map(hidden.restored, _commands_of(words, line))
 
 
-def _substitutions(script: str, hide: Callable[[str, str], str]) -> str:
-    """`script` with each command substitution outside single quotes (`$(…)`, `` `…` ``, but not arithmetic `$((…))`)
-    replaced by what `hide` returns for its text and its commands."""
+def _substitutions(script: str, hide: Callable[[str, str], str], escape: str = "\\") -> str:
+    """`script` with each command substitution outside single quotes (`$(…)`, and `` `…` `` where the backquote is no
+    escape; not arithmetic `$((…))`) replaced by what `hide` returns for its text and its commands."""
     out: list[str] = []
     index, quote = 0, ""
     while index < len(script):
         character = script[index]
-        end = None if quote == "'" else _substitution_end(script, index)
+        end = None if quote == "'" else _substitution_end(script, index, backquotes=escape != "`")
         if end is not None:
             text = script[index:end]
             out.append(hide(text, text[2:-1] if text.startswith("$(") else text[1:-1]))
             index = end
             continue
-        if character == "\\" and quote != "'":
+        if character == escape and quote != "'":
             out.append(script[index : index + 2])
             index += 2
             continue
@@ -187,9 +194,9 @@ def _substitutions(script: str, hide: Callable[[str, str], str]) -> str:
     return "".join(out)
 
 
-def _substitution_end(script: str, start: int) -> int | None:
+def _substitution_end(script: str, start: int, *, backquotes: bool = True) -> int | None:
     """Where the command substitution starting at `start` ends (just after it), or None if none starts there."""
-    if script.startswith("`", start):
+    if backquotes and script.startswith("`", start):
         end = script.find("`", start + 1)
         return None if end < 0 else end + 1
     if not script.startswith("$(", start) or script.startswith("$((", start):
@@ -202,7 +209,7 @@ def _substitution_end(script: str, start: int) -> int | None:
     return None
 
 
-def _lines(raw: list[str]) -> Iterator[tuple[str, list[str] | ValueError]]:
+def _lines(raw: list[str], escape: str = "\\") -> Iterator[tuple[str, list[str] | ValueError]]:
     """Each line with its words; a quoted string that is still open at the end of a line goes on to the next."""
     lines = iter(raw)
     for first in lines:
@@ -211,7 +218,7 @@ def _lines(raw: list[str]) -> Iterator[tuple[str, list[str] | ValueError]]:
             continue
         while True:
             try:
-                yield line, _words(line)
+                yield line, _words(line, escape)
                 break
             except ValueError as error:
                 following = next(lines, None)

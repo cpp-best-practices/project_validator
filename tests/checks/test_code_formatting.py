@@ -10,10 +10,11 @@ from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 from project_validator.facts import Facts
+from project_validator.facts.formatting import FORMAT, Enforcement
 from project_validator.facts.tools import ToolRun
-from project_validator.policy import judge_formatting
+from project_validator.policy.formatting import judge_formatting
 from project_validator.questions import Answer
-from project_validator.questions.formatting import formatting_answer
+from project_validator.questions.tooling import tool_answer
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,
@@ -167,6 +168,8 @@ class PythonCodeFormattingTests(unittest.TestCase):
 
     def test_formatter_in_any_ci_passes_with_its_default_style(self) -> None:
         commands = {"ruff format": "ruff format --check .", "black": "python -m black src tests --check"}
+        # ruff format fails when it reformats a file with --exit-non-zero-on-format.
+        self.assertEqual(self._run(github_job("x", "ruff format --exit-non-zero-on-format .")).status, Status.PASS)
         for provider in CI_FILES:
             for tool, command in commands.items():
                 with self.subTest(ci=provider, tool=tool):
@@ -321,8 +324,8 @@ class MixedLanguageCodeFormattingTests(unittest.TestCase):
 
 class AnswerTests(unittest.TestCase):
     def test_a_language_no_known_tool_formats_is_skipped(self) -> None:
-        answer = formatting_answer("Lang", Facts(()), ())
-        self.assertEqual(answer.enforced, Answer.IMPOSSIBLE)
+        answer = tool_answer(FORMAT, Enforcement.CHECK, "Lang", Facts(()), ())
+        self.assertEqual(answer.answer, Answer.IMPOSSIBLE)
         self.assertEqual(judge_formatting(answer), Result(status=Status.SKIP, message="no known tool formats Lang"))
 
     def test_a_language_only_auxiliary_code_uses_is_skipped(self) -> None:

@@ -46,22 +46,110 @@
         "language": "Ruby",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "RuboCop",
-              "Standard",
-              "syntax_tree"
-            ],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "RuboCop": "rubocop",
-              "Standard": "standardrb",
-              "syntax_tree": "stree check"
+              "RuboCop": {
+                "can": {
+                  "apply": "rubocop -a",
+                  "check": "rubocop"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Standard": {
+                "can": {
+                  "apply": "standardrb --fix",
+                  "check": "standardrb"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "syntax_tree": {
+                "can": {
+                  "apply": "stree write",
+                  "check": "stree check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "Ruby",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "Reek": {
+                "can": {
+                  "checks": "reek"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "RuboCop": {
+                "can": {
+                  "checks": "rubocop"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Standard": {
+                "can": {
+                  "checks": "standardrb"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "Sorbet": {
+                "can": {
+                  "checks": "srb tc (Sorbet)",
+                  "strict": "# typed: strict files (Sorbet)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Steep": {
+                "can": {
+                  "checks": "steep check (Steep, with RBS signatures)",
+                  "strict": "D::Ruby.strict in the Steepfile"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -101,6 +189,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "app.rb",
+      "reader": "Sorbet"
     }
   ],
   "map": {
@@ -158,7 +251,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
       "status": "FAIL"
     },
     "code-formatting": {
@@ -277,7 +370,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider running rubocop (or standardrb) in CI"
+        "consider running rubocop, standardrb or reek in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"

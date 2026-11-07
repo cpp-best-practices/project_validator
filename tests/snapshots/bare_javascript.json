@@ -57,26 +57,133 @@
         "language": "JavaScript",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "prettier",
-              "biome",
-              "deno fmt",
-              "oxfmt",
-              "dprint"
-            ],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "biome": "biome ci",
-              "deno fmt": "deno fmt --check",
-              "dprint": "dprint check",
-              "oxfmt": "oxfmt --check",
-              "prettier": "prettier --check ."
+              "biome": {
+                "can": {
+                  "apply": "biome format --write",
+                  "check": "biome ci"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "deno fmt": {
+                "can": {
+                  "apply": "deno fmt",
+                  "check": "deno fmt --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dprint": {
+                "can": {
+                  "apply": "dprint fmt",
+                  "check": "dprint check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "oxfmt": {
+                "can": {
+                  "apply": "oxfmt",
+                  "check": "oxfmt --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "prettier": {
+                "can": {
+                  "apply": "prettier --write .",
+                  "check": "prettier --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "JavaScript",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "biome": {
+                "can": {
+                  "checks": "biome lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "deno lint": {
+                "can": {
+                  "checks": "deno lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "eslint": {
+                "can": {
+                  "checks": "eslint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "oxlint": {
+                "can": {
+                  "checks": "oxlint"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "deno check": {
+                "can": {
+                  "checks": "deno check",
+                  "strict": "deno check (strict by default)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "tsc": {
+                "can": {
+                  "checks": "tsc --noEmit (JavaScript is checked with checkJs in a jsconfig.json)",
+                  "strict": "\"strict\": true in the compilerOptions of tsconfig.json"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -183,14 +290,14 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
       "status": "FAIL"
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that runs prettier --check . (or biome ci, deno fmt --check, oxfmt --check or dprint check)"
+        "consider a CI job that runs prettier --check . (or deno fmt --check, oxfmt --check, dprint check or biome ci)"
       ],
-      "message": "CI never runs prettier, biome, deno fmt, oxfmt or dprint; its formatting is not enforced",
+      "message": "CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced",
       "status": "FAIL"
     },
     "committed-artifacts": {
@@ -302,7 +409,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider running eslint (or biome lint, or deno lint) in CI"
+        "consider running eslint, oxlint, deno lint or biome lint in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"
@@ -322,7 +429,7 @@
     },
     "type-checking": {
       "details": [
-        "consider running tsc --noEmit in CI (JavaScript is checked with checkJs in a jsconfig.json, or deno check)"
+        "consider running a type checker in CI: tsc --noEmit (JavaScript is checked with checkJs in a jsconfig.json) or deno check"
       ],
       "message": "no type checker runs",
       "status": "FAIL"

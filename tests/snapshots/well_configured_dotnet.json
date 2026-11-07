@@ -52,26 +52,116 @@
         "language": "C#",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "dotnet format",
-              "CSharpier"
-            ],
+            "answer": "yes",
             "defined": {
               "dotnet format": [
                 ".editorconfig"
               ]
             },
-            "enforced": "yes",
             "known": {
-              "CSharpier": "csharpier check .",
-              "dotnet format": "dotnet format --verify-no-changes"
+              "CSharpier": {
+                "can": {
+                  "apply": "csharpier format .",
+                  "check": "csharpier check ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dotnet format": {
+                "can": {
+                  "apply": "dotnet format",
+                  "check": "dotnet format --verify-no-changes"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "C#",
-            "tools": [
-              "dotnet format"
-            ],
-            "undefined": [],
+            "level": "check",
+            "runs": {
+              "dotnet format": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "Roslynator": [
+                "Directory.Build.props"
+              ]
+            },
+            "known": {
+              "Meziantou.Analyzer": {
+                "can": {
+                  "checks": "Meziantou.Analyzer"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Roslynator": {
+                "can": {
+                  "checks": "Roslynator"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "SonarAnalyzer": {
+                "can": {
+                  "checks": "SonarAnalyzer"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "StyleCop.Analyzers": {
+                "can": {
+                  "checks": "StyleCop.Analyzers"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C#",
+            "level": "checks",
+            "runs": {
+              "Roslynator": {
+                "levels": [
+                  "checks"
+                ],
+                "read": [
+                  "Directory.Build.props"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C#",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -124,6 +214,7 @@
       "role": "product"
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -200,6 +291,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[0]",
@@ -281,6 +373,22 @@
     {
       "argv": [
         "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -290,7 +398,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -306,10 +414,11 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[1]",
@@ -391,6 +500,22 @@
     {
       "argv": [
         "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -400,7 +525,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -416,10 +541,11 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[2]",
@@ -501,6 +627,22 @@
     {
       "argv": [
         "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -510,7 +652,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -526,10 +668,11 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[3]",
@@ -611,6 +754,22 @@
     {
       "argv": [
         "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -620,7 +779,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -636,10 +795,11 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[4]",
@@ -721,6 +881,22 @@
     {
       "argv": [
         "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -730,7 +906,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -746,10 +922,11 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[5]",
@@ -831,6 +1008,22 @@
     {
       "argv": [
         "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -840,7 +1033,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -856,10 +1049,11 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -916,6 +1110,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/function-limits.yml:function-limits",
@@ -1061,6 +1256,14 @@
       "value": "MIT"
     },
     {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:PackageReference",
+      "tool": "MSBuild",
+      "value": "Roslynator.Analyzers"
+    },
+    {
       "kind": "ConfigurationFile",
       "origin": "src/App/App.csproj",
       "reader": "MSBuild"
@@ -1096,6 +1299,38 @@
     },
     {
       "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "coverlet.collector"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "Microsoft.NET.Test.Sdk"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "xunit"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "xunit.runner.visualstudio"
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
@@ -1139,10 +1374,52 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1154,6 +1431,28 @@
         "."
       ],
       "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
       "via": []
     },
     {
@@ -1201,10 +1500,52 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1216,6 +1557,28 @@
         "."
       ],
       "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
       "via": []
     },
     {
@@ -1263,10 +1626,52 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1278,6 +1683,28 @@
         "."
       ],
       "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
       "via": []
     },
     {
@@ -1325,10 +1752,52 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1340,6 +1809,28 @@
         "."
       ],
       "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
       "via": []
     },
     {
@@ -1387,10 +1878,52 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1402,6 +1935,28 @@
         "."
       ],
       "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
       "via": []
     },
     {
@@ -1449,10 +2004,52 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1464,6 +2061,28 @@
         "."
       ],
       "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
       "via": []
     }
   ],
@@ -1756,7 +2375,7 @@
     },
     "static-analysis": {
       "details": [],
-      "message": "Roslynator runs",
+      "message": "Roslynator (Directory.Build.props) runs",
       "status": "PASS"
     },
     "status-badges": {

@@ -146,7 +146,7 @@ def _llvm_cov(command: Command, _: Facts) -> Run | None:
     return measured(LINE, REGION, BRANCH if branch else None, PATH if path else None)
 
 
-def _cmake_configures(argv: tuple[str, ...]) -> bool:
+def cmake_configures(argv: tuple[str, ...]) -> bool:
     """Whether a cmake command configures a build tree, and so reads the CMake files."""
     excluded = ("--build", "--install", "-E", "-P", "--open", "--help", "--version")
     return program(argv) == "cmake" and not has_option(argv, *excluded)
@@ -161,7 +161,7 @@ def _instrumentation(flag: str) -> Tool:
         argv = resolved(command)
         if any(found.search(word) for word in (*argv, *command.env.values())):
             return measured(PATH, heuristic=True)
-        if _cmake_configures(argv) and (read := facts.where(Setting, tool="CMake", key="flag", value=flag)):
+        if cmake_configures(argv) and (read := facts.where(Setting, tool="CMake", key="flag", value=flag)):
             return measured(PATH, read=read)
         return None
 

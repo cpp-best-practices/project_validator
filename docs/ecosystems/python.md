@@ -22,15 +22,17 @@ Warnings are errors: `-W error`, `PYTHONWARNINGS=error`, or pytest `filterwarnin
 
 ## `type-checking`
 
-mypy, pyright or basedpyright, pyrefly, or ty. Strict mode is a bonus: `strict = true` in `[tool.mypy]` or a `[mypy]`
-section, `mypy --strict`, or pyright's `typeCheckingMode` `strict`.
+mypy (or dmypy), pyright or basedpyright, pyrefly, or ty, in CI or a pre-commit hook CI runs. Strict mode is a
+bonus: `strict = true` in `[tool.mypy]` or a `[mypy]` section, `mypy --strict`, or pyright's `typeCheckingMode`
+`strict` (basedpyright's `all`).
 
 ## `code-formatting`
 
-ruff format (`ruff format --check` or `--diff`; settings in `[tool.ruff]` of pyproject.toml, ruff.toml or
-.ruff.toml) or black (`--check` or `--diff`; settings in `[tool.black]`), run directly, through a launcher, as the
-`psf/black` or `astral-sh/ruff-action` action, or as a pre-commit hook CI runs (`ruff-format`, `black`). Both have a
-default style, so CI enforcement alone passes; `black .` alone only rewrites files.
+ruff format (`ruff format --check`, `--diff` or `--exit-non-zero-on-format`; settings in `[tool.ruff]` of
+pyproject.toml, ruff.toml or .ruff.toml) or black (`--check` or `--diff`; settings in `[tool.black]`), run directly,
+through a launcher or tox, as the `psf/black` or `astral-sh/ruff-action` action, or as a pre-commit hook CI runs
+(`ruff-format`, `black`). Both have a default style, so CI enforcement alone passes; `black .` alone only rewrites
+files.
 
 ## `function-limits`
 
@@ -38,7 +40,8 @@ lizard runs with a length limit.
 
 ## `static-analysis`
 
-`ruff check`, pylint or flake8, in CI or as a pre-commit hook.
+`ruff check`, pylint or flake8, in CI or a pre-commit hook CI runs (pre-commit.ci, or `pre-commit run` in a
+job).
 
 ## `security-scanning`
 

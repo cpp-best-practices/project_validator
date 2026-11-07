@@ -17,7 +17,6 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import (
     ci_and_hook_texts,
-    configuration,
     existing_texts,
     first_existing,
     json_value,
@@ -42,16 +41,13 @@ from project_validator.facts.tools import Claim, Run, Tool, defined_by
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
-    Analyzer,
     BuildOutputs,
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    StaticAnalysis,
     TestSuite,
-    TypeChecking,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -320,18 +316,6 @@ PRETTIER = format_tool(
     formats=flagged(("prettier",), checks=("--check", "-c", "--list-different", "-l"), applies=("--write", "-w")),
     style=defined_by(files=("prettier",), settings=("prettier",)),
     reads=("prettier", "package.json prettier"),
-)
-BIOME = format_tool(
-    name="biome",
-    languages=JS_LANGUAGES,
-    can={Enforcement.CHECK: "biome ci", Enforcement.APPLY: "biome format --write"},
-    formats=flagged(
-        ("biome", "format"),
-        ("biome", "check"),
-        ("biome", "ci"),
-        applies=("--write", "--apply", "--fix", "--apply-unsafe"),
-    ),
-    style=defined_by(files=("biome",)),
 )
 DENO_FMT = format_tool(
     name="deno fmt",
@@ -617,51 +601,6 @@ def _max_lines_per_function(context: Context) -> Result:
     return Result.passed(f"function length is limited with eslint max-lines-per-function ({config})")
 
 
-BIOME_CONFIG = configuration(("biome.json", "biome.jsonc"))
-DENO_CONFIG = configuration(DENO_CONFIG_FILES)
-
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        Analyzer(name="eslint", runs=re.compile(RUNS_ESLINT), configured=configuration(ESLINT_CONFIG_FILES)),
-        Analyzer(name="biome lint", runs=re.compile(RUNS_BIOME_LINT), configured=BIOME_CONFIG),
-        Analyzer(name="deno lint", runs=re.compile(RUNS_DENO_LINT), configured=DENO_CONFIG),
-    ),
-    texts=_run_texts,
-    hint="consider running eslint (or biome lint, or deno lint) in CI",
-)
-
-TSCONFIG_FILES = ("tsconfig.json", "jsconfig.json")
-# @tsconfig/strictest turns on strict, and more.
-STRICTEST_BASE = re.compile(r"@tsconfig/strictest\b")
-
-
-def _strict_type_checking(context: Context) -> str | None:
-    """Where strict type checking is enabled: a tsconfig.json, or Deno, which checks strictly unless told not to."""
-    for path in TSCONFIG_FILES:
-        if json_value(context, path, "compilerOptions", "strict", comments=True) is True:
-            return f'"strict": true in {path}'
-        extends = json_value(context, path, "extends", comments=True)
-        bases = extends if isinstance(extends, list) else [extends]
-        if any(isinstance(base, str) and STRICTEST_BASE.search(base) for base in bases):
-            return f"@tsconfig/strictest in {path}"
-    deno = first_existing(context, DENO_CONFIG_FILES)
-    if deno is not None and json_value(context, deno, "compilerOptions", "strict", comments=True) is not False:
-        return f"Deno's default strict mode ({deno})"
-    return None
-
-
-TYPE_CHECKING = TypeChecking(
-    checkers=(
-        Analyzer(name="tsc", runs=re.compile(r"(?<![\w-])(?:vue-)?tsc\b"), configured=configuration(TSCONFIG_FILES)),
-        # deno test type-checks the code it runs, as deno check does.
-        Analyzer(name="deno check", runs=re.compile(r"\bdeno\s+(?:check|test)\b"), configured=DENO_CONFIG),
-    ),
-    texts=_run_texts,
-    strict=_strict_type_checking,
-    hint="consider running tsc --noEmit in CI (JavaScript is checked with checkJs in a jsconfig.json, or deno check)",
-    strict_hint='consider enabling strict mode: "strict": true in the compilerOptions of tsconfig.json',
-)
-
 LOCKFILES = (
     "package-lock.json",
     "npm-shrinkwrap.json",
@@ -746,8 +685,6 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_max_lines_per_function),
-        STATIC_ANALYSIS,
-        TYPE_CHECKING,
         DEPENDENCIES,
         NODE_MODULES,
         LICENSE,

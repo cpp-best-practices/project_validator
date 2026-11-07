@@ -54,24 +54,163 @@
         "language": "PHP",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "PHP-CS-Fixer",
-              "PHP_CodeSniffer",
-              "Pint"
-            ],
+            "answer": "yes",
             "defined": {},
-            "enforced": "yes",
             "known": {
-              "PHP-CS-Fixer": "php-cs-fixer check",
-              "PHP_CodeSniffer": "phpcs",
-              "Pint": "pint --test"
+              "PHP-CS-Fixer": {
+                "can": {
+                  "apply": "php-cs-fixer fix",
+                  "check": "php-cs-fixer check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "PHP_CodeSniffer": {
+                "can": {
+                  "apply": "phpcbf",
+                  "check": "phpcs"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Pint": {
+                "can": {
+                  "apply": "pint",
+                  "check": "pint --test"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "PHP",
-            "tools": [
-              "PHP-CS-Fixer"
-            ],
-            "undefined": [],
+            "level": "check",
+            "runs": {
+              "PHP-CS-Fixer": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "PHPStan": [
+                "phpstan.neon.dist"
+              ]
+            },
+            "known": {
+              "PHPMD": {
+                "can": {
+                  "checks": "phpmd"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "PHPStan": {
+                "can": {
+                  "checks": "phpstan analyse"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Phan": {
+                "can": {
+                  "checks": "phan"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Psalm": {
+                "can": {
+                  "checks": "psalm"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "checks",
+            "runs": {
+              "PHPStan": {
+                "levels": [
+                  "checks"
+                ],
+                "read": [
+                  "phpstan.neon.dist"
+                ]
+              },
+              "Psalm": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "PHPStan": [
+                "phpstan.neon.dist"
+              ]
+            },
+            "known": {
+              "PHPStan": {
+                "can": {
+                  "checks": "phpstan analyse",
+                  "strict": "level: 8 (or max) in phpstan.neon"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Psalm": {
+                "can": {
+                  "checks": "psalm",
+                  "strict": "errorLevel=\"2\" in psalm.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "checks",
+            "runs": {
+              "PHPStan": {
+                "levels": [
+                  "checks",
+                  "strict"
+                ],
+                "read": [
+                  "phpstan.neon.dist"
+                ]
+              },
+              "Psalm": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
             "unit": ".",
             "unknowns": []
           }
@@ -120,6 +259,7 @@
       "role": "product"
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci-lint.yml:ci-lint",
@@ -196,6 +336,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[0]",
@@ -394,6 +535,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[1]",
@@ -592,6 +734,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[2]",
@@ -790,6 +933,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[3]",
@@ -988,6 +1132,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[4]",
@@ -1186,6 +1331,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/ci.yml:test[5]",
@@ -1384,6 +1530,7 @@
       "via": []
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1440,6 +1587,7 @@
       ]
     },
     {
+      "builds": true,
       "env": {},
       "heuristic": false,
       "id": ".github/workflows/function-limits.yml:function-limits",
@@ -1512,6 +1660,19 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "phpstan.neon.dist",
+      "reader": "PHPStan"
+    },
+    {
+      "heuristic": true,
+      "key": "level",
+      "kind": "Setting",
+      "origin": "phpstan.neon.dist:level",
+      "tool": "PHPStan",
+      "value": "max"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "phpunit.xml.dist",
       "reader": "PHPUnit"
     },
@@ -1536,6 +1697,61 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[0]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "phpstan.neon.dist"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "PHPStan",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
       ]
     },
     {
@@ -1584,6 +1800,61 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[0]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "phpstan.neon.dist"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "PHPStan",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
       ]
     },
     {
@@ -1632,6 +1903,61 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[0]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "phpstan.neon.dist"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "PHPStan",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
       ]
     },
     {
@@ -1680,6 +2006,61 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[0]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "phpstan.neon.dist"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "PHPStan",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
       ]
     },
     {
@@ -1728,6 +2109,61 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[0]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "phpstan.neon.dist"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "PHPStan",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
       ]
     },
     {
@@ -1776,6 +2212,61 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[0]"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[0]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "phpstan.neon.dist"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "PHPStan",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
       ]
     },
     {
@@ -2114,7 +2605,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "PHPStan (phpstan.neon.dist) and Psalm run; strict mode bonus: PHPStan level in phpstan.neon.dist",
+      "message": "PHPStan (phpstan.neon.dist) and Psalm run; strict mode bonus: PHPStan (phpstan.neon.dist)",
       "status": "PASS"
     },
     "vcs-ignore": {

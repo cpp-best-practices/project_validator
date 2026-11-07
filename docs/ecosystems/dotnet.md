@@ -40,8 +40,9 @@ lizard runs with a length limit. lizard does not measure F#, so F#-only projects
 
 ## `static-analysis`
 
-An analyzer package beyond the SDK's own (Roslynator, SonarAnalyzer, StyleCop.Analyzers or Meziantou.Analyzer), or
-FSharpLint.
+For C#, an analyzer package beyond the SDK's own (Roslynator, SonarAnalyzer, StyleCop.Analyzers or
+Meziantou.Analyzer) referenced by a project or `Directory.*.props`, which runs when CI builds (`dotnet build`, `test`,
+`pack`, `publish`, `msbuild`); for F#, FSharpLint (`dotnet fsharplint lint`).
 
 ## `security-scanning`
 

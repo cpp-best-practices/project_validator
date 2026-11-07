@@ -40,7 +40,8 @@ class CiJob(Fact):
     """One CI job as it runs: one combination of its matrix, on one runner.
 
     `id` is unique in the project and names the job in other facts. `heuristic` jobs come from configuration that is
-    not parsed; their commands are unknown.
+    not parsed; their commands are unknown. A job that never `builds` the project (pre-commit.ci, which only runs
+    hooks) runs tools, but is no platform or build configuration the project is built on.
     """
 
     id: str
@@ -51,6 +52,7 @@ class CiJob(Fact):
     image: str | None = None
     env: Mapping[str, str] = NOTHING
     heuristic: bool = False
+    builds: bool = True
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

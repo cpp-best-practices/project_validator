@@ -9,8 +9,6 @@ from pathlib import PurePosixPath
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
 from project_validator.evidence import (
-    ci_and_hook_texts,
-    configuration,
     existing_texts,
     toml_value,
 )
@@ -23,15 +21,12 @@ from project_validator.facts.settings import SettingsReader, ini_settings, toml_
 from project_validator.facts.tools import Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
-    Analyzer,
     BuildOutputs,
     DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    StaticAnalysis,
     TestSuite,
-    TypeChecking,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -67,7 +62,10 @@ RUFF_FORMAT = format_tool(
     languages=PYTHON_ONLY,
     can={Enforcement.CHECK: "ruff format --check", Enforcement.APPLY: "ruff format"},
     # The ruff-format pre-commit hook applies it.
-    formats=either(flagged(("ruff", "format"), checks=("--check", "--diff")), flagged(("ruff-format",), checks=())),
+    formats=either(
+        flagged(("ruff", "format"), checks=("--check", "--diff", "--exit-non-zero-on-format")),
+        flagged(("ruff-format",), checks=()),
+    ),
     style=defined_by(settings=("ruff",)),
     reads=("ruff",),
 )
@@ -232,6 +230,8 @@ PYTHON_RUNNERS = launcher(
             "--python",
             "-p",
             "--group",
+            "--only-group",
+            "--no-group",
             "--extra",
             "--package",
             "--directory",
@@ -335,86 +335,6 @@ BYTECODE = BuildOutputs(
 LICENSE = toml_license("pyproject.toml", "project")
 
 
-def _section(name: str) -> re.Pattern[str]:
-    return re.compile(rf"^\s*\[{re.escape(name)}\b", re.MULTILINE)
-
-
-STATIC_ANALYSIS = StaticAnalysis(
-    analyzers=(
-        Analyzer(
-            name="ruff check",
-            # ruff's pre-commit hook is `ruff` (or `ruff-check`); `ruff-format` only formats.
-            runs=re.compile(r"\bruff\s+check\b|\bastral-sh/ruff-action\b|\bid:\s*ruff(?:-check)?\s*$", re.MULTILINE),
-            configured=configuration(("ruff.toml", ".ruff.toml"), {"pyproject.toml": _section("tool.ruff")}),
-        ),
-        Analyzer(
-            name="pylint",
-            runs=re.compile(r"\bpylint\b"),
-            configured=configuration((".pylintrc", "pylintrc"), {"pyproject.toml": _section("tool.pylint")}),
-        ),
-        Analyzer(
-            name="flake8",
-            runs=re.compile(r"\bflake8\b"),
-            configured=configuration((".flake8",), {"setup.cfg": _section("flake8"), "tox.ini": _section("flake8")}),
-        ),
-    ),
-    texts=ci_and_hook_texts,
-    hint="consider running ruff check (or pylint or flake8) in CI",
-)
-
-# mypy reads its [mypy] section from these files, and [tool.mypy] from pyproject.toml.
-MYPY_INI_FILES = ("mypy.ini", ".mypy.ini", "setup.cfg")
-MYPY_STRICT_SETTING = re.compile(r"^\[mypy\][^\[]*^\s*strict\s*=\s*(?:true|1|yes|on)\b", re.MULTILINE | re.IGNORECASE)
-MYPY_STRICT_FLAG = re.compile(r"\bmypy\b[^\n]*\s--strict\b")
-PYRIGHT_STRICT_MODE = re.compile(r"""\btypeCheckingMode["']?\s*[:=]\s*["'](?:strict|all)["']""")
-
-
-def _strict_type_checking(context: Context) -> str | None:
-    """Where strict type checking is enabled: mypy's strict setting or flag, or pyright's strict mode."""
-    if toml_value(context, "pyproject.toml", "tool", "mypy", "strict") is True:
-        return "mypy strict = true in pyproject.toml"
-    strict_files = (
-        *((path, MYPY_STRICT_SETTING, "mypy strict = true") for path in MYPY_INI_FILES),
-        *((path, PYRIGHT_STRICT_MODE, "pyright typeCheckingMode") for path in ("pyrightconfig.json", "pyproject.toml")),
-    )
-    for path, setting, name in strict_files:
-        if context.project.exists(path) and setting.search(context.project.read_text(path)):
-            return f"{name} in {path}"
-    return "mypy --strict" if any(map(MYPY_STRICT_FLAG.search, ci_and_hook_texts(context))) else None
-
-
-def _tool_configuration(name: str, *files: str) -> Callable[[Context], str | None]:
-    return configuration(files, {"pyproject.toml": _section(f"tool.{name}")})
-
-
-TYPE_CHECKING = TypeChecking(
-    checkers=(
-        Analyzer(
-            name="mypy",
-            runs=re.compile(r"\b(?:d?mypy|mirrors-mypy)\b"),
-            configured=configuration(
-                ("mypy.ini", ".mypy.ini"), {"pyproject.toml": _section("tool.mypy"), "setup.cfg": _section("mypy")}
-            ),
-        ),
-        Analyzer(
-            name="pyright",
-            runs=re.compile(r"\b(?:based)?pyright\b"),
-            configured=configuration(
-                ("pyrightconfig.json",),
-                {"pyproject.toml": re.compile(r"^\s*\[tool\.(?:based)?pyright\b", re.MULTILINE)},
-            ),
-        ),
-        Analyzer(
-            name="pyrefly", runs=re.compile(r"\bpyrefly\b"), configured=_tool_configuration("pyrefly", "pyrefly.toml")
-        ),
-        Analyzer(name="ty", runs=re.compile(r"\bty\s+check\b"), configured=_tool_configuration("ty", "ty.toml")),
-    ),
-    texts=ci_and_hook_texts,
-    strict=_strict_type_checking,
-    hint="consider running a type checker in CI: mypy, pyright (or basedpyright), pyrefly or ty",
-    strict_hint="consider enabling strict mode: strict = true in [tool.mypy], or pyright's typeCheckingMode = strict",
-)
-
 LOCKFILES = ("uv.lock", "poetry.lock", "pdm.lock", "Pipfile.lock", "pylock.toml")
 NAMED_LOCKFILE = re.compile(r"pylock\.[^/]+\.toml")
 REQUIREMENTS_FILE = re.compile(r"(?:^|/)(?:[^/]*requirements[^/]*\.txt|requirements/[^/]+\.txt)$")
@@ -478,8 +398,6 @@ PYTHON = Ecosystem(
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,
         FunctionLimits(),
-        STATIC_ANALYSIS,
-        TYPE_CHECKING,
         DEPENDENCIES,
         BYTECODE,
         LICENSE,

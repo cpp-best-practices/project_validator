@@ -71,10 +71,12 @@ def _pre_commit_hooks(command: Command, context: Context) -> Iterator[Expansion]
         return iter((found,))
     path, document = found
     stage = options.get("--hook-stage")
+    # pre-commit skips the hooks its SKIP variable names.
+    skipped = {name.strip() for name in command.env.get("SKIP", "").split(",")}
     return (
         _expansion(path, ("repos", repo_index, "hooks", hook_index), repo, hook)
         for repo_index, hook_index, repo, hook in _hooks(document)
-        if (not words or hook["id"] in words) and _runs_in(hook, stage)
+        if (not words or hook["id"] in words) and _runs_in(hook, stage) and hook["id"] not in skipped
     )
 
 

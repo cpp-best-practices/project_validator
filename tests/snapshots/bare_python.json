@@ -48,20 +48,116 @@
         "language": "Python",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "ruff format",
-              "black"
-            ],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "black": "black --check",
-              "ruff format": "ruff format --check"
+              "black": {
+                "can": {
+                  "apply": "black",
+                  "check": "black --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ruff format": {
+                "can": {
+                  "apply": "ruff format",
+                  "check": "ruff format --check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "Python",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "flake8": {
+                "can": {
+                  "checks": "flake8"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pylint": {
+                "can": {
+                  "checks": "pylint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ruff check": {
+                "can": {
+                  "checks": "ruff check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "mypy": {
+                "can": {
+                  "checks": "mypy",
+                  "strict": "strict = true in [tool.mypy] (or mypy --strict)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pyrefly": {
+                "can": {
+                  "checks": "pyrefly check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pyright": {
+                "can": {
+                  "checks": "pyright (or basedpyright)",
+                  "strict": "pyright's typeCheckingMode = strict"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ty": {
+                "can": {
+                  "checks": "ty check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -115,6 +211,31 @@
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
       "reader": "pytest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pylint"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "mypy"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pyright"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pyrefly"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "ty"
     }
   ],
   "map": {
@@ -167,7 +288,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
       "status": "FAIL"
     },
     "code-formatting": {
@@ -286,7 +407,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider running ruff check (or pylint or flake8) in CI"
+        "consider running ruff check, pylint or flake8 in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"
@@ -306,7 +427,7 @@
     },
     "type-checking": {
       "details": [
-        "consider running a type checker in CI: mypy, pyright (or basedpyright), pyrefly or ty"
+        "consider running a type checker in CI: mypy, pyright (or basedpyright), pyrefly check or ty check"
       ],
       "message": "no type checker runs",
       "status": "FAIL"

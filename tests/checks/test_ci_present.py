@@ -17,6 +17,12 @@ class CiPresentTests(unittest.TestCase):
         self.assertEqual(result.status, Status.PASS)
         self.assertIn("GitHub Actions", result.message)
 
+    def test_pre_commit_ci_is_a_pre_commit_configuration_with_a_ci_section(self) -> None:
+        configured = self._run({".pre-commit-config.yaml": "ci:\n  autofix_prs: false\nrepos: []\n"})
+        self.assertEqual(configured.message, "CI configuration found for pre-commit.ci")
+        self.assertEqual(self._run({".pre-commit-config.yaml": "repos: []\n"}).status, Status.FAIL)
+        self.assertEqual(self._run({".pre-commit-config.yaml": "ci: ["}).status, Status.FAIL)
+
     def test_passes_with_every_ci_provider(self) -> None:
         for provider, path in CI_FILES.items():
             with self.subTest(ci=provider):

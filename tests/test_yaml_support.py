@@ -23,3 +23,16 @@ class YamlSupportTests(unittest.TestCase):
         with self.assertRaises(yaml_support.YamlError) as raised:
             yaml_support.load("a: [unclosed\n")
         self.assertNotIn("\n", str(raised.exception))
+
+
+class TaggedTests(unittest.TestCase):
+    def test_local_tags_are_kept_as_tagged_values(self) -> None:
+        document = yaml_support.load("a: !reference [.x, script]\nb: !Ref Name\nc: !Sub {x: 1}\n")
+        self.assertEqual(
+            document,
+            {
+                "a": yaml_support.Tagged(tag="!reference", value=[".x", "script"]),
+                "b": yaml_support.Tagged(tag="!Ref", value="Name"),
+                "c": yaml_support.Tagged(tag="!Sub", value={"x": 1}),
+            },
+        )

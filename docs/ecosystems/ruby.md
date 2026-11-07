@@ -23,8 +23,8 @@ Ruby's warnings are on while testing (`ruby -w`, `RUBYOPT=-w`, `$VERBOSE = true`
 
 ## `type-checking`
 
-Sorbet (`srb tc`) or Steep (`steep check`). Strict mode is a bonus: Sorbet's `# typed: strict`, or `D::Ruby.strict`
-in a Steepfile.
+Sorbet (`srb tc`) or Steep (`steep check`). Strict mode is a bonus: Sorbet's `# typed: strict` sigils, or
+`D::Ruby.strict` in a Steepfile.
 
 ## `code-formatting`
 
@@ -38,7 +38,7 @@ lizard runs with a length limit, or RuboCop runs with `Metrics/MethodLength` not
 
 ## `static-analysis`
 
-RuboCop, Standard or Reek.
+RuboCop or Standard (without autocorrecting, run directly or as the Rake task a Rakefile defines), or Reek.
 
 ## `security-scanning`
 

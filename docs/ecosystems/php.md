@@ -28,8 +28,8 @@ PHPUnit's `failOnWarning`, `failOnNotice` and `failOnDeprecation` (or `failOnAll
 
 ## `type-checking`
 
-PHPStan or Psalm, also through the Composer scripts CI runs. Strict mode is a bonus: PHPStan `level` 8 or higher, or
-Psalm `errorLevel` 1 or 2.
+PHPStan or Psalm, also through the Composer scripts CI runs. Strict mode is a bonus: PHPStan `level` 8 or higher
+(in its configuration or `--level`), or Psalm `errorLevel` 1 or 2.
 
 ## `code-formatting`
 

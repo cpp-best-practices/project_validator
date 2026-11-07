@@ -172,8 +172,8 @@ except where a step deliberately changes results and says so.
    - Components (command expanders and coverage tools) are found by `project_validator/components.py` in the
      shared build systems and tools and in the profiles (and their modules), never listed.
    - The coverage question (`project_validator/questions/coverage.py`) answers per language and granularity; the
-     policy (`project_validator/policy.py`) requires branch coverage, or the finest granularity a known tool can
-     measure, and reports path coverage as a bonus. An unknown answer is an error, naming what was not read
+     policy (`project_validator/policy/coverage.py`) requires branch coverage, or the finest granularity a known tool
+     can measure, and reports path coverage as a bonus. An unknown answer is an error, naming what was not read
      (see Policy).
    - `--answers` prints the answers. C and C++ coverage tools stay in the C/C++ profile (`c_cpp/coverage.py`) until
      step 5 shares them with Fortran.
@@ -289,6 +289,48 @@ except where a step deliberately changes results and says so.
    - **Plugins add components** (`project_validator/components.py`, `add_plugin_modules`): a plugin module's tools,
      settings readers, expanders and actions are found like the built-in ones, and a check made of a question
      applies to the languages its tools now handle (`Check.languages_from`).
+   **4b. Static analysis and type checking** (`static-analysis`, `type-checking`; the `Analyzer`, `StaticAnalysis`
+   and `TypeChecking` rules are deleted).
+   - **One answer for every tool-based practice** (`project_validator/questions/tooling.py`): `ToolAnswer` holds,
+     for one aspect of one language in one unit, the known tools (how each provides each level, whether it needs a
+     definition, whether it is required alongside the others), the tools CI runs with the levels they provide and
+     the settings files they read, the files that define each, and the unknowns. A practice's question is
+     `aspect_answers(aspect, level)`; formatting moved onto it. Policies live in `project_validator/policy/`, one
+     module per practice, with the wording helpers they share.
+   - **Aspects**: `analysis` (one level, `checks`: an analyzer's `Definition` is where its checks are chosen; clang-tidy
+     and golangci-lint need one) and `type-check` (`checks`, and `strict` as a bonus), spelled by `analyzer`,
+     `analysed`, `type_checker` and `type_checked` (`project_validator/facts/analysis.py`). `Tool.required` marks an
+     analyzer that must run alongside the others (clang-tidy and cppcheck). `combined` makes one tool of the same
+     program's aspects (RuboCop and Standard format and lint; biome formats and lints; PHPStan and Psalm analyse and
+     type check).
+   - **Build-wired analyzers**: CMake's `CMAKE_<LANG>_CLANG_TIDY`/`_CPPCHECK` run their analyzer in a build CI
+     configures; JVM analyzers run by their goals and tasks or by the plugins a build's verification brings in, Error
+     Prone by every compiling build; .NET analyzer packages (`PackageReference`, now read from MSBuild files) by every
+     build; SwiftLint's build tool plugin by a package build. `go run <package>@<version>` and `go tool` launch the
+     program the package names.
+   - **pre-commit.ci** (`project_validator/ci/pre_commit_ci.py`) is a CI provider: a `.pre-commit-config.yaml` with
+     a `ci:` section (`CiProvider.recognises`) runs its hooks, but those in `ci.skip` (pre-commit's `SKIP`). Its job
+     never `builds` (`CiJob.builds`), so it is no platform or build configuration. A pre-commit hook counts only where
+     CI runs it; before, any hook counted.
+   - **Each tool for its own languages**: Error Prone, PMD and Checkstyle analyse Java, detekt Kotlin; .NET analyzer
+     packages C#, FSharpLint F#.
+   - Components may be defined as module-level tuples (one analyzer per NuGet package), and settings readers may name
+     files by the end of their path (`sorbet/config`). `defined_by(named=…)` counts a file by existing (an empty
+     `ty.toml`).
+   - Profiles that grew past one module became packages (`python`, `javascript`, `jvm`), each with an `analysis`
+     module.
+   - **Reading more of what CI runs** (from the corpus): tox environments (`tox -e`/`-f`/`run`/`p`, the env list,
+     factor-conditional commands, braces, `tox.ini`/`tox.toml`/`[tool.tox]`; a factor from a variable matches every
+     section it may be); the project's shell scripts (`bash ci/lint.sh`, `./ci/lint.sh`); GitLab local `include:`
+     files, `extends:` and `!reference` (YAML values with local tags are `Tagged`; other includes are unknowns that
+     hide jobs); PowerShell scripts (a step's `shell: pwsh`, or a Windows runner's default) split with PowerShell's
+     escape character; and a GitHub job whose matrix is an expression runs its steps with the matrix values unknown
+     (before, its steps were lost).
+   - **Auxiliary code does not speak for a unit**: a run only in an example's or the docs' directory (tsc in
+     `examples/app`) covers no unit of another role, and an auxiliary directory's configuration defines no tool of
+     the unit it is in. tsc reads the configuration it uses (`-p`, or `tsconfig.json` where it runs, and the local
+     ones it extends). Findings list at most three files, and how many more.
+
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice

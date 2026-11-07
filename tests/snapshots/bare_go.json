@@ -46,18 +46,63 @@
         "language": "Go",
         "units": [
           {
-            "applied": [],
-            "default_style": [
-              "gofmt"
-            ],
+            "answer": "no",
             "defined": {},
-            "enforced": "no",
             "known": {
-              "gofmt": "test -z \"$(gofmt -l .)\""
+              "gofmt": {
+                "can": {
+                  "apply": "gofmt -w .",
+                  "check": "test -z \"$(gofmt -l .)\""
+                },
+                "needs_definition": false,
+                "required": false
+              }
             },
             "language": "Go",
-            "tools": [],
-            "undefined": [],
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "golangci-lint": {
+                "can": {
+                  "checks": "golangci-lint (with linters enabled beyond its defaults in a .golangci.yml)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Go",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Go",
+            "level": "checks",
+            "runs": {},
             "unit": ".",
             "unknowns": []
           }
@@ -161,7 +206,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker)",
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
       "status": "FAIL"
     },
     "code-formatting": {
@@ -282,7 +327,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider running golangci-lint in CI, with linters enabled beyond its defaults in a .golangci.yml"
+        "consider running golangci-lint (with linters enabled beyond its defaults in a .golangci.yml) in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"
