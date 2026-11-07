@@ -14,9 +14,9 @@ from itertools import groupby
 
 from project_validator.build_configurations import BUILD_TYPE_KINDS
 
-# The values each dimension starts with; "other" stands for every value not named. The dimensions are open: a value
-# a condition names joins its dimension (a profile's compiler, GHC, or language, Haskell), after "other", and a
-# condition made before it was named holds for it as it holds for "other".
+# The values each dimension starts with; "other" stands for every value not named. The dimensions are open: a profile
+# adds its compiler (GHC) or language (Haskell) with `extend`, when its module is imported, so that every run knows
+# the same values; a condition made before a value was added holds for it as it holds for "other".
 OTHER = "other"
 COMPILERS = ("gcc", "clang", "appleclang", "msvc", "intel", "flang", OTHER)
 PLATFORMS = ("linux", "macos", "windows", "emscripten", OTHER)
@@ -30,6 +30,12 @@ _VALUES: dict[str, list[str]] = {
 }
 # Where "other" is among each dimension's values: values named later come after it.
 _OTHER_INDEX = {name: values.index(OTHER) for name, values in _VALUES.items()}
+
+
+def extend(dimension: str, *values: str) -> None:
+    """Add `values` to `dimension`, after "other" (a profile's compiler or language)."""
+    known = _VALUES[dimension]
+    known += [value for value in values if value not in known]
 
 
 class _Dimensions(Mapping[str, tuple[str, ...]]):
@@ -182,8 +188,8 @@ def only(dimension: str, values: Iterable[str]) -> Condition:
     """The builds whose `dimension` takes one of `values`."""
     allowed = frozenset(values)
     variable = _DIMENSION_NAMES.index(dimension)
-    known = _VALUES[dimension]
-    known += sorted(allowed - set(known))
+    if unknown := allowed - set(_VALUES[dimension]):
+        raise ValueError(f"{', '.join(sorted(unknown))} not among the {dimension}; a profile adds it with extend()")
     return Condition(_DIAGRAM.node(variable, tuple(int(value in allowed) for value in DIMENSIONS[dimension])))
 
 
@@ -274,6 +280,7 @@ __all__ = [
     "Dimension",
     "both",
     "either",
+    "extend",
     "negated",
     "only",
     "paths",

@@ -41,11 +41,14 @@ def toml_members(*table: str) -> Callable[[str], tuple[str, ...]]:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ToolchainPatterns:
-    """How a CI job names the versions of a language toolchain, and how a job that names none shows it uses one."""
+    """How a CI job names the versions of a language toolchain, and how a job that names none shows it uses one.
+    `labelled` patterns name a toolchain by something other than its version, written with their label: a Stackage
+    snapshot pins a GHC (a resolver `lts-22` is "Stackage lts-22")."""
 
     language: str
     versions: tuple[re.Pattern[str], ...]
     usage: re.Pattern[str]
+    labelled: tuple[tuple[re.Pattern[str], str], ...] = ()
 
 
 # Ecosystems are registry singletons: they compare and hash by identity.
@@ -79,7 +82,9 @@ class Ecosystem:
 
     def used_by(self, text: str) -> bool:
         """Whether CI configuration `text` builds with or runs the ecosystem's toolchain."""
-        patterns = (self.ci_usage, *((self.toolchain.usage, *self.toolchain.versions) if self.toolchain else ()))
+        toolchain = self.toolchain
+        named = (toolchain.usage, *toolchain.versions, *(found for found, _ in toolchain.labelled)) if toolchain else ()
+        patterns = (self.ci_usage, *named)
         return any(pattern.search(text) for pattern in patterns if pattern is not None)
 
     def used_build_systems(self, build_systems: frozenset[str]) -> tuple[BuildSystem, ...]:

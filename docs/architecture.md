@@ -485,10 +485,17 @@ except where a step deliberately changes results and says so.
    it harder than a recognition module and extractors; each fix is shared:
    - The CI layer: `$GITHUB_ENV` carries to later steps; a word that is one variable splits; a program that is a
      variable nothing sets is unknown; matrix objects are read as written.
-   - Conditions are open: a compiler or language a condition names joins its dimension, so a profile's compiler
-     (GHC) and language scope `CompilerOption` facts like CMake's. Compiler flags are requirements built once
+   - Conditions are open: a profile adds its compiler (GHC) and language to their dimensions when it is imported
+     (`extend`), so that its options scope `CompilerOption` facts like CMake's, and every run knows the same values. Compiler flags are requirements built once
      (`project_validator/facts/flags.py`): on a command line, as an option's value, in the build files' options for
      the language and compiler, with hints derived from the flag's spellings; the Meson and CMake settings that set
      them are the build systems' (`tools/toolchains.py`).
+   - A tool run on files its job wrote, and none of the project's, covers none of the project's code; project-wide
+     tools' hints name tools for every language.
+   - Build outputs name the build systems that write them (several), and only the project's languages' are looked
+     for; JSON nested deeper than Python recurses is read without recursion; a monorepo licensed per package warns;
+     a package manager says whether its lockfiles lock from deeper in a unit (`nested_locks`).
+   - A toolchain can be named by something other than its version (`ToolchainPatterns.labelled`: a Stackage
+     snapshot), and `python -m project_validator.scaffold` starts a profile with everything the contract asks for.
 
 `--facts` and `--answers` expose the database and the answers.

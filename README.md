@@ -150,7 +150,9 @@ without changing the validator.
 
 A built-in profile is found by its module, `project_validator/ecosystems/<name>.py`; it comes with its own
 `tests/layouts/<name>.py`, fixtures `tests/fixtures/well_configured_<name>` and `tests/fixtures/bare_<name>`, and page
-`docs/ecosystems/<name>.md`, and no shared list names it.
+`docs/ecosystems/<name>.md`, and no shared list names it. `python -m project_validator.scaffold <name> <Label>
+<suffix>...` writes them, recognising the language by its suffixes, with the fixtures' files that are not about the
+language; what is left is the language's own knowledge.
 
 A project is recognised as an ecosystem by any of:
 

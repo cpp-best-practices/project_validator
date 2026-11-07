@@ -1,6 +1,14 @@
+import re
 import unittest
 
-from project_validator.platforms import Toolchain, detect_compilers, detect_operating_systems, detect_toolchains
+from project_validator.ecosystems import ToolchainPatterns
+from project_validator.platforms import (
+    Toolchain,
+    _language_toolchains,
+    detect_compilers,
+    detect_operating_systems,
+    detect_toolchains,
+)
 
 
 def _toolchains(language: str, *versions: str) -> frozenset[Toolchain]:
@@ -55,3 +63,15 @@ class ToolchainDetectionTests(unittest.TestCase):
     def test_mentioning_a_language_is_not_using_it(self) -> None:
         self.assertEqual(detect_toolchains("languages: python, rust\nname: python-docs\ncmake --version"), frozenset())
         self.assertEqual(detect_toolchains('{"python-version": "${{ matrix.python }}"}'), frozenset())
+
+
+class LabelledToolchainTests(unittest.TestCase):
+    def test_a_toolchain_named_by_a_snapshot_is_written_with_its_label(self) -> None:
+        patterns = ToolchainPatterns(
+            language="GHC",
+            versions=(re.compile(r"\bghc-version\W+(\d+\.\d+)"),),
+            usage=re.compile(r"\bstack\b"),
+            labelled=((re.compile(r"--resolver[=\s]+(lts-[\d.]+)"), "Stackage {}"),),
+        )
+        found = _language_toolchains("GHC", patterns, ("stack test --resolver lts-22 && ghc-version: 9.8",))
+        self.assertEqual({str(toolchain) for toolchain in found}, {"GHC 9.8", "GHC Stackage lts-22"})
