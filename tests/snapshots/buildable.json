@@ -366,6 +366,58 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {},
+                "missing": [
+                  "_FORTIFY_SOURCE",
+                  "-fstack-protector-strong",
+                  "-fcf-protection",
+                  "-fstack-clash-protection",
+                  "_GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {},
+                "missing": [
+                  "_FORTIFY_SOURCE",
+                  "-fstack-protector-strong",
+                  "-fcf-protection",
+                  "-fstack-clash-protection",
+                  "_GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "license": [
       {
         "language": "C",
@@ -879,8 +931,10 @@
       "status": "FAIL"
     },
     "hardening": {
-      "details": [],
-      "message": "no hardening options found; enable -fhardened (GCC 14+) or _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE",
+      "details": [
+        "enable -fhardened (GCC 14+) or _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE; for MSVC /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT"
+      ],
+      "message": "no hardening options found; enable _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE",
       "status": "FAIL"
     },
     "large-files": {

@@ -6,9 +6,7 @@ import tomllib
 from collections.abc import Iterator
 from pathlib import Path, PurePosixPath
 
-from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
-from project_validator.evidence import existing_texts
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
@@ -20,6 +18,7 @@ from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import Practice, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
@@ -28,7 +27,6 @@ from project_validator.facts.testing import TestFiles, test_runner, tested, test
 from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.rules import (
     BuildTypes,
-    Hardening,
     directories,
     ignored_at_top_level,
 )
@@ -188,12 +186,6 @@ CARGO_CONFIG_FILES = (".cargo/config.toml", ".cargo/config")
 CRATE_SETTINGS_FILES = frozenset({"Cargo.toml", "lib.rs", "main.rs"})
 
 
-def _settings_texts(context: Context) -> tuple[str, ...]:
-    """Where Rust lints and profiles are set: CI configuration, Cargo configuration, manifests and crate roots."""
-    crate_files = (path for path in context.project.files() if PurePosixPath(path).name in CRATE_SETTINGS_FILES)
-    return (*context.ci_texts, *existing_texts(context, (*CARGO_CONFIG_FILES, *crate_files)))
-
-
 def _setting(name: str, regex: str) -> Pattern:
     return Pattern(name, re.compile(regex, re.MULTILINE))
 
@@ -222,15 +214,21 @@ WARNINGS = Practice(
 )
 
 # Overflow checks are compiled into the binary; release builds leave them out unless the profile asks for them.
-HARDENING = Hardening(
-    texts=_settings_texts,
-    options=(
-        _setting(
-            "release overflow-checks",
-            r"^\[profile\.release\][^\[]*^\s*overflow-checks\s*=\s*true\b"
-            r"""|-C[\s"',]*overflow-checks(?:=(?:on|yes|y|true))?(?![\w=-])""",
-        ),
-    ),
+_OVERFLOW_CHECKS = required(
+    _setting(
+        "release overflow-checks",
+        r"^\[profile\.release\][^\[]*^\s*overflow-checks\s*=\s*true\b"
+        r"""|-C[\s"',]*overflow-checks(?:=(?:on|yes|y|true))?(?![\w=-])""",
+    )
+)
+RUST_HARDENING_SETTINGS = requirement_reader("Rust build settings", RUST_LINT_SETTINGS_FILES, (_OVERFLOW_CHECKS,))
+HARDENING = Practice(
+    name=HARDENING_PRACTICE,
+    languages=RUST_LANGUAGE,
+    kind="hardening options",
+    requirements=always(_OVERFLOW_CHECKS),
+    reads=(RUST_HARDENING_SETTINGS.name,),
+    hint="set overflow-checks = true in [profile.release] of Cargo.toml",
 )
 
 # Forbidding unsafe code crate-wide makes the compiler reject the code whose memory safety it cannot check: in the
@@ -432,6 +430,5 @@ RUST = Ecosystem(
     rules=(
         RUST_TOOLCHAINS,
         BuildTypes(axis=RUST_TOOLCHAINS),
-        HARDENING,
     ),
 )

@@ -524,6 +524,156 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "clang",
+                "found": {
+                  "-fcf-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-clash-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-protector-strong": [
+                    "CMakeLists.txt"
+                  ],
+                  "_FORTIFY_SOURCE": [
+                    "CMakeLists.txt"
+                  ],
+                  "_GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-fcf-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-clash-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-protector-strong": [
+                    "CMakeLists.txt"
+                  ],
+                  "_FORTIFY_SOURCE": [
+                    "CMakeLists.txt"
+                  ],
+                  "_GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "msvc",
+                "found": {
+                  "/CETCOMPAT": [
+                    "CMakeLists.txt"
+                  ],
+                  "/DYNAMICBASE": [
+                    "CMakeLists.txt"
+                  ],
+                  "/guard:cf": [
+                    "CMakeLists.txt"
+                  ],
+                  "/sdl": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "clang",
+                "found": {
+                  "-fcf-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-clash-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-protector-strong": [
+                    "CMakeLists.txt"
+                  ],
+                  "_FORTIFY_SOURCE": [
+                    "CMakeLists.txt"
+                  ],
+                  "_GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-fcf-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-clash-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-protector-strong": [
+                    "CMakeLists.txt"
+                  ],
+                  "_FORTIFY_SOURCE": [
+                    "CMakeLists.txt"
+                  ],
+                  "_GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "msvc",
+                "found": {
+                  "/CETCOMPAT": [
+                    "CMakeLists.txt"
+                  ],
+                  "/DYNAMICBASE": [
+                    "CMakeLists.txt"
+                  ],
+                  "/guard:cf": [
+                    "CMakeLists.txt"
+                  ],
+                  "/sdl": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C++",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "license": [
       {
         "language": "C",
@@ -8012,7 +8162,7 @@
     },
     "hardening": {
       "details": [],
-      "message": "hardening options are enabled: _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+      "message": "hardening options are enabled: _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE for clang and gcc; /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT for msvc",
       "status": "PASS"
     },
     "large-files": {

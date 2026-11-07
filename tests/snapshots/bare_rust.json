@@ -225,6 +225,29 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "release overflow-checks"
+                ]
+              }
+            ],
+            "language": "Rust",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "license": [
       {
         "language": "Rust",
@@ -437,6 +460,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
+      "reader": "Rust build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
       "reader": "Rust lints"
     },
     {
@@ -467,12 +495,22 @@
     {
       "kind": "ConfigurationFile",
       "origin": "src/lib.rs",
+      "reader": "Rust build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/lib.rs",
       "reader": "Rust lints"
     },
     {
       "kind": "ConfigurationFile",
       "origin": "src/main.rs",
       "reader": "Rust lint settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/main.rs",
+      "reader": "Rust build settings"
     },
     {
       "kind": "ConfigurationFile",
@@ -616,7 +654,9 @@
       "status": "FAIL"
     },
     "hardening": {
-      "details": [],
+      "details": [
+        "set overflow-checks = true in [profile.release] of Cargo.toml"
+      ],
       "message": "no hardening options found; enable release overflow-checks",
       "status": "FAIL"
     },

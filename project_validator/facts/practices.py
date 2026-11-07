@@ -20,6 +20,7 @@ from project_validator.text import Pattern
 
 WARNINGS = "compiler-warnings"
 WARNINGS_AS_ERRORS = "warnings-as-errors"
+HARDENING = "hardening"
 
 
 @dataclass(frozen=True, slots=True)
@@ -109,7 +110,8 @@ class Practice:
     the facts: C# asks for other settings than F#), all of them or, with `any_one`, one. The settings the readers it
     `reads` record under a requirement's name meet it (see `requirement_reader`), and their unknowns may hide it.
     `kind` names the requirements in messages (listed joined by `separator`), `searched` says where they are looked
-    for, and `hint` how to meet them. A practice judged per compiler names the `compilers` CI builds with."""
+    for, and `hint` how to meet them. A practice judged per compiler names the `compilers` CI builds with. A practice
+    that `forbids` its requirements is met when none of them is found."""
 
     name: str
     languages: frozenset[str]
@@ -121,6 +123,13 @@ class Practice:
     hint: str = ""
     separator: str = ", "
     compilers: Callable[[Facts], Sequence[str]] | None = None
+    # Settings that must not be found (`-Ounchecked`), rather than settings that must.
+    forbids: bool = False
+    # Why the practice does not apply to the project (a Go library builds no binary to harden); None when it does.
+    skipped: Callable[[Facts], str | None] = lambda _facts: None
+    # What a met practice, and one met in nothing, are reported as, when not as the policy words it.
+    passed: str = ""
+    failed: str = ""
 
 
 def known_practices() -> tuple[Practice, ...]:
@@ -192,6 +201,7 @@ def handled(name: str) -> Callable[[], frozenset[str]]:
 
 
 __all__ = [
+    "HARDENING",
     "WARNINGS",
     "WARNINGS_AS_ERRORS",
     "Evidence",

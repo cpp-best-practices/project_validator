@@ -7,9 +7,7 @@ import re
 from collections.abc import Iterator
 
 from project_validator.build_configurations import build_type_kinds
-from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import existing_texts
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
@@ -19,6 +17,7 @@ from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
 from project_validator.facts.practices import Practice, always, required, requirement_reader
@@ -35,11 +34,10 @@ from project_validator.facts.testing import TestFiles, test_runner, tested, test
 from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
     BuildTypes,
-    Hardening,
     directories,
     ignored_at_top_level,
 )
-from project_validator.text import found_and_missing, pattern
+from project_validator.text import pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
@@ -96,15 +94,6 @@ XCODE_DATA = BuildOutput(
 )
 # Xcode keeps a project's build settings and its schemes inside the project directory.
 XCODE_SETTINGS = re.compile(r"\.xc(?:odeproj|workspace)/(?:.+/)?(?:project\.pbxproj|[^/]+\.xcscheme)$")
-
-
-def _xcode_settings(context: Context) -> list[str]:
-    return [path for path in context.project.files() if XCODE_SETTINGS.search(path) or path.endswith(".xcconfig")]
-
-
-def _build_texts(context: Context) -> tuple[str, ...]:
-    """CI configuration, Package.swift, and the Xcode build settings and schemes."""
-    return (*context.ci_texts, *existing_texts(context, (PACKAGE_SWIFT, *_xcode_settings(context))))
 
 
 SWIFT_FORMAT_FILES = file_reader("swift-format", (".swift-format",))
@@ -279,17 +268,19 @@ UNCHECKED = (
 )
 
 
-def _runtime_checks_kept(context: Context) -> Result:
-    removed, _ = found_and_missing(_build_texts(context), UNCHECKED)
-    if removed:
-        return Result.failed(
-            f"Swift's runtime safety checks are compiled away: {', '.join(removed)}",
-            "build releases with -O (the default), which keeps bounds, overflow and exclusivity checks",
-        )
-    return Result.passed("release builds keep Swift's runtime safety checks (no -Ounchecked)")
-
-
-HARDENING = Hardening(texts=_build_texts, judge=_runtime_checks_kept)
+_UNCHECKED = tuple(required(option) for option in UNCHECKED)
+SWIFT_HARDENING_SETTINGS = requirement_reader("Swift optimization settings", SWIFT_BUILD_SETTINGS_FILES, _UNCHECKED)
+HARDENING = Practice(
+    name=HARDENING_PRACTICE,
+    languages=SWIFT_ONLY,
+    kind="Swift's runtime safety checks",
+    requirements=always(*_UNCHECKED),
+    reads=(SWIFT_HARDENING_SETTINGS.name,),
+    forbids=True,
+    hint="build releases with -O (the default), which keeps bounds, overflow and exclusivity checks",
+    passed="release builds keep Swift's runtime safety checks (no -Ounchecked)",
+    failed="Swift's runtime safety checks are compiled away",
+)
 
 SWIFTLINT_CONFIG = ".swiftlint.yml"
 SWIFTLINT_SETTINGS = SettingsReader(
@@ -415,6 +406,5 @@ SWIFT = Ecosystem(
     rules=(
         SWIFT_TOOLCHAINS,
         BuildTypes(axis=SWIFT_TOOLCHAINS),
-        HARDENING,
     ),
 )
