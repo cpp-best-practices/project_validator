@@ -131,6 +131,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -155,6 +156,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -187,6 +189,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -217,6 +220,71 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "ctest": {
+                "can": {
+                  "runs": "ctest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "meson test": {
+                "can": {
+                  "runs": "meson test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "ctest": {
+                "can": {
+                  "runs": "ctest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "meson test": {
+                "can": {
+                  "runs": "meson test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C++",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -234,6 +302,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -249,6 +318,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -293,6 +363,11 @@
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
       "reader": "CMake flags"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CTest"
     }
   ],
   "map": {
@@ -481,7 +556,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "CTest is never enabled; call enable_testing() or include(CTest)",
+      "message": "no tests found (tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call) or tests registered with Meson's test() in meson.build)",
       "status": "FAIL"
     },
     "type-checking": {

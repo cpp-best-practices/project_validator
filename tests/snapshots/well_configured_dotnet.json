@@ -87,6 +87,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -146,6 +147,44 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "dotnet test": [
+                "tests/App.Tests/CalculatorTests.cs"
+              ]
+            },
+            "known": {
+              "dotnet test": {
+                "can": {
+                  "runs": "dotnet test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C#",
+            "level": "runs",
+            "runs": {
+              "dotnet test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -163,6 +202,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -212,6 +252,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "[Fact], [Test] or [TestMethod] methods in a test project (one referencing Microsoft.NET.Test.Sdk)",
+      "language": "C#",
+      "origin": "tests/App.Tests/CalculatorTests.cs"
     },
     {
       "builds": true,
@@ -1277,6 +1322,14 @@
       "value": "net10.0"
     },
     {
+      "heuristic": false,
+      "key": "Sdk",
+      "kind": "Setting",
+      "origin": "src/App/App.csproj:Sdk",
+      "tool": "MSBuild",
+      "value": "Microsoft.NET.Sdk"
+    },
+    {
       "kind": "ConfigurationFile",
       "origin": "tests/App.Tests/App.Tests.csproj",
       "reader": "MSBuild"
@@ -1331,6 +1384,14 @@
     },
     {
       "heuristic": false,
+      "key": "Sdk",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:Sdk",
+      "tool": "MSBuild",
+      "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
@@ -1409,6 +1470,27 @@
         "."
       ],
       "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
       "via": []
     },
     {
@@ -1547,6 +1629,27 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1673,6 +1776,27 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1799,6 +1923,27 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1913,6 +2058,27 @@
         "."
       ],
       "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
       "via": []
     },
     {
@@ -2039,6 +2205,27 @@
         "."
       ],
       "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
       "via": []
     },
     {
@@ -2385,7 +2572,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": ".NET tests found in 1 file(s)",
+      "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
     "type-checking": {

@@ -80,6 +80,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -126,6 +127,33 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "phpunit, pest or composer test": {
+                "can": {
+                  "runs": "phpunit, pest or composer test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -160,6 +188,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -389,7 +418,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no PHP tests found (*Test.php files with PHPUnit test cases or Pest tests)",
+      "message": "no tests found (*Test.php files with PHPUnit test cases or Pest tests)",
       "status": "FAIL"
     },
     "type-checking": {

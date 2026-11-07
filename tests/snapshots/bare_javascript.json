@@ -105,6 +105,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -151,6 +152,33 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "a JavaScript test runner": {
+                "can": {
+                  "runs": "jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -185,6 +213,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -424,7 +453,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no JavaScript or TypeScript tests found (*.test.*, *.spec.* or __tests__/ files)",
+      "message": "no tests found (*.test.*, *.spec.* or __tests__/ files)",
       "status": "FAIL"
     },
     "type-checking": {

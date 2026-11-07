@@ -154,6 +154,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -189,6 +190,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -238,6 +240,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -285,6 +288,93 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "ctest": [
+                "test/CMakeLists.txt"
+              ]
+            },
+            "known": {
+              "ctest": {
+                "can": {
+                  "runs": "ctest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "meson test": {
+                "can": {
+                  "runs": "meson test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "runs",
+            "runs": {
+              "ctest": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "ctest": [
+                "test/CMakeLists.txt"
+              ]
+            },
+            "known": {
+              "ctest": {
+                "can": {
+                  "runs": "ctest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "meson test": {
+                "can": {
+                  "runs": "meson test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C++",
+            "level": "runs",
+            "runs": {
+              "ctest": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -302,6 +392,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -317,6 +408,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -3200,6 +3292,19 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CTest"
+    },
+    {
+      "heuristic": true,
+      "key": "enables",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:enables",
+      "tool": "CTest",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "cmake/Dependencies.cmake",
       "reader": "CMake analyzers"
     },
@@ -3210,6 +3315,11 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "cmake/Dependencies.cmake",
+      "reader": "CTest"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "test/CMakeLists.txt",
       "reader": "CMake analyzers"
     },
@@ -3217,6 +3327,19 @@
       "kind": "ConfigurationFile",
       "origin": "test/CMakeLists.txt",
       "reader": "CMake flags"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "test/CMakeLists.txt",
+      "reader": "CTest"
+    },
+    {
+      "heuristic": true,
+      "key": "registers",
+      "kind": "Setting",
+      "origin": "test/CMakeLists.txt:registers",
+      "tool": "CTest",
+      "value": "add_test"
     },
     {
       "heuristic": true,
@@ -3239,6 +3362,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -3326,6 +3470,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -3413,6 +3578,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -3500,6 +3686,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -3587,6 +3794,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -3674,6 +3902,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -3761,6 +4010,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -3848,6 +4118,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -3935,6 +4226,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4022,6 +4334,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4109,6 +4442,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4196,6 +4550,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4283,6 +4658,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4370,6 +4766,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4457,6 +4874,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4544,6 +4982,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4631,6 +5090,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4718,6 +5198,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4805,6 +5306,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -4892,6 +5414,27 @@
         "."
       ],
       "tool": "gcc -fcondition-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ctest",
       "via": []
     },
     {
@@ -5527,7 +6070,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "CTest is enabled and tests are registered with add_test",
+      "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
     "type-checking": {

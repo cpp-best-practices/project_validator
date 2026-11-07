@@ -6,7 +6,6 @@ count as CI configuration, as package scripts do for JavaScript.
 
 import re
 from collections.abc import Callable, Iterator
-from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
@@ -24,6 +23,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
+from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
@@ -35,7 +35,6 @@ from project_validator.rules import (
     Evidence,
     FunctionLimits,
     SecurityLints,
-    TestSuite,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -172,24 +171,20 @@ PINT = format_tool(
     style=defined_by(files=("Pint",)),
 )
 
-TEST_CASE = re.compile(r"\bextends\s+\\?(?:[\w\\]*\\)?\w*TestCase\b|^\s*(?:test|it|describe)\s*\(", re.MULTILINE)
-RUNS_TESTS = (
-    pattern(
-        "PHP tests",
-        r"(?<![\w-])(?:phpunit|pest|paratest)\b(?!\.xml)|\bcomposer\s+(?:run(?:-script)?\s+)?tests?\b",
-    ),
+PHP_TEST_FILES = TestFiles(
+    name="*Test.php files with PHPUnit test cases or Pest tests",
+    languages=PHP_ONLY,
+    path=re.compile(r"Test\.php$"),
+    contains=re.compile(r"\bextends\s+\\?(?:[\w\\]*\\)?\w*TestCase\b|^\s*(?:test|it|describe)\s*\(", re.MULTILINE),
+)
+PHP_TESTS = test_runner(
+    name="phpunit, pest or composer test",
+    languages=PHP_ONLY,
+    how="phpunit, pest or composer test",
+    runs=lambda command, _facts: tested() if program(resolved(command)) in ("phpunit", "pest", "paratest") else None,
+    tests=tests_of(PHP_TEST_FILES.name),
 )
 
-
-def _php_tests(context: Context) -> Result:
-    tests = (path for path in context.project.files() if PurePosixPath(path).name.endswith("Test.php"))
-    count = sum(1 for path in tests if TEST_CASE.search(context.project.read_text(path)))
-    if count == 0:
-        return Result.failed("no PHP tests found (*Test.php files with PHPUnit test cases or Pest tests)")
-    return Result.passed(f"PHP tests found in {count} file(s)")
-
-
-TESTS = TestSuite(found=_php_tests, runs=RUNS_TESTS, runner="phpunit, pest or composer test", texts=_run_texts)
 
 _PHPUNIT_PROGRAMS = frozenset({"phpunit", "pest", "paratest"})
 _CONFIGURATION_OPTIONS = frozenset({"--configuration", "-c"})
@@ -483,7 +478,6 @@ PHP = Ecosystem(
     ),
     rules=(
         versions_axis("PHP version", PHP_LANGUAGE),
-        TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,
         SECURITY_LINTS,

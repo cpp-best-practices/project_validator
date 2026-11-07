@@ -72,6 +72,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -111,6 +112,47 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "nox": {
+                "can": {
+                  "runs": "nox"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "pytest": {
+                "can": {
+                  "runs": "pytest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "unittest": {
+                "can": {
+                  "runs": "unittest"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -159,6 +201,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -422,7 +465,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no Python tests found (test_*.py or *_test.py files)",
+      "message": "no tests found (test_*.py or *_test.py files)",
       "status": "FAIL"
     },
     "type-checking": {

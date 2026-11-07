@@ -25,6 +25,7 @@ from project_validator.facts.settings import (
     settings,
     xml_root,
 )
+from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
@@ -35,7 +36,6 @@ from project_validator.rules import (
     DependencyManagement,
     FunctionLimits,
     Hardening,
-    TestSuite,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -138,21 +138,26 @@ SWIFTFORMAT = format_tool(
     style=defined_by(files=("SwiftFormat",)),
 )
 
-TEST_CASE = re.compile(r"\bXCTestCase\b|^\s*@(?:Test|Suite)\b", re.MULTILINE)
+SWIFT_TEST_FILES = TestFiles(
+    name="XCTestCase classes or Swift Testing @Test functions",
+    languages=SWIFT_ONLY,
+    path=re.compile(r"\.swift$"),
+    contains=re.compile(r"\bXCTestCase\b|^\s*@(?:Test|Suite)\b", re.MULTILINE),
+)
 
 
-def _swift_tests(context: Context) -> Result:
-    sources = (path for path in context.project.files() if path.endswith(".swift"))
-    count = sum(1 for path in sources if TEST_CASE.search(context.project.read_text(path)))
-    if count == 0:
-        return Result.failed("no Swift tests found (XCTestCase classes or Swift Testing @Test functions)")
-    return Result.passed(f"Swift tests found in {count} file(s)")
+def _swift_tests(command: Command, _facts: Facts) -> Run | None:
+    argv = resolved(command)
+    xcode = program(argv) == "xcodebuild" and bool({"test", "test-without-building"} & set(argv[1:]))
+    return tested() if argv[:2] == ("swift", "test") or xcode else None
 
 
-TESTS = TestSuite(
-    found=_swift_tests,
-    runs=(pattern("swift test", r"\bswift\s+test\b|\bxcodebuild\b[^\n]*\btest(?:-without-building)?\b"),),
-    runner="swift test or xcodebuild test",
+SWIFT_TESTS = test_runner(
+    name="swift test or xcodebuild test",
+    languages=SWIFT_ONLY,
+    how="swift test or xcodebuild test",
+    runs=_swift_tests,
+    tests=tests_of(SWIFT_TEST_FILES.name),
 )
 
 
@@ -379,7 +384,6 @@ SWIFT = Ecosystem(
     rules=(
         SWIFT_TOOLCHAINS,
         BuildTypes(axis=SWIFT_TOOLCHAINS),
-        TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,
         HARDENING,

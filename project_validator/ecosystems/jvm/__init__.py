@@ -18,6 +18,7 @@ from project_validator.facts.arguments import positional, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
+from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
@@ -27,7 +28,6 @@ from project_validator.rules import (
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    TestSuite,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -117,30 +117,36 @@ GRADLE_PLUGIN = r"""(?:id\s*\(?\s*|apply\s+plugin:\s*|plugins\.apply\s*\(\s*)["'
 
 
 SOURCE_SUFFIXES = (".java", ".kt")
-TEST_SOURCES = re.compile(r"(?:^|/)src/test/(?:java|kotlin)/.+\.(?:java|kt)$")
 # JUnit and TestNG annotate tests; Kotest specs extend a spec style.
-TEST_CASE = re.compile(
-    r"@(?:org\.junit\.(?:jupiter\.api\.)?)?Test\b|:\s*(?:Fun|String|Describe|Behavior|Should|Free|Word|Feature|Expect|Annotation)Spec\b"
-)
-RUNS_TESTS = (
-    pattern(
-        "Maven or Gradle tests",
-        rf"{MVN}\b(?:test|package|verify|install|deploy)\b|{GRADLE_RUN}\b(?:test|check|build)\b",
+JVM_TEST_FILES = TestFiles(
+    name="@Test methods or Kotest specs under src/test/java or src/test/kotlin",
+    languages=frozenset({JAVA, KOTLIN}),
+    path=re.compile(r"(?:^|/)src/test/(?:java|kotlin)/.+\.(?:java|kt)$"),
+    contains=re.compile(
+        r"@(?:org\.junit\.(?:jupiter\.api\.)?)?Test\b"
+        r"|:\s*(?:Fun|String|Describe|Behavior|Should|Free|Word|Feature|Expect|Annotation)Spec\b"
     ),
 )
+# The lifecycle phases and tasks that run the tests.
+_TESTS = {
+    "maven": frozenset({"test", "package", "verify", "install", "deploy"}),
+    "gradle": frozenset({"test", "check", "build"}),
+}
 
 
-def _jvm_tests(context: Context) -> Result:
-    tests = (path for path in context.project.files() if TEST_SOURCES.search(path))
-    count = sum(1 for path in tests if TEST_CASE.search(context.project.read_text(path)))
-    if count == 0:
-        return Result.failed(
-            "no JVM tests found (@Test methods or Kotest specs under src/test/java or src/test/kotlin)"
-        )
-    return Result.passed(f"JVM tests found in {count} file(s)")
+def _build_tests(command: Command, _facts: Facts) -> Run | None:
+    found = build_steps(command)
+    return tested() if found is not None and set(found[1]) & _TESTS[found[0]] else None
 
 
-TESTS = TestSuite(found=_jvm_tests, runs=RUNS_TESTS, runner="mvn test or gradle test")
+BUILD_TESTS = test_runner(
+    name="mvn test or gradle test",
+    languages=frozenset({JAVA, KOTLIN}),
+    how="mvn test or gradle test",
+    runs=_build_tests,
+    tests=tests_of(JVM_TEST_FILES.name),
+)
+
 
 # Options of mvn and gradle that take a value, so that their values are not taken for goals or tasks.
 _MAVEN_VALUES = frozenset(
@@ -569,7 +575,6 @@ JVM = Ecosystem(
     ),
     rules=(
         versions_axis("JDK version", "JDK"),
-        TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,
         SECURITY_LINTS,

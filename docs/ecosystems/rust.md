@@ -4,7 +4,7 @@ Recognised by `.rs` sources and Cargo (`Cargo.toml`).
 
 ## `tests-run`
 
-`#[test]` functions run by `cargo test` or nextest.
+`#[test]` functions run by `cargo test`, nextest, llvm-cov or tarpaulin.
 
 ## `coverage`
 

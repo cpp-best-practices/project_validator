@@ -72,6 +72,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -97,6 +98,33 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "swift test or xcodebuild test": {
+                "can": {
+                  "runs": "swift test or xcodebuild test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Swift",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -114,6 +142,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -345,7 +374,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no Swift tests found (XCTestCase classes or Swift Testing @Test functions)",
+      "message": "no tests found (XCTestCase classes or Swift Testing @Test functions)",
       "status": "FAIL"
     },
     "type-checking": {

@@ -170,6 +170,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -233,6 +234,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -290,6 +292,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -345,6 +348,79 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "a JavaScript test runner": [
+                "src/add.test.ts"
+              ]
+            },
+            "known": {
+              "a JavaScript test runner": {
+                "can": {
+                  "runs": "jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "runs",
+            "runs": {
+              "a JavaScript test runner": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "a JavaScript test runner": [
+                "src/add.test.ts"
+              ]
+            },
+            "known": {
+              "a JavaScript test runner": {
+                "can": {
+                  "runs": "jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "runs",
+            "runs": {
+              "a JavaScript test runner": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -393,6 +469,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -439,6 +516,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -486,6 +564,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "*.test.*, *.spec.* or __tests__/ files",
+      "language": "TypeScript",
+      "origin": "src/add.test.ts"
     },
     {
       "builds": true,
@@ -1977,6 +2060,29 @@
       ],
       "origin": "package.json:scripts.test",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -2061,6 +2167,29 @@
       "tool": "tsc",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
     },
     {
@@ -2169,6 +2298,29 @@
       ],
       "origin": "package.json:scripts.test",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -2265,6 +2417,29 @@
       ],
       "origin": "package.json:scripts.test",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -2349,6 +2524,29 @@
       "tool": "tsc",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
     },
     {
@@ -2445,6 +2643,29 @@
       "tool": "tsc",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
     },
     {
@@ -2775,7 +2996,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "JavaScript or TypeScript tests found in 1 file(s)",
+      "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
     "type-checking": {

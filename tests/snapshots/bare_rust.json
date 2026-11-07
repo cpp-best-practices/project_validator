@@ -71,6 +71,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -96,6 +97,33 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "cargo test": {
+                "can": {
+                  "runs": "cargo test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -113,6 +141,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -343,7 +372,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no Rust tests found (#[test] functions)",
+      "message": "no tests found (#[test] functions)",
       "status": "FAIL"
     },
     "type-checking": {

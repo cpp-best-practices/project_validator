@@ -51,6 +51,7 @@ def answered_check[A: UnitAnswer](
     languages: Callable[[], frozenset[str]],
     answers: Callable[[str, Facts], LanguageAnswers[A]],
     judge: Judge[A],
+    aliases: tuple[str, ...] = (),
 ) -> Check:
     """A check that judges a question's answers by a policy, for each ecosystem the project uses (its findings
     labelled by ecosystem as other checks' are). It applies to the `languages` its known tools handle."""
@@ -64,7 +65,9 @@ def answered_check[A: UnitAnswer](
             context, by_ecosystem, lambda judged_languages, found: judged(judged_languages, found, answers, judge)
         )
 
-    return Check(name=name, description=description, run=run, languages=languages(), languages_from=languages)
+    return Check(
+        name=name, description=description, run=run, languages=languages(), languages_from=languages, aliases=aliases
+    )
 
 
 __all__ = ["answered_check", "judged"]

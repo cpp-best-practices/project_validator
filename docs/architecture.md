@@ -331,6 +331,26 @@ except where a step deliberately changes results and says so.
      the unit it is in. tsc reads the configuration it uses (`-p`, or `tsconfig.json` where it runs, and the local
      ones it extends). Findings list at most three files, and how many more.
 
+   **4c. Tests** (`tests-run`; the `TestSuite` rule is deleted).
+   - **The `test` aspect** (`project_validator/facts/testing.py`), one level, `runs`. A runner's `Definition` is where
+     the tests it runs are: the `TestFile` facts of the kinds it runs, or what a build system registers (CTest's
+     `add_test` after `enable_testing()`, Meson's `test()`, read as settings). A `TestFiles` component says what a
+     language's test file is (a path, and what it contains); test files are a structure stage. `Definition.describe`
+     says what defines a tool for findings, and `from_test_units` lets a separate test project's tests
+     (`tests/App.Tests`) count for every unit.
+   - **Probes** (`Probe`) run the project's own tools when asked (`--build`): the C/C++ profile's builds the project
+     and counts what ctest lists (`BuiltTests`); a build that cannot run is an unknown that hides ctest's tests.
+     `ToolAnswer.unknown_definitions` keeps the unknowns that may hide a definition apart from those that may hide a
+     run, so that "no tests found" is said only when that is known.
+   - `coverage run -m <module>` launches the module, as `python -m` does; a sourced script (`. ci/test.sh`) runs its
+     commands.
+   - A directory a variable names (`cd $BUILD_DIR`) is unknown rather than outside the project: nothing is expanded
+     there, but a tool run there covers the whole project, heuristically (most often it is the project's build tree).
+     Before, such runs covered nothing.
+   - Roles: a unit's own directory name tells its role first, below a source root too (`internal/tools`, a Go tools
+     module, is tooling); fuzz and stress tests, and directories named `tests-…`, are test code. So a crate of fuzz
+     targets or a tools module is not held to having tests of its own.
+
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice

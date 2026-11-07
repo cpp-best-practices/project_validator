@@ -80,6 +80,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -126,6 +127,33 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "mvn test or gradle test": {
+                "can": {
+                  "runs": "mvn test or gradle test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Java",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -143,6 +171,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -368,7 +397,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no JVM tests found (@Test methods or Kotest specs under src/test/java or src/test/kotlin)",
+      "message": "no tests found (@Test methods or Kotest specs under src/test/java or src/test/kotlin)",
       "status": "FAIL"
     },
     "type-checking": {

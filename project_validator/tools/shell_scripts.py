@@ -18,8 +18,11 @@ _SHEBANG = ("#!/bin/sh", "#!/bin/bash", "#!/usr/bin/env bash", "#!/usr/bin/env s
 
 
 def _script(command: Command) -> str | None:
-    """The script file a command runs: `sh script.sh` (not `sh -c '…'`), or `./script.sh` run directly."""
+    """The script file a command runs: `sh script.sh` (not `sh -c '…'`), `./script.sh` run directly, or a script
+    the shell sources (`. ci/env.sh`, `source ci/env.sh`)."""
     argv = resolved(command)
+    if argv[:1] in ((".",), ("source",)):
+        return argv[1] if len(argv) > 1 else None
     if program(argv) in _SHELLS:
         words, _ = positional(argv, _SHELL_VALUES)
         return None if "-c" in argv[1:] or not words else words[0]

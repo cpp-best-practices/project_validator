@@ -37,6 +37,7 @@ from project_validator.facts.settings import (
     settings,
     unreadable,
 )
+from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, defined_by
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
@@ -47,7 +48,6 @@ from project_validator.rules import (
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    TestSuite,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -343,29 +343,34 @@ JS_SUFFIXES = (".js", ".mjs", ".cjs", ".jsx")
 TS_SUFFIXES = (".ts", ".mts", ".cts", ".tsx")
 SOURCE_SUFFIXES = (*JS_SUFFIXES, *TS_SUFFIXES)
 # app.test.ts, app.spec.js, app_test.ts (Deno), or any source in a __tests__ directory (Jest).
-TEST_FILE = re.compile(r"(?:^|/)(?:[^/]*(?:[._]test|\.spec)\.[^/]+|__tests__/.+)$")
-RUNS_TESTS = (
-    pattern(
-        "JavaScript tests",
-        r"\b(?:jest|vitest|mocha|ava|playwright\s+test)\b|\bnode\s+(?:[^\n]*\s)?--test\b|\b(?:deno|bun)\s+test\b"
-        r"|\bnpm\s+(?:t|test|run\s+test)\b|\b(?:pnpm|yarn)\s+(?:run\s+)?test\b",
-    ),
+JS_TEST_FILES = TestFiles(
+    name="*.test.*, *.spec.* or __tests__/ files",
+    languages=JS_LANGUAGES,
+    path=re.compile(r"(?:^|/)(?:[^/]*(?:[._]test|\.spec)\.[^/]+|__tests__/.+)$"),
+)
+_JS_RUNNERS = frozenset({"jest", "vitest", "mocha", "ava"})
+
+
+def _js_tests(command: Command, _facts: Facts) -> Run | None:
+    """jest, vitest, mocha, ava, `playwright test`, `node --test`, `deno test` or `bun test`."""
+    argv = resolved(command)
+    name = program(argv)
+    runs = (
+        name in _JS_RUNNERS
+        or argv[:2] in (("playwright", "test"), ("deno", "test"), ("bun", "test"))
+        or (name == "node" and "--test" in argv)
+    )
+    return tested() if runs else None
+
+
+JS_TESTS = test_runner(
+    name="a JavaScript test runner",
+    languages=JS_LANGUAGES,
+    how="jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)",
+    runs=_js_tests,
+    tests=tests_of(JS_TEST_FILES.name),
 )
 
-
-def _javascript_tests(context: Context) -> Result:
-    tests = [path for path in context.project.files() if path.endswith(SOURCE_SUFFIXES) and TEST_FILE.search(path)]
-    if not tests:
-        return Result.failed("no JavaScript or TypeScript tests found (*.test.*, *.spec.* or __tests__/ files)")
-    return Result.passed(f"JavaScript or TypeScript tests found in {len(tests)} file(s)")
-
-
-TESTS = TestSuite(
-    found=_javascript_tests,
-    runs=RUNS_TESTS,
-    runner="jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)",
-    texts=_run_texts,
-)
 
 JEST_CONFIG_FILES = tuple(f"jest.config.{suffix}" for suffix in ("js", "cjs", "mjs", "ts", "mts", "cts", "json"))
 VITEST_CONFIG_FILES = tuple(
@@ -679,7 +684,6 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
     ),
     rules=(
         versions_axis("runtime version", "JavaScript runtime"),
-        TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,
         SECURITY_LINTS,

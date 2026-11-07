@@ -78,6 +78,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -117,6 +118,33 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "rspec, rake test or rails test": {
+                "can": {
+                  "runs": "rspec, rake test or rails test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -151,6 +179,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -385,7 +414,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no Ruby tests found (spec/**/*_spec.rb or test/**/*_test.rb files)",
+      "message": "no tests found (spec/**/*_spec.rb or test/**/*_test.rb files)",
       "status": "FAIL"
     },
     "type-checking": {

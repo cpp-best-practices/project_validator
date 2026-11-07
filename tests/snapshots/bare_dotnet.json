@@ -72,6 +72,7 @@
             "level": "check",
             "runs": {},
             "unit": "src/App",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -118,6 +119,33 @@
             "level": "checks",
             "runs": {},
             "unit": "src/App",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "dotnet test": {
+                "can": {
+                  "runs": "dotnet test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C#",
+            "level": "runs",
+            "runs": {},
+            "unit": "src/App",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -135,6 +163,7 @@
             "level": "checks",
             "runs": {},
             "unit": "src/App",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -186,6 +215,14 @@
       "origin": "src/App/App.csproj:PackageReference",
       "tool": "MSBuild",
       "value": "Newtonsoft.Json"
+    },
+    {
+      "heuristic": false,
+      "key": "Sdk",
+      "kind": "Setting",
+      "origin": "src/App/App.csproj:Sdk",
+      "tool": "MSBuild",
+      "value": "Microsoft.NET.Sdk"
     }
   ],
   "map": {
@@ -371,7 +408,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no .NET test project found (one referencing Microsoft.NET.Test.Sdk)",
+      "message": "no tests found ([Fact], [Test] or [TestMethod] methods in a test project (one referencing Microsoft.NET.Test.Sdk))",
       "status": "FAIL"
     },
     "type-checking": {

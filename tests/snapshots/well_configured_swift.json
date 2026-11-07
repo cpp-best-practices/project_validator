@@ -83,6 +83,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -119,6 +120,44 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "swift test or xcodebuild test": [
+                "Tests/AppCoreTests/CalculatorTests.swift"
+              ]
+            },
+            "known": {
+              "swift test or xcodebuild test": {
+                "can": {
+                  "runs": "swift test or xcodebuild test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Swift",
+            "level": "runs",
+            "runs": {
+              "swift test or xcodebuild test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -136,6 +175,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -195,6 +235,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "XCTestCase classes or Swift Testing @Test functions",
+      "language": "Swift",
+      "origin": "Tests/AppCoreTests/CalculatorTests.swift"
     },
     {
       "builds": true,
@@ -2072,6 +2117,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2082,6 +2147,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2133,6 +2218,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2143,6 +2248,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2194,6 +2319,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2204,6 +2349,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2255,6 +2420,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2265,6 +2450,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2316,6 +2521,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2326,6 +2551,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2377,6 +2622,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2387,6 +2652,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2438,6 +2723,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2448,6 +2753,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2499,6 +2824,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2509,6 +2854,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2560,6 +2925,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2570,6 +2955,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2621,6 +3026,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2631,6 +3056,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2682,6 +3127,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2692,6 +3157,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     },
     {
@@ -2743,6 +3228,26 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
         "coverage": [
           "line",
           "region"
@@ -2753,6 +3258,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift test or xcodebuild test",
       "via": []
     }
   ],
@@ -3200,7 +3725,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "Swift tests found in 1 file(s)",
+      "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
     "type-checking": {
