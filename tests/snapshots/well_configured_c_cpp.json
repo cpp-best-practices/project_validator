@@ -3590,126 +3590,7 @@
     {
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
-      "reader": "CMake analyzers"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "CMakeLists.txt",
-      "reader": "CMake flags"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-Wall"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-Wextra"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-Wpedantic"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-Wshadow"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-Wconversion"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-fstack-protector-strong"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-fcf-protection"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-fstack-clash-protection"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "--coverage"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-fcondition-coverage"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "--coverage"
-    },
-    {
-      "heuristic": true,
-      "key": "flag",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:flag",
-      "tool": "CMake",
-      "value": "-Werror"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "CMakeLists.txt",
-      "reader": "CTest"
-    },
-    {
-      "heuristic": true,
-      "key": "enables",
-      "kind": "Setting",
-      "origin": "CMakeLists.txt:enables",
-      "tool": "CTest",
-      "value": true
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "CMakeLists.txt",
-      "reader": "CMake dependencies"
+      "reader": "CMake"
     },
     {
       "kind": "ConfigurationFile",
@@ -3726,22 +3607,358 @@
     {
       "kind": "ConfigurationFile",
       "origin": "cmake/Dependencies.cmake",
-      "reader": "CMake analyzers"
+      "reader": "CMake"
     },
     {
       "kind": "ConfigurationFile",
-      "origin": "cmake/Dependencies.cmake",
-      "reader": "CMake flags"
+      "origin": "test/CMakeLists.txt",
+      "reader": "CMake"
     },
     {
-      "kind": "ConfigurationFile",
-      "origin": "cmake/Dependencies.cmake",
-      "reader": "CTest"
+      "applies": {
+        "compilers": [
+          "msvc"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "/W4",
+      "origin": "CMakeLists.txt:add_compile_options[7]",
+      "target": null
     },
     {
-      "kind": "ConfigurationFile",
-      "origin": "cmake/Dependencies.cmake",
-      "reader": "CMake dependencies"
+      "applies": {
+        "compilers": [
+          "msvc"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "/permissive-",
+      "origin": "CMakeLists.txt:add_compile_options[7]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "msvc"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "/sdl",
+      "origin": "CMakeLists.txt:add_compile_options[7]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "msvc"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "/guard:cf",
+      "origin": "CMakeLists.txt:add_compile_options[7]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "msvc"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": true,
+      "option": "/DYNAMICBASE",
+      "origin": "CMakeLists.txt:add_link_options[8]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "msvc"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": true,
+      "option": "/CETCOMPAT",
+      "origin": "CMakeLists.txt:add_link_options[8]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-Wall",
+      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-Wextra",
+      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-Wpedantic",
+      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-Wshadow",
+      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-Wconversion",
+      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-fstack-protector-strong",
+      "origin": "CMakeLists.txt:add_compile_options[11]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-fcf-protection",
+      "origin": "CMakeLists.txt:add_compile_options[11]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-fstack-clash-protection",
+      "origin": "CMakeLists.txt:add_compile_options[11]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-D_FORTIFY_SOURCE=3",
+      "origin": "CMakeLists.txt:add_compile_definitions[12]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": [
+          "appleclang",
+          "clang",
+          "gcc",
+          "intel",
+          "other"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-D_GLIBCXX_ASSERTIONS",
+      "origin": "CMakeLists.txt:add_compile_definitions[12]",
+      "target": null
+    },
+    {
+      "applies": {},
+      "build_system": "CMake",
+      "default": true,
+      "kind": "BuildSetting",
+      "name": "ENABLE_COVERAGE",
+      "origin": "CMakeLists.txt:option[15]",
+      "target": null,
+      "value": "OFF"
+    },
+    {
+      "applies": {
+        "requires": [
+          "ENABLE_COVERAGE"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "--coverage",
+      "origin": "CMakeLists.txt:add_compile_options[17]",
+      "target": null
+    },
+    {
+      "applies": {
+        "requires": [
+          "ENABLE_COVERAGE"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-fcondition-coverage",
+      "origin": "CMakeLists.txt:add_compile_options[17]",
+      "target": null
+    },
+    {
+      "applies": {
+        "requires": [
+          "ENABLE_COVERAGE"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": true,
+      "option": "--coverage",
+      "origin": "CMakeLists.txt:add_link_options[18]",
+      "target": null
+    },
+    {
+      "applies": {},
+      "build_system": "CMake",
+      "default": true,
+      "kind": "BuildSetting",
+      "name": "WARNINGS_AS_ERRORS",
+      "origin": "CMakeLists.txt:option[21]",
+      "target": null,
+      "value": "ON"
+    },
+    {
+      "applies": {
+        "requires": [
+          "WARNINGS_AS_ERRORS"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-Werror",
+      "origin": "CMakeLists.txt:add_compile_options[23]",
+      "target": null
+    },
+    {
+      "heuristic": false,
+      "key": "enables",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt",
+      "tool": "CTest",
+      "value": true
+    },
+    {
+      "heuristic": false,
+      "key": "registers",
+      "kind": "Setting",
+      "origin": "test/CMakeLists.txt",
+      "tool": "CTest",
+      "value": "add_test"
+    },
+    {
+      "applies": {},
+      "build_system": "CMake",
+      "default": false,
+      "kind": "BuildSetting",
+      "name": "CMAKE_CXX_EXTENSIONS",
+      "origin": "CMakeLists.txt:set[4]",
+      "target": null,
+      "value": "OFF"
     },
     {
       "kind": "Declared",
@@ -3749,35 +3966,7 @@
       "origin": "cmake/Dependencies.cmake"
     },
     {
-      "kind": "ConfigurationFile",
-      "origin": "test/CMakeLists.txt",
-      "reader": "CMake analyzers"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "test/CMakeLists.txt",
-      "reader": "CMake flags"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "test/CMakeLists.txt",
-      "reader": "CTest"
-    },
-    {
-      "heuristic": true,
-      "key": "registers",
-      "kind": "Setting",
-      "origin": "test/CMakeLists.txt:registers",
-      "tool": "CTest",
-      "value": "add_test"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "test/CMakeLists.txt",
-      "reader": "CMake dependencies"
-    },
-    {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
@@ -3909,7 +4098,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
@@ -4041,7 +4230,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
@@ -4173,7 +4362,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
@@ -4305,7 +4494,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
@@ -4437,7 +4626,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
@@ -4569,7 +4758,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ToolRun",
       "languages": [
@@ -4701,7 +4890,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ToolRun",
       "languages": [
@@ -4833,7 +5022,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ToolRun",
       "languages": [
@@ -4965,7 +5154,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ToolRun",
       "languages": [
@@ -5097,7 +5286,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ToolRun",
       "languages": [
@@ -5229,7 +5418,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ToolRun",
       "languages": [
@@ -5361,7 +5550,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "ToolRun",
       "languages": [
@@ -5493,7 +5682,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "ToolRun",
       "languages": [
@@ -5625,7 +5814,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "ToolRun",
       "languages": [
@@ -5757,7 +5946,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "ToolRun",
       "languages": [
@@ -5889,7 +6078,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "ToolRun",
       "languages": [
@@ -6021,7 +6210,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "ToolRun",
       "languages": [
@@ -6153,7 +6342,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "ToolRun",
       "languages": [
@@ -6285,7 +6474,7 @@
       "via": []
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "ToolRun",
       "languages": [
@@ -6440,7 +6629,7 @@
       ]
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "job": ".github/workflows/codeql-analysis.yml:analyze",
       "kind": "ToolRun",
       "languages": [

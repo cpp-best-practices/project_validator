@@ -204,6 +204,10 @@ def as_dict(fact: Fact) -> dict[str, object]:
 def _plain(value: object) -> object:
     if isinstance(value, Origin):
         return str(value)
+    if dataclasses.is_dataclass(value) and not isinstance(value, type):
+        # A value of a fact (where a build file's setting applies): its fields that say something.
+        fields = ((item.name, getattr(value, item.name)) for item in dataclasses.fields(value))
+        return {name: _plain(item) for name, item in fields if item is not None and item != frozenset()}
     if isinstance(value, Mapping):
         return {str(key): _plain(item) for key, item in value.items()}
     if isinstance(value, tuple):

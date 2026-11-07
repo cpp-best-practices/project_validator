@@ -149,9 +149,9 @@ except where a step deliberately changes results and says so.
    2. Command expansion (`project_validator/facts/expansion.py`): a `CommandExpander` says what a command runs in
       turn, and the commands found are expanded again, each with `via`, the chain that led to it. Expanders live
       with what they know and are found, not listed: package.json scripts and Deno tasks in the JavaScript profile,
-      Composer scripts in the PHP profile, Make in `project_validator/build_systems`, pre-commit in
-      `project_validator/tools`. Rake tasks, Maven lifecycle phases and CMake presets follow when their profiles
-      move onto facts; presets and phases are settings rather than commands.
+      Composer scripts in the PHP profile, Make and CMake's custom targets (`cmake --build --target`) in
+      `project_validator/build_systems`, pre-commit in `project_validator/tools`. Rake tasks and Maven lifecycle
+      phases follow when their profiles move onto facts; presets and phases are settings rather than commands.
    3. The jobs the checks judge are built from the facts. A GitHub step or job whose condition is false for a
       combination yields no facts, and known expressions are evaluated (`project_validator/ci/github_expressions.py`).
       A job's evidence is what it runs: commands (with the variables its environment defines), image, environment,
@@ -419,6 +419,20 @@ except where a step deliberately changes results and says so.
 
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; llvm-cov, gcov and osv-scanner become shared tools.
+   - A build file sets options and settings for some builds only: those of one compiler (`if(MSVC)`), platform,
+     configuration (`$<CONFIG:Debug>`) or language, or behind something only configuring decides (an option, a
+     compiler check). A `Condition` (`project_validator/facts/conditions.py`) is a set of builds, kept as a reduced,
+     shared multi-valued decision diagram over those dimensions and the requirements not understood, so that the
+     many branches of a real build file stay exact and cheap; `CompilerOption` and `BuildSetting` facts
+     (`project_validator/facts/build.py`) each hold one disjunct of it, as `Applies`.
+   - CMake is read without running it (`project_validator/build_systems/cmake`): its files are parsed by the
+     language's grammar and evaluated as configuring would evaluate them, from each top-level CMakeLists.txt through
+     `include()`, `add_subdirectory()` and the project's own functions and macros, with variables in their scopes
+     and every branch followed in the builds it holds in. Presets add their cache variables, in the builds configured
+     with them. A file nothing reaches is evaluated as if included, a function nothing calls as if called, each
+     under that requirement. CTest registrations, CPM and FetchContent, and the analyzers a build runs
+     (`CMAKE_CXX_CLANG_TIDY`) are read from the same evaluation; `cmake --build` expands to the commands of the
+     custom targets it builds.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice
    dispatch are removed.
 7. **Proof**: add Fortran using only extractors and a recognition module.
