@@ -6,12 +6,23 @@ set itself (an option, a compiler check, `EXISTS`) is a requirement that is not 
 """
 
 import re
-from collections.abc import Callable, Iterable, Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from itertools import product
 
 from project_validator.build_systems.cmake.values import Item, Lookup, referenced
-from project_validator.facts.conditions import ALWAYS, NEVER, OTHER, Condition, both, either, negated, only, requiring
+from project_validator.facts.conditions import (
+    ALWAYS,
+    NEVER,
+    OTHER,
+    Condition,
+    Dimension,
+    both,
+    either,
+    negated,
+    only,
+    requiring,
+)
 
 # The identifiers CMake gives each dimension's values, and the value each is; any other identifier is OTHER.
 COMPILER_IDS = {"GNU": "gcc", "Clang": "clang", "AppleClang": "appleclang", "MSVC": "msvc", "Intel": "intel"}
@@ -22,29 +33,6 @@ _OTHER_SYSTEM_NAMES = ("FreeBSD", "NetBSD", "OpenBSD", "Android", "iOS", "CYGWIN
 BUILD_TYPES = {"Debug": "debug", "Release": "release", "RelWithDebInfo": "relwithdebinfo", "MinSizeRel": "minsizerel"}
 LANGUAGE_NAMES = {"C": "C", "CXX": "C++", "CUDA": "CUDA", "OBJC": "Objective-C", "OBJCXX": "Objective-C++"}
 LANGUAGE_NAMES |= {"Fortran": "Fortran", "ASM": "Assembly"}
-
-
-@dataclass(frozen=True, slots=True)
-class Dimension:
-    """How CMake names the values of a dimension: by identifiers, known and other."""
-
-    name: str
-    identifiers: Mapping[str, str]
-    others: tuple[str, ...] = ()
-    case_sensitive: bool = True
-
-    def named(self, test: Callable[[str], bool]) -> Condition:
-        """The builds whose identifier passes `test`."""
-        values = [value for identifier, value in self.identifiers.items() if test(identifier)]
-        return only(self.name, [*values, *([OTHER] if any(test(other) for other in self.others) else [])])
-
-    def equal_to(self, identifier: str) -> Condition:
-        if self.case_sensitive:
-            return self.named(lambda known: known == identifier)
-        return self.named(lambda known: known.lower() == identifier.lower())
-
-    def listed(self, identifiers: Iterable[str]) -> Condition:
-        return either(*(self.equal_to(identifier) for identifier in identifiers))
 
 
 COMPILER = Dimension("compilers", COMPILER_IDS, _OTHER_COMPILER_IDS)

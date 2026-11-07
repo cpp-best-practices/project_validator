@@ -433,6 +433,14 @@ except where a step deliberately changes results and says so.
      under that requirement. CTest registrations, CPM and FetchContent, and the analyzers a build runs
      (`CMAKE_CXX_CLANG_TIDY`) are read from the same evaluation; `cmake --build` expands to the commands of the
      custom targets it builds.
+   - Meson is read the same way (`project_validator/build_systems/meson`): meson.build files are parsed and evaluated
+     from each top-level one through `subdir()`, every `if` branch followed in the builds it holds in; the compiler
+     (`cc.get_id()`, `cc.get_argument_syntax()`), the host system and the build type are understood, other options
+     and compiler checks (`cc.has_argument()`, `cc.get_supported_arguments()`) are requirements. `default_options`,
+     a target's `override_options` and meson.options defaults are `BuildSetting`s; project, global and target
+     arguments are `CompilerOption`s; `test()` registers tests; `meson compile <target>` (or `ninja <target>`) runs a
+     run target's command. `Dimension` (`project_validator/facts/conditions.py`) is how each build system names a
+     dimension's values (CMake's `GNU`, Meson's `gcc`).
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice
    dispatch are removed.
 7. **Proof**: add Fortran using only extractors and a recognition module.
