@@ -173,15 +173,15 @@ class Context:
         """The CI jobs the facts show, as the checks judge them."""
         from project_validator.ci import ci_analysis
 
-        return ci_analysis(self.facts, self.project)
+        return ci_analysis(self.facts)
 
     @cached_property
     def facts(self) -> Facts:
         """The fact database (see `project_validator.facts`), extracted in stages: the project's structure, the files
         git does not track and the build outputs it does, and its test files (and, with `--build`, what probes find by
-        building it), the CI jobs and what they run (with what that runs in turn), the settings the configuration
+        building it), the CI jobs and what they run (with what that runs in turn) and on, the settings the configuration
         files hold (those commands name included), and the tools those commands run."""
-        from project_validator.ci import ci_facts
+        from project_validator.ci import ci_facts, job_facts
         from project_validator.facts import Facts
         from project_validator.facts.expansion import expanded, known_actions, known_expanders
         from project_validator.facts.outputs import known_build_outputs
@@ -196,6 +196,7 @@ class Context:
         if self.options.build:
             found += (fact for probe in known_probes() for fact in probe.run(self.project, self.options))
         found += expanded(ci_facts(self.project, self.ci_files), self, known_expanders(), known_actions())
+        found += job_facts(found, self.project)
         found += settings_facts(self, known_settings_readers(), found)
         return found + tool_runs(found, known_tools())
 

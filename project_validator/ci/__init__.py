@@ -23,9 +23,11 @@ from project_validator.text import Pattern
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class Job:
-    """One CI job as it would run: a single OS, plus every compiler, toolchain and build configuration it uses."""
+class Job(Fact):
+    """One CI job (the `CiJob` whose id is `job`) as it would run: a single OS, plus every compiler, toolchain and
+    build configuration it uses. A compiler is the runner's default (`default_compiler`) when the job names none."""
 
+    job: str
     name: str
     os: str
     compilers: frozenset[str]
@@ -88,6 +90,7 @@ def find_ci_files(project: Project, providers: tuple[CiProvider, ...]) -> tuple[
 
 
 def _job_with_compilers(
+    job: CiJob,
     name: str,
     os: str,
     compilers: list[str],
@@ -100,6 +103,8 @@ def _job_with_compilers(
     found = frozenset(configurations)
     default = None if compilers else RUNNER_DEFAULT_COMPILERS.get(os)
     return Job(
+        origin=job.origin,
+        job=job.id,
         name=name,
         os=os,
         compilers=frozenset(compilers) if default is None else frozenset({default}),
@@ -116,7 +121,7 @@ def _enables(value: str) -> bool:
     return "${{" not in value and value.strip().lower() not in ("", "false", "off", "no", "0")
 
 
-def _evidence(job: CiJob, facts: Iterable[Fact]) -> str:
+def _evidence(job: CiJob, facts: Iterable[Command | ActionStep]) -> str:
     """What a job shows about the tools it uses: its image, environment, the commands it runs (with the variables
     its environment defines in place) and the actions it uses with the inputs that are known and switched on.
 
@@ -128,7 +133,7 @@ def _evidence(job: CiJob, facts: Iterable[Fact]) -> str:
         if isinstance(fact, ActionStep):
             lines.append(f"uses: {fact.uses}")
             lines += [f"{name}: {value}" for name, value in fact.inputs.items() if _enables(value)]
-        elif isinstance(fact, Command):
+        else:
             assignments = (f"{name}={value}" for name, value in fact.env.items() if job.env.get(name) != value)
             lines.append(" ".join((*assignments, *resolved(fact))))
     return "\n".join(lines)
@@ -142,7 +147,7 @@ def _configurations(commands: Iterable[Command], evidence: str) -> set[BuildConf
     return {BuildConfiguration(build_type=build_type, sanitizers=sanitizers) for build_type in types}
 
 
-def _job(job: CiJob, facts: tuple[Fact, ...], project: Project) -> Job:
+def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project) -> Job:
     """A job as the checks see it. A parsed job's compilers and toolchains are named by its matrix values first,
     then by what it runs; a heuristic job's by the whole file."""
     commands = [fact for fact in facts if isinstance(fact, Command)]
@@ -150,6 +155,7 @@ def _job(job: CiJob, facts: tuple[Fact, ...], project: Project) -> Job:
     texts = (project.read_text(job.origin.path),) if job.heuristic else (json.dumps(dict(job.matrix)), evidence)
     compilers = next((found for text in texts if (found := detect_compilers(text))), [])
     return _job_with_compilers(
+        job,
         f"{job.origin.path}: {job.name}" if not job.heuristic else job.origin.path,
         job.os,
         compilers,
@@ -160,15 +166,19 @@ def _job(job: CiJob, facts: tuple[Fact, ...], project: Project) -> Job:
     )
 
 
-def ci_analysis(facts: Facts, project: Project) -> CiAnalysis:
-    """The CI jobs that build the project, with what each one builds and runs; and what was read only heuristically."""
-    by_job: dict[str, list[Fact]] = {}
+def job_facts(facts: Facts, project: Project) -> Iterator[Job]:
+    """The CI jobs that build the project, each with what it builds and runs on, from what it runs."""
+    by_job: dict[str, list[Command | ActionStep]] = {}
     for fact in facts:
-        if (job := getattr(fact, "job", None)) is not None:
-            by_job.setdefault(job, []).append(fact)
-    jobs = tuple(_job(job, tuple(by_job.get(job.id, ())), project) for job in facts.of(CiJob) if job.builds)
+        if isinstance(fact, (Command, ActionStep)):
+            by_job.setdefault(fact.job, []).append(fact)
+    return (_job(job, tuple(by_job.get(job.id, ())), project) for job in facts.of(CiJob) if job.builds)
+
+
+def ci_analysis(facts: Facts) -> CiAnalysis:
+    """The CI jobs that build the project (see `job_facts`), and what was read only heuristically."""
     notes = (f"{fact.origin.path}: {fact.reason}" for fact in facts.of(Unknown) if fact.subject == _JOBS)
-    return CiAnalysis(jobs=jobs, notes=tuple(dict.fromkeys(notes)))
+    return CiAnalysis(jobs=facts.of(Job), notes=tuple(dict.fromkeys(notes)))
 
 
 def strings(value: object) -> dict[str, str]:
