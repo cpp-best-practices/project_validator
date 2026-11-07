@@ -18,5 +18,5 @@ def copy_paste_detection(context: Context) -> Result:
         return Result.passed(f"CI runs copy-paste detection with {', '.join(detectors)}")
     return Result.warned(
         "no copy-paste detection found in CI configuration",
-        "consider adding PMD CPD (pmd cpd --language cpp), jscpd, Duplo or Simian",
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
     )

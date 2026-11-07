@@ -7,6 +7,7 @@ aspects that run provides, joined with the settings it read (see `project_valida
 counts only when CI runs the tool that reads it. Questions read the runs of an aspect; none has its own tool type.
 """
 
+import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import PurePosixPath
@@ -199,9 +200,45 @@ def _scope(command: Command) -> tuple[str, ...]:
     return (str(PurePosixPath(directory.removeprefix("./") or ".")),)
 
 
+# What writes a file in a command line: a redirection, tee or touch.
+_WRITES = re.compile(r"(?:>>?|\btee\s+(?:-a\s+)?|\btouch\s+)\s*([^\s;&|<>]+)")
+
+
+class _Sources:
+    """The project's source files, the suffixes of each language's, and the files each job's commands write."""
+
+    def __init__(self, facts: Facts) -> None:
+        from project_validator.facts.structure import SourceFile
+
+        found = facts.of(SourceFile)
+        self.paths = frozenset(source.path for source in found)
+        self.languages = {PurePosixPath(source.path).suffix: source.language for source in found if source.language}
+        self.written: dict[str, set[str]] = {}
+        for command in facts.of(Command):
+            self.written.setdefault(command.job, set()).update(_WRITES.findall(command.line))
+
+    def foreign(self, command: Command, languages: frozenset[str]) -> bool:
+        """Whether the command names source files of `languages`, all of them written by the job and none the
+        project's: a tool run on a file CI wrote (`ormolu -m check test.hs`, to try a release) covers none of the
+        project's code."""
+        named = [
+            word
+            for word in resolved(command)[1:]
+            if not word.startswith("-") and self.languages.get(PurePosixPath(word).suffix) in languages
+        ]
+        directory = command.directory or "."
+        written = self.written.get(command.job, set())
+        return bool(named) and all(word in written and _joined(directory, word) not in self.paths for word in named)
+
+
+def _joined(directory: str, path: str) -> str:
+    return str(PurePosixPath(directory) / path.removeprefix("./")).removeprefix("./")
+
+
 def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun]:
     """The run of each tool among `tools` that each command of `facts` is."""
     tools = tuple(tools)
+    sources = _Sources(facts)
     for command in facts.of(Command):
         for tool in tools:
             run = tool.claims(command, facts)
@@ -212,7 +249,7 @@ def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun]:
                     tool=tool.name,
                     languages=tool.languages,
                     provides={aspect: levels for aspect, levels in run.provides.items() if levels},
-                    scope=_scope(command),
+                    scope=() if sources.foreign(command, tool.languages) else _scope(command),
                     read=run.read,
                     via=command.via,
                     heuristic=run.heuristic or (command.directory or "").startswith("$"),
