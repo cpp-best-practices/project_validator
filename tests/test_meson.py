@@ -23,7 +23,7 @@ from project_validator.build_systems.meson.values import (
 from project_validator.facts import Command, Fact, Setting
 from project_validator.facts import Unknown as UnknownFact
 from project_validator.facts.build import Applies, BuildSetting, CompilerOption
-from project_validator.facts.conditions import ALWAYS, NEVER, both, negated, only, requiring
+from project_validator.facts.conditions import ALWAYS, DIMENSIONS, NEVER, both, negated, only, requiring
 from tests.support import github_job, make_context, temp_project
 
 ANY = Applies()
@@ -76,7 +76,7 @@ BRANCHES = [
     "/guard:cf None link platforms=windows configurations=minsizerel,other,release,relwithdebinfo",
     "-fhardened None compile requires=the compiler accepts -fhardened",
 ]
-NOT_MSVC = "compilers=appleclang,clang,flang,gcc,intel,other"
+NOT_MSVC = "compilers=" + ",".join(sorted(set(DIMENSIONS["compilers"]) - {"msvc"}))
 VARIABLES = [
     f"-fstack-protector-strong app-cli compile {NOT_MSVC} languages=C",
     f"-D_FORTIFY_SOURCE=2 app-cli compile {NOT_MSVC} languages=C requires=get_option('hardening')",

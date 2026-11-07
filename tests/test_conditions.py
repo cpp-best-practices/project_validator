@@ -5,7 +5,6 @@ from project_validator.facts import conditions
 from project_validator.facts.build import Applies, disjuncts
 from project_validator.facts.conditions import (
     ALWAYS,
-    COMPILERS,
     DIMENSIONS,
     NEVER,
     both,
@@ -33,7 +32,7 @@ class ConditionTests(unittest.TestCase):
         self.assertFalse(both(MSVC, only("compilers", ["gcc"])))
 
     def test_every_value_or_none_of_a_dimension(self) -> None:
-        self.assertEqual(only("compilers", COMPILERS), ALWAYS)
+        self.assertEqual(only("compilers", DIMENSIONS["compilers"]), ALWAYS)
         self.assertEqual(only("compilers", []), NEVER)
 
     def test_long_chains_of_branches_stay_small(self) -> None:
@@ -53,7 +52,7 @@ class DisjunctTests(unittest.TestCase):
     def test_a_condition_is_written_out_as_few_disjuncts(self) -> None:
         self.assertEqual(disjuncts(ALWAYS), (Applies(),))
         self.assertEqual(disjuncts(NEVER), ())
-        self.assertEqual(disjuncts(negated(MSVC)), (Applies(compilers=frozenset(COMPILERS) - {"msvc"}),))
+        self.assertEqual(disjuncts(negated(MSVC)), (Applies(compilers=frozenset(DIMENSIONS["compilers"]) - {"msvc"}),))
         self.assertEqual(
             disjuncts(both(MSVC, negated(OPTION))),
             (Applies(compilers=frozenset({"msvc"}), requires=frozenset({"NOT ENABLE_X"})),),
@@ -90,7 +89,7 @@ class DisjunctTests(unittest.TestCase):
     def test_what_an_applies_allows(self) -> None:
         applies = Applies(compilers=frozenset({"gcc"}), requires=frozenset({"X"}))
         self.assertEqual(applies.allowed("compilers"), {"gcc"})
-        self.assertEqual(applies.allowed("platforms"), set(conditions.PLATFORMS))
+        self.assertEqual(applies.allowed("platforms"), set(DIMENSIONS["platforms"]))
         self.assertFalse(applies.unconditional)
         self.assertTrue(Applies().unconditional)
 
@@ -114,6 +113,9 @@ class OpenDimensionTests(unittest.TestCase):
     def test_a_value_named_later_branches_as_other_did(self) -> None:
         not_msvc = negated(only("compilers", ["msvc"]))
         others = only("compilers", ["other"])
+        with self.assertRaises(ValueError):
+            only("compilers", ["zcc-for-a-test"])
+        conditions.extend("compilers", "zcc-for-a-test", "zcc-for-a-test")
         zcc = only("compilers", ["zcc-for-a-test"])
         self.assertIn("zcc-for-a-test", DIMENSIONS["compilers"])
         self.assertEqual(len(DIMENSIONS), 4)

@@ -147,6 +147,8 @@ def _with_program(command: Command, assigned: frozenset[str] | None) -> Iterator
         and argv
         and (match := _WHOLE_VARIABLE.fullmatch(argv[0]))
         and match[0].strip("${}") not in assigned
+        # A variable the job sets, to a value that cannot be read, is set all the same.
+        and match[0].strip("${}") not in command.env
     ):
         reason = f"its program is the variable {argv[0]}, which nothing the job runs is seen to set"
         yield Unknown(origin=command.origin, subject=f"the command {command.line!r}", reason=reason)
