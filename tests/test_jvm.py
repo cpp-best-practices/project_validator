@@ -3,7 +3,7 @@
 import unittest
 
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems.jvm import DEPENDENCIES, JVM
+from project_validator.ecosystems.jvm import GRADLE_PACKAGES, JVM, MAVEN_PACKAGES
 from tests.support import (
     GITHUB_WORKFLOW,
     checks_named,
@@ -270,21 +270,28 @@ class FunctionLimitTests(unittest.TestCase):
 class DependencyAndOutputTests(unittest.TestCase):
     def test_declared_dependencies_must_be_verified(self) -> None:
         declared = _pom(dependencies="<dependency><artifactId>guava</artifactId></dependency>")
-        expected = Result.warned("dependencies are managed with Maven but not locked", DEPENDENCIES.lock_hint)
+        expected = Result.warned(
+            "dependencies are declared in pom.xml (Maven) but not locked", MAVEN_PACKAGES.lock_hint
+        )
         self.assertEqual(_maven(self, DEPENDENCY_MANAGEMENT, declared), expected)
         config = {**declared, ".mvn/maven.config": "--strict-checksums\n"}
         locked = _maven(self, DEPENDENCY_MANAGEMENT, config)
-        self.assertEqual(
-            locked.message, "dependencies are managed with Maven and locked in .mvn/maven.config (--strict-checksums)"
-        )
+        self.assertEqual(locked.message, "dependencies are declared in pom.xml (Maven) and locked in .mvn/maven.config")
+        lax = _maven(self, DEPENDENCY_MANAGEMENT, {**declared, ".mvn/maven.config": "-B\n"})
+        self.assertEqual(lax.status, Status.WARN)
+        in_ci = _maven(self, DEPENDENCY_MANAGEMENT, {**declared, **_ci("./mvnw -B --strict-checksums verify")})
+        self.assertEqual(in_ci.status, Status.PASS)
 
     def test_gradle_verification_metadata_locks_dependencies(self) -> None:
         build = _gradle('dependencies {\n    implementation("com.google.guava:guava:33.4.8-jre")\n}\n')
         files = {**build, "gradle/verification-metadata.xml": "<verification-metadata/>"}
         result = _gradle_kotlin(self, DEPENDENCY_MANAGEMENT, files)
         self.assertEqual(
-            result.message, "dependencies are managed with Gradle and locked in gradle/verification-metadata.xml"
+            result.message,
+            "dependencies are declared in build.gradle.kts (Gradle) and locked in gradle/verification-metadata.xml",
         )
+        unverified = _gradle_kotlin(self, DEPENDENCY_MANAGEMENT, build)
+        self.assertEqual(unverified.details, (GRADLE_PACKAGES.lock_hint,))
         self.assertEqual(_gradle_kotlin(self, DEPENDENCY_MANAGEMENT, {}).message, "no dependencies are declared")
 
     def test_each_build_system_ignores_its_own_output(self) -> None:

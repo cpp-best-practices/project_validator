@@ -389,6 +389,17 @@ except where a step deliberately changes results and says so.
    - lizard named only in CMake files no longer counts: it is judged by what CI runs, like every other tool, until
      CMake custom targets are read (step 5).
 
+   **4g. Dependency management** (`dependency-management`; the `DependencyManagement` rule is deleted).
+   - **Facts** (`project_validator/facts/dependencies.py`): settings readers of each package manager's manifests and
+     lockfiles record a manifest that `Declared` dependencies, a lockfile (or setting) that `Locked` them, and whether
+     a package is an `Application` or a `Library`. A `PackageManager` says when its lock is asked for (always, for
+     applications, or never), how to lock, which CI commands verify dependencies (`mvn --strict-checksums`), and
+     which files are its vendored output.
+   - **`Untracked`**, a structural fact: a file git does not track, so an ignored lockfile locks nothing.
+   - The question is answered per language and unit: a manifest belongs to the unit that owns it (not the docs' or
+     tooling's), a lockfile locks its directory and those below it (a workspace's lock locks its members). A manifest
+     that does not parse makes the answer unknown.
+
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice

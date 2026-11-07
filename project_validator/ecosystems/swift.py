@@ -5,7 +5,6 @@ A Swift build reads its settings from Package.swift or the Xcode project, so tho
 
 import re
 from collections.abc import Iterator
-from pathlib import PurePosixPath
 
 from project_validator.build_configurations import build_type_kinds
 from project_validator.core import Context, Result
@@ -15,6 +14,7 @@ from project_validator.facts import Command, Fact, Facts, Setting, Unknown, reso
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
@@ -32,7 +32,6 @@ from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
     BuildOutputs,
     BuildTypes,
-    DependencyManagement,
     Hardening,
     WarningPolicy,
     WarningsAsErrors,
@@ -361,27 +360,28 @@ PACKAGE_DEPENDENCY = re.compile(r"\.package\s*\(")
 EXECUTABLE = re.compile(r"\.executable(?:Target)?\s*\(")
 
 
-def _declared_packages(context: Context) -> str | None:
-    if context.project.exists(PACKAGE_SWIFT) and PACKAGE_DEPENDENCY.search(context.project.read_text(PACKAGE_SWIFT)):
-        return "managed with SwiftPM"
-    return None
-
-
-def _package_resolved(context: Context) -> str | None:
-    return next((path for path in context.tracked_files if PurePosixPath(path).name == "Package.resolved"), None)
-
-
-def _is_application(context: Context) -> bool:
-    """An app (an Xcode project, or a package with an executable) pins its packages; a library's users resolve them."""
-    if any(".xcodeproj/" in path for path in context.project.files()):
-        return True
-    return context.project.exists(PACKAGE_SWIFT) and bool(EXECUTABLE.search(context.project.read_text(PACKAGE_SWIFT)))
-
-
-DEPENDENCIES = DependencyManagement(
-    managed=_declared_packages,
-    locked=_package_resolved,
-    lock_required=_is_application,
+PACKAGE_SWIFT_DEPENDENCIES = manifest_reader(
+    name="SwiftPM dependencies",
+    manager="SwiftPM",
+    files=(PACKAGE_SWIFT,),
+    declares=lambda _path, text: bool(PACKAGE_DEPENDENCY.search(text)),
+    application=lambda _path, text: bool(EXECUTABLE.search(text)),
+)
+# An Xcode project builds an app.
+XCODE_APPLICATIONS = manifest_reader(
+    name="Xcode applications",
+    manager="SwiftPM",
+    files=("project.pbxproj",),
+    declares=lambda _path, _text: False,
+    application=lambda path, _text: ".xcodeproj/" in path,
+)
+PACKAGE_RESOLVED = lockfile_reader(manager="SwiftPM", files=("Package.resolved",))
+# An app (an Xcode project, or a package with an executable) pins its packages; a library's users resolve them.
+SWIFTPM_PACKAGES = PackageManager(
+    name="SwiftPM",
+    languages=SWIFT_ONLY,
+    lock=Lock.APPLICATIONS,
+    applications_by_default=False,
     lock_hint="commit Package.resolved, so the application is built with the package versions it was tested with",
 )
 
@@ -408,6 +408,5 @@ SWIFT = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         HARDENING,
-        DEPENDENCIES,
     ),
 )

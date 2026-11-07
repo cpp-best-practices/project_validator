@@ -286,6 +286,50 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "npm packages",
+                "manifest": "package.json"
+              }
+            ],
+            "language": "JavaScript",
+            "lock_required": true,
+            "locked": [
+              "package-lock.json"
+            ],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "npm packages",
+                "manifest": "package.json"
+              }
+            ],
+            "language": "TypeScript",
+            "lock_required": true,
+            "locked": [
+              "package-lock.json"
+            ],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "JavaScript",
@@ -2316,6 +2360,16 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "package-lock.json",
+      "reader": "npm packages lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "npm packages",
+      "origin": "package-lock.json"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "package.json",
       "reader": "package.json prettier"
     },
@@ -2323,6 +2377,16 @@
       "kind": "ConfigurationFile",
       "origin": "package.json",
       "reader": "Jest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "npm packages",
+      "origin": "package.json"
     },
     {
       "kind": "ConfigurationFile",
@@ -3961,7 +4025,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "dependencies are declared in package.json and locked in package-lock.json",
+      "message": "dependencies are declared in package.json (npm packages) and locked in package-lock.json",
       "status": "PASS"
     },
     "dependency-updates": {

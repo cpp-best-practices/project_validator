@@ -99,6 +99,17 @@ class UnrecognisedSuffix(Fact):
     files: int
 
 
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Untracked(Fact):
+    """A file of the project that git does not track (ignored, or never added), so it is not part of the project
+    others check out; outside a git checkout every file counts as tracked."""
+
+
+def untracked_facts(project: Project) -> Iterator[Untracked]:
+    tracked = set(project.tracked_files())
+    yield from (Untracked(origin=Origin(path=path)) for path in project.files() if path not in tracked)
+
+
 def _build_files(project: Project, files: list[str]) -> Iterator[tuple[BuildFile | None, str]]:
     """For each project file that belongs to a build system: the build file it shows (None when already shown, as
     for the second file of a build directory), and the project file."""
@@ -270,6 +281,8 @@ __all__ = [
     "SourceFile",
     "Unit",
     "UnrecognisedSuffix",
+    "Untracked",
     "project_languages",
     "structure_facts",
+    "untracked_facts",
 ]

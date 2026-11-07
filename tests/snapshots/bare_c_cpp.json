@@ -144,6 +144,36 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [],
+            "language": "C",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [],
+            "language": "C++",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "C",
@@ -544,6 +574,11 @@
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
       "reader": "CTest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CMake dependencies"
     }
   ],
   "map": {

@@ -101,6 +101,29 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "SwiftPM",
+                "manifest": "Package.swift"
+              }
+            ],
+            "language": "Swift",
+            "lock_required": true,
+            "locked": [
+              "Package.resolved"
+            ],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Swift",
@@ -2239,8 +2262,33 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "Package.resolved",
+      "reader": "SwiftPM lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "SwiftPM",
+      "origin": "Package.resolved"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "Package.swift",
       "reader": "SwiftLint plugin"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "SwiftPM dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "SwiftPM",
+      "origin": "Package.swift"
+    },
+    {
+      "kind": "Application",
+      "manager": "SwiftPM",
+      "origin": "Package.swift"
     },
     {
       "heuristic": false,
@@ -6663,7 +6711,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "dependencies are managed with SwiftPM and locked in Package.resolved",
+      "message": "dependencies are declared in Package.swift (SwiftPM) and locked in Package.resolved",
       "status": "PASS"
     },
     "dependency-updates": {

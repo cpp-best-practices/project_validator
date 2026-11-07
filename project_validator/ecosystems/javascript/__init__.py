@@ -24,6 +24,7 @@ from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resol
 from project_validator.facts.arguments import option_values, positional, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import (
@@ -41,13 +42,12 @@ from project_validator.facts.tools import Claim, Run, Tool, defined_by, starts, 
 from project_validator.rules import (
     BuildOutputs,
     DeclaredLicense,
-    DependencyManagement,
     WarningPolicy,
     WarningsAsErrors,
     directories,
     ignored_at_top_level,
 )
-from project_validator.text import Pattern, matching_names, pattern
+from project_validator.text import Pattern, matching_names, pattern, strip_json_comments
 from project_validator.tools.audits import multi_ecosystem_audits
 
 JAVASCRIPT = "JavaScript"
@@ -588,22 +588,31 @@ LOCKFILES = (
 DEPENDENCY_FIELDS = ("dependencies", "devDependencies", "peerDependencies", "optionalDependencies")
 
 
-def _declared_dependencies(context: Context) -> str | None:
-    if any(json_value(context, PACKAGE_JSON, field) for field in DEPENDENCY_FIELDS):
-        return f"declared in {PACKAGE_JSON}"
-    deno = next((path for path in DENO_CONFIG_FILES if json_value(context, path, "imports", comments=True)), None)
-    return f"declared in {deno}" if deno else None
+JS_PACKAGES = "npm packages"
 
 
-def _lockfile(context: Context) -> str | None:
-    return next((path for path in LOCKFILES if context.committed(path)), None)
+def _package_json_declares(_path: str, text: str) -> bool:
+    manifest = json.loads(text)
+    return isinstance(manifest, dict) and any(manifest.get(field) for field in DEPENDENCY_FIELDS)
 
 
+def _deno_declares(_path: str, text: str) -> bool:
+    config = json.loads(strip_json_comments(text))
+    return isinstance(config, dict) and bool(config.get("imports"))
+
+
+PACKAGE_JSON_DEPENDENCIES = manifest_reader(
+    name="package.json dependencies", manager=JS_PACKAGES, files=(PACKAGE_JSON,), declares=_package_json_declares
+)
+DENO_DEPENDENCIES = manifest_reader(
+    name="Deno imports", manager=JS_PACKAGES, files=DENO_CONFIG_FILES, declares=_deno_declares
+)
+JS_LOCKFILES = lockfile_reader(manager=JS_PACKAGES, files=LOCKFILES)
 # A package's lockfile is not published, so even a library commits one: its CI and contributors then install the
 # dependencies it was tested with.
-DEPENDENCIES = DependencyManagement(
-    managed=_declared_dependencies,
-    locked=_lockfile,
+JS_PACKAGE_MANAGER = PackageManager(
+    name=JS_PACKAGES,
+    languages=JS_LANGUAGES,
     lock_hint="commit the package manager's lockfile (package-lock.json, pnpm-lock.yaml, yarn.lock, bun.lock or "
     "deno.lock) and install from it in CI (npm ci, pnpm install --frozen-lockfile, yarn install --immutable)",
 )
@@ -656,7 +665,6 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
         versions_axis("runtime version", "JavaScript runtime"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        DEPENDENCIES,
         NODE_MODULES,
         LICENSE,
     ),

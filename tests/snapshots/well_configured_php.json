@@ -117,6 +117,29 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "Composer",
+                "manifest": "composer.json"
+              }
+            ],
+            "language": "PHP",
+            "lock_required": true,
+            "locked": [
+              "composer.lock"
+            ],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "PHP",
@@ -1921,6 +1944,26 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "Composer dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Composer",
+      "origin": "composer.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.lock",
+      "reader": "Composer lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "Composer",
+      "origin": "composer.lock"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "phpstan.neon.dist",
       "reader": "PHPStan"
     },
@@ -3396,7 +3439,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "dependencies are declared in composer.json and locked in composer.lock",
+      "message": "dependencies are declared in composer.json (Composer) and locked in composer.lock",
       "status": "PASS"
     },
     "dependency-updates": {

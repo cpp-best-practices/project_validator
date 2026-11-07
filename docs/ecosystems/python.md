@@ -52,7 +52,9 @@ bandit, or `ruff check` with its `S` rules selected (on its command line or in i
 ## `dependency-management`
 
 Dependencies declared in `pyproject.toml`, `setup.py` or requirements files are locked by a committed `uv.lock`,
-`poetry.lock`, `pdm.lock`, `Pipfile.lock` or `pylock.toml`, or by requirements pinned with `--hash`.
+`poetry.lock`, `pdm.lock`, `Pipfile.lock` or `pylock.toml`, or by requirements pinned with `--hash`. Requirements files
+in `.github` are CI's own: pinned by hash, they lock what CI installs, but they declare nothing. Those of the docs and
+tooling (`docs/requirements.txt`) are theirs, not the product's.
 
 ## `dependency-audit`
 

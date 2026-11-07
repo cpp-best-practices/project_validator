@@ -3,7 +3,7 @@
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems.ruby import BUNDLE, DEPENDENCIES, RUBY
+from project_validator.ecosystems.ruby import BUNDLE, BUNDLER_PACKAGES, RUBY
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, run_as, run_in_layout
 
 (
@@ -155,14 +155,16 @@ class DependencyTests(unittest.TestCase):
         gems = {"Gemfile": 'source "https://rubygems.org"\ngem "rack"\n'}
         self.assertEqual(
             self._run(gems),
-            Result.warned("dependencies are declared in Gemfile but not locked", DEPENDENCIES.lock_hint),
+            Result.warned("dependencies are declared in Gemfile (Bundler) but not locked", BUNDLER_PACKAGES.lock_hint),
         )
         locked = self._run({**gems, "Gemfile.lock": "GEM\n"})
-        self.assertEqual(locked, Result.passed("dependencies are declared in Gemfile and locked in Gemfile.lock"))
+        self.assertEqual(
+            locked, Result.passed("dependencies are declared in Gemfile (Bundler) and locked in Gemfile.lock")
+        )
 
     def test_a_gem_need_not_lock(self) -> None:
         gemspec = {"app.gemspec": 'Gem::Specification.new { |s| s.add_dependency "rack" }\n'}
-        self.assertEqual(self._run(gemspec), Result.passed("dependencies are declared in app.gemspec"))
+        self.assertEqual(self._run(gemspec), Result.passed("dependencies are declared in app.gemspec (Bundler)"))
         self.assertEqual(self._run({}), Result.passed("no dependencies are declared"))
 
     def test_the_gemspec_licenses_are_a_choice(self) -> None:

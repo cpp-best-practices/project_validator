@@ -17,6 +17,7 @@ from project_validator.facts.analysis import Strictness, analysed, analyzer, typ
 from project_validator.facts.arguments import has_option, positional, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
@@ -27,7 +28,6 @@ from project_validator.facts.tools import Claim, Run, combined, defined_by, eith
 from project_validator.rules import (
     BuildOutputs,
     DeclaredLicense,
-    DependencyManagement,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -404,28 +404,25 @@ GEM = re.compile(r"^\s*gem\s+[\"']", re.MULTILINE)
 GEMSPEC_DEPENDENCY = re.compile(r"\.add_(?:runtime_|development_)?dependency\b")
 
 
-def _declared_dependencies(context: Context) -> str | None:
-    if context.project.exists(GEMFILE) and GEM.search(context.project.read_text(GEMFILE)):
-        return f"declared in {GEMFILE}"
-    gemspec = next(
-        (path for path in _gemspecs(context) if GEMSPEC_DEPENDENCY.search(context.project.read_text(path))), None
-    )
-    return f"declared in {gemspec}" if gemspec else None
-
-
-def _gemfile_lock(context: Context) -> str | None:
-    return "Gemfile.lock" if context.committed("Gemfile.lock") else None
-
-
-def _is_application(context: Context) -> bool:
-    """A gem's users resolve its dependencies themselves; an application locks them."""
-    return not _gemspecs(context)
-
-
-DEPENDENCIES = DependencyManagement(
-    managed=_declared_dependencies,
-    locked=_gemfile_lock,
-    lock_required=_is_application,
+GEMFILE_DEPENDENCIES = manifest_reader(
+    name="Gemfile dependencies",
+    manager="Bundler",
+    files=(GEMFILE,),
+    declares=lambda _path, text: bool(GEM.search(text)),
+)
+# A gem's users resolve its dependencies themselves.
+GEMSPEC_DEPENDENCIES = manifest_reader(
+    name="gemspec dependencies",
+    manager="Bundler",
+    files=("*.gemspec",),
+    declares=lambda _path, text: bool(GEMSPEC_DEPENDENCY.search(text)),
+    library=lambda _path, _text: True,
+)
+GEMFILE_LOCK = lockfile_reader(manager="Bundler", files=("Gemfile.lock",))
+BUNDLER_PACKAGES = PackageManager(
+    name="Bundler",
+    languages=RUBY_ONLY,
+    lock=Lock.APPLICATIONS,
     lock_hint="commit Gemfile.lock, so the application is installed with the gems it was tested with",
 )
 
@@ -469,7 +466,6 @@ RUBY = Ecosystem(
     rules=(
         versions_axis("Ruby version", RUBY_LANGUAGE),
         WARNINGS,
-        DEPENDENCIES,
         BUNDLE,
         LICENSE,
     ),

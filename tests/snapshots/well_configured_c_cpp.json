@@ -156,6 +156,46 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "FetchContent",
+                "manifest": "cmake/Dependencies.cmake"
+              }
+            ],
+            "language": "C",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "FetchContent",
+                "manifest": "cmake/Dependencies.cmake"
+              }
+            ],
+            "language": "C++",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "C",
@@ -3559,6 +3599,11 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CMake dependencies"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "cmake/Dependencies.cmake",
       "reader": "CMake analyzers"
     },
@@ -3571,6 +3616,16 @@
       "kind": "ConfigurationFile",
       "origin": "cmake/Dependencies.cmake",
       "reader": "CTest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "cmake/Dependencies.cmake",
+      "reader": "CMake dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "FetchContent",
+      "origin": "cmake/Dependencies.cmake"
     },
     {
       "kind": "ConfigurationFile",
@@ -3594,6 +3649,11 @@
       "origin": "test/CMakeLists.txt:registers",
       "tool": "CTest",
       "value": "add_test"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "test/CMakeLists.txt",
+      "reader": "CMake dependencies"
     },
     {
       "heuristic": true,
@@ -6899,7 +6959,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "dependencies are managed with FetchContent",
+      "message": "dependencies are declared in cmake/Dependencies.cmake (FetchContent)",
       "status": "PASS"
     },
     "dependency-updates": {

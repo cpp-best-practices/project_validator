@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from project_validator.ecosystems.c_cpp.cmake import CMAKE
 from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, WARNINGS, WARNINGS_AS_ERRORS
-from project_validator.ecosystems.c_cpp.dependencies import DEPENDENCIES
 from project_validator.ecosystems.c_cpp.meson import MESON
 from project_validator.ecosystems.model import C_FAMILY, Ecosystem, ToolchainAxis
 from project_validator.rules import (
@@ -94,7 +93,6 @@ C_AND_CXX = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         HARDENING,
-        DEPENDENCIES,
         BUILD_DIRECTORY,
     ),
 )

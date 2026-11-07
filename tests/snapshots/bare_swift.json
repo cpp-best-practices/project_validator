@@ -90,6 +90,27 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "SwiftPM",
+                "manifest": "Package.swift"
+              }
+            ],
+            "language": "Swift",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Swift",
@@ -307,6 +328,21 @@
       "kind": "ConfigurationFile",
       "origin": "Package.swift",
       "reader": "SwiftLint plugin"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "SwiftPM dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "SwiftPM",
+      "origin": "Package.swift"
+    },
+    {
+      "kind": "Application",
+      "manager": "SwiftPM",
+      "origin": "Package.swift"
     }
   ],
   "map": {
@@ -417,7 +453,7 @@
       "details": [
         "commit Package.resolved, so the application is built with the package versions it was tested with"
       ],
-      "message": "dependencies are managed with SwiftPM but not locked",
+      "message": "dependencies are declared in Package.swift (SwiftPM) but not locked",
       "status": "WARN"
     },
     "dependency-updates": {

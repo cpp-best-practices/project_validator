@@ -1,30 +1,47 @@
-"""C and C++ dependency managers: CPM, FetchContent, vcpkg, Conan and Meson wraps. None of them is a lockfile."""
+"""C and C++ dependency managers: CPM, FetchContent, vcpkg, Conan and Meson wraps. None of them has a lockfile, and
+C and C++ have no package manager of their own, so each is suggested to a project that declares no dependencies."""
 
-from project_validator.core import Context
-from project_validator.ecosystems.c_cpp.compiler_flags import build_texts
-from project_validator.rules import DependencyManagement
-from project_validator.text import joined, matching_names, pattern
+import re
+from collections.abc import Iterator
 
-MANAGER_COMMANDS = (
-    pattern("CPM", r"\bCPM(?:AddPackage|FindPackage|DeclarePackage)\b|\bCPM\.cmake\b"),
-    pattern("FetchContent", r"\bFetchContent_(?:Declare|MakeAvailable|Populate)\b"),
-)
-MANAGER_FILES = {
-    "vcpkg": ("vcpkg.json",),
-    "Conan": ("conanfile.txt", "conanfile.py"),
+from project_validator.ecosystems.model import C_FAMILY
+from project_validator.facts import Fact, Origin
+from project_validator.facts.dependencies import Declared, Lock, PackageManager, manifest_reader
+from project_validator.facts.settings import SettingsReader
+from project_validator.text import strip_cmake_comments
+
+_CMAKE_MANAGERS = {
+    "CPM": re.compile(r"\bCPM(?:AddPackage|FindPackage|DeclarePackage)\b|\bCPM\.cmake\b"),
+    "FetchContent": re.compile(r"\bFetchContent_(?:Declare|MakeAvailable|Populate)\b"),
 }
 
 
-def _managers(context: Context) -> str | None:
-    found = matching_names(build_texts(context), MANAGER_COMMANDS)
-    found += [name for name, files in MANAGER_FILES.items() if any(map(context.project.exists, files))]
-    if context.project.files_in("subprojects", (".wrap",)):
-        found.append("Meson wraps")
-    return f"managed with {joined(found)}" if found else None
+def _read_cmake_dependencies(path: str, text: str) -> Iterator[Fact]:
+    """The CMake dependency managers a CMake file calls, comments left out, until CMake is read structurally."""
+    code = strip_cmake_comments(text)
+    for manager, calls in _CMAKE_MANAGERS.items():
+        if calls.search(code):
+            yield Declared(origin=Origin(path=path), manager=manager)
 
 
-DEPENDENCIES = DependencyManagement(
-    managed=_managers,
-    hint="if the project has dependencies, consider a dependency manager: CPM, FetchContent, vcpkg, Conan or Meson "
-    "wraps",
+CMAKE_DEPENDENCIES = SettingsReader(
+    name="CMake dependencies", files=("CMakeLists.txt", "*.cmake"), read=_read_cmake_dependencies
+)
+
+
+def _declares(_path: str, _text: str) -> bool:
+    return True
+
+
+VCPKG_MANIFESTS = manifest_reader(name="vcpkg manifest", manager="vcpkg", files=("vcpkg.json",), declares=_declares)
+CONAN_MANIFESTS = manifest_reader(
+    name="Conan recipe", manager="Conan", files=("conanfile.txt", "conanfile.py"), declares=_declares
+)
+MESON_WRAPS = manifest_reader(
+    name="Meson wraps", manager="Meson wraps", files=("subprojects/*.wrap",), declares=_declares
+)
+
+C_FAMILY_PACKAGE_MANAGERS = tuple(
+    PackageManager(name=name, languages=C_FAMILY, lock=Lock.NEVER, suggested=True)
+    for name in ("CPM", "FetchContent", "vcpkg", "Conan", "Meson wraps")
 )
