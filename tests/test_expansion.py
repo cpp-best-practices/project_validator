@@ -370,3 +370,10 @@ class CiEnvironmentTests(unittest.TestCase):
         powershell = github_job("windows-latest", "$tool = 'x'", "$tool --version")
         with temp_project(powershell) as root:
             self.assertFalse(make_context(root).facts.of(Unknown))
+
+    def test_a_variable_carried_to_later_steps_is_set(self) -> None:
+        resolvable = self._facts('run: HC=/opt/ghc/bin/ghc-9.8; echo "HC=$HC" >> "$GITHUB_ENV"', "run: $HC --version")
+        [command] = [fact for fact in resolvable.of(Command) if fact.argv[0] == "$HC"]
+        self.assertEqual(resolved(command), ("/opt/ghc/bin/ghc-9.8", "--version"))
+        unresolved = self._facts('run: echo "HC=$(which ghc)" >> "$GITHUB_ENV"', "run: $HC --version")
+        self.assertFalse(unresolved.of(Unknown))
