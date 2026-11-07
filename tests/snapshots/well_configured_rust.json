@@ -254,6 +254,31 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "release overflow-checks": [
+                    "Cargo.toml"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Rust",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "license": [
       {
         "language": "Rust",
@@ -2865,6 +2890,19 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
+      "reader": "Rust build settings"
+    },
+    {
+      "heuristic": true,
+      "key": "release overflow-checks",
+      "kind": "Setting",
+      "origin": "Cargo.toml",
+      "tool": "Rust build settings",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
       "reader": "Rust lints"
     },
     {
@@ -2930,6 +2968,11 @@
       "kind": "ConfigurationFile",
       "origin": "src/lib.rs",
       "reader": "Rust lint settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/lib.rs",
+      "reader": "Rust build settings"
     },
     {
       "kind": "ConfigurationFile",

@@ -269,6 +269,12 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "license": [
       {
         "language": "PHP",

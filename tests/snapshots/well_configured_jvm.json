@@ -268,6 +268,12 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "Java",
+        "units": []
+      }
+    ],
     "license": [
       {
         "language": "Java",

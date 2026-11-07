@@ -8,7 +8,7 @@ import re
 from typing import TYPE_CHECKING
 
 from project_validator.ecosystems.c_cpp.cmake import CMAKE
-from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, builds_c_or_cxx
+from project_validator.ecosystems.c_cpp.compiler_flags import builds_c_or_cxx
 from project_validator.ecosystems.c_cpp.meson import MESON
 from project_validator.ecosystems.model import C_FAMILY, Ecosystem, ToolchainAxis
 from project_validator.facts.outputs import BuildOutput
@@ -85,6 +85,5 @@ C_AND_CXX = Ecosystem(
     rules=(
         COMPILERS,
         BuildTypes(axis=COMPILERS),
-        HARDENING,
     ),
 )

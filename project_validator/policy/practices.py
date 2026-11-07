@@ -3,7 +3,7 @@ warnings fail the build in at least one configuration."""
 
 from collections.abc import Callable, Iterable
 
-from project_validator.core import Result
+from project_validator.core import Result, Status
 from project_validator.policy import unknown
 from project_validator.questions import Answer
 from project_validator.questions.practices import Compiled, PracticeAnswer
@@ -47,6 +47,28 @@ def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     return Result.warned(f"missing {practice.kind}: {missing}", f"found {joined(answer.found())}")
 
 
+def judge_hardening(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
+    """Every hardening setting on passes (or, for a practice that forbids settings, none found); some on warns; none
+    fails. A language whose project builds no binary is skipped. Unknown is an error unless `allow_unknown`."""
+    practice = answer.practice
+    joined = practice.separator.join
+    if answer.skipped is not None:
+        return Result(status=Status.SKIP, message=answer.skipped)
+    if answer.answer is Answer.YES:
+        enabled = practice.passed or f"{practice.kind} are enabled: {_described(answer.compiled, _found, joined)}"
+        return Result.passed(enabled)
+    if answer.answer is Answer.UNKNOWN and not allow_unknown:
+        asked = f"whether {practice.kind} are kept" if practice.forbids else f"whether the {practice.kind} are enabled"
+        return unknown(asked, answer.unknowns, practice.hint)
+    if practice.forbids:
+        return Result.failed(f"{practice.failed}: {joined(answer.found())}", practice.hint)
+    if not answer.found():
+        required = dict.fromkeys(name for compiled in answer.compiled for name in compiled.missing)
+        return Result.failed(practice.failed or f"no {practice.kind} found; enable {joined(required)}", practice.hint)
+    missing = _described(answer.compiled, _missing, ", ".join)
+    return Result.warned(f"missing {practice.kind}: {missing}", f"found {joined(answer.found())}")
+
+
 def judge_errors(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
     """Warnings that fail the build in some configuration pass; none fails. Unknown is an error unless
     `allow_unknown`."""
@@ -58,4 +80,4 @@ def judge_errors(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Resu
     return Result.failed(f"warnings are not treated as errors in {practice.searched}", practice.hint)
 
 
-__all__ = ["judge_errors", "judge_warnings"]
+__all__ = ["judge_errors", "judge_hardening", "judge_warnings"]

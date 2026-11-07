@@ -624,6 +624,16 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "JavaScript",
+        "units": []
+      },
+      {
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
     "license": [
       {
         "language": "JavaScript",

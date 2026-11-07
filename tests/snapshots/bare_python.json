@@ -224,6 +224,12 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "Python",
+        "units": []
+      }
+    ],
     "license": [
       {
         "language": "Python",

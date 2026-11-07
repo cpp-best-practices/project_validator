@@ -244,6 +244,31 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-buildmode=pie": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Go",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "license": [
       {
         "language": "Go",
@@ -2467,7 +2492,20 @@
     {
       "kind": "ConfigurationFile",
       "origin": "go.mod",
+      "reader": "Go programs"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "go.mod",
       "reader": "Go module requirements"
+    },
+    {
+      "heuristic": false,
+      "key": "main",
+      "kind": "Setting",
+      "origin": "cmd/app/main.go",
+      "tool": "Go programs",
+      "value": true
     },
     {
       "heuristic": false,
