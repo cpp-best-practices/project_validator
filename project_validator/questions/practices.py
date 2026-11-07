@@ -114,7 +114,7 @@ def practice_answer(name: str, language: str, facts: Facts) -> PracticeAnswer | 
     )
 
 
-def _answers(name: str) -> Callable[[str, Facts], LanguageAnswers[PracticeAnswer]]:
+def practice_answers(name: str) -> Callable[[str, Facts], LanguageAnswers[PracticeAnswer]]:
     def answers(language: str, facts: Facts) -> LanguageAnswers[PracticeAnswer]:
         found = practice_answer(name, language, facts)
         return LanguageAnswers(language=language, units=() if found is None else (found,))
@@ -122,9 +122,9 @@ def _answers(name: str) -> Callable[[str, Facts], LanguageAnswers[PracticeAnswer
     return answers
 
 
-warning_answers = _answers(WARNINGS)
-error_answers = _answers(WARNINGS_AS_ERRORS)
-hardening_answers = _answers(HARDENING)
+warning_answers = practice_answers(WARNINGS)
+error_answers = practice_answers(WARNINGS_AS_ERRORS)
+hardening_answers = practice_answers(HARDENING)
 
 WARNINGS_QUESTION = Question(
     name=WARNINGS,
@@ -147,4 +147,5 @@ __all__ = [
     "Compiled",
     "PracticeAnswer",
     "practice_answer",
+    "practice_answers",
 ]
