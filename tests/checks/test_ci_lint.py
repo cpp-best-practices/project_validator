@@ -3,7 +3,7 @@ from collections.abc import Mapping
 
 from project_validator.checks.ci_lint import ci_lint
 from project_validator.core import Result, Status
-from tests.support import CI_FILES, FIXTURES, GITHUB_WORKFLOW, make_context, temp_project
+from tests.support import CI_FILES, FIXTURES, GITHUB_WORKFLOW, github_steps, make_context, temp_project
 
 GITHUB_HINT = "GitHub Actions: run actionlint (rhysd/actionlint) or zizmor (zizmorcore/zizmor-action) in CI"
 
@@ -32,7 +32,7 @@ class CiLintTests(unittest.TestCase):
 
     def test_each_provider_has_its_linters(self) -> None:
         cases = {
-            "GitHub Actions": ("- uses: rhysd/actionlint@v1", "actionlint"),
+            "GitHub Actions": (github_steps("uses: rhysd/actionlint@v1")[GITHUB_WORKFLOW], "actionlint"),
             "GitLab CI": ("lint:\n  script: glab ci lint\n", "glab ci lint"),
             "CircleCI": ("steps:\n  - run: circleci config validate\n", "circleci config validate"),
         }
@@ -56,7 +56,7 @@ class CiLintTests(unittest.TestCase):
             _run({GITHUB_WORKFLOW: "jobs: {}\n"}),
             Result.warned("CI does not lint its GitHub Actions configuration", GITHUB_HINT),
         )
-        result = _run({GITHUB_WORKFLOW: "run: actionlint\n", ".gitlab-ci.yml": "", CI_FILES["Jenkins"]: ""})
+        result = _run({**github_steps("run: actionlint"), ".gitlab-ci.yml": "", CI_FILES["Jenkins"]: ""})
         self.assertEqual(
             result,
             Result.warned(

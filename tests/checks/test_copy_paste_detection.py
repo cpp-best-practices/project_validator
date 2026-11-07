@@ -2,7 +2,7 @@ import unittest
 
 from project_validator.checks.copy_paste_detection import copy_paste_detection
 from project_validator.core import Result, Status
-from tests.support import FIXTURES, make_context, temp_project
+from tests.support import FIXTURES, github_steps, make_context, temp_project
 
 
 class CopyPasteDetectionTests(unittest.TestCase):
@@ -18,7 +18,7 @@ class CopyPasteDetectionTests(unittest.TestCase):
         self.assertEqual(result.status, Status.WARN)
 
     def test_warns_when_ci_runs_no_copy_paste_detection(self) -> None:
-        result = self._run({".github/workflows/ci.yml": "steps:\n  - run: ctest --test-dir build\n"})
+        result = self._run(github_steps("run: ctest --test-dir build"))
         self.assertEqual(result.status, Status.WARN)
         self.assertIn("no copy-paste detection", result.message)
 
@@ -41,7 +41,7 @@ class CopyPasteDetectionTests(unittest.TestCase):
         )
         for step, tool in cases:
             with self.subTest(tool=tool, step=step):
-                result = self._run({".github/workflows/ci.yml": f"steps:\n  - {step}\n"})
+                result = self._run(github_steps(step))
                 self.assertEqual(result.status, Status.PASS)
                 self.assertEqual(result.message, f"CI runs copy-paste detection with {tool}")
 
@@ -51,7 +51,7 @@ class CopyPasteDetectionTests(unittest.TestCase):
         self.assertEqual(result.message, "CI runs copy-paste detection with PMD CPD, jscpd")
 
     def test_similar_words_do_not_count(self) -> None:
-        result = self._run({".github/workflows/ci.yml": "steps:\n  - run: ./duplicate.sh cpdfile duplogs\n"})
+        result = self._run(github_steps("run: ./duplicate.sh cpdfile duplogs"))
         self.assertEqual(result.status, Status.WARN)
 
     def test_tool_outside_ci_does_not_count(self) -> None:
