@@ -138,6 +138,39 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "RuboCop's Metrics/MethodLength": {
+                "can": {
+                  "limits": "rubocop"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Ruby",
@@ -457,8 +490,10 @@
       "status": "WARN"
     },
     "function-limits": {
-      "details": [],
-      "message": "function length is never limited; run rubocop (Metrics/MethodLength) or lizard --length 30 in CI",
+      "details": [
+        "consider running in CI: rubocop or lizard --length 30"
+      ],
+      "message": "function length is never limited",
       "status": "FAIL"
     },
     "hardening": {

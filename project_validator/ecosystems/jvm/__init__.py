@@ -10,9 +10,9 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
-from project_validator.core import Context, Result
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, first_existing
+from project_validator.evidence import ci_and_hook_texts
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.audit import audited, auditor
@@ -23,16 +23,14 @@ from project_validator.facts.settings import SettingsReader, matched_settings, s
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, either, starts
 from project_validator.rules import (
-    SUGGESTED_LIZARD,
     BuildOutputs,
     DependencyManagement,
-    FunctionLimits,
     WarningPolicy,
     WarningsAsErrors,
     directories,
     ignored_at_top_level,
 )
-from project_validator.text import Pattern, matching_names, pattern
+from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 
 JAVA = "Java"
@@ -80,7 +78,6 @@ RUNS_BUILD = re.compile(
     rf"{MVN}\b(?:compile|test|package|verify|install|deploy)\b"
     rf"|{GRADLE_RUN}\b(?:build|check|test|assemble|classes|compile\w*)\b"
 )
-RUNS_VERIFICATION = re.compile(rf"{MVN}\b(?:verify|install|deploy)\b|{GRADLE_RUN}\b(?:build|check)\b")
 
 
 def _build_files(context: Context) -> tuple[str, ...]:
@@ -101,7 +98,6 @@ def _texts_when(runs: re.Pattern[str]) -> Callable[[Context], tuple[str, ...]]:
 
 
 _build_texts = _texts_when(RUNS_BUILD)
-_verification_texts = _texts_when(RUNS_VERIFICATION)
 
 
 def _setting(name: str, regex: str) -> Pattern:
@@ -471,49 +467,6 @@ DEPENDENCY_CHECK_ACTION = AuditAction(
 )
 
 
-def _checkstyle_configs(context: Context) -> list[str]:
-    return [
-        path
-        for path in context.project.files()
-        if "checkstyle" in PurePosixPath(path).name.lower() and path.endswith(".xml")
-    ]
-
-
-DETEKT_CONFIG_FILES = ("detekt.yml", "config/detekt/detekt.yml", "detekt-config.yml")
-METHOD_LENGTH = re.compile(r"""name\s*=\s*["']MethodLength["']""")
-# detekt's LongMethod rule is active by default.
-LONG_METHOD_OFF = re.compile(r"^\s*LongMethod:\s*\n\s*active:\s*false\b", re.MULTILINE)
-RUNS_CHECKSTYLE = pattern("Checkstyle", r"\bcheckstyle\b")
-RUNS_DETEKT = pattern("detekt", r"\bdetekt\b")
-
-
-def _method_length_check(context: Context) -> str | None:
-    """The Checkstyle configuration that enables the MethodLength check, if any."""
-    configs = _checkstyle_configs(context)
-    return next((path for path in configs if METHOD_LENGTH.search(context.project.read_text(path))), None)
-
-
-def _long_method_active(context: Context) -> bool:
-    config = first_existing(context, DETEKT_CONFIG_FILES)
-    return config is None or not LONG_METHOD_OFF.search(context.project.read_text(config))
-
-
-def _method_length_enforced(context: Context) -> Result:
-    """Checkstyle's MethodLength check, or detekt's LongMethod rule, limits method length when the tool runs."""
-    texts = _verification_texts(context)
-    checkstyle = _method_length_check(context)
-    if checkstyle and matching_names(texts, (RUNS_CHECKSTYLE,)):
-        return Result.passed(f"function length is limited with Checkstyle MethodLength ({checkstyle})")
-    if _long_method_active(context) and matching_names(texts, (RUNS_DETEKT,)):
-        return Result.passed("function length is limited with detekt LongMethod")
-    if checkstyle:
-        return Result.warned(f"MethodLength is enabled in {checkstyle} but Checkstyle does not run")
-    return Result.failed(
-        "function length is never limited; enable Checkstyle's MethodLength check, run detekt, "
-        f"or run {SUGGESTED_LIZARD} in CI"
-    )
-
-
 MAVEN_DEPENDENCY = re.compile(r"<dependency>")
 GRADLE_DEPENDENCY = re.compile(r"^\s*(?:implementation|api|compileOnly|runtimeOnly|testImplementation)\b", re.MULTILINE)
 GRADLE_LOCKS = ("gradle/verification-metadata.xml", "gradle.lockfile")
@@ -579,7 +532,6 @@ JVM = Ecosystem(
         versions_axis("JDK version", "JDK"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        FunctionLimits(without_lizard=_method_length_enforced),
         DEPENDENCIES,
         CLASS_FILES,
     ),

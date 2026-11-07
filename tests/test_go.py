@@ -109,16 +109,27 @@ class GoTests(unittest.TestCase):
 
     def test_funlen_limits_functions_when_golangci_lint_runs(self) -> None:
         result = self._run(function_limits, {**FUNLEN_CONFIG, **_ci("golangci-lint run")})
-        self.assertEqual(result, Result.passed("function length is limited with golangci-lint funlen (.golangci.yml)"))
+        self.assertEqual(
+            result, Result.passed("function length is limited with golangci-lint's funlen (.golangci.yml)")
+        )
+        for config in ("linters:\n  enable-all: true\n", "version: '2'\nlinters:\n  default: all\n"):
+            with self.subTest(config=config):
+                files = {".golangci.yml": config, **_ci("golangci-lint run")}
+                self.assertEqual(self._run(function_limits, files).status, Status.PASS)
 
     def test_funlen_without_golangci_lint_in_ci_warns(self) -> None:
         result = self._run(function_limits, FUNLEN_CONFIG)
-        self.assertEqual(result, Result.warned("funlen is enabled in .golangci.yml but CI does not run golangci-lint"))
+        self.assertEqual(
+            result.message, ".golangci.yml limits function length, but CI does not run golangci-lint's funlen"
+        )
 
     def test_without_funlen_or_lizard_function_length_is_not_limited(self) -> None:
-        result = self._run(function_limits, _ci("golangci-lint run"))
-        self.assertEqual(result.status, Status.FAIL)
-        self.assertIn("funlen", result.message)
+        expected = Result.failed(
+            "CI runs golangci-lint's funlen, but without a function length limit; set funlen enabled in .golangci.yml"
+        )
+        self.assertEqual(self._run(function_limits, _ci("golangci-lint run")), expected)
+        disabled = {".golangci.yml": "linters:\n  enable-all: true\n  disable: [funlen]\n", **_ci("golangci-lint run")}
+        self.assertEqual(self._run(function_limits, disabled), expected)
 
     def test_test_binaries_and_profiles_must_be_ignored(self) -> None:
         self.assertEqual(self._run(vcs_ignore, {".gitignore": "*.test\n"}).status, Status.PASS)

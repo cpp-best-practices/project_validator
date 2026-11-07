@@ -38,7 +38,8 @@ and `php-cs-fixer fix` only rewrite files. They have a default style, so CI enfo
 
 ## `function-limits`
 
-lizard runs with a length limit, or PHPMD runs with its `codesize` rules (`ExcessiveMethodLength`).
+lizard runs in CI with a length limit, or PHPMD runs with its `codesize` rules (`ExcessiveMethodLength`), named on
+the command line or used by its rule set (`phpmd.xml`, or the rule set the command names) without excluding the rule.
 
 ## `static-analysis`
 

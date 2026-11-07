@@ -164,15 +164,31 @@ class SecurityTests(unittest.TestCase):
 
 class AnalysisTests(unittest.TestCase):
     def test_phpmd_codesize_limits_methods_when_phpmd_runs(self) -> None:
-        expected = Result.passed("function length is limited with PHPMD ExcessiveMethodLength")
+        expected = Result.passed("function length is limited with PHPMD's ExcessiveMethodLength")
         self.assertEqual(run_as(self, FUNCTION_LIMITS, _ci("vendor/bin/phpmd src text codesize"), PHP), expected)
         config = {"phpmd.xml": '<ruleset><rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/></ruleset>'}
-        self.assertEqual(run_as(self, FUNCTION_LIMITS, {**config, **_ci("phpmd src text phpmd.xml")}, PHP), expected)
+        self.assertEqual(
+            run_as(self, FUNCTION_LIMITS, {**config, **_ci("phpmd src text phpmd.xml")}, PHP),
+            Result.passed("function length is limited with PHPMD's ExcessiveMethodLength (phpmd.xml)"),
+        )
+        # A rule set named on the command line is read too.
+        custom = {"build/rules.xml": '<ruleset><rule ref="rulesets/codesize.xml"/></ruleset>'}
+        self.assertEqual(
+            run_as(self, FUNCTION_LIMITS, {**custom, **_ci("phpmd src text build/rules.xml")}, PHP).status, Status.PASS
+        )
         warned = run_as(self, FUNCTION_LIMITS, config, PHP)
         self.assertEqual(
-            warned, Result.warned("ExcessiveMethodLength is enabled in phpmd.xml but CI does not run PHPMD")
+            warned.message, "phpmd.xml limits function length, but CI does not run PHPMD's ExcessiveMethodLength"
         )
-        self.assertEqual(run_as(self, FUNCTION_LIMITS, _ci("phpmd src text cleancode"), PHP).status, Status.FAIL)
+        excluded = '<ruleset><rule ref="rulesets/codesize.xml"><exclude name="ExcessiveMethodLength"/></rule></ruleset>'
+        for files in (
+            _ci("phpmd src text cleancode"),
+            {"phpmd.xml": excluded, **_ci("phpmd src text phpmd.xml")},
+        ):
+            with self.subTest(files=files):
+                self.assertEqual(run_as(self, FUNCTION_LIMITS, files, PHP).status, Status.FAIL)
+        unreadable = {"phpmd.xml": "<ruleset", **_ci("phpmd src text phpmd.xml")}
+        self.assertEqual(run_as(self, FUNCTION_LIMITS, unreadable, PHP).status, Status.ERROR)
 
     def test_phpstan_or_psalm_type_check_and_a_high_level_is_strict(self) -> None:
         cases = {

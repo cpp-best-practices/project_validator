@@ -36,7 +36,8 @@ passes.
 
 ## `function-limits`
 
-lizard runs with a length limit. lizard does not measure F#, so F#-only projects are skipped.
+lizard runs in CI with a length limit. lizard does not measure F#, and no known tool limits the length of F#
+functions, so F# is skipped.
 
 ## `static-analysis`
 

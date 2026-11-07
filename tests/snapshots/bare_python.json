@@ -139,6 +139,32 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Python",
@@ -515,8 +541,10 @@
       "status": "WARN"
     },
     "function-limits": {
-      "details": [],
-      "message": "function length is never limited; run lizard --length 30 in CI",
+      "details": [
+        "consider running in CI: lizard --length 30"
+      ],
+      "message": "function length is never limited",
       "status": "FAIL"
     },
     "hardening": {

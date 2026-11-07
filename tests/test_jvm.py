@@ -230,24 +230,41 @@ CHECKSTYLE = {
 
 
 class FunctionLimitTests(unittest.TestCase):
-    def _run(self, files: dict[str, str]) -> Result:
-        return run_as(self, FUNCTION_LIMITS, files, JVM)
+    """Checkstyle measures Java, and detekt Kotlin."""
+
+    def _java(self, files: dict[str, str]) -> Result:
+        return run_in_layout(self, "Maven Java", FUNCTION_LIMITS, files)
+
+    def _kotlin(self, files: dict[str, str]) -> Result:
+        return run_in_layout(self, "Gradle Kotlin", FUNCTION_LIMITS, files)
 
     def test_checkstyle_method_length_limits_methods_when_checkstyle_runs(self) -> None:
-        result = self._run({**CHECKSTYLE, **_ci("mvn checkstyle:check")})
-        expected = "function length is limited with Checkstyle MethodLength (config/checkstyle/checkstyle.xml)"
+        result = self._java({**CHECKSTYLE, **_ci("mvn checkstyle:check")})
+        expected = "function length is limited with Checkstyle's MethodLength (config/checkstyle/checkstyle.xml)"
         self.assertEqual(result, Result.passed(expected))
-        warned = self._run(CHECKSTYLE)
+        warned = self._java(CHECKSTYLE)
         self.assertEqual(
-            warned.message, "MethodLength is enabled in config/checkstyle/checkstyle.xml but Checkstyle does not run"
+            warned.message,
+            "config/checkstyle/checkstyle.xml limits function length, but CI does not run Checkstyle's MethodLength",
         )
+        unreadable = self._java({"config/checkstyle/checkstyle.xml": "<module", **_ci("mvn checkstyle:check")})
+        self.assertEqual(unreadable.status, Status.ERROR)
 
     def test_detekt_limits_methods_unless_long_method_is_off(self) -> None:
         self.assertEqual(
-            self._run(_ci("./gradlew detekt")), Result.passed("function length is limited with detekt LongMethod")
+            self._kotlin(_ci("./gradlew detekt")), Result.passed("function length is limited with detekt's LongMethod")
         )
-        off = {"config/detekt/detekt.yml": "complexity:\n  LongMethod:\n    active: false\n", **_ci("./gradlew detekt")}
-        self.assertEqual(self._run(off).status, Status.FAIL)
+        detekt = "config/detekt/detekt.yml"
+        threshold = {detekt: "complexity:\n  LongMethod:\n    threshold: 40\n", **_ci("./gradlew detekt")}
+        self.assertEqual(
+            self._kotlin(threshold), Result.passed(f"function length is limited with detekt's LongMethod ({detekt})")
+        )
+        for config in (
+            "complexity:\n  LongMethod:\n    active: false\n    threshold: 40\n",
+            "complexity:\n  active: false\n",
+        ):
+            with self.subTest(config=config):
+                self.assertEqual(self._kotlin({detekt: config, **_ci("./gradlew detekt")}).status, Status.FAIL)
 
 
 class DependencyAndOutputTests(unittest.TestCase):

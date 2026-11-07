@@ -9,9 +9,9 @@ import re
 from collections.abc import Iterator
 from pathlib import PurePosixPath
 
-from project_validator.core import Context, Result
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, existing_texts, first_existing
+from project_validator.evidence import ci_and_hook_texts, existing_texts
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, positional, program
@@ -19,22 +19,22 @@ from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
-from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings
+from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    SUGGESTED_LIZARD,
     BuildOutputs,
     DeclaredLicense,
     DependencyManagement,
-    FunctionLimits,
     WarningPolicy,
     directories,
     ignored_at_top_level,
 )
-from project_validator.text import Pattern, matching_names, pattern
+from project_validator.text import Pattern, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
 RUBY_LANGUAGE = "Ruby"
@@ -128,7 +128,9 @@ def _lints(program_name: str, autocorrects: frozenset[str], tool: str) -> Claim:
     return analyses
 
 
-RUBOCOP_FILES = file_reader("RuboCop", (RUBOCOP_CONFIG,))
+RUBOCOP_SETTINGS = SettingsReader(
+    name="RuboCop", files=(RUBOCOP_CONFIG,), read=lambda path, text: yaml_settings("RuboCop", path, text)
+)
 STANDARD_FILES = file_reader("Standard", (".standard.yml",))
 SYNTAX_TREE_FILES = file_reader("syntax_tree", (".streerc",))
 
@@ -307,22 +309,38 @@ SECURITY_SCANNERS = (
     *multi_language_scanners(RUBY_ONLY),
 )
 
+_METHOD_LENGTH = "Metrics/MethodLength"
+
+
+def _method_length(facts: Facts, *, on: bool) -> list[Setting]:
+    """The RuboCop settings that turn Metrics/MethodLength on (setting its Max, or enabling it), or off (disabling it,
+    or every Metrics cop)."""
+    if on:
+        keys = {f"{_METHOD_LENGTH}.Max": None, f"{_METHOD_LENGTH}.Enabled": True}
+    else:
+        keys = {f"{_METHOD_LENGTH}.Enabled": False, "Metrics.Enabled": False}
+    return [
+        setting
+        for setting in facts.settings("RuboCop")
+        if setting.key in keys and keys[setting.key] in (None, setting.value)
+    ]
+
+
 # Metrics/MethodLength is on by default; Standard turns the Metrics cops off.
-METHOD_LENGTH_OFF = re.compile(
-    r"^Metrics(?:/MethodLength)?:\s*\n(?:[ \t]+.*\n)*?[ \t]+Enabled:\s*false\b", re.MULTILINE
+METHOD_LENGTH = limiter(
+    name="RuboCop's Metrics/MethodLength",
+    languages=RUBY_ONLY,
+    how="rubocop",
+    runs=_lints("rubocop", _RUBOCOP_CORRECTS, "RuboCop"),
+    rule=Rule(
+        describe=f"{_METHOD_LENGTH} on in {RUBOCOP_CONFIG}",
+        enabled=lambda facts: _method_length(facts, on=True),
+        disabled=lambda facts: _method_length(facts, on=False),
+        default=True,
+    ),
+    reads=("Rake", "RuboCop"),
 )
-
-
-def _method_length_enforced(context: Context) -> Result:
-    """RuboCop limits method length with Metrics/MethodLength, unless its configuration turns the cop off."""
-    config = first_existing(context, (RUBOCOP_CONFIG,))
-    if config is not None and METHOD_LENGTH_OFF.search(context.project.read_text(config) + "\n"):
-        return Result.failed(f"Metrics/MethodLength is disabled in {config}; enable it or run {SUGGESTED_LIZARD} in CI")
-    if matching_names(_run_texts(context), (pattern("RuboCop", RUNS_RUBOCOP),)):
-        return Result.passed("function length is limited with RuboCop Metrics/MethodLength")
-    return Result.failed(
-        f"function length is never limited; run rubocop (Metrics/MethodLength) or {SUGGESTED_LIZARD} in CI"
-    )
+FUNCTION_LENGTH_LIMITERS = (METHOD_LENGTH, *function_length_limiters(RUBY_ONLY))
 
 
 REEK_FILES = file_reader("Reek", (".reek.yml",))
@@ -451,7 +469,6 @@ RUBY = Ecosystem(
     rules=(
         versions_axis("Ruby version", RUBY_LANGUAGE),
         WARNINGS,
-        FunctionLimits(without_lizard=_method_length_enforced),
         DEPENDENCIES,
         BUNDLE,
         LICENSE,

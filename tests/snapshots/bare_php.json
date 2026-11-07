@@ -147,6 +147,39 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "PHPMD's ExcessiveMethodLength": {
+                "can": {
+                  "limits": "phpmd with its codesize rules (ExcessiveMethodLength)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "PHP",
@@ -474,8 +507,10 @@
       "status": "WARN"
     },
     "function-limits": {
-      "details": [],
-      "message": "function length is never limited; run PHPMD with its codesize rules (ExcessiveMethodLength) or run lizard --length 30 in CI",
+      "details": [
+        "consider running in CI: phpmd with its codesize rules (ExcessiveMethodLength) or lizard --length 30"
+      ],
+      "message": "function length is never limited",
       "status": "FAIL"
     },
     "hardening": {

@@ -9,7 +9,7 @@ from collections.abc import Iterator
 from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
 
-from project_validator.core import Context, Result, Status
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
@@ -24,11 +24,9 @@ from project_validator.facts.settings import SettingsReader, file_reader, matche
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, starts
 from project_validator.rules import (
-    SUGGESTED_LIZARD,
     BuildOutputs,
     DeclaredLicense,
     DependencyManagement,
-    FunctionLimits,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -36,6 +34,7 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
 CSHARP = "C#"
@@ -373,11 +372,8 @@ SECURITY_SCANNERS = (
 )
 
 
-def _fsharp_only(context: Context) -> Result:
-    """lizard measures C# but not F#, and no F# tool is known to limit function length."""
-    if CSHARP in context.structure.languages:
-        return Result.failed(f"function length is never limited; run {SUGGESTED_LIZARD} in CI")
-    return Result(status=Status.SKIP, message="no known tool limits the length of F# functions")
+# lizard measures C# but not F#, and no F# tool is known to limit function length.
+FUNCTION_LENGTH_LIMITERS = function_length_limiters(frozenset({CSHARP}))
 
 
 # The commands that build a project, and so run the analyzers its packages add.
@@ -500,7 +496,6 @@ DOTNET = Ecosystem(
         versions_axis(".NET SDK version", ".NET SDK"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        FunctionLimits(without_lizard=_fsharp_only),
         DEPENDENCIES,
         BUILD_OUTPUT,
         LICENSE,

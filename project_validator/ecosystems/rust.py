@@ -24,7 +24,6 @@ from project_validator.rules import (
     BuildOutputs,
     BuildTypes,
     DependencyManagement,
-    FunctionLimits,
     Hardening,
     WarningPolicy,
     directories,
@@ -33,6 +32,7 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
 
@@ -300,6 +300,8 @@ def _cargo_deny(command: Command, _facts: Facts) -> Run | None:
     return audited() if not checks or "advisories" in checks else None
 
 
+# Rust has no function length limit of its own here (clippy's too_many_lines counts lines, but is off by default).
+FUNCTION_LENGTH_LIMITERS = function_length_limiters(RUST_LANGUAGE)
 AUDITORS = (
     auditor(
         name="cargo audit",
@@ -414,7 +416,6 @@ RUST = Ecosystem(
         BuildTypes(axis=RUST_TOOLCHAINS),
         WARNINGS,
         HARDENING,
-        FunctionLimits(),
         DEPENDENCIES,
         TARGET_DIRECTORY,
         LICENSE,
