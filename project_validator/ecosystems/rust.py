@@ -18,12 +18,12 @@ from project_validator.facts.dependencies import Lock, PackageManager, lockfile_
 from project_validator.facts.expansion import Action
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.rules import (
-    BuildOutputs,
     BuildTypes,
     Hardening,
     WarningPolicy,
@@ -324,7 +324,8 @@ CARGO_DENY_ACTION = AuditAction(
     ),
 )
 
-TARGET_DIRECTORY = BuildOutputs(
+TARGET_DIRECTORY = BuildOutput(
+    languages=RUST_LANGUAGE,
     name="the target directory",
     globs=ignored_at_top_level("target"),
     paths=directories("target"),
@@ -425,7 +426,6 @@ RUST = Ecosystem(
         BuildTypes(axis=RUST_TOOLCHAINS),
         WARNINGS,
         HARDENING,
-        TARGET_DIRECTORY,
         LICENSE,
     ),
 )

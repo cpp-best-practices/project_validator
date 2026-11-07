@@ -1,5 +1,20 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "pkg/"
+            ],
+            "language": "Ruby",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Ruby",
@@ -346,6 +361,21 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Ruby",
+            "outputs": {
+              "the installed gems": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -380,6 +410,14 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": "pkg/",
+      "output": "the installed gems"
     },
     {
       "kind": "ConfigurationFile",

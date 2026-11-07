@@ -1,29 +1,20 @@
 """No build output is committed: what the ignore rules keep out (see `vcs-ignore`) did not slip in before them."""
 
-from project_validator.core import Context, Result
-from project_validator.ecosystems import practice
-from project_validator.rules import BuildOutputs
-
-# How many of the committed outputs are listed.
-LISTED = 5
-HINT = "remove them from version control (git rm -r --cached <path>) and ignore them"
+from project_validator.facts.outputs import known_build_outputs
+from project_validator.judging import answered_check
+from project_validator.policy.outputs import judge_committed
+from project_validator.questions.outputs import committed_outputs
 
 
-@practice(
+def output_languages() -> frozenset[str]:
+    """The languages whose builds write a known build output."""
+    return frozenset().union(*(output.languages for output in known_build_outputs()))
+
+
+committed_artifacts = answered_check(
     name="committed-artifacts",
     description="No build outputs (e.g. object files, __pycache__/, target/) are committed",
-    rule=BuildOutputs,
+    languages=output_languages,
+    answers=committed_outputs,
+    judge=lambda answer, allow_unknown: judge_committed(answer, allow_unknown=allow_unknown),
 )
-def committed_artifacts(outputs: BuildOutputs, context: Context) -> Result:
-    found = dict.fromkeys(
-        artifact for path in context.tracked_files if (artifact := outputs.artifact(path)) is not None
-    )
-    if not found:
-        return Result.passed("no build outputs are committed")
-    count = len(found)
-    return Result.failed(
-        f"{count} build output{'s are' if count != 1 else ' is'} committed",
-        *list(found)[:LISTED],
-        *((f"and {count - LISTED} more",) if count > LISTED else ()),
-        HINT,
-    )

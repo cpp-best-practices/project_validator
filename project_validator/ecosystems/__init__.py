@@ -12,7 +12,7 @@ from fnmatch import fnmatchcase
 from pathlib import Path
 from types import ModuleType
 
-from project_validator.core import Check, CheckFunction, Context, Result, Status
+from project_validator.core import Check, Context, Result, Status
 from project_validator.ecosystems.model import (
     C_FAMILY,
     BuildSystem,
@@ -165,17 +165,6 @@ def with_registered_languages(selected: Check) -> Check:
     return replace(selected, languages=languages_of(providers(selected.rule)))
 
 
-def ecosystem_check(*, name: str, description: str, rule: type[object]) -> Callable[[CheckFunction], Check]:
-    """A check of the whole project that applies wherever an ecosystem has a rule of type `rule`."""
-
-    def wrap(function: CheckFunction) -> Check:
-        return Check(
-            name=name, description=description, run=function, languages=languages_of(providers(rule)), rule=rule
-        )
-
-    return wrap
-
-
 type Judge[R] = Callable[[R, Context], Result]
 
 
@@ -238,7 +227,6 @@ __all__ = [
     "check_each_ecosystem",
     "claim_conflicts",
     "combined",
-    "ecosystem_check",
     "ecosystems_for",
     "is_build_tree",
     "isolated_registry",
