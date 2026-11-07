@@ -8,7 +8,7 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path, PurePosixPath
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
     from project_validator.ci import CiAnalysis, CiFile, CiProvider
@@ -153,6 +153,14 @@ class Context:
         self.project = project
         self.providers = providers
         self.options = options
+        self._shared: dict[str, object] = {}
+
+    def shared[T](self, key: str, compute: Callable[[], T]) -> T:
+        """What `compute` returns, computed once: extractors that read the same files (CMake's, for its facts and its
+        custom targets) share the work."""
+        if key not in self._shared:
+            self._shared[key] = compute()
+        return cast(T, self._shared[key])
 
     @cached_property
     def ci_files(self) -> tuple[CiFile, ...]:
@@ -188,7 +196,7 @@ class Context:
         if self.options.build:
             found += (fact for probe in known_probes() for fact in probe.run(self.project, self.options))
         found += expanded(ci_facts(self.project, self.ci_files), self, known_expanders(), known_actions())
-        found += settings_facts(self.project, known_settings_readers(), found)
+        found += settings_facts(self, known_settings_readers(), found)
         return found + tool_runs(found, known_tools())
 
     @cached_property

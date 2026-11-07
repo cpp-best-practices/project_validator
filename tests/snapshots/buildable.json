@@ -642,38 +642,23 @@
     {
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
-      "reader": "CMake analyzers"
+      "reader": "CMake"
     },
     {
-      "kind": "ConfigurationFile",
-      "origin": "CMakeLists.txt",
-      "reader": "CMake flags"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "CMakeLists.txt",
-      "reader": "CTest"
-    },
-    {
-      "heuristic": true,
+      "heuristic": false,
       "key": "enables",
       "kind": "Setting",
-      "origin": "CMakeLists.txt:enables",
+      "origin": "CMakeLists.txt",
       "tool": "CTest",
       "value": true
     },
     {
-      "heuristic": true,
+      "heuristic": false,
       "key": "registers",
       "kind": "Setting",
-      "origin": "CMakeLists.txt:registers",
+      "origin": "CMakeLists.txt",
       "tool": "CTest",
       "value": "add_test"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "CMakeLists.txt",
-      "reader": "CMake dependencies"
     }
   ],
   "map": {
