@@ -6,6 +6,7 @@ from project_validator.facts.build import Applies, disjuncts
 from project_validator.facts.conditions import (
     ALWAYS,
     COMPILERS,
+    DIMENSIONS,
     NEVER,
     both,
     either,
@@ -101,3 +102,27 @@ class DimensionTests(unittest.TestCase):
         self.assertEqual(compilers.equal_to("Unheard"), only("compilers", ["other"]))
         insensitive = conditions.Dimension("configurations", {"Debug": "debug"}, case_sensitive=False)
         self.assertEqual(insensitive.listed(["debug", "x"]), only("configurations", ["debug", "other"]))
+
+
+class OpenDimensionTests(unittest.TestCase):
+    """A value a condition names joins its dimension; conditions made before hold for it as for "other"."""
+
+    def setUp(self) -> None:
+        saved = list(conditions.DIMENSIONS["compilers"])
+        self.addCleanup(lambda: conditions._VALUES["compilers"].__setitem__(slice(None), saved))
+
+    def test_a_value_named_later_branches_as_other_did(self) -> None:
+        not_msvc = negated(only("compilers", ["msvc"]))
+        others = only("compilers", ["other"])
+        zcc = only("compilers", ["zcc-for-a-test"])
+        self.assertIn("zcc-for-a-test", DIMENSIONS["compilers"])
+        self.assertEqual(len(DIMENSIONS), 4)
+        self.assertEqual(both(not_msvc, zcc), zcc)
+        # "other" named before meant every compiler not named yet; named after, it no longer covers zcc.
+        self.assertEqual(both(others, zcc), zcc)
+        self.assertEqual(both(only("compilers", ["other"]), zcc), NEVER)
+        # A condition made before and one made after the value was named are the same.
+        self.assertEqual(negated(negated(not_msvc)), not_msvc)
+        self.assertEqual(either(not_msvc, only("compilers", ["msvc"])), ALWAYS)
+        allowed = {applies.compilers for applies in disjuncts(both(not_msvc, zcc))}
+        self.assertEqual(allowed, {frozenset({"zcc-for-a-test"})})

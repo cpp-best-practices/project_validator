@@ -481,4 +481,14 @@ except where a step deliberately changes results and says so.
      compiler family, and gfortran, ifx and flang in CI jobs. ctest and `meson test` run the tests of whatever their
      build system compiles, and CPM, FetchContent and Meson wraps became the build systems' own package managers.
 
+8. **What a second new language taught.** A trial of Haskell (branch `language-trial-haskell`) found what made
+   it harder than a recognition module and extractors; each fix is shared:
+   - The CI layer: `$GITHUB_ENV` carries to later steps; a word that is one variable splits; a program that is a
+     variable nothing sets is unknown; matrix objects are read as written.
+   - Conditions are open: a compiler or language a condition names joins its dimension, so a profile's compiler
+     (GHC) and language scope `CompilerOption` facts like CMake's. Compiler flags are requirements built once
+     (`project_validator/facts/flags.py`): on a command line, as an option's value, in the build files' options for
+     the language and compiler, with hints derived from the flag's spellings; the Meson and CMake settings that set
+     them are the build systems' (`tools/toolchains.py`).
+
 `--facts` and `--answers` expose the database and the answers.

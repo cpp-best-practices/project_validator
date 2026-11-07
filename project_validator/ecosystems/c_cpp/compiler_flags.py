@@ -1,24 +1,26 @@
 """C/C++ compiler flags: the strict warning set and warnings as errors, for each compiler CI builds with, and security
 hardening."""
 
-import re
-from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Facts
-from project_validator.facts.build import CompilerOption
+from project_validator.facts.flags import flag_requirement
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Evidence, Found, Practice, Requirement
+from project_validator.facts.practices import Practice, Requirement
 from project_validator.tools.toolchains import (
     FHARDENED,
     GCC_HARDENING,
     MSVC_HARDENING,
+    WARNING_LEVEL_HINTS,
+    WARNINGS_AS_ERRORS_SETTING_HINTS,
+    WARNINGS_AS_ERRORS_SETTINGS,
     Flag,
     hardening_flags,
     warning_flags,
+    warning_level_settings,
     warnings_as_errors_flag,
 )
 
@@ -47,51 +49,21 @@ def ci_compilers(facts: Facts) -> tuple[str, ...]:
     return tuple(sorted(found)) or ("gcc",)
 
 
-def _options(flag: Flag) -> Found:
-    """The build files' options that set `flag` for C or C++ builds with the compiler judged."""
-
-    def found(facts: Facts, compiler: str | None) -> Iterator[Evidence]:
-        for option in facts.of(CompilerOption):
-            applies = option.applies
-            for_compiler = compiler is None or compiler in applies.allowed("compilers")
-            if for_compiler and applies.allowed("languages") & C_FAMILY and flag.option.fullmatch(option.option):
-                yield Evidence(option.origin.path, applies.requires)
-
-    return found
-
-
-# What a command that sets a flag, or a build system setting that passes it, holds.
-_HINTS = ("-W", "/W", "-pedantic", "/permissive", "warning_level", "warnlevel", "werror", "WARNING_AS_ERROR")
-
-
-def _flag(flag: Flag, *configured: str) -> Requirement:
-    """A flag, on a command line or in the build files; `configured` are the build system settings a command line can
-    set it with (`-Dwarning_level=3`)."""
-    runs = re.compile("|".join((flag.standalone.pattern, *configured)))
-    return Requirement(name=flag.name, runs=runs, found=_options(flag), hints=_HINTS)
-
-
-# Meson's `warning_level` (and `--warnlevel`) on a command line, by the GCC flags it passes.
-_LEVELS = {"-Wall": "[123]|everything", "-Wextra": "[23]|everything", "-Wpedantic": "3|everything"}
+def _flag(flag: Flag, configured: tuple[str, ...] = (), hints: tuple[str, ...] = ()) -> Requirement:
+    """A flag for C or C++ builds, on a command line or in the build files; `configured` are the build system
+    settings a command line can set it with (`-Dwarning_level=3`), found by `hints`."""
+    return flag_requirement(flag, C_FAMILY, configured=configured, configured_hints=hints)
 
 
 def _warnings(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
-    levels = (_LEVELS.get(flag.name) for flag in warning_flags(compiler or "gcc"))
     return tuple(
-        _flag(flag, *([rf"(?:-Dwarning_level=|--warnlevel[=\s])(?:{level})\b"] if level else []))
-        for flag, level in zip(warning_flags(compiler or "gcc"), levels, strict=True)
+        _flag(flag, warning_level_settings(flag), WARNING_LEVEL_HINTS) for flag in warning_flags(compiler or "gcc")
     )
-
-
-_ERRORS_CONFIGURED = (
-    r"(?<![\w-])--werror\b|-Dwerror=true\b",
-    r"COMPILE_WARNING_AS_ERROR(?::BOOL)?=(?i:on|true|yes|1)\b",
-)
 
 
 def _errors(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
     flag = warnings_as_errors_flag(compiler or "gcc")
-    return () if flag is None else (_flag(flag, *_ERRORS_CONFIGURED),)
+    return () if flag is None else (_flag(flag, WARNINGS_AS_ERRORS_SETTINGS, WARNINGS_AS_ERRORS_SETTING_HINTS),)
 
 
 WARNINGS = Practice(
@@ -121,10 +93,7 @@ WARNINGS_AS_ERRORS = Practice(
 
 
 def _hardening(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
-    return tuple(
-        Requirement(name=flag.name, runs=flag.standalone, found=_options(flag), hints=flag.hints)
-        for flag in hardening_flags(compiler or "gcc")
-    )
+    return tuple(_flag(flag) for flag in hardening_flags(compiler or "gcc"))
 
 
 HARDENING = Practice(
