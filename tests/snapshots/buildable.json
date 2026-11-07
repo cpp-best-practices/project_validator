@@ -131,6 +131,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -155,6 +156,7 @@
             "level": "check",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -187,6 +189,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -217,6 +220,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -253,6 +257,7 @@
             "level": "runs",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -287,6 +292,7 @@
             "level": "runs",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -304,6 +310,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -319,6 +326,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]

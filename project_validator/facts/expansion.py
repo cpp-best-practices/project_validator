@@ -125,16 +125,19 @@ _WORKSPACES = frozenset({"$GITHUB_WORKSPACE", "${GITHUB_WORKSPACE}", "$CI_PROJEC
 
 
 def _changed(directory: str | None, argv: tuple[str, ...]) -> str | None:
-    """The directory the commands after `argv` run in: `cd` changes it for the rest of the script. A directory that
-    cannot be told (`cd $HOME`, `cd -`) is outside the project; `..` that leaves the project is too."""
+    """The directory the commands after `argv` run in: `cd` changes it for the rest of the script. A directory a
+    variable names (`cd $BUILD_DIR`) is kept as written: it is not known, but most often the project's own build tree.
+    One elsewhere (`cd /tmp`, `cd $HOME`, `cd -`, `..` that leaves the project) is outside the project."""
     if argv[:1] != ("cd",) or len(argv) != 2:
         return directory
     target = argv[1].rstrip("/")
     if target in _WORKSPACES or target.split("/", 1)[0] in _WORKSPACES:
         target = target.split("/", 1)[1] if "/" in target else "."
         return posixpath.normpath(target)
-    if target.startswith(("/", "$", "~", "-")):
+    if target.startswith(("$HOME", "${HOME}", "/", "~", "-")):
         return OUTSIDE
+    if target.startswith("$"):
+        return target
     return posixpath.normpath(joined(directory, target))
 
 
@@ -176,7 +179,7 @@ def inside(context: Context, directory: str | None) -> bool:
     tree, whose definitions are not the project's)."""
     if directory in (None, "", "."):
         return True
-    if directory.startswith(("/", "..")):
+    if directory.startswith(("/", "..", "$")):
         return False
     return (context.project.root / directory).is_dir()
 

@@ -72,6 +72,7 @@
             "level": "check",
             "runs": {},
             "unit": "src/App",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -118,6 +119,7 @@
             "level": "checks",
             "runs": {},
             "unit": "src/App",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -143,6 +145,7 @@
             "level": "runs",
             "runs": {},
             "unit": "src/App",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -160,6 +163,7 @@
             "level": "checks",
             "runs": {},
             "unit": "src/App",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]

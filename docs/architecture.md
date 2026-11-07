@@ -342,7 +342,11 @@ except where a step deliberately changes results and says so.
      and counts what ctest lists (`BuiltTests`); a build that cannot run is an unknown that hides ctest's tests.
      `ToolAnswer.unknown_definitions` keeps the unknowns that may hide a definition apart from those that may hide a
      run, so that "no tests found" is said only when that is known.
-   - `coverage run -m <module>` launches the module, as `python -m` does.
+   - `coverage run -m <module>` launches the module, as `python -m` does; a sourced script (`. ci/test.sh`) runs its
+     commands.
+   - A directory a variable names (`cd $BUILD_DIR`) is unknown rather than outside the project: nothing is expanded
+     there, but a tool run there covers the whole project, heuristically (most often it is the project's build tree).
+     Before, such runs covered nothing.
 
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
