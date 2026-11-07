@@ -505,14 +505,6 @@
       "output": "compiled classes"
     },
     {
-      "kind": "CommittedOutput",
-      "languages": [
-        "Rust"
-      ],
-      "origin": "target/",
-      "output": "the target directory"
-    },
-    {
       "kind": "ConfigurationFile",
       "origin": "pom.xml",
       "reader": "Maven"
