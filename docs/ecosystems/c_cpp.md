@@ -12,8 +12,12 @@ one test. With Meson: `test()` is called in a `meson.build` and CI runs `meson t
 
 ## `coverage`
 
-gcovr, lcov, genhtml, gcov or llvm-cov branch options, in CI or CMake files. Path or MC/DC coverage
-(`-fcondition-coverage`, `-fpath-coverage`, gcov `--prime-paths`, `-fcoverage-mcdc`) is a bonus.
+A coverage tool CI runs, reporting branches: gcovr with any report but the default text one (`--xml`, `--html`,
+`--json`, `--sonarqube`, `--print-summary`, `--txt-metric branch`, also in `gcovr.cfg`), lcov or genhtml with
+`branch_coverage=1` (also in `.lcovrc`), `gcov -b`, or `llvm-cov report`, `export` or `show -show-branches`. Path or
+MC/DC coverage is a bonus: gcov `--conditions` or `--prime-paths`, lcov `--mcdc-coverage`, `llvm-cov show -show-mcdc`,
+or the instrumentation `-fcondition-coverage`, `-fpath-coverage` or `-fcoverage-mcdc` on a command line, in an
+environment variable, or in the CMake files a CI `cmake` configuration reads (matched in their text).
 
 ## `platform-matrix`
 

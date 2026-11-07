@@ -1,18 +1,37 @@
 """Python: packaged with pyproject.toml or setup.py, judged by the interpreter versions CI runs."""
 
 import re
+import shlex
 from collections.abc import Callable
 from fnmatch import fnmatch
 from pathlib import PurePosixPath
 
+from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing, toml_value
+from project_validator.evidence import (
+    ci_and_hook_texts,
+    configuration,
+    existing_texts,
+    first_existing,
+    ini_value,
+    toml_value,
+)
+from project_validator.facts import Command, resolved
+from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
+from project_validator.facts.expansion import (
+    CommandExpander,
+    Expansion,
+    Launched,
+    found_at,
+    has_option,
+    launcher,
+    program,
+)
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
     BuildOutputs,
-    CoverageTools,
     DependencyAudit,
     DependencyManagement,
     Formatter,
@@ -53,25 +72,148 @@ RUFF_OR_BLACK = Formatter(
     default_style=True,
 )
 
-COVERAGE_SETTINGS_FILES = ("pyproject.toml", "setup.cfg", "tox.ini", ".coveragerc")
+_TRUE = frozenset({"true", "1", "yes", "on"})
 
 
-def _ci_and_coverage_settings_texts(context: Context) -> tuple[str, ...]:
-    return (*context.ci_texts, *existing_texts(context, COVERAGE_SETTINGS_FILES))
+def _coverage_setting(context: Context, path: str, key: str) -> object | None:
+    """A coverage.py `[run]` setting in the configuration file `path`, as coverage.py reads that kind of file."""
+    if path.endswith(".toml"):
+        return toml_value(context, path, "tool", "coverage", "run", key)
+    if PurePosixPath(path).name in ("setup.cfg", "tox.ini"):
+        return ini_value(context, path, "coverage:run", key)
+    return ini_value(context, path, "run", key) or ini_value(context, path, "coverage:run", key)
 
 
-COVERAGE = CoverageTools(
-    searched="CI configuration or coverage.py settings",
-    texts=_ci_and_coverage_settings_texts,
-    branch=(
-        pattern("coverage.py", r"\bcoverage\s+run\b[^\n]*--branch\b"),
-        pattern("pytest-cov", r"--cov-branch\b"),
-        Pattern(
-            "coverage.py branch = true",
-            re.compile(r"^\s*branch\s*=\s*(true|1|yes|on)\b", re.IGNORECASE | re.MULTILINE),
-        ),
+def _coverage_configuration(context: Context, directory: str | None, named: str | None) -> str | None:
+    """The file coverage.py reads its settings from: the one it is given, else .coveragerc, else the first of
+    setup.cfg, tox.ini and pyproject.toml with coverage settings."""
+    if named:
+        return found_at(context, directory, (named,))
+    if found := found_at(context, directory, (".coveragerc",)):
+        return found
+    shared = (
+        path for name in ("setup.cfg", "tox.ini", "pyproject.toml") if (path := found_at(context, directory, (name,)))
+    )
+    return next((path for path in shared if "coverage" in context.project.read_text(path)), None)
+
+
+def _measures_branches(context: Context, configuration: str | None) -> bool:
+    setting = _coverage_setting(context, configuration, "branch") if configuration else None
+    return setting is True or str(setting).strip().lower() in _TRUE
+
+
+def _coverage_py(command: Command, context: Context) -> Measurement | None:
+    argv = resolved(command)
+    if program(argv) != "coverage" or len(argv) < 2 or argv[1] != "run":
+        return None
+    named = next(iter(option_values(argv, "--rcfile")), command.env.get("COVERAGE_RCFILE"))
+    configuration = _coverage_configuration(context, command.directory, named)
+    branch = has_option(argv, "--branch") or _measures_branches(context, configuration)
+    return measured(
+        Granularity.LINE, Granularity.BRANCH if branch else None, read=[configuration] if configuration else ()
+    )
+
+
+# Where pytest reads its options (`addopts`): the first of these files with a pytest section.
+_PYTEST_CONFIGURATION = (
+    ("pytest.ini", "pytest"),
+    ("pyproject.toml", ""),
+    ("tox.ini", "pytest"),
+    ("setup.cfg", "tool:pytest"),
+)
+
+
+def _pytest_options(context: Context, directory: str | None) -> tuple[tuple[str, ...], str | None]:
+    """The options pytest's configuration adds to every run, and the file they are in."""
+    for name, section in _PYTEST_CONFIGURATION:
+        path = found_at(context, directory, (name,))
+        if path is None:
+            continue
+        options = (
+            toml_value(context, path, "tool", "pytest", "ini_options", "addopts")
+            if not section
+            else ini_value(context, path, section, "addopts")
+        )
+        if options is not None:
+            words = options if isinstance(options, list) else shlex.split(str(options))
+            return tuple(str(word) for word in words), path
+    return (), None
+
+
+def _pytest_cov(command: Command, context: Context) -> Measurement | None:
+    argv = resolved(command)
+    if program(argv) not in ("pytest", "py.test"):
+        return None
+    added, options_file = _pytest_options(context, command.directory)
+    words = (*argv, *added)
+    if not has_option(words, "--cov"):
+        return None
+    configuration = _coverage_configuration(
+        context, command.directory, next(iter(option_values(words, "--cov-config")), None)
+    )
+    branch = has_option(words, "--cov-branch") or _measures_branches(context, configuration)
+    read = [path for path in (options_file, configuration) if path]
+    return measured(Granularity.LINE, Granularity.BRANCH if branch else None, read=read)
+
+
+COVERAGE_PY = CoverageTool(
+    name="coverage.py",
+    languages=frozenset({"Python"}),
+    can={Granularity.LINE: "coverage run", Granularity.BRANCH: "coverage run --branch"},
+    measures=_coverage_py,
+)
+PYTEST_COV = CoverageTool(
+    name="pytest-cov",
+    languages=frozenset({"Python"}),
+    can={Granularity.LINE: "pytest --cov", Granularity.BRANCH: "pytest --cov --cov-branch"},
+    measures=_pytest_cov,
+)
+
+_PYTHON = re.compile(r"python(?:\d+(?:\.\d+)?)?|pypy\d*|py")
+# Interpreter options that take a value (`-W error`).
+_INTERPRETER_VALUES = frozenset({"-W", "-X", "--check-hash-based-pycs"})
+
+
+def _python_module(command: Command, _: Context) -> list[Expansion] | None:
+    """`python -m module`: the module runs as its command does (`python -m pytest` as `pytest`)."""
+    argv = resolved(command)
+    if not _PYTHON.fullmatch(program(argv)):
+        return None
+    words = iter(argv[1:])
+    for word in words:
+        if word == "-m" or (word.startswith("-m") and len(word) > 2):
+            module = word[2:] or next(words, "")
+            return [Launched(argv=(module, *words))] if module else []
+        if word in _INTERPRETER_VALUES:
+            next(words, None)
+        elif not word.startswith("-") or word in ("-", "-c"):
+            return None
+    return None
+
+
+PYTHON_MODULES = CommandExpander(name="python -m", expand=_python_module)
+# The runners that run a command in the project's environment.
+PYTHON_RUNNERS = launcher(
+    "Python environment runners",
+    (("uv", "run"), ("uvx",), ("poetry", "run"), ("pipenv", "run"), ("pdm", "run"), ("hatch", "run"), ("pipx", "run")),
+    with_values=frozenset(
+        {
+            "--with",
+            "--python",
+            "-p",
+            "--group",
+            "--extra",
+            "--package",
+            "--directory",
+            "--project",
+            "--env-file",
+            "--from",
+            "--spec",
+            "--index",
+        }
     ),
 )
+
 
 PYTHON_TEST_FILES = ("test_*.py", "*_test.py")
 RUNS_PYTHON_TESTS = (pattern("Python tests", r"\bpytest\b|\bunittest\b|\btox\b|\bnox\b"),)
@@ -302,7 +444,6 @@ PYTHON = Ecosystem(
     rules=(
         versions_axis("Python version", "Python"),
         RUFF_OR_BLACK,
-        COVERAGE,
         TESTS,
         WARNINGS,
         SECURITY_LINTS,

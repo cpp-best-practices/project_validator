@@ -10,8 +10,9 @@ the Composer scripts it runs.
 
 ## `coverage`
 
-PHPUnit `--path-coverage` (or `pathCoverage="true"`), which reports branch and path coverage together, so it also
-earns the path bonus. Line coverage alone counts no branches.
+PHPUnit (or Pest, or ParaTest) reporting coverage with `--path-coverage` (or `pathCoverage="true"` in the
+configuration it reads, with a report), which reports branch and path coverage together, so it also earns the path
+bonus. Line coverage alone counts no branches.
 
 ## `platform-matrix`
 

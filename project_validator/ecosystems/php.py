@@ -18,14 +18,23 @@ from project_validator.evidence import (
     json_value,
     scripts_run,
 )
-from project_validator.facts import Command, Origin, Unknown
-from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined, positional
+from project_validator.facts import Command, Origin, Unknown, resolved
+from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
+from project_validator.facts.expansion import (
+    CommandExpander,
+    Expansion,
+    Script,
+    found_at,
+    has_option,
+    joined,
+    positional,
+    program,
+)
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     Analyzer,
     BuildOutputs,
-    CoverageTools,
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
@@ -178,13 +187,37 @@ def _php_tests(context: Context) -> Result:
 
 TESTS = TestSuite(found=_php_tests, runs=RUNS_TESTS, runner="phpunit, pest or composer test", texts=_run_texts)
 
-# PHPUnit collects branch and path coverage together (with Xdebug); line coverage alone counts no branches.
-PATH_COVERAGE = pattern("PHPUnit --path-coverage", r"--path-coverage\b|\bpathCoverage\s*=\s*[\"']true[\"']")
-COVERAGE = CoverageTools(
-    searched="CI configuration, the Composer scripts it runs, or phpunit.xml",
-    texts=_with_files(*PHPUNIT_CONFIG_FILES),
-    branch=(PATH_COVERAGE,),
-    path=(PATH_COVERAGE,),
+_PHPUNIT_PROGRAMS = frozenset({"phpunit", "pest", "paratest"})
+_COVERAGE_REPORT = re.compile(r"<coverage\b[^>]*>(?:(?!</coverage>).)*<report\b", re.DOTALL)
+_PATH_COVERAGE = re.compile(r"<coverage\b[^>]*\bpathCoverage\s*=\s*[\"']true[\"']")
+
+
+def _phpunit(command: Command, context: Context) -> Measurement | None:
+    """PHPUnit (or Pest, or ParaTest) reporting coverage, from its options or its XML configuration. It counts
+    branches and paths together (with Xdebug), when asked for path coverage; otherwise lines."""
+    argv = resolved(command)
+    if program(argv) not in _PHPUNIT_PROGRAMS:
+        return None
+    named = positional(argv, frozenset({"--configuration", "-c"}))[1]
+    configuration = found_at(context, command.directory, list(named.values()) or PHPUNIT_CONFIG_FILES)
+    text = context.project.read_text(configuration) if configuration else ""
+    reports = any(word.startswith("--coverage-") or word == "--coverage" for word in argv)
+    if not (reports or _COVERAGE_REPORT.search(text)):
+        return None
+    path = has_option(argv, "--path-coverage") or bool(_PATH_COVERAGE.search(text))
+    read = [configuration] if configuration else ()
+    return measured(Granularity.LINE, *((Granularity.BRANCH, Granularity.PATH) if path else ()), read=read)
+
+
+PHPUNIT = CoverageTool(
+    name="PHPUnit",
+    languages=frozenset({"PHP"}),
+    can={
+        Granularity.LINE: "phpunit --coverage-clover",
+        Granularity.BRANCH: "phpunit --path-coverage",
+        Granularity.PATH: "phpunit --path-coverage",
+    },
+    measures=_phpunit,
 )
 
 # E_ALL & ~E_DEPRECATED leaves some out.
@@ -393,7 +426,6 @@ PHP = Ecosystem(
     rules=(
         versions_axis("PHP version", PHP_LANGUAGE),
         FORMATTERS,
-        COVERAGE,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

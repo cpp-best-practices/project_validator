@@ -12,12 +12,14 @@ from pathlib import Path, PurePosixPath
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, first_existing
+from project_validator.facts import Command, resolved
+from project_validator.facts.coverage import CoverageTool, Granularity, Measure, Measurement, measured
+from project_validator.facts.expansion import positional, program
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     Analyzer,
     BuildOutputs,
-    CoverageTools,
     DependencyAudit,
     DependencyManagement,
     Formatter,
@@ -171,18 +173,99 @@ def _jvm_tests(context: Context) -> Result:
 
 TESTS = TestSuite(found=_jvm_tests, runs=RUNS_TESTS, runner="mvn test or gradle test")
 
+# Options of mvn and gradle that take a value, so that their values are not taken for goals or tasks.
+_MAVEN_VALUES = frozenset(
+    {
+        "-f",
+        "--file",
+        "-s",
+        "--settings",
+        "-gs",
+        "-P",
+        "--activate-profiles",
+        "-pl",
+        "--projects",
+        "-T",
+        "--threads",
+        "-rf",
+        "--resume-from",
+        "-l",
+        "--log-file",
+    }
+)
+_GRADLE_VALUES = frozenset(
+    {
+        "-x",
+        "--exclude-task",
+        "-p",
+        "--project-dir",
+        "-c",
+        "-I",
+        "--init-script",
+        "--max-workers",
+        "-g",
+        "--gradle-user-home",
+    }
+)
+
+
+def _build_steps(command: Command) -> tuple[str, list[str]] | None:
+    """Whether a command runs Maven or Gradle, and the goals, phases or tasks it runs."""
+    argv = resolved(command)
+    name = program(argv)
+    if name in ("mvn", "mvnw"):
+        return "maven", positional(argv, _MAVEN_VALUES)[0]
+    if name in ("gradle", "gradlew"):
+        return "gradle", [step.rsplit(":", 1)[-1] for step in positional(argv, _GRADLE_VALUES)[0]]
+    return None
+
+
+def _verifies(kind: str, steps: list[str]) -> bool:
+    """Whether the build runs as far as the plugins that verify it: Maven's verify phase, Gradle's check task."""
+    return bool(set(steps) & ({"verify", "install", "deploy"} if kind == "maven" else {"build", "check"}))
+
+
+def _jvm_coverage(runs: str, bound: str) -> Measure:
+    """A coverage tool whose report a goal or task `runs`, or which the build files bind (`bound`) to the
+    verification CI runs."""
+    report, binding = re.compile(runs), _setting("", bound).regex
+
+    def measures(command: Command, context: Context) -> Measurement | None:
+        found = _build_steps(command)
+        if found is None:
+            return None
+        kind, steps = found
+        if any(report.fullmatch(step) for step in steps):
+            return measured(Granularity.LINE, Granularity.BRANCH)
+        if _verifies(kind, steps):
+            files = [path for path in _build_files(context) if binding.search(context.project.read_text(path))]
+            return measured(Granularity.LINE, Granularity.BRANCH, read=files, heuristic=True) if files else None
+        return None
+
+    return measures
+
+
 # JaCoCo and Kover count branches; neither reports path coverage.
-COVERAGE = CoverageTools(
-    searched="CI configuration, or the Maven or Gradle build CI runs",
-    texts=_verification_texts,
-    branch=(
-        _setting(
-            "JaCoCo", rf"\bjacoco:report\b|\bjacocoTestReport\b|{_bound_goal('jacoco-maven-plugin', 'report[\\w-]*')}"
-        ),
-        _setting(
-            "Kover",
-            r"\bkover\w*Report\b|\borg\.jetbrains\.kotlinx\.kover\b|<artifactId>kover-maven-plugin</artifactId>",
-        ),
+JVM_LANGUAGES = frozenset({JAVA, KOTLIN})
+JACOCO = CoverageTool(
+    name="JaCoCo",
+    languages=JVM_LANGUAGES,
+    can={
+        Granularity.LINE: "jacoco:report or jacocoTestReport",
+        Granularity.BRANCH: "jacoco:report or jacocoTestReport",
+    },
+    measures=_jvm_coverage(
+        r"(?:org\.jacoco:)?jacoco(?:-maven-plugin)?(?::[^:]+)?:report[\w-]*|jacoco\w*Report",
+        rf"\bjacocoTestReport\b|{_bound_goal('jacoco-maven-plugin', 'report[\\w-]*')}",
+    ),
+)
+KOVER = CoverageTool(
+    name="Kover",
+    languages=JVM_LANGUAGES,
+    can={Granularity.LINE: "koverXmlReport", Granularity.BRANCH: "koverXmlReport"},
+    measures=_jvm_coverage(
+        r"kover\w*Report|(?:org\.jetbrains\.kotlinx:)?kover(?:-maven-plugin)?(?::[^:]+)?:report[\w-]*",
+        r"\borg\.jetbrains\.kotlinx\.kover\b|<artifactId>kover-maven-plugin</artifactId>",
     ),
 )
 
@@ -367,7 +450,6 @@ JVM = Ecosystem(
     rules=(
         versions_axis("JDK version", "JDK"),
         FORMATTERS,
-        COVERAGE,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

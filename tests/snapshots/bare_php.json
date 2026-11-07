@@ -1,4 +1,43 @@
 {
+  "answers": {
+    "coverage": [
+      {
+        "branch": {
+          "answer": "no",
+          "known": [
+            "phpunit --path-coverage"
+          ],
+          "tools": []
+        },
+        "language": "PHP",
+        "line": {
+          "answer": "no",
+          "known": [
+            "phpunit --coverage-clover"
+          ],
+          "tools": []
+        },
+        "path": {
+          "answer": "no",
+          "known": [
+            "phpunit --path-coverage"
+          ],
+          "tools": []
+        },
+        "region": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "statement": {
+          "answer": "impossible",
+          "known": [],
+          "tools": []
+        },
+        "unknowns": []
+      }
+    ]
+  },
   "facts": [],
   "map": {
     "build_systems": [
@@ -74,8 +113,10 @@
       "status": "WARN"
     },
     "coverage": {
-      "details": [],
-      "message": "no branch coverage reporting found in CI configuration, the Composer scripts it runs, or phpunit.xml",
+      "details": [
+        "known to report branch coverage: phpunit --path-coverage"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

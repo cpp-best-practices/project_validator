@@ -58,6 +58,8 @@ class Options:
     max_file_size: int = DEFAULT_MAX_FILE_SIZE
     # Actions published by GitHub (actions/, github/) may be pinned to tags.
     allow_official_tags: bool = False
+    # Judge answers that depend on configuration that could not be read by what could, instead of erroring.
+    allow_unknown: bool = False
 
 
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})
@@ -171,9 +173,11 @@ class Context:
         command runs in turn."""
         from project_validator.ci import ci_facts
         from project_validator.facts import Facts
+        from project_validator.facts.coverage import built_in_coverage_tools, coverage_facts
         from project_validator.facts.expansion import built_in_expanders, expanded
 
-        return Facts(tuple(expanded(ci_facts(self.project, self.ci_files), self, built_in_expanders())))
+        found = Facts(tuple(expanded(ci_facts(self.project, self.ci_files), self, built_in_expanders())))
+        return Facts((*found, *coverage_facts(found, self, built_in_coverage_tools())))
 
     @cached_property
     def ci_texts(self) -> tuple[str, ...]:

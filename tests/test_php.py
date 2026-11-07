@@ -89,17 +89,23 @@ class TestAndCoverageTests(unittest.TestCase):
         )
 
     def test_branch_coverage_needs_path_coverage_which_is_also_the_bonus(self) -> None:
-        expected = Result.passed(
-            "branch coverage is reported with PHPUnit --path-coverage; path coverage bonus: PHPUnit --path-coverage"
-        )
+        expected = Result.passed("branch coverage is reported with PHPUnit; path coverage bonus: PHPUnit")
+        configured = {
+            "phpunit.xml.dist": '<phpunit><coverage pathCoverage="true"><report><clover/></report></coverage>'
+        }
         for files in (
             _ci("vendor/bin/phpunit --coverage-html cov --path-coverage"),
-            {"phpunit.xml": '<phpunit><coverage pathCoverage="true"/></phpunit>'},
+            {**configured, **_ci("vendor/bin/phpunit")},
+            {"ci.xml": configured["phpunit.xml.dist"], **_ci("phpunit -c ci.xml")},
         ):
             with self.subTest(files=files):
                 self.assertEqual(run_as(self, COVERAGE, files, PHP), expected)
-        # Line coverage (PCOV, or Xdebug without --path-coverage) counts no branches.
-        self.assertEqual(run_as(self, COVERAGE, _ci("phpunit --coverage-clover clover.xml"), PHP).status, Status.FAIL)
+        # Line coverage (PCOV, or Xdebug without --path-coverage) counts no branches; settings count only when CI runs
+        # PHPUnit, and only once a report is asked for.
+        unreported = {"phpunit.xml": '<phpunit><coverage pathCoverage="true"/></phpunit>', **_ci("phpunit")}
+        for files in (_ci("phpunit --coverage-clover clover.xml"), configured, unreported):
+            with self.subTest(files=files):
+                self.assertEqual(run_as(self, COVERAGE, files, PHP).status, Status.FAIL)
 
 
 class WarningTests(unittest.TestCase):

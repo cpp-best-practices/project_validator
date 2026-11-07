@@ -113,19 +113,30 @@ class JavaScriptTests(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertEqual(self._run(tests_run, {"a.test.js": "", **_ci(command)}).status, Status.PASS)
 
-    def test_coverage_is_found_in_ci_scripts_or_runner_settings(self) -> None:
-        cases = {
-            "c8": _ci("npx c8 node --test"),
-            "nyc": _scripts(test="nyc mocha") | _ci("npm test"),
-            "jest --coverage": {"jest.config.js": "export default { collectCoverage: true };\n"},
-            "vitest --coverage": {"vitest.config.ts": "test: { coverage: { provider: 'v8', enabled: true } }\n"},
-            "deno test --coverage": _ci("deno test --coverage=cov"),
-            "node --experimental-test-coverage": _ci("node --test --experimental-test-coverage"),
-        }
-        for tool, files in cases.items():
+    def test_coverage_is_found_in_what_ci_runs_and_the_runner_settings_it_reads(self) -> None:
+        jest = {"jest.config.js": "export default { collectCoverage: true };\n"}
+        vitest = {"vitest.config.ts": "test: { coverage: { provider: 'v8', enabled: true } }\n"}
+        cases = (
+            ("c8", _ci("npx --yes c8 node --test")),
+            ("nyc", _scripts(test="nyc mocha") | _ci("npm test")),
+            ("Jest", jest | _ci("pnpm exec jest")),
+            ("Jest", _package(main="index.js", jest={"collectCoverage": True}) | _ci("npx jest")),
+            ("Vitest", vitest | _scripts(test="vitest run") | _ci("npm test")),
+            ("deno test", _ci("deno test --coverage=cov")),
+            ("node --test", _ci("node --test --experimental-test-coverage")),
+        )
+        for tool, files in cases:
             with self.subTest(tool=tool):
                 self.assertEqual(self._run(coverage, files), Result.passed(f"branch coverage is reported with {tool}"))
-        self.assertEqual(self._run(coverage, _ci("npx vitest run", "git checkout c8a1b2")).status, Status.FAIL)
+        # A runner's settings count only where CI runs it; Bun counts lines.
+        for files in (
+            jest,
+            vitest | _ci("npx jest"),
+            _ci("npx vitest run", "git checkout c8a1b2"),
+            _ci("bun test --coverage"),
+        ):
+            with self.subTest(files=files):
+                self.assertEqual(self._run(coverage, files).status, Status.FAIL)
 
     def test_one_linter_is_enough(self) -> None:
         for command, linter in (("npx eslint .", "eslint"), ("biome ci", "biome lint"), ("deno lint", "deno lint")):

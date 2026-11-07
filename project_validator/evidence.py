@@ -1,5 +1,6 @@
 """Gathering the files whose text a rule searches for evidence."""
 
+import configparser
 import json
 import re
 import tomllib
@@ -35,6 +36,17 @@ def toml_value(context: Context, path: str, *keys: str) -> object | None:
     except tomllib.TOMLDecodeError:
         return None
     return _at(value, keys)
+
+
+def ini_value(context: Context, path: str, section: str, key: str) -> str | None:
+    """The value of `key` in `section` of the existing INI file `path`; None when the section or the key is missing or
+    the file does not parse."""
+    parser = configparser.ConfigParser(interpolation=None)
+    try:
+        parser.read_string(context.project.read_text(path))
+    except configparser.Error:
+        return None
+    return parser.get(section, key, fallback=None)
 
 
 def json_value(context: Context, path: str, *keys: str, comments: bool = False) -> object | None:

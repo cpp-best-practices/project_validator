@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 
 from project_validator.plugins import discover
+from project_validator.questions.answers import answers
 from project_validator.runner import run_checks
 from tests.support import FIXTURES, make_context
 
@@ -23,6 +24,7 @@ def snapshot_of(fixture: Path) -> dict[str, object]:
     return {
         "map": context.structure.as_dict(),
         "facts": context.facts.as_dicts(),
+        "answers": answers(context),
         "results": {
             report.check.name: {
                 "status": str(report.result.status),

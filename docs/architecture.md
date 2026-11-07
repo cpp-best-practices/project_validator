@@ -105,14 +105,20 @@ names its question and its policy and formats the result. `--strict` and `--warn
 not the questions. The policy is built in to begin with; it is a separate layer so that it can be made configurable
 later without touching extraction.
 
+An **unknown** answer is a gap in the validator's tooling (configuration it cannot read, such as a CI provider it
+only scans heuristically, or a matrix computed by an expression), not a finding about the project. So it is an
+`ERROR`, which fails the run and names what was not read, unless the user passes `--allow-unknown`; then the answer
+is judged by what could be read, as a no.
+
 ### Worked example: branch coverage in this repository
 
 1. The GitHub Actions extractor records the job `coverage` and its command
    `["coverage", "run", "--branch", "-m", "unittest"]`.
-2. The coverage.py extractor claims programs named `coverage` and records that coverage.py runs in that job, measuring
-   branches, for Python.
-3. The `pyproject.toml` extractor records `[tool.coverage.run] branch = true`, a coverage.py setting that joins the
-   run.
+2. The coverage.py extractor claims `coverage run` and records that coverage.py runs in that job, measuring lines
+   and branches, for Python.
+3. Without `--branch`, the same extractor reads the configuration coverage.py would read (`.coveragerc`, else the
+   first of `setup.cfg`, `tox.ini` and `pyproject.toml` with coverage settings) for `branch = true`: the setting
+   joins the run, and counts for nothing without one.
 4. The coverage question answers for Python: lines yes, branches yes, paths impossible.
 5. The coverage policy requires branches: PASS, with no path coverage suggestion, because none is possible.
 
@@ -154,6 +160,22 @@ except where a step deliberately changes results and says so.
       reading them structurally is the toolchain step (5).
 3. **Coverage end to end.** Coverage extractors for every supported language, the coverage question and its policy;
    the `coverage` check moves to them and the `CoverageTools` rules are deleted.
+   - A `CoverageTool` (`project_validator/facts/coverage.py`) records the languages it measures and each
+     granularity it can measure (line, statement, region, branch, path) with how to ask for it, and claims the
+     commands that run it by program and subcommand. A claimed command becomes a `CoverageMeasured` fact, joined
+     with the configuration that command reads (`pytest` with its `addopts` and coverage.py's settings, `phpunit`
+     with its XML, `dotnet test` with the MSBuild settings and `.runsettings`, `xcodebuild test` with the scheme,
+     `cmake` configuring with the CMake files): a setting alone, which nothing CI runs reads, counts for nothing.
+   - Launchers are command expanders that yield `Launched` commands: `bundle exec rake` runs `rake`, `npx c8` runs
+     `c8`, `python -m coverage` runs `coverage`, `uv run pytest` runs `pytest`.
+   - Components (command expanders and coverage tools) are found by `project_validator/components.py` in the
+     shared build systems and tools and in the profiles (and their modules), never listed.
+   - The coverage question (`project_validator/questions/coverage.py`) answers per language and granularity; the
+     policy (`project_validator/policy.py`) requires branch coverage, or the finest granularity a known tool can
+     measure, and reports path coverage as a bonus. An unknown answer is an error, naming what was not read
+     (see Policy).
+   - `--answers` prints the answers. C and C++ coverage tools stay in the C/C++ profile (`c_cpp/coverage.py`) until
+     step 5 shares them with Fortran.
 4. **The remaining practices**, one at a time, each deleting its rule type from `rules.py`.
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
@@ -161,5 +183,4 @@ except where a step deliberately changes results and says so.
    dispatch are removed.
 7. **Proof**: add Fortran using only extractors and a recognition module.
 
-`project-validator facts --json` and `project-validator answers --json` expose the database and the answers once
-step 3 lands.
+`--facts` and `--answers` expose the database and the answers.

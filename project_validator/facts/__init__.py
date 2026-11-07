@@ -140,6 +140,8 @@ def _plain(value: object) -> object:
         return {str(key): _plain(item) for key, item in value.items()}
     if isinstance(value, tuple):
         return [_plain(item) for item in value]
+    if isinstance(value, frozenset):
+        return sorted(_plain(item) for item in value)  # type: ignore[type-var]
     return value
 
 

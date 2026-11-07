@@ -10,8 +10,9 @@ tests, run by `dotnet test`.
 
 ## `coverage`
 
-coverlet (`XPlat Code Coverage`, `CollectCoverage=true`, also in a `.runsettings` file), `dotnet-coverage collect` or
-`dotnet test --coverage`.
+coverlet (`dotnet test --collect "XPlat Code Coverage"`, `CollectCoverage=true` on the command line or in the MSBuild
+settings `dotnet test` builds with, a `.runsettings` file it is given that adds the collector, or the `coverlet`
+console tool), `dotnet-coverage collect` or `dotnet test --coverage`.
 
 ## `platform-matrix`
 

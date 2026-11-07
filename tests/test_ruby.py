@@ -76,11 +76,15 @@ class RakeTests(unittest.TestCase):
 class SettingTests(unittest.TestCase):
     def test_simplecov_must_count_branches(self) -> None:
         branch = {".simplecov": "SimpleCov.start do\n  enable_coverage(:branch)\nend\n"}
-        self.assertEqual(
-            run_as(self, COVERAGE, branch, RUBY), Result.passed("branch coverage is reported with SimpleCov")
-        )
-        lines = {"spec/spec_helper.rb": 'require "simplecov"\nSimpleCov.start\n'}
-        self.assertEqual(run_as(self, COVERAGE, lines, RUBY).status, Status.FAIL)
+        for command in ("bundle exec rake", "bin/rails test", "bundle exec rspec spec/models"):
+            with self.subTest(command=command):
+                result = run_as(self, COVERAGE, {**branch, **_ci(command)}, RUBY)
+                self.assertEqual(result, Result.passed("branch coverage is reported with SimpleCov"))
+        # SimpleCov starts when the tests run, and counts lines unless told to count branches too.
+        lines = {"spec/spec_helper.rb": 'require "simplecov"\nSimpleCov.start\n', **_ci("bundle exec rspec")}
+        for files in (branch, {**branch, **_ci("bundle exec rubocop")}, lines):
+            with self.subTest(files=files):
+                self.assertEqual(run_as(self, COVERAGE, files, RUBY).status, Status.FAIL)
 
     def test_ruby_warnings_and_a_linter_are_both_needed(self) -> None:
         for files in (
