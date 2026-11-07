@@ -5,11 +5,11 @@ from typing import ClassVar
 
 from project_validator.build_systems.make import parse_makefile
 from project_validator.ecosystems.python.tox import braces
-from project_validator.facts import Command, Facts, Origin, Unknown
+from project_validator.facts import Command, Facts, Origin, Unknown, resolved
 from project_validator.facts.arguments import positional
 from project_validator.facts.expansion import CommandExpander, known_expanders
 from project_validator.facts.tools import ToolRun
-from tests.support import GITHUB_WORKFLOW, github_job, make_context, temp_project
+from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, temp_project
 
 
 def _facts(files: dict[str, str]) -> Facts:
@@ -328,3 +328,40 @@ class ShellScriptTests(unittest.TestCase):
         ):
             with self.subTest(line=line):
                 self.assertNotIn(("ruff", "check", "."), _tox(files, line))
+
+
+class CiEnvironmentTests(unittest.TestCase):
+    """What a job's environment holds as its steps run, and what its commands' programs are."""
+
+    def _facts(self, *steps: str) -> Facts:
+        with temp_project(github_steps(*steps)) as root:
+            return make_context(root).facts
+
+    def test_github_env_is_set_for_the_later_steps(self) -> None:
+        facts = self._facts('run: echo "CABAL=cabal -v" >> "$GITHUB_ENV"', "run: $CABAL test")
+        [command] = [fact for fact in facts.of(Command) if fact.argv[0] == "$CABAL"]
+        self.assertEqual(resolved(command), ("cabal", "-v", "test"))
+        self.assertFalse([fact for fact in facts.of(Unknown) if "$CABAL" in fact.subject])
+
+    def test_a_word_that_is_one_variable_splits(self) -> None:
+        command = Command(
+            origin=Origin(path="ci.yml"),
+            job="job",
+            argv=("$CC", "-c", "x$Y"),
+            line="",
+            env={"CC": "gcc -m32", "Y": "a b"},
+        )
+        self.assertEqual(resolved(command), ("gcc", "-m32", "-c", "xa b"))
+
+    def test_a_program_the_job_does_not_set_is_unknown(self) -> None:
+        facts = self._facts("run: $CABAL v2-test all", "run: ${HOME}/bin/tool")
+        [unknown] = facts.of(Unknown)
+        self.assertIn("$CABAL", unknown.reason)
+
+    def test_a_program_the_script_sets_is_known(self) -> None:
+        for script in ("CC=gcc; $CC -c a.c", "for f in a b; do $f; done", "read -r TOOL; ${TOOL} x"):
+            with self.subTest(script=script):
+                self.assertFalse(self._facts(f"run: {script}").of(Unknown))
+        powershell = github_job("windows-latest", "$tool = 'x'", "$tool --version")
+        with temp_project(powershell) as root:
+            self.assertFalse(make_context(root).facts.of(Unknown))

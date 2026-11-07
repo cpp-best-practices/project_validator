@@ -101,12 +101,12 @@ def script_facts(
     via: tuple[Origin, ...] = (),
     powershell: bool = False,
 ) -> Iterator[Fact]:
-    """The commands of a shell script a job runs (PowerShell when `powershell`), a line that cannot be split as unknown;
-    `opaque` matches the expressions a CI service evaluates before the shell runs (see `split_script`)."""
+    """The commands of a shell script a job runs (PowerShell when `powershell`; `opaque`: see `split_script`)."""
+    assigned = None if via or powershell else _assigned(script)
     for found in split_script(script, opaque, powershell=powershell):
         if isinstance(found, ShellCommand):
             directory = _changed(directory, found.argv)
-            yield Command(
+            command = Command(
                 origin=origin,
                 job=job,
                 argv=found.argv,
@@ -116,8 +116,40 @@ def script_facts(
                 condition=condition,
                 via=via,
             )
+            yield from _with_program(command, assigned)
         else:
             yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
+
+
+_WHOLE_VARIABLE = re.compile(r"\$(?:\{\w+\}|\w+)")
+
+
+# What sets a shell variable in a script: an assignment (`export NAME=`), a loop (`for NAME in`), `read NAME`.
+_ASSIGNED = re.compile(
+    r"(?:^|[;&|(\s])(?:(?:export|local|readonly|declare|typeset)\s+(?:-\w+\s+)*)?(\w+)\+?="
+    r"|\bfor\s+(\w+)\s+in\b|\bread\s+(?:-\w+\s+)*(\w+)",
+    re.MULTILINE,
+)
+
+
+def _assigned(script: str) -> frozenset[str]:
+    return frozenset(name for match in _ASSIGNED.finditer(script) for name in match.groups() if name)
+
+
+def _with_program(command: Command, assigned: frozenset[str] | None) -> Iterator[Fact]:
+    """The command, and, when its program is a variable neither the job nor the script (whose `assigned` variables
+    are known) sets (`$CABAL v2-test`), that what runs is unknown. Only a CI step's own shell script is known whole
+    (None: a script it runs, or PowerShell, may set what is not seen), and a line that cannot be split is unknown."""
+    yield command
+    argv = resolved(command)
+    if (
+        assigned is not None
+        and argv
+        and (match := _WHOLE_VARIABLE.fullmatch(argv[0]))
+        and match[0].strip("${}") not in assigned
+    ):
+        reason = f"its program is the variable {argv[0]}, which nothing the job runs is seen to set"
+        yield Unknown(origin=command.origin, subject=f"the command {command.line!r}", reason=reason)
 
 
 # Where a CI service checks the project out, written as a variable.

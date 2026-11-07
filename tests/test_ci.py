@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 from project_validator import yaml_support
-from project_validator.ci import CiAnalysis, find_ci_files
+from project_validator.ci import CiAnalysis, _matrix_text, find_ci_files
 from project_validator.core import Project
 from project_validator.plugins import discover
 from tests.support import CI_FILES, PROJECT_LAYOUTS, ci_jobs, layout_project, make_context, temp_project
@@ -85,3 +85,11 @@ class ParseJobsTests(unittest.TestCase):
     def test_unstructured_providers_are_noted(self) -> None:
         analysis = self._parse({".travis.yml": "os: linux\ncompiler: gcc\n"})
         self.assertEqual(analysis.notes, (".travis.yml: Travis CI is scanned heuristically",))
+
+
+class MatrixToolchainTests(unittest.TestCase):
+    def test_matrix_values_that_are_objects_are_read_as_written(self) -> None:
+        self.assertEqual(
+            _matrix_text({"versions": '{"ghc": "9.6"}', "os": "ubuntu"}), '{"versions": {"ghc": "9.6"}, "os": "ubuntu"}'
+        )
+        self.assertEqual(_matrix_text({"odd": "{not json"}), '{"odd": "{not json"}')
