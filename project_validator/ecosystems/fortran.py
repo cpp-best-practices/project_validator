@@ -19,8 +19,9 @@ from project_validator.facts import Command, Fact, Facts, Origin, Setting, resol
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.axes import ToolchainAxis
-from project_validator.facts.build import BuildSetting, CompilerOption
+from project_validator.facts.build import BuildSetting
 from project_validator.facts.dependencies import Lock, PackageManager, manifest_reader
+from project_validator.facts.flags import flag_requirement
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import EXTENSIONS, Evidence, Found, Practice, Requirement
@@ -31,7 +32,15 @@ from project_validator.facts.settings import SettingsReader, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by
 from project_validator.tools.limits import function_length_limiters
-from project_validator.tools.toolchains import FHARDENED, GCC_HARDENING, Flag
+from project_validator.tools.toolchains import (
+    FHARDENED,
+    GCC_HARDENING,
+    WARNING_LEVEL_HINTS,
+    WARNINGS_AS_ERRORS_SETTING_HINTS,
+    WARNINGS_AS_ERRORS_SETTINGS,
+    Flag,
+    warning_level_settings,
+)
 
 if TYPE_CHECKING:
     from project_validator.ci import Job
@@ -200,16 +209,10 @@ _HARDENING = {
 }
 
 
-def _options(flag: Flag) -> Found:
-    """The build files' options that set `flag` for Fortran builds with the compiler judged, and the flags of the
-    fpm profile a CI command builds with."""
+def _fpm_profile_flags(flag: Flag) -> Found:
+    """The flags of the fpm profile a CI command builds with that set `flag` for the compiler judged."""
 
     def found(facts: Facts, compiler: str | None) -> Iterator[Evidence]:
-        for option in facts.of(CompilerOption):
-            applies = option.applies
-            for_compiler = compiler is None or compiler in applies.allowed("compilers")
-            if for_compiler and FORTRAN in applies.allowed("languages") and flag.option.fullmatch(option.option):
-                yield Evidence(option.origin.path, applies.requires)
         for command in facts.of(Command):
             if any(flag.option.fullmatch(word) for word in _fpm_flags(command, compiler or "gcc")):
                 yield Evidence(f"{command.origin.path} (fpm's {_fpm_profile(resolved(command))} profile)")
@@ -217,42 +220,26 @@ def _options(flag: Flag) -> Found:
     return found
 
 
-_HINTS = (
-    *("-W", "-warn", "/warn", "-pedantic", "-std", "-stand", "/stand"),
-    *("warning_level", "werror", "WARNING_AS_ERROR", "fpm"),
-)
+def _flag(flag: Flag, configured: tuple[str, ...] = (), hints: tuple[str, ...] = ()) -> Requirement:
+    """A flag for Fortran builds: on a command line, in the build files, or in the fpm profile a command builds
+    with; `configured` are the build system settings a command line sets it with, found by `hints`."""
+    return flag_requirement(
+        flag, FORTRAN_LANGUAGE, configured=configured, configured_hints=hints, also=(_fpm_profile_flags(flag),)
+    )
 
 
-def _flag(flag: Flag, *configured: str) -> Requirement:
-    """A flag, on a command line, in the build files or in the fpm profile a command builds with; `configured` are
-    the build system settings a command line can set it with."""
-    runs = re.compile("|".join((flag.standalone.pattern, *configured)))
-    return Requirement(name=flag.name, runs=runs, found=_options(flag), hints=(*_HINTS, *flag.hints))
-
-
-_LEVELS = {"-Wall": "[123]|everything", "-Wextra": "[23]|everything", "-Wpedantic": "3|everything"}
 BUILD_FILES = ("CMake", "Meson")
 
 
 def _warnings(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
     return tuple(
-        _flag(
-            flag,
-            *([rf"(?:-Dwarning_level=|--warnlevel[=\s])(?:{level})\b"] if (level := _LEVELS.get(flag.name)) else []),
-        )
-        for flag in _WARNINGS.get(compiler or "gcc", ())
+        _flag(flag, warning_level_settings(flag), WARNING_LEVEL_HINTS) for flag in _WARNINGS.get(compiler or "gcc", ())
     )
-
-
-_ERRORS_CONFIGURED = (
-    r"(?<![\w-])--werror\b|-Dwerror=true\b",
-    r"COMPILE_WARNING_AS_ERROR(?::BOOL)?=(?i:on|true|yes|1)\b",
-)
 
 
 def _errors(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
     flag = _ERRORS.get(compiler or "gcc")
-    return () if flag is None else (_flag(flag, *_ERRORS_CONFIGURED),)
+    return () if flag is None else (_flag(flag, WARNINGS_AS_ERRORS_SETTINGS, WARNINGS_AS_ERRORS_SETTING_HINTS),)
 
 
 WARNINGS = Practice(
@@ -311,10 +298,7 @@ EXTENSIONS_PRACTICE = Practice(
 
 
 def _hardening(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
-    return tuple(
-        Requirement(name=flag.name, runs=flag.standalone, found=_options(flag), hints=flag.hints)
-        for flag in _HARDENING.get(compiler or "gcc", ())
-    )
+    return tuple(_flag(flag) for flag in _HARDENING.get(compiler or "gcc", ()))
 
 
 PROGRAM = re.compile(r"^\s*program\s+\w", re.MULTILINE | re.IGNORECASE)
