@@ -3,6 +3,9 @@ from collections.abc import Mapping
 
 from project_validator.checks.license import license_
 from project_validator.core import Result, Status
+from project_validator.policy.license import HINT
+from project_validator.questions import Answer
+from project_validator.questions.license import licenses as license_answers
 from tests.support import FIXTURES, make_context, temp_project
 
 MIT = (FIXTURES / "well_configured_c_cpp" / "LICENSE").read_text(encoding="utf-8")
@@ -139,3 +142,40 @@ class DeclaredLicenseTests(unittest.TestCase):
                 self.assertEqual(_run({"pyproject.toml": text, "LICENSE": MIT}).status, Status.PASS)
         # A Python project without a pyproject.toml declares nothing.
         self.assertEqual(_run({"setup.py": "", "LICENSE": MIT}).status, Status.PASS)
+
+
+class NearestLicenseTests(unittest.TestCase):
+    MEMBER = "packages/core/package.json"
+
+    def test_a_member_with_license_files_of_its_own_is_compared_with_them(self) -> None:
+        files = {"LICENSE": MIT, "packages/core/LICENSE": APACHE, self.MEMBER: '{"license": "Apache-2.0"}'}
+        self.assertEqual(_run(files), Result.passed("the project is licensed under MIT", "LICENSE"))
+
+    def test_a_member_without_is_compared_with_those_above_it(self) -> None:
+        result = _run({"LICENSE": MIT, self.MEMBER: '{"license": "Apache-2.0"}'})
+        self.assertEqual(result.details, (f"{self.MEMBER} declares Apache-2.0, but the license files are MIT",))
+
+    def test_the_docs_examples_and_tests_declare_nothing_of_the_product(self) -> None:
+        for manifest in ("docs/package.json", "examples/app/package.json", "tests/fixtures/app/package.json"):
+            with self.subTest(manifest):
+                self.assertEqual(_run({"LICENSE": MIT, manifest: '{"license": "GPL-3.0"}'}).status, Status.PASS)
+
+    def test_license_files_below_the_root_are_not_the_projects_own(self) -> None:
+        self.assertEqual(_run({"packages/core/LICENSE": MIT}), Result.failed("no license file", HINT))
+        # A manifest with no license file at or above it is compared with nothing.
+        sibling = {"packages/core/LICENSE": MIT, "packages/cli/package.json": '{"license": "GPL-3.0"}'}
+        self.assertEqual(_run(sibling), Result.failed("no license file", HINT))
+
+    def test_reuse_licenses_the_directory_that_holds_it(self) -> None:
+        files = {"LICENSES/MIT.txt": MIT, "Cargo.toml": "[package]\nlicense = 'Apache-2.0'\n"}
+        self.assertEqual(_run(files).status, Status.WARN)
+
+    def test_each_language_compares_its_own_manifests(self) -> None:
+        files = {"LICENSE": MIT, "package.json": '{"license": "Apache-2.0"}', "pyproject.toml": ""}
+        with temp_project(files) as root:
+            facts = make_context(root).facts
+        [javascript] = license_answers("JavaScript", facts).units
+        [python] = license_answers("Python", facts).units
+        self.assertEqual((javascript.answer, python.answer), (Answer.NO, Answer.YES))
+        self.assertEqual(python.licenses(), frozenset({"MIT"}))
+        self.assertEqual(javascript.as_dict()["mismatches"][0]["manifest"], "package.json")  # type: ignore[index]

@@ -20,6 +20,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
@@ -27,7 +28,6 @@ from project_validator.facts.settings import SettingsReader, file_reader, matche
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    DeclaredLicense,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -55,10 +55,6 @@ def _run_texts(context: Context) -> tuple[str, ...]:
     """CI configuration and pre-commit hooks, with the Rakefile when CI runs rake."""
     texts = ci_and_hook_texts(context)
     return (*texts, *_rake_texts(context)) if any(map(RUNS_RAKE.search, texts)) else texts
-
-
-def _gemspecs(context: Context) -> list[str]:
-    return [path for path in context.project.files() if "/" not in path and path.endswith(".gemspec")]
 
 
 RUBOCOP_CONFIG = ".rubocop.yml"
@@ -429,16 +425,17 @@ BUNDLER_PACKAGES = PackageManager(
 GEMSPEC_LICENSES = re.compile(r"""\.licenses?\s*=\s*(?:\[(?P<list>[^\]]*)\]|["'](?P<one>[^"']+)["'])""")
 
 
-def _gemspec_license(context: Context) -> str | None:
+def _gemspec_license(text: str) -> str | None:
     """A gemspec's licenses are a choice, as an SPDX expression joins them with OR."""
-    texts = (context.project.read_text(path) for path in _gemspecs(context))
-    match = next((found for text in texts if (found := GEMSPEC_LICENSES.search(text))), None)
+    match = GEMSPEC_LICENSES.search(text)
     if match is None:
         return None
     return match["one"] or " OR ".join(re.findall(r"""["']([^"']+)["']""", match["list"])) or None
 
 
-LICENSE = DeclaredLicense(manifest="the gemspec", declared=_gemspec_license)
+GEMSPEC_LICENSE = declared_license_reader(
+    name="gemspec license", files=("*.gemspec",), languages=RUBY_ONLY, declared=_gemspec_license
+)
 
 BUNDLE = BuildOutput(
     languages=RUBY_ONLY,
@@ -467,6 +464,5 @@ RUBY = Ecosystem(
     rules=(
         versions_axis("Ruby version", RUBY_LANGUAGE),
         WARNINGS,
-        LICENSE,
     ),
 )

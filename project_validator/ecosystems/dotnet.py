@@ -20,13 +20,13 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, starts
 from project_validator.rules import (
-    DeclaredLicense,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -454,12 +454,13 @@ NUGET_PACKAGES = PackageManager(
 PACKAGE_LICENSE = re.compile(r"<PackageLicenseExpression>\s*([^<]+?)\s*</PackageLicenseExpression>")
 
 
-def _package_license(context: Context) -> str | None:
-    texts = (context.project.read_text(path) for path in _settings_files(context))
-    return next((match[1] for text in texts if (match := PACKAGE_LICENSE.search(text))), None)
+def _package_license(text: str) -> str | None:
+    return match[1] if (match := PACKAGE_LICENSE.search(text)) else None
 
 
-LICENSE = DeclaredLicense(manifest="the project's PackageLicenseExpression", declared=_package_license)
+PACKAGE_LICENSE_EXPRESSION = declared_license_reader(
+    name="PackageLicenseExpression", files=SETTINGS_FILES, languages=DOTNET_LANGUAGES, declared=_package_license
+)
 
 BUILD_OUTPUT = BuildOutput(
     languages=DOTNET_LANGUAGES,
@@ -492,6 +493,5 @@ DOTNET = Ecosystem(
         versions_axis(".NET SDK version", ".NET SDK"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        LICENSE,
     ),
 )

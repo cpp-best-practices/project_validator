@@ -207,6 +207,20 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Ruby",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Ruby",

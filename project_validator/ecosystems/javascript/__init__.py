@@ -27,6 +27,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.settings import (
     Read,
@@ -41,7 +42,6 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, defined_by, starts, when
 from project_validator.rules import (
-    DeclaredLicense,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -618,12 +618,15 @@ JS_PACKAGE_MANAGER = PackageManager(
 )
 
 
-def _package_license(context: Context) -> str | None:
-    license_ = json_value(context, PACKAGE_JSON, "license")
+def _package_license(text: str) -> str | None:
+    manifest = json.loads(text)
+    license_ = manifest.get("license") if isinstance(manifest, dict) else None
     return license_ if isinstance(license_, str) else None
 
 
-LICENSE = DeclaredLicense(manifest=PACKAGE_JSON, declared=_package_license)
+PACKAGE_JSON_LICENSE = declared_license_reader(
+    name="package.json license", files=(PACKAGE_JSON,), languages=JS_LANGUAGES, declared=_package_license
+)
 
 NODE_MODULES = BuildOutput(
     languages=JS_LANGUAGES,
@@ -666,6 +669,5 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
         versions_axis("runtime version", "JavaScript runtime"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        LICENSE,
     ),
 )

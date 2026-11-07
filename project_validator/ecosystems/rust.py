@@ -18,6 +18,7 @@ from project_validator.facts.dependencies import Lock, PackageManager, lockfile_
 from project_validator.facts.expansion import Action
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, toml_settings
@@ -29,7 +30,6 @@ from project_validator.rules import (
     WarningPolicy,
     directories,
     ignored_at_top_level,
-    toml_license,
 )
 from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
@@ -333,7 +333,9 @@ TARGET_DIRECTORY = BuildOutput(
     artifacts=("/target/",),
 )
 
-LICENSE = toml_license("Cargo.toml", "package")
+CARGO_LICENSE = declared_license_reader(
+    name="Cargo.toml license", files=("Cargo.toml",), languages=RUST_LANGUAGE, declared=toml_license("package")
+)
 
 DEPENDENCY_TABLES = ("dependencies", "dev-dependencies", "build-dependencies")
 
@@ -426,6 +428,5 @@ RUST = Ecosystem(
         BuildTypes(axis=RUST_TOOLCHAINS),
         WARNINGS,
         HARDENING,
-        LICENSE,
     ),
 )

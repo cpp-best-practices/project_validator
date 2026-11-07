@@ -171,7 +171,7 @@ class DependencyTests(unittest.TestCase):
         mit = "Permission is hereby granted, free of charge, to any person obtaining a copy\n"
         files = {"LICENSE": mit, "app.gemspec": 's.licenses = ["MIT", "Ruby"]\n'}
         result = run_in_layout(self, "Bundler Ruby", LICENSE, files)
-        self.assertIn("the gemspec declares MIT OR Ruby", result.details[0])
+        self.assertIn("app.gemspec declares MIT OR Ruby", result.details[0])
         self.assertEqual(
             run_in_layout(self, "Bundler Ruby", LICENSE, {**files, "app.gemspec": "s.license = 'MIT'\n"}).status,
             Status.PASS,

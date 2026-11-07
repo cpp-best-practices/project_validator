@@ -201,6 +201,20 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "C#",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C#",
@@ -427,6 +441,11 @@
       "kind": "Declared",
       "manager": "NuGet",
       "origin": "src/App/App.csproj"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "PackageLicenseExpression"
     }
   ],
   "map": {

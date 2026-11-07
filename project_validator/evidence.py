@@ -2,7 +2,6 @@
 
 import json
 import re
-import tomllib
 from collections.abc import Callable, Iterable, Iterator, Mapping
 
 from project_validator.core import Context
@@ -20,17 +19,6 @@ def _at(value: object, keys: tuple[str, ...]) -> object | None:
             return None
         value = value.get(key)
     return value
-
-
-def toml_value(context: Context, path: str, *keys: str) -> object | None:
-    """The value at `keys` in the TOML file `path`; None when the file, or the value, is missing or does not parse."""
-    if not context.project.exists(path):
-        return None
-    try:
-        value: object = tomllib.loads(context.project.read_text(path))
-    except tomllib.TOMLDecodeError:
-        return None
-    return _at(value, keys)
 
 
 def json_value(context: Context, path: str, *keys: str, comments: bool = False) -> object | None:

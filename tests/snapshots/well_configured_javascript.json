@@ -576,6 +576,40 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "JavaScript",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "TypeScript",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "JavaScript",
@@ -2424,6 +2458,18 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "eslint.config.js",
       "reader": "eslint"
     },
@@ -2468,6 +2514,20 @@
     {
       "kind": "Declared",
       "manager": "npm packages",
+      "origin": "package.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json license"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
       "origin": "package.json"
     },
     {
