@@ -126,7 +126,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"scaffold: {error}", file=sys.stderr)
         return 2
     for path in written:
-        print(path.relative_to(arguments.root))
+        print(path.relative_to(arguments.root).as_posix())
     print("next: the profile's components, the fixtures' sources and CI, the page's sections, then the snapshots")
     return 0
 

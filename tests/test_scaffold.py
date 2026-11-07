@@ -22,7 +22,9 @@ class ScaffoldTests(unittest.TestCase):
         shutil.copytree(ROOT / "tests/fixtures/well_configured_go", self.root / "tests/fixtures/well_configured_go")
 
     def test_writes_what_the_contract_asks_for(self) -> None:
-        written = {str(path.relative_to(self.root)) for path in scaffold(self.root, "nim", "Nim", [".nim", ".nims"])}
+        written = {
+            path.relative_to(self.root).as_posix() for path in scaffold(self.root, "nim", "Nim", [".nim", ".nims"])
+        }
         self.assertLessEqual(
             {
                 "project_validator/ecosystems/nim.py",
