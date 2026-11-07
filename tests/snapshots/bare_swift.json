@@ -2,39 +2,45 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
         "language": "Swift",
-        "line": {
-          "answer": "no",
-          "known": [
-            "swift test --enable-code-coverage",
-            "xcodebuild test -enableCodeCoverage YES"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "no",
-          "known": [
-            "swift test --enable-code-coverage",
-            "xcodebuild test -enableCodeCoverage YES"
-          ],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Swift",
+            "line": {
+              "answer": "no",
+              "known": [
+                "swift test --enable-code-coverage",
+                "xcodebuild test -enableCodeCoverage YES"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "no",
+              "known": [
+                "swift test --enable-code-coverage",
+                "xcodebuild test -enableCodeCoverage YES"
+              ],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -52,14 +58,25 @@
       "kind": "SourceFile",
       "language": "Swift",
       "origin": "Package.swift",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Swift",
       "origin": "Sources/App/main.swift",
-      "vendored": false
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "SwiftPM"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".",
+      "role": "product"
     }
   ],
   "map": {
@@ -79,6 +96,18 @@
     },
     "languages": [
       "Swift"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "SwiftPM"
+        ],
+        "directory": ".",
+        "languages": [
+          "Swift"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": []
   },

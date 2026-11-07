@@ -2,54 +2,60 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "cargo llvm-cov --branch",
-            "cargo tarpaulin --branch",
-            "grcov --branch"
-          ],
-          "tools": [
-            "cargo-llvm-cov"
-          ]
-        },
         "language": "Rust",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "cargo llvm-cov",
-            "cargo tarpaulin",
-            "grcov"
-          ],
-          "tools": [
-            "cargo-llvm-cov"
-          ]
-        },
-        "path": {
-          "answer": "yes",
-          "known": [
-            "cargo llvm-cov --mcdc",
-            "RUSTFLAGS=-Zcoverage-options=mcdc"
-          ],
-          "tools": [
-            "cargo-llvm-cov"
-          ]
-        },
-        "region": {
-          "answer": "yes",
-          "known": [
-            "cargo llvm-cov"
-          ],
-          "tools": [
-            "cargo-llvm-cov"
-          ]
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "cargo llvm-cov --branch",
+                "cargo tarpaulin --branch",
+                "grcov --branch"
+              ],
+              "tools": [
+                "cargo-llvm-cov"
+              ]
+            },
+            "language": "Rust",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "cargo llvm-cov",
+                "cargo tarpaulin",
+                "grcov"
+              ],
+              "tools": [
+                "cargo-llvm-cov"
+              ]
+            },
+            "path": {
+              "answer": "yes",
+              "known": [
+                "cargo llvm-cov --mcdc",
+                "RUSTFLAGS=-Zcoverage-options=mcdc"
+              ],
+              "tools": [
+                "cargo-llvm-cov"
+              ]
+            },
+            "region": {
+              "answer": "yes",
+              "known": [
+                "cargo llvm-cov"
+              ],
+              "tools": [
+                "cargo-llvm-cov"
+              ]
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -67,7 +73,18 @@
       "kind": "SourceFile",
       "language": "Rust",
       "origin": "src/lib.rs",
-      "vendored": false
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Cargo"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -1955,218 +1972,278 @@
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[9]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[10]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line",
-        "path",
-        "region"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[11]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Rust"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line",
+          "path",
+          "region"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "cargo-llvm-cov",
       "via": []
     }
@@ -2445,6 +2522,18 @@
     },
     "languages": [
       "Rust"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Cargo"
+        ],
+        "directory": ".",
+        "languages": [
+          "Rust"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": []
   },

@@ -2,41 +2,47 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "SimpleCov enable_coverage :branch"
-          ],
-          "tools": [
-            "SimpleCov"
-          ]
-        },
         "language": "Ruby",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "SimpleCov"
-          ],
-          "tools": [
-            "SimpleCov"
-          ]
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "SimpleCov enable_coverage :branch"
+              ],
+              "tools": [
+                "SimpleCov"
+              ]
+            },
+            "language": "Ruby",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "SimpleCov"
+              ],
+              "tools": [
+                "SimpleCov"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -62,27 +68,38 @@
       "kind": "SourceFile",
       "language": "Ruby",
       "origin": "lib/app.rb",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Ruby",
       "origin": "spec/app_spec.rb",
-      "vendored": false
+      "role": "test"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Ruby",
       "origin": "spec/spec_helper.rb",
-      "vendored": false
+      "role": "test"
     },
     {
       "files": 1,
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".rbs"
+    },
+    {
+      "build_systems": [
+        "Bundler"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -1089,19 +1106,24 @@
       "value": "branch"
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "spec/spec_helper.rb"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "SimpleCov",
       "via": [
@@ -1109,19 +1131,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "spec/spec_helper.rb"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "SimpleCov",
       "via": [
@@ -1129,19 +1156,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "spec/spec_helper.rb"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "SimpleCov",
       "via": [
@@ -1149,19 +1181,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "spec/spec_helper.rb"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "SimpleCov",
       "via": [
@@ -1169,19 +1206,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "spec/spec_helper.rb"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "SimpleCov",
       "via": [
@@ -1189,19 +1231,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "spec/spec_helper.rb"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "SimpleCov",
       "via": [
@@ -1353,6 +1400,18 @@
     },
     "languages": [
       "Ruby"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Bundler"
+        ],
+        "directory": ".",
+        "languages": [
+          "Ruby"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": [
       {

@@ -2,41 +2,47 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
         "language": "Go",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "go test -cover"
-          ],
-          "tools": [
-            "go test -cover"
-          ]
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "yes",
-          "known": [
-            "go test -cover"
-          ],
-          "tools": [
-            "go test -cover"
-          ]
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Go",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "go test -cover"
+              ],
+              "tools": [
+                "go test -cover"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "yes",
+              "known": [
+                "go test -cover"
+              ],
+              "tools": [
+                "go test -cover"
+              ]
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -54,21 +60,32 @@
       "kind": "SourceFile",
       "language": "Go",
       "origin": "app.go",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Go",
       "origin": "app_test.go",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Go",
       "origin": "cmd/app/main.go",
-      "vendored": false
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Go modules"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -1278,98 +1295,128 @@
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "statement"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Go"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "statement"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "go test -cover",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "statement"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Go"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "statement"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "go test -cover",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "statement"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Go"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "statement"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "go test -cover",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "statement"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Go"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "statement"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "go test -cover",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "statement"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Go"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "statement"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "go test -cover",
       "via": []
     },
     {
-      "granularities": [
-        "line",
-        "statement"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Go"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "coverage": [
+          "line",
+          "statement"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "go test -cover",
       "via": []
     }
@@ -1528,6 +1575,18 @@
     },
     "languages": [
       "Go"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Go modules"
+        ],
+        "directory": ".",
+        "languages": [
+          "Go"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": []
   },

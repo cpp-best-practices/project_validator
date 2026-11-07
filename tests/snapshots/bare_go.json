@@ -2,37 +2,43 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
         "language": "Go",
-        "line": {
-          "answer": "no",
-          "known": [
-            "go test -cover"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "no",
-          "known": [
-            "go test -cover"
-          ],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Go",
+            "line": {
+              "answer": "no",
+              "known": [
+                "go test -cover"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "no",
+              "known": [
+                "go test -cover"
+              ],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -50,20 +56,31 @@
       "kind": "SourceFile",
       "language": "Go",
       "origin": "app.go",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Go",
       "origin": "cmd/app/main.go",
-      "vendored": false
+      "role": "product"
     },
     {
       "files": 1,
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".out"
+    },
+    {
+      "build_systems": [
+        "Go modules"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".",
+      "role": "product"
     }
   ],
   "map": {
@@ -83,6 +100,18 @@
     },
     "languages": [
       "Go"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Go modules"
+        ],
+        "directory": ".",
+        "languages": [
+          "Go"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": [
       {

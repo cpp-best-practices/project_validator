@@ -38,7 +38,9 @@ class Job:
 
 
 # Facts from a parsed configuration document at a path (see `project_validator.facts`).
-type FactExtractor = Callable[[str, object], Iterable[Fact]]
+# Reads another configuration file of the project (a reusable workflow, an included file), or None.
+type Load = Callable[[str], object | None]
+type FactExtractor = Callable[[str, object, Load], Iterable[Fact]]
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -189,7 +191,7 @@ def _heuristic_facts(ci_file: CiFile, text: str, reason: str) -> Iterator[Fact]:
             origin=origin, id=identity, provider=ci_file.provider.name, name=ci_file.path, os=os, heuristic=True
         )
         yield from (fact for fact in script_facts(script, job=identity, origin=origin) if isinstance(fact, Command))
-    yield Unknown(origin=origin, subject=_JOBS, reason=reason)
+    yield Unknown(origin=origin, subject=_JOBS, reason=reason, hides="jobs")
 
 
 def _file_facts(project: Project, ci_file: CiFile) -> Iterable[Fact]:
@@ -201,7 +203,19 @@ def _file_facts(project: Project, ci_file: CiFile) -> Iterable[Fact]:
         document = yaml_support.load(text)
     except yaml_support.YamlError as error:
         return _heuristic_facts(ci_file, text, f"invalid YAML ({error}), scanned heuristically")
-    return provider.facts(ci_file.path, document)
+    return provider.facts(ci_file.path, document, _loader(project))
+
+
+def _loader(project: Project) -> Load:
+    def load(path: str) -> object | None:
+        if not project.exists(path):
+            return None
+        try:
+            return yaml_support.load(project.read_text(path))
+        except yaml_support.YamlError:
+            return None
+
+    return load
 
 
 def ci_facts(project: Project, ci_files: tuple[CiFile, ...]) -> Facts:

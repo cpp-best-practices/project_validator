@@ -4,7 +4,8 @@ import unittest
 
 from project_validator.build_systems.make import parse_makefile
 from project_validator.facts import Command, Facts, Origin, Unknown
-from project_validator.facts.expansion import CommandExpander, built_in_expanders, positional
+from project_validator.facts.arguments import positional
+from project_validator.facts.expansion import CommandExpander, built_in_expanders
 from tests.support import GITHUB_WORKFLOW, github_job, make_context, temp_project
 
 
@@ -37,6 +38,43 @@ class EngineTests(unittest.TestCase):
         )
         self.assertEqual(str(formatting.origin), "Makefile:format[6]")
         self.assertEqual(formatting.job, f"{GITHUB_WORKFLOW}:build")
+
+    def test_launchers_and_wrappers_run_the_command_that_follows(self) -> None:
+        files = github_job(
+            "ubuntu-latest", "sudo -u ci env CC=clang CXX=clang++ emcmake cmake -S .", "npx --yes", "nice -n 5"
+        )
+        launched = {command.argv: command.env for command in _facts(files).of(Command) if command.via}
+        self.assertEqual(
+            list(launched),
+            [
+                ("env", "CC=clang", "CXX=clang++", "emcmake", "cmake", "-S", "."),
+                ("emcmake", "cmake", "-S", "."),
+                ("cmake", "-S", "."),
+            ],
+        )
+        self.assertEqual(launched[("cmake", "-S", ".")], {"CC": "clang", "CXX": "clang++"})
+
+    def test_cd_changes_where_the_rest_of_the_script_runs(self) -> None:
+        files = {
+            "web/ui/package.json": '{"scripts": {"lint": "eslint ."}}',
+            **github_job("ubuntu-latest", "cd web/ui && npm run lint\ncd ../.. && pwd\ncd $GITHUB_WORKSPACE/web && ls"),
+        }
+        commands = [(command.argv, command.directory) for command in _facts(files).of(Command)]
+        self.assertIn((("eslint", "."), "web/ui"), commands)
+        self.assertIn((("pwd",), "."), commands)
+        self.assertIn((("ls",), "web"), commands)
+
+    def test_what_runs_outside_the_project_is_not_expanded(self) -> None:
+        for script in (
+            "cd /tmp/other && make",
+            "cd $HOME && make",
+            "cd ../sibling && make",
+            "cd build && make",
+            "make -C build",
+        ):
+            with self.subTest(script=script):
+                found = _facts({"Makefile": "all:\n\techo hi\n", **github_job("ubuntu-latest", script)})
+                self.assertEqual((_expanded(found), found.of(Unknown)), ([], ()))
 
     def test_a_definition_that_runs_itself_is_followed_once(self) -> None:
         files = {"Makefile": "all:\n\t$(MAKE) all\n\techo done\n", **github_job("ubuntu-latest", "make")}

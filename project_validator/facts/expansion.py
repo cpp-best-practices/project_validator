@@ -5,12 +5,14 @@ commands are facts like those CI runs directly, in the same job, with `via` nami
 Expansion repeats on what it finds, and stops where a definition would run itself again.
 """
 
+import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from project_validator.facts import NOTHING, Command, Fact, Origin, Unknown, resolved
+from project_validator.facts.arguments import program
 from project_validator.facts.shell import ShellCommand, split_script
 
 if TYPE_CHECKING:
@@ -39,9 +41,11 @@ class Invocation:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Launched:
-    """The command a launcher runs from its own arguments (`bundle exec rake` runs `rake`), where the launcher is."""
+    """The command a launcher runs from its own arguments (`bundle exec rake` runs `rake`), where the launcher is,
+    with the variables the launcher sets for it (`env CC=clang make`)."""
 
     argv: tuple[str, ...]
+    env: Mapping[str, str] = NOTHING
 
 
 type Expansion = Script | Invocation | Launched | Unknown
@@ -73,6 +77,7 @@ def script_facts(
     """
     for found in split_script(script, opaque):
         if isinstance(found, ShellCommand):
+            directory = _changed(directory, found.argv)
             yield Command(
                 origin=origin,
                 job=job,
@@ -87,6 +92,28 @@ def script_facts(
             yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
 
 
+# Where a CI service checks the project out, written as a variable.
+_WORKSPACES = frozenset({"$GITHUB_WORKSPACE", "${GITHUB_WORKSPACE}", "$CI_PROJECT_DIR", "${CI_PROJECT_DIR}"})
+
+
+def _changed(directory: str | None, argv: tuple[str, ...]) -> str | None:
+    """The directory the commands after `argv` run in: `cd` changes it for the rest of the script. A directory that
+    cannot be told (`cd $HOME`, `cd -`) is outside the project; `..` that leaves the project is too."""
+    if argv[:1] != ("cd",) or len(argv) != 2:
+        return directory
+    target = argv[1].rstrip("/")
+    if target in _WORKSPACES or target.split("/", 1)[0] in _WORKSPACES:
+        target = target.split("/", 1)[1] if "/" in target else "."
+        return posixpath.normpath(target)
+    if target.startswith(("/", "$", "~", "-")):
+        return OUTSIDE
+    return posixpath.normpath(joined(directory, target))
+
+
+# The directory of a command that runs outside the project (`cd /tmp`, `cd $HOME`).
+OUTSIDE = "/"
+
+
 def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
     via = (*command.via, command.origin)
     if isinstance(expansion, Unknown):
@@ -98,7 +125,7 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
             job=command.job,
             argv=expansion.argv,
             line=found.line,
-            env=command.env,
+            env={**command.env, **expansion.env} if isinstance(expansion, Launched) else command.env,
             directory=command.directory,
             condition=command.condition,
             via=via,
@@ -116,8 +143,21 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
         )
 
 
+def inside(context: Context, directory: str | None) -> bool:
+    """Whether `directory` is one of the project's own (a command elsewhere runs another checkout or a generated build
+    tree, whose definitions are not the project's)."""
+    if directory in (None, "", "."):
+        return True
+    if directory.startswith(("/", "..")):
+        return False
+    return (context.project.root / directory).is_dir()
+
+
 def expand_command(command: Command, context: Context, expanders: Iterable[CommandExpander]) -> Iterator[Fact]:
-    """What `command` runs in turn, through every expander that recognises it, depth first."""
+    """What `command` runs in turn, through every expander that recognises it, depth first. A command run outside the
+    project's own directories is not expanded."""
+    if not inside(context, command.directory):
+        return
     expanders = tuple(expanders)
     chain = (*command.via, command.origin)
     for expander in expanders:
@@ -151,70 +191,41 @@ def built_in_expanders() -> tuple[CommandExpander, ...]:
     return built_in(CommandExpander)
 
 
+_ASSIGNMENT = re.compile(r"([A-Za-z_]\w*)=(.*)", re.DOTALL)
+
+
 def launcher(
     name: str, prefixes: Iterable[tuple[str, ...]], with_values: frozenset[str] = frozenset()
 ) -> CommandExpander:
     """An expander of the launchers whose commands start with one of `prefixes` (`("bundle", "exec")`): each runs the
-    command its first positional argument starts. `with_values` are the launcher's options that take a value.
+    command its first positional argument starts, with the variables assigned before it (`env CC=clang make`).
+    `with_values` are the launcher's options that take a value.
     """
     starts = tuple(prefixes)
 
     def expand(command: Command, _: Context) -> list[Expansion] | None:
         argv = resolved(command)
         prefix = next((start for start in starts if _starts_with(argv, start)), None)
-        if prefix is None:
-            return None
-        rest = iter(argv[len(prefix) :])
-        for word in rest:
-            if word == "--" or not word.startswith("-"):
-                launched = (*(() if word == "--" else (word,)), *rest)
-                return [Launched(argv=launched)] if launched else []
-            if word in with_values:
-                next(rest, None)
-        return []
+        return None if prefix is None else _launched(argv[len(prefix) :], with_values)
 
     return CommandExpander(name=name, expand=expand)
 
 
+def _launched(words: tuple[str, ...], with_values: frozenset[str]) -> list[Expansion]:
+    rest, env = iter(words), {}
+    for word in rest:
+        if (assignment := _ASSIGNMENT.fullmatch(word)) is not None:
+            env[assignment[1]] = assignment[2]
+        elif word == "--" or not word.startswith("-"):
+            launched = (*(() if word == "--" else (word,)), *rest)
+            return [Launched(argv=launched, env=env)] if launched else []
+        elif word in with_values:
+            next(rest, None)
+    return []
+
+
 def _starts_with(argv: tuple[str, ...], prefix: tuple[str, ...]) -> bool:
     return len(argv) > len(prefix) and program(argv) == prefix[0] and argv[1 : len(prefix)] == prefix[1:]
-
-
-def program(argv: tuple[str, ...]) -> str:
-    """The name of the program `argv` runs, without its directory or a Windows suffix (`./vendor/bin/phpunit`)."""
-    name = argv[0].replace("\\", "/").rsplit("/", 1)[-1] if argv else ""
-    for suffix in (".exe", ".cmd", ".bat"):
-        name = name.removesuffix(suffix)
-    return name
-
-
-def has_option(argv: tuple[str, ...], *names: str) -> bool:
-    """Whether `argv` gives one of the options `names`, alone or with a value (`--name=value`)."""
-    return any(word in names or word.partition("=")[0] in names for word in argv[1:])
-
-
-def short_flags(argv: tuple[str, ...]) -> frozenset[str]:
-    """The one-letter flags given in `argv`, together or apart (`-bc`, `-b -c`)."""
-    return frozenset(
-        letter for word in argv[1:] if word.startswith("-") and not word.startswith("--") for letter in word[1:]
-    )
-
-
-def positional(argv: tuple[str, ...], with_values: frozenset[str] = frozenset()) -> tuple[list[str], dict[str, str]]:
-    """The positional arguments after the program, and the values of the options in `with_values`.
-
-    `--opt=value` and `--opt value` are both read; other options are skipped.
-    """
-    words: list[str] = []
-    options: dict[str, str] = {}
-    arguments = iter(argv[1:])
-    for word in arguments:
-        name, equals, value = word.partition("=")
-        if name in with_values:
-            options[name] = value if equals else next(arguments, "")
-        elif not word.startswith("-"):
-            words.append(word)
-    return words, options
 
 
 def found_at(context: Context, directory: str | None, names: Iterable[str]) -> str | None:
@@ -239,11 +250,7 @@ __all__ = [
     "expand_command",
     "expanded",
     "found_at",
-    "has_option",
     "joined",
     "launcher",
-    "positional",
-    "program",
     "script_facts",
-    "short_flags",
 ]

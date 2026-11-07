@@ -2,46 +2,52 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "cargo llvm-cov --branch",
-            "cargo tarpaulin --branch",
-            "grcov --branch"
-          ],
-          "tools": []
-        },
         "language": "Rust",
-        "line": {
-          "answer": "no",
-          "known": [
-            "cargo llvm-cov",
-            "cargo tarpaulin",
-            "grcov"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "no",
-          "known": [
-            "cargo llvm-cov --mcdc",
-            "RUSTFLAGS=-Zcoverage-options=mcdc"
-          ],
-          "tools": []
-        },
-        "region": {
-          "answer": "no",
-          "known": [
-            "cargo llvm-cov"
-          ],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "cargo llvm-cov --branch",
+                "cargo tarpaulin --branch",
+                "grcov --branch"
+              ],
+              "tools": []
+            },
+            "language": "Rust",
+            "line": {
+              "answer": "no",
+              "known": [
+                "cargo llvm-cov",
+                "cargo tarpaulin",
+                "grcov"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "no",
+              "known": [
+                "cargo llvm-cov --mcdc",
+                "RUSTFLAGS=-Zcoverage-options=mcdc"
+              ],
+              "tools": []
+            },
+            "region": {
+              "answer": "no",
+              "known": [
+                "cargo llvm-cov"
+              ],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -59,14 +65,25 @@
       "kind": "SourceFile",
       "language": "Rust",
       "origin": "src/lib.rs",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Rust",
       "origin": "src/main.rs",
-      "vendored": false
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Cargo"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".",
+      "role": "product"
     }
   ],
   "map": {
@@ -86,6 +103,18 @@
     },
     "languages": [
       "Rust"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Cargo"
+        ],
+        "directory": ".",
+        "languages": [
+          "Rust"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": []
   },

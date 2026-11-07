@@ -31,27 +31,6 @@ def build_type_kinds(*values: str) -> frozenset[str]:
     return frozenset(BUILD_TYPE_KINDS[value.lower()] for value in values if value.lower() in BUILD_TYPE_KINDS)
 
 
-def _value(word: str, following: str | None, name: str) -> str | None:
-    if word == name:
-        return following
-    if word.startswith(f"{name}="):
-        return word[len(name) + 1 :]
-    if len(name) == 2 and word.startswith(name) and len(word) > 2:
-        return word[2:]  # -Cvalue
-    return None
-
-
-def option_values(argv: tuple[str, ...], *names: str) -> list[str]:
-    """The values of options `names` in `argv`, written `--name value`, `--name=value` or (one letter) `-Cvalue`."""
-    following = [*argv[1:], None][: len(argv)]
-    return [
-        value
-        for word, after in zip(argv, following, strict=True)
-        for name in names
-        if (value := _value(word, after, name)) is not None
-    ]
-
-
 def sanitizers_enabled(texts: Iterable[str]) -> bool:
     """Sanitizer flags or options, or cmake_template's packaging maintainer mode being off (which enables them)."""
     return any(_SANITIZERS_ENABLED.search(text) for text in texts)

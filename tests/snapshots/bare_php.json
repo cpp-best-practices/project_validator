@@ -2,39 +2,45 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "phpunit --path-coverage"
-          ],
-          "tools": []
-        },
         "language": "PHP",
-        "line": {
-          "answer": "no",
-          "known": [
-            "phpunit --coverage-clover"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "no",
-          "known": [
-            "phpunit --path-coverage"
-          ],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "phpunit --path-coverage"
+              ],
+              "tools": []
+            },
+            "language": "PHP",
+            "line": {
+              "answer": "no",
+              "known": [
+                "phpunit --coverage-clover"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "no",
+              "known": [
+                "phpunit --path-coverage"
+              ],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -52,13 +58,24 @@
       "kind": "SourceFile",
       "language": "PHP",
       "origin": "src/Calculator.php",
-      "vendored": false
+      "role": "product"
     },
     {
       "files": 1,
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".cache"
+    },
+    {
+      "build_systems": [
+        "Composer"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".",
+      "role": "product"
     }
   ],
   "map": {
@@ -78,6 +95,18 @@
     },
     "languages": [
       "PHP"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Composer"
+        ],
+        "directory": ".",
+        "languages": [
+          "PHP"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": [
       {

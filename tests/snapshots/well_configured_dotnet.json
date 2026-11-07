@@ -2,43 +2,49 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "dotnet test --collect \"XPlat Code Coverage\"",
-            "dotnet-coverage collect"
-          ],
-          "tools": [
-            "coverlet"
-          ]
-        },
         "language": "C#",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "dotnet test --collect \"XPlat Code Coverage\"",
-            "dotnet-coverage collect"
-          ],
-          "tools": [
-            "coverlet"
-          ]
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "dotnet test --collect \"XPlat Code Coverage\"",
+                "dotnet-coverage collect"
+              ],
+              "tools": [
+                "coverlet"
+              ]
+            },
+            "language": "C#",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "dotnet test --collect \"XPlat Code Coverage\"",
+                "dotnet-coverage collect"
+              ],
+              "tools": [
+                "coverlet"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -66,14 +72,25 @@
       "kind": "SourceFile",
       "language": "C#",
       "origin": "src/App/Calculator.cs",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "C#",
       "origin": "tests/App.Tests/CalculatorTests.cs",
-      "vendored": false
+      "role": "test"
+    },
+    {
+      "build_systems": [
+        "MSBuild"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -946,104 +963,134 @@
       "value": "false"
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C#",
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "coverlet",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C#",
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "coverlet",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C#",
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "coverlet",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C#",
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "coverlet",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C#",
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "coverlet",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C#",
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "coverlet",
       "via": []
     }
@@ -1190,6 +1237,18 @@
     },
     "languages": [
       "C#"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "MSBuild"
+        ],
+        "directory": ".",
+        "languages": [
+          "C#"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": []
   },

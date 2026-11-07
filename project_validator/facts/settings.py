@@ -88,7 +88,9 @@ def settings(
 
 
 def unreadable(tool: str, path: str, error: Exception) -> Unknown:
-    return Unknown(origin=Origin(path=path), subject=f"the {tool} settings", reason=f"{error}", tools=(tool,))
+    return Unknown(
+        origin=Origin(path=path), subject=f"the {tool} settings", reason=f"{error}", hides="settings", tools=(tool,)
+    )
 
 
 def toml_settings(tool: str, path: str, text: str, *table: str) -> Iterator[Fact]:

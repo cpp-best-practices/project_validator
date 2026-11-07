@@ -3,13 +3,13 @@
 import re
 from pathlib import Path, PurePosixPath
 
-from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
 from project_validator.evidence import configuration, existing_texts, first_existing, toml_value
 from project_validator.facts import Command, Facts, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
-from project_validator.facts.expansion import has_option, program
+from project_validator.facts.arguments import has_option, option_values, program
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.tools import Run
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
@@ -60,6 +60,7 @@ CARGO = BuildSystem(
     languages=frozenset({"Rust"}),
     is_build_tree=is_cargo_target,
     build_types=cargo_build_types,
+    members=toml_members("workspace"),
 )
 
 _RUST_VERSION = r"(stable|beta|nightly|\d+\.\d+(?:\.\d+)?)"
@@ -86,20 +87,20 @@ def _cargo(command: Command, name: str) -> tuple[str, ...] | None:
     return argv[1:] if argv[:2] == ("cargo", name) else None
 
 
-def _cargo_llvm_cov(command: Command, _: Facts) -> Measurement | None:
+def _cargo_llvm_cov(command: Command, _: Facts) -> Run | None:
     if (argv := _cargo(command, "llvm-cov")) is None:
         return None
     branch = has_option(argv, "--branch")
     return measured(LINE, REGION, BRANCH if branch else None, PATH if has_option(argv, "--mcdc") else None)
 
 
-def _cargo_tarpaulin(command: Command, _: Facts) -> Measurement | None:
+def _cargo_tarpaulin(command: Command, _: Facts) -> Run | None:
     if (argv := _cargo(command, "tarpaulin")) is None:
         return None
     return measured(LINE, BRANCH if has_option(argv, "--branch", "-b") else None)
 
 
-def _grcov(command: Command, _: Facts) -> Measurement | None:
+def _grcov(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
     if program(argv) != "grcov":
         return None
@@ -109,7 +110,7 @@ def _grcov(command: Command, _: Facts) -> Measurement | None:
 _MCDC = re.compile(r"-Z\s*coverage-options=\S*mcdc")
 
 
-def _rustc_mcdc(command: Command, _: Facts) -> Measurement | None:
+def _rustc_mcdc(command: Command, _: Facts) -> Run | None:
     """rustc's MC/DC instrumentation, on a command line or in RUSTFLAGS."""
     words = (" ".join(resolved(command)), command.env.get("RUSTFLAGS", ""))
     return measured(PATH) if any(_MCDC.search(word) for word in words) else None
@@ -117,7 +118,7 @@ def _rustc_mcdc(command: Command, _: Facts) -> Measurement | None:
 
 LINE, REGION, BRANCH, PATH = Granularity.LINE, Granularity.REGION, Granularity.BRANCH, Granularity.PATH
 RUST_LANGUAGE = frozenset({"Rust"})
-CARGO_LLVM_COV = CoverageTool(
+CARGO_LLVM_COV = coverage_tool(
     name="cargo-llvm-cov",
     languages=RUST_LANGUAGE,
     can={
@@ -128,16 +129,16 @@ CARGO_LLVM_COV = CoverageTool(
     },
     measures=_cargo_llvm_cov,
 )
-CARGO_TARPAULIN = CoverageTool(
+CARGO_TARPAULIN = coverage_tool(
     name="cargo-tarpaulin",
     languages=RUST_LANGUAGE,
     can={LINE: "cargo tarpaulin", BRANCH: "cargo tarpaulin --branch"},
     measures=_cargo_tarpaulin,
 )
-GRCOV = CoverageTool(
+GRCOV = coverage_tool(
     name="grcov", languages=RUST_LANGUAGE, can={LINE: "grcov", BRANCH: "grcov --branch"}, measures=_grcov
 )
-RUSTC_MCDC = CoverageTool(
+RUSTC_MCDC = coverage_tool(
     name="rustc MC/DC",
     languages=RUST_LANGUAGE,
     can={PATH: "RUSTFLAGS=-Zcoverage-options=mcdc"},

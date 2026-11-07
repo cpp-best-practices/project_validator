@@ -2,43 +2,49 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "coverage run --branch",
-            "pytest --cov --cov-branch"
-          ],
-          "tools": [
-            "coverage.py"
-          ]
-        },
         "language": "Python",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "coverage run",
-            "pytest --cov"
-          ],
-          "tools": [
-            "coverage.py"
-          ]
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "coverage run --branch",
+                "pytest --cov --cov-branch"
+              ],
+              "tools": [
+                "coverage.py"
+              ]
+            },
+            "language": "Python",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "coverage run",
+                "pytest --cov"
+              ],
+              "tools": [
+                "coverage.py"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -56,7 +62,18 @@
       "kind": "SourceFile",
       "language": "Python",
       "origin": "tests/test_app.py",
-      "vendored": false
+      "role": "test"
+    },
+    {
+      "build_systems": [
+        "Python packaging"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -1453,19 +1470,24 @@
       "reader": "pytest"
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Python"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pyproject.toml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "coverage.py",
       "via": [
@@ -1473,19 +1495,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Python"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pyproject.toml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "coverage.py",
       "via": [
@@ -1493,19 +1520,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Python"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pyproject.toml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "coverage.py",
       "via": [
@@ -1513,19 +1545,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Python"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pyproject.toml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "coverage.py",
       "via": [
@@ -1533,19 +1570,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Python"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pyproject.toml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "coverage.py",
       "via": [
@@ -1553,19 +1595,24 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Python"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pyproject.toml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "coverage.py",
       "via": [
@@ -1712,6 +1759,18 @@
     },
     "languages": [
       "Python"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Python packaging"
+        ],
+        "directory": ".",
+        "languages": [
+          "Python"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": []
   },

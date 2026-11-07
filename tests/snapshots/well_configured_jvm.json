@@ -2,43 +2,49 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "jacoco:report or jacocoTestReport",
-            "koverXmlReport"
-          ],
-          "tools": [
-            "JaCoCo"
-          ]
-        },
         "language": "Java",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "jacoco:report or jacocoTestReport",
-            "koverXmlReport"
-          ],
-          "tools": [
-            "JaCoCo"
-          ]
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "jacoco:report or jacocoTestReport",
+                "koverXmlReport"
+              ],
+              "tools": [
+                "JaCoCo"
+              ]
+            },
+            "language": "Java",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "jacoco:report or jacocoTestReport",
+                "koverXmlReport"
+              ],
+              "tools": [
+                "JaCoCo"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -54,14 +60,25 @@
       "kind": "SourceFile",
       "language": "Java",
       "origin": "src/main/java/com/example/App.java",
-      "vendored": false
+      "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Java",
       "origin": "src/test/java/com/example/AppTest.java",
-      "vendored": false
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Maven"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Java"
+      ],
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -629,115 +646,145 @@
       ]
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Java",
         "Kotlin"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pom.xml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "JaCoCo",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Java",
         "Kotlin"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pom.xml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "JaCoCo",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Java",
         "Kotlin"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pom.xml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "JaCoCo",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Java",
         "Kotlin"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pom.xml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "JaCoCo",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Java",
         "Kotlin"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pom.xml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "JaCoCo",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "Java",
         "Kotlin"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [
         "pom.xml"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "JaCoCo",
       "via": []
@@ -885,6 +932,18 @@
     },
     "languages": [
       "Java"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Maven"
+        ],
+        "directory": ".",
+        "languages": [
+          "Java"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": []
   },

@@ -5,7 +5,7 @@ import json
 import re
 from collections.abc import Iterator, Mapping
 
-from project_validator.ci import CiProvider, strings
+from project_validator.ci import CiProvider, Load, strings
 from project_validator.facts import CiJob, Fact, Origin, Unknown
 from project_validator.facts.expansion import script_facts
 from project_validator.platforms import detect_operating_systems
@@ -93,7 +93,7 @@ def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mappin
                 )
 
 
-def pipeline_facts(path: str, document: object) -> Iterator[Fact]:
+def pipeline_facts(path: str, document: object, _: Load | None = None) -> Iterator[Fact]:
     """The jobs of a pipeline, one per `parallel: matrix:` combination, with the commands each one runs."""
     if not isinstance(document, Mapping):
         return

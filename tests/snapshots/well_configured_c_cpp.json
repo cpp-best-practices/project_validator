@@ -2,112 +2,124 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "gcovr --xml",
-            "lcov --rc branch_coverage=1",
-            "gcov --branch-counts",
-            "llvm-cov report"
-          ],
-          "tools": [
-            "gcovr"
-          ]
-        },
         "language": "C",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "gcovr",
-            "lcov",
-            "gcov",
-            "llvm-cov report"
-          ],
-          "tools": [
-            "gcovr"
-          ]
-        },
-        "path": {
-          "answer": "yes",
-          "known": [
-            "lcov --mcdc-coverage",
-            "gcov --conditions",
-            "llvm-cov show -show-mcdc",
-            "gcc -fcondition-coverage",
-            "gcc -fpath-coverage",
-            "clang -fcoverage-mcdc"
-          ],
-          "tools": [
-            "gcc -fcondition-coverage"
-          ]
-        },
-        "region": {
-          "answer": "no",
-          "known": [
-            "llvm-cov report"
-          ],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "gcovr --xml",
+                "lcov --rc branch_coverage=1",
+                "gcov --branch-counts",
+                "llvm-cov report"
+              ],
+              "tools": [
+                "gcovr"
+              ]
+            },
+            "language": "C",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "gcovr",
+                "lcov",
+                "gcov",
+                "llvm-cov report"
+              ],
+              "tools": [
+                "gcovr"
+              ]
+            },
+            "path": {
+              "answer": "yes",
+              "known": [
+                "lcov --mcdc-coverage",
+                "gcov --conditions",
+                "llvm-cov show -show-mcdc",
+                "gcc -fcondition-coverage",
+                "gcc -fpath-coverage",
+                "clang -fcoverage-mcdc"
+              ],
+              "tools": [
+                "gcc -fcondition-coverage"
+              ]
+            },
+            "region": {
+              "answer": "no",
+              "known": [
+                "llvm-cov report"
+              ],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       },
       {
-        "branch": {
-          "answer": "yes",
-          "known": [
-            "gcovr --xml",
-            "lcov --rc branch_coverage=1",
-            "gcov --branch-counts",
-            "llvm-cov report"
-          ],
-          "tools": [
-            "gcovr"
-          ]
-        },
         "language": "C++",
-        "line": {
-          "answer": "yes",
-          "known": [
-            "gcovr",
-            "lcov",
-            "gcov",
-            "llvm-cov report"
-          ],
-          "tools": [
-            "gcovr"
-          ]
-        },
-        "path": {
-          "answer": "yes",
-          "known": [
-            "lcov --mcdc-coverage",
-            "gcov --conditions",
-            "llvm-cov show -show-mcdc",
-            "gcc -fcondition-coverage",
-            "gcc -fpath-coverage",
-            "clang -fcoverage-mcdc"
-          ],
-          "tools": [
-            "gcc -fcondition-coverage"
-          ]
-        },
-        "region": {
-          "answer": "no",
-          "known": [
-            "llvm-cov report"
-          ],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "gcovr --xml",
+                "lcov --rc branch_coverage=1",
+                "gcov --branch-counts",
+                "llvm-cov report"
+              ],
+              "tools": [
+                "gcovr"
+              ]
+            },
+            "language": "C++",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "gcovr",
+                "lcov",
+                "gcov",
+                "llvm-cov report"
+              ],
+              "tools": [
+                "gcovr"
+              ]
+            },
+            "path": {
+              "answer": "yes",
+              "known": [
+                "lcov --mcdc-coverage",
+                "gcov --conditions",
+                "llvm-cov show -show-mcdc",
+                "gcc -fcondition-coverage",
+                "gcc -fpath-coverage",
+                "clang -fcoverage-mcdc"
+              ],
+              "tools": [
+                "gcc -fcondition-coverage"
+              ]
+            },
+            "region": {
+              "answer": "no",
+              "known": [
+                "llvm-cov report"
+              ],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -135,7 +147,19 @@
       "kind": "SourceFile",
       "language": null,
       "origin": "cmake/Dependencies.cmake",
-      "vendored": false
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "CMake"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".",
+      "role": "product"
     },
     {
       "env": {},
@@ -2929,719 +2953,924 @@
       "reader": "CMake flags"
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[6]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[7]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[8]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[9]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[9]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[10]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[10]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[11]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[11]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[12]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[12]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[13]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[13]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[14]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[14]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[15]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[15]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[16]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[16]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[17]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[17]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[18]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[18]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[19]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
     },
     {
-      "granularities": [
-        "branch",
-        "line"
-      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[19]",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
       "read": [],
+      "scope": [
+        "."
+      ],
       "tool": "gcovr",
       "via": []
     },
     {
-      "granularities": [
-        "path"
-      ],
       "heuristic": true,
       "job": ".github/workflows/codeql-analysis.yml:analyze",
-      "kind": "CoverageMeasured",
+      "kind": "ToolRun",
       "languages": [
         "C",
         "C++"
       ],
       "origin": ".github/workflows/codeql-analysis.yml:jobs.analyze.steps[2].run",
+      "provides": {
+        "coverage": [
+          "path"
+        ]
+      },
       "read": [
         "CMakeLists.txt"
+      ],
+      "scope": [
+        "."
       ],
       "tool": "gcc -fcondition-coverage",
       "via": []
@@ -3996,6 +4225,19 @@
     "languages": [
       "C",
       "C++"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "CMake"
+        ],
+        "directory": ".",
+        "languages": [
+          "C",
+          "C++"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": []
   },

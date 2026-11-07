@@ -6,7 +6,9 @@ from unittest import mock
 from project_validator.checks.coverage import coverage
 from project_validator.core import Result, Status
 from project_validator.facts import Command, Facts, Origin, Unknown
-from project_validator.facts.coverage import CoverageMeasured, CoverageTool, Granularity, Measurement, measured
+from project_validator.facts.coverage import COVERAGE, Granularity, coverage_tool, measured
+from project_validator.facts.structure import Unit
+from project_validator.facts.tools import Run, Tool, ToolRun
 from project_validator.policy import judge_coverage, required_coverage
 from project_validator.questions import Answer
 from project_validator.questions.coverage import coverage_answer
@@ -15,12 +17,12 @@ from tests.support import github_job, make_context, temp_project
 ORIGIN = Origin(path="ci.yml", at=("jobs", "test"))
 
 
-def _never(_: Command, __: Facts) -> Measurement | None:
+def _never(_: Command, __: Facts) -> Run | None:
     return None
 
 
-def _tool(name: str, languages: set[str], *granularities: Granularity) -> CoverageTool:
-    return CoverageTool(
+def _tool(name: str, languages: set[str], *granularities: Granularity) -> Tool:
+    return coverage_tool(
         name=name,
         languages=frozenset(languages),
         can={granularity: f"{name} --{granularity}" for granularity in granularities},
@@ -28,9 +30,14 @@ def _tool(name: str, languages: set[str], *granularities: Granularity) -> Covera
     )
 
 
-def _measured(tool: str, *granularities: Granularity) -> CoverageMeasured:
-    return CoverageMeasured(
-        origin=ORIGIN, job="test", tool=tool, languages=frozenset({"Lang"}), granularities=frozenset(granularities)
+def _measured(tool: str, *granularities: Granularity, scope: tuple[str, ...] = (".",)) -> ToolRun:
+    return ToolRun(
+        origin=ORIGIN,
+        job="test",
+        tool=tool,
+        languages=frozenset({"Lang"}),
+        provides={COVERAGE: frozenset(granularities)},
+        scope=scope,
     )
 
 
@@ -93,16 +100,37 @@ class CoveragePolicyTests(unittest.TestCase):
 
 class LanguagesOfOneEcosystemTests(unittest.TestCase):
     def test_languages_judged_differently_are_labelled(self) -> None:
-        c_only = CoverageTool(
+        c_only = coverage_tool(
             name="ccov", languages=frozenset({"C"}), can={BRANCH: "ccov"}, measures=lambda *_: measured(BRANCH)
         )
         files = {"main.c": "", "app.cpp": "", **github_job("ubuntu-latest", "ccov")}
         with (
-            mock.patch("project_validator.checks.coverage.built_in_coverage_tools", return_value=(c_only,)),
-            mock.patch("project_validator.facts.coverage.built_in_coverage_tools", return_value=(c_only,)),
+            mock.patch("project_validator.questions.coverage.built_in_tools", return_value=(c_only,)),
+            mock.patch("project_validator.facts.tools.built_in_tools", return_value=(c_only,)),
             temp_project(files) as root,
         ):
             result = coverage.run(make_context(root))
         self.assertEqual(
             result.message, "C: branch coverage is reported with ccov; C++: no known tool measures the coverage of C++"
         )
+
+
+class UnitTests(unittest.TestCase):
+    def test_a_run_covers_its_directory_what_is_below_it_and_the_unit_it_is_in(self) -> None:
+        run = _measured("cov", BRANCH, scope=("packages/a",))
+        self.assertEqual(
+            [run.covers(unit) for unit in (".", "packages/a", "packages/a/sub", "packages/b", "packages/ab")],
+            [True, True, True, False, False],
+        )
+        self.assertTrue(_measured("cov", BRANCH).covers("packages/b"))
+
+    def test_each_unit_of_a_language_is_answered(self) -> None:
+        facts = Facts(
+            (
+                Unit(origin=Origin(path="a"), build_systems=("npm",), languages=frozenset({"Lang"})),
+                Unit(origin=Origin(path="b"), build_systems=("npm",), languages=frozenset({"Lang"})),
+                _measured("cov", BRANCH, scope=("a",)),
+            )
+        )
+        answers = {unit: coverage_answer("Lang", facts, TOOLS, unit)[BRANCH].answer for unit in ("a", "b")}
+        self.assertEqual(answers, {"a": Answer.YES, "b": Answer.NO})

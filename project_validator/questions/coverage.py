@@ -1,10 +1,13 @@
-"""The coverage question: for one language, what coverage does CI report, at each granularity?"""
+"""The coverage question: for each language, in each unit of the project that has it, what coverage does CI report,
+at each granularity?"""
 
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from project_validator.facts import Facts, Unknown
-from project_validator.facts.coverage import CoverageMeasured, CoverageTool, Granularity, built_in_coverage_tools
+from project_validator.facts.coverage import COVERAGE, Granularity
+from project_validator.facts.structure import Unit
+from project_validator.facts.tools import Tool, ToolRun, built_in_tools
 from project_validator.questions import Answer, Question
 
 
@@ -19,7 +22,10 @@ class GranularityAnswer:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class CoverageAnswer:
+    """The coverage of one language in one unit ("." for the project's root unit)."""
+
     language: str
+    unit: str = "."
     granularities: Mapping[Granularity, GranularityAnswer]
     # What could not be read, for unknown answers: `subject: reason (origin)`.
     unknowns: tuple[str, ...] = ()
@@ -34,6 +40,7 @@ class CoverageAnswer:
     def as_dict(self) -> dict[str, object]:
         return {
             "language": self.language,
+            "unit": self.unit,
             **{
                 str(granularity): {"answer": str(found.answer), "tools": list(found.tools), "known": list(found.known)}
                 for granularity, found in self.granularities.items()
@@ -42,45 +49,84 @@ class CoverageAnswer:
         }
 
 
+@dataclass(frozen=True, slots=True, kw_only=True)
+class LanguageCoverage:
+    """The coverage of one language, in each unit of the project that has it."""
+
+    language: str
+    units: tuple[CoverageAnswer, ...]
+
+    def as_dict(self) -> dict[str, object]:
+        return {"language": self.language, "units": [unit.as_dict() for unit in self.units]}
+
+
+def measures_coverage(tool: Tool) -> bool:
+    return COVERAGE in tool.can
+
+
 def _answer(
-    granularity: Granularity, measured: tuple[CoverageMeasured, ...], known: tuple[CoverageTool, ...], unread: bool
+    granularity: Granularity, runs: tuple[ToolRun, ...], known: tuple[Tool, ...], unread: bool
 ) -> GranularityAnswer:
-    able = tuple(dict.fromkeys(tool.can[granularity] for tool in known if granularity in tool.can))
+    level = str(granularity)
+    able = tuple(dict.fromkeys(tool.can[COVERAGE][level] for tool in known if level in tool.can[COVERAGE]))
     if not able:
         return GranularityAnswer(answer=Answer.IMPOSSIBLE)
-    if tools := tuple(dict.fromkeys(fact.tool for fact in measured if granularity in fact.granularities)):
+    if tools := tuple(dict.fromkeys(run.tool for run in runs if level in run.provides[COVERAGE])):
         return GranularityAnswer(answer=Answer.YES, tools=tools, known=able)
     return GranularityAnswer(answer=Answer.UNKNOWN if unread else Answer.NO, known=able)
 
 
-def coverage_answer(language: str, facts: Facts, tools: Iterable[CoverageTool]) -> CoverageAnswer:
-    """What coverage CI reports for `language`, by the facts, and what the known `tools` could report."""
-    known = tuple(tool for tool in tools if language in tool.languages)
-    measured = tuple(fact for fact in facts.of(CoverageMeasured) if language in fact.languages)
-    # What was not read matters when it may hide anything, or holds settings a known tool reads.
+def coverage_answer(language: str, facts: Facts, tools: Iterable[Tool], unit: str = ".") -> CoverageAnswer:
+    """What coverage CI reports for `language` in `unit`, by the facts, and what the known `tools` could report."""
+    known = tuple(tool for tool in tools if measures_coverage(tool) and language in tool.languages)
+    runs = tuple(
+        run for run in facts.of(ToolRun) if COVERAGE in run.provides and language in run.languages and run.covers(unit)
+    )
+    # What was not read matters when it may hide a run (a job or a command), or settings a known tool reads.
     reads = {name for tool in known for name in (tool.name, *tool.reads)}
     unknowns = tuple(
         f"{fact.subject}: {fact.reason} ({fact.origin})"
         for fact in facts.of(Unknown)
-        if not fact.tools or reads & set(fact.tools)
+        if fact.hides in ("jobs", "commands") or (fact.hides == "settings" and reads & set(fact.tools))
     )
     return CoverageAnswer(
         language=language,
-        granularities={
-            granularity: _answer(granularity, measured, known, bool(unknowns)) for granularity in Granularity
-        },
+        unit=unit,
+        granularities={granularity: _answer(granularity, runs, known, bool(unknowns)) for granularity in Granularity},
         unknowns=unknowns,
     )
 
 
-def _answer_coverage(language: str, facts: Facts) -> CoverageAnswer:
-    return coverage_answer(language, facts, built_in_coverage_tools())
+def units_of(language: str, facts: Facts) -> tuple[str, ...]:
+    """The product units of the project that have `language`: none when the language is only in its docs, tooling,
+    examples, benchmarks or test fixtures. A project with no product unit at all (only scripts, say) is all product;
+    a project with no units is one, its root."""
+    units = facts.of(Unit)
+    product = [unit for unit in units if unit.role == "product"] or [unit for unit in units if unit.role != "vendored"]
+    return tuple(unit.directory for unit in product if language in unit.languages) if units else (".",)
 
 
-COVERAGE = Question(
+def language_coverage(language: str, facts: Facts) -> LanguageCoverage:
+    tools = built_in_tools()
+    return LanguageCoverage(
+        language=language,
+        units=tuple(coverage_answer(language, facts, tools, unit) for unit in units_of(language, facts)),
+    )
+
+
+COVERAGE_QUESTION = Question(
     name="coverage",
-    description="What coverage does CI report for the language, at each granularity (line to path)?",
-    answer=_answer_coverage,
+    description="What coverage does CI report for each language in each unit, at each granularity (line to path)?",
+    answer=language_coverage,
 )
 
-__all__ = ["COVERAGE", "CoverageAnswer", "GranularityAnswer", "coverage_answer"]
+__all__ = [
+    "COVERAGE_QUESTION",
+    "CoverageAnswer",
+    "GranularityAnswer",
+    "LanguageCoverage",
+    "coverage_answer",
+    "language_coverage",
+    "measures_coverage",
+    "units_of",
+]

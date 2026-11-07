@@ -2,39 +2,45 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "jacoco:report or jacocoTestReport",
-            "koverXmlReport"
-          ],
-          "tools": []
-        },
         "language": "Java",
-        "line": {
-          "answer": "no",
-          "known": [
-            "jacoco:report or jacocoTestReport",
-            "koverXmlReport"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "region": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "jacoco:report or jacocoTestReport",
+                "koverXmlReport"
+              ],
+              "tools": []
+            },
+            "language": "Java",
+            "line": {
+              "answer": "no",
+              "known": [
+                "jacoco:report or jacocoTestReport",
+                "koverXmlReport"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -50,7 +56,18 @@
       "kind": "SourceFile",
       "language": "Java",
       "origin": "src/main/java/com/example/App.java",
-      "vendored": false
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Maven"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Java"
+      ],
+      "origin": ".",
+      "role": "product"
     },
     {
       "kind": "ConfigurationFile",
@@ -74,6 +91,18 @@
     },
     "languages": [
       "Java"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Maven"
+        ],
+        "directory": ".",
+        "languages": [
+          "Java"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": []
   },

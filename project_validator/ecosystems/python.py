@@ -6,9 +6,8 @@ from collections.abc import Callable, Iterator
 from fnmatch import fnmatch
 from pathlib import PurePosixPath
 
-from project_validator.build_configurations import option_values
 from project_validator.core import Context, Result
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
 from project_validator.evidence import (
     ci_and_hook_texts,
     configuration,
@@ -17,17 +16,11 @@ from project_validator.evidence import (
     toml_value,
 )
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
-from project_validator.facts.coverage import CoverageTool, Granularity, Measurement, measured
-from project_validator.facts.expansion import (
-    CommandExpander,
-    Expansion,
-    Launched,
-    has_option,
-    joined,
-    launcher,
-    program,
-)
+from project_validator.facts.arguments import has_option, option_values, program
+from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.expansion import CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
+from project_validator.facts.tools import Run
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
@@ -48,7 +41,10 @@ from project_validator.rules import (
 from project_validator.text import Pattern, pattern
 
 PYTHON_PACKAGING = BuildSystem(
-    name="Python packaging", files=("pyproject.toml", "setup.py"), languages=frozenset({"Python"})
+    name="Python packaging",
+    files=("pyproject.toml", "setup.py"),
+    languages=frozenset({"Python"}),
+    members=toml_members("tool", "uv", "workspace"),
 )
 
 PYTHON_FORMATTER_SECTIONS = re.compile(r"^\s*\[tool\.(?:ruff|black)\b", re.MULTILINE)
@@ -134,13 +130,13 @@ def _branches(setting: Setting | None) -> bool:
     return setting is not None and (setting.value is True or str(setting.value).strip().lower() in _TRUE)
 
 
-def _measured_lines_and(branch: bool, *read: Setting | None) -> Measurement:
+def _measured_lines_and(branch: bool, *read: Setting | None) -> Run:
     return measured(
         Granularity.LINE, Granularity.BRANCH if branch else None, read=[found for found in read if found is not None]
     )
 
 
-def _coverage_py(command: Command, facts: Facts) -> Measurement | None:
+def _coverage_py(command: Command, facts: Facts) -> Run | None:
     argv = resolved(command)
     if program(argv) != "coverage" or argv[1:2] != ("run",):
         return None
@@ -149,7 +145,7 @@ def _coverage_py(command: Command, facts: Facts) -> Measurement | None:
     return _measured_lines_and(has_option(argv, "--branch") or _branches(setting), setting)
 
 
-def _pytest_cov(command: Command, facts: Facts) -> Measurement | None:
+def _pytest_cov(command: Command, facts: Facts) -> Run | None:
     argv = resolved(command)
     if program(argv) not in ("pytest", "py.test"):
         return None
@@ -165,14 +161,14 @@ def _pytest_cov(command: Command, facts: Facts) -> Measurement | None:
     return _measured_lines_and(has_option(words, "--cov-branch") or _branches(setting), setting, addopts)
 
 
-COVERAGE_PY = CoverageTool(
+COVERAGE_PY = coverage_tool(
     name="coverage.py",
     languages=frozenset({"Python"}),
     can={Granularity.LINE: "coverage run", Granularity.BRANCH: "coverage run --branch"},
     measures=_coverage_py,
     reads=("coverage.py",),
 )
-PYTEST_COV = CoverageTool(
+PYTEST_COV = coverage_tool(
     name="pytest-cov",
     languages=frozenset({"Python"}),
     can={Granularity.LINE: "pytest --cov", Granularity.BRANCH: "pytest --cov --cov-branch"},

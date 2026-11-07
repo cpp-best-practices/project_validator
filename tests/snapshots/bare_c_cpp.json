@@ -2,100 +2,112 @@
   "answers": {
     "coverage": [
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "gcovr --xml",
-            "lcov --rc branch_coverage=1",
-            "gcov --branch-counts",
-            "llvm-cov report"
-          ],
-          "tools": []
-        },
         "language": "C",
-        "line": {
-          "answer": "no",
-          "known": [
-            "gcovr",
-            "lcov",
-            "gcov",
-            "llvm-cov report"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "no",
-          "known": [
-            "lcov --mcdc-coverage",
-            "gcov --conditions",
-            "llvm-cov show -show-mcdc",
-            "gcc -fcondition-coverage",
-            "gcc -fpath-coverage",
-            "clang -fcoverage-mcdc"
-          ],
-          "tools": []
-        },
-        "region": {
-          "answer": "no",
-          "known": [
-            "llvm-cov report"
-          ],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "gcovr --xml",
+                "lcov --rc branch_coverage=1",
+                "gcov --branch-counts",
+                "llvm-cov report"
+              ],
+              "tools": []
+            },
+            "language": "C",
+            "line": {
+              "answer": "no",
+              "known": [
+                "gcovr",
+                "lcov",
+                "gcov",
+                "llvm-cov report"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "no",
+              "known": [
+                "lcov --mcdc-coverage",
+                "gcov --conditions",
+                "llvm-cov show -show-mcdc",
+                "gcc -fcondition-coverage",
+                "gcc -fpath-coverage",
+                "clang -fcoverage-mcdc"
+              ],
+              "tools": []
+            },
+            "region": {
+              "answer": "no",
+              "known": [
+                "llvm-cov report"
+              ],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       },
       {
-        "branch": {
-          "answer": "no",
-          "known": [
-            "gcovr --xml",
-            "lcov --rc branch_coverage=1",
-            "gcov --branch-counts",
-            "llvm-cov report"
-          ],
-          "tools": []
-        },
         "language": "C++",
-        "line": {
-          "answer": "no",
-          "known": [
-            "gcovr",
-            "lcov",
-            "gcov",
-            "llvm-cov report"
-          ],
-          "tools": []
-        },
-        "path": {
-          "answer": "no",
-          "known": [
-            "lcov --mcdc-coverage",
-            "gcov --conditions",
-            "llvm-cov show -show-mcdc",
-            "gcc -fcondition-coverage",
-            "gcc -fpath-coverage",
-            "clang -fcoverage-mcdc"
-          ],
-          "tools": []
-        },
-        "region": {
-          "answer": "no",
-          "known": [
-            "llvm-cov report"
-          ],
-          "tools": []
-        },
-        "statement": {
-          "answer": "impossible",
-          "known": [],
-          "tools": []
-        },
-        "unknowns": []
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "gcovr --xml",
+                "lcov --rc branch_coverage=1",
+                "gcov --branch-counts",
+                "llvm-cov report"
+              ],
+              "tools": []
+            },
+            "language": "C++",
+            "line": {
+              "answer": "no",
+              "known": [
+                "gcovr",
+                "lcov",
+                "gcov",
+                "llvm-cov report"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "no",
+              "known": [
+                "lcov --mcdc-coverage",
+                "gcov --conditions",
+                "llvm-cov show -show-mcdc",
+                "gcc -fcondition-coverage",
+                "gcc -fpath-coverage",
+                "clang -fcoverage-mcdc"
+              ],
+              "tools": []
+            },
+            "region": {
+              "answer": "no",
+              "known": [
+                "llvm-cov report"
+              ],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ]
   },
@@ -114,7 +126,19 @@
       "kind": "SourceFile",
       "language": "C++",
       "origin": "third_party/json/json.hpp",
-      "vendored": true
+      "role": "vendored"
+    },
+    {
+      "build_systems": [
+        "CMake"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".",
+      "role": "product"
     },
     {
       "kind": "ConfigurationFile",
@@ -139,6 +163,19 @@
     "languages": [
       "C",
       "C++"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "CMake"
+        ],
+        "directory": ".",
+        "languages": [
+          "C",
+          "C++"
+        ],
+        "role": "product"
+      }
     ],
     "unrecognised_suffixes": [],
     "vendored": [
