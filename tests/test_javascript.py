@@ -180,10 +180,10 @@ class FunctionLimitTests(unittest.TestCase):
 
     def test_eslint_max_lines_per_function_limits_functions_when_eslint_runs(self) -> None:
         config = {"eslint.config.js": 'export default [{ rules: { "max-lines-per-function": ["error", 40] } }];\n'}
-        expected = Result.passed("function length is limited with eslint max-lines-per-function (eslint.config.js)")
+        expected = Result.passed("function length is limited with eslint's max-lines-per-function (eslint.config.js)")
         self.assertEqual(self._run({**config, **_ci("npx eslint .")}), expected)
-        warned = Result.warned("max-lines-per-function is enabled in eslint.config.js but CI does not run eslint")
-        self.assertEqual(self._run(config), warned)
+        warned = "eslint.config.js limits function length, but CI does not run eslint's max-lines-per-function"
+        self.assertEqual(self._run(config).message, warned)
 
     def test_a_disabled_rule_limits_nothing(self) -> None:
         for setting in ('"off"', "0", '["off"]'):

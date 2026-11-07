@@ -10,6 +10,7 @@ from project_validator.facts.arguments import has_option, program
 from project_validator.facts.expansion import Action, from_hook
 from project_validator.facts.settings import Read, SettingsReader, ini_settings, json_settings, toml_settings
 from project_validator.facts.tools import Run, defined_by
+from project_validator.tools.limits import function_length_limiters
 
 PYTHON = frozenset({"Python"})
 _TRUE = frozenset({"true", "1", "yes", "on"})
@@ -165,3 +166,6 @@ TY = type_checker(
     reads=("ty",),
 )
 PYRIGHT_ACTION = Action(name="jakebailey/pyright-action", runs=lambda _inputs: (("pyright",),))
+
+# Python has no function length limit of its own here; lizard measures it.
+FUNCTION_LENGTH_LIMITERS = function_length_limiters(PYTHON)

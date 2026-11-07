@@ -138,6 +138,32 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Rust",
@@ -430,8 +456,10 @@
       "status": "WARN"
     },
     "function-limits": {
-      "details": [],
-      "message": "function length is never limited; run lizard --length 30 in CI",
+      "details": [
+        "consider running in CI: lizard --length 30"
+      ],
+      "message": "function length is never limited",
       "status": "FAIL"
     },
     "hardening": {

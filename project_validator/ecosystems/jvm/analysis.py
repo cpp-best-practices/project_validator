@@ -15,11 +15,19 @@ from project_validator.ecosystems.jvm import (
     plugin_definition,
     wired_run,
 )
-from project_validator.facts import Command, Fact, Facts, Setting
+from project_validator.facts import Command, Fact, Facts, Setting, Unknown
 from project_validator.facts.analysis import analysed, analyzer
+from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
-from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
+from project_validator.facts.settings import (
+    SettingsReader,
+    matched_settings,
+    settings,
+    xml_root,
+    yaml_settings,
+)
 from project_validator.facts.tools import Claim, Run, Tool, defined_by, either
+from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
 
@@ -69,7 +77,21 @@ PMD = analyzer(
     rules=plugin_definition("maven-pmd-plugin", "pmd"),
     reads=("Maven", "Gradle"),
 )
-CHECKSTYLE_FILES = file_reader("Checkstyle", ("*checkstyle*.xml", "*Checkstyle*.xml"))
+
+
+def _read_checkstyle(path: str, text: str) -> Iterator[Fact]:
+    """The modules (checks) a Checkstyle configuration names."""
+    root = xml_root("Checkstyle", path, text)
+    if isinstance(root, Unknown):
+        yield root
+        return
+    names = tuple(module.get("name", "") for module in root.iter("module"))
+    yield from settings("Checkstyle", path, (("modules", names),))
+
+
+CHECKSTYLE_SETTINGS = SettingsReader(
+    name="Checkstyle", files=("*checkstyle*.xml", "*Checkstyle*.xml"), read=_read_checkstyle
+)
 CHECKSTYLE = analyzer(
     name="Checkstyle",
     languages=frozenset({JAVA}),
@@ -85,7 +107,11 @@ CHECKSTYLE = analyzer(
     rules=defined_by(files=("Checkstyle",)),
     reads=("Maven", "Gradle"),
 )
-DETEKT_FILES = file_reader("detekt", ("detekt.yml", "detekt-config.yml", "config/detekt/detekt.yml"))
+DETEKT_SETTINGS = SettingsReader(
+    name="detekt",
+    files=("detekt.yml", "detekt-config.yml", "config/detekt/detekt.yml"),
+    read=lambda path, text: yaml_settings("detekt", path, text),
+)
 DETEKT = analyzer(
     name="detekt",
     languages=frozenset({KOTLIN}),
@@ -104,6 +130,50 @@ DETEKT = analyzer(
     rules=defined_by(files=("detekt",)),
     reads=("Maven", "Gradle"),
 )
+
+
+def _method_length_module(facts: Facts) -> list[Setting]:
+    return [setting for setting in facts.settings("Checkstyle") if "MethodLength" in _names(setting)]
+
+
+def _names(setting: Setting) -> tuple[object, ...]:
+    return setting.value if isinstance(setting.value, tuple) else ()
+
+
+def _long_method(facts: Facts, *, on: bool) -> list[Setting]:
+    """The detekt settings that turn LongMethod off (it or its rule set inactive), or, unless they do, on (its
+    settings)."""
+    found = facts.settings("detekt")
+    off = [setting for setting in found if setting.key in _LONG_METHOD_OFF and setting.value is False]
+    if not on or off:
+        return [] if on else off
+    return [setting for setting in found if setting.key.startswith("complexity.LongMethod.")]
+
+
+_LONG_METHOD_OFF = frozenset({"complexity.LongMethod.active", "complexity.active"})
+METHOD_LENGTH = limiter(
+    name="Checkstyle's MethodLength",
+    languages=frozenset({JAVA}),
+    how="Checkstyle with its MethodLength check",
+    runs=CHECKSTYLE.claims,
+    rule=Rule(describe="the MethodLength module in the Checkstyle configuration", enabled=_method_length_module),
+    reads=("Maven", "Gradle", "Checkstyle"),
+)
+# detekt's LongMethod rule is active by default.
+LONG_METHOD = limiter(
+    name="detekt's LongMethod",
+    languages=frozenset({KOTLIN}),
+    how="detekt",
+    runs=DETEKT.claims,
+    rule=Rule(
+        describe="LongMethod active in the detekt configuration",
+        enabled=lambda facts: _long_method(facts, on=True),
+        disabled=lambda facts: _long_method(facts, on=False),
+        default=True,
+    ),
+    reads=("Maven", "Gradle", "detekt"),
+)
+FUNCTION_LENGTH_LIMITERS = (METHOD_LENGTH, LONG_METHOD, *function_length_limiters(JVM_LANGUAGES))
 
 # Error Prone is a compiler plugin: on a Maven compiler's processor path or arguments, or the net.ltgt.errorprone
 # Gradle plugin. Matched in the build files until they are read structurally.

@@ -182,7 +182,8 @@ class SecurityAndAnalysisTests(unittest.TestCase):
     def test_function_length_is_measured_by_lizard_except_for_fsharp(self) -> None:
         self.assertEqual(run_in_layout(self, CSHARP, FUNCTION_LIMITS, {}).status, Status.FAIL)
         skipped = run_in_layout(self, FSHARP, FUNCTION_LIMITS, {})
-        self.assertEqual(skipped, Result(status=Status.SKIP, message="no known tool limits the length of F# functions"))
+        # No known tool limits the length of F# functions.
+        self.assertEqual(skipped.status, Status.SKIP)
 
 
 class DependencyTests(unittest.TestCase):

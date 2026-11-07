@@ -132,21 +132,6 @@ class DependencyManagement:
     vendor_outputs: tuple[str, ...] = ()
 
 
-# Scanners that audit the dependencies of many ecosystems at once, from their manifests and lockfiles.
-DEFAULT_LENGTH_LIMIT = 30
-SUGGESTED_LIZARD = f"lizard --length {DEFAULT_LENGTH_LIMIT}"
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class FunctionLimits:
-    """Function length can be limited in this ecosystem; lizard measures every one of them.
-
-    `without_lizard` judges the ecosystem's own way of limiting function length when lizard is not run.
-    """
-
-    without_lizard: Callable[[Context], Result] | None = None
-
-
 def ignored_at_top_level(names: str) -> re.Pattern[str]:
     """Globs that ignore one of `names` at the top of the repository, as a directory or with all of its contents."""
     return re.compile(rf"(?:\*\*/|/)?(?:{names})(?:/\**)?", re.IGNORECASE)

@@ -37,7 +37,7 @@ files.
 
 ## `function-limits`
 
-lizard runs with a length limit.
+lizard runs in CI with a length limit.
 
 ## `static-analysis`
 

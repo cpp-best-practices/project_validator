@@ -101,9 +101,15 @@ class SettingTests(unittest.TestCase):
         self.assertEqual(missing.message, "missing Ruby warning settings: Ruby warnings")
 
     def test_method_length_is_limited_by_rubocop_unless_disabled(self) -> None:
-        expected = Result.passed("function length is limited with RuboCop Metrics/MethodLength")
+        expected = Result.passed("function length is limited with RuboCop's Metrics/MethodLength")
         self.assertEqual(run_as(self, FUNCTION_LIMITS, _ci("bundle exec rubocop --parallel"), RUBY), expected)
-        for config in ("Metrics/MethodLength:\n  Enabled: false\n", "Metrics:\n  Max: 5\n  Enabled: false\n"):
+        configured = {".rubocop.yml": "Metrics/MethodLength:\n  Max: 20\n"}
+        self.assertEqual(
+            run_as(self, FUNCTION_LIMITS, {**configured, **_ci("rubocop")}, RUBY),
+            Result.passed("function length is limited with RuboCop's Metrics/MethodLength (.rubocop.yml)"),
+        )
+        self.assertEqual(run_as(self, FUNCTION_LIMITS, configured, RUBY).status, Status.WARN)
+        for config in ("Metrics/MethodLength:\n  Enabled: false\n", "Metrics:\n  Enabled: false\n"):
             with self.subTest(config=config):
                 files = {".rubocop.yml": config, **_ci("rubocop")}
                 self.assertEqual(run_as(self, FUNCTION_LIMITS, files, RUBY).status, Status.FAIL)

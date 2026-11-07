@@ -32,7 +32,9 @@ gofmt, gofumpt or goimports listing what they would change (`-l` or `-d`, which 
 
 ## `function-limits`
 
-lizard runs with a length limit, or golangci-lint runs with `funlen` enabled.
+lizard runs in CI with a length limit, or golangci-lint runs with `funlen` enabled in its configuration (in
+`linters.enable`, or all linters, and not in `linters.disable`). `funlen` enabled while CI does not run golangci-lint
+warns.
 
 ## `static-analysis`
 

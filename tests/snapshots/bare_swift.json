@@ -125,6 +125,39 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "SwiftLint's function_body_length": {
+                "can": {
+                  "limits": "swiftlint --strict"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Swift",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Swift",
@@ -395,8 +428,10 @@
       "status": "WARN"
     },
     "function-limits": {
-      "details": [],
-      "message": "function length is never limited; run SwiftLint or lizard --length 30 in CI",
+      "details": [
+        "consider running in CI: swiftlint --strict or lizard --length 30"
+      ],
+      "message": "function length is never limited",
       "status": "FAIL"
     },
     "hardening": {

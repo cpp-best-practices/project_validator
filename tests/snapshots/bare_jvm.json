@@ -140,6 +140,39 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "Checkstyle's MethodLength": {
+                "can": {
+                  "limits": "Checkstyle with its MethodLength check"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Java",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Java",
@@ -445,8 +478,10 @@
       "status": "WARN"
     },
     "function-limits": {
-      "details": [],
-      "message": "function length is never limited; enable Checkstyle's MethodLength check, run detekt, or run lizard --length 30 in CI",
+      "details": [
+        "consider running in CI: Checkstyle with its MethodLength check or lizard --length 30"
+      ],
+      "message": "function length is never limited",
       "status": "FAIL"
     },
     "hardening": {

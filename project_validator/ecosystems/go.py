@@ -2,12 +2,12 @@
 
 import re
 import shlex
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import existing_texts, first_existing
-from project_validator.facts import Command, Fact, Facts, resolved
+from project_validator.evidence import existing_texts
+from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, positional, program
 from project_validator.facts.audit import audited, auditor
@@ -15,15 +15,14 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by, either, starts, when
 from project_validator.rules import (
-    SUGGESTED_LIZARD,
     BuildOutputs,
     DependencyManagement,
-    FunctionLimits,
     Hardening,
     WarningPolicy,
     directories,
@@ -31,6 +30,7 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern, matching_names, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
 _USE = re.compile(r"^\s*(?:use\s+)?(?:\(\s*)?(\.{1,2}/[^\s)]*|\.)\s*\)?\s*$", re.MULTILINE)
@@ -185,17 +185,34 @@ WARNINGS = WarningPolicy(
 )
 
 
+def _golangci_enables(linter: str) -> Callable[[Facts], list[Setting]]:
+    """The golangci-lint settings that enable `linter`: among the linters `linters.enable` names, or all of them; none
+    when `linters.disable` names it."""
+
+    def enabled(facts: Facts) -> list[Setting]:
+        found = facts.settings("golangci-lint")
+        if any(setting.key == "linters.disable" and _names(setting, linter) for setting in found):
+            return []
+        return [
+            setting
+            for setting in found
+            if (setting.key == "linters.enable" and _names(setting, linter))
+            or (setting.key == "linters.enable-all" and setting.value is True)
+            or (setting.key == "linters.default" and setting.value == "all")
+        ]
+
+    return enabled
+
+
+def _names(setting: Setting, linter: str) -> bool:
+    return isinstance(setting.value, tuple) and linter in setting.value
+
+
 def _golangci_gosec(command: Command, facts: Facts) -> Run | None:
     """`golangci-lint run` with gosec among the linters its configuration enables (or all of them)."""
     if not starts(("golangci-lint", "run"))(command):
         return None
-    read = [
-        setting
-        for setting in facts.settings("golangci-lint")
-        if (setting.key == "linters.enable" and isinstance(setting.value, tuple) and "gosec" in setting.value)
-        or (setting.key == "linters.enable-all" and setting.value is True)
-        or (setting.key == "linters.default" and setting.value == "all")
-    ]
+    read = _golangci_enables("gosec")(facts)
     return scanned(read=read) if read else None
 
 
@@ -256,21 +273,6 @@ def _position_independent(context: Context) -> Result:
 
 HARDENING = Hardening(texts=_build_texts, judge=_position_independent)
 
-FUNLEN = re.compile(r"(?<![\w-])funlen\b")
-
-
-def _funlen_enforced(context: Context) -> Result:
-    """golangci-lint's funlen linter limits function length, when it is enabled and golangci-lint runs."""
-    config = first_existing(context, GOLANGCI_CONFIG_FILES)
-    enabled = config is not None and FUNLEN.search(context.project.read_text(config))
-    if not enabled:
-        return Result.failed(
-            f"function length is never limited; enable golangci-lint's funlen linter or run {SUGGESTED_LIZARD} in CI"
-        )
-    if not matching_names(context.ci_texts, (pattern("golangci-lint", RUNS_GOLANGCI_LINT),)):
-        return Result.warned(f"funlen is enabled in {config} but CI does not run golangci-lint")
-    return Result.passed(f"function length is limited with golangci-lint funlen ({config})")
-
 
 # golangci-lint enables a few linters by default; a configuration that enables more asks for more.
 def _more_linters(facts: Facts) -> Iterator[str]:
@@ -297,6 +299,15 @@ GOLANGCI_LINT = analyzer(
     rules=Definition(found=_more_linters, default=False),
     reads=("golangci-lint",),
 )
+FUNLEN = limiter(
+    name="golangci-lint's funlen",
+    languages=GO_LANGUAGE,
+    how="golangci-lint with funlen enabled in .golangci.yml",
+    runs=_golangci_lint,
+    rule=Rule(describe="funlen enabled in .golangci.yml", enabled=_golangci_enables("funlen")),
+    reads=("golangci-lint",),
+)
+FUNCTION_LENGTH_LIMITERS = (FUNLEN, *function_length_limiters(GO_LANGUAGE))
 
 
 REQUIRE = re.compile(r"^\s*require\b", re.MULTILINE)
@@ -344,7 +355,6 @@ GO = Ecosystem(
         versions_axis("Go version", "Go"),
         WARNINGS,
         HARDENING,
-        FunctionLimits(without_lizard=_funlen_enforced),
         DEPENDENCIES,
         BUILD_OUTPUTS,
     ),

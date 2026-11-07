@@ -34,7 +34,8 @@ default task that depends on it. They have a default style, so CI enforcement al
 
 ## `function-limits`
 
-lizard runs with a length limit, or RuboCop runs with `Metrics/MethodLength` not disabled (it is on by default).
+lizard runs in CI with a length limit, or RuboCop runs with `Metrics/MethodLength` on (it is on by default;
+`Enabled: false` on the cop or on the `Metrics` department turns it off). Standard turns the Metrics cops off.
 
 ## `static-analysis`
 

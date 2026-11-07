@@ -122,6 +122,39 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "golangci-lint's funlen": {
+                "can": {
+                  "limits": "golangci-lint with funlen enabled in .golangci.yml"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Go",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Go",
@@ -412,8 +445,10 @@
       "status": "WARN"
     },
     "function-limits": {
-      "details": [],
-      "message": "function length is never limited; enable golangci-lint's funlen linter or run lizard --length 30 in CI",
+      "details": [
+        "consider running in CI: golangci-lint with funlen enabled in .golangci.yml or lizard --length 30"
+      ],
+      "message": "function length is never limited",
       "status": "FAIL"
     },
     "hardening": {

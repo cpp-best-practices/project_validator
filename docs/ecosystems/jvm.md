@@ -35,8 +35,9 @@ Kotlin. They have a default style, so CI enforcement alone passes.
 
 ## `function-limits`
 
-lizard runs with a length limit, or Checkstyle runs with `MethodLength`, or detekt runs with `LongMethod` (on by
-default).
+Java: lizard runs in CI with a length limit, or Checkstyle runs with a configuration that has the `MethodLength`
+module. Kotlin: lizard, or detekt runs with `LongMethod` active (it is on by default; `active: false` on the rule or
+on the `complexity` rule set turns it off).
 
 ## `static-analysis`
 

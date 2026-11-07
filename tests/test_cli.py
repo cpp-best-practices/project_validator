@@ -65,13 +65,14 @@ class CliTests(unittest.TestCase):
 
     def test_well_configured_projects_in_other_languages_pass_strictly(self) -> None:
         for layout in OTHER_LANGUAGE_LAYOUTS:
-            [language] = layout.languages
             with layout_project(self, layout, well_configured(layout)) as root:
                 code, output, _ = run_cli("--strict", str(root))
                 self.assertEqual(code, EXIT_SUCCESS, output)
-                for name in COMPILER_CHECKS.split(","):
-                    status = "SKIP" if name in NOT_APPLICABLE[language] else "PASS"
-                    self.assertIn(f"[{status}] {name}:", output)
+                # The profile's well-configured project may add languages of its own to the layout's (C# to F#).
+                languages = set(json.loads(run_cli("--map", str(root))[1])["languages"])
+                for found in LANGUAGE_SPECIFIC_CHECKS:
+                    status = "PASS" if found.languages & languages else "SKIP"
+                    self.assertIn(f"[{status}] {found.name}:", output)
 
     def test_mixed_language_project_passes_when_every_language_is_well_configured(self) -> None:
         python = {

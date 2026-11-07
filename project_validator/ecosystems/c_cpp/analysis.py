@@ -14,12 +14,11 @@ from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
 from project_validator.facts.expansion import Action
-from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
+from project_validator.facts.settings import SettingsReader, matched_settings
 from project_validator.facts.tools import Claim, Run, defined_by
 from project_validator.text import strip_cmake_comments
 from project_validator.tools.scanners import multi_language_scanners
 
-CLANG_TIDY_FILES = file_reader("clang-tidy", (".clang-tidy",))
 # A CMake variable that runs an analyzer on every file the build compiles, as CMake files and presets set it.
 _ANALYZER_VARIABLE = re.compile(r"\bCMAKE_(?:C|CXX|OBJC|OBJCXX)_(CLANG_TIDY|CPPCHECK)\b")
 

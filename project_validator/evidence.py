@@ -9,10 +9,6 @@ from project_validator.core import Context
 from project_validator.text import strip_json_comments
 
 
-def first_existing(context: Context, names: Iterable[str]) -> str | None:
-    return next((name for name in names if context.project.exists(name)), None)
-
-
 def existing_texts(context: Context, names: Iterable[str]) -> tuple[str, ...]:
     return tuple(context.project.read_text(name) for name in names if context.project.exists(name))
 

@@ -193,6 +193,39 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "eslint's max-lines-per-function": {
+                "can": {
+                  "limits": "eslint with max-lines-per-function on"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "JavaScript",
@@ -395,7 +428,7 @@
     {
       "kind": "ConfigurationFile",
       "origin": "package.json",
-      "reader": "eslint security"
+      "reader": "eslint rules"
     }
   ],
   "map": {
@@ -522,8 +555,10 @@
       "status": "WARN"
     },
     "function-limits": {
-      "details": [],
-      "message": "function length is never limited; enable eslint's max-lines-per-function rule or run lizard --length 30 in CI",
+      "details": [
+        "consider running in CI: eslint with max-lines-per-function on or lizard --length 30"
+      ],
+      "message": "function length is never limited",
       "status": "FAIL"
     },
     "hardening": {
