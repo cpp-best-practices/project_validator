@@ -448,14 +448,6 @@
       "output": "the build directory"
     },
     {
-      "kind": "CommittedOutput",
-      "languages": [
-        "Fortran"
-      ],
-      "origin": "main.o",
-      "output": "the build directory and module files"
-    },
-    {
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
       "reader": "CMake"

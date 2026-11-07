@@ -559,14 +559,6 @@
       "output": "node_modules"
     },
     {
-      "kind": "CommittedOutput",
-      "languages": [
-        "Ruby"
-      ],
-      "origin": "coverage/",
-      "output": "the installed gems"
-    },
-    {
       "kind": "ConfigurationFile",
       "origin": "package.json",
       "reader": "package.json prettier"

@@ -7,7 +7,15 @@ HINT = "add a LICENSE file with the text of a license (see https://choosealicens
 
 
 def judge_license(answer: LicenseAnswer) -> Result:
-    """No license file fails; one not recognised, or a manifest that declares another license, warns."""
+    """No license file fails, unless the project's packages each have one (a monorepo), which warns; one not
+    recognised, or a manifest that declares another license, warns."""
+    if not answer.files and answer.packages:
+        names = ", ".join(sorted(answer.packages_licenses())) or "unrecognised licenses"
+        return Result.warned(
+            f"no license file at the root; {len(answer.packages)} package license file(s) ({names})",
+            "add a LICENSE at the root too, so that the repository says how it is licensed",
+            *(path for path, _ in answer.packages),
+        )
     if not answer.files:
         return Result.failed("no license file", HINT)
     if unknown := answer.unrecognised():

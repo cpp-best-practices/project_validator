@@ -13,6 +13,7 @@ from pathlib import PurePosixPath
 from project_validator.facts import Facts
 from project_validator.facts.licenses import DeclaredLicense, LicenseFile
 from project_validator.facts.roles import role
+from project_validator.facts.structure import Unit
 from project_validator.questions import Answer, LanguageAnswers, Question
 from project_validator.tools.licenses import REUSE_DIRECTORY, identifiers_in
 
@@ -36,9 +37,14 @@ class LicenseAnswer:
     answer: Answer
     files: tuple[tuple[str, frozenset[str]], ...] = ()
     mismatches: tuple[Mismatch, ...] = ()
+    # Where there is no license file at the root: those of the project's units (the packages of a monorepo).
+    packages: tuple[tuple[str, frozenset[str]], ...] = ()
 
     def licenses(self) -> frozenset[str]:
         return frozenset().union(*(licenses for _, licenses in self.files))
+
+    def packages_licenses(self) -> frozenset[str]:
+        return frozenset().union(*(licenses for _, licenses in self.packages))
 
     def unrecognised(self) -> tuple[str, ...]:
         return tuple(path for path, licenses in self.files if not licenses)
@@ -99,7 +105,18 @@ def license_answer(facts: Facts, language: str | None = None) -> LicenseAnswer:
         answer=Answer.YES if licensed else Answer.NO,
         files=own,
         mismatches=mismatches,
+        packages=_packages(facts, files, own),
     )
+
+
+def _packages(
+    facts: Facts, files: tuple[LicenseFile, ...], own: tuple[tuple[str, frozenset[str]], ...]
+) -> tuple[tuple[str, frozenset[str]], ...]:
+    """Where there is no license file at the root (`own`), those of the project's units (a monorepo's packages)."""
+    if own:
+        return ()
+    units = {unit.directory for unit in facts.of(Unit) if unit.role == "product"} - {"."}
+    return tuple((file.origin.path, file.licenses) for file in files if _directory(file) in units)
 
 
 def licenses(language: str, facts: Facts) -> LanguageAnswers[LicenseAnswer]:

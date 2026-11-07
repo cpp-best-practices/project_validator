@@ -187,11 +187,14 @@ class Context:
         from project_validator.facts.outputs import known_build_outputs
         from project_validator.facts.repository import repository_facts
         from project_validator.facts.settings import known_settings_readers, settings_facts
-        from project_validator.facts.structure import structure_facts
+        from project_validator.facts.structure import project_languages, structure_facts
         from project_validator.facts.testing import known_probes, known_test_files, test_file_facts
         from project_validator.facts.tools import known_tools, tool_runs
 
-        found = Facts((*structure_facts(self.project), *repository_facts(self.project, known_build_outputs())))
+        found = Facts(structure_facts(self.project))
+        # Only the build outputs of the project's languages can be committed by it.
+        languages = project_languages(found)
+        found += repository_facts(self.project, (out for out in known_build_outputs() if out.languages & languages))
         found += test_file_facts(self.project, found, known_test_files())
         if self.options.build:
             found += (fact for probe in known_probes() for fact in probe.run(self.project, self.options))

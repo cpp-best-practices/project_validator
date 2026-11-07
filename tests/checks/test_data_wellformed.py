@@ -108,3 +108,34 @@ class DataWellformedTests(unittest.TestCase):
 
     def test_excluded_directories_are_not_parsed(self) -> None:
         self.assertEqual(_run({"tests/fixtures/broken.json": "{"}, exclude="tests/fixtures").status, Status.PASS)
+
+
+class DeepJsonTests(unittest.TestCase):
+    """JSON nested deeper than Python's parser recurses (a JSON parser's test data) is read without recursion."""
+
+    def test_deeply_nested_json_parses(self) -> None:
+        deep = "[" * 100_000 + "]" * 100_000
+        with temp_project({"deep.json": deep, "object.json": '{"a":' * 50_000 + "1" + "}" * 50_000}) as root:
+            self.assertEqual(data_wellformed.run(make_context(root)).status, Status.PASS)
+
+    def test_deeply_nested_malformed_json_fails_where_it_breaks(self) -> None:
+        cases = {"[" * 100_000 + "]" * 99_999: ":1:200000", "[" * 100_000 + "1 2" + "]" * 100_000: ":1:100003"}
+        for text, where in cases.items():
+            with self.subTest(where=where), temp_project({"deep.json": text}) as root:
+                result = data_wellformed.run(make_context(root))
+                self.assertEqual(result.status, Status.FAIL)
+                self.assertIn(f"deep.json{where}: malformed JSON", result.details)
+        for text in ('{"a":' * 5000 + "[1]:2" + "}" * 5000, '{"a"' * 5000, "[" * 5000 + "}" * 5000):
+            with self.subTest(text=text[:12]), temp_project({"deep.json": text}) as root:
+                self.assertEqual(data_wellformed.run(make_context(root)).status, Status.FAIL)
+
+    def test_the_reader_without_recursion_agrees_with_json(self) -> None:
+        good = ("1", "[]", "{}", '{"a":[1,2,{"b":null}]}', ' "x" ', '{"a":{"b":[true,false]},"c":"\\u0041"}')
+        bad = ("[1,]", '{"a"}', "{1:2}", "[1 2]", "[", '{"a":1,}', "[]]", "[}", '{"a":1 "b":2}', "", "{[1]:2}")
+        bad += ("1 2", ":", ",", '{"a":}', "]", '{"a",1}', "[1:2]")
+        for text in good:
+            with self.subTest(text=text):
+                module._check_deep_json(text)
+        for text in bad:
+            with self.subTest(text=text), self.assertRaises(module._ParseError):
+                module._check_deep_json(text)

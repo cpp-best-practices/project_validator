@@ -1,6 +1,7 @@
 import shutil
 import unittest
 from collections.abc import Mapping
+from dataclasses import replace
 
 from project_validator.checks.dependency_management import VENDOR_HINT, dependency_management
 from project_validator.core import Options, Result, Status
@@ -9,6 +10,7 @@ from project_validator.ecosystems.go import GO, GO_MODULES_MANAGER
 from project_validator.ecosystems.python import PYTHON, PYTHON_PACKAGE_MANAGER
 from project_validator.ecosystems.rust import CARGO_PACKAGES, RUST
 from project_validator.facts import Facts
+from project_validator.facts.dependencies import Lock, PackageManager
 from project_validator.policy.dependencies import judge_dependencies
 from project_validator.questions.dependencies import dependency_answer
 from tests.support import (
@@ -268,3 +270,18 @@ class GoTests(unittest.TestCase):
     def test_a_module_without_requirements_has_no_dependencies(self) -> None:
         self.assertEqual(self._run({"go.mod": "module m\n"}), NO_DEPENDENCIES)
         self.assertEqual(self._run({"main.go": "package main\n"}), NO_DEPENDENCIES)
+
+
+class NestedLockTests(unittest.TestCase):
+    """A lockfile deeper in a unit locks it only for a manager whose lockfiles do (`requirements/dev.txt`)."""
+
+    def test_a_manager_whose_lockfiles_lock_only_beside_them(self) -> None:
+        files = {"Cargo.toml": '[package]\nname = "app"\n[dependencies]\nserde = "1"\n', "src/main.rs": ""}
+        files |= {"builders/linux/Cargo.lock": ""}
+        cargo = PackageManager(name="Cargo", languages=frozenset({"Rust"}), lock=Lock.APPLICATIONS)
+        with temp_project(files) as root:
+            facts = make_context(root).facts
+            nested = dependency_answer("Rust", facts, (cargo,))
+            beside = dependency_answer("Rust", facts, (replace(cargo, nested_locks=False),))
+        self.assertEqual(nested.locked, ("builders/linux/Cargo.lock",))
+        self.assertEqual(beside.locked, ())
