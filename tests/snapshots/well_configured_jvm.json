@@ -55,6 +55,13 @@
             "answer": "yes",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "OWASP dependency-check": {
                 "can": {
                   "runs": "OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze)"
@@ -146,6 +153,69 @@
               "Spotless": {
                 "levels": [
                   "check"
+                ],
+                "read": [
+                  "pom.xml"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Find Security Bugs": {
+                "can": {
+                  "scans": "Find Security Bugs (the findsecbugs-plugin of SpotBugs)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "PMD security rules": {
+                "can": {
+                  "scans": "PMD with category/java/security.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Java",
+            "level": "scans",
+            "runs": {
+              "Find Security Bugs": {
+                "levels": [
+                  "scans"
                 ],
                 "read": [
                   "pom.xml"
@@ -892,6 +962,27 @@
       "reader": "Error Prone"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "JVM security rules"
+    },
+    {
+      "heuristic": true,
+      "key": "Find Security Bugs",
+      "kind": "Setting",
+      "origin": "pom.xml:Find Security Bugs",
+      "tool": "JVM security rules",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "Find Security Bugs",
+      "kind": "Setting",
+      "origin": "pom.xml:Find Security Bugs",
+      "tool": "JVM security rules",
+      "value": true
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1003,6 +1094,29 @@
         "."
       ],
       "tool": "SpotBugs",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Find Security Bugs",
       "via": []
     },
     {
@@ -1120,6 +1234,29 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Find Security Bugs",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1234,6 +1371,29 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Find Security Bugs",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1348,6 +1508,29 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Find Security Bugs",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1462,6 +1645,29 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Find Security Bugs",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -1573,6 +1779,29 @@
         "."
       ],
       "tool": "SpotBugs",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Find Security Bugs",
       "via": []
     }
   ],
@@ -1860,7 +2089,7 @@
     },
     "security-scanning": {
       "details": [],
-      "message": "security lints are enabled: Find Security Bugs",
+      "message": "CI scans the code for security problems with Find Security Bugs",
       "status": "PASS"
     },
     "static-analysis": {

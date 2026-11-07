@@ -60,6 +60,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "bun audit": {
                 "can": {
                   "runs": "bun audit"
@@ -178,6 +185,53 @@
             },
             "language": "JavaScript",
             "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "eslint-plugin-security": {
+                "can": {
+                  "scans": "eslint with eslint-plugin-security"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "scans",
             "runs": {},
             "unit": ".",
             "unknown_definitions": [],
@@ -337,6 +391,11 @@
       "kind": "ConfigurationFile",
       "origin": "package.json",
       "reader": "Jest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "eslint security"
     }
   ],
   "map": {
@@ -443,7 +502,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running in CI: npm audit, pnpm audit, yarn npm audit, bun audit, yarn audit, osv-scanner, trivy fs or snyk test"
+        "consider running in CI: npm audit, pnpm audit, yarn npm audit, bun audit, yarn audit, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
@@ -505,8 +564,7 @@
     },
     "security-scanning": {
       "details": [
-        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
-        "or enable each language's security lints (JavaScript/TypeScript: eslint-plugin-security, semgrep JavaScript rules)"
+        "consider running in CI: eslint with eslint-plugin-security, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci"
       ],
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"

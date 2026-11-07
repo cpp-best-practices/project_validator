@@ -8,7 +8,7 @@ from pathlib import Path, PurePosixPath
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
 from project_validator.evidence import existing_texts, toml_value
-from project_validator.facts import Command, Fact, Facts, resolved
+from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.audit import audited, auditor
@@ -16,7 +16,8 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import Action
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
-from project_validator.facts.settings import SettingsReader, toml_settings
+from project_validator.facts.security import scanned, scanner
+from project_validator.facts.settings import SettingsReader, matched_settings, settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.rules import (
@@ -25,7 +26,6 @@ from project_validator.rules import (
     DependencyManagement,
     FunctionLimits,
     Hardening,
-    SecurityLints,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -33,6 +33,7 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.scanners import multi_language_scanners
 
 
 def is_cargo_target(directory: Path) -> bool:
@@ -225,17 +226,66 @@ HARDENING = Hardening(
     ),
 )
 
-# Forbidding unsafe code crate-wide makes the compiler reject the code whose memory safety it cannot check.
-SECURITY_LINTS = SecurityLints(
-    texts=_settings_texts,
-    lints=(
-        _setting(
-            "unsafe_code forbidden",
-            r"#!\[\s*(?:forbid|deny)\s*\([^)]*\bunsafe_code\b"
-            r"""|^\s*unsafe_code\s*=\s*(?:\{[^}]*\blevel\s*=\s*)?["'](?:forbid|deny)["']"""
-            r"""|-[FD][\s"',]*unsafe_code\b|--(?:forbid|deny)[=\s]+unsafe_code\b""",
-        ),
+# Forbidding unsafe code crate-wide makes the compiler reject the code whose memory safety it cannot check: in the
+# manifest's lints table, as a crate attribute, or on the command line.
+_FORBIDS_UNSAFE = re.compile(r"#!\[\s*(?:forbid|deny)\s*\([^)]*\bunsafe_code\b")
+_UNSAFE_FLAG = re.compile(r"""-[FD][\s"',]*unsafe_code\b|--(?:forbid|deny)[=\s]+unsafe_code\b""")
+_FORBIDDEN = frozenset({"forbid", "deny"})
+
+
+def _flags(value: object) -> str:
+    return " ".join(map(str, value if isinstance(value, tuple) else (value,)))
+
+
+def _cargo_configuration(path: str, text: str) -> Iterator[Fact]:
+    """The rustflags of Cargo's configuration, when they forbid unsafe code."""
+    for fact in toml_settings("Rust lints", path, text, "build"):
+        if not isinstance(fact, Setting):
+            yield fact
+        elif fact.key == "rustflags" and _UNSAFE_FLAG.search(_flags(fact.value)):
+            yield from settings("Rust lints", path, (("unsafe_code", "forbid"),))
+
+
+def _read_unsafe_code(path: str, text: str) -> Iterator[Fact]:
+    """Unsafe code forbidden: in a manifest's lints, a crate attribute, or the rustflags of Cargo's configuration."""
+    if PurePosixPath(path).parent.name == ".cargo":
+        yield from _cargo_configuration(path, text)
+    elif PurePosixPath(path).name == "Cargo.toml":
+        for table in (("lints", "rust"), ("workspace", "lints", "rust")):
+            found = toml_settings("Rust lints", path, text, *table)
+            yield from (fact for fact in found if not isinstance(fact, Setting) or fact.key.startswith("unsafe_code"))
+    else:
+        yield from matched_settings("Rust lints", path, text, {"unsafe_code": (_FORBIDS_UNSAFE, "forbid")})
+
+
+RUST_LINT_SETTINGS = SettingsReader(
+    name="Rust lints",
+    files=("Cargo.toml", "lib.rs", "main.rs", ".cargo/config.toml", ".cargo/config"),
+    read=_read_unsafe_code,
+)
+_CARGO_COMPILES = frozenset({"build", "check", "test", "clippy", "run", "rustc", "nextest", "llvm-cov", "tarpaulin"})
+
+
+def _unsafe_forbidden(command: Command, facts: Facts) -> Run | None:
+    """A cargo build that compiles the crate with unsafe code forbidden, by its settings or flags."""
+    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    if program(argv) != "cargo" or not argv[1:2] or argv[1] not in _CARGO_COMPILES:
+        return None
+    if _UNSAFE_FLAG.search(" ".join((*argv, command.env.get("RUSTFLAGS", "")))):
+        return scanned()
+    read = [setting for setting in facts.settings("Rust lints") if str(setting.value) in _FORBIDDEN]
+    return scanned(read=read) if read else None
+
+
+SECURITY_SCANNERS = (
+    scanner(
+        name="unsafe_code forbidden",
+        languages=RUST_LANGUAGE,
+        how='unsafe_code = "forbid" in [lints.rust]',
+        scans=_unsafe_forbidden,
+        reads=("Rust lints",),
     ),
+    *multi_language_scanners(RUST_LANGUAGE),
 )
 
 _DENY_CHECKS = frozenset({"advisories", "bans", "licenses", "sources"})
@@ -364,7 +414,6 @@ RUST = Ecosystem(
         BuildTypes(axis=RUST_TOOLCHAINS),
         WARNINGS,
         HARDENING,
-        SECURITY_LINTS,
         FunctionLimits(),
         DEPENDENCIES,
         TARGET_DIRECTORY,

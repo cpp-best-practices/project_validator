@@ -23,6 +23,7 @@ from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import (
     SettingsReader,
     file_reader,
@@ -40,7 +41,6 @@ from project_validator.rules import (
     DependencyManagement,
     Evidence,
     FunctionLimits,
-    SecurityLints,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -48,6 +48,7 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.scanners import multi_language_scanners
 
 PHP_LANGUAGE = "PHP"
 PHP_ONLY = frozenset({PHP_LANGUAGE})
@@ -339,20 +340,6 @@ AUDITORS = (
 PSALM_CONFIG_FILES = ("psalm.xml", "psalm.xml.dist")
 
 
-def _security_texts(context: Context) -> tuple[str, ...]:
-    """CI and Composer scripts, the packages composer.json requires, and the Psalm and PHP_CodeSniffer settings."""
-    files = existing_texts(context, (*PSALM_CONFIG_FILES, *PHPCS_CONFIG_FILES))
-    return (*_run_texts(context), "\n".join(_required_packages(context)), *files)
-
-
-SECURITY_LINTS = SecurityLints(
-    texts=_security_texts,
-    lints=(
-        pattern("Psalm taint analysis", r"\bpsalm\b[^\n]*--taint-analysis\b|\brunTaintAnalysis\s*=\s*[\"']true"),
-        pattern("phpcs-security-audit", r"\bphpcs-security-audit\b|\bPHPCS_SecurityAudit\b"),
-    ),
-)
-
 PHPMD_CONFIG_FILES = ("phpmd.xml", "phpmd.xml.dist", ".phpmd.xml", ".phpmd.xml.dist")
 RUNS_PHPMD = re.compile(r"(?<![\w-])phpmd\b(?!\.xml)")
 # codesize is the PHPMD rule set that has ExcessiveMethodLength.
@@ -377,6 +364,7 @@ def _method_length_enforced(context: Context) -> Result:
 PHPSTAN_CONFIG_FILES = ("phpstan.neon", "phpstan.neon.dist", "phpstan.dist.neon")
 _PHPSTAN_LEVEL = re.compile(r"^\s*level:\s*(\w+)\b", re.MULTILINE)
 _PSALM_LEVEL = re.compile(r"""\berrorLevel\s*=\s*["'](\d+)["']""")
+_TAINT_ANALYSIS = re.compile(r"""\brunTaintAnalysis\s*=\s*["']true["']""")
 # Strict: PHPStan at level 8 or higher, Psalm at error level 1 or 2.
 _STRICT_PHPSTAN = re.compile(r"[89]|1\d|max")
 _STRICT_PSALM = frozenset({"1", "2"})
@@ -389,7 +377,9 @@ PHPSTAN_SETTINGS = SettingsReader(
 PSALM_SETTINGS = SettingsReader(
     name="Psalm",
     files=PSALM_CONFIG_FILES,
-    read=lambda path, text: matched_settings("Psalm", path, text, {"errorLevel": (_PSALM_LEVEL, None)}),
+    read=lambda path, text: matched_settings(
+        "Psalm", path, text, {"errorLevel": (_PSALM_LEVEL, None), "runTaintAnalysis": (_TAINT_ANALYSIS, True)}
+    ),
 )
 PHPMD_FILES = file_reader("PHPMD", PHPMD_CONFIG_FILES)
 
@@ -445,6 +435,57 @@ PHPMD = analyzer(
     name="PHPMD", languages=PHP_ONLY, how="phpmd", analyses=_runs("phpmd"), rules=defined_by(files=("PHPMD",))
 )
 PHAN = analyzer(name="Phan", languages=PHP_ONLY, how="phan", analyses=_runs("phan"))
+
+_SECURITY_AUDIT = re.compile(r"\bPHPCS_SecurityAudit\b|\bphpcs-security-audit\b")
+PHPCS_SECURITY_SETTINGS = SettingsReader(
+    name="PHP_CodeSniffer security",
+    files=PHPCS_CONFIG_FILES,
+    read=lambda path, text: matched_settings(
+        "PHP_CodeSniffer", path, text, {"security audit": (_SECURITY_AUDIT, True)}
+    ),
+)
+
+
+def _taint_analysis(command: Command, facts: Facts) -> Run | None:
+    """Psalm's taint analysis: `psalm --taint-analysis`, or `runTaintAnalysis="true"` in its configuration."""
+    argv = resolved(command)
+    if program(argv) != "psalm":
+        return None
+    if "--taint-analysis" in argv:
+        return scanned()
+    read = facts.where(Setting, tool="Psalm", key="runTaintAnalysis")
+    return scanned(read=read) if read else None
+
+
+def _phpcs_security(command: Command, facts: Facts) -> Run | None:
+    """phpcs with the phpcs-security-audit standard: in its configuration, or named by --standard."""
+    argv = resolved(command)
+    if program(argv) != "phpcs":
+        return None
+    if any(_SECURITY_AUDIT.search(value) or "Security" in value for value in option_values(argv, "--standard")):
+        return scanned()
+    read = facts.where(Setting, tool="PHP_CodeSniffer", key="security audit")
+    return scanned(read=read) if read else None
+
+
+SECURITY_SCANNERS = (
+    scanner(
+        name="Psalm taint analysis",
+        languages=PHP_ONLY,
+        how="psalm --taint-analysis",
+        scans=_taint_analysis,
+        reads=("Psalm",),
+    ),
+    scanner(
+        name="phpcs-security-audit",
+        languages=PHP_ONLY,
+        how="phpcs with phpcs-security-audit",
+        scans=_phpcs_security,
+        reads=("PHP_CodeSniffer security",),
+    ),
+    # CodeQL does not analyse PHP.
+    *(tool for tool in multi_language_scanners(PHP_ONLY) if tool.name != "CodeQL"),
+)
 
 # The platform (php, ext-*, lib-*) is not a package Composer installs.
 PLATFORM_PACKAGE = re.compile(r"^(?:php|php-64bit|hhvm|composer(?:-plugin|-runtime)?-api|(?:ext|lib)-.+)$")
@@ -506,7 +547,6 @@ PHP = Ecosystem(
         versions_axis("PHP version", PHP_LANGUAGE),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        SECURITY_LINTS,
         FunctionLimits(without_lizard=_method_length_enforced),
         DEPENDENCIES,
         VENDOR,

@@ -57,6 +57,13 @@
             "answer": "yes",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "composer audit": {
                 "can": {
                   "runs": "composer audit"
@@ -149,6 +156,60 @@
               "PHP-CS-Fixer": {
                 "levels": [
                   "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Psalm taint analysis": {
+                "can": {
+                  "scans": "psalm --taint-analysis"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "phpcs-security-audit": {
+                "can": {
+                  "scans": "phpcs with phpcs-security-audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "scans",
+            "runs": {
+              "Psalm taint analysis": {
+                "levels": [
+                  "scans"
                 ],
                 "read": []
               }
@@ -1920,6 +1981,29 @@
       "languages": [
         "PHP"
       ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm taint analysis",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
       "origin": "composer.json:scripts.test",
       "provides": {
         "test": [
@@ -2066,6 +2150,29 @@
       "languages": [
         "PHP"
       ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm taint analysis",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
       "origin": "composer.json:scripts.test",
       "provides": {
         "test": [
@@ -2212,6 +2319,29 @@
       "languages": [
         "PHP"
       ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm taint analysis",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
       "origin": "composer.json:scripts.test",
       "provides": {
         "test": [
@@ -2358,6 +2488,29 @@
       "languages": [
         "PHP"
       ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm taint analysis",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
       "origin": "composer.json:scripts.test",
       "provides": {
         "test": [
@@ -2504,6 +2657,29 @@
       "languages": [
         "PHP"
       ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm taint analysis",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
       "origin": "composer.json:scripts.test",
       "provides": {
         "test": [
@@ -2638,6 +2814,29 @@
         "."
       ],
       "tool": "Psalm",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.analyse[1]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Psalm taint analysis",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[1]"
@@ -3002,7 +3201,7 @@
     },
     "security-scanning": {
       "details": [],
-      "message": "security lints are enabled: Psalm taint analysis",
+      "message": "CI scans the code for security problems with Psalm taint analysis",
       "status": "PASS"
     },
     "static-analysis": {

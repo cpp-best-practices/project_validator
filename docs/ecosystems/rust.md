@@ -44,7 +44,9 @@ lizard runs with a length limit.
 
 ## `security-scanning`
 
-`unsafe_code` forbidden crate-wide.
+`unsafe_code` forbidden crate-wide (in `[lints.rust]`, a crate attribute, Cargo's `rustflags` or the command line) where
+cargo builds. In CI, where the tool runs (a setting alone, which nothing CI runs reads, does not count); CodeQL, GitLab
+SAST or semgrep count too.
 
 ## `dependency-management`
 

@@ -146,13 +146,20 @@ class SecurityTests(unittest.TestCase):
         self.assertEqual(run_as(self, DEPENDENCY_AUDIT, _scripts(audit="composer audit"), PHP).status, Status.WARN)
 
     def test_security_lints_are_taint_analysis_or_phpcs_security_audit(self) -> None:
+        taint = {"psalm.xml": '<psalm runTaintAnalysis="true"/>'}
+        audit = {"phpcs.xml": '<ruleset><rule ref="PHPCS_SecurityAudit"/></ruleset>'}
         for files in (
-            {"psalm.xml": '<psalm runTaintAnalysis="true"/>'},
-            {"phpcs.xml": '<ruleset><rule ref="PHPCS_SecurityAudit"/></ruleset>'},
+            {**taint, **_ci("vendor/bin/psalm")},
+            {**audit, **_ci("vendor/bin/phpcs")},
             _ci("vendor/bin/psalm --taint-analysis"),
+            _ci("vendor/bin/phpcs --standard=Security src"),
         ):
             with self.subTest(files=files):
                 self.assertEqual(run_in_layout(self, "Composer PHP", SECURITY_SCANNING, files).status, Status.PASS)
+        # The settings count where CI runs the tool.
+        for files in (taint, audit, _ci("vendor/bin/phpcs src")):
+            with self.subTest(files=files):
+                self.assertEqual(run_in_layout(self, "Composer PHP", SECURITY_SCANNING, files).status, Status.WARN)
 
 
 class AnalysisTests(unittest.TestCase):

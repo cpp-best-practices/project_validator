@@ -61,11 +61,6 @@ def versions_axis(noun: str, language: str) -> ToolchainAxis:
     return ToolchainAxis(noun=noun, of_job=of_job, runner_default=_never)
 
 
-def ci_configuration(context: Context) -> tuple[str, ...]:
-    """The texts of the project's CI configuration."""
-    return context.ci_texts
-
-
 @dataclass(frozen=True, slots=True, kw_only=True)
 class BuildTypes:
     """A compiled ecosystem, whose CI must build each of its platforms (along `axis`) in every build configuration."""
@@ -103,8 +98,8 @@ class Hardening:
 
     Binary hardening is what the build inserts into the binary to make it harder to exploit: stack protectors,
     control-flow protection, checked library calls, position-independent executables, release-mode overflow checks.
-    It is not static analysis (see `SecurityLints`) nor dependency auditing (see `project_validator.facts.audit`); an
-    ecosystem that builds no binary has no hardening rule.
+    It is not code security scanning (see `project_validator.facts.security`) nor dependency auditing (see
+    `project_validator.facts.audit`); an ecosystem that builds no binary has no hardening rule.
 
     An ecosystem whose options depend on more than presence, e.g. on the compilers in CI, supplies its own `judge`.
     """
@@ -112,14 +107,6 @@ class Hardening:
     texts: Evidence
     options: tuple[Pattern, ...] = ()
     judge: Callable[[Context], Result] | None = None
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class SecurityLints:
-    """The static analysis an ecosystem has for insecure code; enabled, it counts as code security scanning."""
-
-    lints: tuple[Pattern, ...]
-    texts: Evidence
 
 
 def _always(_: Context) -> bool:

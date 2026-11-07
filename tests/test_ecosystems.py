@@ -121,7 +121,8 @@ class CombinedTests(unittest.TestCase):
     def test_a_skip_only_when_every_ecosystem_is_skipped(self) -> None:
         result = combined({C_AND_CXX: self.SKIPPED, PYTHON: self.SKIPPED})
         self.assertEqual(result.status, Status.SKIP)
-        self.assertEqual(result.message, "C/C++: not applicable; Python: not applicable")
+        # The same result for every ecosystem is said once.
+        self.assertEqual(result.message, "not applicable")
 
 
 class JudgeEcosystemTests(unittest.TestCase):

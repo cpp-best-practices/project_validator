@@ -51,6 +51,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "NuGet audit of every package": {
                 "can": {
                   "runs": "a restore with <NuGetAuditMode>all</NuGetAuditMode>"
@@ -124,6 +131,53 @@
             },
             "language": "C#",
             "level": "check",
+            "runs": {},
+            "unit": "src/App",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              ".NET security analyzers": {
+                "can": {
+                  "scans": "<AnalysisModeSecurity>Recommended</AnalysisModeSecurity> (or Security Code Scan)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C#",
+            "level": "scans",
             "runs": {},
             "unit": "src/App",
             "unknown_definitions": [],
@@ -377,7 +431,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running in CI: a restore with <NuGetAuditMode>all</NuGetAuditMode>, dotnet list package --vulnerable --include-transitive, osv-scanner, trivy fs or snyk test"
+        "consider running in CI: a restore with <NuGetAuditMode>all</NuGetAuditMode>, dotnet list package --vulnerable --include-transitive, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
@@ -439,8 +493,7 @@
     },
     "security-scanning": {
       "details": [
-        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
-        "or enable each language's security lints (.NET: .NET security analyzers, Security Code Scan)"
+        "consider running in CI: <AnalysisModeSecurity>Recommended</AnalysisModeSecurity> (or Security Code Scan), CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci"
       ],
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"

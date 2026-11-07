@@ -62,12 +62,22 @@ def _matches(path: str, pattern: str) -> bool:
     return fnmatchcase(PurePosixPath(path).name, pattern)
 
 
+def _hidden_directories(readers: Iterable[SettingsReader]) -> frozenset[str]:
+    """The hidden directories a reader names a file in (`.cargo/config.toml`), which are read too."""
+    return frozenset(
+        pattern.split("/", 1)[0]
+        for reader in readers
+        for pattern in reader.files
+        if pattern.startswith(".") and "/" in pattern
+    )
+
+
 def settings_facts(project: Project, readers: Iterable[SettingsReader], commands: Facts) -> Iterator[Fact]:
     """The settings in the files each reader reads by default (outside vendored code), then in the files the commands
     of `commands` name."""
     readers = tuple(readers)
     # A vendored project's configuration is its own, not this project's.
-    own = [path for path in project.files() if role(path) != "vendored"]
+    own = [path for path in project.files(hidden=_hidden_directories(readers)) if role(path) != "vendored"]
     wanted = [
         (reader, path) for path in own for reader in readers if any(_matches(path, pattern) for pattern in reader.files)
     ]

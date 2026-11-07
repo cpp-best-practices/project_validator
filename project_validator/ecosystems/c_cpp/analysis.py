@@ -17,6 +17,7 @@ from project_validator.facts.expansion import Action
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
 from project_validator.facts.tools import Claim, Run, defined_by
 from project_validator.text import strip_cmake_comments
+from project_validator.tools.scanners import multi_language_scanners
 
 CLANG_TIDY_FILES = file_reader("clang-tidy", (".clang-tidy",))
 # A CMake variable that runs an analyzer on every file the build compiles, as CMake files and presets set it.
@@ -80,3 +81,6 @@ def _runs_clang_tidy(inputs: object) -> tuple[tuple[str, ...], ...]:
 CPP_LINTER_ACTION = Action(name="cpp-linter/cpp-linter-action", runs=_runs_clang_tidy)
 CLANG_TIDY_REVIEW_ACTION = Action(name="ZedThree/clang-tidy-review", runs=_runs_clang_tidy)
 CPPCHECK_ACTION = Action(name="deep5050/cppcheck-action", runs=lambda _inputs: (("cppcheck",),))
+
+# C and C++ have no security lints of their own here: CodeQL, GitLab SAST or semgrep scan them.
+SECURITY_SCANNERS = multi_language_scanners(C_FAMILY)
