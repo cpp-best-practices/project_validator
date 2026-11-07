@@ -55,7 +55,8 @@ class BuildOutput:
     system only), which must never be committed.
 
     A glob ignore entry ignores it when `globs` matches it whole; a regular expression when it matches one of
-    `paths`. `artifacts` recognise it among the tracked files (see `artifact`). `hint` says how to ignore it.
+    `paths`. `artifacts` recognise it among the tracked files (see `artifact`), except files named one of
+    `not_artifacts` (Go's `go.mod` is not a compiled Fortran module). `hint` says how to ignore it.
     """
 
     name: str
@@ -64,6 +65,7 @@ class BuildOutput:
     paths: tuple[str, ...]
     hint: str
     artifacts: tuple[str, ...] = ()
+    not_artifacts: tuple[str, ...] = ()
     build_system: str | None = None
 
     def ignored_by(self, entry: IgnoreEntry) -> bool:
@@ -84,6 +86,8 @@ class BuildOutput:
             if any(fnmatchcase(part, glob.strip("/")) for glob in directories if depth == 0 or glob[0] != "/"):
                 return "/".join(parts[: depth + 1]) + "/"
         files = (glob for glob in self.artifacts if not glob.endswith("/"))
+        if parts[-1] in self.not_artifacts:
+            return None
         return path if any(fnmatchcase(parts[-1], glob) for glob in files) else None
 
 

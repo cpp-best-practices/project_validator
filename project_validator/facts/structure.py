@@ -113,7 +113,7 @@ def _build_files(project: Project, files: list[str]) -> Iterator[tuple[BuildFile
             seen.add((build_file, system.name))
             declared: frozenset[str] = frozenset()
             if not build_file.endswith("/") and system.declared_languages:
-                declared = system.declared_languages(project.read_text(path))
+                declared = system.declared_languages(path, project.read_text(path))
             languages = system.languages | declared
             yield BuildFile(origin=Origin(path=build_file), build_system=system.name, languages=languages), path
 

@@ -2,19 +2,23 @@
 and `meson test`, which runs the tests test() registers."""
 
 from project_validator.build_systems.meson import declared_languages
-from project_validator.build_systems.model import C_FAMILY, BuildSystem
+from project_validator.build_systems.meson.evaluation import LANGUAGES
+from project_validator.build_systems.model import BuildSystem
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.arguments import option_values, program
+from project_validator.facts.dependencies import Lock, PackageManager, manifest_reader
 from project_validator.facts.testing import test_runner, tested
 from project_validator.facts.tools import Definition, Run
 
 BUILD_FILE = "meson.build"
 
 # Meson language name -> language, for the languages a project() declaration can enable.
-MESON_LANGUAGES = {"c": "C", "cpp": "C++", "rust": "Rust"}
+MESON_LANGUAGES = {"c": "C", "cpp": "C++", "fortran": "Fortran", "rust": "Rust"}
+# The languages Meson compiles that have no build system of their own.
+COMPILED = frozenset(LANGUAGES.values())
 
 
-def meson_declared_languages(text: str) -> frozenset[str]:
+def meson_declared_languages(_path: str, text: str) -> frozenset[str]:
     """The languages a meson.build's `project()` declares, as `project_validator.build_systems.meson` reads them."""
     return frozenset(MESON_LANGUAGES[name] for name in declared_languages(text) if name in MESON_LANGUAGES)
 
@@ -31,7 +35,8 @@ def _meson_test(command: Command, _facts: Facts) -> Run | None:
 
 MESON_TESTS = test_runner(
     name="meson test",
-    languages=C_FAMILY,
+    # meson test runs the tests of what Meson compiles (Rust has Cargo's).
+    languages=COMPILED,
     how="meson test",
     runs=_meson_test,
     tests=Definition(
@@ -70,3 +75,11 @@ MESON = BuildSystem(
     declared_languages=meson_declared_languages,
     build_types=meson_build_types,
 )
+
+
+# Meson's own dependency manager, for whatever it builds: wraps have no lockfile, and are suggested to a project that
+# declares no dependencies.
+MESON_WRAPS = manifest_reader(
+    name="Meson wraps", manager="Meson wraps", files=("subprojects/*.wrap",), declares=lambda _path, _text: True
+)
+MESON_WRAPS_MANAGER = PackageManager(name="Meson wraps", languages=COMPILED, lock=Lock.NEVER, suggested=True)

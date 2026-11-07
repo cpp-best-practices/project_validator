@@ -62,7 +62,7 @@ def _described(found: tuple[Fact, ...]) -> list[str]:
     ]
 
 
-GNU = "compilers=appleclang,clang,gcc,intel"
+GNU = "compilers=appleclang,clang,flang,gcc,intel"
 BRANCHES = [
     # Meson's default warning_level (1), and werror=true.
     f"-Wall None compile {GNU}",
@@ -76,7 +76,7 @@ BRANCHES = [
     "/guard:cf None link platforms=windows configurations=minsizerel,other,release,relwithdebinfo",
     "-fhardened None compile requires=the compiler accepts -fhardened",
 ]
-NOT_MSVC = "compilers=appleclang,clang,gcc,intel,other"
+NOT_MSVC = "compilers=appleclang,clang,flang,gcc,intel,other"
 VARIABLES = [
     f"-fstack-protector-strong app-cli compile {NOT_MSVC} languages=C",
     f"-D_FORTIFY_SOURCE=2 app-cli compile {NOT_MSVC} languages=C requires=get_option('hardening')",

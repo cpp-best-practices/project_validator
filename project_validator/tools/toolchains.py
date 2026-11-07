@@ -8,7 +8,7 @@ and `warning_level`), and the C/C++ practices ask for them per compiler.
 import re
 from dataclasses import dataclass
 
-GCC_LIKE = frozenset({"gcc", "clang", "appleclang", "intel"})
+GCC_LIKE = frozenset({"gcc", "clang", "appleclang", "intel", "flang"})
 MSVC = "msvc"
 
 

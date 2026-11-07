@@ -32,9 +32,9 @@ def _check(name: str, languages: frozenset[str] = frozenset()) -> Check:
 
 
 class ProjectStructureTests(unittest.TestCase):
-    def test_cmake_project_is_c_family(self) -> None:
+    def test_a_cmake_project_builds_the_languages_it_enables(self) -> None:
         structure = make_context(FIXTURES / "well_configured_c_cpp").structure
-        self.assertEqual(structure.languages, C_FAMILY)
+        self.assertEqual(structure.languages, frozenset({"C++"}))
         self.assertEqual(structure.build_systems, frozenset({"CMake"}))
         self.assertEqual(structure.ci_providers, ("GitHub Actions",))
         self.assertTrue(structure.ci_jobs)
@@ -111,7 +111,7 @@ class ProjectStructureTests(unittest.TestCase):
 
     def test_map_is_serialisable(self) -> None:
         mapped = make_context(FIXTURES / "well_configured_c_cpp").structure.as_dict()
-        self.assertEqual(mapped["languages"], ["C", "C++"])
+        self.assertEqual(mapped["languages"], ["C++"])
         self.assertEqual(mapped["build_systems"], ["CMake"])
         ci = cast(dict[str, Any], mapped["ci"])
         self.assertEqual(

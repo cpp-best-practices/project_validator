@@ -2,17 +2,6 @@
   "answers": {
     "committed-artifacts": [
       {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "committed": [],
-            "language": "C",
-            "unit": "."
-          }
-        ]
-      },
-      {
         "language": "C++",
         "units": [
           {
@@ -25,74 +14,6 @@
       }
     ],
     "compiler-warnings": [
-      {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "compilers": [
-              {
-                "compiler": "clang",
-                "found": {
-                  "-Wall": [
-                    "CMakeLists.txt"
-                  ],
-                  "-Wconversion": [
-                    "CMakeLists.txt"
-                  ],
-                  "-Wextra": [
-                    "CMakeLists.txt"
-                  ],
-                  "-Wpedantic": [
-                    "CMakeLists.txt"
-                  ],
-                  "-Wshadow": [
-                    "CMakeLists.txt"
-                  ]
-                },
-                "missing": []
-              },
-              {
-                "compiler": "gcc",
-                "found": {
-                  "-Wall": [
-                    "CMakeLists.txt"
-                  ],
-                  "-Wconversion": [
-                    "CMakeLists.txt"
-                  ],
-                  "-Wextra": [
-                    "CMakeLists.txt"
-                  ],
-                  "-Wpedantic": [
-                    "CMakeLists.txt"
-                  ],
-                  "-Wshadow": [
-                    "CMakeLists.txt"
-                  ]
-                },
-                "missing": []
-              },
-              {
-                "compiler": "msvc",
-                "found": {
-                  "/W4": [
-                    "CMakeLists.txt"
-                  ],
-                  "/permissive-": [
-                    "CMakeLists.txt"
-                  ]
-                },
-                "missing": []
-              }
-            ],
-            "language": "C",
-            "practice": "compiler-warnings",
-            "unit": ".",
-            "unknowns": []
-          }
-        ]
-      },
       {
         "language": "C++",
         "units": [
@@ -164,66 +85,6 @@
     ],
     "coverage": [
       {
-        "language": "C",
-        "units": [
-          {
-            "branch": {
-              "answer": "yes",
-              "known": [
-                "gcovr --xml",
-                "lcov --rc branch_coverage=1",
-                "gcov --branch-counts",
-                "llvm-cov report"
-              ],
-              "tools": [
-                "gcovr"
-              ]
-            },
-            "language": "C",
-            "line": {
-              "answer": "yes",
-              "known": [
-                "gcovr",
-                "lcov",
-                "gcov",
-                "llvm-cov report"
-              ],
-              "tools": [
-                "gcovr"
-              ]
-            },
-            "path": {
-              "answer": "yes",
-              "known": [
-                "lcov --mcdc-coverage",
-                "gcov --conditions",
-                "llvm-cov show -show-mcdc",
-                "gcc -fcondition-coverage",
-                "gcc -fpath-coverage",
-                "clang -fcoverage-mcdc"
-              ],
-              "tools": [
-                "gcc -fcondition-coverage"
-              ]
-            },
-            "region": {
-              "answer": "no",
-              "known": [
-                "llvm-cov report"
-              ],
-              "tools": []
-            },
-            "statement": {
-              "answer": "impossible",
-              "known": [],
-              "tools": []
-            },
-            "unit": ".",
-            "unknowns": []
-          }
-        ]
-      },
-      {
         "language": "C++",
         "units": [
           {
@@ -286,22 +147,6 @@
     ],
     "dependency-audit": [
       {
-        "language": "C",
-        "units": [
-          {
-            "answer": "impossible",
-            "defined": {},
-            "known": {},
-            "language": "C",
-            "level": "runs",
-            "runs": {},
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
-          }
-        ]
-      },
-      {
         "language": "C++",
         "units": [
           {
@@ -319,25 +164,6 @@
       }
     ],
     "dependency-management": [
-      {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "declared": [
-              {
-                "manager": "FetchContent",
-                "manifest": "cmake/Dependencies.cmake"
-              }
-            ],
-            "language": "C",
-            "lock_required": false,
-            "locked": [],
-            "unit": ".",
-            "unknowns": []
-          }
-        ]
-      },
       {
         "language": "C++",
         "units": [
@@ -359,42 +185,6 @@
       }
     ],
     "formatting": [
-      {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {
-              "clang-format": [
-                ".clang-format"
-              ]
-            },
-            "known": {
-              "clang-format": {
-                "can": {
-                  "apply": "clang-format -i",
-                  "check": "clang-format --dry-run -Werror"
-                },
-                "needs_definition": true,
-                "required": false
-              }
-            },
-            "language": "C",
-            "level": "check",
-            "runs": {
-              "clang-format": {
-                "levels": [
-                  "check"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
-          }
-        ]
-      },
       {
         "language": "C++",
         "units": [
@@ -433,51 +223,6 @@
       }
     ],
     "function-limits": [
-      {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {
-              "clang-tidy's readability-function-size": [
-                ".clang-tidy"
-              ]
-            },
-            "known": {
-              "clang-tidy's readability-function-size": {
-                "can": {
-                  "limits": "clang-tidy with readability-function-size and a LineThreshold in .clang-tidy"
-                },
-                "needs_definition": true,
-                "required": false
-              },
-              "lizard": {
-                "can": {
-                  "limits": "lizard --length 30"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
-            "language": "C",
-            "level": "limits",
-            "runs": {
-              "clang-tidy's readability-function-size": {
-                "levels": [
-                  "limits",
-                  "measures"
-                ],
-                "read": [
-                  ".clang-tidy"
-                ]
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
-          }
-        ]
-      },
       {
         "language": "C++",
         "units": [
@@ -525,80 +270,6 @@
       }
     ],
     "hardening": [
-      {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "compilers": [
-              {
-                "compiler": "clang",
-                "found": {
-                  "-fcf-protection": [
-                    "CMakeLists.txt"
-                  ],
-                  "-fstack-clash-protection": [
-                    "CMakeLists.txt"
-                  ],
-                  "-fstack-protector-strong": [
-                    "CMakeLists.txt"
-                  ],
-                  "_FORTIFY_SOURCE": [
-                    "CMakeLists.txt"
-                  ],
-                  "_GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE": [
-                    "CMakeLists.txt"
-                  ]
-                },
-                "missing": []
-              },
-              {
-                "compiler": "gcc",
-                "found": {
-                  "-fcf-protection": [
-                    "CMakeLists.txt"
-                  ],
-                  "-fstack-clash-protection": [
-                    "CMakeLists.txt"
-                  ],
-                  "-fstack-protector-strong": [
-                    "CMakeLists.txt"
-                  ],
-                  "_FORTIFY_SOURCE": [
-                    "CMakeLists.txt"
-                  ],
-                  "_GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE": [
-                    "CMakeLists.txt"
-                  ]
-                },
-                "missing": []
-              },
-              {
-                "compiler": "msvc",
-                "found": {
-                  "/CETCOMPAT": [
-                    "CMakeLists.txt"
-                  ],
-                  "/DYNAMICBASE": [
-                    "CMakeLists.txt"
-                  ],
-                  "/guard:cf": [
-                    "CMakeLists.txt"
-                  ],
-                  "/sdl": [
-                    "CMakeLists.txt"
-                  ]
-                },
-                "missing": []
-              }
-            ],
-            "language": "C",
-            "practice": "hardening",
-            "unit": ".",
-            "unknowns": []
-          }
-        ]
-      },
       {
         "language": "C++",
         "units": [
@@ -676,22 +347,6 @@
     ],
     "license": [
       {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "files": {
-              "LICENSE": [
-                "MIT"
-              ]
-            },
-            "language": "C",
-            "mismatches": [],
-            "unit": "."
-          }
-        ]
-      },
-      {
         "language": "C++",
         "units": [
           {
@@ -709,70 +364,6 @@
       }
     ],
     "platforms": [
-      {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "axis": "compiler",
-            "language": "C",
-            "notes": [],
-            "platforms": [
-              {
-                "compiler": "clang",
-                "configurations": [
-                  "Debug",
-                  "Debug + sanitizers",
-                  "Release",
-                  "Release + sanitizers"
-                ],
-                "os": "linux"
-              },
-              {
-                "compiler": "gcc",
-                "configurations": [
-                  "Debug",
-                  "Debug + sanitizers",
-                  "Release",
-                  "Release + sanitizers"
-                ],
-                "os": "linux"
-              },
-              {
-                "compiler": "clang",
-                "configurations": [
-                  "Debug",
-                  "Debug + sanitizers",
-                  "Release",
-                  "Release + sanitizers"
-                ],
-                "os": "macos"
-              },
-              {
-                "compiler": "gcc",
-                "configurations": [
-                  "Debug",
-                  "Debug + sanitizers",
-                  "Release",
-                  "Release + sanitizers"
-                ],
-                "os": "macos"
-              },
-              {
-                "compiler": "msvc",
-                "configurations": [
-                  "Debug",
-                  "Debug + sanitizers",
-                  "Release",
-                  "Release + sanitizers"
-                ],
-                "os": "windows"
-              }
-            ],
-            "unit": "."
-          }
-        ]
-      },
       {
         "language": "C++",
         "units": [
@@ -840,51 +431,6 @@
     ],
     "security-scanning": [
       {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {},
-            "known": {
-              "CodeQL": {
-                "can": {
-                  "scans": "CodeQL (github/codeql-action)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "GitLab SAST": {
-                "can": {
-                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "semgrep": {
-                "can": {
-                  "scans": "semgrep ci"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
-            "language": "C",
-            "level": "scans",
-            "runs": {
-              "CodeQL": {
-                "levels": [
-                  "scans"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
-          }
-        ]
-      },
-      {
         "language": "C++",
         "units": [
           {
@@ -931,54 +477,6 @@
       }
     ],
     "static-analysis": [
-      {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {
-              "clang-tidy": [
-                ".clang-tidy"
-              ]
-            },
-            "known": {
-              "clang-tidy": {
-                "can": {
-                  "checks": "clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy)"
-                },
-                "needs_definition": true,
-                "required": true
-              },
-              "cppcheck": {
-                "can": {
-                  "checks": "cppcheck (CMAKE_CXX_CPPCHECK)"
-                },
-                "needs_definition": false,
-                "required": true
-              }
-            },
-            "language": "C",
-            "level": "checks",
-            "runs": {
-              "clang-tidy": {
-                "levels": [
-                  "checks"
-                ],
-                "read": []
-              },
-              "cppcheck": {
-                "levels": [
-                  "checks"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
-          }
-        ]
-      },
       {
         "language": "C++",
         "units": [
@@ -1030,48 +528,6 @@
     ],
     "tests": [
       {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {
-              "ctest": [
-                "test/CMakeLists.txt"
-              ]
-            },
-            "known": {
-              "ctest": {
-                "can": {
-                  "runs": "ctest"
-                },
-                "needs_definition": true,
-                "required": false
-              },
-              "meson test": {
-                "can": {
-                  "runs": "meson test"
-                },
-                "needs_definition": true,
-                "required": false
-              }
-            },
-            "language": "C",
-            "level": "runs",
-            "runs": {
-              "ctest": {
-                "levels": [
-                  "runs"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
-          }
-        ]
-      },
-      {
         "language": "C++",
         "units": [
           {
@@ -1116,22 +572,6 @@
     ],
     "type-checking": [
       {
-        "language": "C",
-        "units": [
-          {
-            "answer": "impossible",
-            "defined": {},
-            "known": {},
-            "language": "C",
-            "level": "checks",
-            "runs": {},
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
-          }
-        ]
-      },
-      {
         "language": "C++",
         "units": [
           {
@@ -1150,21 +590,6 @@
     ],
     "vcs-ignore": [
       {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "language": "C",
-            "outputs": {
-              "the build directory": {
-                ".gitignore": "/build/"
-              }
-            },
-            "unit": "."
-          }
-        ]
-      },
-      {
         "language": "C++",
         "units": [
           {
@@ -1181,47 +606,6 @@
       }
     ],
     "warnings-as-errors": [
-      {
-        "language": "C",
-        "units": [
-          {
-            "answer": "yes",
-            "compilers": [
-              {
-                "compiler": "clang",
-                "found": {
-                  "-Werror": [
-                    "CI (.github/workflows/ci.yml)",
-                    "CMakeLists.txt (when WARNINGS_AS_ERRORS)"
-                  ]
-                },
-                "missing": []
-              },
-              {
-                "compiler": "gcc",
-                "found": {
-                  "-Werror": [
-                    "CI (.github/workflows/ci.yml)",
-                    "CMakeLists.txt (when WARNINGS_AS_ERRORS)"
-                  ]
-                },
-                "missing": []
-              },
-              {
-                "compiler": "msvc",
-                "found": {},
-                "missing": [
-                  "/WX"
-                ]
-              }
-            ],
-            "language": "C",
-            "practice": "warnings-as-errors",
-            "unit": ".",
-            "unknowns": []
-          }
-        ]
-      },
       {
         "language": "C++",
         "units": [
@@ -1270,7 +654,6 @@
       "build_system": "CMake",
       "kind": "BuildFile",
       "languages": [
-        "C",
         "C++"
       ],
       "origin": "CMakeLists.txt"
@@ -1278,10 +661,7 @@
     {
       "build_system": "CMake",
       "kind": "BuildFile",
-      "languages": [
-        "C",
-        "C++"
-      ],
+      "languages": [],
       "origin": "test/CMakeLists.txt"
     },
     {
@@ -1297,7 +677,6 @@
       ],
       "kind": "Unit",
       "languages": [
-        "C",
         "C++"
       ],
       "origin": ".",
@@ -4620,6 +3999,11 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "Fortran programs"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "LICENSE",
       "reader": "license files"
     },
@@ -4639,6 +4023,11 @@
       "kind": "ConfigurationFile",
       "origin": "test/CMakeLists.txt",
       "reader": "CMake"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "test/CMakeLists.txt",
+      "reader": "Fortran programs"
     },
     {
       "applies": {
@@ -4723,6 +4112,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -4740,6 +4130,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -4757,6 +4148,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -4774,6 +4166,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -4791,6 +4184,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -4808,6 +4202,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -4825,6 +4220,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -4842,6 +4238,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -4859,6 +4256,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -4876,6 +4274,7 @@
         "compilers": [
           "appleclang",
           "clang",
+          "flang",
           "gcc",
           "intel",
           "other"
@@ -5029,8 +4428,13 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -5162,8 +4566,13 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -5295,8 +4704,13 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -5428,8 +4842,13 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -5561,8 +4980,13 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -5694,8 +5118,13 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -5827,8 +5256,13 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -5960,8 +5394,13 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -6093,8 +5532,13 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -6226,8 +5670,13 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -6359,8 +5808,13 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -6492,8 +5946,13 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -6625,8 +6084,13 @@
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -6758,8 +6222,13 @@
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -6891,8 +6360,13 @@
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -7024,8 +6498,13 @@
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -7157,8 +6636,13 @@
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -7290,8 +6774,13 @@
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -7423,8 +6912,13 @@
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -7556,8 +7050,13 @@
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "ToolRun",
       "languages": [
+        "Assembly",
         "C",
-        "C++"
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
       "provides": {
@@ -8239,7 +7738,6 @@
       ]
     },
     "languages": [
-      "C",
       "C++"
     ],
     "units": [
@@ -8249,7 +7747,6 @@
         ],
         "directory": ".",
         "languages": [
-          "C",
           "C++"
         ],
         "role": "product"
@@ -8310,7 +7807,7 @@
     },
     "cxx-extensions": {
       "details": [],
-      "message": "C: C compiler extensions are disabled with set(CMAKE_C_EXTENSIONS OFF); C++: C++ compiler extensions are disabled with set(CMAKE_CXX_EXTENSIONS OFF)",
+      "message": "C++ compiler extensions are disabled with set(CMAKE_CXX_EXTENSIONS OFF)",
       "status": "PASS"
     },
     "data-wellformed": {
@@ -8320,7 +7817,7 @@
     },
     "dependency-audit": {
       "details": [],
-      "message": "not applicable to C, C++",
+      "message": "not applicable to C++",
       "status": "SKIP"
     },
     "dependency-management": {
@@ -8419,7 +7916,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to C, C++",
+      "message": "not applicable to C++",
       "status": "SKIP"
     },
     "vcs-ignore": {

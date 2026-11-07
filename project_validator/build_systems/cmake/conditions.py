@@ -26,7 +26,7 @@ from project_validator.facts.conditions import (
 
 # The identifiers CMake gives each dimension's values, and the value each is; any other identifier is OTHER.
 COMPILER_IDS = {"GNU": "gcc", "Clang": "clang", "AppleClang": "appleclang", "MSVC": "msvc", "Intel": "intel"}
-COMPILER_IDS |= {"IntelLLVM": "intel"}
+COMPILER_IDS |= {"IntelLLVM": "intel", "LLVMFlang": "flang", "Flang": "flang"}
 _OTHER_COMPILER_IDS = ("ARMClang", "XLClang", "IBMClang", "NVHPC", "PGI", "XL", "SunPro", "Cray", "NVIDIA", "TI")
 SYSTEM_NAMES = {"Linux": "linux", "Darwin": "macos", "Windows": "windows", "Emscripten": "emscripten"}
 _OTHER_SYSTEM_NAMES = ("FreeBSD", "NetBSD", "OpenBSD", "Android", "iOS", "CYGWIN", "MSYS", "SunOS", "Generic")

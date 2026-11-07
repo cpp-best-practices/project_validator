@@ -1,0 +1,5 @@
+name = "app"
+version = "0.1.0"
+
+[dependencies]
+stdlib = { git = "https://github.com/fortran-lang/stdlib", branch = "stdlib-fpm" }

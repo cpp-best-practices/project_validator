@@ -72,7 +72,7 @@ What each check accepts for a language is on that ecosystem's page in [docs/ecos
 | `ci-build-types` | every OS/toolchain combination in CI builds Debug and Release, each with and without sanitizers |
 | `compiler-warnings` | a strict warning set is enabled. Warns listing what is missing |
 | `warnings-as-errors` | warnings fail the build, the lint or the tests |
-| `cxx-extensions` | compiler extensions to the language standard are turned off, so `-std=c++NN` is used rather than `-std=gnu++NN` |
+| `cxx-extensions` | compiler extensions to the language standard are turned off, so `-std=c++NN` is used rather than `-std=gnu++NN` (for Fortran, `-std=f2018` rather than the GNU dialect) |
 | `hardening` | binary hardening is enabled: exploit mitigations that the build inserts into the binary (static analysis and dependency audits are judged by `security-scanning` and `dependency-audit`). Ecosystems that build no native binary are not judged. Warns listing what is missing |
 | `code-formatting` | CI enforces each language's formatting in each unit: a formatter run that fails on unformatted code, or one that rewrites it where the job fails on the change or commits it (a pre-commit hook, `git diff --exit-code`). Its style is defined (e.g. `.clang-format`) or the tool's own. Warns when the style is defined but CI does not enforce it |
 | `function-limits` | function length is limited: lizard runs with a length limit (`lizard --length 30`), or one of the ecosystem's own tools limits it |

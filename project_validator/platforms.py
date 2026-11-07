@@ -12,12 +12,14 @@ OPERATING_SYSTEMS = (
 )
 
 COMPILERS = (
-    pattern("gcc", r"\bgcc\b|\bg\+\+|\bmingw"),
+    pattern("gcc", r"\bgcc\b|\bg\+\+|\bmingw|\bgfortran\b"),
     # setup-cpp names clang `llvm` (`compiler: llvm-19.1.1`, `--compiler llvm`).
     pattern("clang", r"\bclang(?![-_]?(tidy|format|d|-apply-replacements)(?:\b|_))|\bllvm-\d|\bcompiler\W+llvm\b"),
     pattern("appleclang", r"\bapple-?clang\b"),
     pattern("msvc", r"\bmsvc|visual studio|\bvs20\d\d\b|\bcl\.exe\b|\bvcvars"),
-    pattern("intel", r"\bicp?x\b|\bicp?c\b|intel-oneapi"),
+    # fortran-lang/setup-fortran names Intel's compilers `intel` and `intel-classic`.
+    pattern("intel", r"\bicp?x\b|\bicp?c\b|\bifx\b|\bifort\b|intel-oneapi|\bcompiler\W+intel\b"),
+    pattern("flang", r"\b(?:llvm-)?flang(?:-new)?\b"),
 )
 
 RUNNER_DEFAULT_COMPILERS = {"linux": "gcc", "macos": "appleclang", "windows": "msvc"}
