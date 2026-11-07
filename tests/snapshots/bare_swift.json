@@ -259,6 +259,21 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Swift toolchain",
+            "language": "Swift",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Swift",

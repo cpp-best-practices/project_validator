@@ -81,7 +81,8 @@ class DiscoverTests(unittest.TestCase):
 ECOSYSTEM_PLUGIN = """
 import re
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.facts.axes import versions_axis
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.tools import defined_by
 
@@ -93,8 +94,8 @@ ZIG = Ecosystem(
     toolchain=ToolchainPatterns(
         language="Zig", versions=(re.compile(r"\\bzig-version\\W+([\\d.x]+)"),), usage=re.compile(r"\\bzig\\s+build\\b")
     ),
-    rules=(versions_axis("Zig version", "Zig"),),
 )
+ZIG_VERSIONS = versions_axis("Zig version", "Zig", frozenset({"Zig"}))
 ZIG_FMT = format_tool(
     name="zig fmt",
     languages=frozenset({"Zig"}),

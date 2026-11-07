@@ -293,6 +293,52 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": ".NET SDK version",
+            "language": "C#",
+            "notes": [],
+            "platforms": [
+              {
+                ".NET SDK version": "10.0.x",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                ".NET SDK version": "9.0.x",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                ".NET SDK version": "10.0.x",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                ".NET SDK version": "9.0.x",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                ".NET SDK version": "10.0.x",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                ".NET SDK version": "9.0.x",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C#",
@@ -555,6 +601,26 @@
       "kind": "[Fact], [Test] or [TestMethod] methods in a test project (one referencing Microsoft.NET.Test.Sdk)",
       "language": "C#",
       "origin": "tests/App.Tests/CalculatorTests.cs"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

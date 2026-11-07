@@ -143,10 +143,10 @@ def has_readme(context: Context) -> Result:
 
 Everything the validator knows about a language lives in its profile under `project_validator/ecosystems/`:
 how it is recognised (build systems, source suffixes, how CI names its toolchain versions), the tools it uses
-(formatters and coverage tools, which say how CI runs them), and the rules it is judged by. The checks are generic:
-each one judges every language a known tool handles, or every ecosystem that has a rule of its type (see
-`project_validator/rules.py`), and does not apply to the others. A plugin can add an ecosystem and its tools the same
-way, without changing the validator.
+(formatters and coverage tools, which say how CI runs them), the settings its practices ask for, and what varies
+between its CI jobs (compilers, toolchain versions). The checks are generic: each one judges every language some
+component handles, and does not apply to the others. A plugin can add an ecosystem and its components the same way,
+without changing the validator.
 
 A built-in profile is found by its module, `project_validator/ecosystems/<name>.py`; it comes with its own
 `tests/layouts/<name>.py`, fixtures `tests/fixtures/well_configured_<name>` and `tests/fixtures/bare_<name>`, and page
@@ -169,7 +169,8 @@ Registering an ecosystem that claims another one's build file or source suffix i
 ```python
 import re
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.facts.axes import versions_axis
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.tools import defined_by
 
@@ -181,8 +182,9 @@ ZIG = Ecosystem(
     toolchain=ToolchainPatterns(
         language="Zig", versions=(re.compile(r"\bzig-version\W+([\d.x]+)"),), usage=re.compile(r"\bzig\s+build\b")
     ),
-    rules=(versions_axis("Zig version", "Zig"),),  # platform-matrix: OS x Zig version
 )
+# platform-matrix: OS x Zig version.
+ZIG_VERSIONS = versions_axis("Zig version", "Zig", frozenset({"Zig"}))
 # code-formatting: zig fmt has one style; `zig fmt --check` fails on unformatted files, `zig fmt` rewrites them.
 ZIG_FMT = format_tool(
     name="zig fmt",

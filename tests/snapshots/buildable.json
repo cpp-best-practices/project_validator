@@ -444,6 +444,34 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "compiler",
+            "language": "C",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "compiler",
+            "language": "C++",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C",

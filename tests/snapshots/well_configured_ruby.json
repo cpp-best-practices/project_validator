@@ -298,6 +298,52 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "Ruby version",
+            "language": "Ruby",
+            "notes": [],
+            "platforms": [
+              {
+                "Ruby version": "3.3",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Ruby version": "3.4",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Ruby version": "3.3",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Ruby version": "3.4",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Ruby version": "3.3",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "Ruby version": "3.4",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Ruby",
@@ -585,6 +631,26 @@
       "kind": "spec/**/*_spec.rb or test/**/*_test.rb files",
       "language": "Ruby",
       "origin": "spec/app_spec.rb"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

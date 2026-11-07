@@ -246,6 +246,21 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "axis": ".NET SDK version",
+            "language": "C#",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C#",

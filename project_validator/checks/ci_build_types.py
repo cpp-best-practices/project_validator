@@ -1,62 +1,15 @@
-from collections import defaultdict
+"""CI builds each platform of a compiled language in Debug and Release, with and without sanitizers. Interpreted
+languages such as Python have no build types."""
 
-from project_validator.build_configurations import BuildConfiguration
-from project_validator.ci import Job
-from project_validator.core import Context, Result
-from project_validator.ecosystems import ToolchainAxis, practice
-from project_validator.rules import BuildTypes
+from project_validator.facts.axes import handled
+from project_validator.judging import answered_check
+from project_validator.policy.platforms import judge_build_types
+from project_validator.questions.platforms import platform_answers
 
-REQUIRED_CONFIGURATIONS = frozenset(
-    BuildConfiguration(build_type=build_type, sanitizers=sanitizers)
-    for build_type in ("debug", "release")
-    for sanitizers in (False, True)
-)
-REQUIREMENT = "build Debug and Release, each with and without sanitizers"
-
-type Platform = tuple[str, str]
-
-
-def configurations_by_platform(jobs: tuple[Job, ...], axis: ToolchainAxis) -> dict[Platform, set[BuildConfiguration]]:
-    found: defaultdict[Platform, set[BuildConfiguration]] = defaultdict(set)
-    for job in jobs:
-        if job.os == "unknown":
-            continue
-        for toolchain in axis.of_job(job):
-            found[(job.os, toolchain)] |= job.configurations
-    return dict(sorted(found.items()))
-
-
-def _shortfall(platform: Platform, configurations: set[BuildConfiguration]) -> str | None:
-    label = " / ".join(platform)
-    if not configurations:
-        return f"{label}: no build type specified"
-    if missing := sorted(REQUIRED_CONFIGURATIONS - configurations):
-        return f"{label}: missing {', '.join(map(str, missing))}"
-    return None
-
-
-def _built_everywhere(axis: ToolchainAxis, context: Context) -> Result:
-    if not context.ci_files:
-        return Result.failed("no CI configuration found")
-
-    analysis = context.ci_analysis
-    combinations = f"OS/{axis.noun} combination(s)"
-    platforms = configurations_by_platform(analysis.jobs, axis)
-    if not platforms:
-        return Result.failed(f"no OS/{axis.noun} combination found in CI configuration", *analysis.notes)
-
-    shortfalls = [found for platform, configs in platforms.items() if (found := _shortfall(platform, configs))]
-    if shortfalls:
-        message = f"{len(shortfalls)} of {len(platforms)} {combinations} do not {REQUIREMENT}"
-        return Result.failed(message, *analysis.notes, *shortfalls)
-    return Result.passed(f"all {len(platforms)} {combinations} {REQUIREMENT}", *analysis.notes)
-
-
-# Interpreted languages such as Python have no build types, so only compiled ecosystems have a BuildTypes rule.
-@practice(
+ci_build_types = answered_check(
     name="ci-build-types",
     description="CI builds Debug and Release, with and without sanitizers, everywhere",
-    rule=BuildTypes,
+    languages=handled(compiled=True),
+    answers=platform_answers,
+    judge=lambda answer, allow_unknown: judge_build_types(answer, allow_unknown=allow_unknown),
 )
-def ci_build_types(rule: BuildTypes, context: Context) -> Result:
-    return _built_everywhere(rule.axis, context)

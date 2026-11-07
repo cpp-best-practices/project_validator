@@ -5,25 +5,23 @@ Every module of this package except `model` is a profile, defining one ecosystem
 
 import importlib
 import pkgutil
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import replace
 from fnmatch import fnmatchcase
 from pathlib import Path
 from types import ModuleType
 
-from project_validator.core import Check, Context, Result, Status
+from project_validator.core import Check
 from project_validator.ecosystems.model import (
     C_FAMILY,
     BuildSystem,
     Ecosystem,
-    ToolchainAxis,
     ToolchainPatterns,
     check_each_ecosystem,
     combined,
     ecosystems_for,
     languages_of,
-    toolchain_versions,
 )
 
 
@@ -136,15 +134,8 @@ def build_systems() -> tuple[BuildSystem, ...]:
     return tuple(system for ecosystem in _registered for system in ecosystem.build_systems)
 
 
-def providers(kind: type[object]) -> tuple[Ecosystem, ...]:
-    """The ecosystems that have a rule of type `kind`, their own or one of their build systems'."""
-    return tuple(ecosystem for ecosystem in _registered if ecosystem.has_rule(kind))
-
-
 def applies_to(selected: Check) -> tuple[str, ...]:
     """The labels of the ecosystems `selected` judges; none for a check that judges every project."""
-    if selected.rule is not None:
-        return tuple(ecosystem.label for ecosystem in providers(selected.rule))
     if selected.languages:
         return tuple(ecosystem.label for ecosystem in _registered if ecosystem.languages & selected.languages)
     return ()
@@ -155,52 +146,7 @@ def with_registered_languages(selected: Check) -> Check:
     its components now known handle."""
     if selected.languages_from is not None:
         return replace(selected, languages=selected.languages_from())
-    if selected.rule is None:
-        return selected
-    return replace(selected, languages=languages_of(providers(selected.rule)))
-
-
-type Judge[R] = Callable[[R, Context], Result]
-
-
-def judge_ecosystem[R](
-    ecosystem: Ecosystem, kind: type[R], judge: Judge[R], context: Context, build_systems: frozenset[str]
-) -> Result:
-    """`judge` of the ecosystem's rule of type `kind` for `build_systems`; a SKIP when it has none for them."""
-    rule = ecosystem.rule_for(kind, build_systems)
-    if rule is not None:
-        return judge(rule, context)
-    used = ", ".join(system.name for system in ecosystem.used_build_systems(build_systems))
-    return Result(status=Status.SKIP, message=f"not applicable to {ecosystem.label} built with {used}")
-
-
-def judge_each_ecosystem[R](context: Context, kind: type[R], judge: Judge[R]) -> Result:
-    """`judge` of the rule of type `kind` of each ecosystem the project uses, for the build systems it uses (see
-    `judge_ecosystem`): the worst result wins, and findings are labelled."""
-    structure = context.structure
-    used = ecosystems_for(structure.languages, providers(kind))
-    return combined(
-        {ecosystem: judge_ecosystem(ecosystem, kind, judge, context, structure.build_systems) for ecosystem in used}
-    )
-
-
-def practice[R](
-    *, name: str, description: str, rule: type[R], aliases: tuple[str, ...] = ()
-) -> Callable[[Judge[R]], Check]:
-    """Turn a judge of one ecosystem's rule into a check of every ecosystem that has a rule of type `rule`.
-
-    The check applies to those ecosystems' languages, and judges each one the project uses (see
-    `check_each_ecosystem`) by the rule for the build systems the project uses (see `Ecosystem.rule_for`).
-    """
-
-    def wrap(judge: Judge[R]) -> Check:
-        def run(context: Context) -> Result:
-            return judge_each_ecosystem(context, rule, judge)
-
-        languages = languages_of(providers(rule))
-        return Check(name=name, description=description, run=run, languages=languages, rule=rule, aliases=aliases)
-
-    return wrap
+    return selected
 
 
 def is_build_tree(directory: Path) -> bool:
@@ -215,7 +161,6 @@ __all__ = [
     "BuildSystem",
     "Ecosystem",
     "RegistryError",
-    "ToolchainAxis",
     "ToolchainPatterns",
     "applies_to",
     "build_systems",
@@ -225,13 +170,8 @@ __all__ = [
     "ecosystems_for",
     "is_build_tree",
     "isolated_registry",
-    "judge_each_ecosystem",
-    "judge_ecosystem",
     "languages_of",
-    "practice",
-    "providers",
     "register",
     "registered",
-    "toolchain_versions",
     "with_registered_languages",
 ]

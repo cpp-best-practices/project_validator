@@ -457,8 +457,15 @@ except where a step deliberately changes results and says so.
      meets them all, for GCC only), release overflow checks for Rust, position-independent executables for Go (a
      project that builds no Go program is skipped), and for Swift a practice that forbids: compiling the runtime
      safety checks away (`-Ounchecked`).
-6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice
-   dispatch are removed.
+   - `cxx-extensions` is a practice met by any one setting: CMake's `CMAKE_<LANG>_EXTENSIONS` off for the whole
+     build (preferred) or a target, or Meson's standard `cpp_std`; C and C++ each by their own.
+   - What varies between a language's CI jobs besides the OS is a `ToolchainAxis` component
+     (`project_validator/facts/axes.py`): compilers for C and C++, toolchain versions for the others; a compiled
+     language's axis asks `ci-build-types` of it. `platform-matrix` and `ci-build-types` answer from the `Job` facts
+     (`project_validator/questions/platforms.py`). With that, `rules.py` and the per-practice dispatch (`practice`,
+     `Ecosystem.rules`, `rule_for`) are gone: every check is a question and its policy.
+6. **Profiles shrink** to language recognition and the language's own tools: what they still hold that several
+   ecosystems share moves to the shared build systems and tools.
 7. **Proof**: add Fortran using only extractors and a recognition module.
 
 `--facts` and `--answers` expose the database and the answers.

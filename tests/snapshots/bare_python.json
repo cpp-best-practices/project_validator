@@ -244,6 +244,21 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Python version",
+            "language": "Python",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Python",

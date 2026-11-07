@@ -297,6 +297,82 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "Rust toolchain",
+            "language": "Rust",
+            "notes": [],
+            "platforms": [
+              {
+                "Rust toolchain": "nightly",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "Rust toolchain": "stable",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "Rust toolchain": "nightly",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "Rust toolchain": "stable",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "Rust toolchain": "nightly",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "windows"
+              },
+              {
+                "Rust toolchain": "stable",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Rust",
@@ -506,6 +582,31 @@
       "kind": "#[test] functions",
       "language": "Rust",
       "origin": "src/lib.rs"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/codeql.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

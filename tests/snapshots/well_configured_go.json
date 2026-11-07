@@ -287,6 +287,52 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "Go version",
+            "language": "Go",
+            "notes": [],
+            "platforms": [
+              {
+                "Go version": "1.22",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Go version": "1.23",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Go version": "1.22",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Go version": "1.23",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Go version": "1.22",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "Go version": "1.23",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Go",
@@ -515,6 +561,31 @@
       "kind": "Test functions in *_test.go files",
       "language": "Go",
       "origin": "app_test.go"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/codeql.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

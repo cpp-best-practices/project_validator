@@ -159,3 +159,11 @@ class JobAttributionTests(unittest.TestCase):
         ) as root:
             [job] = make_context(root).structure.as_dict()["ci"]["jobs"]  # type: ignore[index]
             self.assertEqual(job["ecosystems"], ["C/C++", "Python"])
+
+
+class PlatformQuestionTests(unittest.TestCase):
+    def test_a_language_no_axis_covers_has_no_answer(self) -> None:
+        from project_validator.facts import Facts
+        from project_validator.questions.platforms import platform_answer
+
+        self.assertIsNone(platform_answer("Klingon", Facts(())))

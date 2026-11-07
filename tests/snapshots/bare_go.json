@@ -252,6 +252,21 @@
         ]
       }
     ],
+    "platforms": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Go version",
+            "language": "Go",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Go",

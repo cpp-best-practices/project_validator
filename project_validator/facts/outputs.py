@@ -87,6 +87,16 @@ class BuildOutput:
         return path if any(fnmatchcase(parts[-1], glob) for glob in files) else None
 
 
+def ignored_at_top_level(names: str) -> re.Pattern[str]:
+    """Globs that ignore one of `names` at the top of the repository, as a directory or with all of its contents."""
+    return re.compile(rf"(?:\*\*/|/)?(?:{names})(?:/\**)?", re.IGNORECASE)
+
+
+def directories(*names: str) -> tuple[str, ...]:
+    """The paths of `names` as an ignore rule sees them: the directory itself and what is inside it."""
+    return tuple(path for name in names for path in (name, f"{name}/"))
+
+
 def known_build_outputs() -> tuple[BuildOutput, ...]:
     """Every build output defined by a module of the shared build systems, the shared tools or a profile."""
     from project_validator.components import known
@@ -107,6 +117,8 @@ __all__ = [
     "CommittedOutput",
     "IgnoreEntry",
     "Syntax",
+    "directories",
+    "ignored_at_top_level",
     "known_build_outputs",
     "outputs_of",
 ]

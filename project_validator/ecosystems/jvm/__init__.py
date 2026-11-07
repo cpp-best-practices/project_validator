@@ -10,25 +10,22 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.audit import audited, auditor
+from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Locked, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
-from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
 from project_validator.facts.practices import Practice, always, required, requirement_reader
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, either, starts
-from project_validator.rules import (
-    directories,
-    ignored_at_top_level,
-)
 from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 
@@ -542,5 +539,6 @@ JVM = Ecosystem(
         versions=JDK_VERSIONS,
         usage=re.compile(rf"{MAVEN_COMMAND}|{GRADLE_COMMAND}|\bsetup-java\b|\bjavac\b"),
     ),
-    rules=(versions_axis("JDK version", "JDK"),),
 )
+
+JDK_AXIS = versions_axis("JDK version", "JDK", JVM_LANGUAGES)
