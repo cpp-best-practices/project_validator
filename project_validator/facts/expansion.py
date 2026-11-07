@@ -99,12 +99,11 @@ def script_facts(
     condition: str | None = None,
     opaque: re.Pattern[str] | None = None,
     via: tuple[Origin, ...] = (),
+    powershell: bool = False,
 ) -> Iterator[Fact]:
-    """The commands of a shell script a job runs; a line that cannot be split is recorded as unknown.
-
-    `opaque` matches the expressions a CI service evaluates before the shell runs (see `split_script`).
-    """
-    for found in split_script(script, opaque):
+    """The commands of a shell script a job runs (PowerShell when `powershell`), a line that cannot be split as unknown;
+    `opaque` matches the expressions a CI service evaluates before the shell runs (see `split_script`)."""
+    for found in split_script(script, opaque, powershell=powershell):
         if isinstance(found, ShellCommand):
             directory = _changed(directory, found.argv)
             yield Command(

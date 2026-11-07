@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 
 from project_validator.facts import Facts
+from project_validator.facts.roles import AUXILIARY, role
 from project_validator.facts.tools import Tool, known_tools, within
 from project_validator.questions import Answer, LanguageAnswers, per_unit, runs_of, unknowns_for
 
@@ -110,9 +111,12 @@ class ToolAnswer:
 
 def _relevant(path: str, unit: str) -> bool:
     """Whether a definition file applies to code in `unit`: tools look for theirs in a file's directory and the
-    directories above it, so one at or above the unit applies to all of it, and one inside it to part of it."""
+    directories above it, so one at or above the unit applies to all of it, and one inside it to part of it, unless
+    that part is auxiliary (an example's or the docs' own configuration) or vendored."""
     directory = str(PurePosixPath(path).parent)
-    return within(unit, directory) or within(directory, unit)
+    if within(unit, directory):
+        return True
+    return within(directory, unit) and role(path) not in AUXILIARY
 
 
 def _runs(aspect: str, language: str, unit: str, facts: Facts) -> tuple[Ran, ...]:

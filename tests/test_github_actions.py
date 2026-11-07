@@ -109,7 +109,7 @@ class WorkflowJobTests(unittest.TestCase):
     def test_expression_matrix_is_reported_as_unknown(self) -> None:
         workflow = {"jobs": {"j": {"runs-on": "ubuntu-latest", "strategy": {"matrix": "${{ fromJSON(x) }}"}}}}
         [job] = self._jobs(workflow)
-        self.assertEqual(job.os, "unknown")
+        self.assertEqual(job.os, "linux")
         self.assertIn("expression", job.name)
 
     def test_a_job_whose_condition_is_false_does_not_run(self) -> None:

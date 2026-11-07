@@ -3,11 +3,13 @@ check), with the configuration that defines their rules and strictness."""
 
 import re
 from collections.abc import Callable
+from pathlib import PurePosixPath
 
 from project_validator.ecosystems.javascript import DENO_CONFIG_FILES, ESLINT_CONFIG_FILES, JS_LANGUAGES
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
-from project_validator.facts.arguments import program
+from project_validator.facts.arguments import option_values, program
+from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings
 from project_validator.facts.tools import Run, combined, defined_by
@@ -96,10 +98,33 @@ def _bases(value: object) -> tuple[object, ...]:
     return value if isinstance(value, tuple) else (value,)
 
 
+def _tsconfig(command: Command) -> str:
+    """The configuration tsc reads: the one `-p`/`--project` names (a file, or a directory holding tsconfig.json), or
+    the tsconfig.json where it runs."""
+    named = option_values(resolved(command), "-p", "--project", "-b", "--build")
+    path = joined(command.directory, named[0]) if named else joined(command.directory, "tsconfig.json")
+    return path if path.endswith(".json") else joined(path, "tsconfig.json")
+
+
+def _strict_settings(path: str, facts: Facts, depth: int = 0) -> list[Setting]:
+    """The settings of the configuration `path`, and of the local ones it extends, that make tsc strict."""
+    own = facts.settings("TypeScript", paths=[path])
+    found = [setting for setting in own if _strict(setting)]
+    for setting in own:
+        bases = _bases(setting.value) if setting.key == "extends" else ()
+        for base in map(str, bases):
+            if base.startswith(".") and depth < 4:
+                extended = joined(str(PurePosixPath(path).parent), base)
+                found += _strict_settings(
+                    extended if extended.endswith(".json") else f"{extended}.json", facts, depth + 1
+                )
+    return found
+
+
 def _tsc(command: Command, facts: Facts) -> Run | None:
     if not _programs(("tsc",), ("vue-tsc",))(command):
         return None
-    strict = tuple(filter(_strict, facts.settings("TypeScript")))
+    strict = _strict_settings(_tsconfig(command), facts)
     return type_checked(strict=bool(strict), read=strict)
 
 
