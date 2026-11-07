@@ -1,11 +1,11 @@
-"""C and C++ coverage: gcovr, lcov, gcov and llvm-cov, and the compiler instrumentation for path coverage.
-
-They move to the shared tools and toolchains once a second language uses them (Fortran; see docs/architecture.md).
-"""
+"""Coverage of compiled languages: gcov and the reports built on it (gcovr, lcov), for what GCC compiles; llvm-cov,
+for what Clang compiles (Swift's and Rust's coverage have their own tools, which know what their compilers measure);
+and the compilers' instrumentation for path coverage."""
 
 import re
 from collections.abc import Callable, Iterable
 
+from project_validator.build_systems.cmake.build import cmake_configures
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program, short_flags
 from project_validator.facts.build import CompilerOption
@@ -15,6 +15,8 @@ from project_validator.facts.settings import SettingsReader, key_value_settings
 from project_validator.facts.tools import Run, Tool
 
 C_AND_CXX = frozenset({"C", "C++"})
+# The languages GCC's coverage instrumentation (--coverage) covers, which gcov reads.
+GCC_LANGUAGES = C_AND_CXX | {"Fortran"}
 LINE, REGION, BRANCH, PATH = Granularity.LINE, Granularity.REGION, Granularity.BRANCH, Granularity.PATH
 
 # Every gcovr report but the default text report counts branches, as does its summary.
@@ -137,12 +139,6 @@ def _llvm_cov(command: Command, _: Facts) -> Run | None:
     return measured(LINE, REGION, BRANCH if branch else None, PATH if path else None)
 
 
-def cmake_configures(argv: tuple[str, ...]) -> bool:
-    """Whether a cmake command configures a build tree, and so reads the CMake files."""
-    excluded = ("--build", "--install", "-E", "-P", "--open", "--help", "--version")
-    return program(argv) == "cmake" and not has_option(argv, *excluded)
-
-
 def _instrumentation(flag: str) -> Tool:
     """A compiler flag that instruments for path coverage: on a command line, in an environment variable a build
     reads, or in the CMake files a configuration reads."""
@@ -166,21 +162,21 @@ _COMPILERS = {"-fcondition-coverage": "gcc", "-fpath-coverage": "gcc", "-fcovera
 
 GCOVR = coverage_tool(
     name="gcovr",
-    languages=C_AND_CXX,
+    languages=GCC_LANGUAGES,
     can={LINE: "gcovr", BRANCH: "gcovr --xml"},
     measures=_gcovr,
     reads=("gcovr",),
 )
 LCOV = coverage_tool(
     name="lcov",
-    languages=C_AND_CXX,
+    languages=GCC_LANGUAGES,
     can={LINE: "lcov", BRANCH: "lcov --rc branch_coverage=1", PATH: "lcov --mcdc-coverage"},
     measures=_lcov,
     reads=("lcov",),
 )
 GCOV = coverage_tool(
     name="gcov",
-    languages=C_AND_CXX,
+    languages=GCC_LANGUAGES,
     can={LINE: "gcov", BRANCH: "gcov --branch-counts", PATH: "gcov --conditions"},
     measures=_gcov,
 )

@@ -5,6 +5,7 @@ import unittest
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 
+from project_validator.build_systems.cmake.build import CMAKE
 from project_validator.core import Project
 from project_validator.ecosystems import (
     BUILT_IN,
@@ -16,7 +17,6 @@ from project_validator.ecosystems import (
     isolated_registry,
     register,
 )
-from project_validator.ecosystems.c_cpp.cmake import CMAKE
 from project_validator.structure import ProjectStructure
 from tests.support import make_context, temp_project
 

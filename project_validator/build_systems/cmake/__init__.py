@@ -9,7 +9,9 @@ from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
+from project_validator.build_systems.cmake.build import CMAKE as CMAKE_BUILD_SYSTEM
 from project_validator.build_systems.cmake.commands import Collector, CustomTarget
+from project_validator.build_systems.cmake.ctest import BUILT_TESTS, CTEST
 from project_validator.build_systems.cmake.evaluation import Evaluation
 from project_validator.build_systems.cmake.presets import PRESET_FILES, preset_facts
 from project_validator.core import Context, Project
@@ -130,4 +132,14 @@ def _custom_targets(command: Command, context: Context) -> list[Expansion] | Non
 
 CUSTOM_TARGETS = CommandExpander(name="CMake custom targets", expand=_custom_targets)
 
-__all__ = ["CMAKE", "CMAKE_FILES", "CUSTOM_TARGETS", "PRESET_FILES", "CMakeProject", "cmake_project"]
+__all__ = [
+    "BUILT_TESTS",
+    "CMAKE",
+    "CMAKE_BUILD_SYSTEM",
+    "CMAKE_FILES",
+    "CTEST",
+    "CUSTOM_TARGETS",
+    "PRESET_FILES",
+    "CMakeProject",
+    "cmake_project",
+]

@@ -1,7 +1,8 @@
-"""Meson: C/C++ rules that depend on meson.build files, such as test() registration and the cpp_std option."""
+"""Meson as a build system: its build files, the languages a project() declares, the build types its commands build,
+and `meson test`, which runs the tests test() registers."""
 
 from project_validator.build_systems.meson import declared_languages
-from project_validator.ecosystems.model import C_FAMILY, BuildSystem
+from project_validator.build_systems.model import C_FAMILY, BuildSystem
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.testing import test_runner, tested

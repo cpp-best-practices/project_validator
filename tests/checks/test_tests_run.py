@@ -92,16 +92,16 @@ class CtestRunsTests(unittest.TestCase):
 
     def test_build_mode_counts_what_ctest_lists(self) -> None:
         cmake = {"CMakeLists.txt": "enable_testing()\nadd_test(NAME t COMMAND t)\n", **github_job("x", "ctest")}
-        with mock.patch("project_validator.ecosystems.c_cpp.ctest.count_built_tests", return_value=0):
+        with mock.patch("project_validator.build_systems.cmake.ctest.count_built_tests", return_value=0):
             self.assertEqual(self._run(cmake, Options(build=True)), Result.failed(NO_C_TESTS))
-        with mock.patch("project_validator.ecosystems.c_cpp.ctest.count_built_tests", return_value=3):
+        with mock.patch("project_validator.build_systems.cmake.ctest.count_built_tests", return_value=3):
             self.assertEqual(self._run(cmake, Options(build=True)).status, Status.PASS)
 
     def test_a_build_that_fails_is_unknown(self) -> None:
         failed = subprocess.CompletedProcess(args=[], returncode=1, stdout="", stderr="CMake Error: boom\n")
         cmake = {"CMakeLists.txt": "enable_testing()\n", **github_job("x", "ctest")}
         with (
-            mock.patch("project_validator.ecosystems.c_cpp.ctest.subprocess.run", return_value=failed),
+            mock.patch("project_validator.build_systems.cmake.ctest.subprocess.run", return_value=failed),
             temp_project(cmake) as root,
         ):
             result = tests_run.run(make_context(root, Options(build=True)))
