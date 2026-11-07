@@ -216,6 +216,24 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Go",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Go",
@@ -2200,6 +2218,18 @@
         "errorlint",
         "revive"
       ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
     },
     {
       "kind": "ConfigurationFile",

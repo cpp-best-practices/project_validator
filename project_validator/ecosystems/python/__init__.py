@@ -17,6 +17,7 @@ from project_validator.facts.dependencies import Declared, Locked, PackageManage
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
@@ -26,7 +27,6 @@ from project_validator.rules import (
     WarningPolicy,
     directories,
     ignored_at_top_level,
-    toml_license,
 )
 from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
@@ -380,7 +380,9 @@ BYTECODE = BuildOutput(
     artifacts=("__pycache__/", "*.pyc", "*.pyo", "*.egg-info/", "/dist/", "/build/"),
 )
 
-LICENSE = toml_license("pyproject.toml", "project")
+PYPROJECT_LICENSE = declared_license_reader(
+    name="pyproject.toml license", files=("pyproject.toml",), languages=PYTHON_ONLY, declared=toml_license("project")
+)
 
 
 LOCKFILES = ("uv.lock", "poetry.lock", "pdm.lock", "Pipfile.lock", "pylock.toml", "pylock.*.toml")
@@ -457,6 +459,5 @@ PYTHON = Ecosystem(
     rules=(
         versions_axis("Python version", "Python"),
         WARNINGS,
-        LICENSE,
     ),
 )

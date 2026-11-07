@@ -238,6 +238,24 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "C#",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C#",
@@ -1569,6 +1587,32 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "PackageLicenseExpression"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": "Directory.Build.props"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "src/App/App.csproj",
       "reader": "MSBuild"
     },
@@ -1592,6 +1636,11 @@
       "kind": "ConfigurationFile",
       "origin": "src/App/App.csproj",
       "reader": "NuGet package references"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "PackageLicenseExpression"
     },
     {
       "kind": "ConfigurationFile",
@@ -1673,6 +1722,11 @@
       "kind": "Declared",
       "manager": "NuGet",
       "origin": "tests/App.Tests/App.Tests.csproj"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "PackageLicenseExpression"
     },
     {
       "kind": "ConfigurationFile",

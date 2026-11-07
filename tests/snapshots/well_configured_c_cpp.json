@@ -386,6 +386,40 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "C",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "C++",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C",
@@ -3676,6 +3710,18 @@
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
       "reader": "CMake dependencies"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
     },
     {
       "kind": "ConfigurationFile",

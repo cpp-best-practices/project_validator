@@ -223,6 +223,24 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Rust",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Rust",
@@ -2371,6 +2389,19 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
+      "reader": "Cargo.toml license"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "Cargo.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
       "reader": "Cargo dependencies"
     },
     {
@@ -2393,6 +2424,18 @@
       "origin": "Cargo.toml:pedantic.priority",
       "tool": "clippy",
       "value": -1
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
     },
     {
       "kind": "ConfigurationFile",

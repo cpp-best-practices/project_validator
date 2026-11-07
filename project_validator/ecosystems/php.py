@@ -24,6 +24,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
@@ -38,7 +39,6 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    DeclaredLicense,
     Evidence,
     WarningPolicy,
     WarningsAsErrors,
@@ -561,15 +561,17 @@ COMPOSER_PACKAGES = PackageManager(
 )
 
 
-def _composer_license(context: Context) -> str | None:
+def _composer_license(text: str) -> str | None:
     """Composer's license is an SPDX expression, or a list of licenses to choose from."""
-    license_ = json_value(context, COMPOSER_JSON, "license")
+    license_ = _composer(text).get("license")
     if isinstance(license_, list) and all(isinstance(item, str) for item in license_):
         return " OR ".join(license_) or None
     return license_ if isinstance(license_, str) else None
 
 
-LICENSE = DeclaredLicense(manifest=COMPOSER_JSON, declared=_composer_license)
+COMPOSER_LICENSE = declared_license_reader(
+    name="composer.json license", files=(COMPOSER_JSON,), languages=PHP_ONLY, declared=_composer_license
+)
 
 VENDOR = BuildOutput(
     languages=PHP_ONLY,
@@ -596,6 +598,5 @@ PHP = Ecosystem(
         versions_axis("PHP version", PHP_LANGUAGE),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        LICENSE,
     ),
 )

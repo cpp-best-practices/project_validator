@@ -201,6 +201,20 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Python",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Python",
@@ -454,6 +468,11 @@
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
       "reader": "pytest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pyproject.toml license"
     },
     {
       "kind": "ConfigurationFile",

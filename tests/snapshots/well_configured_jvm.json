@@ -243,6 +243,24 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Java",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Java",
@@ -1013,6 +1031,18 @@
       "pattern": ".gradle/",
       "syntax": "glob",
       "written": ".gradle/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
     },
     {
       "kind": "ConfigurationFile",

@@ -191,6 +191,20 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Go",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Go",
