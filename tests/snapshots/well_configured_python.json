@@ -1,5 +1,18 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Python",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Python",
@@ -444,6 +457,23 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Python",
+            "outputs": {
+              "Python bytecode": {
+                ".gitignore": "__pycache__/"
+              }
+            },
+            "unit": "."
           }
         ]
       }
@@ -1976,6 +2006,25 @@
       "via": [
         ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
       ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "__pycache__/",
+      "syntax": "glob",
+      "written": "__pycache__/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.py[cod]",
+      "syntax": "glob",
+      "written": "*.py[cod]"
     },
     {
       "kind": "ConfigurationFile",

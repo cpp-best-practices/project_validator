@@ -20,12 +20,12 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, starts
 from project_validator.rules import (
-    BuildOutputs,
     DeclaredLicense,
     WarningPolicy,
     WarningsAsErrors,
@@ -461,7 +461,8 @@ def _package_license(context: Context) -> str | None:
 
 LICENSE = DeclaredLicense(manifest="the project's PackageLicenseExpression", declared=_package_license)
 
-BUILD_OUTPUT = BuildOutputs(
+BUILD_OUTPUT = BuildOutput(
+    languages=DOTNET_LANGUAGES,
     name="bin/ and obj/",
     globs=ignored_at_top_level(r"\[Bb\]in|\[Oo\]bj|bin|obj"),
     paths=directories("bin", "obj"),
@@ -491,7 +492,6 @@ DOTNET = Ecosystem(
         versions_axis(".NET SDK version", ".NET SDK"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        BUILD_OUTPUT,
         LICENSE,
     ),
 )

@@ -17,12 +17,12 @@ from project_validator.facts.dependencies import Declared, Locked, PackageManage
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, defined_by, either, starts, when
 from project_validator.rules import (
-    BuildOutputs,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -371,7 +371,8 @@ AUDITORS = (
 )
 PIP_AUDIT_ACTION = AuditAction(name="pypa/gh-action-pip-audit", runs=lambda _inputs: (("pip-audit",),))
 
-BYTECODE = BuildOutputs(
+BYTECODE = BuildOutput(
+    languages=PYTHON_ONLY,
     name="Python bytecode",
     globs=ignored_at_top_level(r"__pycache__|\*\.py(?:c|\[[cod]+\])"),
     paths=(*directories("__pycache__"), "module.pyc"),
@@ -456,7 +457,6 @@ PYTHON = Ecosystem(
     rules=(
         versions_axis("Python version", "Python"),
         WARNINGS,
-        BYTECODE,
         LICENSE,
     ),
 )

@@ -1,5 +1,18 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "C#",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "C#",
@@ -392,6 +405,23 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C#",
+            "outputs": {
+              "bin/ and obj/": {
+                ".gitignore": "[Bb]in/"
+              }
+            },
+            "unit": "."
           }
         ]
       }
@@ -1423,6 +1453,32 @@
       "kind": "ConfigurationFile",
       "origin": ".editorconfig",
       "reader": "analyzer configuration"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "[Bb]in/",
+      "syntax": "glob",
+      "written": "[Bb]in/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "[Oo]bj/",
+      "syntax": "glob",
+      "written": "[Oo]bj/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "TestResults/",
+      "syntax": "glob",
+      "written": "TestResults/"
     },
     {
       "kind": "ConfigurationFile",

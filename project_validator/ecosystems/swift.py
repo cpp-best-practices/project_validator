@@ -18,6 +18,7 @@ from project_validator.facts.dependencies import Lock, PackageManager, lockfile_
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
+from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.settings import (
     SettingsReader,
     file_reader,
@@ -30,7 +31,6 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
-    BuildOutputs,
     BuildTypes,
     Hardening,
     WarningPolicy,
@@ -68,30 +68,30 @@ SWIFTPM = BuildSystem(
     files=(PACKAGE_SWIFT,),
     languages=SWIFT_ONLY,
     build_types=swiftpm_build_types,
-    rules=(
-        BuildOutputs(
-            name="the .build directory",
-            globs=ignored_at_top_level(r"\.build"),
-            paths=directories(".build"),
-            hint="consider ignoring .build/",
-            artifacts=(".build/",),
-        ),
-    ),
+)
+SWIFTPM_BUILD_DIRECTORY = BuildOutput(
+    name="the .build directory",
+    languages=SWIFT_ONLY,
+    build_system="SwiftPM",
+    globs=ignored_at_top_level(r"\.build"),
+    paths=directories(".build"),
+    hint="consider ignoring .build/",
+    artifacts=(".build/",),
 )
 XCODE = BuildSystem(
     name="Xcode",
     files=("*.xcodeproj/", "*.xcworkspace/"),
     languages=SWIFT_ONLY,
     build_types=xcode_build_types,
-    rules=(
-        BuildOutputs(
-            name="Xcode's user data and derived data",
-            globs=ignored_at_top_level(r"xcuserdata|DerivedData"),
-            paths=directories("xcuserdata", "DerivedData"),
-            hint="consider ignoring xcuserdata/ and DerivedData/",
-            artifacts=("xcuserdata/", "DerivedData/"),
-        ),
-    ),
+)
+XCODE_DATA = BuildOutput(
+    name="Xcode's user data and derived data",
+    languages=SWIFT_ONLY,
+    build_system="Xcode",
+    globs=ignored_at_top_level(r"xcuserdata|DerivedData"),
+    paths=directories("xcuserdata", "DerivedData"),
+    hint="consider ignoring xcuserdata/ and DerivedData/",
+    artifacts=("xcuserdata/", "DerivedData/"),
 )
 # Xcode keeps a project's build settings and its schemes inside the project directory.
 XCODE_SETTINGS = re.compile(r"\.xc(?:odeproj|workspace)/(?:.+/)?(?:project\.pbxproj|[^/]+\.xcscheme)$")

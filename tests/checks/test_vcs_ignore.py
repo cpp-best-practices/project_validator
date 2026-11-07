@@ -7,7 +7,10 @@ from project_validator.ecosystems import C_FAMILY
 from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
+from project_validator.facts import Facts
 from project_validator.plugins import discover
+from project_validator.policy.outputs import judge_committed, judge_ignored
+from project_validator.questions.outputs import committed_outputs, ignored_outputs
 from tests.support import (
     NO_FILES,
     PROJECT_LAYOUTS,
@@ -232,3 +235,12 @@ class MixedLanguageVcsIgnoreTests(unittest.TestCase):
     def test_passes_when_every_language_is_ignored(self) -> None:
         result = run_as(self, vcs_ignore, {".gitignore": "build/\n__pycache__/\n"}, C_AND_CXX, PYTHON)
         self.assertEqual(result.status, Status.PASS)
+
+
+class NoKnownOutputTests(unittest.TestCase):
+    def test_a_language_without_a_known_build_output_is_skipped(self) -> None:
+        skipped = Result(status=Status.SKIP, message="no known build output of Lang")
+        [ignored] = ignored_outputs("Lang", Facts(())).units
+        [committed] = committed_outputs("Lang", Facts(())).units
+        self.assertEqual(judge_ignored(ignored), skipped)
+        self.assertEqual(judge_committed(committed), skipped)

@@ -1,5 +1,18 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Go",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Go",
@@ -358,6 +371,23 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Go",
+            "outputs": {
+              "Go test binaries and coverage profiles": {
+                ".gitignore": "*.test"
+              }
+            },
+            "unit": "."
           }
         ]
       }
@@ -2120,6 +2150,32 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.test",
+      "syntax": "glob",
+      "written": "*.test"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.out",
+      "syntax": "glob",
+      "written": "*.out"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/bin/",
+      "syntax": "glob",
+      "written": "/bin/"
     },
     {
       "kind": "ConfigurationFile",

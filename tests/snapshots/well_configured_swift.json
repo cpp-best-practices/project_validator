@@ -1,5 +1,18 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Swift",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Swift",
@@ -349,6 +362,23 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Swift",
+            "outputs": {
+              "the .build directory": {
+                ".gitignore": "/.build/"
+              }
+            },
+            "unit": "."
           }
         ]
       }
@@ -2244,6 +2274,32 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/.build/",
+      "syntax": "glob",
+      "written": "/.build/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "xcuserdata/",
+      "syntax": "glob",
+      "written": "xcuserdata/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "DerivedData/",
+      "syntax": "glob",
+      "written": "DerivedData/"
     },
     {
       "kind": "ConfigurationFile",

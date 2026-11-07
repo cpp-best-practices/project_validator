@@ -1,5 +1,20 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "coverage/"
+            ],
+            "language": "JavaScript",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "JavaScript",
@@ -401,6 +416,21 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "JavaScript",
+            "outputs": {
+              "node_modules": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -435,6 +465,23 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "coverage/",
+      "output": "node_modules"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": "coverage/",
+      "output": "the installed gems"
     },
     {
       "kind": "ConfigurationFile",

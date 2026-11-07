@@ -21,12 +21,12 @@ from project_validator.facts.dependencies import Lock, PackageManager, lockfile_
 from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
+from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    BuildOutputs,
     DeclaredLicense,
     WarningPolicy,
     directories,
@@ -440,7 +440,8 @@ def _gemspec_license(context: Context) -> str | None:
 
 LICENSE = DeclaredLicense(manifest="the gemspec", declared=_gemspec_license)
 
-BUNDLE = BuildOutputs(
+BUNDLE = BuildOutput(
+    languages=RUBY_ONLY,
     name="the installed gems",
     globs=ignored_at_top_level(r"\.bundle|vendor/bundle"),
     paths=directories(".bundle", "vendor/bundle"),
@@ -466,7 +467,6 @@ RUBY = Ecosystem(
     rules=(
         versions_axis("Ruby version", RUBY_LANGUAGE),
         WARNINGS,
-        BUNDLE,
         LICENSE,
     ),
 )

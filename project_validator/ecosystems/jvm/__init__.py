@@ -20,11 +20,11 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.dependencies import Locked, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, either, starts
 from project_validator.rules import (
-    BuildOutputs,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -35,6 +35,7 @@ from project_validator.tools.audits import multi_ecosystem_audits
 
 JAVA = "Java"
 KOTLIN = "Kotlin"
+JVM_LANGUAGES = frozenset({JAVA, KOTLIN})
 POM = "pom.xml"
 GRADLE_BUILD_FILES = ("build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts")
 
@@ -46,9 +47,11 @@ def _output_beside(name: str, build_files: tuple[str, ...]) -> Callable[[Path], 
     return is_build_tree
 
 
-def _build_outputs(name: str, directory: str, *more: str) -> BuildOutputs:
-    return BuildOutputs(
-        name=f"the {name} directory",
+def _build_outputs(build_system: str, directory: str, *more: str) -> BuildOutput:
+    return BuildOutput(
+        name=f"the {directory} directory",
+        languages=JVM_LANGUAGES,
+        build_system=build_system,
         globs=ignored_at_top_level(directory),
         paths=directories(directory),
         hint=f"consider ignoring {' and '.join((f'{directory}/', *more))}",
@@ -56,17 +59,18 @@ def _build_outputs(name: str, directory: str, *more: str) -> BuildOutputs:
     )
 
 
+MAVEN_TARGET = _build_outputs("Maven", "target")
+GRADLE_BUILD = _build_outputs("Gradle", "build", ".gradle/")
+
 MAVEN = BuildSystem(
     name="Maven",
     files=(POM,),
     is_build_tree=_output_beside("target", (POM,)),
-    rules=(_build_outputs("target", "target"),),
 )
 GRADLE = BuildSystem(
     name="Gradle",
     files=GRADLE_BUILD_FILES,
     is_build_tree=_output_beside("build", GRADLE_BUILD_FILES),
-    rules=(_build_outputs("build", "build", ".gradle/"),),
 )
 
 # How far CI runs the build: a phase or task that compiles, and one that also runs the verification plugins.
@@ -275,7 +279,6 @@ def _jvm_coverage(wiring: Wiring) -> Claim:
 
 
 # JaCoCo and Kover count branches; neither reports path coverage.
-JVM_LANGUAGES = frozenset({JAVA, KOTLIN})
 JACOCO = coverage_tool(
     name="JaCoCo",
     languages=JVM_LANGUAGES,
@@ -516,7 +519,8 @@ GRADLE_PACKAGES = PackageManager(
     "or a gradle.lockfile",
 )
 
-CLASS_FILES = BuildOutputs(
+CLASS_FILES = BuildOutput(
+    languages=JVM_LANGUAGES,
     name="compiled classes",
     globs=ignored_at_top_level(r"\*\.class"),
     paths=("App.class",),
@@ -548,6 +552,5 @@ JVM = Ecosystem(
         versions_axis("JDK version", "JDK"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        CLASS_FILES,
     ),
 )

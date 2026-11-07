@@ -1,5 +1,20 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              ".build/"
+            ],
+            "language": "Swift",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Swift",
@@ -288,6 +303,21 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Swift",
+            "outputs": {
+              "the .build directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -323,6 +353,14 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".build/",
+      "output": "the .build directory"
     },
     {
       "kind": "ConfigurationFile",

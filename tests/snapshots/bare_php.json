@@ -1,5 +1,20 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              ".phpunit.result.cache"
+            ],
+            "language": "PHP",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "PHP",
@@ -355,6 +370,21 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "PHP",
+            "outputs": {
+              "vendor": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -389,6 +419,14 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".phpunit.result.cache",
+      "output": "vendor"
     },
     {
       "kind": "ConfigurationFile",

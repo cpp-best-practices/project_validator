@@ -27,6 +27,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.settings import (
     Read,
     SettingsReader,
@@ -40,7 +41,6 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, defined_by, starts, when
 from project_validator.rules import (
-    BuildOutputs,
     DeclaredLicense,
     WarningPolicy,
     WarningsAsErrors,
@@ -625,7 +625,8 @@ def _package_license(context: Context) -> str | None:
 
 LICENSE = DeclaredLicense(manifest=PACKAGE_JSON, declared=_package_license)
 
-NODE_MODULES = BuildOutputs(
+NODE_MODULES = BuildOutput(
+    languages=JS_LANGUAGES,
     name="node_modules",
     globs=ignored_at_top_level("node_modules"),
     paths=directories("node_modules"),
@@ -665,7 +666,6 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
         versions_axis("runtime version", "JavaScript runtime"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        NODE_MODULES,
         LICENSE,
     ),
 )

@@ -17,12 +17,12 @@ from project_validator.facts.expansion import Action, CommandExpander, Expansion
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
+from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by, either, starts, when
 from project_validator.rules import (
-    BuildOutputs,
     Hardening,
     WarningPolicy,
     directories,
@@ -327,7 +327,8 @@ GO_MODULES_MANAGER = PackageManager(
 )
 
 
-BUILD_OUTPUTS = BuildOutputs(
+BUILD_OUTPUTS = BuildOutput(
+    languages=GO_LANGUAGE,
     name="Go test binaries and coverage profiles",
     globs=ignored_at_top_level(r"\*\.test|\*\.out|bin"),
     paths=(*directories("bin"), "app.test", "coverage.out"),
@@ -351,6 +352,5 @@ GO = Ecosystem(
         versions_axis("Go version", "Go"),
         WARNINGS,
         HARDENING,
-        BUILD_OUTPUTS,
     ),
 )

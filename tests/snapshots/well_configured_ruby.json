@@ -1,5 +1,18 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Ruby",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Ruby",
@@ -433,6 +446,23 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Ruby",
+            "outputs": {
+              "the installed gems": {
+                ".gitignore": "/.bundle/"
+              }
+            },
+            "unit": "."
           }
         ]
       }
@@ -1489,6 +1519,46 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/.bundle/",
+      "syntax": "glob",
+      "written": "/.bundle/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/vendor/bundle/",
+      "syntax": "glob",
+      "written": "/vendor/bundle/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/coverage/",
+      "syntax": "glob",
+      "written": "/coverage/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/pkg/",
+      "syntax": "glob",
+      "written": "/pkg/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.gem",
+      "syntax": "glob",
+      "written": "*.gem"
     },
     {
       "kind": "ConfigurationFile",

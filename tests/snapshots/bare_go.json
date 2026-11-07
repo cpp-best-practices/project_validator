@@ -1,5 +1,20 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "coverage.out"
+            ],
+            "language": "Go",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Go",
@@ -299,6 +314,21 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Go",
+            "outputs": {
+              "Go test binaries and coverage profiles": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -340,6 +370,14 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Go"
+      ],
+      "origin": "coverage.out",
+      "output": "Go test binaries and coverage profiles"
     },
     {
       "kind": "ConfigurationFile",

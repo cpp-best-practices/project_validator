@@ -3,13 +3,14 @@ import unittest
 from collections.abc import Mapping
 from pathlib import PurePosixPath
 
-from project_validator.checks.committed_artifacts import HINT, committed_artifacts
+from project_validator.checks.committed_artifacts import committed_artifacts
 from project_validator.core import Context, Options, Project, Result, Status
 from project_validator.ecosystems import C_FAMILY
 from project_validator.ecosystems.c_cpp import BUILD_DIRECTORY
 from project_validator.ecosystems.go import BUILD_OUTPUTS
 from project_validator.ecosystems.python import BYTECODE
 from project_validator.ecosystems.rust import TARGET_DIRECTORY
+from project_validator.policy.outputs import COMMITTED_HINT as HINT
 from tests.support import FIXTURES, make_context, temp_project
 from tests.test_project import git
 
