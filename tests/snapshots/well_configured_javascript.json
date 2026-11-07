@@ -1,5 +1,29 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "JavaScript",
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "TypeScript",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "JavaScript",
@@ -942,6 +966,38 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "JavaScript",
+            "outputs": {
+              "node_modules": {
+                ".gitignore": "node_modules/"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "TypeScript",
+            "outputs": {
+              "node_modules": {
+                ".gitignore": "node_modules/"
+              }
+            },
+            "unit": "."
           }
         ]
       }
@@ -2339,6 +2395,32 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "node_modules/",
+      "syntax": "glob",
+      "written": "node_modules/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "coverage/",
+      "syntax": "glob",
+      "written": "coverage/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "dist/",
+      "syntax": "glob",
+      "written": "dist/"
     },
     {
       "kind": "ConfigurationFile",

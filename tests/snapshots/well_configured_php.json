@@ -1,5 +1,18 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "PHP",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "PHP",
@@ -439,6 +452,23 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "PHP",
+            "outputs": {
+              "vendor": {
+                ".gitignore": "/vendor/"
+              }
+            },
+            "unit": "."
           }
         ]
       }
@@ -1888,6 +1918,25 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/vendor/",
+      "syntax": "glob",
+      "written": "/vendor/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/.phpunit.cache/",
+      "syntax": "glob",
+      "written": "/.phpunit.cache/"
     },
     {
       "kind": "ConfigurationFile",

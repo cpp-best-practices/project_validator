@@ -1,5 +1,18 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Rust",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Rust",
@@ -360,6 +373,23 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Rust",
+            "outputs": {
+              "the target directory": {
+                ".gitignore": "/target"
+              }
+            },
+            "unit": "."
           }
         ]
       }
@@ -2312,6 +2342,18 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/target",
+      "syntax": "glob",
+      "written": "/target"
     },
     {
       "kind": "ConfigurationFile",

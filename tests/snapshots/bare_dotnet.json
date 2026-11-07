@@ -1,5 +1,20 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "src/App/obj/"
+            ],
+            "language": "C#",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "C#",
@@ -323,6 +338,21 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C#",
+            "outputs": {
+              "bin/ and obj/": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -349,6 +379,15 @@
       ],
       "origin": "src/App",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": "src/App/obj/",
+      "output": "bin/ and obj/"
     },
     {
       "kind": "ConfigurationFile",

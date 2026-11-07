@@ -20,8 +20,9 @@ from project_validator.facts.dependencies import (
     known_package_managers,
     managers_of,
 )
+from project_validator.facts.repository import Untracked
 from project_validator.facts.roles import AUXILIARY, role
-from project_validator.facts.structure import Unit, Untracked
+from project_validator.facts.structure import Unit
 from project_validator.facts.tools import owner, within
 from project_validator.questions import Answer, LanguageAnswers, Question, per_unit
 

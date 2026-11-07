@@ -1,5 +1,20 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "target/"
+            ],
+            "language": "Rust",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Rust",
@@ -301,6 +316,21 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Rust",
+            "outputs": {
+              "the target directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -336,6 +366,23 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
     },
     {
       "kind": "ConfigurationFile",

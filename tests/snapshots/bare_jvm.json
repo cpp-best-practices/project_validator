@@ -1,5 +1,20 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "target/"
+            ],
+            "language": "Java",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Java",
@@ -338,6 +353,21 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Java",
+            "outputs": {
+              "the target directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -364,6 +394,41 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": "target/classes/com/example/App.class",
+      "output": "the build directory"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": "target/classes/com/example/App.class",
+      "output": "compiled classes"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
     },
     {
       "kind": "ConfigurationFile",

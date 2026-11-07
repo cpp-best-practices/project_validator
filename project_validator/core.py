@@ -170,18 +170,20 @@ class Context:
     @cached_property
     def facts(self) -> Facts:
         """The fact database (see `project_validator.facts`), extracted in stages: the project's structure, the files
-        git does not track, and its test files (and, with `--build`, what probes find by building it), the CI jobs and
-        what they run (with what that runs in turn), the settings the configuration files hold (those commands name
-        included), and the tools those commands run."""
+        git does not track and the build outputs it does, and its test files (and, with `--build`, what probes find by
+        building it), the CI jobs and what they run (with what that runs in turn), the settings the configuration
+        files hold (those commands name included), and the tools those commands run."""
         from project_validator.ci import ci_facts
         from project_validator.facts import Facts
         from project_validator.facts.expansion import expanded, known_actions, known_expanders
+        from project_validator.facts.outputs import known_build_outputs
+        from project_validator.facts.repository import repository_facts
         from project_validator.facts.settings import known_settings_readers, settings_facts
-        from project_validator.facts.structure import structure_facts, untracked_facts
+        from project_validator.facts.structure import structure_facts
         from project_validator.facts.testing import known_probes, known_test_files, test_file_facts
         from project_validator.facts.tools import known_tools, tool_runs
 
-        found = Facts((*structure_facts(self.project), *untracked_facts(self.project)))
+        found = Facts((*structure_facts(self.project), *repository_facts(self.project, known_build_outputs())))
         found += test_file_facts(self.project, found, known_test_files())
         if self.options.build:
             found += (fact for probe in known_probes() for fact in probe.run(self.project, self.options))

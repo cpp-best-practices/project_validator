@@ -11,8 +11,8 @@ from project_validator.ecosystems.c_cpp.cmake import CMAKE
 from project_validator.ecosystems.c_cpp.compiler_flags import HARDENING, WARNINGS, WARNINGS_AS_ERRORS
 from project_validator.ecosystems.c_cpp.meson import MESON
 from project_validator.ecosystems.model import C_FAMILY, Ecosystem, ToolchainAxis
+from project_validator.facts.outputs import BuildOutput
 from project_validator.rules import (
-    BuildOutputs,
     BuildTypes,
     directories,
     ignored_at_top_level,
@@ -46,7 +46,8 @@ def _uses_runner_default_compiler(job: Job) -> bool:
 COMPILERS = ToolchainAxis(noun="compiler", of_job=_compilers, runner_default=_uses_runner_default_compiler)
 
 
-BUILD_DIRECTORY = BuildOutputs(
+BUILD_DIRECTORY = BuildOutput(
+    languages=C_FAMILY,
     name="the build directory",
     globs=ignored_at_top_level(r"(?:\[Bb\]uild|_?build|out|cmake-build)(?:[-_*][\w*-]*)?"),
     paths=directories("build", "out", "_build", "cmake-build-debug"),
@@ -93,6 +94,5 @@ C_AND_CXX = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         HARDENING,
-        BUILD_DIRECTORY,
     ),
 )

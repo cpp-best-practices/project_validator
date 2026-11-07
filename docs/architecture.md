@@ -400,6 +400,16 @@ except where a step deliberately changes results and says so.
      tooling's), a lockfile locks its directory and those below it (a workspace's lock locks its members). A manifest
      that does not parse makes the answer unknown.
 
+   **4h. Build outputs** (`vcs-ignore`, `committed-artifacts`; the `BuildOutputs` rule is deleted).
+   - **`BuildOutput` components** (`project_validator/facts/outputs.py`): what a language's builds (or one build
+     system's: SwiftPM's `.build`, Maven's `target`) write. A language's outputs are those of the build systems the
+     project uses, or its own when none has one; every build system in use has its outputs ignored.
+   - **The repository stage** (`project_validator/facts/repository.py`) reads git's tracked files once: the files it
+     does not track (`Untracked`) and the tracked files that are a build output (`CommittedOutput`), which the
+     settings readers cannot see, as build trees are not walked.
+   - **Ignore entries** are facts read from `.gitignore`, `.hgignore`, `.bzrignore` and Fossil's `ignore-glob`
+     (`project_validator/tools/version_control.py`).
+
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice

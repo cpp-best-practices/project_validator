@@ -1,5 +1,33 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "main.o"
+            ],
+            "language": "C",
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "main.o"
+            ],
+            "language": "C++",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "C",
@@ -529,6 +557,34 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C",
+            "outputs": {
+              "the build directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C++",
+            "outputs": {
+              "the build directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -559,6 +615,15 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": "main.o",
+      "output": "the build directory"
     },
     {
       "kind": "ConfigurationFile",

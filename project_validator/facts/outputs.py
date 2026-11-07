@@ -1,0 +1,112 @@
+"""Build outputs: what building the project writes into it (`target/`, `__pycache__/`, object files), which version
+control must ignore and never track.
+
+A `BuildOutput` is a component of the profile (or build system) whose builds write it. The ignore files' entries are
+read by settings readers (see `project_validator.tools.version_control`) as `IgnoreEntry` facts; the tracked files
+that are build outputs are found once, when the repository is read (see `project_validator.facts.repository`), as
+`CommittedOutput` facts.
+"""
+
+import enum
+import re
+from collections.abc import Iterable
+from dataclasses import dataclass
+from fnmatch import fnmatchcase
+from pathlib import PurePosixPath
+
+from project_validator.facts import Fact
+
+
+class Syntax(enum.StrEnum):
+    GLOB = "glob"
+    REGEX = "regex"
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class IgnoreEntry(Fact):
+    """An entry of an ignore file (its origin): `written` as it appears there, and the `pattern` it ignores in its
+    `syntax`. A rooted glob `pattern` starts with "/", as in a .gitignore."""
+
+    written: str
+    pattern: str
+    syntax: Syntax
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class CommittedOutput(Fact):
+    """A tracked file, or the outermost tracked directory (its path ends in "/"), that is a build output, as the
+    build output of `languages` called `output` names it."""
+
+    output: str
+    languages: frozenset[str]
+
+
+def _regex_matches_any(pattern: str, paths: Iterable[str]) -> bool:
+    try:
+        compiled = re.compile(pattern)
+    except re.error:
+        return False
+    return any(compiled.search(path) for path in paths)
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class BuildOutput:
+    """The build output called `name` that the builds of `languages` write (with `build_system`, those of that build
+    system only), which must never be committed.
+
+    A glob ignore entry ignores it when `globs` matches it whole; a regular expression when it matches one of
+    `paths`. `artifacts` recognise it among the tracked files (see `artifact`). `hint` says how to ignore it.
+    """
+
+    name: str
+    languages: frozenset[str]
+    globs: re.Pattern[str]
+    paths: tuple[str, ...]
+    hint: str
+    artifacts: tuple[str, ...] = ()
+    build_system: str | None = None
+
+    def ignored_by(self, entry: IgnoreEntry) -> bool:
+        if entry.syntax is Syntax.REGEX:
+            return _regex_matches_any(entry.pattern, self.paths)
+        return self.globs.fullmatch(entry.pattern) is not None
+
+    def artifact(self, path: str) -> str | None:
+        """The build output `path` is, or is inside, as one of `artifacts` names it; None when it is not one.
+
+        A glob without a slash names a file anywhere; one ending in a slash, a directory anywhere, and one that also
+        starts with a slash, a directory at the top of the project. A file in an output directory is the outermost
+        such directory.
+        """
+        parts = PurePosixPath(path).parts
+        directories = [glob for glob in self.artifacts if glob.endswith("/")]
+        for depth, part in enumerate(parts[:-1]):
+            if any(fnmatchcase(part, glob.strip("/")) for glob in directories if depth == 0 or glob[0] != "/"):
+                return "/".join(parts[: depth + 1]) + "/"
+        files = (glob for glob in self.artifacts if not glob.endswith("/"))
+        return path if any(fnmatchcase(parts[-1], glob) for glob in files) else None
+
+
+def known_build_outputs() -> tuple[BuildOutput, ...]:
+    """Every build output defined by a module of the shared build systems, the shared tools or a profile."""
+    from project_validator.components import known
+
+    return known(BuildOutput)
+
+
+def outputs_of(language: str, build_systems: frozenset[str], outputs: Iterable[BuildOutput]) -> tuple[BuildOutput, ...]:
+    """The build outputs of `language` for a project built with `build_systems`: those of the build systems it uses,
+    or, when none of them has one, the language's own."""
+    found = [output for output in outputs if language in output.languages]
+    used = [output for output in found if output.build_system in build_systems]
+    return tuple(used or [output for output in found if output.build_system is None])
+
+
+__all__ = [
+    "BuildOutput",
+    "CommittedOutput",
+    "IgnoreEntry",
+    "Syntax",
+    "known_build_outputs",
+    "outputs_of",
+]

@@ -1,5 +1,20 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "dist/"
+            ],
+            "language": "Python",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "Python",
@@ -368,6 +383,21 @@
           }
         ]
       }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Python",
+            "outputs": {
+              "Python bytecode": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -396,6 +426,14 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Python"
+      ],
+      "origin": "dist/",
+      "output": "Python bytecode"
     },
     {
       "kind": "ConfigurationFile",

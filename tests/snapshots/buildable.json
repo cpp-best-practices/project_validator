@@ -1,5 +1,29 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "C",
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "C++",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "C",
@@ -534,6 +558,34 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C",
+            "outputs": {
+              "the build directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C++",
+            "outputs": {
+              "the build directory": {}
+            },
+            "unit": "."
           }
         ]
       }

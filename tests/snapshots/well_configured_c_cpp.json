@@ -1,5 +1,29 @@
 {
   "answers": {
+    "committed-artifacts": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "C",
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "C++",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "C",
@@ -668,6 +692,38 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C",
+            "outputs": {
+              "the build directory": {
+                ".gitignore": "/build/"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C++",
+            "outputs": {
+              "the build directory": {
+                ".gitignore": "/build/"
+              }
+            },
+            "unit": "."
           }
         ]
       }
@@ -3477,6 +3533,25 @@
           "value": 80
         }
       ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/build/",
+      "syntax": "glob",
+      "written": "/build/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "/out/",
+      "syntax": "glob",
+      "written": "/out/"
     },
     {
       "kind": "ConfigurationFile",

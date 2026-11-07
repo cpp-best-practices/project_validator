@@ -25,6 +25,7 @@ from project_validator.facts.dependencies import Lock, PackageManager, lockfile_
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.limits import Rule, limiter
+from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import (
     SettingsReader,
@@ -37,7 +38,6 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    BuildOutputs,
     DeclaredLicense,
     Evidence,
     WarningPolicy,
@@ -571,7 +571,8 @@ def _composer_license(context: Context) -> str | None:
 
 LICENSE = DeclaredLicense(manifest=COMPOSER_JSON, declared=_composer_license)
 
-VENDOR = BuildOutputs(
+VENDOR = BuildOutput(
+    languages=PHP_ONLY,
     name="vendor",
     globs=ignored_at_top_level("vendor"),
     paths=directories("vendor"),
@@ -595,7 +596,6 @@ PHP = Ecosystem(
         versions_axis("PHP version", PHP_LANGUAGE),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        VENDOR,
         LICENSE,
     ),
 )
