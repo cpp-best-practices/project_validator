@@ -50,7 +50,7 @@ A module that requires others commits `go.sum`. `go mod vendor` output is not th
 
 ## `dependency-audit`
 
-govulncheck.
+govulncheck, run directly, as `go run golang.org/x/vuln/cmd/govulncheck@…`, or as `golang/govulncheck-action`.
 
 ## `committed-artifacts`
 

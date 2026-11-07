@@ -28,11 +28,9 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
-    MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     BuildOutputs,
     BuildTypes,
-    DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     Hardening,
@@ -42,6 +40,7 @@ from project_validator.rules import (
     ignored_at_top_level,
 )
 from project_validator.text import Pattern, found_and_missing, matching_names, pattern
+from project_validator.tools.audits import multi_ecosystem_audits
 
 SWIFT_LANGUAGE = "Swift"
 SWIFT_ONLY = frozenset({SWIFT_LANGUAGE})
@@ -331,10 +330,8 @@ SWIFTLINT_TOOL = analyzer(
 SWIFTLINT_ACTION = Action(name="norio-nomura/action-swiftlint", runs=lambda _inputs: (("swiftlint",),))
 
 # osv-scanner reads Package.resolved; Swift has no audit tool of its own.
-DEPENDENCY_AUDIT = DependencyAudit(
-    tools=MULTI_ECOSYSTEM_AUDITS,
-    hint="consider running osv-scanner in CI, which audits the packages Package.resolved pins",
-)
+# osv-scanner audits the packages Package.resolved pins.
+AUDITORS = multi_ecosystem_audits(SWIFT_ONLY)
 
 PACKAGE_DEPENDENCY = re.compile(r"\.package\s*\(")
 EXECUTABLE = re.compile(r"\.executable(?:Target)?\s*\(")
@@ -387,7 +384,6 @@ SWIFT = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         HARDENING,
-        DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_function_body_length),
         DEPENDENCIES,
     ),

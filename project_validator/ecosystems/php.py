@@ -19,18 +19,24 @@ from project_validator.evidence import (
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, option_values, positional, program
+from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
-from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
+from project_validator.facts.settings import (
+    SettingsReader,
+    file_reader,
+    json_settings,
+    matched_settings,
+    settings,
+    xml_root,
+)
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either
+from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     BuildOutputs,
     DeclaredLicense,
-    DependencyAudit,
     DependencyManagement,
     Evidence,
     FunctionLimits,
@@ -41,6 +47,7 @@ from project_validator.rules import (
     ignored_at_top_level,
 )
 from project_validator.text import Pattern, pattern
+from project_validator.tools.audits import multi_ecosystem_audits
 
 PHP_LANGUAGE = "PHP"
 PHP_ONLY = frozenset({PHP_LANGUAGE})
@@ -296,27 +303,46 @@ def _required_packages(context: Context) -> tuple[str, ...]:
     return tuple(name for table in tables if isinstance(table, dict) for name in table)
 
 
-def _audit_texts(context: Context) -> tuple[str, ...]:
-    return (*_run_texts(context), "\n".join(_required_packages(context)))
-
-
-DEPENDENCY_AUDIT = DependencyAudit(
-    tools=(
-        pattern("composer audit", r"\bcomposer\s+audit\b"),
-        # It conflicts with every vulnerable version, so Composer refuses to install one.
-        pattern("roave/security-advisories", r"\broave/security-advisories\b"),
-        *MULTI_ECOSYSTEM_AUDITS,
+COMPOSER_REQUIRES = SettingsReader(
+    name="Composer",
+    files=(COMPOSER_JSON,),
+    read=lambda path, text: (
+        fact for table in ("require", "require-dev") for fact in json_settings("Composer", path, text, table)
     ),
-    hint="consider running composer audit in CI (or requiring roave/security-advisories)",
-    texts=_audit_texts,
+)
+# roave/security-advisories conflicts with every vulnerable version, so Composer refuses to install one.
+_INSTALLS = (("composer", "install"), ("composer", "update"), ("composer", "require"))
+
+
+def _roave(command: Command, facts: Facts) -> Run | None:
+    read = facts.where(Setting, tool="Composer", key="roave/security-advisories")
+    return audited(read=read) if read and starts(*_INSTALLS)(command) else None
+
+
+AUDITORS = (
+    auditor(
+        name="composer audit",
+        languages=PHP_ONLY,
+        how="composer audit",
+        audits=when(starts(("composer", "audit")), audited),
+    ),
+    auditor(
+        name="roave/security-advisories",
+        languages=PHP_ONLY,
+        how="requiring roave/security-advisories",
+        audits=_roave,
+        reads=("Composer",),
+    ),
+    *multi_ecosystem_audits(PHP_ONLY),
 )
 
 PSALM_CONFIG_FILES = ("psalm.xml", "psalm.xml.dist")
 
 
 def _security_texts(context: Context) -> tuple[str, ...]:
+    """CI and Composer scripts, the packages composer.json requires, and the Psalm and PHP_CodeSniffer settings."""
     files = existing_texts(context, (*PSALM_CONFIG_FILES, *PHPCS_CONFIG_FILES))
-    return (*_audit_texts(context), *files)
+    return (*_run_texts(context), "\n".join(_required_packages(context)), *files)
 
 
 SECURITY_LINTS = SecurityLints(
@@ -481,7 +507,6 @@ PHP = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         SECURITY_LINTS,
-        DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_method_length_enforced),
         DEPENDENCIES,
         VENDOR,

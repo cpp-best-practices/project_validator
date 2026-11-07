@@ -180,7 +180,7 @@ class WarningTests(unittest.TestCase):
 class SecurityTests(unittest.TestCase):
     def test_dependency_check_runs_bound_or_as_a_task(self) -> None:
         bound = {**_pom(_plugin("dependency-check-maven", "aggregate")), **_ci(MAVEN_VERIFY)}
-        for files in (bound, _ci("./gradlew dependencyCheckAnalyze")):
+        for files in (bound, _ci("./gradlew dependencyCheckAnalyze"), _ci("dependency-check.sh --scan .")):
             with self.subTest(files=files):
                 self.assertEqual(run_as(self, DEPENDENCY_AUDIT, files, JVM).status, Status.PASS)
         # The Gradle plugin adds no task to check.

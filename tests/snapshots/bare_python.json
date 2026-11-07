@@ -43,6 +43,60 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pip-audit": {
+                "can": {
+                  "runs": "pip-audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "safety": {
+                "can": {
+                  "runs": "safety scan"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Python",
@@ -380,7 +434,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running pip-audit in CI (pypa/gh-action-pip-audit, or pip-audit -r requirements.txt)"
+        "consider running in CI: pip-audit, safety scan, osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

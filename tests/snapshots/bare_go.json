@@ -41,6 +41,53 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "govulncheck": {
+                "can": {
+                  "runs": "govulncheck ./..."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Go",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Go",
@@ -284,7 +331,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running govulncheck ./... in CI (golang/govulncheck-action)"
+        "consider running in CI: govulncheck ./..., osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

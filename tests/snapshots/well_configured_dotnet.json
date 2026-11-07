@@ -47,6 +47,69 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "NuGet audit of every package": {
+                "can": {
+                  "runs": "a restore with <NuGetAuditMode>all</NuGetAuditMode>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dotnet list package --vulnerable": {
+                "can": {
+                  "runs": "dotnet list package --vulnerable --include-transitive"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C#",
+            "level": "runs",
+            "runs": {
+              "NuGet audit of every package": {
+                "levels": [
+                  "runs"
+                ],
+                "read": [
+                  "Directory.Build.props"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "C#",
@@ -1395,6 +1458,29 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -1448,6 +1534,29 @@
         "."
       ],
       "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -1520,6 +1629,29 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
@@ -1535,6 +1667,29 @@
         "."
       ],
       "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -1595,6 +1750,29 @@
         "."
       ],
       "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -1667,6 +1845,29 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
@@ -1682,6 +1883,29 @@
         "."
       ],
       "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -1742,6 +1966,29 @@
         "."
       ],
       "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -1814,6 +2061,29 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
@@ -1829,6 +2099,29 @@
         "."
       ],
       "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -1889,6 +2182,29 @@
         "."
       ],
       "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -1961,6 +2277,29 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
@@ -1976,6 +2315,29 @@
         "."
       ],
       "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -2036,6 +2398,29 @@
         "."
       ],
       "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -2108,6 +2493,29 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
@@ -2123,6 +2531,29 @@
         "."
       ],
       "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {
@@ -2190,6 +2621,29 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
@@ -2248,6 +2702,29 @@
         "."
       ],
       "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
       "via": []
     },
     {

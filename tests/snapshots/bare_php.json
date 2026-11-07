@@ -43,6 +43,60 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "composer audit": {
+                "can": {
+                  "runs": "composer audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "roave/security-advisories": {
+                "can": {
+                  "runs": "requiring roave/security-advisories"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "PHP",
@@ -227,6 +281,19 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "Composer"
+    },
+    {
+      "heuristic": false,
+      "key": "psr/log",
+      "kind": "Setting",
+      "origin": "composer.json:psr/log",
+      "tool": "Composer",
+      "value": "^3.0"
     }
   ],
   "map": {
@@ -333,7 +400,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running composer audit in CI (or requiring roave/security-advisories)"
+        "consider running in CI: composer audit, requiring roave/security-advisories, osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

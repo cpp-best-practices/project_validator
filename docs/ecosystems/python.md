@@ -55,7 +55,7 @@ Dependencies declared in `pyproject.toml`, `setup.py` or requirements files are 
 
 ## `dependency-audit`
 
-pip-audit or safety.
+pip-audit (or `pypa/gh-action-pip-audit`) or `safety scan`.
 
 ## `license`
 

@@ -110,6 +110,168 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "bun audit": {
+                "can": {
+                  "runs": "bun audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "npm audit": {
+                "can": {
+                  "runs": "npm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pnpm audit": {
+                "can": {
+                  "runs": "pnpm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yarn audit": {
+                "can": {
+                  "runs": "yarn audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yarn npm audit": {
+                "can": {
+                  "runs": "yarn npm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "runs",
+            "runs": {
+              "npm audit": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "bun audit": {
+                "can": {
+                  "runs": "bun audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "npm audit": {
+                "can": {
+                  "runs": "npm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pnpm audit": {
+                "can": {
+                  "runs": "pnpm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yarn audit": {
+                "can": {
+                  "runs": "yarn audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yarn npm audit": {
+                "can": {
+                  "runs": "yarn npm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "runs",
+            "runs": {
+              "npm audit": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "JavaScript",
@@ -2099,6 +2261,27 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
@@ -2215,6 +2398,27 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
     },
     {
       "heuristic": false,
@@ -2337,6 +2541,27 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
@@ -2456,6 +2681,27 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
@@ -2575,6 +2821,27 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
@@ -2691,6 +2958,27 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
     }
   ],
   "map": {

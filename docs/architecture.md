@@ -351,6 +351,16 @@ except where a step deliberately changes results and says so.
      module, is tooling); fuzz and stress tests, and directories named `tests-…`, are test code. So a crate of fuzz
      targets or a tools module is not held to having tests of its own.
 
+   **4d. Dependency audit** (`dependency-audit`; the `DependencyAudit` rule and `MULTI_ECOSYSTEM_AUDITS` are deleted).
+   - **The `audit` aspect** (`project_validator/facts/audit.py`), one level, `runs`. Auditors that serve every ecosystem
+     (osv-scanner, trivy of the file system, snyk) are made by `multi_ecosystem_audits(languages)` in
+     `project_validator/tools/audits.py`; each profile makes them its own, for its languages, so a language whose
+     ecosystem has nothing to audit (C/C++) is not judged. Their actions are shared.
+   - Audits that a build performs are claims on the build: a restore with `NuGetAuditMode` `all`, a Composer install
+     with `roave/security-advisories` required, dependency-check bound to Maven's verification.
+   - `starts(*prefixes)` and `when(matches, run)` (`project_validator/facts/tools.py`) spell the commonest claim: a
+     program, and the subcommands after it.
+
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice

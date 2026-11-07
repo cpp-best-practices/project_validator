@@ -55,7 +55,8 @@ unless the package is a `"type": "library"`.
 
 ## `dependency-audit`
 
-`composer audit`, or `roave/security-advisories` required.
+`composer audit`, or `roave/security-advisories` required where CI installs the packages (`composer install` or
+`update`), since it stops Composer installing a vulnerable version.
 
 ## `license`
 

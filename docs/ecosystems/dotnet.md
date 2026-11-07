@@ -55,7 +55,8 @@ NuGet `PackageReference`s are locked by committed `packages.lock.json` files.
 
 ## `dependency-audit`
 
-`NuGetAuditMode` `all` (restoring then audits transitive packages too) or `dotnet list package --vulnerable`.
+`NuGetAuditMode` `all` in the MSBuild files, when CI restores or builds (restoring then audits transitive packages
+too), or `dotnet list package --vulnerable`.
 
 ## `license`
 

@@ -15,18 +15,17 @@ from project_validator.evidence import ci_and_hook_texts, existing_texts
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, program
+from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
-from project_validator.facts.tools import Claim, Definition, Run, defined_by
+from project_validator.facts.tools import Claim, Definition, Run, defined_by, starts
 from project_validator.rules import (
-    MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     BuildOutputs,
     DeclaredLicense,
-    DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
@@ -36,6 +35,7 @@ from project_validator.rules import (
     ignored_at_top_level,
 )
 from project_validator.text import Pattern, pattern
+from project_validator.tools.audits import multi_ecosystem_audits
 
 CSHARP = "C#"
 FSHARP = "F#"
@@ -301,18 +301,45 @@ WARNINGS_AS_ERRORS = WarningsAsErrors(
     hint="set <TreatWarningsAsErrors>true</TreatWarningsAsErrors> in Directory.Build.props",
 )
 
-DEPENDENCY_AUDIT = DependencyAudit(
-    tools=(
-        pattern("NuGet audit of every package", r"<NuGetAuditMode>\s*all\s*</NuGetAuditMode>"),
-        pattern(
-            "dotnet list package --vulnerable",
-            r"\bdotnet\s+(?:list\s+(?:\S+\s+)?package|package\s+list)\b[^\n]*--vulnerable\b",
-        ),
-        *MULTI_ECOSYSTEM_AUDITS,
+# The commands that restore a project's packages, which NuGet audits as it restores them.
+_RESTORES = frozenset({"restore", "build", "test", "pack", "publish", "run"})
+
+
+def _nuget_audit(command: Command, facts: Facts) -> Run | None:
+    """Restoring with `<NuGetAuditMode>all</NuGetAuditMode>`, which audits the transitive packages too."""
+    argv = resolved(command)
+    restores = program(argv) in ("msbuild", "MSBuild") or (
+        program(argv) == "dotnet" and argv[1:2] and argv[1] in _RESTORES
+    )
+    read = [
+        found
+        for found in facts.where(Setting, tool="MSBuild", key="NuGetAuditMode")
+        if str(found.value).lower() == "all"
+    ]
+    return audited(read=read) if restores and read else None
+
+
+def _list_vulnerable(command: Command, _facts: Facts) -> Run | None:
+    argv = resolved(command)
+    listing = starts(("dotnet", "list"), ("dotnet", "package", "list"))(command) and "package" in argv[1:4]
+    return audited() if listing and "--vulnerable" in argv else None
+
+
+AUDITORS = (
+    auditor(
+        name="NuGet audit of every package",
+        languages=DOTNET_LANGUAGES,
+        how="a restore with <NuGetAuditMode>all</NuGetAuditMode>",
+        audits=_nuget_audit,
+        reads=("MSBuild",),
     ),
-    hint="set <NuGetAuditMode>all</NuGetAuditMode>, so restoring audits transitive packages too, or run "
-    "dotnet list package --vulnerable --include-transitive in CI",
-    texts=_build_texts,
+    auditor(
+        name="dotnet list package --vulnerable",
+        languages=DOTNET_LANGUAGES,
+        how="dotnet list package --vulnerable --include-transitive",
+        audits=_list_vulnerable,
+    ),
+    *multi_ecosystem_audits(DOTNET_LANGUAGES),
 )
 
 ANALYZER_CONFIGURATION = (".editorconfig", ".globalconfig")
@@ -454,7 +481,6 @@ DOTNET = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         SECURITY_LINTS,
-        DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_fsharp_only),
         DEPENDENCIES,
         BUILD_OUTPUT,

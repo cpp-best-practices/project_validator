@@ -41,6 +41,53 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "bundler-audit": {
+                "can": {
+                  "runs": "bundle audit check --update"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Ruby",
@@ -329,7 +376,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running bundle audit check --update in CI (bundler-audit)"
+        "consider running in CI: bundle audit check --update, osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

@@ -49,6 +49,67 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "composer audit": {
+                "can": {
+                  "runs": "composer audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "roave/security-advisories": {
+                "can": {
+                  "runs": "requiring roave/security-advisories"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "runs",
+            "runs": {
+              "composer audit": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "PHP",
@@ -1705,6 +1766,59 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "Composer"
+    },
+    {
+      "heuristic": false,
+      "key": "php",
+      "kind": "Setting",
+      "origin": "composer.json:php",
+      "tool": "Composer",
+      "value": ">=8.3"
+    },
+    {
+      "heuristic": false,
+      "key": "psr/log",
+      "kind": "Setting",
+      "origin": "composer.json:psr/log",
+      "tool": "Composer",
+      "value": "^3.0"
+    },
+    {
+      "heuristic": false,
+      "key": "friendsofphp/php-cs-fixer",
+      "kind": "Setting",
+      "origin": "composer.json:friendsofphp/php-cs-fixer",
+      "tool": "Composer",
+      "value": "^3.75"
+    },
+    {
+      "heuristic": false,
+      "key": "phpstan/phpstan",
+      "kind": "Setting",
+      "origin": "composer.json:phpstan/phpstan",
+      "tool": "Composer",
+      "value": "^2.1"
+    },
+    {
+      "heuristic": false,
+      "key": "phpunit/phpunit",
+      "kind": "Setting",
+      "origin": "composer.json:phpunit/phpunit",
+      "tool": "Composer",
+      "value": "^12.2"
+    },
+    {
+      "heuristic": false,
+      "key": "vimeo/psalm",
+      "kind": "Setting",
+      "origin": "composer.json:vimeo/psalm",
+      "tool": "Composer",
+      "value": "^6.12"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "phpstan.neon.dist",
       "reader": "PHPStan"
     },
@@ -1849,6 +1963,26 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "composer audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
@@ -1972,6 +2106,26 @@
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[2]"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "composer audit",
+      "via": []
     },
     {
       "heuristic": false,
@@ -2101,6 +2255,26 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "composer audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
@@ -2227,6 +2401,26 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "composer audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
@@ -2353,6 +2547,26 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "composer audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
@@ -2476,6 +2690,26 @@
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[2]"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "composer audit",
+      "via": []
     }
   ],
   "map": {
