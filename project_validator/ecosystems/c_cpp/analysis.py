@@ -6,7 +6,7 @@ Each runs directly, through a launcher or action, or within the build: a CMake c
 
 import re
 
-from project_validator.ecosystems.c_cpp.coverage import cmake_configures
+from project_validator.build_systems.cmake.build import cmake_configures
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
