@@ -4,7 +4,10 @@ from types import MappingProxyType
 
 from project_validator.checks.function_limits import function_limits
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_AND_CXX, C_FAMILY, PYTHON, RUST
+from project_validator.ecosystems import C_FAMILY
+from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.python import PYTHON
+from project_validator.ecosystems.rust import RUST
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,
@@ -36,7 +39,7 @@ class FunctionLimitsTests(unittest.TestCase):
         return run_in_every_layout(self, function_limits, files)
 
     def test_declares_the_languages_it_judges(self) -> None:
-        # Plugins (and later built-in profiles) add languages; the README matrix pins the exact list.
+        # Profiles and plugins add languages, so only the stable ones are pinned.
         self.assertLessEqual(C_FAMILY | {"Python", "Rust"}, function_limits.languages)
 
     def test_fails_without_function_limits(self) -> None:

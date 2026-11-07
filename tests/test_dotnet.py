@@ -3,8 +3,7 @@
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems import DOTNET
-from project_validator.ecosystems.dotnet import BUILD_OUTPUT, DEPENDENCIES
+from project_validator.ecosystems.dotnet import BUILD_OUTPUT, DEPENDENCIES, DOTNET
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, make_context, run_as, run_in_layout, temp_project
 
 (

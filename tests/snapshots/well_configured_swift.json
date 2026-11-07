@@ -335,7 +335,7 @@
     },
     "cxx-extensions": {
       "details": [],
-      "message": "not applicable to Swift (applies to C, C++)",
+      "message": "not applicable to Swift",
       "status": "SKIP"
     },
     "data-wellformed": {
@@ -436,7 +436,7 @@
     },
     "type-checking": {
       "details": [],
-      "message": "not applicable to Swift (applies to JavaScript, PHP, Python, Ruby, TypeScript)",
+      "message": "not applicable to Swift",
       "status": "SKIP"
     },
     "vcs-ignore": {

@@ -6,14 +6,16 @@ import textwrap
 import unittest
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
-from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
 
 from project_validator import pretty
 from project_validator.core import Check, Context, Options, Project, Result
-from project_validator.ecosystems import BUILT_IN, C_AND_CXX, C_FAMILY, Ecosystem, ecosystems_for
+from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for
+from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.plugins import discover
+from tests import layouts
+from tests.layouts.model import ProjectLayout
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -46,160 +48,7 @@ def fixture_files(name: str) -> dict[str, str]:
     }
 
 
-@dataclass(frozen=True, slots=True, kw_only=True)
-class ProjectLayout:
-    """A kind of project: its build and source files, and the languages and build systems they map to."""
-
-    name: str
-    files: Mapping[str, str]
-    languages: frozenset[str]
-    build_systems: frozenset[str]
-
-    @property
-    def uses_cmake(self) -> bool:
-        return "CMake" in self.build_systems
-
-    @property
-    def gets_c_family_checks(self) -> bool:
-        """C/C++ checks run for C and C++ projects only."""
-        return bool(self.languages & C_FAMILY)
-
-
-# CMake files are deliberately free of project() and settings so that the files a test adds decide what is checked.
-PROJECT_LAYOUTS = (
-    ProjectLayout(
-        name="CMake C++",
-        files={"CMakeLists.txt": "", "src/main.cpp": "", "include/app/app.hpp": ""},
-        languages=C_FAMILY,
-        build_systems=frozenset({"CMake"}),
-    ),
-    ProjectLayout(
-        name="CMake C",
-        files={"CMakeLists.txt": "", "src/main.c": "", "include/app.h": ""},
-        languages=C_FAMILY,
-        build_systems=frozenset({"CMake"}),
-    ),
-    ProjectLayout(
-        name="CMake C++ with Python bindings",
-        files={"CMakeLists.txt": "", "pyproject.toml": "", "src/module.cpp": "", "python/app/__init__.py": ""},
-        languages=C_FAMILY | {"Python"},
-        build_systems=frozenset({"CMake", "Python packaging"}),
-    ),
-    ProjectLayout(
-        name="Meson C++",
-        files={"meson.build": "project('app', 'cpp')\n", "src/main.cpp": ""},
-        languages=frozenset({"C++"}),
-        build_systems=frozenset({"Meson"}),
-    ),
-    ProjectLayout(
-        name="Meson C",
-        files={"meson.build": "project('app', 'c')\n", "src/main.c": ""},
-        languages=frozenset({"C"}),
-        build_systems=frozenset({"Meson"}),
-    ),
-    ProjectLayout(
-        name="Header-only C++",
-        files={"include/app/app.hpp": ""},
-        languages=frozenset({"C++"}),
-        build_systems=frozenset(),
-    ),
-    ProjectLayout(
-        name="Cargo Rust",
-        files={"Cargo.toml": "", "src/main.rs": ""},
-        languages=frozenset({"Rust"}),
-        build_systems=frozenset({"Cargo"}),
-    ),
-    ProjectLayout(
-        name="Meson Rust",
-        files={"meson.build": "project('app', 'rust')\n", "src/main.rs": ""},
-        languages=frozenset({"Rust"}),
-        build_systems=frozenset({"Meson"}),
-    ),
-    ProjectLayout(
-        name="Python pyproject",
-        files={"pyproject.toml": "", "src/app/__init__.py": ""},
-        languages=frozenset({"Python"}),
-        build_systems=frozenset({"Python packaging"}),
-    ),
-    ProjectLayout(
-        name="Python setup.py",
-        files={"setup.py": "", "app/__init__.py": ""},
-        languages=frozenset({"Python"}),
-        build_systems=frozenset({"Python packaging"}),
-    ),
-    ProjectLayout(
-        name="Go module",
-        files={"go.mod": "module example.com/app\n", "main.go": "package main\n"},
-        languages=frozenset({"Go"}),
-        build_systems=frozenset({"Go modules"}),
-    ),
-    ProjectLayout(
-        name="npm JavaScript",
-        files={"package.json": '{"main": "index.js"}\n', "index.js": ""},
-        languages=frozenset({"JavaScript"}),
-        build_systems=frozenset({"npm"}),
-    ),
-    ProjectLayout(
-        name="Deno TypeScript",
-        files={"deno.json": "{}\n", "main.ts": ""},
-        languages=frozenset({"TypeScript"}),
-        build_systems=frozenset({"Deno"}),
-    ),
-    ProjectLayout(
-        name="Maven Java",
-        files={"pom.xml": "<project/>\n", "src/main/java/App.java": ""},
-        languages=frozenset({"Java"}),
-        build_systems=frozenset({"Maven"}),
-    ),
-    ProjectLayout(
-        name="Gradle Kotlin",
-        files={"settings.gradle.kts": "", "build.gradle.kts": "", "src/main/kotlin/App.kt": ""},
-        languages=frozenset({"Kotlin"}),
-        build_systems=frozenset({"Gradle"}),
-    ),
-    ProjectLayout(
-        name="Composer PHP",
-        files={"composer.json": "{}\n", "src/App.php": ""},
-        languages=frozenset({"PHP"}),
-        build_systems=frozenset({"Composer"}),
-    ),
-    ProjectLayout(
-        name="Bundler Ruby",
-        files={"Gemfile": "", "lib/app.rb": ""},
-        languages=frozenset({"Ruby"}),
-        build_systems=frozenset({"Bundler"}),
-    ),
-    ProjectLayout(
-        name="MSBuild C#",
-        files={"src/App/App.csproj": "<Project/>\n", "src/App/Program.cs": ""},
-        languages=frozenset({"C#"}),
-        build_systems=frozenset({"MSBuild"}),
-    ),
-    ProjectLayout(
-        name="MSBuild F#",
-        files={"App.fsproj": "<Project/>\n", "Program.fs": ""},
-        languages=frozenset({"F#"}),
-        build_systems=frozenset({"MSBuild"}),
-    ),
-    ProjectLayout(
-        name="SwiftPM",
-        files={"Package.swift": "// swift-tools-version:6.0\n", "Sources/App/main.swift": ""},
-        languages=frozenset({"Swift"}),
-        build_systems=frozenset({"SwiftPM"}),
-    ),
-    ProjectLayout(
-        name="Xcode Swift",
-        files={"App.xcodeproj/project.pbxproj": "", "App/AppDelegate.swift": ""},
-        languages=frozenset({"Swift"}),
-        build_systems=frozenset({"Xcode"}),
-    ),
-    ProjectLayout(
-        name="Unrecognised language",
-        files={"README.md": "", "src/main.zig": ""},
-        languages=frozenset(),
-        build_systems=frozenset(),
-    ),
-)
+PROJECT_LAYOUTS = (*layouts.PROFILE_LAYOUTS, layouts.UNRECOGNISED)
 
 
 def checked_ecosystems(selected: Check, layout: ProjectLayout) -> tuple[Ecosystem, ...]:
@@ -279,19 +128,19 @@ def run_in_every_layout(
     return expected
 
 
-WELL_CONFIGURED = fixture_files("well_configured")
-BARE_PROJECT = fixture_files("bare_project")
+WELL_CONFIGURED = fixture_files("well_configured_c_cpp")
+BARE_PROJECT = fixture_files("bare_c_cpp")
+
+
+def well_configured(layout: ProjectLayout) -> dict[str, str]:
+    """The files of the project of `layout`'s profile that passes every check that applies to it."""
+    return fixture_files(f"well_configured_{layout.profile}")
+
 
 # Projects that pass every check that applies to their language.
 WELL_CONFIGURED_PYTHON = fixture_files("well_configured_python")
 WELL_CONFIGURED_RUST = fixture_files("well_configured_rust")
 WELL_CONFIGURED_GO = fixture_files("well_configured_go")
-WELL_CONFIGURED_JAVASCRIPT = fixture_files("well_configured_javascript")
-WELL_CONFIGURED_JVM = fixture_files("well_configured_jvm")
-WELL_CONFIGURED_PHP = fixture_files("well_configured_php")
-WELL_CONFIGURED_RUBY = fixture_files("well_configured_ruby")
-WELL_CONFIGURED_DOTNET = fixture_files("well_configured_dotnet")
-WELL_CONFIGURED_SWIFT = fixture_files("well_configured_swift")
 
 UNSTRUCTURED_CI_FILES = {
     provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}

@@ -3,8 +3,7 @@
 import unittest
 
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems import JVM
-from project_validator.ecosystems.jvm import DEPENDENCIES
+from project_validator.ecosystems.jvm import DEPENDENCIES, JVM
 from tests.support import (
     GITHUB_WORKFLOW,
     checks_named,

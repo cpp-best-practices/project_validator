@@ -1,17 +1,18 @@
-"""The registry of language ecosystems (one profile module each, plus plugins' ones), and judging per ecosystem."""
+"""The registry of language ecosystems (one profile module each, plus plugins' ones), and judging per ecosystem.
 
+Every module of this package except `model` is a profile, defining one ecosystem; they are found, not listed.
+"""
+
+import importlib
+import pkgutil
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from dataclasses import replace
 from fnmatch import fnmatchcase
 from pathlib import Path
+from types import ModuleType
 
 from project_validator.core import Check, CheckFunction, Context, Result, Status
-from project_validator.ecosystems.c_cpp import C_AND_CXX
-from project_validator.ecosystems.dotnet import DOTNET
-from project_validator.ecosystems.go import GO
-from project_validator.ecosystems.javascript import JAVASCRIPT_AND_TYPESCRIPT
-from project_validator.ecosystems.jvm import JVM
 from project_validator.ecosystems.model import (
     C_FAMILY,
     BuildSystem,
@@ -24,13 +25,22 @@ from project_validator.ecosystems.model import (
     languages_of,
     toolchain_versions,
 )
-from project_validator.ecosystems.php import PHP
-from project_validator.ecosystems.python import PYTHON
-from project_validator.ecosystems.ruby import RUBY
-from project_validator.ecosystems.rust import RUST
-from project_validator.ecosystems.swift import SWIFT
 
-BUILT_IN = (C_AND_CXX, PYTHON, RUST, GO, JAVASCRIPT_AND_TYPESCRIPT, JVM, PHP, RUBY, DOTNET, SWIFT)
+
+def _profiles() -> dict[str, Ecosystem]:
+    """Profile module name -> the ecosystem it defines, in module name order."""
+    modules = sorted(info.name for info in pkgutil.iter_modules(__path__) if info.name != "model")
+    found = {name: _defined_in(importlib.import_module(f"{__name__}.{name}")) for name in modules}
+    return {name: ecosystem for name, ecosystem in found.items() if ecosystem is not None}
+
+
+def _defined_in(module: ModuleType) -> Ecosystem | None:
+    return next((value for value in vars(module).values() if isinstance(value, Ecosystem)), None)
+
+
+# The built-in profiles, by module name: a profile's fixtures and documentation are named after its module.
+PROFILES = _profiles()
+BUILT_IN = tuple(PROFILES.values())
 
 _registered: list[Ecosystem] = list(BUILT_IN)
 
@@ -210,17 +220,8 @@ def is_build_tree(directory: Path) -> bool:
 
 __all__ = [
     "BUILT_IN",
-    "C_AND_CXX",
     "C_FAMILY",
-    "DOTNET",
-    "GO",
-    "JAVASCRIPT_AND_TYPESCRIPT",
-    "JVM",
-    "PHP",
-    "PYTHON",
-    "RUBY",
-    "RUST",
-    "SWIFT",
+    "PROFILES",
     "BuildSystem",
     "Ecosystem",
     "RegistryError",

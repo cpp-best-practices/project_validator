@@ -19,8 +19,7 @@ from project_validator.checks.type_checking import type_checking
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems import JAVASCRIPT_AND_TYPESCRIPT
-from project_validator.ecosystems.javascript import DEPENDENCIES, NODE_MODULES, TYPE_CHECKING
+from project_validator.ecosystems.javascript import DEPENDENCIES, JAVASCRIPT_AND_TYPESCRIPT, NODE_MODULES, TYPE_CHECKING
 from tests.support import (
     GITHUB_WORKFLOW,
     github_job,

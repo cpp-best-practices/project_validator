@@ -18,7 +18,7 @@ class SecurityPolicyTests(unittest.TestCase):
         self.assertEqual(security_policy.languages, frozenset())
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
-        result = security_policy.run(make_context(FIXTURES / "well_configured"))
+        result = security_policy.run(make_context(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(result, Result.passed("SECURITY.md says how to report a vulnerability"))
 
     def test_warns_without_a_security_policy(self) -> None:

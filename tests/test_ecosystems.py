@@ -4,10 +4,7 @@ from typing import ClassVar
 from project_validator.core import Check, Context, Result, Status
 from project_validator.ecosystems import (
     BUILT_IN,
-    C_AND_CXX,
     C_FAMILY,
-    PYTHON,
-    RUST,
     BuildSystem,
     Ecosystem,
     applies_to,
@@ -19,6 +16,9 @@ from project_validator.ecosystems import (
     register,
     registered,
 )
+from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.python import PYTHON
+from project_validator.ecosystems.rust import RUST
 from tests.support import make_context, temp_project
 
 

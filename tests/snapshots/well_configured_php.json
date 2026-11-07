@@ -158,7 +158,7 @@
     },
     "ci-build-types": {
       "details": [],
-      "message": "not applicable to PHP (applies to C, C++, Rust, Swift)",
+      "message": "not applicable to PHP",
       "status": "SKIP"
     },
     "ci-lint": {
@@ -203,7 +203,7 @@
     },
     "cxx-extensions": {
       "details": [],
-      "message": "not applicable to PHP (applies to C, C++)",
+      "message": "not applicable to PHP",
       "status": "SKIP"
     },
     "data-wellformed": {
@@ -235,7 +235,7 @@
     },
     "hardening": {
       "details": [],
-      "message": "not applicable to PHP (applies to C, C++, Go, Rust, Swift)",
+      "message": "not applicable to PHP",
       "status": "SKIP"
     },
     "large-files": {

@@ -155,7 +155,7 @@
     },
     "ci-build-types": {
       "details": [],
-      "message": "not applicable to JavaScript, TypeScript (applies to C, C++, Rust, Swift)",
+      "message": "not applicable to JavaScript, TypeScript",
       "status": "SKIP"
     },
     "ci-lint": {
@@ -200,7 +200,7 @@
     },
     "cxx-extensions": {
       "details": [],
-      "message": "not applicable to JavaScript, TypeScript (applies to C, C++)",
+      "message": "not applicable to JavaScript, TypeScript",
       "status": "SKIP"
     },
     "data-wellformed": {
@@ -232,7 +232,7 @@
     },
     "hardening": {
       "details": [],
-      "message": "not applicable to JavaScript, TypeScript (applies to C, C++, Go, Rust, Swift)",
+      "message": "not applicable to JavaScript, TypeScript",
       "status": "SKIP"
     },
     "large-files": {

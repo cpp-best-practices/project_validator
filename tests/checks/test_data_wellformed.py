@@ -29,7 +29,7 @@ class DataWellformedTests(unittest.TestCase):
         self.assertEqual(data_wellformed.languages, frozenset())
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
-        result = data_wellformed.run(make_context(FIXTURES / "well_configured", Options()))
+        result = data_wellformed.run(make_context(FIXTURES / "well_configured_c_cpp", Options()))
         self.assertEqual(result.status, Status.PASS)
         self.assertRegex(result.message, r"^\d+ data files parse \(.*YAML: \d+\)$")
 

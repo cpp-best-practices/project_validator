@@ -53,12 +53,17 @@ class CommittedArtifactsTests(unittest.TestCase):
         self.assertLessEqual(C_FAMILY | {"Python", "Rust", "Go"}, committed_artifacts.languages)
 
     def test_passes_with_the_well_configured_fixtures(self) -> None:
-        for fixture in ("well_configured", "well_configured_python", "well_configured_rust", "well_configured_go"):
+        for fixture in (
+            "well_configured_c_cpp",
+            "well_configured_python",
+            "well_configured_rust",
+            "well_configured_go",
+        ):
             with self.subTest(fixture=fixture):
                 self.assertEqual(committed_artifacts.run(make_context(FIXTURES / fixture)), PASSED)
 
     def test_fails_with_the_bare_fixtures(self) -> None:
-        for fixture in ("bare_project", "bare_python", "bare_rust", "bare_go"):
+        for fixture in ("bare_c_cpp", "bare_python", "bare_rust", "bare_go"):
             with self.subTest(fixture=fixture):
                 self.assertEqual(committed_artifacts.run(make_context(FIXTURES / fixture)).status, Status.FAIL)
 

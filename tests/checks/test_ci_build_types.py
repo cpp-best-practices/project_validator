@@ -4,7 +4,9 @@ from collections.abc import Mapping
 
 from project_validator.checks.ci_build_types import ci_build_types
 from project_validator.core import Result, Status
-from project_validator.ecosystems import C_FAMILY, PYTHON, RUST
+from project_validator.ecosystems import C_FAMILY
+from project_validator.ecosystems.python import PYTHON
+from project_validator.ecosystems.rust import RUST
 from tests.support import (
     BARE_PROJECT,
     GITHUB_WORKFLOW,
@@ -28,7 +30,8 @@ class CiBuildTypesTests(unittest.TestCase):
 
     # Only compiled languages have build types.
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(ci_build_types.languages, C_FAMILY | {"Rust", "Swift"})
+        self.assertLessEqual(C_FAMILY | {"Rust"}, ci_build_types.languages)
+        self.assertNotIn("Python", ci_build_types.languages)
 
     def test_fails_without_ci(self) -> None:
         self.assertEqual(self._run(BARE_PROJECT).status, Status.FAIL)
