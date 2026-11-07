@@ -54,8 +54,9 @@ too.
 
 ## `dependency-management`
 
-Dependencies declared in `pom.xml` or a Gradle build are verified by a committed `gradle/verification-metadata.xml`
-or `gradle.lockfile`, or Maven runs with `--strict-checksums`.
+Dependencies declared in `pom.xml` are verified when Maven runs with `--strict-checksums` (in `.mvn/maven.config`,
+or on a CI command line); those declared in a Gradle build by a committed `gradle/verification-metadata.xml` or
+`gradle.lockfile`.
 
 ## `dependency-audit`
 

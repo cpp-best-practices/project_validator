@@ -104,6 +104,27 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "NuGet",
+                "manifest": "src/App/App.csproj"
+              }
+            ],
+            "language": "C#",
+            "lock_required": true,
+            "locked": [],
+            "unit": "src/App",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "C#",
@@ -357,6 +378,16 @@
       "origin": "src/App/App.csproj:Sdk",
       "tool": "MSBuild",
       "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "Declared",
+      "manager": "NuGet",
+      "origin": "src/App/App.csproj"
     }
   ],
   "map": {
@@ -466,7 +497,7 @@
       "details": [
         "set <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>, commit the packages.lock.json files, and restore them in CI with --locked-mode"
       ],
-      "message": "dependencies are managed with NuGet but not locked",
+      "message": "dependencies are declared in src/App/App.csproj (NuGet) but not locked",
       "status": "WARN"
     },
     "dependency-updates": {

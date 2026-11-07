@@ -4,7 +4,7 @@ import json
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems.php import DEPENDENCIES, PHP, VENDOR
+from project_validator.ecosystems.php import COMPOSER_PACKAGES, PHP, VENDOR
 from project_validator.facts import Command, Facts, Unknown
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, make_context, run_as, run_in_layout, temp_project
 
@@ -213,16 +213,18 @@ class DependencyTests(unittest.TestCase):
 
     def test_an_application_locks_its_dependencies(self) -> None:
         declared = _composer(require={"php": ">=8.3", "ext-json": "*", "psr/log": "^3"})
-        expected = Result.warned("dependencies are declared in composer.json but not locked", DEPENDENCIES.lock_hint)
+        expected = Result.warned(
+            "dependencies are declared in composer.json (Composer) but not locked", COMPOSER_PACKAGES.lock_hint
+        )
         self.assertEqual(self._run(declared), expected)
         locked = self._run({**declared, "composer.lock": "{}"})
         self.assertEqual(
-            locked, Result.passed("dependencies are declared in composer.json and locked in composer.lock")
+            locked, Result.passed("dependencies are declared in composer.json (Composer) and locked in composer.lock")
         )
 
     def test_a_library_need_not_lock_and_the_platform_is_no_dependency(self) -> None:
         library = _composer(type="library", require={"psr/log": "^3"})
-        self.assertEqual(self._run(library), Result.passed("dependencies are declared in composer.json"))
+        self.assertEqual(self._run(library), Result.passed("dependencies are declared in composer.json (Composer)"))
         platform = _composer(require={"php": ">=8.3", "ext-mbstring": "*"})
         self.assertEqual(self._run(platform), Result.passed("no dependencies are declared"))
 

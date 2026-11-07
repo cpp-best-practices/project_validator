@@ -17,6 +17,7 @@ from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.security import scanned, scanner
@@ -26,7 +27,6 @@ from project_validator.facts.tools import Claim, Definition, Run, defined_by, st
 from project_validator.rules import (
     BuildOutputs,
     DeclaredLicense,
-    DependencyManagement,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -437,21 +437,16 @@ PACKAGE_REFERENCE = re.compile(r"<PackageReference\b")
 LOCKFILE = "packages.lock.json"
 
 
-def _uses_packages(context: Context) -> str | None:
-    texts = (context.project.read_text(path) for path in _settings_files(context))
-    return "managed with NuGet" if any(map(PACKAGE_REFERENCE.search, texts)) else None
-
-
-def _lockfiles(context: Context) -> str | None:
-    locks = [path for path in context.tracked_files if PurePosixPath(path).name == LOCKFILE]
-    if not locks:
-        return None
-    return locks[0] if len(locks) == 1 else f"{len(locks)} {LOCKFILE} files"
-
-
-DEPENDENCIES = DependencyManagement(
-    managed=_uses_packages,
-    locked=_lockfiles,
+NUGET_DEPENDENCIES = manifest_reader(
+    name="NuGet package references",
+    manager="NuGet",
+    files=SETTINGS_FILES,
+    declares=lambda _path, text: bool(PACKAGE_REFERENCE.search(text)),
+)
+NUGET_LOCKFILES = lockfile_reader(manager="NuGet", files=(LOCKFILE,))
+NUGET_PACKAGES = PackageManager(
+    name="NuGet",
+    languages=DOTNET_LANGUAGES,
     lock_hint="set <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>, commit the packages.lock.json "
     "files, and restore them in CI with --locked-mode",
 )
@@ -496,7 +491,6 @@ DOTNET = Ecosystem(
         versions_axis(".NET SDK version", ".NET SDK"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        DEPENDENCIES,
         BUILD_OUTPUT,
         LICENSE,
     ),

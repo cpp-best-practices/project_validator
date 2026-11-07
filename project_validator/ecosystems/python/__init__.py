@@ -2,19 +2,18 @@
 
 import re
 import shlex
+import tomllib
 from collections.abc import Callable, Iterable, Iterator
 from pathlib import PurePosixPath
 
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
-from project_validator.evidence import (
-    existing_texts,
-    toml_value,
-)
-from project_validator.facts import Command, Fact, Facts, Setting, resolved
+from project_validator.evidence import existing_texts
+from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import Declared, Locked, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
@@ -24,7 +23,6 @@ from project_validator.facts.testing import TestFiles, test_runner, tested, test
 from project_validator.facts.tools import Claim, Run, defined_by, either, starts, when
 from project_validator.rules import (
     BuildOutputs,
-    DependencyManagement,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -384,41 +382,56 @@ BYTECODE = BuildOutputs(
 LICENSE = toml_license("pyproject.toml", "project")
 
 
-LOCKFILES = ("uv.lock", "poetry.lock", "pdm.lock", "Pipfile.lock", "pylock.toml")
-NAMED_LOCKFILE = re.compile(r"pylock\.[^/]+\.toml")
-REQUIREMENTS_FILE = re.compile(r"(?:^|/)(?:[^/]*requirements[^/]*\.txt|requirements/[^/]+\.txt)$")
+LOCKFILES = ("uv.lock", "poetry.lock", "pdm.lock", "Pipfile.lock", "pylock.toml", "pylock.*.toml")
 HASH = re.compile(r"--hash[=\s]+\w+:")
 SETUP_REQUIRES = re.compile(r"\binstall_requires\s*=")
+PYTHON_PACKAGES = "Python packages"
 
 
-def _declared_dependencies(context: Context) -> str | None:
-    """Where the project declares the dependencies it needs: its manifest, or requirements files."""
-    poetry = toml_value(context, "pyproject.toml", "tool", "poetry", "dependencies")
-    if toml_value(context, "pyproject.toml", "project", "dependencies") or (
-        isinstance(poetry, dict) and set(poetry) - {"python"}
-    ):
-        return "declared in pyproject.toml"
-    if context.project.exists("setup.py") and SETUP_REQUIRES.search(context.project.read_text("setup.py")):
-        return "declared in setup.py"
-    requirements = next((path for path in context.tracked_files if REQUIREMENTS_FILE.search(path)), None)
-    return f"declared in {requirements}" if requirements else None
+def _pyproject_declares(_path: str, text: str) -> bool:
+    """A pyproject.toml declares dependencies in `[project]`, or Poetry's, beyond Python itself."""
+    manifest = tomllib.loads(text)
+    project = manifest.get("project")
+    tool = manifest.get("tool")
+    poetry = tool.get("poetry") if isinstance(tool, dict) else None
+    poetry_dependencies = poetry.get("dependencies") if isinstance(poetry, dict) else None
+    declared = isinstance(project, dict) and bool(project.get("dependencies"))
+    return declared or (isinstance(poetry_dependencies, dict) and bool(set(poetry_dependencies) - {"python"}))
 
 
-def _locked_dependencies(context: Context) -> str | None:
-    """A committed lockfile, or requirements files that pin every package by hash."""
-    lockfiles = [*LOCKFILES, *(path for path in context.tracked_files if NAMED_LOCKFILE.fullmatch(path))]
-    if lockfile := next((path for path in lockfiles if context.committed(path)), None):
-        return lockfile
-    requirements = [path for path in context.tracked_files if REQUIREMENTS_FILE.search(path)]
-    hashed = [path for path in requirements if HASH.search(context.project.read_text(path))]
-    if not hashed:
-        return None
-    return hashed[0] if len(hashed) == 1 else f"{len(hashed)} hash-pinned requirements files"
+PYPROJECT_DEPENDENCIES = manifest_reader(
+    name="Python dependencies",
+    manager=PYTHON_PACKAGES,
+    files=("pyproject.toml",),
+    declares=_pyproject_declares,
+)
+SETUP_PY_DEPENDENCIES = manifest_reader(
+    name="setup.py dependencies",
+    manager=PYTHON_PACKAGES,
+    files=("setup.py",),
+    declares=lambda _path, text: bool(SETUP_REQUIRES.search(text)),
+)
 
 
-DEPENDENCIES = DependencyManagement(
-    managed=_declared_dependencies,
-    locked=_locked_dependencies,
+def _read_requirements(path: str, text: str) -> Iterator[Fact]:
+    """A requirements file declares dependencies, but CI's own (in `.github`, which pin the tools it installs); one
+    that pins them by hash locks them."""
+    origin = Origin(path=path)
+    if not path.startswith("."):
+        yield Declared(origin=origin, manager=PYTHON_PACKAGES)
+    if HASH.search(text):
+        yield Locked(origin=origin, manager=PYTHON_PACKAGES)
+
+
+REQUIREMENTS = SettingsReader(
+    name="requirements files",
+    files=("*requirements*.txt", "requirements/*.txt", ".github/*requirements*.txt"),
+    read=_read_requirements,
+)
+PYTHON_LOCKFILES = lockfile_reader(manager=PYTHON_PACKAGES, files=LOCKFILES)
+PYTHON_PACKAGE_MANAGER = PackageManager(
+    name=PYTHON_PACKAGES,
+    languages=PYTHON_ONLY,
     lock_hint="lock them: commit uv.lock (uv lock), poetry.lock, pdm.lock or pylock.toml, or pin requirements "
     "with hashes (pip-compile --generate-hashes) and install them with --require-hashes",
 )
@@ -443,7 +456,6 @@ PYTHON = Ecosystem(
     rules=(
         versions_axis("Python version", "Python"),
         WARNINGS,
-        DEPENDENCIES,
         BYTECODE,
         LICENSE,
     ),

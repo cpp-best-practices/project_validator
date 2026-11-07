@@ -22,11 +22,6 @@ def matching_names(texts: Iterable[str], patterns: Iterable[Pattern]) -> list[st
     return list(dict.fromkeys(found))
 
 
-def joined(names: list[str]) -> str:
-    """`names` as a sentence lists them: "a", "a and b", "a, b and c"."""
-    return names[0] if len(names) == 1 else f"{', '.join(names[:-1])} and {names[-1]}"
-
-
 def found_and_missing(texts: Iterable[str], patterns: Iterable[Pattern]) -> tuple[list[str], list[str]]:
     """Names of the patterns found in any text, and of those found in none, both in pattern order."""
     texts = tuple(texts)

@@ -104,6 +104,27 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "Composer",
+                "manifest": "composer.json"
+              }
+            ],
+            "language": "PHP",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "PHP",
@@ -381,6 +402,16 @@
       "origin": "composer.json:psr/log",
       "tool": "Composer",
       "value": "^3.0"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "Composer dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Composer",
+      "origin": "composer.json"
     }
   ],
   "map": {
@@ -496,7 +527,7 @@
       "details": [
         "commit composer.lock, so the application is installed with the dependencies it was tested with"
       ],
-      "message": "dependencies are declared in composer.json but not locked",
+      "message": "dependencies are declared in composer.json (Composer) but not locked",
       "status": "WARN"
     },
     "dependency-updates": {

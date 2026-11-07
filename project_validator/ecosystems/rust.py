@@ -2,17 +2,19 @@
 
 import re
 import shlex
+import tomllib
 from collections.abc import Iterator
 from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
-from project_validator.evidence import existing_texts, toml_value
+from project_validator.evidence import existing_texts
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
@@ -23,7 +25,6 @@ from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.rules import (
     BuildOutputs,
     BuildTypes,
-    DependencyManagement,
     Hardening,
     WarningPolicy,
     directories,
@@ -334,30 +335,38 @@ TARGET_DIRECTORY = BuildOutputs(
 LICENSE = toml_license("Cargo.toml", "package")
 
 DEPENDENCY_TABLES = ("dependencies", "dev-dependencies", "build-dependencies")
-BINARY_SOURCES = re.compile(r"(?:^|/)src/(?:main\.rs|bin/[^/]+)$")
 
 
-def _declares_dependencies(context: Context) -> str | None:
+def _cargo_declares(_path: str, text: str) -> bool:
     """Cargo manages the dependencies a crate (or its workspace) declares in Cargo.toml."""
-    tables = [toml_value(context, "Cargo.toml", table) for table in DEPENDENCY_TABLES]
-    tables.append(toml_value(context, "Cargo.toml", "workspace", "dependencies"))
-    return "managed with Cargo" if any(tables) else None
+    manifest = tomllib.loads(text)
+    workspace = manifest.get("workspace")
+    tables = [manifest.get(table) for table in DEPENDENCY_TABLES]
+    return any(tables) or (isinstance(workspace, dict) and bool(workspace.get("dependencies")))
 
 
-def _builds_a_binary(context: Context) -> bool:
-    """A binary's builds should be reproducible, so it commits Cargo.lock; a library's users resolve their own."""
-    has_bin_table = context.project.exists("Cargo.toml") and "[[bin]]" in context.project.read_text("Cargo.toml")
-    return has_bin_table or any(BINARY_SOURCES.search(path) for path in context.tracked_files)
-
-
-def _cargo_lock(context: Context) -> str | None:
-    return "Cargo.lock" if context.committed("Cargo.lock") else None
-
-
-DEPENDENCIES = DependencyManagement(
-    managed=_declares_dependencies,
-    locked=_cargo_lock,
-    lock_required=_builds_a_binary,
+CARGO_MANIFESTS = manifest_reader(
+    name="Cargo dependencies",
+    manager="Cargo",
+    files=("Cargo.toml",),
+    declares=_cargo_declares,
+    application=lambda _path, text: "[[bin]]" in text,
+)
+# A crate with a binary target (src/main.rs, or src/bin/) is an application.
+CARGO_BINARIES = manifest_reader(
+    name="Cargo binaries",
+    manager="Cargo",
+    files=("src/main.rs", "src/bin/*.rs"),
+    declares=lambda _path, _text: False,
+    application=lambda _path, _text: True,
+)
+CARGO_LOCK = lockfile_reader(manager="Cargo", files=("Cargo.lock",))
+# A binary's builds should be reproducible, so it commits Cargo.lock; a library's users resolve their own.
+CARGO_PACKAGES = PackageManager(
+    name="Cargo",
+    languages=RUST_LANGUAGE,
+    lock=Lock.APPLICATIONS,
+    applications_by_default=False,
     lock_hint="commit Cargo.lock, so the binary is always built with the dependencies it was tested with",
 )
 
@@ -416,7 +425,6 @@ RUST = Ecosystem(
         BuildTypes(axis=RUST_TOOLCHAINS),
         WARNINGS,
         HARDENING,
-        DEPENDENCIES,
         TARGET_DIRECTORY,
         LICENSE,
     ),

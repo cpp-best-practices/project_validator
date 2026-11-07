@@ -50,7 +50,9 @@ SAST or semgrep count too.
 
 ## `dependency-management`
 
-A binary crate commits `Cargo.lock`; a library need not.
+A binary crate (`src/main.rs`, `src/bin/`, or a `[[bin]]` target) commits `Cargo.lock`; a library need not. Each crate
+declares its own dependencies (`[workspace.dependencies]` only sets the versions members use), and a workspace's
+`Cargo.lock` locks every member.
 
 ## `dependency-audit`
 

@@ -4,6 +4,7 @@ PHP projects run their tools through Composer scripts (`composer test`, `compose
 count as CI configuration, as package scripts do for JavaScript.
 """
 
+import json
 import re
 from collections.abc import Callable, Iterator
 
@@ -20,6 +21,7 @@ from project_validator.facts.analysis import Strictness, analysed, analyzer, typ
 from project_validator.facts.arguments import has_option, option_values, positional, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.limits import Rule, limiter
@@ -37,7 +39,6 @@ from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by
 from project_validator.rules import (
     BuildOutputs,
     DeclaredLicense,
-    DependencyManagement,
     Evidence,
     WarningPolicy,
     WarningsAsErrors,
@@ -298,11 +299,6 @@ WARNINGS_AS_ERRORS = WarningsAsErrors(
 )
 
 
-def _required_packages(context: Context) -> tuple[str, ...]:
-    tables = (json_value(context, COMPOSER_JSON, table) for table in ("require", "require-dev"))
-    return tuple(name for table in tables if isinstance(table, dict) for name in table)
-
-
 COMPOSER_REQUIRES = SettingsReader(
     name="Composer",
     files=(COMPOSER_JSON,),
@@ -535,24 +531,32 @@ SECURITY_SCANNERS = (
 PLATFORM_PACKAGE = re.compile(r"^(?:php|php-64bit|hhvm|composer(?:-plugin|-runtime)?-api|(?:ext|lib)-.+)$")
 
 
-def _declared_dependencies(context: Context) -> str | None:
-    packages = [name for name in _required_packages(context) if not PLATFORM_PACKAGE.match(name)]
-    return f"declared in {COMPOSER_JSON}" if packages else None
+def _composer(text: str) -> dict[str, object]:
+    manifest = json.loads(text)
+    return manifest if isinstance(manifest, dict) else {}
 
 
-def _composer_lock(context: Context) -> str | None:
-    return "composer.lock" if context.committed("composer.lock") else None
+def _composer_declares(_path: str, text: str) -> bool:
+    """composer.json requires packages beyond the platform (PHP itself, its extensions)."""
+    manifest = _composer(text)
+    tables = (manifest.get(table) for table in ("require", "require-dev"))
+    packages = (name for table in tables if isinstance(table, dict) for name in table)
+    return any(not PLATFORM_PACKAGE.match(name) for name in packages)
 
 
-def _is_application(context: Context) -> bool:
-    """A library's users resolve its dependencies themselves; anything not declared a library locks them."""
-    return json_value(context, COMPOSER_JSON, "type") != "library"
-
-
-DEPENDENCIES = DependencyManagement(
-    managed=_declared_dependencies,
-    locked=_composer_lock,
-    lock_required=_is_application,
+COMPOSER_DEPENDENCIES = manifest_reader(
+    name="Composer dependencies",
+    manager="Composer",
+    files=(COMPOSER_JSON,),
+    declares=_composer_declares,
+    library=lambda _path, text: _composer(text).get("type") == "library",
+)
+COMPOSER_LOCK = lockfile_reader(manager="Composer", files=("composer.lock",))
+# A library's users resolve its dependencies themselves; anything not declared a library locks them.
+COMPOSER_PACKAGES = PackageManager(
+    name="Composer",
+    languages=PHP_ONLY,
+    lock=Lock.APPLICATIONS,
     lock_hint="commit composer.lock, so the application is installed with the dependencies it was tested with",
 )
 
@@ -591,7 +595,6 @@ PHP = Ecosystem(
         versions_axis("PHP version", PHP_LANGUAGE),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        DEPENDENCIES,
         VENDOR,
         LICENSE,
     ),

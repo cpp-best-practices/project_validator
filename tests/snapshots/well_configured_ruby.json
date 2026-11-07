@@ -106,6 +106,27 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "Bundler",
+                "manifest": "Gemfile"
+              }
+            ],
+            "language": "Ruby",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Ruby",
@@ -1484,6 +1505,16 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "Gemfile",
+      "reader": "Gemfile dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Bundler",
+      "origin": "Gemfile"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "Rakefile",
       "reader": "Rake"
     },
@@ -1527,6 +1558,16 @@
       "origin": "Steepfile:strict",
       "tool": "Steep",
       "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "app.gemspec",
+      "reader": "gemspec dependencies"
+    },
+    {
+      "kind": "Library",
+      "manager": "Bundler",
+      "origin": "app.gemspec"
     },
     {
       "kind": "ConfigurationFile",
@@ -3042,7 +3083,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "dependencies are declared in Gemfile",
+      "message": "dependencies are declared in Gemfile (Bundler)",
       "status": "PASS"
     },
     "dependency-updates": {

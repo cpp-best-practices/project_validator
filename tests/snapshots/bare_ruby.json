@@ -95,6 +95,27 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "Bundler",
+                "manifest": "Gemfile"
+              }
+            ],
+            "language": "Ruby",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Ruby",
@@ -362,6 +383,16 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "Gemfile",
+      "reader": "Gemfile dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Bundler",
+      "origin": "Gemfile"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "app.rb",
       "reader": "Sorbet"
     }
@@ -479,7 +510,7 @@
       "details": [
         "commit Gemfile.lock, so the application is installed with the gems it was tested with"
       ],
-      "message": "dependencies are declared in Gemfile but not locked",
+      "message": "dependencies are declared in Gemfile (Bundler) but not locked",
       "status": "WARN"
     },
     "dependency-updates": {
