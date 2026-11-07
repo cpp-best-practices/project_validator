@@ -22,7 +22,7 @@ from tests.support import (
 from tests.test_project import git
 
 C_HINT = (
-    "if the project has dependencies, consider a dependency manager: CPM, FetchContent, vcpkg, Conan or Meson wraps"
+    "if the project has dependencies, consider a dependency manager: CPM, FetchContent, Meson wraps, vcpkg or Conan"
 )
 NO_DEPENDENCIES = Result.passed("no dependencies are declared")
 PYTHON_MANIFEST = {"pyproject.toml": "[project]\ndependencies = ['requests']\n"}

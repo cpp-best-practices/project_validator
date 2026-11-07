@@ -24,8 +24,9 @@ from project_validator.facts.conditions import ALWAYS, NEVER, Condition, Dimensi
 
 _COMPILER_IDS: dict[str, str | tuple[str, ...]] = {"gcc": "gcc", "clang": ("clang", "appleclang"), "msvc": "msvc"}
 _COMPILER_IDS |= dict.fromkeys(("intel", "intel-cl", "intel-llvm", "intel-llvm-cl"), "intel")
+_COMPILER_IDS |= dict.fromkeys(("flang", "llvm-flang"), "flang")
 COMPILER = Dimension("compilers", _COMPILER_IDS)
-ARGUMENT_SYNTAX = Dimension("compilers", {"msvc": "msvc", "gcc": ("gcc", "clang", "appleclang", "intel")})
+ARGUMENT_SYNTAX = Dimension("compilers", {"msvc": "msvc", "gcc": ("gcc", "clang", "appleclang", "intel", "flang")})
 PLATFORM = Dimension(
     "platforms", {"linux": "linux", "darwin": "macos", "windows": "windows", "emscripten": "emscripten"}
 )

@@ -472,5 +472,13 @@ except where a step deliberately changes results and says so.
      ctest and `meson test`), and `BuildSystem` itself lives there (`build_systems/model.py`); the C/C++ profile keeps
      recognition, its formatters, analyzers and package managers, and its practices.
 7. **Proof**: add Fortran using only extractors and a recognition module.
+   - The Fortran profile (`project_validator/ecosystems/fortran.py`) holds recognition (its suffixes), fpm (a build
+     system, its manifest, `fpm test`, its dependencies and the flags of its built-in profiles), the Fortran
+     compilers' flags for the practices (gfortran, ifx and ifort, flang) and the Fortran tools (fprettify,
+     fortitude). CMake's and Meson's facts, ctest, `meson test`, gcov and its reports and lizard serve it unchanged.
+   - What the shared layers had to learn, as extractors: CMake reads the languages a `project()` or
+     `enable_language()` enables (it took every CMake project to be C and C++), Meson's `'fortran'`, the flang
+     compiler family, and gfortran, ifx and flang in CI jobs. ctest and `meson test` run the tests of whatever their
+     build system compiles, and CPM, FetchContent and Meson wraps became the build systems' own package managers.
 
 `--facts` and `--answers` expose the database and the answers.

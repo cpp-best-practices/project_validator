@@ -16,7 +16,7 @@ from project_validator.build_configurations import BUILD_TYPE_KINDS
 
 # The values each dimension can take; "other" stands for those a build system names but none of these is.
 OTHER = "other"
-COMPILERS = ("gcc", "clang", "appleclang", "msvc", "intel", OTHER)
+COMPILERS = ("gcc", "clang", "appleclang", "msvc", "intel", "flang", OTHER)
 PLATFORMS = ("linux", "macos", "windows", "emscripten", OTHER)
 CONFIGURATIONS = (*BUILD_TYPE_KINDS, OTHER)
 LANGUAGES = ("C", "C++", "CUDA", "Objective-C", "Objective-C++", "Fortran", "Assembly", OTHER)

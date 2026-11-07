@@ -1,0 +1,6087 @@
+{
+  "answers": {
+    "committed-artifacts": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Fortran",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-Wall": [
+                    "CI (.github/workflows/ci.yml)",
+                    ".github/workflows/ci.yml (fpm's debug profile)"
+                  ],
+                  "-Wextra": [
+                    "CI (.github/workflows/ci.yml)",
+                    ".github/workflows/ci.yml (fpm's debug profile)"
+                  ],
+                  "-Wimplicit-interface": [
+                    "CI (.github/workflows/ci.yml)",
+                    ".github/workflows/ci.yml (fpm's debug profile)",
+                    ".github/workflows/ci.yml (fpm's release profile)"
+                  ],
+                  "-Wpedantic": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "intel",
+                "found": {
+                  "-warn all": [
+                    "CI (.github/workflows/ci.yml)",
+                    ".github/workflows/ci.yml (fpm's debug profile)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Fortran",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "gcovr --xml",
+                "lcov --rc branch_coverage=1",
+                "gcov --branch-counts"
+              ],
+              "tools": [
+                "gcovr"
+              ]
+            },
+            "language": "Fortran",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "gcovr",
+                "lcov",
+                "gcov"
+              ],
+              "tools": [
+                "gcovr"
+              ]
+            },
+            "path": {
+              "answer": "no",
+              "known": [
+                "lcov --mcdc-coverage",
+                "gcov --conditions"
+              ],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Fortran",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "fpm",
+                "manifest": "fpm.toml"
+              }
+            ],
+            "language": "Fortran",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "fprettify": {
+                "can": {
+                  "apply": "fprettify --recursive .",
+                  "check": "fprettify --diff --recursive ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Fortran",
+            "level": "check",
+            "runs": {
+              "fprettify": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Fortran",
+            "level": "limits",
+            "runs": {
+              "lizard": {
+                "levels": [
+                  "limits",
+                  "measures"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-fcf-protection": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "-fstack-clash-protection": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "-fstack-protector-strong": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "intel",
+                "found": {
+                  "-fcf-protection": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "-fstack-protector-strong": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Fortran",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "license": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Fortran",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "compiler",
+            "language": "Fortran",
+            "notes": [],
+            "platforms": [
+              {
+                "compiler": "gcc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "compiler": "intel",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "compiler": "gcc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "compiler": "gcc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "windows"
+              },
+              {
+                "compiler": "intel",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Fortran",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "fortitude": {
+                "can": {
+                  "checks": "fortitude check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Fortran",
+            "level": "checks",
+            "runs": {
+              "fortitude": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "fpm test": [
+                "test/check.f90"
+              ]
+            },
+            "known": {
+              "ctest": {
+                "can": {
+                  "runs": "ctest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "fpm test": {
+                "can": {
+                  "runs": "fpm test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "meson test": {
+                "can": {
+                  "runs": "meson test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Fortran",
+            "level": "runs",
+            "runs": {
+              "fpm test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Fortran",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Fortran",
+            "outputs": {
+              "the build directory and module files": {
+                ".gitignore": "build/"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-Werror": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "intel",
+                "found": {
+                  "-warn errors": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Fortran",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "fpm",
+      "kind": "BuildFile",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": "fpm.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Fortran",
+      "origin": "app/main.f90",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Fortran",
+      "origin": "src/app.f90",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Fortran",
+      "origin": "test/check.f90",
+      "role": "test"
+    },
+    {
+      "build_systems": [
+        "fpm"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "Fortran test programs in test/",
+      "language": "Fortran",
+      "origin": "test/check.f90"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "profile": "debug",
+        "sanitizers": ""
+      },
+      "name": "gfortran (ubuntu-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "debug",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "profile": "debug",
+        "sanitizers": "-fsanitize=address,undefined"
+      },
+      "name": "gfortran (ubuntu-latest, debug, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "debug",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "profile": "release",
+        "sanitizers": ""
+      },
+      "name": "gfortran (ubuntu-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "release",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "profile": "release",
+        "sanitizers": "-fsanitize=address,undefined"
+      },
+      "name": "gfortran (ubuntu-latest, release, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "release",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "profile": "debug",
+        "sanitizers": ""
+      },
+      "name": "gfortran (macos-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "debug",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "profile": "debug",
+        "sanitizers": "-fsanitize=address,undefined"
+      },
+      "name": "gfortran (macos-latest, debug, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "debug",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[6]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "profile": "release",
+        "sanitizers": ""
+      },
+      "name": "gfortran (macos-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "release",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[7]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "profile": "release",
+        "sanitizers": "-fsanitize=address,undefined"
+      },
+      "name": "gfortran (macos-latest, release, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "release",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[8]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "profile": "debug",
+        "sanitizers": ""
+      },
+      "name": "gfortran (windows-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "debug",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[9]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "profile": "debug",
+        "sanitizers": "-fsanitize=address,undefined"
+      },
+      "name": "gfortran (windows-latest, debug, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "debug",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[10]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "profile": "release",
+        "sanitizers": ""
+      },
+      "name": "gfortran (windows-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "release",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:gfortran[11]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "profile": "release",
+        "sanitizers": "-fsanitize=address,undefined"
+      },
+      "name": "gfortran (windows-latest, release, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "gcc",
+        "version": "14"
+      },
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fprettify",
+        "--diff",
+        "--recursive",
+        "src",
+        "app",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "pipx run fprettify --diff --recursive src app test",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "fortitude-lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "pip install fortitude-lint",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fortitude",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "fortitude check",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "gfortran",
+        "--profile",
+        "release",
+        "--flag",
+        "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "gcovr",
+        "--fail-under-branch",
+        "80",
+        "--xml",
+        "coverage.xml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:ifx[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "profile": "debug",
+        "sanitizers": ""
+      },
+      "name": "ifx (ubuntu-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "intel",
+        "version": "2025.0"
+      },
+      "job": ".github/workflows/ci.yml:ifx[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "ifx",
+        "--profile",
+        "debug",
+        "--flag",
+        "-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:ifx[0]",
+      "kind": "Command",
+      "line": "fpm test --compiler ifx --profile debug --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection \"",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:ifx[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "profile": "debug",
+        "sanitizers": "-fsanitize=address"
+      },
+      "name": "ifx (ubuntu-latest, debug, -fsanitize=address)",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "intel",
+        "version": "2025.0"
+      },
+      "job": ".github/workflows/ci.yml:ifx[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "ifx",
+        "--profile",
+        "debug",
+        "--flag",
+        "-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:ifx[1]",
+      "kind": "Command",
+      "line": "fpm test --compiler ifx --profile debug --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address\"",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:ifx[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "profile": "release",
+        "sanitizers": ""
+      },
+      "name": "ifx (ubuntu-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "intel",
+        "version": "2025.0"
+      },
+      "job": ".github/workflows/ci.yml:ifx[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "ifx",
+        "--profile",
+        "release",
+        "--flag",
+        "-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:ifx[2]",
+      "kind": "Command",
+      "line": "fpm test --compiler ifx --profile release --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection \"",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:ifx[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "profile": "release",
+        "sanitizers": "-fsanitize=address"
+      },
+      "name": "ifx (ubuntu-latest, release, -fsanitize=address)",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "intel",
+        "version": "2025.0"
+      },
+      "job": ".github/workflows/ci.yml:ifx[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "ifx",
+        "--profile",
+        "release",
+        "--flag",
+        "-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:ifx[3]",
+      "kind": "Command",
+      "line": "fpm test --compiler ifx --profile release --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address\"",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:ifx[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "profile": "debug",
+        "sanitizers": ""
+      },
+      "name": "ifx (windows-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "intel",
+        "version": "2025.0"
+      },
+      "job": ".github/workflows/ci.yml:ifx[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "ifx",
+        "--profile",
+        "debug",
+        "--flag",
+        "-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:ifx[4]",
+      "kind": "Command",
+      "line": "fpm test --compiler ifx --profile debug --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection \"",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:ifx[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "profile": "debug",
+        "sanitizers": "-fsanitize=address"
+      },
+      "name": "ifx (windows-latest, debug, -fsanitize=address)",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "intel",
+        "version": "2025.0"
+      },
+      "job": ".github/workflows/ci.yml:ifx[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "ifx",
+        "--profile",
+        "debug",
+        "--flag",
+        "-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:ifx[5]",
+      "kind": "Command",
+      "line": "fpm test --compiler ifx --profile debug --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address\"",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:ifx[6]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "profile": "release",
+        "sanitizers": ""
+      },
+      "name": "ifx (windows-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "intel",
+        "version": "2025.0"
+      },
+      "job": ".github/workflows/ci.yml:ifx[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "ifx",
+        "--profile",
+        "release",
+        "--flag",
+        "-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection "
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:ifx[6]",
+      "kind": "Command",
+      "line": "fpm test --compiler ifx --profile release --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection \"",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:ifx[7]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "profile": "release",
+        "sanitizers": "-fsanitize=address"
+      },
+      "name": "ifx (windows-latest, release, -fsanitize=address)",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "compiler": "intel",
+        "version": "2025.0"
+      },
+      "job": ".github/workflows/ci.yml:ifx[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[1]",
+      "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:ifx[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[2]",
+      "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
+      "argv": [
+        "fpm",
+        "test",
+        "--compiler",
+        "ifx",
+        "--profile",
+        "release",
+        "--flag",
+        "-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:ifx[7]",
+      "kind": "Command",
+      "line": "fpm test --compiler ifx --profile release --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address\"",
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (ubuntu-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (ubuntu-latest, debug, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (ubuntu-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (ubuntu-latest, release, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (macos-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (macos-latest, debug, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (macos-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (macos-latest, release, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (windows-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (windows-latest, debug, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (windows-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++",
+        "Fortran",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: gfortran (windows-latest, release, -fsanitize=address,undefined)",
+      "origin": ".github/workflows/ci.yml:jobs.gfortran",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "intel"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "Fortran"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "intel"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "Fortran"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, debug, -fsanitize=address)",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "intel"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "Fortran"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "intel"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "Fortran"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, release, -fsanitize=address)",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "intel"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "Fortran"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: ifx (windows-latest, debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "windows",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "intel"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "Fortran"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: ifx (windows-latest, debug, -fsanitize=address)",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "windows",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "intel"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "Fortran"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[6]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: ifx (windows-latest, release, )",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "windows",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "intel"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "Fortran"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[7]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: ifx (windows-latest, release, -fsanitize=address)",
+      "origin": ".github/workflows/ci.yml:jobs.ifx",
+      "os": "windows",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "build/",
+      "syntax": "glob",
+      "written": "build/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.mod",
+      "syntax": "glob",
+      "written": "*.mod"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.gcov",
+      "syntax": "glob",
+      "written": "*.gcov"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fpm.toml",
+      "reader": "fpm"
+    },
+    {
+      "heuristic": false,
+      "key": "name",
+      "kind": "Setting",
+      "origin": "fpm.toml:name",
+      "tool": "fpm",
+      "value": "app"
+    },
+    {
+      "heuristic": false,
+      "key": "version",
+      "kind": "Setting",
+      "origin": "fpm.toml:version",
+      "tool": "fpm",
+      "value": "0.1.0"
+    },
+    {
+      "heuristic": false,
+      "key": "license",
+      "kind": "Setting",
+      "origin": "fpm.toml:license",
+      "tool": "fpm",
+      "value": "MIT"
+    },
+    {
+      "heuristic": false,
+      "key": "build.auto-tests",
+      "kind": "Setting",
+      "origin": "fpm.toml:build.auto-tests",
+      "tool": "fpm",
+      "value": true
+    },
+    {
+      "heuristic": false,
+      "key": "fortran.implicit-typing",
+      "kind": "Setting",
+      "origin": "fpm.toml:fortran.implicit-typing",
+      "tool": "fpm",
+      "value": false
+    },
+    {
+      "heuristic": false,
+      "key": "fortran.implicit-external",
+      "kind": "Setting",
+      "origin": "fpm.toml:fortran.implicit-external",
+      "tool": "fpm",
+      "value": false
+    },
+    {
+      "heuristic": false,
+      "key": "dev-dependencies.test-drive.git",
+      "kind": "Setting",
+      "origin": "fpm.toml:dev-dependencies.test-drive.git",
+      "tool": "fpm",
+      "value": "https://github.com/fortran-lang/test-drive"
+    },
+    {
+      "heuristic": false,
+      "key": "dev-dependencies.test-drive.tag",
+      "kind": "Setting",
+      "origin": "fpm.toml:dev-dependencies.test-drive.tag",
+      "tool": "fpm",
+      "value": "v0.5.0"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fpm.toml",
+      "reader": "fpm dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "fpm",
+      "origin": "fpm.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fpm.toml",
+      "reader": "Fortran programs"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fpm.toml",
+      "reader": "fortitude"
+    },
+    {
+      "heuristic": false,
+      "key": "program",
+      "kind": "Setting",
+      "origin": "app/main.f90",
+      "tool": "Fortran programs",
+      "value": true
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fprettify",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fortitude",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gcovr",
+      "via": [
+        ".github/workflows/ci.yml:jobs.gfortran.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:ifx[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.ifx.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "fpm test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "fpm"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (ubuntu-latest, debug, )",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (ubuntu-latest, debug, -fsanitize=address,undefined)",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (ubuntu-latest, release, )",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (ubuntu-latest, release, -fsanitize=address,undefined)",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (macos-latest, debug, )",
+          "os": "macos",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (macos-latest, debug, -fsanitize=address,undefined)",
+          "os": "macos",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (macos-latest, release, )",
+          "os": "macos",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (macos-latest, release, -fsanitize=address,undefined)",
+          "os": "macos",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (windows-latest, debug, )",
+          "os": "windows",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (windows-latest, debug, -fsanitize=address,undefined)",
+          "os": "windows",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (windows-latest, release, )",
+          "os": "windows",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "C/C++",
+            "Fortran",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: gfortran (windows-latest, release, -fsanitize=address,undefined)",
+          "os": "windows",
+          "toolchains": [
+            "Python default"
+          ]
+        },
+        {
+          "compilers": [
+            "intel"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "Fortran"
+          ],
+          "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, debug, )",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "intel"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "Fortran"
+          ],
+          "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, debug, -fsanitize=address)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "intel"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "Fortran"
+          ],
+          "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, release, )",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "intel"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Fortran"
+          ],
+          "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, release, -fsanitize=address)",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "intel"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "Fortran"
+          ],
+          "name": ".github/workflows/ci.yml: ifx (windows-latest, debug, )",
+          "os": "windows",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "intel"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "Fortran"
+          ],
+          "name": ".github/workflows/ci.yml: ifx (windows-latest, debug, -fsanitize=address)",
+          "os": "windows",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "intel"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "Fortran"
+          ],
+          "name": ".github/workflows/ci.yml: ifx (windows-latest, release, )",
+          "os": "windows",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "intel"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Fortran"
+          ],
+          "name": ".github/workflows/ci.yml: ifx (windows-latest, release, -fsanitize=address)",
+          "os": "windows",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Fortran": [
+        "build file fpm.toml",
+        ".f90 files"
+      ]
+    },
+    "languages": [
+      "Fortran"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "fpm"
+        ],
+        "directory": ".",
+        "languages": [
+          "Fortran"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 7 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "all 5 OS/compiler combination(s) build Debug and Release, each with and without sanitizers",
+      "status": "PASS"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "CI enforces the fprettify style",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict Fortran compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wimplicit-interface for gcc; -warn all for intel",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [
+        "consider adding path coverage (e.g. lcov --mcdc-coverage, gcov --conditions)"
+      ],
+      "message": "branch coverage is reported with gcovr",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "Fortran is compiled to a standard, without the compilers' extensions, with -std=f2018, -stand f18",
+      "status": "PASS"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "6 data files parse (TOML: 1, YAML: 5)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "dependencies are declared in fpm.toml (fpm)",
+      "status": "PASS"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with lizard",
+      "status": "PASS"
+    },
+    "hardening": {
+      "details": [],
+      "message": "hardening options are enabled: -fstack-protector-strong, -fcf-protection, -fstack-clash-protection for gcc; -fstack-protector-strong, -fcf-protection for intel",
+      "status": "PASS"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / gcc (runner default)",
+        ".github/workflows/ci.yml: gfortran (ubuntu-latest, debug, ): linux / gcc",
+        ".github/workflows/ci.yml: gfortran (ubuntu-latest, debug, -fsanitize=address,undefined): linux / gcc",
+        ".github/workflows/ci.yml: gfortran (ubuntu-latest, release, ): linux / gcc",
+        ".github/workflows/ci.yml: gfortran (ubuntu-latest, release, -fsanitize=address,undefined): linux / gcc",
+        ".github/workflows/ci.yml: gfortran (macos-latest, debug, ): macos / gcc",
+        ".github/workflows/ci.yml: gfortran (macos-latest, debug, -fsanitize=address,undefined): macos / gcc",
+        ".github/workflows/ci.yml: gfortran (macos-latest, release, ): macos / gcc",
+        ".github/workflows/ci.yml: gfortran (macos-latest, release, -fsanitize=address,undefined): macos / gcc",
+        ".github/workflows/ci.yml: gfortran (windows-latest, debug, ): windows / gcc",
+        ".github/workflows/ci.yml: gfortran (windows-latest, debug, -fsanitize=address,undefined): windows / gcc",
+        ".github/workflows/ci.yml: gfortran (windows-latest, release, ): windows / gcc",
+        ".github/workflows/ci.yml: gfortran (windows-latest, release, -fsanitize=address,undefined): windows / gcc",
+        ".github/workflows/ci.yml: ifx (ubuntu-latest, debug, ): linux / intel",
+        ".github/workflows/ci.yml: ifx (ubuntu-latest, debug, -fsanitize=address): linux / intel",
+        ".github/workflows/ci.yml: ifx (ubuntu-latest, release, ): linux / intel",
+        ".github/workflows/ci.yml: ifx (ubuntu-latest, release, -fsanitize=address): linux / intel",
+        ".github/workflows/ci.yml: ifx (windows-latest, debug, ): windows / intel",
+        ".github/workflows/ci.yml: ifx (windows-latest, debug, -fsanitize=address): windows / intel",
+        ".github/workflows/ci.yml: ifx (windows-latest, release, ): windows / intel",
+        ".github/workflows/ci.yml: ifx (windows-latest, release, -fsanitize=address): windows / intel",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / gcc (runner default)",
+        ".github/workflows/function-limits.yml: function-limits: linux / no compiler"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 2 compiler(s) (gcc, intel), 5 combination(s)",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "fortitude runs",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores build/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with -Werror, -warn errors",
+      "status": "PASS"
+    }
+  }
+}

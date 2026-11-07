@@ -179,13 +179,15 @@ RUN_TARGETS = CommandExpander(name="Meson run targets", expand=_run_targets)
 
 # Defined in `build` (which reads declared languages from here), found here.
 from project_validator.build_systems.meson.build import MESON as MESON_BUILD_SYSTEM  # noqa: E402
-from project_validator.build_systems.meson.build import MESON_TESTS  # noqa: E402
+from project_validator.build_systems.meson.build import MESON_TESTS, MESON_WRAPS, MESON_WRAPS_MANAGER  # noqa: E402
 
 __all__ = [
     "BUILD_SYSTEM",
     "MESON",
     "MESON_BUILD_SYSTEM",
     "MESON_TESTS",
+    "MESON_WRAPS",
+    "MESON_WRAPS_MANAGER",
     "OPTION_FILES",
     "RUN_TARGETS",
     "declared_languages",

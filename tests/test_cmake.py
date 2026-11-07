@@ -417,7 +417,7 @@ PROPERTY_OPTIONS = [
     ("-Wall", "lib", ANY),
     ("-Wextra", "lib", ANY),
     # COMPILE_WARNING_AS_ERROR passes each compiler its flag.
-    ("-Werror", "app", Applies(compilers=frozenset({"gcc", "clang", "appleclang", "intel"}))),
+    ("-Werror", "app", Applies(compilers=frozenset({"gcc", "clang", "appleclang", "intel", "flang"}))),
     ("/WX", "app", MSVC),
     ("-Wshadow", None, ANY),
 ]

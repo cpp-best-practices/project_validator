@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 
 from project_validator.build_systems.cmake.build import CMAKE as CMAKE_BUILD_SYSTEM
+from project_validator.build_systems.cmake.build import CMAKE_PACKAGE_MANAGERS
 from project_validator.build_systems.cmake.commands import Collector, CustomTarget
 from project_validator.build_systems.cmake.ctest import BUILT_TESTS, CTEST
 from project_validator.build_systems.cmake.evaluation import Evaluation
@@ -137,6 +138,7 @@ __all__ = [
     "CMAKE",
     "CMAKE_BUILD_SYSTEM",
     "CMAKE_FILES",
+    "CMAKE_PACKAGE_MANAGERS",
     "CTEST",
     "CUSTOM_TARGETS",
     "PRESET_FILES",

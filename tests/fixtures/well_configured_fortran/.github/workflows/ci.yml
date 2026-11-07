@@ -1,0 +1,35 @@
+jobs:
+  gfortran:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        profile: [debug, release]
+        sanitizers: ["", "-fsanitize=address,undefined"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b # v1
+        with:
+          compiler: gcc
+          version: 14
+      - uses: fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3 # v7
+      - run: pipx run fprettify --diff --recursive src app test
+      - run: pip install fortitude-lint
+      - run: fortitude check
+      - run: fpm test --compiler gfortran --profile ${{ matrix.profile }} --flag "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage ${{ matrix.sanitizers }}"
+      - run: pipx run gcovr --fail-under-branch 80 --xml coverage.xml
+  ifx:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        profile: [debug, release]
+        sanitizers: ["", "-fsanitize=address"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b # v1
+        with:
+          compiler: intel
+          version: 2025.0
+      - uses: fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3 # v7
+      - run: fpm test --compiler ifx --profile ${{ matrix.profile }} --flag "-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection ${{ matrix.sanitizers }}"
