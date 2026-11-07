@@ -46,7 +46,8 @@ job).
 
 ## `security-scanning`
 
-bandit, or ruff's `S` rules.
+bandit, or `ruff check` with its `S` rules selected (on its command line or in its settings). In CI, where the tool runs
+(a setting alone, which nothing CI runs reads, does not count); CodeQL, GitLab SAST or semgrep count too.
 
 ## `dependency-management`
 

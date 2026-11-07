@@ -17,7 +17,6 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import (
     ci_and_hook_texts,
-    existing_texts,
     first_existing,
     json_value,
     scripts_run,
@@ -46,7 +45,6 @@ from project_validator.rules import (
     DeclaredLicense,
     DependencyManagement,
     FunctionLimits,
-    SecurityLints,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -560,22 +558,6 @@ WARNINGS_AS_ERRORS = WarningsAsErrors(
 )
 
 
-def _security_texts(context: Context) -> tuple[str, ...]:
-    return (*_run_texts(context), *existing_texts(context, (PACKAGE_JSON, *ESLINT_CONFIG_FILES)))
-
-
-SECURITY_LINTS = SecurityLints(
-    texts=_security_texts,
-    lints=(
-        pattern("eslint-plugin-security", r"\beslint-plugin-security\b|@microsoft/eslint-plugin-sdl\b"),
-        pattern(
-            "semgrep JavaScript rules",
-            r"\bsemgrep\b[^\n]*--config[=\s]+[\"']?(?:p/)?(?:javascript|typescript|nodejs|react|expressjs)\b",
-        ),
-    ),
-)
-
-
 def _npm_audit(command: Command, _facts: Facts) -> Run | None:
     """`npm audit`; `npm audit signatures` checks provenance, not vulnerabilities."""
     argv = resolved(command)
@@ -696,7 +678,6 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
         versions_axis("runtime version", "JavaScript runtime"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        SECURITY_LINTS,
         FunctionLimits(without_lizard=_max_lines_per_function),
         DEPENDENCIES,
         NODE_MODULES,

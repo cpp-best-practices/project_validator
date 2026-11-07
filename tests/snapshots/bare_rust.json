@@ -58,6 +58,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "cargo audit": {
                 "can": {
                   "runs": "cargo audit"
@@ -123,6 +130,53 @@
             },
             "language": "Rust",
             "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "unsafe_code forbidden": {
+                "can": {
+                  "scans": "unsafe_code = \"forbid\" in [lints.rust]"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "scans",
             "runs": {},
             "unit": ".",
             "unknown_definitions": [],
@@ -239,7 +293,22 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
+      "reader": "Rust lints"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
       "reader": "clippy"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/lib.rs",
+      "reader": "Rust lints"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/main.rs",
+      "reader": "Rust lints"
     }
   ],
   "map": {
@@ -341,7 +410,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running in CI: cargo audit, cargo deny check advisories, osv-scanner, trivy fs or snyk test"
+        "consider running in CI: cargo audit, cargo deny check advisories, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
@@ -403,8 +472,7 @@
     },
     "security-scanning": {
       "details": [
-        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
-        "or enable each language's security lints (Rust: unsafe_code forbidden)"
+        "consider running in CI: unsafe_code = \"forbid\" in [lints.rust], CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci"
       ],
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"

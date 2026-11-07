@@ -5,13 +5,13 @@ Directory.Build.props, so those count as CI configuration when CI builds the pro
 """
 
 import re
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, existing_texts
+from project_validator.evidence import ci_and_hook_texts
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, program
@@ -19,6 +19,7 @@ from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, starts
@@ -28,7 +29,6 @@ from project_validator.rules import (
     DeclaredLicense,
     DependencyManagement,
     FunctionLimits,
-    SecurityLints,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -36,6 +36,7 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.scanners import multi_language_scanners
 
 CSHARP = "C#"
 FSHARP = "F#"
@@ -74,13 +75,6 @@ def _build_texts(context: Context) -> tuple[str, ...]:
     if not any(map(RUNS_BUILD.search, texts)):
         return texts
     return (*texts, *(context.project.read_text(path) for path in _settings_files(context)))
-
-
-def _with_files(*files: str) -> Callable[[Context], tuple[str, ...]]:
-    def texts(context: Context) -> tuple[str, ...]:
-        return (*_build_texts(context), *existing_texts(context, files))
-
-    return texts
 
 
 def _property(name: str, values: str) -> str:
@@ -344,16 +338,38 @@ AUDITORS = (
 
 ANALYZER_CONFIGURATION = (".editorconfig", ".globalconfig")
 
-SECURITY_LINTS = SecurityLints(
-    texts=_with_files(*ANALYZER_CONFIGURATION),
-    lints=(
-        pattern(
-            ".NET security analyzers",
-            r"<AnalysisModeSecurity>\s*(?:Recommended|All)\s*</AnalysisModeSecurity>"
-            r"|\bdotnet_analyzer_diagnostic\.category-Security\.severity\s*=\s*(?:warning|error)\b",
-        ),
-        pattern("Security Code Scan", r"\bSecurityCodeScan\b"),
+_SECURITY_SEVERITY = re.compile(r"\bdotnet_analyzer_diagnostic\.category-Security\.severity\s*=\s*(warning|error)\b")
+ANALYZER_SETTINGS = SettingsReader(
+    name="analyzer configuration",
+    files=ANALYZER_CONFIGURATION,
+    read=lambda path, text: matched_settings("MSBuild", path, text, {"SecuritySeverity": (_SECURITY_SEVERITY, None)}),
+)
+_SECURE = frozenset({"recommended", "all", "warning", "error"})
+
+
+def _security_analysis(command: Command, facts: Facts) -> Run | None:
+    """A build with the SDK's security analyzers turned up (`AnalysisModeSecurity`, or the Security category's
+    severity in .editorconfig), or with Security Code Scan's package referenced."""
+    if not _builds(command):
+        return None
+    read = [
+        found
+        for found in facts.settings("MSBuild")
+        if (found.key in ("AnalysisModeSecurity", "SecuritySeverity") and str(found.value).lower() in _SECURE)
+        or (found.key == "PackageReference" and str(found.value).startswith("SecurityCodeScan"))
+    ]
+    return scanned(read=read) if read else None
+
+
+SECURITY_SCANNERS = (
+    scanner(
+        name=".NET security analyzers",
+        languages=DOTNET_LANGUAGES,
+        how="<AnalysisModeSecurity>Recommended</AnalysisModeSecurity> (or Security Code Scan)",
+        scans=_security_analysis,
+        reads=("MSBuild", "analyzer configuration"),
     ),
+    *multi_language_scanners(DOTNET_LANGUAGES),
 )
 
 
@@ -368,17 +384,21 @@ def _fsharp_only(context: Context) -> Result:
 _BUILDS = frozenset({"build", "test", "pack", "publish", "run", "msbuild"})
 
 
+def _builds(command: Command) -> bool:
+    """Whether a command builds a project, and so runs the analyzers it references."""
+    argv = resolved(command)
+    return program(argv) in ("msbuild", "MSBuild") or (
+        program(argv) == "dotnet" and argv[1:2] != () and argv[1] in _BUILDS
+    )
+
+
 def _analyzer_package(prefix: str) -> Claim:
     """An analyzer a NuGet package adds to the compiler, which runs on every build of a project that references it."""
 
     def analyses(command: Command, facts: Facts) -> Run | None:
-        argv = resolved(command)
-        builds = program(argv) in ("msbuild", "MSBuild") or (
-            program(argv) == "dotnet" and argv[1:2] and argv[1] in _BUILDS
-        )
         references = facts.where(Setting, tool="MSBuild", key="PackageReference")
         read = [found for found in references if str(found.value).lower().startswith(prefix.lower())]
-        return analysed(read=read) if builds and read else None
+        return analysed(read=read) if _builds(command) and read else None
 
     return analyses
 
@@ -480,7 +500,6 @@ DOTNET = Ecosystem(
         versions_axis(".NET SDK version", ".NET SDK"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        SECURITY_LINTS,
         FunctionLimits(without_lizard=_fsharp_only),
         DEPENDENCIES,
         BUILD_OUTPUT,

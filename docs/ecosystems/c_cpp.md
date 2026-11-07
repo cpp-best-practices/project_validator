@@ -56,6 +56,10 @@ the `DoozyX/clang-format-lint-action` or `jidicula/clang-format-action` action, 
 when CI runs pre-commit. `clang-format -i` enforces it only where the job then fails on a change
 (`git diff --exit-code`) or commits it.
 
+## `security-scanning`
+
+No security lints of its own here: CodeQL, GitLab SAST or semgrep in CI.
+
 ## `function-limits`
 
 lizard runs with a length limit, or `.clang-tidy` enables `readability-function-size` with a threshold and clang-tidy

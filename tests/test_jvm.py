@@ -190,8 +190,15 @@ class SecurityTests(unittest.TestCase):
     def test_security_lints_are_find_security_bugs_or_pmd_security_rules(self) -> None:
         pmd = "<plugin><artifactId>maven-pmd-plugin</artifactId><ruleset>category/java/security.xml</ruleset></plugin>"
         files = {**_pom(pmd), **_ci(MAVEN_VERIFY)}
-        result = _maven(self, SECURITY_SCANNING, files)
-        self.assertEqual(result, Result.passed("security lints are enabled: PMD security rules"))
+        # PMD's security rules count where PMD runs: its check goal, here.
+        self.assertEqual(_maven(self, SECURITY_SCANNING, files).status, Status.WARN)
+        result = _maven(self, SECURITY_SCANNING, {**_pom(pmd), **_ci("mvn pmd:check")})
+        self.assertEqual(result, Result.passed("CI scans the code for security problems with PMD security rules"))
+        findsecbugs = _pom(
+            _plugin("spotbugs-maven-plugin", "check") + "<plugin><artifactId>findsecbugs-plugin</artifactId></plugin>"
+        )
+        bugs = _maven(self, SECURITY_SCANNING, {**findsecbugs, **_ci(MAVEN_VERIFY)})
+        self.assertEqual(bugs, Result.passed("CI scans the code for security problems with Find Security Bugs"))
         # A plugin with no execution bound to its check goal never runs; once bound, mvn verify runs it.
         self.assertEqual(
             _maven(self, STATIC_ANALYSIS, files),

@@ -51,7 +51,8 @@ or the package scripts CI runs.
 
 ## `security-scanning`
 
-`eslint-plugin-security` (or `@microsoft/eslint-plugin-sdl`), or semgrep with a JavaScript ruleset.
+eslint with `eslint-plugin-security` (or `@microsoft/eslint-plugin-sdl`) in its configuration. In CI, where the tool
+runs (a setting alone, which nothing CI runs reads, does not count); CodeQL, GitLab SAST or semgrep count too.
 
 ## `dependency-management`
 

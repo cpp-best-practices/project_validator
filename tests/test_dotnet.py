@@ -158,13 +158,14 @@ class SecurityAndAnalysisTests(unittest.TestCase):
 
     def test_security_analyzers_or_security_code_scan(self) -> None:
         editorconfig = {".editorconfig": "[*.cs]\ndotnet_analyzer_diagnostic.category-Security.severity = error\n"}
-        package = {
-            **_props(items='<ItemGroup><PackageReference Include="SecurityCodeScan.VS2019" /></ItemGroup>'),
-            **_ci(BUILD),
-        }
-        for files in (editorconfig, package):
+        package = _props(items='<ItemGroup><PackageReference Include="SecurityCodeScan.VS2019" /></ItemGroup>')
+        mode = _props("AnalysisModeSecurity=Recommended")
+        for files in (editorconfig, package, mode):
             with self.subTest(files=files):
-                self.assertEqual(run_in_layout(self, CSHARP, SECURITY_SCANNING, files).status, Status.PASS)
+                built = {**files, **_ci(BUILD)}
+                self.assertEqual(run_in_layout(self, CSHARP, SECURITY_SCANNING, built).status, Status.PASS)
+                # The analyzers run when CI builds the project.
+                self.assertEqual(run_in_layout(self, CSHARP, SECURITY_SCANNING, files).status, Status.WARN)
 
     def test_an_analyzer_package_is_static_analysis(self) -> None:
         package = _props(items='<ItemGroup><PackageReference Include="StyleCop.Analyzers" /></ItemGroup>')

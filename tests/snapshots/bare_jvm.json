@@ -51,6 +51,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "OWASP dependency-check": {
                 "can": {
                   "runs": "OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze)"
@@ -125,6 +132,60 @@
             },
             "language": "Java",
             "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Find Security Bugs": {
+                "can": {
+                  "scans": "Find Security Bugs (the findsecbugs-plugin of SpotBugs)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "PMD security rules": {
+                "can": {
+                  "scans": "PMD with category/java/security.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Java",
+            "level": "scans",
             "runs": {},
             "unit": ".",
             "unknown_definitions": [],
@@ -259,6 +320,11 @@
       "kind": "ConfigurationFile",
       "origin": "pom.xml",
       "reader": "Error Prone"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "JVM security rules"
     }
   ],
   "map": {
@@ -359,7 +425,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running in CI: OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze), osv-scanner, trivy fs or snyk test"
+        "consider running in CI: OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze), GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
@@ -421,8 +487,7 @@
     },
     "security-scanning": {
       "details": [
-        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
-        "or enable each language's security lints (JVM: Find Security Bugs, PMD security rules)"
+        "consider running in CI: Find Security Bugs (the findsecbugs-plugin of SpotBugs), PMD with category/java/security.xml, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci"
       ],
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"

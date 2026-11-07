@@ -15,6 +15,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by, either, starts, when
@@ -24,14 +25,13 @@ from project_validator.rules import (
     DependencyManagement,
     FunctionLimits,
     Hardening,
-    SecurityLints,
     WarningPolicy,
-    ci_configuration,
     directories,
     ignored_at_top_level,
 )
 from project_validator.text import Pattern, matching_names, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.scanners import multi_language_scanners
 
 _USE = re.compile(r"^\s*(?:use\s+)?(?:\(\s*)?(\.{1,2}/[^\s)]*|\.)\s*\)?\s*$", re.MULTILINE)
 
@@ -184,7 +184,35 @@ WARNINGS = WarningPolicy(
     kind="Go linters", recognised=GO_LINTS, required=_required_lints, texts=_lint_texts, separator=", "
 )
 
-SECURITY_LINTS = SecurityLints(texts=_lint_texts, lints=(pattern("gosec", r"\bgosec\b|\bsecurego/gosec\b"),))
+
+def _golangci_gosec(command: Command, facts: Facts) -> Run | None:
+    """`golangci-lint run` with gosec among the linters its configuration enables (or all of them)."""
+    if not starts(("golangci-lint", "run"))(command):
+        return None
+    read = [
+        setting
+        for setting in facts.settings("golangci-lint")
+        if (setting.key == "linters.enable" and isinstance(setting.value, tuple) and "gosec" in setting.value)
+        or (setting.key == "linters.enable-all" and setting.value is True)
+        or (setting.key == "linters.default" and setting.value == "all")
+    ]
+    return scanned(read=read) if read else None
+
+
+SECURITY_SCANNERS = (
+    scanner(name="gosec", languages=GO_LANGUAGE, how="gosec ./...", scans=when(starts(("gosec",)), scanned)),
+    scanner(
+        name="golangci-lint's gosec",
+        languages=GO_LANGUAGE,
+        how="gosec enabled in .golangci.yml",
+        scans=_golangci_gosec,
+        reads=("golangci-lint",),
+    ),
+    *multi_language_scanners(GO_LANGUAGE),
+)
+GOSEC_ACTION = Action(
+    name="securego/gosec", runs=lambda inputs: (("gosec", *shlex.split(inputs.get("args", "./..."))),)
+)
 
 AUDITORS = (
     auditor(
@@ -207,12 +235,17 @@ def _builds_a_program(context: Context) -> bool:
     return any(MAIN_PACKAGE.search(context.project.read_text(path)) for path in sources)
 
 
+def _build_texts(context: Context) -> tuple[str, ...]:
+    """Where Go builds are configured: CI, and the files that hold build settings."""
+    return (*context.ci_texts, *existing_texts(context, BUILD_SETTINGS_FILES))
+
+
 def _position_independent(context: Context) -> Result:
     """Go is memory safe and bounds checked; what the build adds is a position-independent executable, so that the
     program's own code is randomised in memory (ASLR). That is the default on Windows and macOS, not on Linux."""
     if not _builds_a_program(context):
         return Result(status=Status.SKIP, message="no Go program (package main) is built; a library has no binary")
-    if matching_names((*context.ci_texts, *existing_texts(context, BUILD_SETTINGS_FILES)), (PIE,)):
+    if matching_names(_build_texts(context), (PIE,)):
         return Result.passed(f"hardening options are enabled: {PIE.name}")
     return Result.failed(
         "Go programs are not built as position-independent executables",
@@ -221,7 +254,7 @@ def _position_independent(context: Context) -> Result:
     )
 
 
-HARDENING = Hardening(texts=ci_configuration, judge=_position_independent)
+HARDENING = Hardening(texts=_build_texts, judge=_position_independent)
 
 FUNLEN = re.compile(r"(?<![\w-])funlen\b")
 
@@ -311,7 +344,6 @@ GO = Ecosystem(
         versions_axis("Go version", "Go"),
         WARNINGS,
         HARDENING,
-        SECURITY_LINTS,
         FunctionLimits(without_lizard=_funlen_enforced),
         DEPENDENCIES,
         BUILD_OUTPUTS,

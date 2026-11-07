@@ -55,6 +55,13 @@
             "answer": "yes",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "osv-scanner": {
                 "can": {
                   "runs": "osv-scanner"
@@ -139,6 +146,73 @@
               "ruff format": {
                 "levels": [
                   "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "bandit": {
+                "can": {
+                  "scans": "bandit -r ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ruff's bandit rules": {
+                "can": {
+                  "scans": "ruff check with S selected"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "scans",
+            "runs": {
+              "CodeQL": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              },
+              "bandit": {
+                "levels": [
+                  "scans"
                 ],
                 "read": []
               }
@@ -1775,6 +1849,21 @@
       "uses": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
+      "argv": [
+        "codeql",
+        "database",
+        "analyze"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "Command",
+      "line": "uses: github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9",
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "via": []
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1899,6 +1988,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bandit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "audit": [
@@ -2030,6 +2139,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bandit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "audit": [
@@ -2161,6 +2290,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bandit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "audit": [
@@ -2292,6 +2441,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bandit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "audit": [
@@ -2423,6 +2592,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bandit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "audit": [
@@ -2554,6 +2743,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bandit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "audit": [
@@ -2677,6 +2886,190 @@
         ".github/workflows/ci.yml:jobs.test.steps[9].run",
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "CodeQL",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "CodeQL",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "CodeQL",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "CodeQL",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "CodeQL",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "CodeQL",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "CodeQL",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "CodeQL",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "CodeQL",
+      "via": []
     }
   ],
   "map": {
@@ -2960,7 +3353,7 @@
     },
     "security-scanning": {
       "details": [],
-      "message": "CI runs code security scanning with CodeQL",
+      "message": "CI scans the code for security problems with bandit, CodeQL",
       "status": "PASS"
     },
     "static-analysis": {

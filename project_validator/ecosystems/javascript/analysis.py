@@ -5,14 +5,16 @@ import re
 from collections.abc import Callable
 from pathlib import PurePosixPath
 
-from project_validator.ecosystems.javascript import DENO_CONFIG_FILES, ESLINT_CONFIG_FILES, JS_LANGUAGES
+from project_validator.ecosystems.javascript import DENO_CONFIG_FILES, ESLINT_CONFIG_FILES, JS_LANGUAGES, PACKAGE_JSON
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
-from project_validator.facts.settings import SettingsReader, file_reader, json_settings
+from project_validator.facts.security import scanned, scanner
+from project_validator.facts.settings import SettingsReader, file_reader, json_settings, matched_settings
 from project_validator.facts.tools import Run, combined, defined_by
+from project_validator.tools.scanners import multi_language_scanners
 
 ESLINT_FILES = file_reader("eslint", ESLINT_CONFIG_FILES)
 OXLINT_FILES = file_reader("oxlint", (".oxlintrc.json",))
@@ -154,4 +156,32 @@ DENO_CHECK = type_checker(
     checks=_deno_check,
     configuration=defined_by(settings=("Deno",)),
     reads=("Deno",),
+)
+
+# eslint-plugin-security (or Microsoft's SDL rules), configured where eslint reads its configuration: matched in the
+# configuration, which is code.
+_SECURITY_PLUGIN = re.compile(r"\beslint-plugin-security\b|@microsoft/eslint-plugin-sdl\b|\bplugin:security/")
+ESLINT_SECURITY_SETTINGS = SettingsReader(
+    name="eslint security",
+    files=(*ESLINT_CONFIG_FILES, PACKAGE_JSON),
+    read=lambda path, text: matched_settings("eslint", path, text, {"security plugin": (_SECURITY_PLUGIN, True)}),
+)
+
+
+def _eslint_security(command: Command, facts: Facts) -> Run | None:
+    if not _programs(("eslint",), ("next", "lint"))(command):
+        return None
+    read = facts.where(Setting, tool="eslint", key="security plugin")
+    return scanned(read=read) if read else None
+
+
+SECURITY_SCANNERS = (
+    scanner(
+        name="eslint-plugin-security",
+        languages=JS_LANGUAGES,
+        how="eslint with eslint-plugin-security",
+        scans=_eslint_security,
+        reads=("eslint security",),
+    ),
+    *multi_language_scanners(JS_LANGUAGES),
 )

@@ -42,7 +42,8 @@ action) with linters enabled beyond its defaults (`linters.enable`, `enable-all`
 
 ## `security-scanning`
 
-gosec.
+gosec, or golangci-lint with gosec enabled in its configuration. In CI, where the tool runs (a setting alone, which
+nothing CI runs reads, does not count); CodeQL, GitLab SAST or semgrep count too.
 
 ## `dependency-management`
 

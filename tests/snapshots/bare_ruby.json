@@ -49,6 +49,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "bundler-audit": {
                 "can": {
                   "runs": "bundle audit check --update"
@@ -123,6 +130,60 @@
             },
             "language": "Ruby",
             "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "RuboCop Security cops": {
+                "can": {
+                  "scans": "rubocop"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "brakeman": {
+                "can": {
+                  "scans": "brakeman"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "scans",
             "runs": {},
             "unit": ".",
             "unknown_definitions": [],
@@ -376,7 +437,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running in CI: bundle audit check --update, osv-scanner, trivy fs or snyk test"
+        "consider running in CI: bundle audit check --update, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
@@ -438,8 +499,7 @@
     },
     "security-scanning": {
       "details": [
-        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
-        "or enable each language's security lints (Ruby: brakeman, RuboCop Security cops)"
+        "consider running in CI: brakeman, rubocop, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci"
       ],
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"

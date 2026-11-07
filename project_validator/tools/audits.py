@@ -18,9 +18,21 @@ def _trivy(command: Command, _facts: Facts) -> Run | None:
     return audited() if program(argv) == "trivy" and argv[1:2] and argv[1] in _TRIVY_FILESYSTEM else None
 
 
+def _gitlab_dependency_scanning(command: Command, _facts: Facts) -> Run | None:
+    argv = resolved(command)
+    template = argv[:1] == ("gitlab-template",) and any("Dependency-Scanning" in word for word in argv)
+    return audited() if template else None
+
+
 def multi_ecosystem_audits(languages: frozenset[str]) -> tuple[Tool, ...]:
-    """osv-scanner, trivy (of the file system) and snyk, as auditors of `languages`."""
+    """osv-scanner, trivy (of the file system), snyk and GitLab Dependency Scanning, as auditors of `languages`."""
     return (
+        auditor(
+            name="GitLab Dependency Scanning",
+            languages=languages,
+            how="GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)",
+            audits=_gitlab_dependency_scanning,
+        ),
         auditor(
             name="osv-scanner", languages=languages, how="osv-scanner", audits=when(starts(("osv-scanner",)), audited)
         ),

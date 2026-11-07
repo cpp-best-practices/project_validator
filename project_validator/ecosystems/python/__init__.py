@@ -2,7 +2,7 @@
 
 import re
 import shlex
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from pathlib import PurePosixPath
 
 from project_validator.core import Context
@@ -18,6 +18,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, defined_by, either, starts, when
@@ -25,7 +26,6 @@ from project_validator.rules import (
     BuildOutputs,
     DependencyManagement,
     FunctionLimits,
-    SecurityLints,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -33,6 +33,7 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.scanners import multi_language_scanners
 
 PYTHON_ONLY = frozenset({"Python"})
 PYTHON_PACKAGING = BuildSystem(
@@ -322,32 +323,44 @@ WARNINGS = WarningPolicy(
     kind="Python warning settings", recognised=PYTHON_WARNINGS, required=_required_warnings, texts=_warning_texts
 )
 
-SECURITY_SETTINGS_FILES = (
-    "pyproject.toml",
-    "setup.cfg",
-    "tox.ini",
-    "ruff.toml",
-    ".ruff.toml",
-    ".pre-commit-config.yaml",
-)
-
-
-def _security_texts(context: Context) -> tuple[str, ...]:
-    return (*context.ci_texts, *existing_texts(context, SECURITY_SETTINGS_FILES))
-
-
 # Python builds no binary, so it has no hardening rule: its interpreter is hardened by whoever builds it.
-SECURITY_LINTS = SecurityLints(
-    texts=_security_texts,
-    lints=(
-        _setting(
-            "bandit security lints",
-            r"\bbandit\s+-|\bid:\s*bandit\b|\bPyCQA/bandit-action\b"
-            r"""|\bruff\b[^\n]*--(?:extend-)?select[=\s]+(?:\S*,)?(?:S\d*|ALL)(?![\w-])"""
-            r"""|\b(?:extend-)?select\s*=\s*\[[^\]]*["'](?:S\d*|ALL)["']""",
-        ),
+_BANDIT_RULES = re.compile(r"S\d*|ALL")
+_RULE_SELECTIONS = ("lint.select", "lint.extend-select", "select", "extend-select")
+
+
+def _selects_bandit(values: Iterable[object]) -> bool:
+    return any(_BANDIT_RULES.fullmatch(str(value).strip()) for value in values)
+
+
+def _ruff_security(command: Command, facts: Facts) -> Run | None:
+    """`ruff check` with flake8-bandit's rules (`S`) selected, on its command line or in its settings."""
+    argv = resolved(command)
+    if program(argv) != "ruff" or argv[1:2] != ("check",):
+        return None
+    if _selects_bandit(
+        rule for value in option_values(argv, "--select", "--extend-select") for rule in value.split(",")
+    ):
+        return scanned()
+    read = [
+        setting
+        for setting in facts.settings("ruff")
+        if setting.key in _RULE_SELECTIONS and isinstance(setting.value, tuple) and _selects_bandit(setting.value)
+    ]
+    return scanned(read=read) if read else None
+
+
+SECURITY_SCANNERS = (
+    scanner(name="bandit", languages=PYTHON_ONLY, how="bandit -r .", scans=when(starts(("bandit",)), scanned)),
+    scanner(
+        name="ruff's bandit rules",
+        languages=PYTHON_ONLY,
+        how="ruff check with S selected",
+        scans=_ruff_security,
+        reads=("ruff",),
     ),
+    *multi_language_scanners(PYTHON_ONLY),
 )
+BANDIT_ACTION = Action(name="PyCQA/bandit-action", runs=lambda _inputs: (("bandit", "-r", "."),))
 
 AUDITORS = (
     auditor(name="pip-audit", languages=PYTHON_ONLY, how="pip-audit", audits=when(starts(("pip-audit",)), audited)),
@@ -431,7 +444,6 @@ PYTHON = Ecosystem(
     rules=(
         versions_axis("Python version", "Python"),
         WARNINGS,
-        SECURITY_LINTS,
         FunctionLimits(),
         DEPENDENCIES,
         BYTECODE,

@@ -47,7 +47,8 @@ Meziantou.Analyzer) referenced by a project or `Directory.*.props`, which runs w
 ## `security-scanning`
 
 The analyzers' Security category (`AnalysisModeSecurity`, or `category-Security` severity warning or error in
-`.editorconfig`), or Security Code Scan.
+`.editorconfig` or `.globalconfig`), or Security Code Scan, when CI builds. In CI, where the tool runs (a setting alone,
+which nothing CI runs reads, does not count); CodeQL, GitLab SAST or semgrep count too.
 
 ## `dependency-management`
 
