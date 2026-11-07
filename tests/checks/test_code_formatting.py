@@ -168,6 +168,8 @@ class PythonCodeFormattingTests(unittest.TestCase):
 
     def test_formatter_in_any_ci_passes_with_its_default_style(self) -> None:
         commands = {"ruff format": "ruff format --check .", "black": "python -m black src tests --check"}
+        # ruff format fails when it reformats a file with --exit-non-zero-on-format.
+        self.assertEqual(self._run(github_job("x", "ruff format --exit-non-zero-on-format .")).status, Status.PASS)
         for provider in CI_FILES:
             for tool, command in commands.items():
                 with self.subTest(ci=provider, tool=tool):

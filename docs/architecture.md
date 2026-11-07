@@ -172,8 +172,8 @@ except where a step deliberately changes results and says so.
    - Components (command expanders and coverage tools) are found by `project_validator/components.py` in the
      shared build systems and tools and in the profiles (and their modules), never listed.
    - The coverage question (`project_validator/questions/coverage.py`) answers per language and granularity; the
-     policy (`project_validator/policy/coverage.py`) requires branch coverage, or the finest granularity a known tool can
-     measure, and reports path coverage as a bonus. An unknown answer is an error, naming what was not read
+     policy (`project_validator/policy/coverage.py`) requires branch coverage, or the finest granularity a known tool
+     can measure, and reports path coverage as a bonus. An unknown answer is an error, naming what was not read
      (see Policy).
    - `--answers` prints the answers. C and C++ coverage tools stay in the C/C++ profile (`c_cpp/coverage.py`) until
      step 5 shares them with Fortran.

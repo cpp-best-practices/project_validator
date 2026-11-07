@@ -62,7 +62,10 @@ RUFF_FORMAT = format_tool(
     languages=PYTHON_ONLY,
     can={Enforcement.CHECK: "ruff format --check", Enforcement.APPLY: "ruff format"},
     # The ruff-format pre-commit hook applies it.
-    formats=either(flagged(("ruff", "format"), checks=("--check", "--diff")), flagged(("ruff-format",), checks=())),
+    formats=either(
+        flagged(("ruff", "format"), checks=("--check", "--diff", "--exit-non-zero-on-format")),
+        flagged(("ruff-format",), checks=()),
+    ),
     style=defined_by(settings=("ruff",)),
     reads=("ruff",),
 )
