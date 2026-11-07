@@ -62,8 +62,10 @@ No security lints of its own here: CodeQL, GitLab SAST or semgrep in CI.
 
 ## `function-limits`
 
-lizard runs with a length limit, or `.clang-tidy` enables `readability-function-size` with a threshold and clang-tidy
-runs.
+lizard runs in CI with a length limit (`-L`, `--length`, `-T length=` or `-T nloc=`), or clang-tidy runs (directly,
+or through `CMAKE_CXX_CLANG_TIDY`) with a `.clang-tidy` that enables `readability-function-size` with a positive
+`LineThreshold` or `StatementThreshold`. A `.clang-tidy` that sets the limit while nothing runs clang-tidy warns; one
+that cannot be read makes the answer unknown.
 
 ## `static-analysis`
 

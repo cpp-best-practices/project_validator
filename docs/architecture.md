@@ -375,8 +375,22 @@ except where a step deliberately changes results and says so.
    - Settings readers may name files in hidden directories (`.cargo/config.toml`); those directories are read.
    - The same result for every ecosystem is said once (`combined`), rather than labelled ecosystem by ecosystem.
 
+   **4f. Function length** (`function-limits`; the `FunctionLimits` rule is deleted).
+   - **The `function-length` aspect** (`project_validator/facts/limits.py`): a run `measures` function length, and
+     `limits` it when it fails on a function longer than a limit. lizard is a shared tool
+     (`function_length_limiters(languages)` in `project_validator/tools/limits.py`), made by each profile for the
+     languages lizard measures; it limits when told a length (`-L`, `--length`, `-T length=`).
+   - **A linter's rule** is a `limiter`: the linter's own claim (when it runs) and a `Rule` read from its settings,
+     on by default unless they turn it off (RuboCop's Metrics/MethodLength, SwiftLint's function_body_length,
+     detekt's LongMethod) or only once they turn it on (clang-tidy's readability-function-size with a threshold,
+     golangci-lint's funlen, eslint's max-lines-per-function, Checkstyle's MethodLength, PHPMD's
+     ExcessiveMethodLength). Their settings are read structurally where the format allows it (`.clang-tidy`,
+     `.rubocop.yml`, `.swiftlint.yml`, detekt, Checkstyle and PHPMD XML); eslint's, which is code, is matched.
+   - lizard named only in CMake files no longer counts: it is judged by what CI runs, like every other tool, until
+     CMake custom targets are read (step 5).
+
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
-   MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
+   MSVC flag knowledge, leave the C/C++ profile; llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice
    dispatch are removed.
 7. **Proof**: add Fortran using only extractors and a recognition module.

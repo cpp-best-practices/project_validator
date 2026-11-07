@@ -42,7 +42,8 @@ alone passes.
 
 ## `function-limits`
 
-lizard runs with a length limit, or eslint runs with `max-lines-per-function` enabled.
+lizard runs in CI with a length limit, or eslint runs with `max-lines-per-function` on (not `"off"` or `0`) in its
+configuration. The rule on while CI does not run eslint warns.
 
 ## `static-analysis`
 

@@ -10,13 +10,14 @@ from pathlib import PurePosixPath
 from project_validator.build_configurations import build_type_kinds
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import existing_texts, first_existing
+from project_validator.evidence import existing_texts
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.settings import (
     SettingsReader,
     file_reader,
@@ -24,23 +25,23 @@ from project_validator.facts.settings import (
     matched_settings,
     settings,
     xml_root,
+    yaml_settings,
 )
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
-    SUGGESTED_LIZARD,
     BuildOutputs,
     BuildTypes,
     DependencyManagement,
-    FunctionLimits,
     Hardening,
     WarningPolicy,
     WarningsAsErrors,
     directories,
     ignored_at_top_level,
 )
-from project_validator.text import Pattern, found_and_missing, matching_names, pattern
+from project_validator.text import Pattern, found_and_missing, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
 SWIFT_LANGUAGE = "Swift"
@@ -282,22 +283,9 @@ def _runtime_checks_kept(context: Context) -> Result:
 HARDENING = Hardening(texts=_build_texts, judge=_runtime_checks_kept)
 
 SWIFTLINT_CONFIG = ".swiftlint.yml"
-FUNCTION_BODY_LENGTH_OFF = re.compile(
-    r"^disabled_rules:\s*\n(?:\s+-\s*\S+\s*\n)*?\s+-\s*function_body_length\b", re.MULTILINE
+SWIFTLINT_SETTINGS = SettingsReader(
+    name="SwiftLint", files=(SWIFTLINT_CONFIG,), read=lambda path, text: yaml_settings("SwiftLint", path, text)
 )
-
-
-def _function_body_length(context: Context) -> Result:
-    """SwiftLint limits function length with function_body_length, on unless its configuration disables it."""
-    config = first_existing(context, (SWIFTLINT_CONFIG,))
-    if config is not None and FUNCTION_BODY_LENGTH_OFF.search(context.project.read_text(config)):
-        return Result.failed(f"function_body_length is disabled in {config}; enable it or run {SUGGESTED_LIZARD} in CI")
-    if matching_names(_build_texts(context), (SWIFTLINT,)):
-        return Result.passed("function length is limited with SwiftLint function_body_length")
-    return Result.failed(f"function length is never limited; run SwiftLint or {SUGGESTED_LIZARD} in CI")
-
-
-SWIFTLINT_FILES = file_reader("SwiftLint", (SWIFTLINT_CONFIG,))
 _SWIFTLINT_PLUGIN = re.compile(r"\bSwiftLint(?:Build)?Plugin\b")
 SWIFTLINT_PLUGIN = SettingsReader(
     name="SwiftLint plugin",
@@ -328,6 +316,39 @@ SWIFTLINT_TOOL = analyzer(
     rules=defined_by(files=("SwiftLint",)),
     reads=("SwiftLint plugin",),
 )
+_BODY_LENGTH = "function_body_length"
+
+
+def _body_length(facts: Facts, *, on: bool) -> list[Setting]:
+    """The SwiftLint settings that turn function_body_length on (its thresholds, or `only_rules` naming it), or off
+    (`disabled_rules` naming it, or `only_rules` leaving it out)."""
+    found = []
+    for setting in facts.settings("SwiftLint"):
+        names = setting.value if isinstance(setting.value, tuple) else ()
+        if setting.key == "only_rules":
+            found += [setting] if (_BODY_LENGTH in names) == on else []
+        elif setting.key == "disabled_rules" and _BODY_LENGTH in names:
+            found += [] if on else [setting]
+        elif setting.key == _BODY_LENGTH or setting.key.startswith(f"{_BODY_LENGTH}."):
+            found += [setting] if on else []
+    return found
+
+
+# function_body_length is on by default.
+BODY_LENGTH = limiter(
+    name="SwiftLint's function_body_length",
+    languages=SWIFT_ONLY,
+    how="swiftlint --strict",
+    runs=_swiftlint,
+    rule=Rule(
+        describe=f"{_BODY_LENGTH} on in {SWIFTLINT_CONFIG}",
+        enabled=lambda facts: _body_length(facts, on=True),
+        disabled=lambda facts: _body_length(facts, on=False),
+        default=True,
+    ),
+    reads=("SwiftLint plugin", "SwiftLint"),
+)
+FUNCTION_LENGTH_LIMITERS = (BODY_LENGTH, *function_length_limiters(SWIFT_ONLY))
 SWIFTLINT_ACTION = Action(name="norio-nomura/action-swiftlint", runs=lambda _inputs: (("swiftlint",),))
 
 # osv-scanner reads Package.resolved; Swift has no audit tool of its own.
@@ -387,7 +408,6 @@ SWIFT = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         HARDENING,
-        FunctionLimits(without_lizard=_function_body_length),
         DEPENDENCIES,
     ),
 )

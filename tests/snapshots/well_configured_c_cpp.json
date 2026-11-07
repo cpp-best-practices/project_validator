@@ -230,6 +230,98 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "clang-tidy's readability-function-size": [
+                ".clang-tidy"
+              ]
+            },
+            "known": {
+              "clang-tidy's readability-function-size": {
+                "can": {
+                  "limits": "clang-tidy with readability-function-size and a LineThreshold in .clang-tidy"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "limits",
+            "runs": {
+              "clang-tidy's readability-function-size": {
+                "levels": [
+                  "limits",
+                  "measures"
+                ],
+                "read": [
+                  ".clang-tidy"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "clang-tidy's readability-function-size": [
+                ".clang-tidy"
+              ]
+            },
+            "known": {
+              "clang-tidy's readability-function-size": {
+                "can": {
+                  "limits": "clang-tidy with readability-function-size and a LineThreshold in .clang-tidy"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C++",
+            "level": "limits",
+            "runs": {
+              "clang-tidy's readability-function-size": {
+                "levels": [
+                  "limits",
+                  "measures"
+                ],
+                "read": [
+                  ".clang-tidy"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C",
@@ -3326,6 +3418,27 @@
       "reader": "clang-tidy"
     },
     {
+      "heuristic": false,
+      "key": "Checks",
+      "kind": "Setting",
+      "origin": ".clang-tidy:Checks",
+      "tool": "clang-tidy",
+      "value": "-*,readability-function-size"
+    },
+    {
+      "heuristic": false,
+      "key": "CheckOptions",
+      "kind": "Setting",
+      "origin": ".clang-tidy:CheckOptions",
+      "tool": "clang-tidy",
+      "value": [
+        {
+          "key": "readability-function-size.LineThreshold",
+          "value": 80
+        }
+      ]
+    },
+    {
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
       "reader": "CMake analyzers"
@@ -3577,6 +3690,30 @@
         "C",
         "C++"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "analysis": [
@@ -3685,6 +3822,30 @@
         "C",
         "C++"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "analysis": [
@@ -3793,6 +3954,30 @@
         "C",
         "C++"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "analysis": [
@@ -3901,6 +4086,30 @@
         "C",
         "C++"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "analysis": [
@@ -3999,6 +4208,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -4107,6 +4340,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -4215,6 +4472,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -4323,6 +4604,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -4431,6 +4736,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -4539,6 +4868,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -4647,6 +5000,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -4755,6 +5132,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -4863,6 +5264,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -4971,6 +5396,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -5079,6 +5528,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -5187,6 +5660,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -5295,6 +5792,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -5403,6 +5924,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -5511,6 +6056,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -5619,6 +6188,30 @@
         "."
       ],
       "tool": "clang-tidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [
+        ".clang-tidy"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "clang-tidy's readability-function-size",
       "via": []
     },
     {
@@ -6318,7 +6911,7 @@
     },
     "function-limits": {
       "details": [],
-      "message": "function length is limited with clang-tidy readability-function-size (LineThreshold 80)",
+      "message": "function length is limited with clang-tidy's readability-function-size (.clang-tidy)",
       "status": "PASS"
     },
     "hardening": {

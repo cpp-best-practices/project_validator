@@ -9,9 +9,8 @@ from pathlib import Path
 
 import project_validator
 from project_validator import ecosystems
-from project_validator.core import Context, Result
 from project_validator.ecosystems import BUILT_IN, PROFILES, Ecosystem, languages_of
-from project_validator.rules import FunctionLimits
+from project_validator.rules import Hardening
 from tests import layouts as tests_layouts
 
 PACKAGE = Path(project_validator.__file__).parent
@@ -56,11 +55,8 @@ def _import_fresh(module: str) -> None:
         sys.modules.update(saved)
 
 
-def _limits(_name: str) -> FunctionLimits:
-    def never(_: Context) -> Result:
-        return Result.failed("never limited")
-
-    return FunctionLimits(without_lizard=never)
+def _hardening(_name: str) -> Hardening:
+    return Hardening(texts=lambda _context: ())
 
 
 class ArchitectureTests(unittest.TestCase):
@@ -117,10 +113,10 @@ class EcosystemRuleTests(unittest.TestCase):
             with self.subTest(ecosystem=ecosystem.label):
                 kinds = [type(rule) for rule in ecosystem.rules]
                 self.assertEqual(len(kinds), len(set(kinds)))
-        with self.assertRaisesRegex(ValueError, "several rules of type FunctionLimits"):
-            Ecosystem(label="Twice", languages=frozenset({"X"}), rules=(_limits("a"), _limits("b")))
+        with self.assertRaisesRegex(ValueError, "several rules of type Hardening"):
+            Ecosystem(label="Twice", languages=frozenset({"X"}), rules=(_hardening("a"), _hardening("b")))
 
     def test_a_missing_rule_is_none(self) -> None:
         ecosystem = Ecosystem(label="Bare", languages=frozenset({"X"}))
-        self.assertIsNone(ecosystem.rule(FunctionLimits))
+        self.assertIsNone(ecosystem.rule(Hardening))
         self.assertEqual(repr(ecosystem), "Ecosystem(Bare)")

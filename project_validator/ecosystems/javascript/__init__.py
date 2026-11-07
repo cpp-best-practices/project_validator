@@ -13,11 +13,10 @@ from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator import yaml_support
-from project_validator.core import Context, Result
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import (
     ci_and_hook_texts,
-    first_existing,
     json_value,
     scripts_run,
 )
@@ -40,11 +39,9 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, defined_by, starts, when
 from project_validator.rules import (
-    SUGGESTED_LIZARD,
     BuildOutputs,
     DeclaredLicense,
     DependencyManagement,
-    FunctionLimits,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -579,25 +576,6 @@ AUDITORS = (
     *multi_ecosystem_audits(JS_LANGUAGES),
 )
 
-# The rule's options are "off", 0, or anything else (a severity, or a severity and its limit).
-MAX_LINES_PER_FUNCTION = re.compile(
-    r"""["']?max-lines-per-function["']?\s*:(?!\s*\[?\s*(?:["']off["']|0\b))""", re.IGNORECASE
-)
-
-
-def _max_lines_per_function(context: Context) -> Result:
-    """eslint's max-lines-per-function rule limits function length, when it is enabled and eslint runs."""
-    config = first_existing(context, ESLINT_CONFIG_FILES)
-    if config is None or not MAX_LINES_PER_FUNCTION.search(context.project.read_text(config)):
-        return Result.failed(
-            "function length is never limited; enable eslint's max-lines-per-function rule "
-            f"or run {SUGGESTED_LIZARD} in CI"
-        )
-    if not matching_names(_run_texts(context), LINTERS[:1]):
-        return Result.warned(f"max-lines-per-function is enabled in {config} but CI does not run eslint")
-    return Result.passed(f"function length is limited with eslint max-lines-per-function ({config})")
-
-
 LOCKFILES = (
     "package-lock.json",
     "npm-shrinkwrap.json",
@@ -678,7 +656,6 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
         versions_axis("runtime version", "JavaScript runtime"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        FunctionLimits(without_lizard=_max_lines_per_function),
         DEPENDENCIES,
         NODE_MODULES,
         LICENSE,

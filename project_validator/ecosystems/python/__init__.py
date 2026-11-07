@@ -25,7 +25,6 @@ from project_validator.facts.tools import Claim, Run, defined_by, either, starts
 from project_validator.rules import (
     BuildOutputs,
     DependencyManagement,
-    FunctionLimits,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -444,7 +443,6 @@ PYTHON = Ecosystem(
     rules=(
         versions_axis("Python version", "Python"),
         WARNINGS,
-        FunctionLimits(),
         DEPENDENCIES,
         BYTECODE,
         LICENSE,

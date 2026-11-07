@@ -45,7 +45,8 @@ No security lints of its own here: CodeQL, GitLab SAST or semgrep in CI.
 
 ## `function-limits`
 
-lizard runs with a length limit, or SwiftLint runs with `function_body_length` not disabled (it is on by default).
+lizard runs in CI with a length limit, or SwiftLint runs with `function_body_length` on (it is on by default;
+`disabled_rules` naming it, or `only_rules` leaving it out, turns it off).
 
 ## `static-analysis`
 

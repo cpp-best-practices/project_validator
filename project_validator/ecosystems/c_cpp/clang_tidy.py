@@ -1,30 +1,29 @@
-"""clang-tidy's readability-function-size check, which limits C/C++ function length when clang-tidy runs."""
+"""clang-tidy's settings (a `.clang-tidy`: the checks it enables and their options), and its readability-function-size
+check, which limits C/C++ function length when clang-tidy runs with a line or statement threshold."""
 
-from collections.abc import Mapping
-from dataclasses import dataclass
+from collections.abc import Iterator, Mapping, Sequence
 from fnmatch import fnmatchcase
 
-from project_validator import yaml_support
-from project_validator.core import Context, Project, Result
-from project_validator.ecosystems.c_cpp.compiler_flags import build_texts
-from project_validator.rules import SUGGESTED_LIZARD, FunctionLimits
-from project_validator.text import matching_names, pattern
+from project_validator.ecosystems.c_cpp.analysis import CLANG_TIDY
+from project_validator.ecosystems.model import C_FAMILY
+from project_validator.facts import Fact, Facts, Setting
+from project_validator.facts.limits import Rule, limiter
+from project_validator.facts.settings import SettingsReader, yaml_settings
+from project_validator.tools.limits import function_length_limiters
 
-CLANG_TIDY_CONFIG = ".clang-tidy"
 CLANG_TIDY_CHECK = "readability-function-size"
 LENGTH_THRESHOLDS = ("LineThreshold", "StatementThreshold")
 
-RUNS_CLANG_TIDY = pattern("clang-tidy", r"clang[-_]tidy")
+
+def _read_clang_tidy(path: str, text: str) -> Iterator[Fact]:
+    return yaml_settings("clang-tidy", path, text)
 
 
-@dataclass(frozen=True, slots=True)
-class ClangTidyLimits:
-    thresholds: tuple[str, ...] = ()
-    problem: str | None = None
+CLANG_TIDY_SETTINGS = SettingsReader(name="clang-tidy", files=(".clang-tidy",), read=_read_clang_tidy)
 
 
 def check_globs(checks: object) -> tuple[str, ...]:
-    joined = ",".join(map(str, checks)) if isinstance(checks, list) else str(checks or "")
+    joined = ",".join(map(str, checks)) if isinstance(checks, tuple) else str(checks or "")
     return tuple(glob for glob in (part.strip() for part in joined.split(",")) if glob)
 
 
@@ -34,60 +33,47 @@ def is_enabled(name: str, globs: tuple[str, ...]) -> bool:
     return next(decisions, False)
 
 
-def check_options(options: object) -> Mapping[object, object]:
-    if isinstance(options, list):
-        return {option.get("key"): option.get("value") for option in options if isinstance(option, dict)}
-    return options if isinstance(options, dict) else {}
-
-
 def _is_positive(value: object) -> bool:
     text = str(value).strip()
     return text.isdigit() and int(text) > 0
 
 
-def length_thresholds(options: Mapping[object, object]) -> tuple[str, ...]:
-    return tuple(
-        f"{name} {str(value).strip()}"
-        for name in LENGTH_THRESHOLDS
-        if _is_positive(value := options.get(f"{CLANG_TIDY_CHECK}.{name}"))
-    )
+def _options(settings: Sequence[Setting]) -> Iterator[tuple[Setting, object, object]]:
+    """(setting, key, value) for each check option: `CheckOptions` is a mapping, or a list of `key`/`value` pairs."""
+    for setting in settings:
+        if setting.key.startswith("CheckOptions."):
+            yield setting, setting.key.removeprefix("CheckOptions."), setting.value
+        elif setting.key == "CheckOptions" and isinstance(setting.value, tuple):
+            pairs = (option for option in setting.value if isinstance(option, Mapping))
+            yield from ((setting, option.get("key"), option.get("value")) for option in pairs)
 
 
-def clang_tidy_limits(project: Project) -> ClangTidyLimits:
-    if not project.exists(CLANG_TIDY_CONFIG):
-        return ClangTidyLimits()
-    try:
-        config = yaml_support.load(project.read_text(CLANG_TIDY_CONFIG))
-    except yaml_support.YamlError as error:
-        return ClangTidyLimits(problem=f"{CLANG_TIDY_CONFIG} could not be read: {error}")
-    config = config if isinstance(config, dict) else {}
-
-    if not is_enabled(CLANG_TIDY_CHECK, check_globs(config.get("Checks"))):
-        return ClangTidyLimits(problem=f"{CLANG_TIDY_CHECK} is not enabled by the Checks in {CLANG_TIDY_CONFIG}")
-    if thresholds := length_thresholds(check_options(config.get("CheckOptions"))):
-        return ClangTidyLimits(thresholds=thresholds)
-    return ClangTidyLimits(
-        problem=f"{CLANG_TIDY_CHECK} is enabled in {CLANG_TIDY_CONFIG} but sets no LineThreshold or StatementThreshold"
-    )
+def _thresholds(settings: Sequence[Setting]) -> list[Setting]:
+    wanted = {f"{CLANG_TIDY_CHECK}.{name}" for name in LENGTH_THRESHOLDS}
+    return [setting for setting, key, value in _options(settings) if key in wanted and _is_positive(value)]
 
 
-def _clang_tidy_limits_enforced(context: Context) -> Result:
-    clang_tidy = clang_tidy_limits(context.project)
-    if clang_tidy.thresholds:
-        tool = f"clang-tidy {CLANG_TIDY_CHECK} ({', '.join(clang_tidy.thresholds)})"
-        if matching_names(build_texts(context), (RUNS_CLANG_TIDY,)):
-            return Result.passed(f"function length is limited with {tool}")
-        return Result.warned(
-            f"function length limits are configured for {tool} but nothing runs clang-tidy",
-            "run clang-tidy in CI, or set CMAKE_CXX_CLANG_TIDY",
-        )
-
-    details = (clang_tidy.problem,) if clang_tidy.problem else ()
-    return Result.failed(
-        f"function length is never limited; enable clang-tidy {CLANG_TIDY_CHECK} with a LineThreshold "
-        f"or run {SUGGESTED_LIZARD} in CI",
-        *details,
-    )
+def _function_size(facts: Facts) -> list[Setting]:
+    """The settings of each `.clang-tidy` that enables readability-function-size with a positive threshold."""
+    found: list[Setting] = []
+    for path in dict.fromkeys(setting.path for setting in facts.settings("clang-tidy")):
+        settings = facts.settings("clang-tidy", paths=(path,))
+        checks = next((setting for setting in settings if setting.key == "Checks"), None)
+        thresholds = _thresholds(settings)
+        if checks is not None and is_enabled(CLANG_TIDY_CHECK, check_globs(checks.value)) and thresholds:
+            found += [checks, *thresholds]
+    return found
 
 
-FUNCTION_LIMITS = FunctionLimits(without_lizard=_clang_tidy_limits_enforced)
+FUNCTION_SIZE = limiter(
+    name="clang-tidy's readability-function-size",
+    languages=C_FAMILY,
+    how="clang-tidy with readability-function-size and a LineThreshold in .clang-tidy",
+    runs=CLANG_TIDY.claims,
+    rule=Rule(
+        describe=f"{CLANG_TIDY_CHECK} with a LineThreshold or StatementThreshold in .clang-tidy",
+        enabled=_function_size,
+    ),
+    reads=("CMake", "clang-tidy"),
+)
+FUNCTION_LENGTH_LIMITERS = (FUNCTION_SIZE, *function_length_limiters(C_FAMILY))

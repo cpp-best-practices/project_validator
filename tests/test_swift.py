@@ -132,13 +132,23 @@ class SafetyTests(unittest.TestCase):
                 self.assertEqual(run_in_layout(self, XCODE, HARDENING, files).status, Status.FAIL)
 
     def test_function_body_length_is_on_unless_disabled(self) -> None:
-        expected = Result.passed("function length is limited with SwiftLint function_body_length")
+        expected = Result.passed("function length is limited with SwiftLint's function_body_length")
         self.assertEqual(run_as(self, FUNCTION_LIMITS, _ci("swiftlint"), SWIFT), expected)
-        disabled = {
-            ".swiftlint.yml": "disabled_rules:\n  - line_length\n  - function_body_length\n",
-            **_ci("swiftlint"),
-        }
-        self.assertEqual(run_as(self, FUNCTION_LIMITS, disabled, SWIFT).status, Status.FAIL)
+        for config in (
+            "function_body_length:\n  warning: 40\n",
+            "only_rules:\n  - function_body_length\n",
+            "disabled_rules:\n  - line_length\n",
+        ):
+            with self.subTest(config=config):
+                files = {".swiftlint.yml": config, **_ci("swiftlint")}
+                self.assertEqual(run_as(self, FUNCTION_LIMITS, files, SWIFT).status, Status.PASS)
+        for config in (
+            "disabled_rules:\n  - line_length\n  - function_body_length\n",
+            "only_rules:\n  - line_length\n",
+        ):
+            with self.subTest(config=config):
+                files = {".swiftlint.yml": config, **_ci("swiftlint")}
+                self.assertEqual(run_as(self, FUNCTION_LIMITS, files, SWIFT).status, Status.FAIL)
         self.assertEqual(run_as(self, FUNCTION_LIMITS, {}, SWIFT).status, Status.FAIL)
 
 

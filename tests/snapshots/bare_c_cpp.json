@@ -196,6 +196,70 @@
         ]
       }
     ],
+    "function-limits": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "clang-tidy's readability-function-size": {
+                "can": {
+                  "limits": "clang-tidy with readability-function-size and a LineThreshold in .clang-tidy"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "clang-tidy's readability-function-size": {
+                "can": {
+                  "limits": "clang-tidy with readability-function-size and a LineThreshold in .clang-tidy"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C++",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C",
@@ -604,8 +668,10 @@
       "status": "WARN"
     },
     "function-limits": {
-      "details": [],
-      "message": "function length is never limited; enable clang-tidy readability-function-size with a LineThreshold or run lizard --length 30 in CI",
+      "details": [
+        "consider running in CI: clang-tidy with readability-function-size and a LineThreshold in .clang-tidy or lizard --length 30"
+      ],
+      "message": "function length is never limited",
       "status": "FAIL"
     },
     "hardening": {

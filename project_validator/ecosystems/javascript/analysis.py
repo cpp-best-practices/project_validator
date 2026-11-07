@@ -11,9 +11,11 @@ from project_validator.facts.analysis import Strictness, analysed, analyzer, typ
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings, matched_settings
 from project_validator.facts.tools import Run, combined, defined_by
+from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
 ESLINT_FILES = file_reader("eslint", ESLINT_CONFIG_FILES)
@@ -158,13 +160,22 @@ DENO_CHECK = type_checker(
     reads=("Deno",),
 )
 
-# eslint-plugin-security (or Microsoft's SDL rules), configured where eslint reads its configuration: matched in the
-# configuration, which is code.
+# The eslint rules other practices ask for, matched where eslint reads its configuration, which is code:
+# eslint-plugin-security (or Microsoft's SDL rules), and max-lines-per-function, whose options are "off", 0, or
+# anything else (a severity, or a severity and its limit).
 _SECURITY_PLUGIN = re.compile(r"\beslint-plugin-security\b|@microsoft/eslint-plugin-sdl\b|\bplugin:security/")
-ESLINT_SECURITY_SETTINGS = SettingsReader(
-    name="eslint security",
+_MAX_LINES_PER_FUNCTION = re.compile(
+    r"""["']?max-lines-per-function["']?\s*:(?!\s*\[?\s*(?:["']off["']|0\b))""", re.IGNORECASE
+)
+ESLINT_RULES = SettingsReader(
+    name="eslint rules",
     files=(*ESLINT_CONFIG_FILES, PACKAGE_JSON),
-    read=lambda path, text: matched_settings("eslint", path, text, {"security plugin": (_SECURITY_PLUGIN, True)}),
+    read=lambda path, text: matched_settings(
+        "eslint",
+        path,
+        text,
+        {"security plugin": (_SECURITY_PLUGIN, True), "max-lines-per-function": (_MAX_LINES_PER_FUNCTION, True)},
+    ),
 )
 
 
@@ -181,7 +192,19 @@ SECURITY_SCANNERS = (
         languages=JS_LANGUAGES,
         how="eslint with eslint-plugin-security",
         scans=_eslint_security,
-        reads=("eslint security",),
+        reads=("eslint rules",),
     ),
     *multi_language_scanners(JS_LANGUAGES),
 )
+MAX_LINES_PER_FUNCTION = limiter(
+    name="eslint's max-lines-per-function",
+    languages=JS_LANGUAGES,
+    how="eslint with max-lines-per-function on",
+    runs=ESLINT.claims,
+    rule=Rule(
+        describe="max-lines-per-function on in the eslint configuration",
+        enabled=lambda facts: facts.where(Setting, tool="eslint", key="max-lines-per-function"),
+    ),
+    reads=("eslint rules",),
+)
+FUNCTION_LENGTH_LIMITERS = (MAX_LINES_PER_FUNCTION, *function_length_limiters(JS_LANGUAGES))

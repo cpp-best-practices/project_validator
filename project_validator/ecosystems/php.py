@@ -7,12 +7,11 @@ count as CI configuration, as package scripts do for JavaScript.
 import re
 from collections.abc import Callable, Iterator
 
-from project_validator.core import Context, Result
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import (
     ci_and_hook_texts,
     existing_texts,
-    first_existing,
     json_value,
     scripts_run,
 )
@@ -23,6 +22,7 @@ from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import (
     SettingsReader,
@@ -35,12 +35,10 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    SUGGESTED_LIZARD,
     BuildOutputs,
     DeclaredLicense,
     DependencyManagement,
     Evidence,
-    FunctionLimits,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -48,6 +46,7 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
 PHP_LANGUAGE = "PHP"
@@ -341,26 +340,6 @@ PSALM_CONFIG_FILES = ("psalm.xml", "psalm.xml.dist")
 
 
 PHPMD_CONFIG_FILES = ("phpmd.xml", "phpmd.xml.dist", ".phpmd.xml", ".phpmd.xml.dist")
-RUNS_PHPMD = re.compile(r"(?<![\w-])phpmd\b(?!\.xml)")
-# codesize is the PHPMD rule set that has ExcessiveMethodLength.
-METHOD_LENGTH_RULES = re.compile(r"\bExcessiveMethodLength\b|\bcodesize\b")
-
-
-def _method_length_enforced(context: Context) -> Result:
-    """PHPMD's ExcessiveMethodLength rule limits method length, when its rule set is used and PHPMD runs."""
-    commands = [line for text in _run_texts(context) for line in text.splitlines() if RUNS_PHPMD.search(line)]
-    config = first_existing(context, PHPMD_CONFIG_FILES)
-    configured = config is not None and METHOD_LENGTH_RULES.search(context.project.read_text(config))
-    if commands and (configured or any(map(METHOD_LENGTH_RULES.search, commands))):
-        return Result.passed("function length is limited with PHPMD ExcessiveMethodLength")
-    if configured:
-        return Result.warned(f"ExcessiveMethodLength is enabled in {config} but CI does not run PHPMD")
-    return Result.failed(
-        "function length is never limited; run PHPMD with its codesize rules (ExcessiveMethodLength) "
-        f"or run {SUGGESTED_LIZARD} in CI"
-    )
-
-
 PHPSTAN_CONFIG_FILES = ("phpstan.neon", "phpstan.neon.dist", "phpstan.dist.neon")
 _PHPSTAN_LEVEL = re.compile(r"^\s*level:\s*(\w+)\b", re.MULTILINE)
 _PSALM_LEVEL = re.compile(r"""\berrorLevel\s*=\s*["'](\d+)["']""")
@@ -381,7 +360,32 @@ PSALM_SETTINGS = SettingsReader(
         "Psalm", path, text, {"errorLevel": (_PSALM_LEVEL, None), "runTaintAnalysis": (_TAINT_ANALYSIS, True)}
     ),
 )
-PHPMD_FILES = file_reader("PHPMD", PHPMD_CONFIG_FILES)
+
+
+def _read_phpmd(path: str, text: str) -> Iterator[Fact]:
+    """The rules a PHPMD rule set uses (`rulesets/codesize.xml`, or one of its rules), and those it excludes."""
+    root = xml_root("PHPMD", path, text)
+    if isinstance(root, Unknown):
+        yield root
+        return
+    rules = tuple(rule.get("ref", "") for rule in root.iter("rule"))
+    excluded = tuple(exclude.get("name", "") for exclude in root.iter("exclude"))
+    yield from settings("PHPMD", path, (("rules", rules), ("excluded", excluded)))
+
+
+def _phpmd_rule_sets(command: Command) -> list[str]:
+    """The rule sets a phpmd command names (`phpmd src text codesize,unusedcode`)."""
+    argv = resolved(command)
+    words, _ = positional(argv) if program(argv) == "phpmd" else ([], {})
+    return words[2].split(",") if len(words) > 2 else []
+
+
+PHPMD_SETTINGS = SettingsReader(
+    name="PHPMD",
+    files=PHPMD_CONFIG_FILES,
+    read=_read_phpmd,
+    named_by=lambda command: [path for path in _phpmd_rule_sets(command) if path.endswith((".xml", ".xml.dist"))],
+)
 
 
 def _phpstan_strict(argv: tuple[str, ...], facts: Facts) -> list[Setting] | bool:
@@ -434,6 +438,46 @@ PSALM = _analyser_and_checker("Psalm", _psalm_strict, "psalm", 'errorLevel="2" i
 PHPMD = analyzer(
     name="PHPMD", languages=PHP_ONLY, how="phpmd", analyses=_runs("phpmd"), rules=defined_by(files=("PHPMD",))
 )
+# codesize is the PHPMD rule set that has ExcessiveMethodLength.
+_METHOD_LENGTH_RULES = re.compile(r"\bExcessiveMethodLength\b|\bcodesize\b")
+
+
+def _excessive_method_length(facts: Facts) -> list[Setting]:
+    """The PHPMD rule sets that use ExcessiveMethodLength, and do not exclude it."""
+    found = facts.settings("PHPMD")
+    excluding = {
+        setting.path for setting in found if setting.key == "excluded" and _names("ExcessiveMethodLength", setting)
+    }
+    return [
+        setting
+        for setting in found
+        if setting.key == "rules"
+        and setting.path not in excluding
+        and any(_METHOD_LENGTH_RULES.search(str(rule)) for rule in _values(setting))
+    ]
+
+
+def _values(setting: Setting) -> tuple[object, ...]:
+    return setting.value if isinstance(setting.value, tuple) else ()
+
+
+def _names(name: str, setting: Setting) -> bool:
+    return name in _values(setting)
+
+
+EXCESSIVE_METHOD_LENGTH = limiter(
+    name="PHPMD's ExcessiveMethodLength",
+    languages=PHP_ONLY,
+    how="phpmd with its codesize rules (ExcessiveMethodLength)",
+    runs=_runs("phpmd"),
+    rule=Rule(
+        describe="the codesize rules (ExcessiveMethodLength) in the PHPMD rule set",
+        enabled=_excessive_method_length,
+        flagged=lambda command: any(map(_METHOD_LENGTH_RULES.search, _phpmd_rule_sets(command))),
+    ),
+    reads=("PHPMD",),
+)
+FUNCTION_LENGTH_LIMITERS = (EXCESSIVE_METHOD_LENGTH, *function_length_limiters(PHP_ONLY))
 PHAN = analyzer(name="Phan", languages=PHP_ONLY, how="phan", analyses=_runs("phan"))
 
 _SECURITY_AUDIT = re.compile(r"\bPHPCS_SecurityAudit\b|\bphpcs-security-audit\b")
@@ -547,7 +591,6 @@ PHP = Ecosystem(
         versions_axis("PHP version", PHP_LANGUAGE),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        FunctionLimits(without_lizard=_method_length_enforced),
         DEPENDENCIES,
         VENDOR,
         LICENSE,
