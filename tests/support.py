@@ -10,9 +10,12 @@ from pathlib import Path
 from types import MappingProxyType
 
 from project_validator import pretty
+from project_validator.ci import Job
 from project_validator.core import Check, Context, Options, Project, Result
 from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for
 from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.facts import Command, Origin
+from project_validator.facts.expansion import script_facts
 from project_validator.plugins import discover
 from tests import layouts
 from tests.layouts.model import ProjectLayout
@@ -166,6 +169,22 @@ def run_in_layout(test: unittest.TestCase, name: str, selected: Check, files: Ma
     layouts = tuple(layout for layout in PROJECT_LAYOUTS if layout.name == name)
     test.assertTrue(layouts, f"no layout is called {name}")
     return run_in_every_layout(test, selected, files, layouts)
+
+
+def command(line: str, env: Mapping[str, str] = NO_FILES) -> Command:
+    """The command `line` as a CI job would run it, with `env` as its environment."""
+    [found] = (
+        fact
+        for fact in script_facts(line, job="job", origin=Origin(path="ci.yml"), env=env)
+        if isinstance(fact, Command)
+    )
+    return found
+
+
+def ci_jobs(files: Mapping[str, str]) -> tuple[Job, ...]:
+    """The CI jobs a project with `files` has, as the checks see them."""
+    with temp_project(files) as root:
+        return make_context(root).ci_analysis.jobs
 
 
 def checks_named(*names: str) -> tuple[Check, ...]:

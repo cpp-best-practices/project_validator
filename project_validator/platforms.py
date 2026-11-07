@@ -13,7 +13,8 @@ OPERATING_SYSTEMS = (
 
 COMPILERS = (
     pattern("gcc", r"\bgcc\b|\bg\+\+|\bmingw"),
-    pattern("clang", r"\bclang(?![-_]?(tidy|format|d|-apply-replacements)\b)"),
+    # setup-cpp names clang `llvm` (`compiler: llvm-19.1.1`, `--compiler llvm`).
+    pattern("clang", r"\bclang(?![-_]?(tidy|format|d|-apply-replacements)(?:\b|_))|\bllvm-\d|\bcompiler\W+llvm\b"),
     pattern("appleclang", r"\bapple-?clang\b"),
     pattern("msvc", r"\bmsvc|visual studio|\bvs20\d\d\b|\bcl\.exe\b|\bvcvars"),
     pattern("intel", r"\bicp?x\b|\bicp?c\b|intel-oneapi"),

@@ -113,7 +113,13 @@ class GitHubActionsFactTests(unittest.TestCase):
     def test_each_matrix_combination_is_a_job(self) -> None:
         jobs = {job.id: job for job in self.facts.of(CiJob)}
         self.assertEqual(
-            list(jobs), [f"{GITHUB_WORKFLOW}:test[0]", f"{GITHUB_WORKFLOW}:test[1]", f"{GITHUB_WORKFLOW}:container-job"]
+            list(jobs),
+            [
+                f"{GITHUB_WORKFLOW}:test[0]",
+                f"{GITHUB_WORKFLOW}:test[1]",
+                f"{GITHUB_WORKFLOW}:container-job",
+                f"{GITHUB_WORKFLOW}:computed",
+            ],
         )
         first = jobs[f"{GITHUB_WORKFLOW}:test[0]"]
         self.assertEqual(
@@ -122,16 +128,24 @@ class GitHubActionsFactTests(unittest.TestCase):
         )
         self.assertEqual(jobs[f"{GITHUB_WORKFLOW}:test[1]"].os, "windows")
         self.assertEqual(jobs[f"{GITHUB_WORKFLOW}:container-job"].image, "python:3.14")
+        computed = jobs[f"{GITHUB_WORKFLOW}:computed"]
+        self.assertEqual((computed.name, computed.os), ("computed (matrix computed by an expression)", "unknown"))
 
-    def test_commands_carry_their_step_and_condition(self) -> None:
+    def test_commands_carry_their_step_and_environment(self) -> None:
         commands = [command for command in self.facts.of(Command) if command.job.endswith("test[0]")]
         self.assertEqual(
             [command.argv for command in commands], [("cmake", "-S", "..", "-B", "."), ("ctest", "-C", "Debug")]
         )
         self.assertEqual(
             (str(commands[0].origin), commands[0].directory, commands[0].condition, commands[0].env["CC"]),
-            (f"{GITHUB_WORKFLOW}:jobs.test.steps[2].run", "build", "runner.os != 'Windows'", "gcc"),
+            (f"{GITHUB_WORKFLOW}:jobs.test.steps[2].run", "build", None, "gcc"),
         )
+
+    def test_a_step_runs_only_where_its_condition_holds(self) -> None:
+        # The test step's `if: runner.os != 'Windows'` holds on Linux, so it has no condition left there; on
+        # Windows it does not run at all.
+        windows = [command for command in self.facts.of(Command) if command.job.endswith("test[1]")]
+        self.assertEqual(windows, [])
 
     def test_actions_carry_their_inputs(self) -> None:
         steps = [step for step in self.facts.of(ActionStep) if step.job.endswith("test[1]")]
@@ -150,15 +164,17 @@ class GitHubActionsFactTests(unittest.TestCase):
                         generator: TBZ2
                 runs-on: ubuntu-latest
                 steps:
-                  - run: cmake -DCOVERAGE=${{ matrix.type == 'Debug' }} && cpack -G ${{ matrix.generator }}
+                  - run: >-
+                      cmake -DCOVERAGE=${{ matrix.type == 'Debug' }} -DSHA=${{ github.sha }}
+                      && cpack -G ${{ matrix.generator }}
             """
         commands = _facts({GITHUB_WORKFLOW: workflow}).of(Command)
         self.assertEqual(
             [command.argv for command in commands],
             [
-                ("cmake", "-DCOVERAGE=${{ matrix.type == 'Debug' }}"),
+                ("cmake", "-DCOVERAGE=true", "-DSHA=${{ github.sha }}"),  # an unknown value stays as written
                 ("cpack", "-G"),  # a key the combination lacks is empty
-                ("cmake", "-DCOVERAGE=${{ matrix.type == 'Debug' }}"),
+                ("cmake", "-DCOVERAGE=false", "-DSHA=${{ github.sha }}"),
                 ("cpack", "-G", "TBZ2"),
             ],
         )
@@ -243,10 +259,12 @@ class GitLabFactTests(unittest.TestCase):
 
 class OtherProviderFactTests(unittest.TestCase):
     def test_unparsed_configuration_is_a_heuristic_job_with_unknown_commands(self) -> None:
-        facts = _facts({".travis.yml": "script: make\n"})
+        facts = _facts({".travis.yml": "script: ctest -C Debug\n"})
         [job] = facts.of(CiJob)
         self.assertTrue(job.heuristic)
-        self.assertEqual(facts.of(Unknown)[0].reason, "Travis CI configuration is not parsed")
+        # Each line that could be a command is taken for one.
+        self.assertEqual(_argvs(facts), [("ctest", "-C", "Debug")])
+        self.assertEqual(facts.of(Unknown)[0].reason, "Travis CI is scanned heuristically")
 
     def test_malformed_documents_yield_what_they_can(self) -> None:
         workflow = "jobs:\n  odd: text\n  build:\n    runs-on: ubuntu-latest\n    steps: [text, {run: ctest}]\n"
@@ -256,7 +274,7 @@ class OtherProviderFactTests(unittest.TestCase):
 
     def test_invalid_yaml_is_unknown(self) -> None:
         facts = _facts({GITHUB_WORKFLOW: "jobs: [\n"})
-        self.assertEqual(len(facts), 1)
+        self.assertTrue(facts.of(CiJob)[0].heuristic)
         self.assertIn("invalid YAML", facts.of(Unknown)[0].reason)
 
     def test_a_line_that_cannot_be_split_is_unknown(self) -> None:

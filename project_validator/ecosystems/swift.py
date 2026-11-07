@@ -6,9 +6,11 @@ A Swift build reads its settings from Package.swift or the Xcode project, so tho
 import re
 from pathlib import PurePosixPath
 
+from project_validator.build_configurations import build_type_kinds, option_values
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import configuration, existing_texts, first_existing
+from project_validator.facts import Command, resolved
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -32,10 +34,28 @@ from project_validator.text import Pattern, found_and_missing, matching_names, p
 
 SWIFT_LANGUAGE = "Swift"
 PACKAGE_SWIFT = "Package.swift"
+
+
+def swiftpm_build_types(command: Command) -> frozenset[str]:
+    """The configuration `swift build`, `test` or `run` builds: `-c` / `--configuration`, or SwiftPM's default
+    (debug)."""
+    argv = resolved(command)
+    if argv[:1] != ("swift",) or len(argv) < 2 or argv[1] not in ("build", "test", "run"):
+        return frozenset()
+    return build_type_kinds(*(option_values(argv, "-c", "--configuration") or ["debug"]))
+
+
+def xcode_build_types(command: Command) -> frozenset[str]:
+    """The configuration xcodebuild builds, when it names one; without `-configuration`, the scheme decides."""
+    argv = resolved(command)
+    return build_type_kinds(*option_values(argv, "-configuration")) if argv[:1] == ("xcodebuild",) else frozenset()
+
+
 SWIFTPM = BuildSystem(
     name="SwiftPM",
     files=(PACKAGE_SWIFT,),
     languages=frozenset({SWIFT_LANGUAGE}),
+    build_types=swiftpm_build_types,
     rules=(
         BuildOutputs(
             name="the .build directory",
@@ -50,6 +70,7 @@ XCODE = BuildSystem(
     name="Xcode",
     files=("*.xcodeproj/", "*.xcworkspace/"),
     languages=frozenset({SWIFT_LANGUAGE}),
+    build_types=xcode_build_types,
     rules=(
         BuildOutputs(
             name="Xcode's user data and derived data",

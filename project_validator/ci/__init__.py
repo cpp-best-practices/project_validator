@@ -1,12 +1,16 @@
 """Pluggable CI providers: each one knows where its configuration lives and how to turn it into jobs."""
 
-from collections.abc import Callable, Iterable, Mapping
-from dataclasses import dataclass, replace
+import json
+import re
+from collections.abc import Callable, Iterable, Iterator, Mapping
+from dataclasses import dataclass
 
 from project_validator import yaml_support
-from project_validator.build_configurations import BuildConfiguration, detect_configurations
+from project_validator.build_configurations import BuildConfiguration, sanitizers_enabled
 from project_validator.core import Project
-from project_validator.facts import CiJob, Fact, Facts, Origin, Unknown, collected
+from project_validator.ecosystems import build_systems
+from project_validator.facts import ActionStep, CiJob, Command, Fact, Facts, Origin, Unknown, collected, resolved
+from project_validator.facts.expansion import script_facts
 from project_validator.platforms import (
     RUNNER_DEFAULT_COMPILERS,
     Toolchain,
@@ -33,7 +37,6 @@ class Job:
     heuristic: bool = False
 
 
-type YamlParser = Callable[[object], list[Job]]
 # Facts from a parsed configuration document at a path (see `project_validator.facts`).
 type FactExtractor = Callable[[str, object], Iterable[Fact]]
 
@@ -44,7 +47,6 @@ class CiProvider:
     files: tuple[str, ...] = ()
     directories: tuple[str, ...] = ()
     suffixes: tuple[str, ...] = (".yml", ".yaml")
-    parse_yaml: YamlParser | None = None
     # The tools that lint this provider's configuration when CI (or a pre-commit hook) runs them, and how to add one.
     linters: tuple[Pattern, ...] = ()
     lint_hint: str = ""
@@ -103,46 +105,64 @@ def _job_with_compilers(
     )
 
 
-def build_job(name: str, os: str, *texts: str) -> Job:
-    """Use the compilers named by the first text that names any, falling back to the runner's default."""
+def _enables(value: str) -> bool:
+    """Whether an action input's value is known and switches something on (`vcvarsall: false` does not)."""
+    return "${{" not in value and value.strip().lower() not in ("", "false", "off", "no", "0")
+
+
+def _evidence(job: CiJob, facts: Iterable[Fact]) -> str:
+    """What a job shows about the tools it uses: its image, environment, the commands it runs (with the variables
+    its environment defines in place) and the actions it uses with the inputs that are known and switched on.
+
+    Step names and conditions, and inputs still holding an expression, show nothing about what runs.
+    """
+    lines = [f"image: {job.image}"] if job.image else []
+    lines += [f"{name}: {value}" for name, value in job.env.items()]
+    for fact in facts:
+        if isinstance(fact, ActionStep):
+            lines.append(f"uses: {fact.uses}")
+            lines += [f"{name}: {value}" for name, value in fact.inputs.items() if _enables(value)]
+        elif isinstance(fact, Command):
+            assignments = (f"{name}={value}" for name, value in fact.env.items() if job.env.get(name) != value)
+            lines.append(" ".join((*assignments, *resolved(fact))))
+    return "\n".join(lines)
+
+
+def _configurations(commands: Iterable[Command], evidence: str) -> set[BuildConfiguration]:
+    """The build configurations a job's commands build, as each build system reads its own commands."""
+    readers = [system.build_types for system in build_systems() if system.build_types is not None]
+    types = {found for command in commands for read in readers for found in read(command)}
+    sanitizers = sanitizers_enabled((evidence,))
+    return {BuildConfiguration(build_type=build_type, sanitizers=sanitizers) for build_type in types}
+
+
+def _job(job: CiJob, facts: tuple[Fact, ...], project: Project) -> Job:
+    """A job as the checks see it. A parsed job's compilers and toolchains are named by its matrix values first,
+    then by what it runs; a heuristic job's by the whole file."""
+    commands = [fact for fact in facts if isinstance(fact, Command)]
+    evidence = _evidence(job, facts)
+    texts = (project.read_text(job.origin.path),) if job.heuristic else (json.dumps(dict(job.matrix)), evidence)
     compilers = next((found for text in texts if (found := detect_compilers(text))), [])
     return _job_with_compilers(
-        name, os, compilers, detect_configurations(*texts), detect_toolchains(*texts), detect_ecosystems(*texts)
+        f"{job.origin.path}: {job.name}" if not job.heuristic else job.origin.path,
+        job.os,
+        compilers,
+        _configurations(commands, evidence),
+        detect_toolchains(*texts),
+        detect_ecosystems(*texts),
+        heuristic=job.heuristic,
     )
 
 
-def heuristic_jobs(name: str, text: str) -> list[Job]:
-    compilers = detect_compilers(text)
-    configurations = detect_configurations(text)
-    toolchains = detect_toolchains(text)
-    ecosystems = detect_ecosystems(text)
-    operating_systems = detect_operating_systems(text) or ["unknown"]
-    return [
-        _job_with_compilers(name, os, compilers, configurations, toolchains, ecosystems, heuristic=True)
-        for os in operating_systems
-    ]
-
-
-def _parse_file(project: Project, ci_file: CiFile) -> tuple[list[Job], list[str]]:
-    text = project.read_text(ci_file.path)
-    parser = ci_file.provider.parse_yaml
-    if parser is None:
-        return heuristic_jobs(ci_file.path, text), [f"{ci_file.path}: {ci_file.provider.name} is scanned heuristically"]
-    try:
-        document = yaml_support.load(text)
-    except yaml_support.YamlError as error:
-        return heuristic_jobs(ci_file.path, text), [f"{ci_file.path}: invalid YAML ({error}), scanned heuristically"]
-    return [replace(job, name=f"{ci_file.path}: {job.name}") for job in parser(document)], []
-
-
-def parse_jobs(project: Project, ci_files: tuple[CiFile, ...]) -> CiAnalysis:
-    jobs: list[Job] = []
-    notes: list[str] = []
-    for ci_file in ci_files:
-        file_jobs, file_notes = _parse_file(project, ci_file)
-        jobs.extend(file_jobs)
-        notes.extend(file_notes)
-    return CiAnalysis(jobs=tuple(jobs), notes=tuple(dict.fromkeys(notes)))
+def ci_analysis(facts: Facts, project: Project) -> CiAnalysis:
+    """The CI jobs the facts show, with what each one builds and runs; and what was read only heuristically."""
+    by_job: dict[str, list[Fact]] = {}
+    for fact in facts:
+        if (job := getattr(fact, "job", None)) is not None:
+            by_job.setdefault(job, []).append(fact)
+    jobs = tuple(_job(job, tuple(by_job.get(job.id, ())), project) for job in facts.of(CiJob))
+    notes = (f"{fact.origin.path}: {fact.reason}" for fact in facts.of(Unknown) if fact.subject == _JOBS)
+    return CiAnalysis(jobs=jobs, notes=tuple(dict.fromkeys(notes)))
 
 
 def strings(value: object) -> dict[str, str]:
@@ -152,22 +172,35 @@ def strings(value: object) -> dict[str, str]:
     return {str(key): str(item).lower() if isinstance(item, bool) else str(item) for key, item in value.items()}
 
 
+_JOBS = "the jobs and commands"
+# A line of configuration that is not parsed: list markers and a leading `key:` are not part of its command.
+_CONFIGURATION_LINE = re.compile(r"^\s*(?:-\s+)?(?:[\w.-]+:\s*)?(?P<value>.*?)\s*$")
+
+
+def _heuristic_facts(ci_file: CiFile, text: str, reason: str) -> Iterator[Fact]:
+    """Configuration that is not parsed: one job per OS it names, running each line that could be a command."""
+    origin = Origin(path=ci_file.path)
+    operating_systems = detect_operating_systems(text) or ["unknown"]
+    lines = (match["value"].strip("'\"") for line in text.splitlines() if (match := _CONFIGURATION_LINE.match(line)))
+    script = "\n".join(line for line in lines if line and line not in ("|", ">", "|-", ">-"))
+    for os in operating_systems:
+        identity = ci_file.path if len(operating_systems) == 1 else f"{ci_file.path}[{os}]"
+        yield CiJob(
+            origin=origin, id=identity, provider=ci_file.provider.name, name=ci_file.path, os=os, heuristic=True
+        )
+        yield from (fact for fact in script_facts(script, job=identity, origin=origin) if isinstance(fact, Command))
+    yield Unknown(origin=origin, subject=_JOBS, reason=reason)
+
+
 def _file_facts(project: Project, ci_file: CiFile) -> Iterable[Fact]:
     provider = ci_file.provider
-    origin = Origin(path=ci_file.path)
-    if provider.parse_yaml is None or provider.facts is None:
-        return (
-            CiJob(
-                origin=origin, id=ci_file.path, provider=provider.name, name=ci_file.path, os="unknown", heuristic=True
-            ),
-            Unknown(
-                origin=origin, subject="the jobs and commands", reason=f"{provider.name} configuration is not parsed"
-            ),
-        )
+    text = project.read_text(ci_file.path)
+    if provider.facts is None:
+        return _heuristic_facts(ci_file, text, f"{provider.name} is scanned heuristically")
     try:
-        document = yaml_support.load(project.read_text(ci_file.path))
+        document = yaml_support.load(text)
     except yaml_support.YamlError as error:
-        return (Unknown(origin=origin, subject="the jobs and commands", reason=f"invalid YAML ({error})"),)
+        return _heuristic_facts(ci_file, text, f"invalid YAML ({error}), scanned heuristically")
     return provider.facts(ci_file.path, document)
 
 

@@ -1,30 +1,11 @@
-"""Recognising the CMake build types, Cargo profiles, SwiftPM and Xcode configurations and sanitizer settings a CI
-job builds with."""
+"""Build configurations: the build types a CI job builds (each build system reads its own commands), and whether
+sanitizers are on."""
 
 import re
 from collections.abc import Iterable
 from dataclasses import dataclass
 
 BUILD_TYPE_KINDS = {"debug": "debug", "release": "release", "relwithdebinfo": "release", "minsizerel": "release"}
-
-_VALUE = r"""["']?\s*[=:]\s*["']?(\w+)"""
-_BUILD_TYPE_SOURCES = re.compile(
-    rf"(?:\b|_)build[_-]?type(?::string)?{_VALUE}"
-    r"""|--config(?:\s+|=)["']?(\w+)"""
-    r"""|\s(?-i:-C)\s+["']?(\w+)"""
-    rf"|\bconfiguration{_VALUE}",
-    re.IGNORECASE,
-)
-
-# A Cargo command up to the end of its shell command; the job text is JSON, so line breaks appear as `\n`.
-_CARGO_COMMANDS = re.compile(r"\bcargo\s+(?:\+\S+\s+)?(?:build|test|run|nextest\s+run)\b([^\\\n\"&;|]*)")
-_CARGO_RELEASE = re.compile(r"--release\b|--profile[=\s]+release\b")
-_CARGO_OTHER_PROFILE = re.compile(r"--profile\b")
-
-# SwiftPM builds debug unless told otherwise; xcodebuild is judged only when it names its configuration.
-_SWIFT_COMMANDS = re.compile(r"\bswift\s+(?:build|test|run)\b([^\\\n\"&;|]*)")
-_SWIFT_CONFIGURATION = re.compile(r"(?:\s-c|--configuration)[=\s]+(debug|release)\b", re.IGNORECASE)
-_XCODEBUILD_CONFIGURATION = re.compile(r"\bxcodebuild\b[^\\\n\"&;|]*\s-configuration\s+[\"']?(\w+)", re.IGNORECASE)
 
 _DISABLED = r"(?!(?:off|false|no|none|0)\b)"
 _SANITIZERS_ENABLED = re.compile(
@@ -45,39 +26,32 @@ class BuildConfiguration:
         return f"{build_type} + sanitizers" if self.sanitizers else build_type
 
 
-def _cargo_profile(arguments: str) -> str | None:
-    if _CARGO_RELEASE.search(arguments):
-        return "release"
-    return None if _CARGO_OTHER_PROFILE.search(arguments) else "debug"
+def build_type_kinds(*values: str) -> frozenset[str]:
+    """The kinds (`debug`, `release`) of the build types named by `values`; other build types count as neither."""
+    return frozenset(BUILD_TYPE_KINDS[value.lower()] for value in values if value.lower() in BUILD_TYPE_KINDS)
 
 
-def _cargo_build_types(texts: Iterable[str]) -> set[str]:
-    profiles = (_cargo_profile(match[1]) for text in texts for match in _CARGO_COMMANDS.finditer(text))
-    return {profile for profile in profiles if profile is not None}
+def _value(word: str, following: str | None, name: str) -> str | None:
+    if word == name:
+        return following
+    if word.startswith(f"{name}="):
+        return word[len(name) + 1 :]
+    if len(name) == 2 and word.startswith(name) and len(word) > 2:
+        return word[2:]  # -Cvalue
+    return None
 
 
-def _swift_build_types(texts: Iterable[str]) -> set[str]:
-    configurations = (
-        _SWIFT_CONFIGURATION.search(match[1]) for text in texts for match in _SWIFT_COMMANDS.finditer(text)
-    )
-    swiftpm = {found[1].lower() if found else "debug" for found in configurations}
-    xcode = (match[1].lower() for text in texts for match in _XCODEBUILD_CONFIGURATION.finditer(text))
-    return swiftpm | {BUILD_TYPE_KINDS[value] for value in xcode if value in BUILD_TYPE_KINDS}
-
-
-def detect_build_types(*texts: str) -> set[str]:
-    values = (value for text in texts for match in _BUILD_TYPE_SOURCES.finditer(text) for value in match.groups())
-    cmake = {BUILD_TYPE_KINDS[value.lower()] for value in values if value and value.lower() in BUILD_TYPE_KINDS}
-    return cmake | _cargo_build_types(texts) | _swift_build_types(texts)
+def option_values(argv: tuple[str, ...], *names: str) -> list[str]:
+    """The values of options `names` in `argv`, written `--name value`, `--name=value` or (one letter) `-Cvalue`."""
+    following = [*argv[1:], None]
+    return [
+        value
+        for word, after in zip(argv, following, strict=True)
+        for name in names
+        if (value := _value(word, after, name)) is not None
+    ]
 
 
 def sanitizers_enabled(texts: Iterable[str]) -> bool:
     """Sanitizer flags or options, or cmake_template's packaging maintainer mode being off (which enables them)."""
     return any(_SANITIZERS_ENABLED.search(text) for text in texts)
-
-
-def detect_configurations(*texts: str) -> set[BuildConfiguration]:
-    sanitizers = sanitizers_enabled(texts)
-    return {
-        BuildConfiguration(build_type=build_type, sanitizers=sanitizers) for build_type in detect_build_types(*texts)
-    }

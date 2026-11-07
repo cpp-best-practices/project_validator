@@ -5,6 +5,7 @@ questions query them (see docs/architecture.md). Nothing here judges a project.
 """
 
 import dataclasses
+import re
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass, field
 from types import MappingProxyType
@@ -71,6 +72,24 @@ class Command(Fact):
     via: tuple[Origin, ...] = ()
 
 
+_VARIABLE = re.compile(r"\$(?:\{(\w+)\}|(\w+))")
+# Programs that run the command that follows them.
+_WRAPPERS = frozenset({"sudo", "time", "nice", "env", "emcmake", "emmake", "scan-build", "xvfb-run", "catchsegv"})
+
+
+def resolved(command: Command) -> tuple[str, ...]:
+    """The command's arguments with the shell variables its environment defines (`$BUILD_TYPE`) put in place, and
+    without the programs that only run the command that follows them (`sudo`, `emcmake`)."""
+
+    def value(match: re.Match[str]) -> str:
+        return command.env.get(match[1] or match[2], match[0])
+
+    words = [_VARIABLE.sub(value, word) for word in command.argv]
+    while len(words) > 1 and (words[0] in _WRAPPERS or (words[0] != command.argv[0] and "=" in words[0])):
+        words = words[1:]
+    return tuple(words)
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ActionStep(Fact):
     """A reusable step a CI job runs, such as a GitHub action, with its inputs."""
@@ -101,9 +120,6 @@ class Facts:
     def __iter__(self) -> Iterator[Fact]:
         return iter(self.all)
 
-    def __len__(self) -> int:
-        return len(self.all)
-
     def as_dicts(self) -> list[dict[str, object]]:
         return [as_dict(fact) for fact in self.all]
 
@@ -131,4 +147,16 @@ def collected(groups: Iterable[Iterable[Fact]]) -> Facts:
     return Facts(tuple(fact for group in groups for fact in group))
 
 
-__all__ = ["NOTHING", "ActionStep", "CiJob", "Command", "Fact", "Facts", "Origin", "Unknown", "as_dict", "collected"]
+__all__ = [
+    "NOTHING",
+    "ActionStep",
+    "CiJob",
+    "Command",
+    "Fact",
+    "Facts",
+    "Origin",
+    "Unknown",
+    "as_dict",
+    "collected",
+    "resolved",
+]

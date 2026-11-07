@@ -1,12 +1,14 @@
+import json
 import unittest
 
+from project_validator.ci import Job
 from project_validator.ci.github_actions import (
     Combination,
     action_references,
     expand_matrix,
-    parse_workflow,
     substitute_matrix,
 )
+from tests.support import GITHUB_WORKFLOW, ci_jobs
 
 
 class ExpandMatrixTests(unittest.TestCase):
@@ -51,7 +53,10 @@ class SubstituteMatrixTests(unittest.TestCase):
         )
 
 
-class ParseWorkflowTests(unittest.TestCase):
+class WorkflowJobTests(unittest.TestCase):
+    def _jobs(self, workflow: object) -> tuple[Job, ...]:
+        return ci_jobs({GITHUB_WORKFLOW: json.dumps(workflow)})
+
     def test_compilers_come_from_matrix_values(self) -> None:
         workflow = {
             "jobs": {
@@ -62,36 +67,66 @@ class ParseWorkflowTests(unittest.TestCase):
                 }
             }
         }
-        [job] = parse_workflow(workflow)
+        [job] = self._jobs(workflow)
         self.assertEqual((job.os, job.compilers, job.default_compiler), ("linux", frozenset({"clang"}), False))
 
-    def test_compilers_fall_back_to_job_text_then_runner_default(self) -> None:
+    def test_compilers_fall_back_to_what_the_job_runs_then_runner_default(self) -> None:
         workflow = {
             "jobs": {
                 "named": {"runs-on": "macos-latest", "steps": [{"run": "brew install gcc"}]},
                 "unnamed": {"runs-on": "windows-latest", "steps": [{"run": "cmake --build build"}]},
             }
         }
-        named, unnamed = parse_workflow(workflow)
+        named, unnamed = self._jobs(workflow)
         self.assertEqual(named.compilers, frozenset({"gcc"}))
         self.assertEqual((unnamed.compilers, unnamed.default_compiler), (frozenset({"msvc"}), True))
 
+    def test_step_names_conditions_and_unevaluated_inputs_name_no_compiler(self) -> None:
+        workflow = {
+            "jobs": {
+                "build": {
+                    "runs-on": "ubuntu-latest",
+                    "steps": [
+                        {"name": "Build with clang", "if": "github.ref == 'msvc'", "run": "cmake --build build"},
+                        {"uses": "aminya/setup-cpp@v1", "with": {"vcvarsall": "${{ contains(github.ref, 'x') }}"}},
+                        {"uses": "ilammy/msvc-dev-cmd@v1", "if": "runner.os == 'Windows'"},
+                        {"uses": "aminya/setup-cpp@v1", "with": {"vcvarsall": "${{ runner.os == 'Windows' }}"}},
+                        {"if": "runner.os == 'Windows'", "run": "cl.exe /W4 main.cpp"},
+                    ],
+                }
+            }
+        }
+        [job] = self._jobs(workflow)
+        self.assertEqual((job.compilers, job.default_compiler), (frozenset({"gcc"}), True))
+
     def test_container_jobs_run_on_linux(self) -> None:
         workflow = {"jobs": {"c": {"runs-on": "self-hosted", "container": "gcc:14", "steps": []}}}
-        self.assertEqual(parse_workflow(workflow)[0].os, "linux")
+        self.assertEqual(self._jobs(workflow)[0].os, "linux")
 
-    def test_reusable_workflow_calls_are_skipped(self) -> None:
-        self.assertEqual(parse_workflow({"jobs": {"call": {"uses": "org/repo/.github/workflows/x.yml@v1"}}}), [])
+    def test_reusable_workflow_calls_are_not_jobs_here(self) -> None:
+        self.assertEqual(self._jobs({"jobs": {"call": {"uses": "org/repo/.github/workflows/x.yml@v1"}}}), ())
 
     def test_expression_matrix_is_reported_as_unknown(self) -> None:
         workflow = {"jobs": {"j": {"runs-on": "ubuntu-latest", "strategy": {"matrix": "${{ fromJSON(x) }}"}}}}
-        [job] = parse_workflow(workflow)
+        [job] = self._jobs(workflow)
         self.assertEqual(job.os, "unknown")
         self.assertIn("expression", job.name)
 
-    def test_ignores_documents_without_jobs(self) -> None:
-        self.assertEqual(parse_workflow(None), [])
-        self.assertEqual(parse_workflow({"name": "x"}), [])
+    def test_a_job_whose_condition_is_false_does_not_run(self) -> None:
+        workflow = {
+            "jobs": {
+                "windows-only": {
+                    "if": "matrix.os == 'windows-latest'",
+                    "strategy": {"matrix": {"os": ["ubuntu-latest", "windows-latest"]}},
+                    "runs-on": "${{ matrix.os }}",
+                    "steps": [],
+                }
+            }
+        }
+        self.assertEqual([job.os for job in self._jobs(workflow)], ["windows"])
+
+    def test_documents_without_jobs_have_none(self) -> None:
+        self.assertEqual(ci_jobs({GITHUB_WORKFLOW: "name: x\n"}), ())
 
 
 class ActionReferencesTests(unittest.TestCase):
