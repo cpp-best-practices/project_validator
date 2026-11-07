@@ -46,6 +46,10 @@ class Definition:
 
     found: Callable[[Facts], Iterable[str]]
     default: bool = True
+    # What defines it, for findings (`Test functions in *_test.go files`).
+    describe: str = ""
+    # Whether what a unit of tests (a separate test project, `tests/App.Tests`) defines counts for every unit.
+    from_test_units: bool = False
 
 
 def defined_by(

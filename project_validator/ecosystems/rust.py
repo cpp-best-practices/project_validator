@@ -4,7 +4,7 @@ import re
 from collections.abc import Iterator
 from pathlib import Path, PurePosixPath
 
-from project_validator.core import Context, Result
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
 from project_validator.evidence import existing_texts, toml_value
 from project_validator.facts import Command, Fact, Facts, resolved
@@ -14,6 +14,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, toml_settings
+from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
@@ -24,7 +25,6 @@ from project_validator.rules import (
     FunctionLimits,
     Hardening,
     SecurityLints,
-    TestSuite,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -159,19 +159,25 @@ RUSTC_MCDC = coverage_tool(
     measures=_rustc_mcdc,
 )
 
-RUST_TEST = re.compile(r"#\[(?:\w+::)*test\b")
-RUNS_RUST_TESTS = (pattern("cargo test", r"\bcargo\s+(\+\S+\s+)?(test|nextest|llvm-cov|tarpaulin)\b"),)
+RUST_TEST_FILES = TestFiles(
+    name="#[test] functions",
+    languages=RUST_LANGUAGE,
+    path=re.compile(r"\.rs$"),
+    contains=re.compile(r"#\[(?:\w+::)*test\b"),
+)
 
 
-def _rust_tests_result(context: Context) -> Result:
-    sources = (path for path in context.project.files() if path.endswith(".rs"))
-    count = sum(1 for path in sources if RUST_TEST.search(context.project.read_text(path)))
-    if count == 0:
-        return Result.failed("no Rust tests found (#[test] functions)")
-    return Result.passed(f"Rust tests found in {count} file(s)")
+def _cargo_test(command: Command, _facts: Facts) -> Run | None:
+    """`cargo test`, and the cargo tools that run the tests: nextest, llvm-cov and tarpaulin (any toolchain)."""
+    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    runs = program(argv) == "cargo" and argv[1:2] in (("test",), ("nextest",), ("llvm-cov",), ("tarpaulin",))
+    return tested() if runs else None
 
 
-TESTS = TestSuite(found=_rust_tests_result, runs=RUNS_RUST_TESTS, runner="cargo test")
+CARGO_TEST = test_runner(
+    name="cargo test", languages=RUST_LANGUAGE, how="cargo test", runs=_cargo_test, tests=tests_of(RUST_TEST_FILES.name)
+)
+
 
 CARGO_CONFIG_FILES = (".cargo/config.toml", ".cargo/config")
 CRATE_SETTINGS_FILES = frozenset({"Cargo.toml", "lib.rs", "main.rs"})
@@ -335,7 +341,6 @@ RUST = Ecosystem(
     rules=(
         RUST_TOOLCHAINS,
         BuildTypes(axis=RUST_TOOLCHAINS),
-        TESTS,
         WARNINGS,
         HARDENING,
         SECURITY_LINTS,

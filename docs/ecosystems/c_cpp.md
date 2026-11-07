@@ -7,8 +7,9 @@ a CMake project.
 ## `tests-run`
 
 With CMake: `enable_testing()` or `include(CTest)` is called, tests are registered (`add_test`, `*_discover_tests`,
-...) and CI runs `ctest`; with `--build`, the project is really configured and built, and `ctest` must list at least
-one test. With Meson: `test()` is called in a `meson.build` and CI runs `meson test`.
+...) and CI runs `ctest` (or `cmake --build … --target test`, or `cmake --workflow`); with `--build`, the project is
+really configured and built, and `ctest` must list at least one test (a build that cannot run is unknown). With Meson:
+`test()` is called in a `meson.build` and CI runs `meson test` (or ninja's `test` target).
 
 ## `coverage`
 

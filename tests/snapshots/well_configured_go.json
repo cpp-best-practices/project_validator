@@ -114,6 +114,42 @@
         ]
       }
     ],
+    "tests": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "go test": [
+                "app_test.go"
+              ]
+            },
+            "known": {
+              "go test": {
+                "can": {
+                  "runs": "go test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Go",
+            "level": "runs",
+            "runs": {
+              "go test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "language": "Go",
@@ -172,6 +208,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "Test functions in *_test.go files",
+      "language": "Go",
+      "origin": "app_test.go"
     },
     {
       "builds": true,
@@ -1942,6 +1983,26 @@
       "languages": [
         "Go"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "provides": {
         "analysis": [
@@ -2005,6 +2066,26 @@
       "languages": [
         "Go"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "provides": {
         "analysis": [
@@ -2059,6 +2140,26 @@
         "."
       ],
       "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
       "via": []
     },
     {
@@ -2122,6 +2223,26 @@
         "."
       ],
       "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
       "via": []
     },
     {
@@ -2185,6 +2306,26 @@
         "."
       ],
       "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
       "via": []
     },
     {
@@ -2248,6 +2389,26 @@
         "."
       ],
       "tool": "go test -cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
       "via": []
     },
     {
@@ -2586,7 +2747,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "Go tests found in 1 file(s)",
+      "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
     "type-checking": {

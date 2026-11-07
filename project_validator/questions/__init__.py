@@ -86,14 +86,17 @@ def runs_of(aspect: str, language: str, unit: str, facts: Facts) -> tuple[ToolRu
     )
 
 
-def unknowns_for(tools: Iterable[Tool], facts: Facts) -> tuple[str, ...]:
+def unknowns_for(
+    tools: Iterable[Tool], facts: Facts, *, hiding: Iterable[str] = ("jobs", "commands", "settings")
+) -> tuple[str, ...]:
     """What was not read that may hide a run (a job or a command), or the settings the `tools` read, as
-    `subject: reason (origin)`."""
+    `subject: reason (origin)`; only what may hide one of `hiding`."""
     reads = {name for tool in tools for name in (tool.name, *tool.reads)}
+    kinds = frozenset(hiding)
     return tuple(
         f"{fact.subject}: {fact.reason} ({fact.origin})"
         for fact in facts.of(Unknown)
-        if fact.hides in ("jobs", "commands") or (fact.hides == "settings" and reads & set(fact.tools))
+        if fact.hides in kinds and (fact.hides != "settings" or reads & set(fact.tools))
     )
 
 

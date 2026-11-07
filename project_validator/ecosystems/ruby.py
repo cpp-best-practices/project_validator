@@ -19,6 +19,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings
+from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, combined, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
@@ -29,7 +30,6 @@ from project_validator.rules import (
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    TestSuite,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -70,12 +70,21 @@ _STANDARD_TASK = re.compile(r"\bStandard::RakeTask\b|\bstandard/rake\b")
 _DEFAULT_TASK = re.compile(r"\btask\s*\(?\s*:?default\s*(?:=>|:)\s*((?:%[iwIW])?\[[^\]]*\]|:\w+|[\"']\w+[\"'])")
 
 
+# RSpec::Core::RakeTask.new(:spec), Rake::TestTask.new(:test), Minitest::TestTask.create: their name, if given.
+_TEST_TASK = re.compile(
+    r"\b(RSpec::Core::RakeTask|Rake::TestTask|Minitest::TestTask)\.(?:new|create)(?:\s*\(?\s*:(\w+))?"
+)
+
+
 def _read_rake_tasks(path: str, text: str) -> Iterator[Setting]:
-    """The RuboCop and Standard tasks a Rakefile defines, and its default task's prerequisites: matched in its code."""
+    """The RuboCop, Standard and test tasks a Rakefile defines, and its default task's prerequisites: matched in its
+    code."""
     rubocop = (match[1] or "rubocop" for match in _RUBOCOP_TASK.finditer(text))
     standard = ("standard" for _ in _STANDARD_TASK.finditer(text))
+    tests = (match[2] or ("spec" if match[1].startswith("RSpec") else "test") for match in _TEST_TASK.finditer(text))
     defaults = (re.findall(r"\w+", match[1]) for match in _DEFAULT_TASK.finditer(text))
     found = [*(("task.RuboCop", name) for name in rubocop), *(("task.Standard", name) for name in standard)]
+    found += [("task.tests", name) for name in tests]
     found += [("default", tuple(names)) for names in defaults]
     yield from settings("Rake", path, found, heuristic=True)
 
@@ -170,24 +179,35 @@ SYNTAX_TREE = format_tool(
 )
 
 # RSpec specs, and Minitest (or test-unit) tests.
-TEST_FILE = re.compile(r"(?:^|/)spec/(?:.+/)?[^/]+_spec\.rb$|(?:^|/)test/(?:.+/)?(?:[^/]+_test|test_[^/]+)\.rb$")
-RUNS_TESTS = (
-    pattern(
-        "Ruby tests",
-        r"(?<![\w-])rspec\b|\brake\s+(?:test|spec)\b|\brails\s+test\b|\bruby\s+-Itest\b"
-        r"|\bRSpec::Core::RakeTask\b|\b(?:Rake|Minitest)::TestTask\b",
-    ),
+RUBY_TEST_FILES = TestFiles(
+    name="spec/**/*_spec.rb or test/**/*_test.rb files",
+    languages=RUBY_ONLY,
+    path=re.compile(r"(?:^|/)spec/(?:.+/)?[^/]+_spec\.rb$|(?:^|/)test/(?:.+/)?(?:[^/]+_test|test_[^/]+)\.rb$"),
+)
+_RUBY_RUNNERS = frozenset({"rspec", "m", "turbo_tests", "parallel_rspec", "cucumber"})
+
+
+def _ruby_tests(command: Command, facts: Facts) -> Run | None:
+    """rspec and the like, `rails test`, `ruby -Itest`, `rake test` or `rake spec`, or the test task of a Rakefile
+    that rake runs."""
+    argv = resolved(command)
+    name = program(argv)
+    if name in _RUBY_RUNNERS or argv[:2] == ("rails", "test") or (name == "ruby" and "-Itest" in argv):
+        return tested()
+    if read := _rake_tasks(command, facts, "tests"):
+        return tested(read=read)
+    return tested(heuristic=True) if name == "rake" and {"test", "spec"} & set(argv[1:]) else None
+
+
+RUBY_TESTS = test_runner(
+    name="rspec, rake test or rails test",
+    languages=RUBY_ONLY,
+    how="rspec, rake test or rails test",
+    runs=_ruby_tests,
+    tests=tests_of(RUBY_TEST_FILES.name),
+    reads=("Rake",),
 )
 
-
-def _ruby_tests(context: Context) -> Result:
-    count = sum(1 for path in context.project.files() if TEST_FILE.search(path))
-    if count == 0:
-        return Result.failed("no Ruby tests found (spec/**/*_spec.rb or test/**/*_test.rb files)")
-    return Result.passed(f"Ruby tests found in {count} file(s)")
-
-
-TESTS = TestSuite(found=_ruby_tests, runs=RUNS_TESTS, runner="rspec, rake test or rails test", texts=_run_texts)
 
 TEST_HELPERS = (".simplecov", "spec/spec_helper.rb", "spec/rails_helper.rb", "test/test_helper.rb")
 
@@ -417,7 +437,6 @@ RUBY = Ecosystem(
     ),
     rules=(
         versions_axis("Ruby version", RUBY_LANGUAGE),
-        TESTS,
         WARNINGS,
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,

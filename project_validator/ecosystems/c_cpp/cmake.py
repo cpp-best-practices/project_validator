@@ -7,7 +7,6 @@ from pathlib import Path
 from project_validator.build_configurations import build_type_kinds
 from project_validator.core import Context, Result
 from project_validator.ecosystems.c_cpp.compiler_flags import PRESET_FILES
-from project_validator.ecosystems.c_cpp.ctest import CTEST
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem
 from project_validator.evidence import existing_texts
 from project_validator.facts import Command, resolved
@@ -96,5 +95,5 @@ CMAKE = BuildSystem(
     languages=C_FAMILY,
     is_build_tree=is_cmake_build_tree,
     build_types=cmake_build_types,
-    rules=(CTEST, CompilerExtensions(judge=_extensions_disabled)),
+    rules=(CompilerExtensions(judge=_extensions_disabled),),
 )

@@ -110,11 +110,11 @@ class BuildSettingTests(unittest.TestCase):
 class TestAndCoverageTests(unittest.TestCase):
     def test_tests_need_a_test_project(self) -> None:
         files = {**TEST_PROJECT, **_ci("dotnet test")}
-        self.assertEqual(run_in_layout(self, CSHARP, TESTS_RUN, files), Result.passed(".NET tests found in 1 file(s)"))
+        self.assertEqual(run_in_layout(self, CSHARP, TESTS_RUN, files), Result.passed("tests found in 1 file(s)"))
         no_sdk = {"tests/AddTests.cs": "[Fact] void Adds() {}"}
-        self.assertIn("no .NET test project", run_in_layout(self, CSHARP, TESTS_RUN, no_sdk).message)
+        self.assertIn("no tests found", run_in_layout(self, CSHARP, TESTS_RUN, no_sdk).message)
         no_tests = {"tests/App.Tests/App.Tests.csproj": '<Project Sdk="MSTest.Sdk/3.9.3" />'}
-        self.assertIn("no .NET tests found", run_in_layout(self, CSHARP, TESTS_RUN, no_tests).message)
+        self.assertIn("no tests found", run_in_layout(self, CSHARP, TESTS_RUN, no_tests).message)
 
     def test_fsharp_tests_have_attributes_too(self) -> None:
         files = {"App.Tests.fsproj": '<Project Sdk="MSTest.Sdk" />', "Tests.fs": "[<Fact>]\nlet adds () = ()\n"}

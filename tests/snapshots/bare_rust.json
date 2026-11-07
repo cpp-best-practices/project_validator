@@ -101,6 +101,31 @@
         ]
       }
     ],
+    "tests": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "cargo test": {
+                "can": {
+                  "runs": "cargo test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "language": "Rust",
@@ -343,7 +368,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no Rust tests found (#[test] functions)",
+      "message": "no tests found (#[test] functions)",
       "status": "FAIL"
     },
     "type-checking": {

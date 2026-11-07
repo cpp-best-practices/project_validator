@@ -13,7 +13,8 @@ from pathlib import PurePosixPath
 
 from project_validator.facts import Facts
 from project_validator.facts.roles import AUXILIARY, role
-from project_validator.facts.tools import Tool, known_tools, within
+from project_validator.facts.structure import Unit
+from project_validator.facts.tools import Tool, known_tools, owner, within
 from project_validator.questions import Answer, LanguageAnswers, per_unit, runs_of, unknowns_for
 
 
@@ -27,6 +28,8 @@ class KnownTool:
     can: Mapping[str, str]
     needs_definition: bool = False
     required: bool = False
+    # What defines how it provides the aspect (`Test functions in *_test.go files`).
+    describe: str = ""
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -55,6 +58,8 @@ class ToolAnswer:
     defined: tuple[tuple[str, tuple[str, ...]], ...] = ()
     known: tuple[KnownTool, ...] = ()
     unknowns: tuple[str, ...] = ()
+    # The unknowns that may hide where a known tool is defined (settings that could not be read).
+    unknown_definitions: tuple[str, ...] = ()
 
     def providing(self, level: str | None = None) -> tuple[str, ...]:
         """The tools CI runs that provide `level` (by default, the answer's)."""
@@ -106,6 +111,7 @@ class ToolAnswer:
                 for tool in self.known
             },
             "unknowns": list(self.unknowns),
+            "unknown_definitions": list(self.unknown_definitions),
         }
 
 
@@ -134,17 +140,28 @@ def _known(tool: Tool, aspect: str) -> KnownTool:
         can=tool.can[aspect],
         needs_definition=tool.needs_definition(aspect),
         required=aspect in tool.required,
+        describe=definition.describe if (definition := tool.definitions.get(aspect)) is not None else "",
     )
 
 
 type _Defined = tuple[tuple[str, tuple[str, ...]], ...]
 
 
+def _test_unit_files(facts: Facts) -> Callable[[str], bool]:
+    """Whether a file is in a unit of tests (a separate test project)."""
+    units = {found.directory: found.role for found in facts.of(Unit)}
+    return lambda path: units.get(owner(path, units), "product") == "test"
+
+
 def _defined(aspect: str, known: tuple[Tool, ...], facts: Facts, unit: str) -> _Defined:
     """Each known tool whose definition a file that applies to `unit` holds, with those files."""
-    found = (
-        (tool.name, tuple(path for path in tool.defined(aspect, facts) if _relevant(path, unit))) for tool in known
-    )
+    in_test_unit = _test_unit_files(facts)
+
+    def applies(tool: Tool, path: str) -> bool:
+        definition = tool.definitions.get(aspect)
+        return _relevant(path, unit) or (definition is not None and definition.from_test_units and in_test_unit(path))
+
+    found = ((tool.name, tuple(path for path in tool.defined(aspect, facts) if applies(tool, path))) for tool in known)
     return tuple((name, paths) for name, paths in found if paths)
 
 
@@ -169,6 +186,7 @@ def tool_answer(
         defined=_defined(aspect, known, facts, unit),
         known=tuple(_known(tool, aspect) for tool in known),
         unknowns=unknowns,
+        unknown_definitions=unknowns_for(known, facts, hiding=("settings",)),
     )
 
 

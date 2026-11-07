@@ -1,17 +1,14 @@
-from project_validator.core import Context, Result, Status
-from project_validator.ecosystems import practice
-from project_validator.rules import TestSuite
-from project_validator.text import matching_names
+from project_validator.facts.testing import TEST
+from project_validator.facts.tools import handling
+from project_validator.judging import answered_check
+from project_validator.policy.testing import judge_tests
+from project_validator.questions.testing import tests
 
-
-@practice(
+tests_run = answered_check(
     name="tests-run",
     description="Tests exist (registered with CTest or Meson for C/C++) and CI runs them",
-    rule=TestSuite,
+    languages=handling(TEST),
+    answers=tests,
+    judge=lambda answer, allow_unknown: judge_tests(answer, allow_unknown=allow_unknown),
     aliases=("ctest-runs",),
 )
-def tests_run(suite: TestSuite, context: Context) -> Result:
-    result = suite.found(context)
-    if result.status != Status.PASS or matching_names(suite.texts(context), suite.runs):
-        return result
-    return Result.warned(f"{result.message}, but no CI configuration runs {suite.runner}", *result.details)

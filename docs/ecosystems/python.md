@@ -4,7 +4,8 @@ Recognised by `.py` sources, `pyproject.toml` or `setup.py`.
 
 ## `tests-run`
 
-`test_*.py` / `*_test.py` files run by pytest, unittest, tox or nox.
+`test_*.py` / `*_test.py` files run by pytest or unittest (directly, as `python -m` or `coverage run -m`, or in the
+tox environments CI runs), or by nox, whose sessions are not read.
 
 ## `coverage`
 

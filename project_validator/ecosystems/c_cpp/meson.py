@@ -5,11 +5,14 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.c_cpp.compiler_flags import WARNINGS_AS_ERRORS
-from project_validator.ecosystems.model import BuildSystem
-from project_validator.facts import Command, resolved
-from project_validator.facts.arguments import option_values
-from project_validator.rules import CompilerExtensions, TestSuite, WarningsAsErrors
-from project_validator.text import Pattern, matching_names, pattern
+from project_validator.ecosystems.model import C_FAMILY, BuildSystem
+from project_validator.facts import Command, Facts, Setting, resolved
+from project_validator.facts.arguments import option_values, program
+from project_validator.facts.settings import SettingsReader, matched_settings
+from project_validator.facts.testing import test_runner, tested
+from project_validator.facts.tools import Definition, Run
+from project_validator.rules import CompilerExtensions, WarningsAsErrors
+from project_validator.text import Pattern
 
 BUILD_FILE = "meson.build"
 
@@ -45,17 +48,34 @@ def meson_texts(context: Context) -> tuple[str, ...]:
 
 # --- tests
 
-REGISTERS_TESTS = (pattern("test()", r"(?<![\w.])test\s*\("),)
-RUNS_MESON_TESTS = (pattern("meson test", r"\bmeson\s+test\b|\bninja\b[^\n]*\btest\b"),)
+_REGISTERS_TESTS = re.compile(r"(?<![\w.])test\s*\(")
+MESON_TEST_REGISTRATIONS = SettingsReader(
+    name="Meson tests",
+    files=(BUILD_FILE,),
+    read=lambda path, text: matched_settings("Meson", path, strip_comments(text), {"test": (_REGISTERS_TESTS, True)}),
+)
 
 
-def _meson_tests_result(context: Context) -> Result:
-    if registered := matching_names(meson_texts(context), REGISTERS_TESTS):
-        return Result.passed(f"tests are registered with {', '.join(registered)}")
-    return Result.failed(f"no tests are registered; call test() in {BUILD_FILE}")
+def _meson_test(command: Command, _facts: Facts) -> Run | None:
+    """`meson test`, or ninja's `test` target in a Meson build directory."""
+    argv = resolved(command)
+    runs = argv[:2] == ("meson", "test") or (program(argv) == "ninja" and "test" in argv[1:])
+    return tested() if runs else None
 
 
-MESON_TESTS = TestSuite(found=_meson_tests_result, runs=RUNS_MESON_TESTS, runner="meson test")
+MESON_TESTS = test_runner(
+    name="meson test",
+    languages=C_FAMILY,
+    how="meson test",
+    runs=_meson_test,
+    tests=Definition(
+        found=lambda facts: (found.path for found in facts.where(Setting, tool="Meson", key="test")),
+        default=False,
+        from_test_units=True,
+        describe=f"tests registered with Meson's test() in {BUILD_FILE}",
+    ),
+    reads=("Meson tests",),
+)
 
 # --- compiler extensions
 
@@ -126,5 +146,5 @@ MESON = BuildSystem(
     files=(BUILD_FILE, "meson.options"),
     declared_languages=meson_declared_languages,
     build_types=meson_build_types,
-    rules=(MESON_TESTS, CompilerExtensions(judge=_extensions_disabled), MESON_WARNINGS_AS_ERRORS),
+    rules=(CompilerExtensions(judge=_extensions_disabled), MESON_WARNINGS_AS_ERRORS),
 )

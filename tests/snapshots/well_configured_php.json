@@ -163,6 +163,42 @@
         ]
       }
     ],
+    "tests": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "phpunit, pest or composer test": [
+                "tests/CalculatorTest.php"
+              ]
+            },
+            "known": {
+              "phpunit, pest or composer test": {
+                "can": {
+                  "runs": "phpunit, pest or composer test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "runs",
+            "runs": {
+              "phpunit, pest or composer test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "language": "PHP",
@@ -257,6 +293,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "*Test.php files with PHPUnit test cases or Pest tests",
+      "language": "PHP",
+      "origin": "tests/CalculatorTest.php"
     },
     {
       "builds": true,
@@ -1763,6 +1804,29 @@
       ],
       "origin": "composer.json:scripts.test",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "phpunit, pest or composer test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.test",
+      "provides": {
         "coverage": [
           "branch",
           "line",
@@ -1855,6 +1919,29 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "phpunit, pest or composer test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
       ]
     },
     {
@@ -1969,6 +2056,29 @@
       ],
       "origin": "composer.json:scripts.test",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "phpunit, pest or composer test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.test",
+      "provides": {
         "coverage": [
           "branch",
           "line",
@@ -2072,6 +2182,29 @@
       ],
       "origin": "composer.json:scripts.test",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "phpunit, pest or composer test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.test",
+      "provides": {
         "coverage": [
           "branch",
           "line",
@@ -2164,6 +2297,29 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "phpunit, pest or composer test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
       ]
     },
     {
@@ -2267,6 +2423,29 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[3].run",
         "composer.json:scripts.check[1]"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "phpunit, pest or composer test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run",
+        "composer.json:scripts.check[2]"
       ]
     },
     {
@@ -2600,7 +2779,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "PHP tests found in 1 file(s)",
+      "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
     "type-checking": {

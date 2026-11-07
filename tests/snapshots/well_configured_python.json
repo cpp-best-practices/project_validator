@@ -134,6 +134,62 @@
         ]
       }
     ],
+    "tests": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "nox": [
+                "tests/test_app.py"
+              ],
+              "pytest": [
+                "tests/test_app.py"
+              ],
+              "unittest": [
+                "tests/test_app.py"
+              ]
+            },
+            "known": {
+              "nox": {
+                "can": {
+                  "runs": "nox"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "pytest": {
+                "can": {
+                  "runs": "pytest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "unittest": {
+                "can": {
+                  "runs": "unittest"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Python",
+            "level": "runs",
+            "runs": {
+              "pytest": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "language": "Python",
@@ -223,6 +279,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "test_*.py or *_test.py files",
+      "language": "Python",
+      "origin": "tests/test_app.py"
     },
     {
       "builds": true,
@@ -504,6 +565,22 @@
       ]
     },
     {
+      "argv": [
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -702,6 +779,22 @@
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "argv": [
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
     },
@@ -908,6 +1001,22 @@
       ]
     },
     {
+      "argv": [
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1106,6 +1215,22 @@
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "argv": [
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
     },
@@ -1312,6 +1437,22 @@
       ]
     },
     {
+      "argv": [
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1510,6 +1651,22 @@
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "argv": [
+        "pytest"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "python -W error -m coverage run -m pytest",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
     },
@@ -1760,6 +1917,29 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pytest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
@@ -1843,6 +2023,29 @@
       ],
       "tool": "coverage.py",
       "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pytest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
     },
@@ -1936,6 +2139,29 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pytest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
@@ -2019,6 +2245,29 @@
       ],
       "tool": "coverage.py",
       "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pytest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
     },
@@ -2112,6 +2361,29 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pytest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
@@ -2195,6 +2467,29 @@
       ],
       "tool": "coverage.py",
       "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "pytest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run",
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
     }
@@ -2495,7 +2790,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "Python tests found in 1 file(s)",
+      "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
     "type-checking": {
