@@ -85,7 +85,7 @@ class TestAndCoverageTests(unittest.TestCase):
             with self.subTest(files=files):
                 self.assertEqual(run_as(self, TESTS_RUN, {**files, **_ci("vendor/bin/pest")}, PHP).status, Status.PASS)
         result = run_as(self, TESTS_RUN, {**PHPUNIT_TEST, **_scripts(test="phpunit"), **_ci("composer test")}, PHP)
-        self.assertEqual(result, Result.passed("PHP tests found in 1 file(s)"))
+        self.assertEqual(result, Result.passed("tests found in 1 file(s)"))
         self.assertEqual(
             run_as(self, TESTS_RUN, {"tests/Helper.php": "<?php class Helper extends TestCase {}"}, PHP).status,
             Status.FAIL,

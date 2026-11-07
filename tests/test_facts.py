@@ -6,6 +6,7 @@ import unittest
 from project_validator.ci.github_actions import EXPRESSION
 from project_validator.facts import ActionStep, CiJob, Command, Facts, Origin, Unknown, as_dict
 from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
+from project_validator.facts.tools import ToolRun
 from tests.support import GITHUB_WORKFLOW, make_context, temp_project
 
 
@@ -322,7 +323,8 @@ class OtherProviderFactTests(unittest.TestCase):
         workflow = "jobs:\n  odd: text\n  build:\n    runs-on: ubuntu-latest\n    steps: [text, {run: ctest}]\n"
         facts = _facts({GITHUB_WORKFLOW: workflow, ".github/workflows/list.yml": "- a\n", ".gitlab-ci.yml": "- a\n"})
         self.assertEqual(_argvs(facts), [("ctest",)])
-        self.assertEqual([type(fact) for fact in facts], [CiJob, Command])
+        # ctest is a test runner, so its command is a run too.
+        self.assertEqual([type(fact) for fact in facts], [CiJob, Command, ToolRun])
 
     def test_invalid_yaml_is_unknown(self) -> None:
         facts = _facts({GITHUB_WORKFLOW: "jobs: [\n"})

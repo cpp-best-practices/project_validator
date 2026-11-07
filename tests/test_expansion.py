@@ -258,7 +258,8 @@ class ToxTests(unittest.TestCase):
                 ("ty", "check"),
             ],
             # A factor from a variable matches each section its other parts fit.
-            "tox run -e $PYTHON-tests": [("coverage", "run", "-m", "pytest")],
+            # `coverage run -m pytest` runs pytest.
+            "tox run -e $PYTHON-tests": [("coverage", "run", "-m", "pytest"), ("pytest",)],
             "tox list": [],
         }
         for line, expected in cases.items():

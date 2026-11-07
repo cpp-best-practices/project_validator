@@ -74,20 +74,6 @@ class BuildTypes:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class TestSuite:
-    """How an ecosystem's tests are found, and how CI is recognised running them.
-
-    Their runners are searched in `texts`: CI configuration, unless the ecosystem's CI runs them through scripts it
-    can read.
-    """
-
-    found: Callable[[Context], Result]
-    runs: tuple[Pattern, ...]
-    runner: str
-    texts: Evidence = ci_configuration
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
 class WarningPolicy:
     """The warning settings an ecosystem must enable, every setting it recognises, and where they are found.
 

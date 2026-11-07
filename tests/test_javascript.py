@@ -113,16 +113,18 @@ class JavaScriptTests(unittest.TestCase):
         for path in ("src/app.test.ts", "app.spec.jsx", "lib/app_test.mjs", "src/__tests__/app.js"):
             with self.subTest(path=path):
                 result = self._run(tests_run, {path: "", **_ci("npx vitest run")})
-                self.assertEqual(result, Result.passed("JavaScript or TypeScript tests found in 1 file(s)"))
+                self.assertEqual(result, Result.passed("tests found in 1 file(s)"))
         for path in ("src/latest.js", "test.md", "app.test.py"):
             with self.subTest(path=path):
                 self.assertEqual(self._run(tests_run, {path: ""}).status, Status.FAIL)
 
     def test_ci_must_run_the_tests(self) -> None:
         self.assertEqual(self._run(tests_run, {"a.test.js": ""}).status, Status.WARN)
+        scripts = _scripts(test="vitest run")
         for command in ("npm test", "pnpm test", "node --experimental-strip-types --test", "bun test", "jest"):
             with self.subTest(command=command):
-                self.assertEqual(self._run(tests_run, {"a.test.js": "", **_ci(command)}).status, Status.PASS)
+                files = {"a.test.js": "", **scripts, **_ci(command)}
+                self.assertEqual(self._run(tests_run, files).status, Status.PASS)
 
     def test_coverage_is_found_in_what_ci_runs_and_the_runner_settings_it_reads(self) -> None:
         jest = {"jest.config.js": "export default { collectCoverage: true };\n"}

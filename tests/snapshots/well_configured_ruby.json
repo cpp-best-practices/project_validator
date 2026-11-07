@@ -152,6 +152,44 @@
         ]
       }
     ],
+    "tests": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "rspec, rake test or rails test": [
+                "spec/app_spec.rb"
+              ]
+            },
+            "known": {
+              "rspec, rake test or rails test": {
+                "can": {
+                  "runs": "rspec, rake test or rails test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "runs",
+            "runs": {
+              "rspec, rake test or rails test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": [
+                  "Rakefile"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "language": "Ruby",
@@ -255,6 +293,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "spec/**/*_spec.rb or test/**/*_test.rb files",
+      "language": "Ruby",
+      "origin": "spec/app_spec.rb"
     },
     {
       "builds": true,
@@ -1268,6 +1311,14 @@
     },
     {
       "heuristic": true,
+      "key": "task.tests",
+      "kind": "Setting",
+      "origin": "Rakefile:task.tests",
+      "tool": "Rake",
+      "value": "spec"
+    },
+    {
+      "heuristic": true,
       "key": "default",
       "kind": "Setting",
       "origin": "Rakefile:default",
@@ -1363,6 +1414,30 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "rspec, rake test or rails test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1440,6 +1515,30 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "rspec, rake test or rails test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1517,6 +1616,30 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "rspec, rake test or rails test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1594,6 +1717,30 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "rspec, rake test or rails test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1671,6 +1818,30 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "rspec, rake test or rails test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1735,6 +1906,30 @@
         "."
       ],
       "tool": "RuboCop",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "rspec, rake test or rails test",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[2].run"
       ]
@@ -2096,7 +2291,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "Ruby tests found in 1 file(s)",
+      "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
     "type-checking": {

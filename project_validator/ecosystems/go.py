@@ -3,7 +3,6 @@
 import re
 import shlex
 from collections.abc import Iterator
-from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
@@ -15,6 +14,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
+from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
@@ -25,7 +25,6 @@ from project_validator.rules import (
     FunctionLimits,
     Hardening,
     SecurityLints,
-    TestSuite,
     WarningPolicy,
     ci_configuration,
     directories,
@@ -146,18 +145,22 @@ GO_COVER = coverage_tool(
     measures=_go_cover,
 )
 
-GO_TEST = re.compile(r"^func\s+(?:Test|Fuzz|Example)\w*\s*\(", re.MULTILINE)
+GO_TEST_FILES = TestFiles(
+    name="Test functions in *_test.go files",
+    languages=GO_LANGUAGE,
+    path=re.compile(r"_test\.go$"),
+    contains=re.compile(r"^func\s+(?:Test|Fuzz|Example)\w*\s*\(", re.MULTILINE),
+)
 
 
-def _go_tests_result(context: Context) -> Result:
-    test_files = (path for path in context.project.files() if PurePosixPath(path).name.endswith("_test.go"))
-    count = sum(1 for path in test_files if GO_TEST.search(context.project.read_text(path)))
-    if count == 0:
-        return Result.failed("no Go tests found (Test functions in *_test.go files)")
-    return Result.passed(f"Go tests found in {count} file(s)")
+def _go_test(command: Command, _facts: Facts) -> Run | None:
+    argv = resolved(command)
+    return tested() if argv[:2] == ("go", "test") or program(argv) == "gotestsum" else None
 
 
-TESTS = TestSuite(found=_go_tests_result, runs=(pattern("go test", r"\bgo\s+test\b|\bgotestsum\b"),), runner="go test")
+GO_TEST = test_runner(
+    name="go test", languages=GO_LANGUAGE, how="go test", runs=_go_test, tests=tests_of(GO_TEST_FILES.name)
+)
 
 
 def _lint_texts(context: Context) -> tuple[str, ...]:
@@ -299,7 +302,6 @@ GO = Ecosystem(
     ),
     rules=(
         versions_axis("Go version", "Go"),
-        TESTS,
         WARNINGS,
         HARDENING,
         SECURITY_LINTS,

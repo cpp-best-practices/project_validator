@@ -161,6 +161,42 @@
         ]
       }
     ],
+    "tests": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "mvn test or gradle test": [
+                "src/test/java/com/example/AppTest.java"
+              ]
+            },
+            "known": {
+              "mvn test or gradle test": {
+                "can": {
+                  "runs": "mvn test or gradle test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Java",
+            "level": "runs",
+            "runs": {
+              "mvn test or gradle test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "language": "Java",
@@ -210,6 +246,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "@Test methods or Kotest specs under src/test/java or src/test/kotlin",
+      "language": "Java",
+      "origin": "src/test/java/com/example/AppTest.java"
     },
     {
       "builds": true,
@@ -800,6 +841,27 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "mvn test or gradle test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -870,6 +932,27 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "mvn test or gradle test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -940,6 +1023,27 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "mvn test or gradle test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1010,6 +1114,27 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "mvn test or gradle test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1080,6 +1205,27 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "mvn test or gradle test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1138,6 +1284,27 @@
         "."
       ],
       "tool": "SpotBugs",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "mvn test or gradle test",
       "via": []
     },
     {
@@ -1510,7 +1677,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "JVM tests found in 1 file(s)",
+      "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
     "type-checking": {

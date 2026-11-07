@@ -11,7 +11,7 @@ import project_validator
 from project_validator import ecosystems
 from project_validator.core import Context, Result
 from project_validator.ecosystems import BUILT_IN, PROFILES, Ecosystem, languages_of
-from project_validator.rules import TestSuite
+from project_validator.rules import FunctionLimits
 from tests import layouts as tests_layouts
 
 PACKAGE = Path(project_validator.__file__).parent
@@ -56,11 +56,11 @@ def _import_fresh(module: str) -> None:
         sys.modules.update(saved)
 
 
-def _suite(runner: str) -> TestSuite:
-    def no_tests(_: Context) -> Result:
-        return Result.failed("no tests")
+def _limits(_name: str) -> FunctionLimits:
+    def never(_: Context) -> Result:
+        return Result.failed("never limited")
 
-    return TestSuite(found=no_tests, runs=(), runner=runner)
+    return FunctionLimits(without_lizard=never)
 
 
 class ArchitectureTests(unittest.TestCase):
@@ -117,10 +117,10 @@ class EcosystemRuleTests(unittest.TestCase):
             with self.subTest(ecosystem=ecosystem.label):
                 kinds = [type(rule) for rule in ecosystem.rules]
                 self.assertEqual(len(kinds), len(set(kinds)))
-        with self.assertRaisesRegex(ValueError, "several rules of type TestSuite"):
-            Ecosystem(label="Twice", languages=frozenset({"X"}), rules=(_suite("a"), _suite("b")))
+        with self.assertRaisesRegex(ValueError, "several rules of type FunctionLimits"):
+            Ecosystem(label="Twice", languages=frozenset({"X"}), rules=(_limits("a"), _limits("b")))
 
     def test_a_missing_rule_is_none(self) -> None:
         ecosystem = Ecosystem(label="Bare", languages=frozenset({"X"}))
-        self.assertIsNone(ecosystem.rule(TestSuite))
+        self.assertIsNone(ecosystem.rule(FunctionLimits))
         self.assertEqual(repr(ecosystem), "Ecosystem(Bare)")

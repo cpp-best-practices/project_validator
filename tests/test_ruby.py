@@ -50,7 +50,7 @@ def _ci(*steps: str) -> dict[str, str]:
 class RakeTests(unittest.TestCase):
     def test_the_rakefile_counts_when_ci_runs_rake(self) -> None:
         files = {**RAKEFILE, **SPEC, **_ci("bundle exec rake")}
-        self.assertEqual(run_as(self, TESTS_RUN, files, RUBY), Result.passed("Ruby tests found in 1 file(s)"))
+        self.assertEqual(run_as(self, TESTS_RUN, files, RUBY), Result.passed("tests found in 1 file(s)"))
         self.assertEqual(run_as(self, CODE_FORMATTING, files, RUBY), Result.passed("CI enforces the RuboCop style"))
         # Without rake in CI, the Rakefile runs nothing.
         self.assertEqual(

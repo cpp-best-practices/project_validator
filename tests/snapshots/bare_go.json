@@ -92,6 +92,31 @@
         ]
       }
     ],
+    "tests": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "go test": {
+                "can": {
+                  "runs": "go test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Go",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "language": "Go",
@@ -342,7 +367,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no Go tests found (Test functions in *_test.go files)",
+      "message": "no tests found (Test functions in *_test.go files)",
       "status": "FAIL"
     },
     "type-checking": {

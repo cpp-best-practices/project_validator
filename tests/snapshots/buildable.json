@@ -222,6 +222,76 @@
         ]
       }
     ],
+    "tests": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {
+              "ctest": [
+                "CMakeLists.txt"
+              ]
+            },
+            "known": {
+              "ctest": {
+                "can": {
+                  "runs": "ctest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "meson test": {
+                "can": {
+                  "runs": "meson test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {
+              "ctest": [
+                "CMakeLists.txt"
+              ]
+            },
+            "known": {
+              "ctest": {
+                "can": {
+                  "runs": "ctest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "meson test": {
+                "can": {
+                  "runs": "meson test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C++",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "language": "C",
@@ -286,6 +356,27 @@
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
       "reader": "CMake flags"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CTest"
+    },
+    {
+      "heuristic": true,
+      "key": "enables",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:enables",
+      "tool": "CTest",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "registers",
+      "kind": "Setting",
+      "origin": "CMakeLists.txt:registers",
+      "tool": "CTest",
+      "value": "add_test"
     }
   ],
   "map": {
@@ -467,7 +558,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "CTest is enabled and tests are registered with add_test, but no CI configuration runs ctest",
+      "message": "tests found in 1 file(s), but no CI configuration runs ctest or meson test",
       "status": "WARN"
     },
     "type-checking": {

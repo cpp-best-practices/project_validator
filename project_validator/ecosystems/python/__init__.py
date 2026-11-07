@@ -3,10 +3,9 @@
 import re
 import shlex
 from collections.abc import Callable, Iterator
-from fnmatch import fnmatch
 from pathlib import PurePosixPath
 
-from project_validator.core import Context, Result
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
 from project_validator.evidence import (
     existing_texts,
@@ -18,7 +17,8 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
-from project_validator.facts.tools import Run, defined_by, either
+from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
+from project_validator.facts.tools import Claim, Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     BuildOutputs,
@@ -26,7 +26,6 @@ from project_validator.rules import (
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    TestSuite,
     WarningPolicy,
     directories,
     ignored_at_top_level,
@@ -220,6 +219,30 @@ def _python_module(command: Command, _: Context) -> list[Expansion] | None:
 
 
 PYTHON_MODULES = CommandExpander(name="python -m", expand=_python_module)
+# coverage.py's options that take a value, before the module or script it runs.
+_COVERAGE_RUN_VALUES = frozenset(
+    {"--rcfile", "--source", "--include", "--omit", "--context", "--data-file", "--concurrency"}
+)
+
+
+def _coverage_run(command: Command, _: Context) -> list[Expansion] | None:
+    """`coverage run -m module`: coverage.py runs the module as `python -m` does (`coverage run -m pytest`)."""
+    argv = resolved(command)
+    if argv[:2] != ("coverage", "run"):
+        return None
+    words = iter(argv[2:])
+    for word in words:
+        if word == "-m":
+            module = next(words, "")
+            return [Launched(argv=(module, *words))] if module else []
+        if word in _COVERAGE_RUN_VALUES:
+            next(words, None)
+        elif not word.startswith("-"):
+            return None
+    return None
+
+
+COVERAGE_RUN = CommandExpander(name="coverage run -m", expand=_coverage_run)
 # The runners that run a command in the project's environment.
 PYTHON_RUNNERS = launcher(
     "Python environment runners",
@@ -245,19 +268,29 @@ PYTHON_RUNNERS = launcher(
 )
 
 
-PYTHON_TEST_FILES = ("test_*.py", "*_test.py")
-RUNS_PYTHON_TESTS = (pattern("Python tests", r"\bpytest\b|\bunittest\b|\btox\b|\bnox\b"),)
+PYTHON_TEST_FILES = TestFiles(
+    name="test_*.py or *_test.py files",
+    languages=PYTHON_ONLY,
+    path=re.compile(r"(?:^|/)(?:test_[^/]*|[^/]*_test)\.py$"),
+)
+_PYTHON_TESTS = tests_of(PYTHON_TEST_FILES.name)
 
 
-def _python_tests_result(context: Context) -> Result:
-    names = (PurePosixPath(path).name for path in context.project.files() if path.endswith(".py"))
-    count = sum(1 for name in names if any(fnmatch(name, test_file) for test_file in PYTHON_TEST_FILES))
-    if count == 0:
-        return Result.failed(f"no Python tests found ({' or '.join(PYTHON_TEST_FILES)} files)")
-    return Result.passed(f"Python tests found in {count} file(s)")
+def _runs_tests(*programs: str, heuristic: bool = False) -> Claim:
+    return lambda command, _facts: tested(heuristic=heuristic) if program(resolved(command)) in programs else None
 
 
-TESTS = TestSuite(found=_python_tests_result, runs=RUNS_PYTHON_TESTS, runner="pytest, unittest, tox or nox")
+PYTEST = test_runner(
+    name="pytest", languages=PYTHON_ONLY, how="pytest", runs=_runs_tests("pytest", "py.test"), tests=_PYTHON_TESTS
+)
+# `python -m unittest` runs as `unittest` (see PYTHON_MODULES).
+UNITTEST = test_runner(
+    name="unittest", languages=PYTHON_ONLY, how="unittest", runs=_runs_tests("unittest"), tests=_PYTHON_TESTS
+)
+# nox's sessions are Python code, which is not read: a nox run is taken to run the tests.
+NOX = test_runner(
+    name="nox", languages=PYTHON_ONLY, how="nox", runs=_runs_tests("nox", heuristic=True), tests=_PYTHON_TESTS
+)
 
 
 def _setting(name: str, regex: str) -> Pattern:
@@ -393,7 +426,6 @@ PYTHON = Ecosystem(
     ),
     rules=(
         versions_axis("Python version", "Python"),
-        TESTS,
         WARNINGS,
         SECURITY_LINTS,
         DEPENDENCY_AUDIT,

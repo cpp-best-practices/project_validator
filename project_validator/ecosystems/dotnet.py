@@ -19,6 +19,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
+from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
 from project_validator.facts.tools import Claim, Definition, Run, defined_by
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
@@ -29,7 +30,6 @@ from project_validator.rules import (
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
-    TestSuite,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -39,6 +39,7 @@ from project_validator.text import Pattern, pattern
 
 CSHARP = "C#"
 FSHARP = "F#"
+DOTNET_LANGUAGES = frozenset({CSHARP, FSHARP})
 PROJECT_FILES = ("*.csproj", "*.fsproj")
 # MSBuild reads these beside (or above) every project.
 SHARED_SETTINGS = ("Directory.Build.props", "Directory.Build.targets", "Directory.Packages.props")
@@ -113,24 +114,40 @@ FANTOMAS = format_tool(
     style=defined_by(files=("EditorConfig",)),
 )
 
-TEST_SDK = re.compile(r"\bMicrosoft\.NET\.Test\.Sdk\b|\bSdk\s*=\s*[\"']MSTest\.Sdk\b")
 # xUnit, NUnit and MSTest, in C# ([Fact]) and F# ([<Fact>]).
-TEST_ATTRIBUTE = re.compile(r"\[<?\s*(?:Fact|Theory|Test|TestCase|TestMethod|DataTestMethod)\b")
-SOURCE_SUFFIXES = (".cs", ".fs")
+DOTNET_TEST_FILES = TestFiles(
+    name="[Fact], [Test] or [TestMethod] methods in a test project (one referencing Microsoft.NET.Test.Sdk)",
+    languages=DOTNET_LANGUAGES,
+    path=re.compile(r"\.(?:cs|fs)$"),
+    contains=re.compile(r"\[<?\s*(?:Fact|Theory|Test|TestCase|TestMethod|DataTestMethod)\b"),
+)
 
 
-def _dotnet_tests(context: Context) -> Result:
-    projects = [path for path in _settings_files(context) if path.endswith(("proj", ".props"))]
-    if not any(TEST_SDK.search(context.project.read_text(path)) for path in projects):
-        return Result.failed("no .NET test project found (one referencing Microsoft.NET.Test.Sdk)")
-    sources = (path for path in context.project.files() if path.endswith(SOURCE_SUFFIXES))
-    count = sum(1 for path in sources if TEST_ATTRIBUTE.search(context.project.read_text(path)))
-    if count == 0:
-        return Result.failed("no .NET tests found ([Fact], [Test] or [TestMethod] methods)")
-    return Result.passed(f".NET tests found in {count} file(s)")
+def _test_project(facts: Facts) -> bool:
+    """Whether a project references the test SDK (Microsoft.NET.Test.Sdk, or MSTest's own SDK)."""
+    settings_ = facts.settings("MSBuild")
+    return any(
+        (found.key == "PackageReference" and str(found.value) == "Microsoft.NET.Test.Sdk")
+        or (found.key == "Sdk" and str(found.value).startswith("MSTest.Sdk"))
+        for found in settings_
+    )
 
 
-TESTS = TestSuite(found=_dotnet_tests, runs=(pattern("dotnet test", r"\bdotnet\s+test\b"),), runner="dotnet test")
+def _dotnet_tests(facts: Facts) -> Iterator[str]:
+    """The test files, when a test project runs them."""
+    if _test_project(facts):
+        yield from (test.origin.path for test in facts.of(TestFile) if test.kind == DOTNET_TEST_FILES.name)
+
+
+DOTNET_TEST = test_runner(
+    name="dotnet test",
+    languages=DOTNET_LANGUAGES,
+    how="dotnet test",
+    runs=lambda command, _facts: tested() if resolved(command)[:2] == ("dotnet", "test") else None,
+    tests=Definition(found=_dotnet_tests, default=False, describe=DOTNET_TEST_FILES.name, from_test_units=True),
+    reads=("MSBuild",),
+)
+
 
 # coverlet and Microsoft's code coverage (dotnet-coverage, Microsoft.Testing.Platform) both count branches.
 _COLLECT_COVERAGE = re.compile(_property("CollectCoverage", "true"), re.IGNORECASE)
@@ -156,6 +173,8 @@ def _read_msbuild_properties(path: str, text: str) -> Iterator[Setting]:
         for reference in root.iter(kind)
     )
     yield from settings("MSBuild", path, (("PackageReference", name) for name in references if name))
+    if sdk := root.get("Sdk"):
+        yield from settings("MSBuild", path, (("Sdk", sdk),))
 
 
 def _read_run_settings(path: str, text: str) -> Iterator[Setting]:
@@ -225,7 +244,6 @@ def _microsoft_coverage(command: Command, _: Facts) -> Run | None:
     return None
 
 
-DOTNET_LANGUAGES = frozenset({CSHARP, FSHARP})
 COVERLET = coverage_tool(
     name="coverlet",
     languages=DOTNET_LANGUAGES,
@@ -433,7 +451,6 @@ DOTNET = Ecosystem(
     ),
     rules=(
         versions_axis(".NET SDK version", ".NET SDK"),
-        TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,
         SECURITY_LINTS,
