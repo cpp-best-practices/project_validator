@@ -178,11 +178,17 @@ class StructureTests(unittest.TestCase):
             ("src/main/java/com/example/App.java", "product"),
             ("src/test/java/com/example/AppTest.java", "product"),
             ("src/vendor/x.php", "vendored"),
+            ("tokio/fuzz/fuzz_targets/a.rs", "test"),
+            ("stress-test/src/main.rs", "test"),
+            ("tests-integration/src/lib.rs", "test"),
         ):
             with self.subTest(path=path):
                 self.assertEqual(role(path), expected)
         directories = (role("examples", directory=True), role("."), role(".", directory=True))
         self.assertEqual(directories, ("example", "product", "product"))
+        # A unit is told by its own name first, below a source root too.
+        self.assertEqual(role("internal/tools", directory=True), "tooling")
+        self.assertEqual(role("internal/tools/gen.go"), "product")
 
     def test_vendored_code_is_recorded_but_adds_no_language(self) -> None:
         with temp_project({"main.c": "", "web/sw.min.js": ""}) as root:

@@ -347,6 +347,9 @@ except where a step deliberately changes results and says so.
    - A directory a variable names (`cd $BUILD_DIR`) is unknown rather than outside the project: nothing is expanded
      there, but a tool run there covers the whole project, heuristically (most often it is the project's build tree).
      Before, such runs covered nothing.
+   - Roles: a unit's own directory name tells its role first, below a source root too (`internal/tools`, a Go tools
+     module, is tooling); fuzz and stress tests, and directories named `tests-…`, are test code. So a crate of fuzz
+     targets or a tools module is not held to having tests of its own.
 
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
