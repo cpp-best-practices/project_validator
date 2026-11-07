@@ -178,3 +178,68 @@ class ReusableWorkflowTests(unittest.TestCase):
         for uses in ("org/repo/.github/workflows/build.yml@v1", "./.github/workflows/missing.yml"):
             with self.subTest(uses=uses):
                 self.assertEqual(self._facts(uses), ([], ["job ci"]))
+
+
+COMPOSITE_ACTION = """name: build
+inputs:
+  tasks:
+    default: build
+  flags:
+    default: false
+runs:
+  using: composite
+  steps:
+    - run: ./gradlew ${{ inputs.tasks }} --scan=${{ inputs.flags }}
+      shell: bash
+      continue-on-error: true
+    - uses: $/.github/actions/nested
+      with:
+        targets: [lint, "${{ inputs.tasks }}"]
+    - not a step
+"""
+
+
+class LocalActionTests(unittest.TestCase):
+    def _facts(self, step: dict[str, object], files: dict[str, str]) -> tuple[list[tuple[str, ...]], list[str]]:
+        workflow = {GITHUB_WORKFLOW: json.dumps({"jobs": {"ci": {"runs-on": "ubuntu-latest", "steps": [step]}}})}
+        with temp_project({**workflow, **files}) as root:
+            facts = make_context(root).facts
+        return [command.argv for command in facts.of(Command)], [unknown.subject for unknown in facts.of(Unknown)]
+
+    def test_a_local_composite_actions_steps_run_in_the_job_with_its_inputs(self) -> None:
+        files = {
+            ".github/actions/build/action.yml": COMPOSITE_ACTION,
+            ".github/actions/nested/action.yaml": "runs:\n  using: composite\n  steps:\n    - run: echo lint\n",
+        }
+        commands, unknowns = self._facts({"uses": "./.github/actions/build", "with": {"tasks": "check"}}, files)
+        self.assertEqual(commands, [("./gradlew", "check", "--scan=false"), ("echo", "lint")])
+        self.assertEqual(unknowns, [])
+        with temp_project(
+            {
+                **files,
+                GITHUB_WORKFLOW: json.dumps(
+                    {"jobs": {"ci": {"runs-on": "x", "steps": [{"uses": "./.github/actions/build"}]}}}
+                ),
+            }
+        ) as root:
+            [first, *_] = make_context(root).facts.of(Command)
+        self.assertEqual(first.argv, ("./gradlew", "build", "--scan=false"))
+        self.assertEqual([str(origin) for origin in first.via], [f"{GITHUB_WORKFLOW}:jobs.ci.steps[0]"])
+        self.assertEqual(str(first.origin), ".github/actions/build/action.yml:runs.steps[0].run")
+
+    def test_javascript_and_docker_actions_run_their_own_code(self) -> None:
+        node = {".github/actions/js/action.yml": "runs:\n  using: node20\n  main: index.js\n"}
+        self.assertEqual(self._facts({"uses": "./.github/actions/js"}, node), ([], []))
+
+    def test_a_missing_local_action_is_unknown(self) -> None:
+        self.assertEqual(
+            self._facts({"uses": "./.github/actions/gone"}, {}), ([], ["the action ./.github/actions/gone"])
+        )
+
+    def test_an_action_that_uses_itself_ends(self) -> None:
+        looping = {
+            ".github/actions/loop/action.yml": "runs:\n  using: composite\n  steps:\n"
+            "    - uses: ./.github/actions/loop\n    - run: echo once\n"
+        }
+        commands, _ = self._facts({"uses": "./.github/actions/loop"}, looping)
+        self.assertEqual(set(commands), {("echo", "once")})

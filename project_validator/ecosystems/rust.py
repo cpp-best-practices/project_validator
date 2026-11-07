@@ -5,11 +5,14 @@ from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
-from project_validator.evidence import configuration, existing_texts, first_existing, toml_value
+from project_validator.evidence import configuration, existing_texts, toml_value
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
-from project_validator.facts.tools import Run
+from project_validator.facts.expansion import Action
+from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.settings import SettingsReader, toml_settings
+from project_validator.facts.tools import Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
@@ -17,7 +20,6 @@ from project_validator.rules import (
     BuildTypes,
     DependencyAudit,
     DependencyManagement,
-    Formatter,
     FunctionLimits,
     Hardening,
     SecurityLints,
@@ -54,10 +56,11 @@ def cargo_build_types(command: Command) -> frozenset[str]:
     return frozenset() if profiles else frozenset({"debug"})
 
 
+RUST_LANGUAGE = frozenset({"Rust"})
 CARGO = BuildSystem(
     name="Cargo",
     files=("Cargo.toml",),
-    languages=frozenset({"Rust"}),
+    languages=RUST_LANGUAGE,
     is_build_tree=is_cargo_target,
     build_types=cargo_build_types,
     members=toml_members("workspace"),
@@ -68,17 +71,30 @@ _RUST_VERSION = r"(stable|beta|nightly|\d+\.\d+(?:\.\d+)?)"
 RUST_TOOLCHAINS = versions_axis("Rust toolchain", "Rust")
 
 
-def _rustfmt_file(context: Context) -> str | None:
-    return first_existing(context, ("rustfmt.toml", ".rustfmt.toml"))
-
-
-RUSTFMT = Formatter(
+RUSTFMT_SETTINGS = SettingsReader(
     name="rustfmt",
-    config_file=_rustfmt_file,
-    runs=(pattern("rustfmt", r"\bcargo\s+(?:\+\S+\s+)?fmt\b|(?<![\w.-])rustfmt\b(?!\.toml)"),),
-    hint="consider a CI job that runs cargo fmt --check",
-    default_style=True,
+    files=("rustfmt.toml", ".rustfmt.toml"),
+    read=lambda path, text: toml_settings("rustfmt", path, text),
 )
+
+
+def _cargo_fmt(command: Command, facts: Facts) -> Run | None:
+    """`cargo fmt --check` (`cargo +nightly fmt --all -- --check`) checks; `cargo fmt` applies."""
+    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    if program(argv) != "cargo" or argv[1:2] != ("fmt",):
+        return None
+    return formatted(command, facts, checks="--check" in argv)
+
+
+RUSTFMT = format_tool(
+    name="rustfmt",
+    languages=RUST_LANGUAGE,
+    can={Enforcement.CHECK: "cargo fmt --check", Enforcement.APPLY: "cargo fmt"},
+    formats=either(_cargo_fmt, flagged(("rustfmt",), checks=("--check",))),
+    style=defined_by(files=("rustfmt",)),
+    reads=("rustfmt",),
+)
+RUSTFMT_ACTION = Action(name="actions-rust-lang/rustfmt", runs=lambda _inputs: (("cargo", "fmt", "--check"),))
 
 
 def _cargo(command: Command, name: str) -> tuple[str, ...] | None:
@@ -117,7 +133,6 @@ def _rustc_mcdc(command: Command, _: Facts) -> Run | None:
 
 
 LINE, REGION, BRANCH, PATH = Granularity.LINE, Granularity.REGION, Granularity.BRANCH, Granularity.PATH
-RUST_LANGUAGE = frozenset({"Rust"})
 CARGO_LLVM_COV = coverage_tool(
     name="cargo-llvm-cov",
     languages=RUST_LANGUAGE,
@@ -285,7 +300,7 @@ STATIC_ANALYSIS = StaticAnalysis(
 
 RUST = Ecosystem(
     label="Rust",
-    languages=frozenset({"Rust"}),
+    languages=RUST_LANGUAGE,
     build_systems=(CARGO,),
     source_suffixes={".rs": "Rust"},
     toolchain=ToolchainPatterns(
@@ -302,7 +317,6 @@ RUST = Ecosystem(
     rules=(
         RUST_TOOLCHAINS,
         BuildTypes(axis=RUST_TOOLCHAINS),
-        RUSTFMT,
         TESTS,
         WARNINGS,
         HARDENING,

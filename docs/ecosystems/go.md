@@ -26,7 +26,9 @@ Programs are built as position-independent executables (`-buildmode=pie`, not th
 
 ## `code-formatting`
 
-gofmt, gofumpt or goimports; they have a default style, so CI enforcement alone passes.
+gofmt, gofumpt or goimports listing what they would change (`-l` or `-d`, which CI fails on:
+`test -z "$(gofmt -l .)"`), or `golangci-lint fmt --diff`. They have one style, so CI enforcement alone passes;
+`gofmt -w` and `go fmt` only rewrite files.
 
 ## `function-limits`
 

@@ -5,7 +5,7 @@ import unittest
 from project_validator.build_systems.make import parse_makefile
 from project_validator.facts import Command, Facts, Origin, Unknown
 from project_validator.facts.arguments import positional
-from project_validator.facts.expansion import CommandExpander, built_in_expanders
+from project_validator.facts.expansion import CommandExpander, known_expanders
 from tests.support import GITHUB_WORKFLOW, github_job, make_context, temp_project
 
 
@@ -20,9 +20,9 @@ def _expanded(facts: Facts) -> list[tuple[str, ...]]:
 
 class EngineTests(unittest.TestCase):
     def test_expanders_are_found_in_profiles_and_shared_modules(self) -> None:
-        names = {expander.name for expander in built_in_expanders()}
+        names = {expander.name for expander in known_expanders()}
         self.assertLessEqual({"Make targets", "pre-commit hooks", "package.json scripts", "Composer scripts"}, names)
-        self.assertTrue(all(isinstance(expander, CommandExpander) for expander in built_in_expanders()))
+        self.assertTrue(all(isinstance(expander, CommandExpander) for expander in known_expanders()))
 
     def test_an_expanded_command_records_the_chain_that_ran_it(self) -> None:
         files = {
@@ -53,6 +53,11 @@ class EngineTests(unittest.TestCase):
             ],
         )
         self.assertEqual(launched[("cmake", "-S", ".")], {"CC": "clang", "CXX": "clang++"})
+
+    def test_xargs_runs_its_command_with_the_arguments_it_reads(self) -> None:
+        files = github_job("ubuntu-latest", "git ls-files '*.cpp' | xargs -n 1 -P4 clang-format --dry-run -Werror")
+        launched = [command.argv for command in _facts(files).of(Command) if command.via]
+        self.assertEqual(launched, [("clang-format", "--dry-run", "-Werror")])
 
     def test_cd_changes_where_the_rest_of_the_script_runs(self) -> None:
         files = {

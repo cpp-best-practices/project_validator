@@ -49,7 +49,11 @@ standard such as `c++20` rather than `gnu++20`, so `-std=c++NN` is used rather t
 
 ## `code-formatting`
 
-The style is defined in a `.clang-format` and CI runs clang-format.
+The style is defined in a `.clang-format` (or `_clang-format`), at or above the code, and CI checks it:
+`clang-format --dry-run -Werror` (or `-n --Werror`, also through `xargs`), `git clang-format --diff`, run-clang-format,
+the `DoozyX/clang-format-lint-action` or `jidicula/clang-format-action` action, or the clang-format pre-commit hook
+when CI runs pre-commit. `clang-format -i` enforces it only where the job then fails on a change
+(`git diff --exit-code`) or commits it.
 
 ## `function-limits`
 

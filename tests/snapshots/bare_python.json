@@ -42,6 +42,31 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "ruff format",
+              "black"
+            ],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "black": "black --check",
+              "ruff format": "ruff format --check"
+            },
+            "language": "Python",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -70,6 +95,16 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "ruff"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "black"
     },
     {
       "kind": "ConfigurationFile",

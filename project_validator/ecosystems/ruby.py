@@ -13,11 +13,12 @@ from project_validator.core import Context, Result
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
 from project_validator.facts import Command, Facts, Setting, resolved
-from project_validator.facts.arguments import program
+from project_validator.facts.arguments import positional, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined, launcher
-from project_validator.facts.settings import SettingsReader, matched_settings, settings
-from project_validator.facts.tools import Run
+from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings
+from project_validator.facts.tools import Claim, Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -26,7 +27,6 @@ from project_validator.rules import (
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
-    Formatter,
     FunctionLimits,
     SecurityLints,
     StaticAnalysis,
@@ -39,8 +39,9 @@ from project_validator.rules import (
 from project_validator.text import Pattern, matching_names, pattern
 
 RUBY_LANGUAGE = "Ruby"
+RUBY_ONLY = frozenset({RUBY_LANGUAGE})
 GEMFILE = "Gemfile"
-BUNDLER = BuildSystem(name="Bundler", files=(GEMFILE, "*.gemspec"), languages=frozenset({RUBY_LANGUAGE}))
+BUNDLER = BuildSystem(name="Bundler", files=(GEMFILE, "*.gemspec"), languages=RUBY_ONLY)
 RAKEFILES = ("Rakefile", "rakefile", "Rakefile.rb")
 RUNS_RAKE = re.compile(r"(?<![\w-])rake\b")
 
@@ -66,18 +67,72 @@ RUBOCOP_CONFIG = ".rubocop.yml"
 RUNS_RUBOCOP = r"(?<![\w-])rubocop\b(?!\.yml|-)(?![^\n]*\s(?:-a|-A|--autocorrect(?:-all)?)\b)|\bRuboCop::RakeTask\b"
 RUNS_STANDARD = r"\bstandardrb\b(?![^\n]*\s--fix\b)|\brake\s+standard\b|\bStandard::RakeTask\b|\bstandard/rake\b"
 
+_RUBOCOP_TASK = re.compile(r"\bRuboCop::RakeTask\.new(?:\s*\(?\s*:(\w+))?")
+_STANDARD_TASK = re.compile(r"\bStandard::RakeTask\b|\bstandard/rake\b")
+_DEFAULT_TASK = re.compile(r"\btask\s*\(?\s*:?default\s*(?:=>|:)\s*((?:%[iwIW])?\[[^\]]*\]|:\w+|[\"']\w+[\"'])")
+
+
+def _read_rake_tasks(path: str, text: str) -> Iterator[Setting]:
+    """The RuboCop and Standard tasks a Rakefile defines, and its default task's prerequisites: matched in its code."""
+    rubocop = (match[1] or "rubocop" for match in _RUBOCOP_TASK.finditer(text))
+    standard = ("standard" for _ in _STANDARD_TASK.finditer(text))
+    defaults = (re.findall(r"\w+", match[1]) for match in _DEFAULT_TASK.finditer(text))
+    found = [*(("task.RuboCop", name) for name in rubocop), *(("task.Standard", name) for name in standard)]
+    found += [("default", tuple(names)) for names in defaults]
+    yield from settings("Rake", path, found, heuristic=True)
+
+
+RAKE_TASKS = SettingsReader(name="Rake", files=(*RAKEFILES, "*.rake"), read=_read_rake_tasks)
+
+
+def _rake_task(tool: str) -> Claim:
+    """`rake rubocop`, or `rake` whose default task runs it: the task a Rakefile defines for `tool` checks."""
+
+    def formats(command: Command, facts: Facts) -> Run | None:
+        argv = resolved(command)
+        if program(argv) != "rake":
+            return None
+        tasks = facts.where(Setting, tool="Rake", key=f"task.{tool}")
+        targets = set(positional(argv)[0]) or {"default"}
+        if "default" in targets:
+            defaults = (found.value for found in facts.where(Setting, tool="Rake", key="default"))
+            targets |= {str(name) for names in defaults if isinstance(names, tuple) for name in names}
+        read = [task for task in tasks if task.value in targets]
+        return formatted(command, facts, checks=True, read=read) if read else None
+
+    return formats
+
+
+RUBOCOP_FILES = file_reader("RuboCop", (RUBOCOP_CONFIG,))
+STANDARD_FILES = file_reader("Standard", (".standard.yml",))
+SYNTAX_TREE_FILES = file_reader("syntax_tree", (".streerc",))
+
 # RuboCop and Standard have a default style; syntax_tree's is its own.
-FORMATTERS = Formatter(
-    name="RuboCop, Standard or syntax_tree",
-    config_file=configuration((RUBOCOP_CONFIG, ".standard.yml", ".streerc")),
-    runs=(
-        pattern("RuboCop", RUNS_RUBOCOP),
-        pattern("Standard", RUNS_STANDARD),
-        pattern("syntax_tree", r"\bstree\s+check\b"),
+RUBOCOP = format_tool(
+    name="RuboCop",
+    languages=RUBY_ONLY,
+    can={Enforcement.CHECK: "rubocop", Enforcement.APPLY: "rubocop -a"},
+    formats=either(
+        flagged(("rubocop",), applies=("-a", "-A", "--autocorrect", "--autocorrect-all", "-x", "--fix-layout")),
+        _rake_task("RuboCop"),
     ),
-    hint="consider a CI job that runs rubocop (or standardrb, or stree check)",
-    default_style=True,
-    texts=_run_texts,
+    style=defined_by(files=("RuboCop",)),
+    reads=("Rake",),
+)
+STANDARD = format_tool(
+    name="Standard",
+    languages=RUBY_ONLY,
+    can={Enforcement.CHECK: "standardrb", Enforcement.APPLY: "standardrb --fix"},
+    formats=either(flagged(("standardrb",), applies=("--fix", "--fix-unsafely")), _rake_task("Standard")),
+    style=defined_by(files=("Standard",)),
+    reads=("Rake",),
+)
+SYNTAX_TREE = format_tool(
+    name="syntax_tree",
+    languages=RUBY_ONLY,
+    can={Enforcement.CHECK: "stree check", Enforcement.APPLY: "stree write"},
+    formats=flagged(("stree", "check"), ("stree", "write"), checks=("check",)),
+    style=defined_by(files=("syntax_tree",)),
 )
 
 # RSpec specs, and Minitest (or test-unit) tests.
@@ -138,7 +193,7 @@ def _simplecov(command: Command, facts: Facts) -> Run | None:
 
 SIMPLECOV = coverage_tool(
     name="SimpleCov",
-    languages=frozenset({"Ruby"}),
+    languages=RUBY_ONLY,
     can={Granularity.LINE: "SimpleCov", Granularity.BRANCH: "SimpleCov enable_coverage :branch"},
     measures=_simplecov,
     reads=("SimpleCov",),
@@ -293,7 +348,7 @@ _RUBY_VERSION = r"(\d+\.\d+(?:\.\d+)?|head|(?:jruby|truffleruby)(?:-[\w.]+)?)"
 
 RUBY = Ecosystem(
     label=RUBY_LANGUAGE,
-    languages=frozenset({RUBY_LANGUAGE}),
+    languages=RUBY_ONLY,
     build_systems=(BUNDLER,),
     source_suffixes={".rb": RUBY_LANGUAGE, ".rake": RUBY_LANGUAGE},
     # Rack configuration and ERB templates belong to Ruby projects, but name no language on their own.
@@ -305,7 +360,6 @@ RUBY = Ecosystem(
     ),
     rules=(
         versions_axis("Ruby version", RUBY_LANGUAGE),
-        FORMATTERS,
         TESTS,
         WARNINGS,
         SECURITY_LINTS,

@@ -36,7 +36,8 @@ Releases keep the language's runtime safety checks: no build uses `-Ounchecked` 
 
 ## `code-formatting`
 
-`swift format lint --strict` or `swiftformat --lint`; they have a default style, so CI enforcement alone passes.
+`swift format lint --strict` (or `swift-format lint -s`; plain `lint` only warns) or `swiftformat --lint`.
+They have a default style, so CI enforcement alone passes; `swift format -i` and `swiftformat` only rewrite files.
 
 ## `function-limits`
 

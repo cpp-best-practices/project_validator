@@ -82,13 +82,8 @@ ECOSYSTEM_PLUGIN = """
 import re
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.rules import Formatter
-from project_validator.text import pattern
-
-
-def _no_config(context):
-    return None
-
+from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.tools import defined_by
 
 ZIG = Ecosystem(
     label="Zig",
@@ -98,16 +93,14 @@ ZIG = Ecosystem(
     toolchain=ToolchainPatterns(
         language="Zig", versions=(re.compile(r"\\bzig-version\\W+([\\d.x]+)"),), usage=re.compile(r"\\bzig\\s+build\\b")
     ),
-    rules=(
-        versions_axis("Zig version", "Zig"),
-        Formatter(
-            name="zig fmt",
-            config_file=_no_config,
-            runs=(pattern("zig fmt", r"\\bzig\\s+fmt\\b"),),
-            hint="run zig fmt --check in CI",
-            default_style=True,
-        ),
-    ),
+    rules=(versions_axis("Zig version", "Zig"),),
+)
+ZIG_FMT = format_tool(
+    name="zig fmt",
+    languages=frozenset({"Zig"}),
+    can={Enforcement.CHECK: "zig fmt --check .", Enforcement.APPLY: "zig fmt ."},
+    formats=flagged(("zig", "fmt"), checks=("--check",)),
+    style=defined_by(),
 )
 """
 

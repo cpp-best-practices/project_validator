@@ -4,11 +4,10 @@ at each granularity?"""
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
-from project_validator.facts import Facts, Unknown
+from project_validator.facts import Facts
 from project_validator.facts.coverage import COVERAGE, Granularity
-from project_validator.facts.structure import Unit
-from project_validator.facts.tools import Tool, ToolRun, built_in_tools
-from project_validator.questions import Answer, Question
+from project_validator.facts.tools import Tool, ToolRun, known_tools
+from project_validator.questions import Answer, LanguageAnswers, Question, per_unit, runs_of, unknowns_for
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -49,15 +48,7 @@ class CoverageAnswer:
         }
 
 
-@dataclass(frozen=True, slots=True, kw_only=True)
-class LanguageCoverage:
-    """The coverage of one language, in each unit of the project that has it."""
-
-    language: str
-    units: tuple[CoverageAnswer, ...]
-
-    def as_dict(self) -> dict[str, object]:
-        return {"language": self.language, "units": [unit.as_dict() for unit in self.units]}
+type LanguageCoverage = LanguageAnswers[CoverageAnswer]
 
 
 def measures_coverage(tool: Tool) -> bool:
@@ -79,16 +70,8 @@ def _answer(
 def coverage_answer(language: str, facts: Facts, tools: Iterable[Tool], unit: str = ".") -> CoverageAnswer:
     """What coverage CI reports for `language` in `unit`, by the facts, and what the known `tools` could report."""
     known = tuple(tool for tool in tools if measures_coverage(tool) and language in tool.languages)
-    runs = tuple(
-        run for run in facts.of(ToolRun) if COVERAGE in run.provides and language in run.languages and run.covers(unit)
-    )
-    # What was not read matters when it may hide a run (a job or a command), or settings a known tool reads.
-    reads = {name for tool in known for name in (tool.name, *tool.reads)}
-    unknowns = tuple(
-        f"{fact.subject}: {fact.reason} ({fact.origin})"
-        for fact in facts.of(Unknown)
-        if fact.hides in ("jobs", "commands") or (fact.hides == "settings" and reads & set(fact.tools))
-    )
+    runs = runs_of(COVERAGE, language, unit, facts)
+    unknowns = unknowns_for(known, facts)
     return CoverageAnswer(
         language=language,
         unit=unit,
@@ -97,21 +80,9 @@ def coverage_answer(language: str, facts: Facts, tools: Iterable[Tool], unit: st
     )
 
 
-def units_of(language: str, facts: Facts) -> tuple[str, ...]:
-    """The product units of the project that have `language`: none when the language is only in its docs, tooling,
-    examples, benchmarks or test fixtures. A project with no product unit at all (only scripts, say) is all product;
-    a project with no units is one, its root."""
-    units = facts.of(Unit)
-    product = [unit for unit in units if unit.role == "product"] or [unit for unit in units if unit.role != "vendored"]
-    return tuple(unit.directory for unit in product if language in unit.languages) if units else (".",)
-
-
 def language_coverage(language: str, facts: Facts) -> LanguageCoverage:
-    tools = built_in_tools()
-    return LanguageCoverage(
-        language=language,
-        units=tuple(coverage_answer(language, facts, tools, unit) for unit in units_of(language, facts)),
-    )
+    tools = known_tools()
+    return per_unit(language, facts, lambda unit: coverage_answer(language, facts, tools, unit))
 
 
 COVERAGE_QUESTION = Question(
@@ -128,5 +99,4 @@ __all__ = [
     "coverage_answer",
     "language_coverage",
     "measures_coverage",
-    "units_of",
 ]

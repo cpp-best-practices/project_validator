@@ -16,8 +16,10 @@ from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
+from project_validator import yaml_support
 from project_validator.core import Project
 from project_validator.facts import Command, ConfigurationFile, Fact, Facts, Origin, Setting, Unknown
+from project_validator.facts.roles import role
 from project_validator.text import strip_json_comments
 
 type Read = Callable[[str, str], Iterable[Fact]]
@@ -35,19 +37,32 @@ class SettingsReader:
     named_by: Callable[[Command], Iterable[str]] | None = None
 
 
-def built_in_settings_readers() -> tuple[SettingsReader, ...]:
-    """Every settings reader defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import built_in
+def _nothing(_path: str, _text: str) -> Iterator[Fact]:
+    return iter(())
 
-    return built_in(SettingsReader)
+
+def file_reader(name: str, files: tuple[str, ...]) -> SettingsReader:
+    """A reader of files whose presence is what counts (a `.clang-format` defines the formatting, whatever it holds):
+    each is recorded as a `ConfigurationFile`, and its settings are not read."""
+    return SettingsReader(name=name, files=files, read=_nothing)
+
+
+def known_settings_readers() -> tuple[SettingsReader, ...]:
+    """Every settings reader defined by a module of the shared build systems, the shared tools or a profile."""
+    from project_validator.components import known
+
+    return known(SettingsReader)
 
 
 def settings_facts(project: Project, readers: Iterable[SettingsReader], commands: Facts) -> Iterator[Fact]:
-    """The settings in the files each reader reads by default, then in the files the commands of `commands` name."""
+    """The settings in the files each reader reads by default (outside vendored code), then in the files the commands
+    of `commands` name."""
     readers = tuple(readers)
+    # A vendored project's configuration is its own, not this project's.
+    own = [path for path in project.files() if role(path) != "vendored"]
     wanted = [
         (reader, path)
-        for path in project.files()
+        for path in own
         for reader in readers
         if any(fnmatchcase(PurePosixPath(path).name, pattern) for pattern in reader.files)
     ]
@@ -93,17 +108,25 @@ def unreadable(tool: str, path: str, error: Exception) -> Unknown:
     )
 
 
-def toml_settings(tool: str, path: str, text: str, *table: str) -> Iterator[Fact]:
-    """The settings in TOML `table` (`tool`, `coverage`) of the file, flattened under dotted keys."""
+def _document_settings(
+    tool: str, path: str, parse: Callable[[], object], errors: type[Exception], keys: tuple[str, ...]
+) -> Iterator[Fact]:
+    """The settings in the mapping at `keys` of a document `parse` reads, flattened under dotted keys; unknown when it
+    raises one of `errors`."""
     try:
-        value: object = tomllib.loads(text)
-    except tomllib.TOMLDecodeError as error:
+        value = parse()
+    except errors as error:
         yield unreadable(tool, path, error)
         return
-    for key in table:
+    for key in keys:
         value = value.get(key) if isinstance(value, Mapping) else None
     if isinstance(value, Mapping):
         yield from settings(tool, path, flattened(value))
+
+
+def toml_settings(tool: str, path: str, text: str, *table: str) -> Iterator[Fact]:
+    """The settings in TOML `table` (`tool`, `coverage`) of the file, flattened under dotted keys."""
+    return _document_settings(tool, path, lambda: tomllib.loads(text), tomllib.TOMLDecodeError, table)
 
 
 def ini_settings(tool: str, path: str, text: str, sections: Callable[[str], str | None]) -> Iterator[Fact]:
@@ -121,15 +144,13 @@ def ini_settings(tool: str, path: str, text: str, sections: Callable[[str], str 
 
 def json_settings(tool: str, path: str, text: str, *keys: str, comments: bool = False) -> Iterator[Fact]:
     """The settings in the JSON object at `keys` of the file, flattened under dotted keys."""
-    try:
-        value: object = json.loads(strip_json_comments(text) if comments else text)
-    except json.JSONDecodeError as error:
-        yield unreadable(tool, path, error)
-        return
-    for key in keys:
-        value = value.get(key) if isinstance(value, Mapping) else None
-    if isinstance(value, Mapping):
-        yield from settings(tool, path, flattened(value))
+    parse = (lambda: json.loads(strip_json_comments(text))) if comments else (lambda: json.loads(text))
+    return _document_settings(tool, path, parse, json.JSONDecodeError, keys)
+
+
+def yaml_settings(tool: str, path: str, text: str, *keys: str) -> Iterator[Fact]:
+    """The settings in the YAML mapping at `keys` of the file, flattened under dotted keys."""
+    return _document_settings(tool, path, lambda: yaml_support.load(text), yaml_support.YamlError, keys)
 
 
 def key_value_settings(tool: str, path: str, text: str) -> Iterator[Setting]:
@@ -162,11 +183,12 @@ def matched_settings(
 
 __all__ = [
     "SettingsReader",
-    "built_in_settings_readers",
+    "file_reader",
     "flattened",
     "ini_settings",
     "json_settings",
     "key_value_settings",
+    "known_settings_readers",
     "matched_settings",
     "plain",
     "settings",
@@ -174,4 +196,5 @@ __all__ = [
     "toml_settings",
     "unreadable",
     "xml_root",
+    "yaml_settings",
 ]

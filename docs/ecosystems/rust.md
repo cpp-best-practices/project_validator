@@ -29,7 +29,9 @@ Every OS/toolchain combination builds the debug and release profiles, each with 
 
 ## `code-formatting`
 
-rustfmt has a default style, so CI enforcement alone passes; its style can be set in `rustfmt.toml`.
+rustfmt: `cargo fmt --check` (with any toolchain, `cargo +nightly fmt -- --check`), `rustfmt --check`, or the
+`actions-rust-lang/rustfmt` action. It has a default style, so CI enforcement alone passes; its style can be set in
+`rustfmt.toml` or `.rustfmt.toml`, which applies to the crates at and below it.
 
 ## `function-limits`
 

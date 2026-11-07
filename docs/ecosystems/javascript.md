@@ -34,8 +34,10 @@ mode is a bonus: `"strict": true` or `@tsconfig/strictest` in `tsconfig.json`, o
 
 ## `code-formatting`
 
-`prettier --check`, `biome format` / `biome ci`, `deno fmt --check` or `dprint check`, in CI or the package scripts
-it runs; they have a default style, so CI enforcement alone passes.
+`prettier --check` (or `-l`; settings in a `.prettierrc*`, `prettier.config.*` or the `prettier` key of
+package.json), `biome format`, `biome check` or `biome ci` (without `--write`), `deno fmt --check`, `dprint check` or
+`oxfmt --check`, in CI or the package scripts and Deno tasks it runs. They have a default style, so CI enforcement
+alone passes.
 
 ## `function-limits`
 

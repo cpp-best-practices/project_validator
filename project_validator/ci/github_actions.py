@@ -104,9 +104,10 @@ def _job_label(name: str, combination: Combination) -> str:
 
 
 def _job_facts(
-    path: str, job_id: str, job: Mapping[str, object], workflow_env: object, caller: str = ""
+    path: str, job_id: str, job: Mapping[str, object], workflow_env: object, caller: str = "", load: Load | None = None
 ) -> Iterator[Fact]:
-    """The facts of one job; `caller` names the job that calls the workflow, for a reusable workflow's jobs."""
+    """The facts of one job; `caller` names the job that calls the workflow, for a reusable workflow's jobs. `load`
+    reads the local actions its steps use."""
     origin = Origin(path=path, at=("jobs", job_id))
     strategy = job.get("strategy")
     combinations = expand_matrix(strategy.get("matrix") if isinstance(strategy, Mapping) else None)
@@ -122,7 +123,7 @@ def _job_facts(
         return
     for index, combination in enumerate(combinations):
         identity = f"{caller}{path}:{job_id}" + ("" if len(combinations) == 1 else f"[{index}]")
-        yield from _Combination(origin, identity, combination).facts(job, workflow_env)
+        yield from _Combination(origin, identity, combination, load=load).facts(job, workflow_env)
 
 
 @dataclass(frozen=True, slots=True)
@@ -134,6 +135,7 @@ class _Combination:
     combination: Combination
     # What the job's conditions and expressions can be evaluated with, once its environment is known.
     known: Known | None = None
+    load: Load | None = None
 
     def substitute(self, text: str) -> str:
         """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
@@ -187,17 +189,21 @@ class _Combination:
                     Origin(path=self.origin.path, at=(*self.origin.at, "steps", number)), step, known
                 )
 
-    def step_facts(self, origin: Origin, step: Mapping[str, object], known: Known) -> Iterator[Fact]:
-        """The facts of a step that runs, or may run, in this combination; its condition is kept while unknown."""
+    def step_facts(
+        self, origin: Origin, step: Mapping[str, object], known: Known, via: tuple[Origin, ...] = ()
+    ) -> Iterator[Fact]:
+        """The facts of a step that runs, or may run, in this combination; its condition is kept while unknown. A local
+        composite action's steps run in the job too, with `via` naming the steps that use it."""
         runs = self.runs(step.get("if"), known)
         if runs is False:
             return
         condition = None if runs else self.optional(step.get("if"))
         if "uses" in step:
             inputs = self.substituted(step.get("with"))
-            yield ActionStep(
-                origin=origin, job=self.identity, uses=str(step["uses"]), inputs=inputs, condition=condition
-            )
+            uses = str(step["uses"])
+            yield ActionStep(origin=origin, job=self.identity, uses=uses, inputs=inputs, condition=condition)
+            if (local := _local_action(uses)) is not None:
+                yield from self.composite_facts(origin, local, inputs, known, (*via, origin))
         if isinstance(run := step.get("run"), str):
             yield from script_facts(
                 self.substitute(run),
@@ -207,7 +213,71 @@ class _Combination:
                 directory=self.optional(step.get("working-directory")),
                 condition=condition,
                 opaque=EXPRESSION,
+                via=via,
             )
+
+    def composite_facts(
+        self, origin: Origin, directory: str, inputs: Mapping[str, str], known: Known, via: tuple[Origin, ...]
+    ) -> Iterator[Fact]:
+        """The steps of the local action in `directory`, when it is a composite action, with its inputs in place."""
+        found = self._action(directory)
+        if found is None:
+            yield Unknown(
+                origin=origin,
+                subject=f"the action ./{directory}",
+                reason="its action.yml is not read",
+                hides="commands",
+            )
+            return
+        path, action = found
+        runs = action.get("runs")
+        steps = runs.get("steps") if isinstance(runs, Mapping) and runs.get("using") == "composite" else None
+        if not isinstance(steps, list) or len(via) > _CALL_DEPTH:
+            return  # a JavaScript or Docker action, whose commands are its own code
+        values = {**_input_defaults(action.get("inputs")), **inputs}
+        for number, step in enumerate(steps):
+            if isinstance(step, Mapping):
+                at = Origin(path=path, at=("runs", "steps", number))
+                yield from self.step_facts(at, _with_inputs(step, values), known, via)
+
+    def _action(self, directory: str) -> tuple[str, Mapping[str, object]] | None:
+        for name in ("action.yml", "action.yaml"):
+            path = f"{directory}/{name}"
+            if self.load is not None and isinstance(document := self.load(path), Mapping):
+                return path, document
+        return None
+
+
+_INPUT = re.compile(r"\$\{\{\s*inputs\.([\w-]+)\s*\}\}")
+
+
+def _local_action(uses: str) -> str | None:
+    """The directory of an action in the same repository (`./.github/actions/build`), else None."""
+    path = _local(uses)
+    return None if path is None else path.rstrip("/")
+
+
+def _input_defaults(inputs: object) -> dict[str, str]:
+    if not isinstance(inputs, Mapping):
+        return {}
+    found = ((name, spec.get("default")) for name, spec in inputs.items() if isinstance(spec, Mapping))
+    return {
+        str(name): str(default).lower() if isinstance(default, bool) else str(default)
+        for name, default in found
+        if default is not None
+    }
+
+
+def _with_inputs[T](value: T, inputs: Mapping[str, str]) -> T:
+    """`value` (a step, or part of one) with each `${{ inputs.<name> }}` replaced by the input's value ("" when it has
+    none)."""
+    if isinstance(value, str):
+        return _INPUT.sub(lambda match: inputs.get(match[1], ""), value)  # type: ignore[return-value]
+    if isinstance(value, Mapping):
+        return {key: _with_inputs(item, inputs) for key, item in value.items()}  # type: ignore[return-value]
+    if isinstance(value, list):
+        return [_with_inputs(item, inputs) for item in value]  # type: ignore[return-value]
+    return value
 
 
 # GitHub runs at most this many levels of reusable workflows.
@@ -221,8 +291,9 @@ def _only_called(document: Mapping[object, object]) -> bool:
     return names == ["workflow_call"]
 
 
-def _local_workflow(uses: object) -> str | None:
-    """The path of a reusable workflow in the same repository (`./.github/workflows/build.yml`), else None."""
+def _local(uses: object) -> str | None:
+    """The path of a reusable workflow or action in the same repository (`./.github/workflows/build.yml`,
+    `$/.github/actions/build`), else None."""
     text = str(uses)
     for prefix in ("./", "$/"):
         if text.startswith(prefix) and "@" not in text:
@@ -242,9 +313,9 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
         if not isinstance(job, Mapping):
             continue
         if "uses" not in job:
-            yield from _job_facts(path, str(job_id), job, document.get("env"), caller)
+            yield from _job_facts(path, str(job_id), job, document.get("env"), caller, load)
             continue
-        called = _local_workflow(job["uses"])
+        called = _local(job["uses"])
         within_depth = caller.count(" → ") < _CALL_DEPTH
         if called is not None and load is not None and within_depth and (target := load(called)) is not None:
             yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id} → ")

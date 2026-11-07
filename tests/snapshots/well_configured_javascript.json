@@ -109,6 +109,70 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "prettier",
+              "biome",
+              "deno fmt",
+              "oxfmt",
+              "dprint"
+            ],
+            "defined": {},
+            "enforced": "yes",
+            "known": {
+              "biome": "biome ci",
+              "deno fmt": "deno fmt --check",
+              "dprint": "dprint check",
+              "oxfmt": "oxfmt --check",
+              "prettier": "prettier --check ."
+            },
+            "language": "JavaScript",
+            "tools": [
+              "prettier"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "prettier",
+              "biome",
+              "deno fmt",
+              "oxfmt",
+              "dprint"
+            ],
+            "defined": {},
+            "enforced": "yes",
+            "known": {
+              "biome": "biome ci",
+              "deno fmt": "deno fmt --check",
+              "dprint": "dprint check",
+              "oxfmt": "oxfmt --check",
+              "prettier": "prettier --check ."
+            },
+            "language": "TypeScript",
+            "tools": [
+              "prettier"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -1493,7 +1557,35 @@
     {
       "kind": "ConfigurationFile",
       "origin": "package.json",
+      "reader": "package.json prettier"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
       "reader": "Jest"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
     },
     {
       "heuristic": false,
@@ -1517,6 +1609,29 @@
       "tool": "Vitest",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
       ]
     },
     {
@@ -1551,6 +1666,29 @@
         "JavaScript",
         "TypeScript"
       ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
       "origin": "package.json:scripts.test",
       "provides": {
         "coverage": [
@@ -1565,6 +1703,29 @@
       "tool": "Vitest",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
       ]
     },
     {
@@ -1599,6 +1760,29 @@
         "JavaScript",
         "TypeScript"
       ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
       "origin": "package.json:scripts.test",
       "provides": {
         "coverage": [
@@ -1613,6 +1797,29 @@
       "tool": "Vitest",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
       ]
     },
     {

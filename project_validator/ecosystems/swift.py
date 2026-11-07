@@ -14,8 +14,9 @@ from project_validator.evidence import configuration, existing_texts, first_exis
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
-from project_validator.facts.settings import SettingsReader, json_settings, settings, xml_root
-from project_validator.facts.tools import Run
+from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.settings import SettingsReader, file_reader, json_settings, settings, xml_root
+from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -24,7 +25,6 @@ from project_validator.rules import (
     BuildTypes,
     DependencyAudit,
     DependencyManagement,
-    Formatter,
     FunctionLimits,
     Hardening,
     StaticAnalysis,
@@ -37,6 +37,7 @@ from project_validator.rules import (
 from project_validator.text import Pattern, found_and_missing, matching_names, pattern
 
 SWIFT_LANGUAGE = "Swift"
+SWIFT_ONLY = frozenset({SWIFT_LANGUAGE})
 PACKAGE_SWIFT = "Package.swift"
 
 
@@ -58,7 +59,7 @@ def xcode_build_types(command: Command) -> frozenset[str]:
 SWIFTPM = BuildSystem(
     name="SwiftPM",
     files=(PACKAGE_SWIFT,),
-    languages=frozenset({SWIFT_LANGUAGE}),
+    languages=SWIFT_ONLY,
     build_types=swiftpm_build_types,
     rules=(
         BuildOutputs(
@@ -73,7 +74,7 @@ SWIFTPM = BuildSystem(
 XCODE = BuildSystem(
     name="Xcode",
     files=("*.xcodeproj/", "*.xcworkspace/"),
-    languages=frozenset({SWIFT_LANGUAGE}),
+    languages=SWIFT_ONLY,
     build_types=xcode_build_types,
     rules=(
         BuildOutputs(
@@ -98,16 +99,36 @@ def _build_texts(context: Context) -> tuple[str, ...]:
     return (*context.ci_texts, *existing_texts(context, (PACKAGE_SWIFT, *_xcode_settings(context))))
 
 
+SWIFT_FORMAT_FILES = file_reader("swift-format", (".swift-format",))
+SWIFTFORMAT_FILES = file_reader("SwiftFormat", (".swiftformat",))
+
+
+def _swift_format(command: Command, facts: Facts) -> Run | None:
+    """`swift format lint --strict` (or `swift-format lint -s`) checks, as plain `lint` only warns; `swift format -i`
+    (its default `format` subcommand) applies."""
+    argv = resolved(command)
+    words = argv[2:] if argv[:2] == ("swift", "format") else argv[1:] if program(argv) == "swift-format" else None
+    if words is None:
+        return None
+    if words[:1] == ("lint",):
+        return formatted(command, facts, checks=has_option(argv, "--strict", "-s"), applies=False)
+    return formatted(command, facts, checks=False, applies=has_option(argv, "-i", "--in-place"))
+
+
 # swift-format and SwiftFormat have a default style; their lint modes fail only when told to.
-FORMATTERS = Formatter(
-    name="swift-format or SwiftFormat",
-    config_file=configuration((".swift-format", ".swiftformat")),
-    runs=(
-        pattern("swift-format", r"\bswift(?:-|\s+)format\s+lint\b[^\n]*(?:--strict|-s)\b"),
-        pattern("SwiftFormat", r"\bswiftformat\b[^\n]*--lint\b"),
-    ),
-    hint="consider a CI job that runs swift format lint --strict (or swiftformat --lint)",
-    default_style=True,
+SWIFT_FORMAT = format_tool(
+    name="swift-format",
+    languages=SWIFT_ONLY,
+    can={Enforcement.CHECK: "swift format lint --strict", Enforcement.APPLY: "swift format -i"},
+    formats=_swift_format,
+    style=defined_by(files=("swift-format",)),
+)
+SWIFTFORMAT = format_tool(
+    name="SwiftFormat",
+    languages=SWIFT_ONLY,
+    can={Enforcement.CHECK: "swiftformat --lint", Enforcement.APPLY: "swiftformat"},
+    formats=flagged(("swiftformat",), checks=("--lint",)),
+    style=defined_by(files=("SwiftFormat",)),
 )
 
 TEST_CASE = re.compile(r"\bXCTestCase\b|^\s*@(?:Test|Suite)\b", re.MULTILINE)
@@ -174,7 +195,6 @@ def _xcodebuild(command: Command, facts: Facts) -> Run | None:
     return measured(Granularity.LINE, Granularity.REGION, read=read) if read else None
 
 
-SWIFT_ONLY = frozenset({SWIFT_LANGUAGE})
 SWIFTPM_COVERAGE = coverage_tool(
     name="swift test",
     languages=SWIFT_ONLY,
@@ -311,7 +331,7 @@ SWIFT_TOOLCHAINS = versions_axis("Swift toolchain", SWIFT_LANGUAGE)
 
 SWIFT = Ecosystem(
     label=SWIFT_LANGUAGE,
-    languages=frozenset({SWIFT_LANGUAGE}),
+    languages=SWIFT_ONLY,
     build_systems=(SWIFTPM, XCODE),
     source_suffixes={".swift": SWIFT_LANGUAGE},
     toolchain=ToolchainPatterns(
@@ -327,7 +347,6 @@ SWIFT = Ecosystem(
     rules=(
         SWIFT_TOOLCHAINS,
         BuildTypes(axis=SWIFT_TOOLCHAINS),
-        FORMATTERS,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

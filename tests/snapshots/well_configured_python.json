@@ -46,6 +46,33 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "ruff format",
+              "black"
+            ],
+            "defined": {},
+            "enforced": "yes",
+            "known": {
+              "black": "black --check",
+              "ruff format": "ruff format --check"
+            },
+            "language": "Python",
+            "tools": [
+              "ruff format"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -1454,6 +1481,16 @@
     {
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
+      "reader": "ruff"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "black"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
       "reader": "coverage.py"
     },
     {
@@ -1468,6 +1505,26 @@
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
       "reader": "pytest"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff format",
+      "via": []
     },
     {
       "heuristic": false,
@@ -1501,6 +1558,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "provides": {
         "coverage": [
@@ -1518,6 +1595,26 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff format",
+      "via": []
     },
     {
       "heuristic": false,
@@ -1551,6 +1648,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "provides": {
         "coverage": [
@@ -1576,6 +1693,26 @@
       "languages": [
         "Python"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "provides": {
         "coverage": [
@@ -1593,6 +1730,26 @@
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[9].run"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ruff format",
+      "via": []
     },
     {
       "heuristic": false,

@@ -76,6 +76,8 @@ class JavaScriptTests(unittest.TestCase):
             _ci("biome ci"),
             _ci("deno fmt --check"),
             _ci("dprint check"),
+            _ci("pnpm exec oxfmt --check"),
+            {**_scripts(fmt="oxfmt"), **_ci("pnpm fmt", "git diff --exit-code")},
             {**_scripts(fmt="prettier -c src"), **_ci("pnpm fmt")},
             {**_scripts(check="npm run fmt", fmt="prettier -l ."), **_ci("yarn run check")},
         ):

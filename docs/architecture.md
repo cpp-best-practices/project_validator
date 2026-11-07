@@ -240,13 +240,55 @@ except where a step deliberately changes results and says so.
      runs that workflow's jobs; a workflow that runs only `on: workflow_call` runs only where it is called.
      Workspace-wide script runs (`pnpm -r`, `--filter`, `npm --workspaces`, `turbo run`, `lerna run`,
      `nx run-many`) run each workspace package's script (npm, yarn and bun workspaces, `pnpm-workspace.yaml`).
-   - **Questions answer per language per unit.** A run covers its working directory, what is below it, and the
-     unit it is in, so a run from the root covers every unit, and a run in `packages/a` covers only that package.
+   - **Questions answer per language per unit.** A run covers the units at or below its working directory, and the
+     unit that directory belongs to (the deepest unit containing it), so a run from the root covers every unit, a
+     run in `src/` covers the root unit, and a run in `packages/a` covers only that package (since step 4; before,
+     it covered the root unit above it too).
      A project with one unit is judged as before. In a monorepo, findings name the unit (`packages/b: no branch
      coverage …`); in a mixed-language project each language is judged in the units that have it (a C++ project
      with Python bindings in `python/` needs Python coverage there).
 4. **The remaining practices**, one at a time, each deleting its rule type from `rules.py`. Each becomes settings
-   readers, an aspect of the shared `Tool` model, a question answered per language per unit, and a policy.
+   readers, an aspect of the shared `Tool` model, a question answered per language per unit, and a policy. What
+   every practice needs is shared: `project_validator/questions/__init__.py` has the units of a language, the runs
+   of an aspect in a unit and the unknowns that matter to some tools (`per_unit`, `runs_of`, `unknowns_for`), and
+   `project_validator/judging.py` makes a question and a policy into a check (`answered_check`), labelling results
+   by language and unit.
+
+   **4a. Formatting** (`code-formatting`; the `Formatter` rule is deleted).
+   - **The `format` aspect** (`project_validator/facts/formatting.py`) has two levels: `check`, a run that fails on
+     unformatted code, and `apply`, one that rewrites it. Applying it enforces it where a change fails CI or is kept:
+     a pre-commit hook (pre-commit fails when a hook changes a file), a job that runs `git diff --exit-code` or
+     `--quiet`, or commits (`git commit`, `stefanzweifel/git-auto-commit-action`). A run that only prints the
+     formatted code is not a formatter run. `flagged(prefixes, checks=…, applies=…)` spells most formatters' claims
+     (`flagged(("ruff", "format"), checks=("--check", "--diff"))`); `either` combines claims.
+   - **Where a tool's behaviour is defined** (`Tool.definitions`, a `Definition` per aspect): the files that define
+     its style, found as the files a settings reader read (`defined_by(files=…)`: a `.clang-format`, whatever it
+     holds; `file_reader` records such files without reading settings) or the files holding a tool's settings
+     (`defined_by(settings=…)`: `[tool.ruff]` in pyproject.toml), and whether the tool has a default of its own. A
+     definition applies to the units at or below its directory, and to the unit it is in. Linters and analyzers will
+     use the same for their rules.
+   - **Actions run commands** (`Action`, in `project_validator/facts/expansion.py`): a reusable CI step that runs a
+     known command (`psf/black` runs `black --check --diff .`) is expanded into that command, so tools only ever
+     claim commands.
+   - **Reading more of what CI runs**: commands inside a command substitution (`test -z "$(gofmt -l .)"`) run before
+     the command they are part of, and `xargs` launches its command. A local composite action (`uses:
+     ./.github/actions/build` or `$/…`) runs its steps in the calling job, with its inputs in place (a missing one
+     is unknown; a JavaScript or Docker action runs its own code). An action's `working-directory` input is where
+     its command runs. A job that shows a diff for a later step to fail on (`DIFF=$(git diff)`) is taken to enforce
+     what its formatter applied, as a heuristic run.
+   - **Settings outside vendored code**: a settings reader reads the files it finds by name only outside vendored
+     directories (a `deps/jemalloc/.clang-format` is not the project's); a file a command names is read wherever
+     it is. Roles moved to `project_validator/facts/roles.py`, shared by structure and settings.
+   - **The formatting question** answers per language per unit: whether CI enforces the formatting (yes, no,
+     unknown, or impossible when no known tool formats the language), with which tools, which only rewrite files,
+     which files define the style, and which tools CI runs whose style needs a definition the project lacks. Each
+     formatter handles only its own languages: ktlint formats Kotlin, not Java; Fantomas F#, not C#.
+   - **The policy** passes enforcement with a defined style (a file, or the tool's own), fails a style that is not
+     defined, a run that only rewrites files, or no run; warns when a style is defined but CI does not enforce it;
+     an unknown answer is an error unless `--allow-unknown`. Hints come from the tools (`can`), not from profiles.
+   - **Plugins add components** (`project_validator/components.py`, `add_plugin_modules`): a plugin module's tools,
+     settings readers, expanders and actions are found like the built-in ones, and a check made of a question
+     applies to the languages its tools now handle (`Check.languages_from`).
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice

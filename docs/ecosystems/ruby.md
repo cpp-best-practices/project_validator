@@ -28,7 +28,9 @@ in a Steepfile.
 
 ## `code-formatting`
 
-RuboCop (not `-a`), Standard or `stree check`; they have a default style, so CI enforcement alone passes.
+RuboCop (without `-a` or `-A`), Standard (without `--fix`) or `stree check`, run directly, through
+`bundle exec`, or as the Rake task a Rakefile defines (`RuboCop::RakeTask`, `standard/rake`) when CI runs it or the
+default task that depends on it. They have a default style, so CI enforcement alone passes.
 
 ## `function-limits`
 

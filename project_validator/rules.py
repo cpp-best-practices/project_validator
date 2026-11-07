@@ -67,22 +67,6 @@ def ci_configuration(context: Context) -> tuple[str, ...]:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class Formatter:
-    """Where an ecosystem's formatting style is defined, and the CI commands that enforce it.
-
-    A formatter with a `default_style` defines the formatting even without a configuration file. Its commands are
-    searched in `texts`: CI configuration, unless the ecosystem's CI runs them through scripts it can read.
-    """
-
-    name: str
-    config_file: Callable[[Context], str | None]
-    runs: tuple[Pattern, ...]
-    hint: str
-    default_style: bool = False
-    texts: Evidence = ci_configuration
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
 class BuildTypes:
     """A compiled ecosystem, whose CI must build each of its platforms (along `axis`) in every build configuration."""
 

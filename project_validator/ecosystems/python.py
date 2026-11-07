@@ -12,22 +12,21 @@ from project_validator.evidence import (
     ci_and_hook_texts,
     configuration,
     existing_texts,
-    first_existing,
     toml_value,
 )
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
-from project_validator.facts.expansion import CommandExpander, Expansion, Launched, joined, launcher
+from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
+from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
-from project_validator.facts.tools import Run
+from project_validator.facts.tools import Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     Analyzer,
     BuildOutputs,
     DependencyAudit,
     DependencyManagement,
-    Formatter,
     FunctionLimits,
     SecurityLints,
     StaticAnalysis,
@@ -40,33 +39,57 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern, pattern
 
+PYTHON_ONLY = frozenset({"Python"})
 PYTHON_PACKAGING = BuildSystem(
     name="Python packaging",
     files=("pyproject.toml", "setup.py"),
-    languages=frozenset({"Python"}),
+    languages=PYTHON_ONLY,
     members=toml_members("tool", "uv", "workspace"),
 )
 
-PYTHON_FORMATTER_SECTIONS = re.compile(r"^\s*\[tool\.(?:ruff|black)\b", re.MULTILINE)
+
+def _read_ruff(path: str, text: str) -> Iterator[Fact]:
+    """ruff's settings: `[tool.ruff]` in pyproject.toml, or the whole of ruff.toml."""
+    tables = ("tool", "ruff") if PurePosixPath(path).name == "pyproject.toml" else ()
+    return toml_settings("ruff", path, text, *tables)
 
 
-def _python_formatter_file(context: Context) -> str | None:
-    project = context.project
-    if project.exists("pyproject.toml") and PYTHON_FORMATTER_SECTIONS.search(project.read_text("pyproject.toml")):
-        return "pyproject.toml"
-    return first_existing(context, ("ruff.toml", ".ruff.toml"))
-
-
-RUFF_OR_BLACK = Formatter(
-    name="ruff format or black",
-    config_file=_python_formatter_file,
-    runs=(
-        pattern("ruff format", r"\bruff\s+format\b"),
-        pattern("black", r"(?<![\w.-])black\b[^\n]*\s--(?:check|diff)\b|\bpsf/black@"),
-    ),
-    hint="consider a CI job that runs ruff format --check (or black --check)",
-    default_style=True,
+RUFF_SETTINGS = SettingsReader(name="ruff", files=("ruff.toml", ".ruff.toml", "pyproject.toml"), read=_read_ruff)
+BLACK_SETTINGS = SettingsReader(
+    name="black",
+    files=("pyproject.toml",),
+    read=lambda path, text: toml_settings("black", path, text, "tool", "black"),
 )
+
+
+RUFF_FORMAT = format_tool(
+    name="ruff format",
+    languages=PYTHON_ONLY,
+    can={Enforcement.CHECK: "ruff format --check", Enforcement.APPLY: "ruff format"},
+    # The ruff-format pre-commit hook applies it.
+    formats=either(flagged(("ruff", "format"), checks=("--check", "--diff")), flagged(("ruff-format",), checks=())),
+    style=defined_by(settings=("ruff",)),
+    reads=("ruff",),
+)
+BLACK = format_tool(
+    name="black",
+    languages=PYTHON_ONLY,
+    can={Enforcement.CHECK: "black --check", Enforcement.APPLY: "black"},
+    formats=flagged(("black",), checks=("--check", "--diff")),
+    style=defined_by(settings=("black",)),
+    reads=("black",),
+)
+# The black action checks (`--check --diff`) unless its options say otherwise; ruff's action runs ruff's `args`.
+BLACK_ACTION = Action(
+    name="psf/black",
+    runs=lambda inputs: (
+        ("black", *shlex.split(inputs.get("options", "--check --diff")), *shlex.split(inputs.get("src", "."))),
+    ),
+)
+RUFF_ACTION = Action(
+    name="astral-sh/ruff-action", runs=lambda inputs: (("ruff", *shlex.split(inputs.get("args", "check"))),)
+)
+
 
 _TRUE = frozenset({"true", "1", "yes", "on"})
 COVERAGE_FILES = (".coveragerc", "setup.cfg", "tox.ini", "pyproject.toml")
@@ -163,14 +186,14 @@ def _pytest_cov(command: Command, facts: Facts) -> Run | None:
 
 COVERAGE_PY = coverage_tool(
     name="coverage.py",
-    languages=frozenset({"Python"}),
+    languages=PYTHON_ONLY,
     can={Granularity.LINE: "coverage run", Granularity.BRANCH: "coverage run --branch"},
     measures=_coverage_py,
     reads=("coverage.py",),
 )
 PYTEST_COV = coverage_tool(
     name="pytest-cov",
-    languages=frozenset({"Python"}),
+    languages=PYTHON_ONLY,
     can={Granularity.LINE: "pytest --cov", Granularity.BRANCH: "pytest --cov --cov-branch"},
     measures=_pytest_cov,
     reads=("pytest", "coverage.py"),
@@ -434,7 +457,7 @@ DEPENDENCIES = DependencyManagement(
 
 PYTHON = Ecosystem(
     label="Python",
-    languages=frozenset({"Python"}),
+    languages=PYTHON_ONLY,
     build_systems=(PYTHON_PACKAGING,),
     source_suffixes={".py": "Python", ".pyi": "Python"},
     toolchain=ToolchainPatterns(
@@ -450,7 +473,6 @@ PYTHON = Ecosystem(
     ),
     rules=(
         versions_axis("Python version", "Python"),
-        RUFF_OR_BLACK,
         TESTS,
         WARNINGS,
         SECURITY_LINTS,

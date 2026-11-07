@@ -42,6 +42,31 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "swift-format",
+              "SwiftFormat"
+            ],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "SwiftFormat": "swiftformat --lint",
+              "swift-format": "swift format lint --strict"
+            },
+            "language": "Swift",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [

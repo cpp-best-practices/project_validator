@@ -40,6 +40,33 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "RuboCop",
+              "Standard",
+              "syntax_tree"
+            ],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "RuboCop": "rubocop",
+              "Standard": "standardrb",
+              "syntax_tree": "stree check"
+            },
+            "language": "Ruby",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -136,7 +163,7 @@
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that runs rubocop (or standardrb, or stree check)"
+        "consider a CI job that runs rubocop (or standardrb or stree check)"
       ],
       "message": "CI never runs RuboCop, Standard or syntax_tree; its formatting is not enforced",
       "status": "FAIL"

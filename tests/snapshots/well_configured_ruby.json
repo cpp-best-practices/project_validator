@@ -44,6 +44,39 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "RuboCop",
+              "Standard",
+              "syntax_tree"
+            ],
+            "defined": {
+              "RuboCop": [
+                ".rubocop.yml"
+              ]
+            },
+            "enforced": "yes",
+            "known": {
+              "RuboCop": "rubocop",
+              "Standard": "standardrb",
+              "syntax_tree": "stree check"
+            },
+            "language": "Ruby",
+            "tools": [
+              "RuboCop"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -1086,6 +1119,36 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": ".rubocop.yml",
+      "reader": "RuboCop"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Rakefile",
+      "reader": "Rake"
+    },
+    {
+      "heuristic": true,
+      "key": "task.RuboCop",
+      "kind": "Setting",
+      "origin": "Rakefile:task.RuboCop",
+      "tool": "Rake",
+      "value": "rubocop"
+    },
+    {
+      "heuristic": true,
+      "key": "default",
+      "kind": "Setting",
+      "origin": "Rakefile:default",
+      "tool": "Rake",
+      "value": [
+        "i",
+        "spec",
+        "rubocop"
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "spec/spec_helper.rb",
       "reader": "SimpleCov"
     },
@@ -1114,6 +1177,30 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1126,6 +1213,30 @@
         "."
       ],
       "tool": "SimpleCov",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[2].run"
       ]
@@ -1164,6 +1275,30 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1176,6 +1311,30 @@
         "."
       ],
       "tool": "SimpleCov",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[2].run"
       ]
@@ -1214,6 +1373,30 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "coverage": [
           "branch",
           "line"
@@ -1226,6 +1409,30 @@
         "."
       ],
       "tool": "SimpleCov",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[2].run"
       ]

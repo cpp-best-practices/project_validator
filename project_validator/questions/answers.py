@@ -2,7 +2,7 @@
 
 from typing import TYPE_CHECKING
 
-from project_validator.questions import built_in_questions
+from project_validator.questions import known_questions
 
 if TYPE_CHECKING:
     from project_validator.core import Context
@@ -13,7 +13,7 @@ def answers(context: Context) -> dict[str, object]:
     languages = sorted(context.structure.languages)
     return {
         question.name: [question.answer(language, context.facts).as_dict() for language in languages]
-        for question in built_in_questions()
+        for question in known_questions()
     }
 
 

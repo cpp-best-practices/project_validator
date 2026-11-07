@@ -49,6 +49,29 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "rustfmt"
+            ],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "rustfmt": "cargo fmt --check"
+            },
+            "language": "Rust",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [

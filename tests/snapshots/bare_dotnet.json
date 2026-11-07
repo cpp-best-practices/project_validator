@@ -42,6 +42,31 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "dotnet format",
+              "CSharpier"
+            ],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "CSharpier": "csharpier check .",
+              "dotnet format": "dotnet format --verify-no-changes"
+            },
+            "language": "C#",
+            "tools": [],
+            "undefined": [],
+            "unit": "src/App",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -137,9 +162,9 @@
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that runs dotnet format --verify-no-changes (or csharpier check, or fantomas --check)"
+        "consider a CI job that runs dotnet format --verify-no-changes (or csharpier check .)"
       ],
-      "message": "CI never runs dotnet format, CSharpier or Fantomas; its formatting is not enforced",
+      "message": "CI never runs dotnet format or CSharpier; its formatting is not enforced",
       "status": "FAIL"
     },
     "committed-artifacts": {
