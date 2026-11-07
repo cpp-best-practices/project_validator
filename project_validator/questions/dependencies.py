@@ -46,10 +46,10 @@ class DependencyAnswer:
     unknowns: tuple[str, ...] = ()
 
     def managers(self) -> tuple[str, ...]:
-        return tuple(dict.fromkeys(manager for manager, _ in self.declared))
+        return tuple(sorted({manager for manager, _ in self.declared}))
 
     def manifests(self) -> tuple[str, ...]:
-        return tuple(dict.fromkeys(path for _, path in self.declared))
+        return tuple(sorted({path for _, path in self.declared}))
 
     def as_dict(self) -> dict[str, object]:
         return {

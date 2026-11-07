@@ -1,11 +1,11 @@
 """C/C++ tests: registered with CTest in the CMake files (`enable_testing()`, then `add_test` or a `*_discover_tests`
-call), or, with `--build`, listed by ctest after a real build. ctest runs them."""
+call, as `project_validator.build_systems.cmake` reads them), or, with `--build`, listed by ctest after a real build.
+ctest runs them."""
 
 import json
-import re
 import subprocess
 import tempfile
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -14,28 +14,8 @@ from project_validator.ecosystems.c_cpp.coverage import cmake_configures
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.arguments import option_values, program
-from project_validator.facts.settings import SettingsReader, matched_settings
 from project_validator.facts.testing import Probe, test_runner, tested
 from project_validator.facts.tools import Definition, Run
-from project_validator.text import strip_cmake_comments
-
-_ENABLES_TESTING = re.compile(r"\benable_testing\s*\(|\binclude\s*\(\s*CTest\b")
-_REGISTERS_TESTS = re.compile(
-    r"\b(add_test|catch_discover_tests|gtest_discover_tests|gtest_add_tests|doctest_discover_tests"
-    r"|boost_discover_tests)\s*\("
-)
-
-
-def _read_ctest(path: str, text: str) -> Iterable[Fact]:
-    """Whether a CMake file enables CTest, and the calls that register its tests: matched in its text, comments left
-    out, until CMake is read structurally."""
-    code = strip_cmake_comments(text)
-    return matched_settings(
-        "CTest", path, code, {"enables": (_ENABLES_TESTING, True), "registers": (_REGISTERS_TESTS, None)}
-    )
-
-
-CTEST_REGISTRATIONS = SettingsReader(name="CTest", files=("CMakeLists.txt", "*.cmake"), read=_read_ctest)
 
 
 class BuildError(Exception):
@@ -125,5 +105,5 @@ CTEST = test_runner(
         from_test_units=True,
         describe="tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call)",
     ),
-    reads=("CTest",),
+    reads=("CMake",),
 )

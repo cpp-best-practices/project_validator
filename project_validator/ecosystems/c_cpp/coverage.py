@@ -8,11 +8,11 @@ from collections.abc import Callable, Iterable
 
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program, short_flags
+from project_validator.facts.build import CompilerOption
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined
-from project_validator.facts.settings import SettingsReader, key_value_settings, matched_settings
+from project_validator.facts.settings import SettingsReader, key_value_settings
 from project_validator.facts.tools import Run, Tool
-from project_validator.text import strip_cmake_comments
 
 C_AND_CXX = frozenset({"C", "C++"})
 LINE, REGION, BRANCH, PATH = Granularity.LINE, Granularity.REGION, Granularity.BRANCH, Granularity.PATH
@@ -66,15 +66,6 @@ GCOVR_SETTINGS = SettingsReader(
 LCOV_SETTINGS = SettingsReader(
     name="lcov", files=(".lcovrc",), read=_read_key_values("lcov"), named_by=_named(_LCOV_PROGRAMS, "--config-file")
 )
-# Compiler flags in CMake files: matched in their text (comments left out) until CMake is read structurally.
-_CMAKE_FLAG = re.compile(r"(?<![\w$-])(--coverage|-[fW][\w=+,.:-]*)")
-
-
-def _read_cmake_flags(path: str, text: str) -> Iterable[Fact]:
-    return matched_settings("CMake", path, strip_cmake_comments(text), {"flag": (_CMAKE_FLAG, None)})
-
-
-CMAKE_FLAGS = SettingsReader(name="CMake flags", files=("CMakeLists.txt", "*.cmake"), read=_read_cmake_flags)
 
 
 def _configuration(tool: str, command: Command, facts: Facts, named: list[str], default: str) -> tuple[Setting, ...]:
@@ -161,7 +152,9 @@ def _instrumentation(flag: str) -> Tool:
         argv = resolved(command)
         if any(found.search(word) for word in (*argv, *command.env.values())):
             return measured(PATH, heuristic=True)
-        if cmake_configures(argv) and (read := facts.where(Setting, tool="CMake", key="flag", value=flag)):
+        if cmake_configures(argv) and (
+            read := [option.origin.path for option in facts.where(CompilerOption, option=flag)]
+        ):
             return measured(PATH, read=read)
         return None
 

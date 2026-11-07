@@ -125,18 +125,13 @@ READ = (
         [("Xcode", "defaultOptions.codeCoverage", False)],
     ),
     ("jest.config.json", '{"collectCoverage": true}', [("Jest", "collectCoverage", True)]),
-    (
-        "CMakeLists.txt",
-        "# -fnope\nadd_compile_options(-Wall --coverage)\n",
-        [("CMake", "flag", "-Wall"), ("CMake", "flag", "--coverage")],
-    ),
 )
 
 
 class ReaderTests(unittest.TestCase):
     def test_readers_are_found_not_listed(self) -> None:
         names = {reader.name for reader in known_settings_readers()}
-        self.assertLessEqual({"coverage.py", "pytest", "gcovr", "CMake flags", "MSBuild", "Maven", "Gradle"}, names)
+        self.assertLessEqual({"coverage.py", "pytest", "gcovr", "CMake", "MSBuild", "Maven", "Gradle"}, names)
 
     def test_a_configuration_file_a_command_names_is_read(self) -> None:
         files = {"ci/cov.ini": "[run]\nbranch = on\n", **github_job("x", "coverage run --rcfile=ci/cov.ini -m x")}

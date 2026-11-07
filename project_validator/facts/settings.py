@@ -17,7 +17,7 @@ from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator import yaml_support
-from project_validator.core import Project
+from project_validator.core import Context, Project
 from project_validator.facts import Command, ConfigurationFile, Fact, Facts, Origin, Setting, Unknown
 from project_validator.facts.roles import role
 from project_validator.text import strip_json_comments
@@ -25,20 +25,25 @@ from project_validator.text import strip_json_comments
 type Read = Callable[[str, str], Iterable[Fact]]
 
 
+def _nothing(_path: str, _text: str) -> Iterator[Fact]:
+    return iter(())
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class SettingsReader:
     """`read(path, text)` records the settings of the file `path`. `files` are the names (or globs of names) of the
     files the tool reads in any directory, or the ends of their paths (`sorbet/config`); `named_by` the configuration
-    files a command names, relative to the project."""
+    files a command names, relative to the project.
+
+    Files that are only understood together (CMake files, which include each other) are read by `read_project`
+    instead, once, when the project has one of them.
+    """
 
     name: str
     files: tuple[str, ...]
-    read: Read
+    read: Read = _nothing
     named_by: Callable[[Command], Iterable[str]] | None = None
-
-
-def _nothing(_path: str, _text: str) -> Iterator[Fact]:
-    return iter(())
+    read_project: Callable[[Context], Iterable[Fact]] | None = None
 
 
 def file_reader(name: str, files: tuple[str, ...]) -> SettingsReader:
@@ -72,25 +77,35 @@ def _hidden_directories(readers: Iterable[SettingsReader]) -> frozenset[str]:
     )
 
 
-def settings_facts(project: Project, readers: Iterable[SettingsReader], commands: Facts) -> Iterator[Fact]:
+def _read_by_default(project: Project, readers: tuple[SettingsReader, ...]) -> Iterator[tuple[SettingsReader, str]]:
+    """Each reader with each file it reads by default, outside vendored code: a vendored project's configuration is
+    its own, not this project's."""
+    own = (path for path in project.files(hidden=_hidden_directories(readers)) if role(path) != "vendored")
+    for path in own:
+        yield from ((reader, path) for reader in readers if any(_matches(path, pattern) for pattern in reader.files))
+
+
+def _named(
+    project: Project, readers: tuple[SettingsReader, ...], commands: Facts
+) -> Iterator[tuple[SettingsReader, str]]:
+    """Each reader with each existing file a command names as its configuration."""
+    for command in commands.of(Command):
+        for reader in readers:
+            paths = reader.named_by(command) if reader.named_by else ()
+            yield from ((reader, path) for path in paths if project.exists(path))
+
+
+def settings_facts(context: Context, readers: Iterable[SettingsReader], commands: Facts) -> Iterator[Fact]:
     """The settings in the files each reader reads by default (outside vendored code), then in the files the commands
     of `commands` name."""
-    readers = tuple(readers)
-    # A vendored project's configuration is its own, not this project's.
-    own = [path for path in project.files(hidden=_hidden_directories(readers)) if role(path) != "vendored"]
-    wanted = [
-        (reader, path) for path in own for reader in readers if any(_matches(path, pattern) for pattern in reader.files)
-    ]
-    wanted += [
-        (reader, path)
-        for command in commands.of(Command)
-        for reader in readers
-        for path in (reader.named_by(command) if reader.named_by else ())
-        if project.exists(path)
-    ]
+    project, readers = context.project, tuple(readers)
+    wanted = [*_read_by_default(project, readers), *_named(project, readers, commands)]
     for reader, path in dict.fromkeys(wanted):
         yield ConfigurationFile(origin=Origin(path=path), reader=reader.name)
         yield from reader.read(path, project.read_text(path))
+    for reader in dict.fromkeys(reader for reader, _ in wanted):
+        if reader.read_project is not None:
+            yield from reader.read_project(context)
 
 
 def plain(value: object) -> object:

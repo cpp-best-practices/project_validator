@@ -1,0 +1,94 @@
+import unittest
+from unittest import mock
+
+from project_validator.facts import conditions
+from project_validator.facts.build import Applies, disjuncts
+from project_validator.facts.conditions import (
+    ALWAYS,
+    COMPILERS,
+    NEVER,
+    both,
+    either,
+    negated,
+    only,
+    paths,
+    requiring,
+)
+
+MSVC = only("compilers", ["msvc"])
+LINUX = only("platforms", ["linux"])
+OPTION = requiring("ENABLE_X")
+
+
+class ConditionTests(unittest.TestCase):
+    def test_conditions_are_equal_when_they_hold_in_the_same_builds(self) -> None:
+        self.assertEqual(either(MSVC, negated(MSVC)), ALWAYS)
+        self.assertEqual(both(MSVC, negated(MSVC)), NEVER)
+        self.assertEqual(negated(negated(both(MSVC, OPTION))), both(OPTION, MSVC))
+        self.assertEqual(either(both(OPTION, MSVC), both(negated(OPTION), MSVC)), MSVC)
+
+    def test_a_condition_is_true_when_it_holds_in_some_build(self) -> None:
+        self.assertTrue(MSVC)
+        self.assertFalse(both(MSVC, only("compilers", ["gcc"])))
+
+    def test_every_value_or_none_of_a_dimension(self) -> None:
+        self.assertEqual(only("compilers", COMPILERS), ALWAYS)
+        self.assertEqual(only("compilers", []), NEVER)
+
+    def test_long_chains_of_branches_stay_small(self) -> None:
+        remaining = ALWAYS
+        for index in range(200):
+            remaining = both(remaining, negated(requiring(f"OPTION_{index}")))
+        self.assertTrue(remaining)
+        self.assertEqual(len(paths(remaining)), 1)
+
+    def test_paths_are_capped(self) -> None:
+        many = either(*(both(requiring(f"A{index}"), requiring(f"B{index}")) for index in range(10)))
+        with mock.patch.object(conditions, "MOST_DISJUNCTS", 3):
+            self.assertEqual(len(paths(many)), 3)
+
+
+class DisjunctTests(unittest.TestCase):
+    def test_a_condition_is_written_out_as_few_disjuncts(self) -> None:
+        self.assertEqual(disjuncts(ALWAYS), (Applies(),))
+        self.assertEqual(disjuncts(NEVER), ())
+        self.assertEqual(disjuncts(negated(MSVC)), (Applies(compilers=frozenset(COMPILERS) - {"msvc"}),))
+        self.assertEqual(
+            disjuncts(both(MSVC, negated(OPTION))),
+            (Applies(compilers=frozenset({"msvc"}), requires=frozenset({"NOT ENABLE_X"})),),
+        )
+
+    def test_disjuncts_that_differ_in_one_dimension_are_merged(self) -> None:
+        gcc_or_clang = either(only("compilers", ["gcc"]), only("compilers", ["clang"]))
+        [found] = disjuncts(both(gcc_or_clang, LINUX))
+        self.assertEqual(found, Applies(compilers=frozenset({"gcc", "clang"}), platforms=frozenset({"linux"})))
+
+    def test_paths_that_differ_in_one_dimension_are_merged(self) -> None:
+        windows = only("platforms", ["windows"])
+        gcc = only("compilers", ["gcc"])
+        found = disjuncts(either(both(MSVC, LINUX, OPTION), both(gcc, either(both(LINUX, OPTION), windows))))
+        merged = Applies(
+            compilers=frozenset({"msvc", "gcc"}), platforms=frozenset({"linux"}), requires=frozenset({"ENABLE_X"})
+        )
+        self.assertEqual(set(found), {merged, Applies(compilers=frozenset({"gcc"}), platforms=frozenset({"windows"}))})
+        self.assertEqual(
+            disjuncts(either(both(MSVC, OPTION), both(negated(MSVC), OPTION))),
+            (Applies(requires=frozenset({"ENABLE_X"})),),
+        )
+
+    def test_disjuncts_that_differ_in_more_stay_apart(self) -> None:
+        self.assertEqual(len(disjuncts(either(both(MSVC, OPTION), LINUX))), 2)
+        self.assertEqual(
+            len(disjuncts(either(both(MSVC, LINUX), both(only("compilers", ["gcc"]), only("platforms", ["windows"]))))),
+            2,
+        )
+        self.assertEqual(
+            len(disjuncts(either(both(MSVC, OPTION), both(only("compilers", ["gcc"]), requiring("B"))))), 2
+        )
+
+    def test_what_an_applies_allows(self) -> None:
+        applies = Applies(compilers=frozenset({"gcc"}), requires=frozenset({"X"}))
+        self.assertEqual(applies.allowed("compilers"), {"gcc"})
+        self.assertEqual(applies.allowed("platforms"), set(conditions.PLATFORMS))
+        self.assertFalse(applies.unconditional)
+        self.assertTrue(Applies().unconditional)

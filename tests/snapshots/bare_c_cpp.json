@@ -654,22 +654,7 @@
     {
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
-      "reader": "CMake analyzers"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "CMakeLists.txt",
-      "reader": "CMake flags"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "CMakeLists.txt",
-      "reader": "CTest"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "CMakeLists.txt",
-      "reader": "CMake dependencies"
+      "reader": "CMake"
     }
   ],
   "map": {

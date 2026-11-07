@@ -1,43 +1,38 @@
 """clang-tidy and cppcheck: the C and C++ static analyzers, which find different bugs, so both must run.
 
 Each runs directly, through a launcher or action, or within the build: a CMake configuration that sets
-`CMAKE_<LANG>_CLANG_TIDY` or `CMAKE_<LANG>_CPPCHECK` runs it on every file it compiles. Those variables are matched
-in the CMake files and presets until CMake is read structurally.
+`CMAKE_<LANG>_CLANG_TIDY` or `CMAKE_<LANG>_CPPCHECK` (or the target property) runs it on every file it compiles.
 """
 
 import re
-from collections.abc import Iterable
 
 from project_validator.ecosystems.c_cpp.coverage import cmake_configures
 from project_validator.ecosystems.model import C_FAMILY
-from project_validator.facts import Command, Fact, Facts, Setting, resolved
+from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
+from project_validator.facts.build import BuildSetting
 from project_validator.facts.expansion import Action
-from project_validator.facts.settings import SettingsReader, matched_settings
 from project_validator.facts.tools import Claim, Run, defined_by
-from project_validator.text import strip_cmake_comments
 from project_validator.tools.scanners import multi_language_scanners
 
-# A CMake variable that runs an analyzer on every file the build compiles, as CMake files and presets set it.
-_ANALYZER_VARIABLE = re.compile(r"\bCMAKE_(?:C|CXX|OBJC|OBJCXX)_(CLANG_TIDY|CPPCHECK)\b")
+# A CMake variable (or target property) that runs an analyzer on every file the build compiles.
+_ANALYZER_SETTING = re.compile(r"(?:CMAKE_)?(?:C|CXX|OBJC|OBJCXX)_(CLANG_TIDY|CPPCHECK)")
 
 
-def _read_cmake_analyzers(path: str, text: str) -> Iterable[Fact]:
-    found = strip_cmake_comments(text) if not path.endswith(".json") else text
-    return matched_settings("CMake", path, found, {"analyzer": (_ANALYZER_VARIABLE, None)})
-
-
-CMAKE_ANALYZERS = SettingsReader(
-    name="CMake analyzers",
-    files=("CMakeLists.txt", "*.cmake", "CMakePresets.json", "CMakeUserPresets.json"),
-    read=_read_cmake_analyzers,
-)
+def _analyzer_settings(facts: Facts, variable: str) -> list[str]:
+    """The files of the CMake settings (variables, target properties, presets) that run the analyzer `variable`."""
+    found = (setting for setting in facts.of(BuildSetting) if setting.value and setting.build_system == "CMake")
+    return [
+        setting.origin.path
+        for setting in found
+        if (match := _ANALYZER_SETTING.fullmatch(setting.name)) and match[1] == variable
+    ]
 
 
 def _analyzer(programs: re.Pattern[str], variable: str) -> Claim:
     """A run of the analyzer `programs` name, or of a CMake configuration whose build runs it (`variable` set on its
-    command line, or in the CMake files and presets: heuristic)."""
+    command line, or in the CMake files and presets)."""
 
     def analyses(command: Command, facts: Facts) -> Run | None:
         argv = resolved(command)
@@ -47,7 +42,7 @@ def _analyzer(programs: re.Pattern[str], variable: str) -> Claim:
             return None
         if any(re.match(rf"-DCMAKE_\w+_{variable}(?::\w+)?=.", word) for word in argv):
             return analysed()
-        read = facts.where(Setting, tool="CMake", key="analyzer", value=variable)
+        read = _analyzer_settings(facts, variable)
         return analysed(read=read) if read else None
 
     return analyses
