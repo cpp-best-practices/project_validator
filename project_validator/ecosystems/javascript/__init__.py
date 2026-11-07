@@ -52,7 +52,7 @@ DENO_CONFIG_FILES = ("deno.json", "deno.jsonc")
 ENTRY_POINTS = ("main", "module", "exports", "bin")
 
 
-def _declared_by_package(text: str) -> frozenset[str]:
+def _declared_by_package(_path: str, text: str) -> frozenset[str]:
     """package.json is everywhere, as the tooling of projects in other languages; only a package's entry points (or
     JavaScript sources, recognised by their suffixes) make a project a JavaScript one."""
     try:

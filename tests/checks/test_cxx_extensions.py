@@ -29,9 +29,9 @@ def _cxx(files: dict[str, str], test: unittest.TestCase) -> Result:
 
 
 class CxxExtensionsTests(unittest.TestCase):
-    # Only C/C++ has compiler extensions.
+    # C, C++ and Fortran have compiler extensions (Fortran's dialects).
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(cxx_extensions.languages, C_FAMILY)
+        self.assertEqual(cxx_extensions.languages, C_FAMILY | {"Fortran"})
 
     def test_fails_when_extensions_are_never_disabled(self) -> None:
         self.assertEqual(_cxx(BARE_PROJECT, self), CXX_FAILED)

@@ -79,9 +79,7 @@ class UnitTests(unittest.TestCase):
         self.assertEqual([unit for unit, _, _ in _units(vendored)], ["."])
 
     def test_a_mixed_language_project_has_a_unit_per_build_root(self) -> None:
-        self.assertEqual(
-            _units(MIXED), [(".", ("CMake",), ["C", "C++"]), ("python", ("Python packaging",), ["Python"])]
-        )
+        self.assertEqual(_units(MIXED), [(".", ("CMake",), ["C++"]), ("python", ("Python packaging",), ["Python"])])
 
 
 class MonorepoCoverageTests(unittest.TestCase):

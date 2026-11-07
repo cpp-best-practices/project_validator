@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from project_validator.build_systems.cmake.build import cmake_configures
-from project_validator.build_systems.model import C_FAMILY
+from project_validator.build_systems.cmake.conditions import LANGUAGE_NAMES
 from project_validator.core import Options, Project
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.arguments import option_values, program
@@ -96,7 +96,8 @@ def _ctest(command: Command, _facts: Facts) -> Run | None:
 
 CTEST = test_runner(
     name="ctest",
-    languages=C_FAMILY,
+    # ctest runs the tests of whatever CMake builds.
+    languages=frozenset(LANGUAGE_NAMES.values()),
     how="ctest",
     runs=_ctest,
     tests=Definition(

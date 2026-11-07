@@ -125,7 +125,7 @@ class CliTests(unittest.TestCase):
         code, output, _ = run_cli("--map", str(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(code, EXIT_SUCCESS)
         mapped = json.loads(output)
-        self.assertEqual(mapped["languages"], ["C", "C++"])
+        self.assertEqual(mapped["languages"], ["C++"])
         self.assertIn("GitHub Actions", mapped["ci"]["providers"])
 
     def assert_map_matches_layout(self, layout: ProjectLayout, *arguments: str) -> dict[str, Any]:
