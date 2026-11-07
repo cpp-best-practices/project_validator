@@ -172,7 +172,11 @@ def known_tools() -> tuple[Tool, ...]:
 
 
 def _scope(command: Command) -> tuple[str, ...]:
+    """The directories whose code a run covers: where it runs; the whole project where a variable names the directory
+    (its build tree, most often); none outside the project."""
     directory = command.directory or "."
+    if directory.startswith("$"):
+        return (".",)
     if directory.startswith(("/", "..")):
         return ()  # outside the project: it covers none of the project's code
     return (str(PurePosixPath(directory.removeprefix("./") or ".")),)
@@ -194,7 +198,7 @@ def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun]:
                     scope=_scope(command),
                     read=run.read,
                     via=command.via,
-                    heuristic=run.heuristic,
+                    heuristic=run.heuristic or (command.directory or "").startswith("$"),
                 )
 
 

@@ -8,6 +8,7 @@ from project_validator.ecosystems.python.tox import braces
 from project_validator.facts import Command, Facts, Origin, Unknown
 from project_validator.facts.arguments import positional
 from project_validator.facts.expansion import CommandExpander, known_expanders
+from project_validator.facts.tools import ToolRun
 from tests.support import GITHUB_WORKFLOW, github_job, make_context, temp_project
 
 
@@ -70,6 +71,16 @@ class EngineTests(unittest.TestCase):
         self.assertIn((("eslint", "."), "web/ui"), commands)
         self.assertIn((("pwd",), "."), commands)
         self.assertIn((("ls",), "web"), commands)
+
+    def test_a_directory_a_variable_names_is_unknown_not_elsewhere(self) -> None:
+        files = {"CMakeLists.txt": "enable_testing()\n", **github_job("x", "cd $BUILD_DIR && ctest && make")}
+        with temp_project(files) as root:
+            facts = make_context(root).facts
+        commands = {command.argv[0]: command.directory for command in facts.of(Command)}
+        # Nothing is expanded there (its makefile cannot be read), but a tool run there covers the whole project.
+        self.assertEqual(commands, {"cd": "$BUILD_DIR", "ctest": "$BUILD_DIR", "make": "$BUILD_DIR"})
+        [run] = facts.of(ToolRun)
+        self.assertEqual((run.tool, run.scope, run.heuristic), ("ctest", (".",), True))
 
     def test_what_runs_outside_the_project_is_not_expanded(self) -> None:
         for script in (
@@ -293,7 +304,14 @@ class ShellScriptTests(unittest.TestCase):
     SCRIPT: ClassVar[dict[str, str]] = {"ci/lint.sh": "#!/usr/bin/env bash\nset -e\nruff check .\n"}
 
     def test_a_script_of_the_project_runs_its_commands(self) -> None:
-        for line in ("bash ci/lint.sh", "./ci/lint.sh", "sh -e ci/lint.sh", "cd ci && ./lint.sh"):
+        for line in (
+            "bash ci/lint.sh",
+            "./ci/lint.sh",
+            "sh -e ci/lint.sh",
+            "cd ci && ./lint.sh",
+            ". ci/lint.sh",
+            "source ci/lint.sh",
+        ):
             with self.subTest(line=line):
                 found = _tox(self.SCRIPT, line)
                 self.assertIn(("ruff", "check", "."), found)

@@ -73,6 +73,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -109,6 +110,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -145,6 +147,7 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
@@ -162,6 +165,7 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
             "unknowns": []
           }
         ]
