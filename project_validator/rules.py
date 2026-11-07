@@ -12,7 +12,6 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
 from project_validator.core import Context, Result
-from project_validator.text import Pattern
 
 if TYPE_CHECKING:
     from project_validator.ci import Job
@@ -63,47 +62,6 @@ class BuildTypes:
     """A compiled ecosystem, whose CI must build each of its platforms (along `axis`) in every build configuration."""
 
     axis: ToolchainAxis
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class WarningPolicy:
-    """The warning settings an ecosystem must enable, every setting it recognises, and where they are found.
-
-    Settings are listed joined by `separator`: flags as on a command line, named tools as a list.
-    """
-
-    kind: str
-    recognised: tuple[Pattern, ...]
-    required: Callable[[Context], tuple[Pattern, ...]]
-    texts: Evidence
-    separator: str = " "
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class WarningsAsErrors:
-    """The settings that make warnings fail the build, where they are `searched`, and how to enable them."""
-
-    flags: tuple[Pattern, ...]
-    texts: Evidence
-    searched: str
-    hint: str
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class Hardening:
-    """The binary hardening an ecosystem must enable, all of it, and where it is found.
-
-    Binary hardening is what the build inserts into the binary to make it harder to exploit: stack protectors,
-    control-flow protection, checked library calls, position-independent executables, release-mode overflow checks.
-    It is not code security scanning (see `project_validator.facts.security`) nor dependency auditing (see
-    `project_validator.facts.audit`); an ecosystem that builds no binary has no hardening rule.
-
-    An ecosystem whose options depend on more than presence, e.g. on the compilers in CI, supplies its own `judge`.
-    """
-
-    texts: Evidence
-    options: tuple[Pattern, ...] = ()
-    judge: Callable[[Context], Result] | None = None
 
 
 def ignored_at_top_level(names: str) -> re.Pattern[str]:

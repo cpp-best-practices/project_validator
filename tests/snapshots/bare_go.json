@@ -215,6 +215,29 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "-buildmode=pie"
+                ]
+              }
+            ],
+            "language": "Go",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "license": [
       {
         "language": "Go",
@@ -426,12 +449,25 @@
     {
       "kind": "ConfigurationFile",
       "origin": "go.mod",
+      "reader": "Go programs"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "go.mod",
       "reader": "Go module requirements"
     },
     {
       "kind": "Declared",
       "manager": "Go modules",
       "origin": "go.mod"
+    },
+    {
+      "heuristic": false,
+      "key": "main",
+      "kind": "Setting",
+      "origin": "cmd/app/main.go",
+      "tool": "Go programs",
+      "value": true
     }
   ],
   "map": {

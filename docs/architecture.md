@@ -453,6 +453,10 @@ except where a step deliberately changes results and says so.
      they are read structurally), or facts such as the `CompilerOption`s that apply to a compiler. C and C++ are judged
      for each compiler CI builds with, by the flags that apply to it; every language by its own requirements (Java
      and Kotlin, C# and F#, apart). The answers are per language (`project_validator/questions/practices.py`).
+     `hardening` is a practice too: GCC's, Clang's and MSVC's hardening flags for C and C++ (GCC's `-fhardened`
+     meets them all, for GCC only), release overflow checks for Rust, position-independent executables for Go (a
+     project that builds no Go program is skipped), and for Swift a practice that forbids: compiling the runtime
+     safety checks away (`-Ounchecked`).
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice
    dispatch are removed.
 7. **Proof**: add Fortran using only extractors and a recognition module.

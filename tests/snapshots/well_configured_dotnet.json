@@ -269,6 +269,12 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "C#",
+        "units": []
+      }
+    ],
     "license": [
       {
         "language": "C#",

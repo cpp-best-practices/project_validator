@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from project_validator.facts import Facts, Unknown
 from project_validator.facts.practices import (
+    HARDENING,
     WARNINGS,
     WARNINGS_AS_ERRORS,
     Practice,
@@ -38,6 +39,7 @@ class PracticeAnswer:
     answer: Answer
     compiled: tuple[Compiled, ...]
     unknowns: tuple[str, ...] = ()
+    skipped: str | None = None
 
     def found(self) -> tuple[str, ...]:
         """Every requirement met for some compiler, in order."""
@@ -76,9 +78,19 @@ def _unknowns(practice: Practice, facts: Facts) -> tuple[str, ...]:
 
 
 def _met(practice: Practice, compiled: tuple[Compiled, ...]) -> bool:
+    if practice.forbids:
+        return not any(compiled_for.found for compiled_for in compiled)
     if practice.any_one:
         return any(compiled_for.found for compiled_for in compiled)
     return bool(compiled) and all(not compiled_for.missing for compiled_for in compiled)
+
+
+def _answer(practice: Practice, met: bool, unknown: bool) -> Answer:
+    """What was not read may hide a requirement met, or (for a practice that forbids them) one that is not."""
+    in_doubt = met if practice.forbids else not met
+    if in_doubt and unknown:
+        return Answer.UNKNOWN
+    return Answer.YES if met else Answer.NO
 
 
 def practice_answer(name: str, language: str, facts: Facts) -> PracticeAnswer | None:
@@ -88,11 +100,15 @@ def practice_answer(name: str, language: str, facts: Facts) -> PracticeAnswer | 
     if not practices:
         return None
     practice = practices[0]
+    if (skipped := practice.skipped(facts)) is not None:
+        return PracticeAnswer(
+            language=language, unit=".", practice=practice, answer=Answer.IMPOSSIBLE, compiled=(), skipped=skipped
+        )
     compilers = practice.compilers(facts) if practice.compilers else (None,)
     texts = ci_texts(facts)
     compiled = tuple(_compiled(practice, facts, compiler, texts) for compiler in compilers)
     unknowns = _unknowns(practice, facts)
-    answer = Answer.YES if _met(practice, compiled) else Answer.UNKNOWN if unknowns else Answer.NO
+    answer = _answer(practice, _met(practice, compiled), bool(unknowns))
     return PracticeAnswer(
         language=language, unit=".", practice=practice, answer=answer, compiled=compiled, unknowns=unknowns
     )
@@ -108,14 +124,27 @@ def _answers(name: str) -> Callable[[str, Facts], LanguageAnswers[PracticeAnswer
 
 warning_answers = _answers(WARNINGS)
 error_answers = _answers(WARNINGS_AS_ERRORS)
+hardening_answers = _answers(HARDENING)
 
 WARNINGS_QUESTION = Question(
     name=WARNINGS,
     description="Which of the strict warning settings each language asks for are on?",
     answer=warning_answers,
 )
+HARDENING_QUESTION = Question(
+    name=HARDENING,
+    description="Which of the hardening settings each language asks for are on?",
+    answer=hardening_answers,
+)
 WARNINGS_AS_ERRORS_QUESTION = Question(
     name=WARNINGS_AS_ERRORS, description="Do warnings fail the build for each language?", answer=error_answers
 )
 
-__all__ = ["WARNINGS_AS_ERRORS_QUESTION", "WARNINGS_QUESTION", "Compiled", "PracticeAnswer", "practice_answer"]
+__all__ = [
+    "HARDENING_QUESTION",
+    "WARNINGS_AS_ERRORS_QUESTION",
+    "WARNINGS_QUESTION",
+    "Compiled",
+    "PracticeAnswer",
+    "practice_answer",
+]

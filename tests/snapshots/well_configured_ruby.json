@@ -274,6 +274,12 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "Ruby",
+        "units": []
+      }
+    ],
     "license": [
       {
         "language": "Ruby",

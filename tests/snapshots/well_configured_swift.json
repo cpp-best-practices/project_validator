@@ -255,6 +255,30 @@
         ]
       }
     ],
+    "hardening": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "-Ounchecked",
+                  "unchecked exclusivity"
+                ]
+              }
+            ],
+            "language": "Swift",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "license": [
       {
         "language": "Swift",
@@ -2860,6 +2884,11 @@
       "origin": "Package.swift",
       "tool": "Swift build settings",
       "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "Swift optimization settings"
     },
     {
       "kind": "ConfigurationFile",

@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from project_validator.checks.hardening import hardening
@@ -9,8 +10,11 @@ from tests.support import (
     CI_FILES,
     GITHUB_WORKFLOW,
     PROJECT_LAYOUTS,
+    UNSTRUCTURED_CI_FILES,
     WELL_CONFIGURED,
     WELL_CONFIGURED_RUST,
+    ci_running,
+    github_job,
     run_as,
     run_in_every_layout,
 )
@@ -23,9 +27,20 @@ GCC_OPTIONS = (
     "_GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE"
 )
 MSVC_OPTIONS = "/sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT"
-MSVC_CI = "jobs:\n  build:\n    runs-on: windows-latest\n    steps:\n      - run: cmake -S . -B build\n"
-CLANG_CI = "jobs:\n  build:\n    runs-on: ubuntu-latest\n    env:\n      CXX: clang++\n    steps:\n      - run: make\n"
-LINUX_CI = "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make\n"
+HINT = f"enable -fhardened (GCC 14+) or {GCC_OPTIONS}; for MSVC {MSVC_OPTIONS}"
+# Linux (GCC by default) and Windows (MSVC by default).
+LINUX_AND_WINDOWS = {
+    GITHUB_WORKFLOW: json.dumps(
+        {
+            "jobs": {
+                "linux": {"runs-on": "ubuntu-latest", "steps": [{"run": "cmake --build build"}]},
+                "windows": {"runs-on": "windows-latest", "steps": [{"run": "cmake --build build"}]},
+            }
+        }
+    )
+}
+GCC_AND_CLANG = github_job("ubuntu-latest", "cmake --build build", matrix={"compiler": ["gcc", "clang"]})
+LINUX = github_job("ubuntu-latest", "cmake --build build")
 
 
 class HardeningTests(unittest.TestCase):
@@ -45,29 +60,29 @@ class CAndCxxHardeningTests(unittest.TestCase):
 
     def test_fails_when_no_hardening_options_are_found(self) -> None:
         self.assertEqual(
-            self._run(BARE_PROJECT),
-            Result.failed(f"no hardening options found; enable -fhardened (GCC 14+) or {GCC_OPTIONS}"),
+            self._run(BARE_PROJECT), Result.failed(f"no hardening options found; enable {GCC_OPTIONS}", HINT)
         )
 
-    def test_failure_lists_msvc_options_when_msvc_is_in_ci(self) -> None:
+    def test_failure_lists_the_options_of_each_compiler_ci_uses(self) -> None:
         self.assertEqual(
-            self._run({GITHUB_WORKFLOW: MSVC_CI}),
-            Result.failed(
-                f"no hardening options found; enable -fhardened (GCC 14+) or {GCC_OPTIONS}, and for MSVC {MSVC_OPTIONS}"
-            ),
+            self._run(LINUX_AND_WINDOWS),
+            Result.failed(f"no hardening options found; enable {GCC_OPTIONS}, {MSVC_OPTIONS}", HINT),
         )
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
         self.assertEqual(self._run(WELL_CONFIGURED).status, Status.PASS)
 
-    def test_passes_with_every_gcc_and_clang_option_in_any_ci(self) -> None:
-        for provider, path in CI_FILES.items():
+    def test_passes_with_every_gcc_and_clang_option_on_the_command_line(self) -> None:
+        for provider in CI_FILES:
             with self.subTest(ci=provider):
-                result = self._run({path: f"script: cmake -S . -B build -DCMAKE_CXX_FLAGS='{GCC_FLAGS}'\n"})
-                self.assertEqual(result, Result.passed(f"hardening options are enabled: {GCC_OPTIONS}"))
+                result = self._run(ci_running(provider, f"cmake -S . -B build -DCMAKE_CXX_FLAGS='{GCC_FLAGS}'"))
+                if provider in UNSTRUCTURED_CI_FILES:  # scanned heuristically, which keeps no quoted command
+                    self.assertEqual(result.status, Status.ERROR)
+                else:
+                    self.assertEqual(result, Result.passed(f"hardening options are enabled: {GCC_OPTIONS}"))
 
     def test_options_in_cmake_presets_count(self) -> None:
-        preset = f'{{"configurePresets": [{{"cacheVariables": {{"CMAKE_CXX_FLAGS": "{GCC_FLAGS}"}}}}]}}\n'
+        preset = f'{{"configurePresets": [{{"name": "ci", "cacheVariables": {{"CMAKE_CXX_FLAGS": "{GCC_FLAGS}"}}}}]}}\n'
         for name in ("CMakePresets.json", "CMakeUserPresets.json"):
             with self.subTest(name):
                 self.assertEqual(self._run({name: preset}).status, Status.PASS)
@@ -75,16 +90,24 @@ class CAndCxxHardeningTests(unittest.TestCase):
     def test_cmake_template_style_passes(self) -> None:
         result = self._run(
             {
-                "cmake/Hardening.cmake": """\
-                    set(NEW_CXX_DEFINITIONS "${NEW_CXX_DEFINITIONS} -D_GLIBCXX_ASSERTIONS")
-                    set(NEW_COMPILE_OPTIONS "${NEW_COMPILE_OPTIONS} -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3")
+                "CMakeLists.txt": """\
+                    list(APPEND NEW_CXX_DEFINITIONS -D_GLIBCXX_ASSERTIONS)
+                    list(APPEND NEW_COMPILE_OPTIONS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3)
                     check_cxx_compiler_flag(-fstack-protector-strong STACK_PROTECTOR)
-                    set(NEW_COMPILE_OPTIONS "${NEW_COMPILE_OPTIONS} -fcf-protection")
-                    set(NEW_COMPILE_OPTIONS "${NEW_COMPILE_OPTIONS} -fstack-clash-protection")
+                    if(STACK_PROTECTOR)
+                      list(APPEND NEW_COMPILE_OPTIONS -fstack-protector-strong)
+                    endif()
+                    list(APPEND NEW_COMPILE_OPTIONS -fcf-protection -fstack-clash-protection)
+                    add_compile_options(${NEW_COMPILE_OPTIONS})
+                    add_compile_definitions(${NEW_CXX_DEFINITIONS})
                 """,
             }
         )
         self.assertEqual(result.status, Status.PASS)
+
+    def test_options_that_are_never_applied_do_not_count(self) -> None:
+        result = self._run({"cmake/Hardening.cmake": f"set(NEW_COMPILE_OPTIONS {GCC_FLAGS})\n"})
+        self.assertEqual(result.status, Status.FAIL)
 
     def test_libcxx_hardening_mode_counts_as_library_assertions(self) -> None:
         for mode in ("FAST", "EXTENSIVE", "DEBUG"):
@@ -122,19 +145,16 @@ class CAndCxxHardeningTests(unittest.TestCase):
     def test_fhardened_enables_every_gcc_option(self) -> None:
         self.assertEqual(
             self._run({"CMakeLists.txt": "add_compile_options(-fhardened)\n"}),
-            Result.passed("hardening options are enabled: -fhardened"),
+            Result.passed(f"hardening options are enabled: {GCC_OPTIONS}"),
         )
 
-    def test_fhardened_alone_warns_when_clang_is_in_ci(self) -> None:
-        result = self._run({"CMakeLists.txt": "add_compile_options(-fhardened)\n", GITHUB_WORKFLOW: CLANG_CI})
+    def test_fhardened_is_gcc_only(self) -> None:
+        result = self._run({"CMakeLists.txt": "add_compile_options(-fhardened)\n", **GCC_AND_CLANG})
         self.assertEqual(
-            result,
-            Result.warned(
-                f"-fhardened is GCC-only; Clang in CI is missing hardening options: {GCC_OPTIONS}", "found -fhardened"
-            ),
+            result, Result.warned(f"missing hardening options: {GCC_OPTIONS} for clang", f"found {GCC_OPTIONS}")
         )
 
-    def test_fhardened_with_explicit_options_passes_when_clang_is_in_ci(self) -> None:
+    def test_fhardened_for_gcc_and_explicit_options_for_clang_pass(self) -> None:
         result = self._run(
             {
                 "CMakeLists.txt": f"""\
@@ -144,14 +164,16 @@ class CAndCxxHardeningTests(unittest.TestCase):
                       add_compile_options({GCC_FLAGS})
                     endif()
                 """,
-                GITHUB_WORKFLOW: CLANG_CI,
+                **GCC_AND_CLANG,
             }
         )
-        self.assertEqual(result, Result.passed(f"hardening options are enabled: -fhardened, {GCC_OPTIONS}"))
+        self.assertEqual(result, Result.passed(f"hardening options are enabled: {GCC_OPTIONS}"))
 
     def test_msvc_in_ci_requires_msvc_options(self) -> None:
-        result = self._run({"CMakeLists.txt": f"add_compile_options({GCC_FLAGS})\n", GITHUB_WORKFLOW: MSVC_CI})
-        self.assertEqual(result, Result.warned(f"missing hardening options: {MSVC_OPTIONS}", f"found {GCC_OPTIONS}"))
+        result = self._run({"CMakeLists.txt": f"add_compile_options({GCC_FLAGS})\n", **LINUX_AND_WINDOWS})
+        self.assertEqual(
+            result, Result.warned(f"missing hardening options: {MSVC_OPTIONS} for msvc", f"found {GCC_OPTIONS}")
+        )
 
     def test_msvc_in_ci_passes_with_msvc_options(self) -> None:
         result = self._run(
@@ -164,28 +186,31 @@ class CAndCxxHardeningTests(unittest.TestCase):
                       add_compile_options({GCC_FLAGS})
                     endif()
                 """,
-                GITHUB_WORKFLOW: MSVC_CI,
+                **LINUX_AND_WINDOWS,
             }
         )
-        self.assertEqual(result, Result.passed(f"hardening options are enabled: {GCC_OPTIONS}, {MSVC_OPTIONS}"))
+        expected = f"hardening options are enabled: {GCC_OPTIONS} for gcc; {MSVC_OPTIONS} for msvc"
+        self.assertEqual(result, Result.passed(expected))
 
     def test_disabled_msvc_options_do_not_count(self) -> None:
         result = self._run(
             {
                 "CMakeLists.txt": f"add_compile_options({GCC_FLAGS})\n"
                 "add_compile_options(/sdl- /guard:cf- /DYNAMICBASE:NO /CETCOMPAT:NO)\n",
-                GITHUB_WORKFLOW: MSVC_CI,
+                **LINUX_AND_WINDOWS,
             }
         )
-        self.assertEqual(result, Result.warned(f"missing hardening options: {MSVC_OPTIONS}", f"found {GCC_OPTIONS}"))
+        self.assertEqual(
+            result, Result.warned(f"missing hardening options: {MSVC_OPTIONS} for msvc", f"found {GCC_OPTIONS}")
+        )
 
     def test_msvc_options_are_not_required_without_msvc_in_ci(self) -> None:
-        result = self._run({"CMakeLists.txt": f"add_compile_options({GCC_FLAGS})\n", GITHUB_WORKFLOW: LINUX_CI})
+        result = self._run({"CMakeLists.txt": f"add_compile_options({GCC_FLAGS})\n", **LINUX})
         self.assertEqual(result.status, Status.PASS)
 
-    def test_only_unrequired_msvc_options_warn_rather_than_fail(self) -> None:
+    def test_options_of_a_compiler_ci_does_not_use_do_not_count(self) -> None:
         result = self._run({"CMakeLists.txt": "add_compile_options(/sdl /guard:cf)\n"})
-        self.assertEqual(result, Result.warned(f"missing hardening options: {GCC_OPTIONS}", "found "))
+        self.assertEqual(result.status, Status.FAIL)
 
 
 class RustHardeningTests(unittest.TestCase):
@@ -201,15 +226,19 @@ class RustHardeningTests(unittest.TestCase):
     def test_fails_without_hardening(self) -> None:
         files = {
             "Cargo.toml": "[profile.dev]\noverflow-checks = true\n",
-            GITHUB_WORKFLOW: "run: cargo build -C overflow-checks=off\n",
+            **github_job("ubuntu-latest", "cargo build -C overflow-checks=off"),
         }
-        self.assertEqual(self._run(files), Result.failed("no hardening options found; enable release overflow-checks"))
+        expected = Result.failed(
+            "no hardening options found; enable release overflow-checks",
+            "set overflow-checks = true in [profile.release] of Cargo.toml",
+        )
+        self.assertEqual(self._run(files), expected)
 
     def test_release_overflow_checks_in_any_spelling_count(self) -> None:
         spellings = {
             "release profile": {"Cargo.toml": self.OVERFLOW_CHECKS},
             "rustflags": {".cargo/config.toml": '[build]\nrustflags = ["-C", "overflow-checks"]\n'},
-            "command line": {GITHUB_WORKFLOW: "run: cargo rustc --release -- -Coverflow-checks=on\n"},
+            "command line": github_job("ubuntu-latest", "cargo rustc --release -- -Coverflow-checks=on"),
         }
         for spelling, files in spellings.items():
             with self.subTest(spelling):
