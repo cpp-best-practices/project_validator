@@ -9,9 +9,7 @@ from collections.abc import Iterator
 from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
 
-from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, program
@@ -22,13 +20,14 @@ from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
+from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
+from project_validator.facts.practices import Practice, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, starts
 from project_validator.rules import (
-    WarningPolicy,
-    WarningsAsErrors,
     directories,
     ignored_at_top_level,
 )
@@ -60,20 +59,6 @@ MSBUILD = BuildSystem(
 )
 
 RUNS_BUILD = re.compile(r"\bdotnet\s+(?:build|test|publish|pack|run|restore)\b")
-
-
-def _settings_files(context: Context) -> list[str]:
-    """The project files and shared MSBuild settings, in every directory."""
-    files = context.project.files()
-    return [path for path in files if any(fnmatchcase(PurePosixPath(path).name, glob) for glob in SETTINGS_FILES)]
-
-
-def _build_texts(context: Context) -> tuple[str, ...]:
-    """CI configuration and pre-commit hooks, with the project files and shared MSBuild settings when CI builds."""
-    texts = ci_and_hook_texts(context)
-    if not any(map(RUNS_BUILD.search, texts)):
-        return texts
-    return (*texts, *(context.project.read_text(path) for path in _settings_files(context)))
 
 
 def _property(name: str, values: str) -> str:
@@ -268,29 +253,46 @@ NULLABLE = Pattern("Nullable enable", re.compile(_property("Nullable", "enable")
 FSHARP_WARNINGS = Pattern("F# --warnon", re.compile(r"<WarnOn>[^<]+</WarnOn>|--warnon:\S+", re.IGNORECASE))
 
 
-def _required_settings(context: Context) -> tuple[Pattern, ...]:
-    if CSHARP in context.structure.languages:
-        return (ANALYSIS_MODE, ENFORCE_CODE_STYLE, NULLABLE)
-    return (FSHARP_WARNINGS,)
-
-
-WARNINGS = WarningPolicy(
-    kind=".NET analyzer settings",
-    recognised=(ANALYSIS_MODE, ENFORCE_CODE_STYLE, NULLABLE, FSHARP_WARNINGS),
-    required=_required_settings,
-    texts=_build_texts,
-    separator=", ",
-)
-
-WARNINGS_AS_ERRORS = WarningsAsErrors(
-    flags=(
+_CSHARP_WARNINGS = (required(ANALYSIS_MODE), required(ENFORCE_CODE_STYLE), required(NULLABLE))
+_FSHARP_WARNINGS = (required(FSHARP_WARNINGS),)
+_DOTNET_WARNINGS_AS_ERRORS = (
+    required(
         pattern(
             "TreatWarningsAsErrors",
             rf"{_property('TreatWarningsAsErrors', 'true')}|(?<![\w-])[-/]{{1,2}}warnaserror(?![\w:-])",
-        ),
+        )
     ),
-    texts=_build_texts,
-    searched="the MSBuild settings CI builds with, or CI configuration",
+)
+DOTNET_WARNING_SETTINGS = requirement_reader(
+    "MSBuild warning settings", SETTINGS_FILES, (*_CSHARP_WARNINGS, *_FSHARP_WARNINGS, *_DOTNET_WARNINGS_AS_ERRORS)
+)
+# The .NET analyzers analyze C#; F#'s compiler has warnings to turn on instead.
+CSHARP_WARNINGS = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=frozenset({CSHARP}),
+    kind=".NET analyzer settings",
+    requirements=always(*_CSHARP_WARNINGS),
+    reads=(DOTNET_WARNING_SETTINGS.name,),
+    hint="set <AnalysisMode>All</AnalysisMode>, <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> and "
+    "<Nullable>enable</Nullable> in Directory.Build.props",
+)
+FSHARP_WARNINGS_PRACTICE = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=frozenset({FSHARP}),
+    kind=".NET analyzer settings",
+    requirements=always(*_FSHARP_WARNINGS),
+    reads=(DOTNET_WARNING_SETTINGS.name,),
+    hint="turn on F# warnings with <WarnOn> (or --warnon:)",
+)
+
+WARNINGS_AS_ERRORS = Practice(
+    name=WARNINGS_AS_ERRORS_PRACTICE,
+    languages=DOTNET_LANGUAGES,
+    kind="warnings as errors",
+    requirements=always(*_DOTNET_WARNINGS_AS_ERRORS),
+    any_one=True,
+    reads=(DOTNET_WARNING_SETTINGS.name,),
+    searched="the MSBuild settings or CI configuration",
     hint="set <TreatWarningsAsErrors>true</TreatWarningsAsErrors> in Directory.Build.props",
 )
 
@@ -489,9 +491,5 @@ DOTNET = Ecosystem(
         ),
         usage=re.compile(r"\bdotnet\s+(?:build|test|restore|publish|pack|run|format)\b|\bsetup-dotnet\b"),
     ),
-    rules=(
-        versions_axis(".NET SDK version", ".NET SDK"),
-        WARNINGS,
-        WARNINGS_AS_ERRORS,
-    ),
+    rules=(versions_axis(".NET SDK version", ".NET SDK"),),
 )

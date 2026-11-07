@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from project_validator.checks.warnings_as_errors import warnings_as_errors
@@ -6,11 +7,26 @@ from project_validator.ecosystems import C_FAMILY
 from tests.support import (
     BARE_PROJECT,
     CI_FILES,
-    GITHUB_WORKFLOW,
     WELL_CONFIGURED,
     c_family_layouts_built_with,
+    ci_running,
+    github_job,
     run_in_every_layout,
 )
+
+SEARCHED = (
+    "warnings are not treated as errors in CI configuration or the build files (CMake files, presets, meson.build)"
+)
+MSVC_AND_GCC = {
+    ".github/workflows/ci.yml": json.dumps(
+        {
+            "jobs": {
+                "linux": {"runs-on": "ubuntu-latest", "steps": [{"run": "cmake -S . -B build"}]},
+                "windows": {"runs-on": "windows-latest", "steps": [{"run": "cmake -S . -B build"}]},
+            }
+        }
+    )
+}
 
 
 class WarningsAsErrorsTests(unittest.TestCase):
@@ -31,38 +47,41 @@ class WarningsAsErrorsTests(unittest.TestCase):
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("warnings are not treated as errors", result.message)
         self.assertIn("CMAKE_COMPILE_WARNING_AS_ERROR", result.details[0])
+        self.assertEqual(
+            result.message,
+            SEARCHED,
+        )
 
     def test_passes_with_werror_in_an_optional_configuration(self) -> None:
         result = self._run(WELL_CONFIGURED)
         self.assertEqual(result.status, Status.PASS)
         self.assertEqual(result.message, "warnings are treated as errors with -Werror")
 
-    def test_passes_with_msvc_wx(self) -> None:
-        result = self._run({"cmake/CompilerWarnings.cmake": "set(MSVC_WARNINGS /W4 /WX)\n"})
-        self.assertEqual(result.status, Status.PASS)
-        self.assertEqual(result.message, "warnings are treated as errors with /WX")
+    def test_passes_with_msvc_wx_when_ci_builds_with_msvc(self) -> None:
+        msvc = {"CMakeLists.txt": "if(MSVC)\n  add_compile_options(/W4 /WX)\nendif()\n"}
+        result = self._run({**msvc, **github_job("windows-latest", "cmake -S . -B build")})
+        self.assertEqual(result, Result.passed("warnings are treated as errors with /WX"))
+        self.assertEqual(self._run(msvc).status, Status.FAIL)
 
     def test_passes_with_the_cmake_variable(self) -> None:
         result = self._run({"CMakeLists.txt": "set(CMAKE_COMPILE_WARNING_AS_ERROR ON)\n"})
         self.assertEqual(result.status, Status.PASS)
-        self.assertEqual(result.message, "warnings are treated as errors with COMPILE_WARNING_AS_ERROR")
+        self.assertEqual(result.message, "warnings are treated as errors with -Werror")
 
     def test_passes_with_the_target_property(self) -> None:
         result = self._run({"CMakeLists.txt": "set_target_properties(app PROPERTIES COMPILE_WARNING_AS_ERROR TRUE)\n"})
         self.assertEqual(result.status, Status.PASS)
 
     def test_passes_with_the_cmake_variable_set_from_any_ci(self) -> None:
-        for provider, path in CI_FILES.items():
+        for provider in CI_FILES:
             with self.subTest(ci=provider):
-                configure = "steps:\n  - run: cmake -S . -B build -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON\n"
-                result = self._run({path: configure})
-                self.assertEqual(result.status, Status.PASS)
-                self.assertEqual(result.message, "warnings are treated as errors with COMPILE_WARNING_AS_ERROR")
+                configure = ci_running(provider, "cmake -S . -B build -DCMAKE_COMPILE_WARNING_AS_ERROR:BOOL=ON")
+                self.assertEqual(self._run(configure), Result.passed("warnings are treated as errors with -Werror"))
 
     def test_passes_with_werror_in_any_ci(self) -> None:
-        for provider, path in CI_FILES.items():
+        for provider in CI_FILES:
             with self.subTest(ci=provider):
-                result = self._run({path: 'steps:\n  - run: cmake -S . -B build -DCMAKE_CXX_FLAGS="-Wall -Werror"\n'})
+                result = self._run(ci_running(provider, "cmake -S . -B build -DCMAKE_CXX_FLAGS=-Werror"))
                 self.assertEqual(result.status, Status.PASS)
                 self.assertEqual(result.message, "warnings are treated as errors with -Werror")
 
@@ -70,12 +89,12 @@ class WarningsAsErrorsTests(unittest.TestCase):
         for value in ('"ON"', "true", '{"type": "BOOL", "value": "ON"}'):
             with self.subTest(value=value):
                 variables = f'{{"CMAKE_COMPILE_WARNING_AS_ERROR": {value}}}'
-                preset = f'{{"configurePresets": [{{"cacheVariables": {variables}}}]}}'
+                preset = f'{{"configurePresets": [{{"name": "ci", "cacheVariables": {variables}}}]}}'
                 result = self._run({"CMakePresets.json": preset})
                 self.assertEqual(result.status, Status.PASS)
 
     def test_reports_every_form_found(self) -> None:
-        result = self._run({"CMakeLists.txt": "add_compile_options(-Werror /WX)\n"})
+        result = self._run({"CMakeLists.txt": "add_compile_options(-Werror /WX)\n", **MSVC_AND_GCC})
         self.assertEqual(result.message, "warnings are treated as errors with -Werror, /WX")
 
     def test_disabled_or_partial_settings_do_not_count(self) -> None:
@@ -86,7 +105,7 @@ class WarningsAsErrorsTests(unittest.TestCase):
                     add_compile_options(-Werror=return-type -Wno-error /WX:NO)
                     """,
                 "CMakePresets.json": """\
-                    {"configurePresets": [{"cacheVariables": {"CMAKE_COMPILE_WARNING_AS_ERROR": false}}]}
+                    {"configurePresets": [{"name": "ci", "cacheVariables": {"CMAKE_COMPILE_WARNING_AS_ERROR": false}}]}
                     """,
             }
         )
@@ -106,19 +125,20 @@ class MesonWarningsAsErrorsTests(unittest.TestCase):
     def test_fails_without_werror(self) -> None:
         result = self._run({})
         self.assertEqual(result.status, Status.FAIL)
-        self.assertEqual(result.message, "warnings are not treated as errors in CI configuration or meson.build files")
+        self.assertEqual(
+            result.message,
+            SEARCHED,
+        )
         self.assertIn("werror=true", result.details[0])
 
     def test_passes_with_the_werror_option(self) -> None:
         cases = {
             "meson.build": "project('app', 'cpp', default_options: ['warning_level=3', 'werror=true'])\n",
-            GITHUB_WORKFLOW: "steps:\n  - run: meson setup build -Dwerror=true\n",
         }
-        for path, text in cases.items():
+        for path, text in {**cases, **github_job("ubuntu-latest", "meson setup build -Dwerror=true")}.items():
             with self.subTest(path=path):
                 result = self._run({path: text})
-                self.assertEqual(result.status, Status.PASS)
-                self.assertEqual(result.message, "warnings are treated as errors with werror=true")
+                self.assertEqual(result, Result.passed("warnings are treated as errors with -Werror"))
 
     def test_passes_with_werror_or_wx_as_project_arguments(self) -> None:
         result = self._run({"meson.build": "add_project_arguments('-Werror', language: 'cpp')\n"})

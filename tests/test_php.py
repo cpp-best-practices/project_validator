@@ -39,7 +39,10 @@ from tests.support import GITHUB_WORKFLOW, checks_named, github_job, make_contex
     "type-checking",
     "warnings-as-errors",
 )
-SETUP_PHP_INI = "steps:\n  - uses: shivammathur/setup-php@v2\n    with:\n      ini-values: error_reporting=E_ALL\n"
+SETUP_PHP_INI = (
+    "jobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: shivammathur/setup-php@v2\n"
+    "        with:\n          ini-values: error_reporting=E_ALL\n"
+)
 PHPUNIT_TEST = {"tests/AppTest.php": "<?php\nfinal class AppTest extends \\PHPUnit\\Framework\\TestCase {}\n"}
 
 TYPE_HINT = "consider running a type checker in CI: phpstan analyse or psalm"

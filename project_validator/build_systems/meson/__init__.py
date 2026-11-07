@@ -14,16 +14,33 @@ from project_validator.build_systems.meson.evaluation import BUILD_FILE, Evaluat
 from project_validator.core import Context, Project
 from project_validator.facts import Command, Fact, Origin, Setting, Unknown, resolved
 from project_validator.facts.arguments import positional, program
-from project_validator.facts.build import BuildSetting, CompilerOption, disjuncts
+from project_validator.facts.build import BuildSetting, CompilerOption, disjuncts, implied_options
 from project_validator.facts.conditions import both
 from project_validator.facts.expansion import CommandExpander, Expansion, Script
 from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader
+from project_validator.tools.toolchains import GCC_LIKE, MSVC, WARNINGS_AS_ERRORS_BY_COMPILER, ByCompiler
 
 BUILD_SYSTEM = "Meson"
 MESON_TOOLS = (BUILD_SYSTEM,)
 OPTION_FILES = ("meson.options", "meson_options.txt")
 MESON_FILES = (BUILD_FILE, *OPTION_FILES)
+
+
+_GCC_LEVELS = ("-Wall",), ("-Wall", "-Wextra"), ("-Wall", "-Wextra", "-Wpedantic")
+_MSVC_LEVELS = ("/W2",), ("/W3",), ("/W4",)
+# What Meson's `warning_level` and `werror` pass each compiler.
+_IMPLIED: dict[tuple[str, str], ByCompiler] = {
+    **{
+        ("warning_level", str(level)): ((GCC_LIKE, gcc), (frozenset({MSVC}), msvc))
+        for level, gcc, msvc in zip((1, 2, 3), _GCC_LEVELS, _MSVC_LEVELS, strict=True)
+    },
+    ("warning_level", "everything"): (
+        (GCC_LIKE, (*_GCC_LEVELS[-1], "-Wshadow", "-Wconversion")),
+        (frozenset({MSVC}), ("/Wall",)),
+    ),
+    ("werror", "true"): WARNINGS_AS_ERRORS_BY_COMPILER,
+}
 
 
 @dataclass(slots=True)
@@ -47,6 +64,9 @@ class Collector:
                 )
 
     def setting(self, frame: Frame, name: str, key: str, value: str, target: str | None, *, default: bool) -> None:
+        if name != "option":
+            implied = _IMPLIED.get((key, value), ())
+            self.facts += implied_options(frame.origin(name), BUILD_SYSTEM, implied, frame.condition, target)
         for applies in disjuncts(frame.condition):
             self.facts.append(
                 BuildSetting(

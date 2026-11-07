@@ -24,6 +24,144 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "clang",
+                "found": {
+                  "-Wall": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wconversion": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wextra": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wpedantic": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wshadow": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-Wall": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wconversion": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wextra": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wpedantic": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wshadow": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "msvc",
+                "found": {
+                  "/W4": [
+                    "CMakeLists.txt"
+                  ],
+                  "/permissive-": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "clang",
+                "found": {
+                  "-Wall": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wconversion": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wextra": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wpedantic": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wshadow": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-Wall": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wconversion": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wextra": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wpedantic": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wshadow": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "msvc",
+                "found": {
+                  "/W4": [
+                    "CMakeLists.txt"
+                  ],
+                  "/permissive-": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C++",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "C",
@@ -758,6 +896,90 @@
               }
             },
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "clang",
+                "found": {
+                  "-Werror": [
+                    "CI (.github/workflows/ci.yml)",
+                    "CMakeLists.txt (when WARNINGS_AS_ERRORS)"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-Werror": [
+                    "CI (.github/workflows/ci.yml)",
+                    "CMakeLists.txt (when WARNINGS_AS_ERRORS)"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "msvc",
+                "found": {},
+                "missing": [
+                  "/WX"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "clang",
+                "found": {
+                  "-Werror": [
+                    "CI (.github/workflows/ci.yml)",
+                    "CMakeLists.txt (when WARNINGS_AS_ERRORS)"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-Werror": [
+                    "CI (.github/workflows/ci.yml)",
+                    "CMakeLists.txt (when WARNINGS_AS_ERRORS)"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "msvc",
+                "found": {},
+                "missing": [
+                  "/WX"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -7743,7 +7965,7 @@
     },
     "compiler-warnings": {
       "details": [],
-      "message": "strict compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wshadow -Wconversion /W4 /permissive-",
+      "message": "strict compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wshadow -Wconversion for clang and gcc; /W4 /permissive- for msvc",
       "status": "PASS"
     },
     "copy-paste-detection": {

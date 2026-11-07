@@ -24,6 +24,54 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "eslint": [
+                    "CI (package.json)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "JavaScript",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "eslint": [
+                    "CI (package.json)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "TypeScript",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "JavaScript",
@@ -1032,6 +1080,60 @@
               }
             },
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "eslint --max-warnings 0": [
+                    "CI (package.json)"
+                  ]
+                },
+                "missing": [
+                  "biome ci",
+                  "deno lint"
+                ]
+              }
+            ],
+            "language": "JavaScript",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "eslint --max-warnings 0": [
+                    "CI (package.json)"
+                  ]
+                },
+                "missing": [
+                  "biome ci",
+                  "deno lint"
+                ]
+              }
+            ],
+            "language": "TypeScript",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }

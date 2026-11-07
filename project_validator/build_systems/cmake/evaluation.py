@@ -7,7 +7,8 @@ followed, in the builds its condition names (see `project_validator.build_system
 hold each value in the builds it is set in. Commands that are neither control flow nor variables are handed to an
 `Observer` with their arguments' values.
 
-What is not followed: loops run once per listed item (or once), a function or macro only for its first calls,
+What is not followed: loops run once per listed item (or once), a function or macro called again with the same
+arguments (or after its first calls),
 `return()` returns nowhere, and only the
 `list()` and `string()` operations that add to a variable change it. A CMake file no top-level CMakeLists.txt
 reaches is evaluated on its own, as if it were included; a function or macro nothing calls, as if it were called.
@@ -48,8 +49,9 @@ from project_validator.facts.conditions import ALWAYS, Condition, both, either, 
 MOST_NESTED = 24
 MOST_ITERATIONS = 64
 MOST_COMMANDS = 250_000
-# A function or macro is followed for its first calls only: those show what it sets (on which targets is not asked).
-MOST_CALLS = 32
+# A function or macro called again with the same arguments sets the same things again: it is not followed again. Nor is
+# it after its first calls, which show what it sets (on which targets is not asked).
+MOST_CALLS = 64
 LISTS_FILE = "CMakeLists.txt"
 NO_ARGUMENTS: Mapping[str, tuple[Item, ...]] = MappingProxyType({})
 
@@ -122,6 +124,8 @@ class Definition:
     # The builds it is defined in.
     when: Condition = ALWAYS
     calls: int = 0
+    # The arguments of each call followed so far.
+    seen: set[tuple[str, ...]] = field(default_factory=set)
 
 
 class _TooMuch(Exception):
@@ -218,13 +222,14 @@ class Evaluation:
     def words(self, arguments: Iterable[Argument], frame: Frame) -> list[Value]:
         """The values of the arguments: unquoted ones split into their list elements."""
         found: list[Value] = []
-        for argument in arguments:
+        for index, argument in enumerate(arguments):
             if argument.kind is Kind.BRACKET:
                 found.append(Value(argument.text))
                 continue
             for choice, value in enumerate(self._possible(argument.text, frame)):
                 if argument.kind is Kind.QUOTED:
-                    found.append(Value(value.text.replace(ESCAPED_SEMICOLON, ";"), value.when, value.origin, choice))
+                    text = value.text.replace(ESCAPED_SEMICOLON, ";")
+                    found.append(Value(text, value.when, value.origin, choice, index))
                 else:
                     found += (Value(element, value.when, value.origin, choice) for element in elements(value.text))
         return found
@@ -314,8 +319,13 @@ class Evaluation:
         self.observer.invoked(frame, invocation, words)
 
     def _call(self, definition: Definition, words: list[Value], frame: Frame) -> None:
+        arguments = tuple(word.text for word in words)
+        if arguments in definition.seen or definition.name in frame.stack or len(frame.stack) > MOST_NESTED:
+            definition.calls = max(definition.calls, 1)
+            return
+        definition.seen.add(arguments)
         definition.calls += 1
-        if definition.name in frame.stack or len(frame.stack) > MOST_NESTED or definition.calls > MOST_CALLS:
+        if definition.calls > MOST_CALLS:
             return
         bound = _bound(definition.parameters, words)
         stack = (*frame.stack, definition.name)
@@ -381,6 +391,17 @@ class Evaluation:
             frame.scope.assign(
                 words[1].text, (Item(text, ALWAYS, frame.origin(invocation)),), frame.condition, append=True
             )
+
+    def separate_arguments(self, frame: Frame, words: list[Value], invocation: Invocation) -> None:
+        """`separate_arguments(VARIABLE UNIX_COMMAND "a b")`: the words of a command line, as a list; the old
+        form, `separate_arguments(VARIABLE)`, splits the variable's own value."""
+        if not words:
+            return
+        name, texts = words[0].text, words[2:] if len(words) > 2 and words[1].text.endswith("_COMMAND") else words[1:]
+        origin = frame.origin(invocation)
+        found = texts or [Value(item.text, item.when, item.origin) for item in frame.scope.get(name) or ()]
+        items = [Item(part, value.when, value.origin or origin) for value in found for part in value.text.split()]
+        frame.scope.assign(name, items, frame.condition)
 
     def option(self, _frame: Frame, words: list[Value], _: Invocation) -> None:
         if words:
@@ -467,6 +488,7 @@ _HANDLERS: Mapping[str, Callable[[Evaluation, Frame, list[Value], Invocation], N
     "cmake_dependent_option": Evaluation.option,
     "find_program": Evaluation.find_program,
     "cmake_parse_arguments": Evaluation.parse_arguments,
+    "separate_arguments": Evaluation.separate_arguments,
     "include": Evaluation.include,
     "add_subdirectory": Evaluation.add_subdirectory,
     "project": Evaluation.project,
@@ -551,12 +573,26 @@ def _loop_items(words: list[Value], scope: Scope) -> list[Item] | None:
     return found
 
 
+def _arguments(words: list[Value]) -> list[tuple[Item, ...]]:
+    """A call's arguments: each word one, but the values a quoted argument takes in different builds one together."""
+    found: list[tuple[Item, ...]] = []
+    for index, word in enumerate(words):
+        item = Item(word.text, word.when, word.origin)
+        if word.argument >= 0 and index and words[index - 1].argument == word.argument:
+            found[-1] = (*found[-1], item)
+        else:
+            found.append((item,))
+    return found
+
+
 def _bound(parameters: tuple[str, ...], words: list[Value]) -> dict[str, tuple[Item, ...]]:
     """A call's arguments, by the names a function or macro gives them, and as ARGV, ARGN, ARGC and ARGV<n>."""
-    items = [Item(word.text, word.when, word.origin) for word in words]
-    bound = {name: tuple(items[index : index + 1]) for index, name in enumerate(parameters)}
-    bound |= {f"ARGV{index}": (item,) for index, item in enumerate(items)}
-    return bound | {"ARGV": tuple(items), "ARGN": tuple(items[len(parameters) :]), "ARGC": (Item(str(len(items))),)}
+    arguments = _arguments(words)
+    bound = {name: arguments[index] if index < len(arguments) else () for index, name in enumerate(parameters)}
+    bound |= {f"ARGV{index}": items for index, items in enumerate(arguments)}
+    every = tuple(item for items in arguments for item in items)
+    rest = tuple(item for items in arguments[len(parameters) :] for item in items)
+    return bound | {"ARGV": every, "ARGN": rest, "ARGC": (Item(str(len(arguments))),)}
 
 
 def _number(text: str) -> int:

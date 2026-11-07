@@ -13,6 +13,37 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "AnalysisMode Recommended or All": [
+                    "Directory.Build.props"
+                  ],
+                  "EnforceCodeStyleInBuild": [
+                    "Directory.Build.props"
+                  ],
+                  "Nullable enable": [
+                    "Directory.Build.props"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C#",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "C#",
@@ -440,6 +471,31 @@
               }
             },
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "TreatWarningsAsErrors": [
+                    "Directory.Build.props"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C#",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -1729,6 +1785,14 @@
     },
     {
       "heuristic": false,
+      "key": "WarnOn",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:WarnOn",
+      "tool": "MSBuild",
+      "value": "3390"
+    },
+    {
+      "heuristic": false,
       "key": "NuGetAuditMode",
       "kind": "Setting",
       "origin": "Directory.Build.props:NuGetAuditMode",
@@ -1758,6 +1822,51 @@
       "origin": "Directory.Build.props:PackageReference",
       "tool": "MSBuild",
       "value": "Roslynator.Analyzers"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "MSBuild warning settings"
+    },
+    {
+      "heuristic": true,
+      "key": "AnalysisMode Recommended or All",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "EnforceCodeStyleInBuild",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "Nullable enable",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "F# --warnon",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "TreatWarningsAsErrors",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
     },
     {
       "kind": "ConfigurationFile",
@@ -1815,6 +1924,11 @@
       "origin": "src/App/App.csproj:Sdk",
       "tool": "MSBuild",
       "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "MSBuild warning settings"
     },
     {
       "kind": "ConfigurationFile",
@@ -1896,6 +2010,11 @@
       "origin": "tests/App.Tests/App.Tests.csproj:Sdk",
       "tool": "MSBuild",
       "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "MSBuild warning settings"
     },
     {
       "kind": "ConfigurationFile",

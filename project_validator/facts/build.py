@@ -7,12 +7,12 @@ facts hold one `Applies` each, a disjunct of it: an option set under a condition
 """
 
 import dataclasses
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from itertools import product
 
-from project_validator.facts import Fact
-from project_validator.facts.conditions import DIMENSIONS, Condition, paths
+from project_validator.facts import Fact, Origin
+from project_validator.facts.conditions import DIMENSIONS, Condition, both, only, paths
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -108,4 +108,21 @@ class BuildSetting(Fact):
     default: bool = False
 
 
-__all__ = ["Applies", "BuildSetting", "CompilerOption", "disjuncts"]
+def implied_options(
+    origin: Origin,
+    build_system: str,
+    by_compiler: Iterable[tuple[frozenset[str], tuple[str, ...]]],
+    builds: Condition,
+    target: str | None = None,
+) -> Iterator[CompilerOption]:
+    """The options a build system's setting passes each compiler (CMake's `COMPILE_WARNING_AS_ERROR` passes GCC
+    `-Werror` and MSVC `/WX`), in `builds`."""
+    for compilers, options in by_compiler:
+        for applies in disjuncts(both(builds, only("compilers", compilers))):
+            for option in options:
+                yield CompilerOption(
+                    origin=origin, build_system=build_system, option=option, applies=applies, target=target
+                )
+
+
+__all__ = ["Applies", "BuildSetting", "CompilerOption", "disjuncts", "implied_options"]

@@ -68,11 +68,12 @@ class RecognitionTests(unittest.TestCase):
 
 
 class BuildSettingTests(unittest.TestCase):
-    def test_analyzers_count_when_ci_builds(self) -> None:
+    def test_analyzers_count_in_the_msbuild_settings_or_on_the_command_line(self) -> None:
         props = _props("AnalysisLevel=latest-recommended", "EnforceCodeStyleInBuild=true", "Nullable=enable")
         result = run_in_layout(self, CSHARP, COMPILER_WARNINGS, {**props, **_ci(BUILD)})
         self.assertEqual(result.status, Status.PASS)
-        self.assertEqual(run_in_layout(self, CSHARP, COMPILER_WARNINGS, props).status, Status.FAIL)
+        # The MSBuild settings are the project's, whether or not CI builds it.
+        self.assertEqual(run_in_layout(self, CSHARP, COMPILER_WARNINGS, props).status, Status.PASS)
         partial = run_in_layout(self, CSHARP, COMPILER_WARNINGS, _ci(f"{BUILD} -p:Nullable=enable"))
         expected = "missing .NET analyzer settings: AnalysisMode Recommended or All, EnforceCodeStyleInBuild"
         self.assertEqual(partial.message, expected)

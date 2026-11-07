@@ -11,10 +11,7 @@ from collections.abc import Callable, Iterator
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import (
-    ci_and_hook_texts,
-    existing_texts,
     json_value,
-    scripts_run,
 )
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
@@ -27,6 +24,9 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
+from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
+from project_validator.facts.practices import Practice, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import (
     SettingsReader,
@@ -39,9 +39,6 @@ from project_validator.facts.settings import (
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either, starts, when
 from project_validator.rules import (
-    Evidence,
-    WarningPolicy,
-    WarningsAsErrors,
     directories,
     ignored_at_top_level,
 )
@@ -57,34 +54,10 @@ COMPOSER = BuildSystem(name="Composer", files=(COMPOSER_JSON,), languages=PHP_ON
 PHPUNIT_CONFIG_FILES = ("phpunit.xml", "phpunit.xml.dist", "phpunit.dist.xml")
 
 
-def _scripts(context: Context) -> dict[str, str]:
-    """The Composer scripts, by name; a script of several commands is one command per line."""
-    scripts = json_value(context, COMPOSER_JSON, "scripts")
-    if not isinstance(scripts, dict):
-        return {}
-    commands = {name: [value] if isinstance(value, str) else value for name, value in scripts.items()}
-    return {
-        name: "\n".join(item for item in value if isinstance(item, str))
-        for name, value in commands.items()
-        if isinstance(value, list)
-    }
-
-
 # `composer test`, `composer run-script lint`, and `@lint` or `@composer lint` inside a script.
 CALLS_SCRIPT = re.compile(
     r"\bcomposer\s+(?:run(?:-script)?\s+)?(?P<command>[\w:.-]+)|(?:^|\s)@(?!composer\b|php\b)(?P<script>[\w:.-]+)"
 )
-
-
-def _called(text: str) -> Iterator[str]:
-    for match in CALLS_SCRIPT.finditer(text):
-        yield match["command"] or match["script"]
-
-
-def _run_texts(context: Context) -> tuple[str, ...]:
-    """CI configuration, pre-commit hooks, and the Composer scripts they run."""
-    texts = ci_and_hook_texts(context)
-    return (*texts, *scripts_run(texts, _scripts(context), _called))
 
 
 # Composer's own commands, which are not script names; `install` and `update` run their event scripts.
@@ -139,15 +112,6 @@ def _composer_scripts(command: Command, context: Context) -> Iterator[Expansion]
 
 
 COMPOSER_SCRIPTS = CommandExpander(name="Composer scripts", expand=_composer_scripts)
-
-
-def _with_files(*files: str) -> Evidence:
-    """CI configuration, the Composer scripts it runs, and `files`."""
-
-    def texts(context: Context) -> tuple[str, ...]:
-        return (*_run_texts(context), *existing_texts(context, files))
-
-    return texts
 
 
 CS_FIXER_CONFIG_FILES = (".php-cs-fixer.dist.php", ".php-cs-fixer.php")
@@ -265,35 +229,45 @@ ERROR_REPORTING = Pattern(
 )
 
 
-def _required_settings(_: Context) -> tuple[Pattern, ...]:
-    return (ERROR_REPORTING,)
-
-
 # PHP reports notices, warnings and deprecations at run time; the tests must see every one of them.
-WARNINGS = WarningPolicy(
-    kind="PHP error reporting settings",
-    recognised=(ERROR_REPORTING,),
-    required=_required_settings,
-    texts=_with_files(*PHPUNIT_CONFIG_FILES),
-)
-
-
 def _fails_on(issue: str) -> str:
     return rf"(?:\b{issue}\s*=\s*[\"']true[\"']|--fail-on-{issue.removeprefix('failOn').lower()}\b)"
 
 
-WARNINGS_AS_ERRORS = WarningsAsErrors(
-    flags=(
+_PHP_WARNINGS_AS_ERRORS = (
+    required(
         Pattern(
             "PHPUnit failOnWarning, failOnNotice and failOnDeprecation",
             re.compile(
                 rf"(?=[\s\S]*{_fails_on('failOnWarning')})(?=[\s\S]*{_fails_on('failOnNotice')})"
                 rf"(?=[\s\S]*{_fails_on('failOnDeprecation')})"
             ),
-        ),
-        pattern("PHPUnit failOnAllIssues", r"\bfailOnAllIssues\s*=\s*[\"']true[\"']|--fail-on-all-issues\b"),
+        )
     ),
-    texts=_with_files(*PHPUNIT_CONFIG_FILES),
+    required(pattern("PHPUnit failOnAllIssues", r"\bfailOnAllIssues\s*=\s*[\"']true[\"']|--fail-on-all-issues\b")),
+)
+PHP_WARNING_SETTINGS = requirement_reader(
+    "PHPUnit warning settings", PHPUNIT_CONFIG_FILES, (required(ERROR_REPORTING), *_PHP_WARNINGS_AS_ERRORS)
+)
+# PHP reports notices, warnings and deprecations at run time; the tests must see every one of them.
+WARNINGS = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=PHP_ONLY,
+    kind="PHP error reporting settings",
+    requirements=always(required(ERROR_REPORTING)),
+    reads=(PHP_WARNING_SETTINGS.name,),
+    separator=" ",
+    hint='set <ini name="error_reporting" value="-1"/> in phpunit.xml',
+)
+
+
+WARNINGS_AS_ERRORS = Practice(
+    name=WARNINGS_AS_ERRORS_PRACTICE,
+    languages=PHP_ONLY,
+    kind="warnings as errors",
+    requirements=always(*_PHP_WARNINGS_AS_ERRORS),
+    any_one=True,
+    reads=(PHP_WARNING_SETTINGS.name,),
     searched="phpunit.xml, CI configuration or the Composer scripts it runs",
     hint='set failOnWarning="true", failOnNotice="true" and failOnDeprecation="true" in phpunit.xml',
 )
@@ -594,9 +568,5 @@ PHP = Ecosystem(
         versions=(re.compile(rf"\bphp-version\W+{_PHP_VERSION}"), re.compile(rf"\bphp:{_PHP_VERSION}")),
         usage=re.compile(r"\bcomposer\s+(?:install|update|test|run|audit)\b|\bsetup-php\b|\bvendor/bin/|\bphp\s+-"),
     ),
-    rules=(
-        versions_axis("PHP version", PHP_LANGUAGE),
-        WARNINGS,
-        WARNINGS_AS_ERRORS,
-    ),
+    rules=(versions_axis("PHP version", PHP_LANGUAGE),),
 )

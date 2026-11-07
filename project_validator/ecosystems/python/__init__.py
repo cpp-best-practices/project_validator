@@ -4,11 +4,11 @@ import re
 import shlex
 import tomllib
 from collections.abc import Callable, Iterable, Iterator
+from dataclasses import replace
 from pathlib import PurePosixPath
 
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members, versions_axis
-from project_validator.evidence import existing_texts
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.audit import audited, auditor
@@ -19,12 +19,13 @@ from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
+from project_validator.facts.practices import Practice, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, defined_by, either, starts, when
 from project_validator.rules import (
-    WarningPolicy,
     directories,
     ignored_at_top_level,
 )
@@ -308,16 +309,18 @@ PYTHON_WARNINGS = (
 )
 
 
-def _required_warnings(_: Context) -> tuple[Pattern, ...]:
-    return PYTHON_WARNINGS
-
-
-def _warning_texts(context: Context) -> tuple[str, ...]:
-    return (*context.ci_texts, *existing_texts(context, WARNING_SETTINGS_FILES))
-
-
-WARNINGS = WarningPolicy(
-    kind="Python warning settings", recognised=PYTHON_WARNINGS, required=_required_warnings, texts=_warning_texts
+_PYTHON_WARNINGS = tuple(
+    replace(required(warning), hints=("-W", "PYTHONWARNINGS", "filterwarnings")) for warning in PYTHON_WARNINGS
+)
+PYTHON_WARNING_SETTINGS = requirement_reader("Python warning settings", WARNING_SETTINGS_FILES, _PYTHON_WARNINGS)
+WARNINGS = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=PYTHON_ONLY,
+    kind="Python warning settings",
+    requirements=always(*_PYTHON_WARNINGS),
+    reads=(PYTHON_WARNING_SETTINGS.name,),
+    separator=" ",
+    hint='run the tests with -W error (or filterwarnings = ["error"] in the pytest settings)',
 )
 
 # Python builds no binary, so it has no hardening rule: its interpreter is hardened by whoever builds it.
@@ -456,8 +459,5 @@ PYTHON = Ecosystem(
             r"\bpython[\d.]*\s+(?:-|\S+\.py\b)|\bpip\d*\s+install\b|\bpytest\b|\btox\b|\bnox\b|\bsetup-python\b"
         ),
     ),
-    rules=(
-        versions_axis("Python version", "Python"),
-        WARNINGS,
-    ),
+    rules=(versions_axis("Python version", "Python"),),
 )

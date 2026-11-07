@@ -13,6 +13,31 @@
         ]
       }
     ],
+    "compiler-warnings": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "error_reporting = E_ALL": [
+                    "phpunit.xml.dist"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "PHP",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "coverage": [
       {
         "language": "PHP",
@@ -487,6 +512,33 @@
               }
             },
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "PHPUnit failOnWarning, failOnNotice and failOnDeprecation": [
+                    "phpunit.xml.dist"
+                  ]
+                },
+                "missing": [
+                  "PHPUnit failOnAllIssues"
+                ]
+              }
+            ],
+            "language": "PHP",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -2255,6 +2307,27 @@
       "kind": "ConfigurationFile",
       "origin": "phpunit.xml.dist",
       "reader": "PHPUnit"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "phpunit.xml.dist",
+      "reader": "PHPUnit warning settings"
+    },
+    {
+      "heuristic": true,
+      "key": "error_reporting = E_ALL",
+      "kind": "Setting",
+      "origin": "phpunit.xml.dist",
+      "tool": "PHPUnit warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "PHPUnit failOnWarning, failOnNotice and failOnDeprecation",
+      "kind": "Setting",
+      "origin": "phpunit.xml.dist",
+      "tool": "PHPUnit warning settings",
+      "value": true
     },
     {
       "heuristic": false,

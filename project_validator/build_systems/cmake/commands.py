@@ -6,15 +6,16 @@ from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass, field
 from itertools import groupby
 
-from project_validator.build_systems.cmake.conditions import CONFIGURATION, LANGUAGE
+from project_validator.build_systems.cmake.conditions import CONFIGURATION, LANGUAGE, constant
 from project_validator.build_systems.cmake.evaluation import Frame
 from project_validator.build_systems.cmake.generator_expressions import generated
 from project_validator.build_systems.cmake.syntax import Invocation
 from project_validator.build_systems.cmake.values import Item, Value, elements
 from project_validator.facts import Fact, Origin, Setting
-from project_validator.facts.build import BuildSetting, CompilerOption, disjuncts
+from project_validator.facts.build import BuildSetting, CompilerOption, disjuncts, implied_options
 from project_validator.facts.conditions import ALWAYS, Condition, both
 from project_validator.facts.dependencies import Declared
+from project_validator.tools.toolchains import WARNINGS_AS_ERRORS_BY_COMPILER
 
 BUILD_SYSTEM = "CMake"
 _SCOPES = frozenset({"BEFORE", "INTERFACE", "PUBLIC", "PRIVATE"})
@@ -120,6 +121,9 @@ class Collector:
         *,
         default: bool = False,
     ) -> None:
+        self.facts += warnings_as_errors(
+            frame.origin(invocation), name, value.text, both(frame.condition, value.when), target
+        )
         for applies in disjuncts(both(frame.condition, value.when)):
             origin = frame.origin(invocation)
             self.facts.append(
@@ -139,6 +143,7 @@ def variable_facts(origin: Origin, name: str, value: str, builds: Condition) -> 
     """A CMake variable's value, in `builds`, as a setting; the flags of one that holds flags, as options too."""
     for applies in disjuncts(builds):
         yield BuildSetting(origin=origin, build_system=BUILD_SYSTEM, name=name, value=value, applies=applies)
+    yield from warnings_as_errors(origin, name, value, builds)
     if flags := _FLAGS.fullmatch(name):
         kind = "link" if flags["linker"] else "compile"
         for applies in disjuncts(both(builds, _flags_builds(flags))):
@@ -146,6 +151,17 @@ def variable_facts(origin: Origin, name: str, value: str, builds: Condition) -> 
                 yield CompilerOption(
                     origin=origin, build_system=BUILD_SYSTEM, option=option, applies=applies, linking=kind == "link"
                 )
+
+
+_WARNINGS_AS_ERRORS = frozenset({"CMAKE_COMPILE_WARNING_AS_ERROR", "COMPILE_WARNING_AS_ERROR"})
+
+
+def warnings_as_errors(
+    origin: Origin, name: str, value: str, builds: Condition, target: str | None = None
+) -> Iterator[CompilerOption]:
+    """`CMAKE_COMPILE_WARNING_AS_ERROR` (or a target's `COMPILE_WARNING_AS_ERROR`) on passes each compiler its flag."""
+    if name in _WARNINGS_AS_ERRORS and constant(value):
+        yield from implied_options(origin, BUILD_SYSTEM, WARNINGS_AS_ERRORS_BY_COMPILER, builds, target)
 
 
 def _flags_builds(flags: re.Match[str]) -> Condition:

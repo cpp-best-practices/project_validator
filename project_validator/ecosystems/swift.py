@@ -19,6 +19,9 @@ from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput
+from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
+from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
+from project_validator.facts.practices import Practice, always, required, requirement_reader
 from project_validator.facts.settings import (
     SettingsReader,
     file_reader,
@@ -33,12 +36,10 @@ from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
     BuildTypes,
     Hardening,
-    WarningPolicy,
-    WarningsAsErrors,
     directories,
     ignored_at_top_level,
 )
-from project_validator.text import Pattern, found_and_missing, pattern
+from project_validator.text import found_and_missing, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
@@ -236,27 +237,36 @@ COMPLETE_CONCURRENCY = pattern(
 )
 
 
-def _required_warnings(_: Context) -> tuple[Pattern, ...]:
-    return (SWIFTLINT, COMPLETE_CONCURRENCY)
-
-
-WARNINGS = WarningPolicy(
+SWIFT_BUILD_SETTINGS_FILES = (PACKAGE_SWIFT, "*.pbxproj", "*.xcconfig", "*.xcscheme")
+_SWIFT_WARNINGS = (required(SWIFTLINT, tools=("SwiftLint",)), required(COMPLETE_CONCURRENCY))
+WARNINGS = Practice(
+    name=WARNINGS_PRACTICE,
+    languages=SWIFT_ONLY,
     kind="Swift warning settings",
-    recognised=(SWIFTLINT, COMPLETE_CONCURRENCY),
-    required=_required_warnings,
-    texts=_build_texts,
-    separator=", ",
+    requirements=always(*_SWIFT_WARNINGS),
+    reads=("Swift build settings",),
+    hint="run SwiftLint and check concurrency completely (Swift 6 language mode, or -strict-concurrency=complete)",
 )
 
-WARNINGS_AS_ERRORS = WarningsAsErrors(
-    flags=(
+_SWIFT_WARNINGS_AS_ERRORS = (
+    required(
         pattern(
             "-warnings-as-errors",
             r"-warnings-as-errors\b|\btreatAllWarnings\s*\(\s*as:\s*\.error\b"
             r"|\bSWIFT_TREAT_WARNINGS_AS_ERRORS\s*=\s*YES\b",
-        ),
+        )
     ),
-    texts=_build_texts,
+)
+SWIFT_BUILD_SETTINGS = requirement_reader(
+    "Swift build settings", SWIFT_BUILD_SETTINGS_FILES, (*_SWIFT_WARNINGS, *_SWIFT_WARNINGS_AS_ERRORS)
+)
+WARNINGS_AS_ERRORS = Practice(
+    name=WARNINGS_AS_ERRORS_PRACTICE,
+    languages=SWIFT_ONLY,
+    kind="warnings as errors",
+    requirements=always(*_SWIFT_WARNINGS_AS_ERRORS),
+    any_one=True,
+    reads=(SWIFT_BUILD_SETTINGS.name,),
     searched="CI configuration, Package.swift or the Xcode build settings",
     hint="build with -Xswiftc -warnings-as-errors (SwiftPM 6.2: treatAllWarnings(as: .error); Xcode: "
     "SWIFT_TREAT_WARNINGS_AS_ERRORS = YES)",
@@ -405,8 +415,6 @@ SWIFT = Ecosystem(
     rules=(
         SWIFT_TOOLCHAINS,
         BuildTypes(axis=SWIFT_TOOLCHAINS),
-        WARNINGS,
-        WARNINGS_AS_ERRORS,
         HARDENING,
     ),
 )
