@@ -104,15 +104,30 @@ def _job_label(name: str, combination: Combination) -> str:
 
 
 _EXPORT = re.compile(
-    r"""^\s*(?:echo|printf)\s+(?:-\w+\s+)?["']?(?P<name>[A-Za-z_]\w*)=(?P<value>[^"'\n]*?)["']?"""
+    r"""(?:^|[;&]\s*)\s*(?:echo|printf)\s+(?:-\w+\s+)?["']?(?P<name>[A-Za-z_]\w*)=(?P<value>[^"'\n]*?)["']?"""
     r"""\s*>>\s*["']?\$\{?GITHUB_ENV\}?["']?\s*$""",
     re.MULTILINE,
 )
 
 
+_ASSIGNMENT = re.compile(r"(?:^|[;&]\s*)\s*(?:export\s+)?(?P<name>[A-Za-z_]\w*)=(?P<value>[^\s;&|]*)", re.MULTILINE)
+_REFERENCE = re.compile(r"\$(?:\{(\w+)\}|(\w+))")
+
+
 def _exported(script: str) -> dict[str, str]:
-    """The variables a step's script sets for the later steps: `echo "NAME=value" >> "$GITHUB_ENV"`."""
-    return {match["name"]: match["value"] for match in _EXPORT.finditer(script)}
+    """The variables a step's script sets for the later steps (`echo "NAME=value" >> "$GITHUB_ENV"`), with the
+    variables the script assigns before in place (`HC=/opt/ghc/bin/ghc` then `echo "HC=$HC" >> "$GITHUB_ENV"`)."""
+    exported: dict[str, str] = {}
+    for match in _EXPORT.finditer(script):
+        assigned = {
+            found["name"]: found["value"].strip("\"'") for found in _ASSIGNMENT.finditer(script, 0, match.start())
+        }
+        exported[match["name"]] = _substituted(match["value"], assigned)
+    return exported
+
+
+def _substituted(value: str, assigned: Mapping[str, str]) -> str:
+    return _REFERENCE.sub(lambda reference: assigned.get(reference[1] or reference[2], reference[0]), value)
 
 
 def _job_facts(
