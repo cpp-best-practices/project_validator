@@ -1,4 +1,1763 @@
 {
+  "facts": [
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "sanitizer": "",
+        "toolchain": "stable"
+      },
+      "name": "test (ubuntu-latest, stable, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "stable"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "sanitizer": "-Zsanitizer=address",
+        "toolchain": "stable"
+      },
+      "name": "test (ubuntu-latest, stable, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "stable"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "sanitizer": "",
+        "toolchain": "nightly"
+      },
+      "name": "test (ubuntu-latest, nightly, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "nightly"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "sanitizer": "-Zsanitizer=address",
+        "toolchain": "nightly"
+      },
+      "name": "test (ubuntu-latest, nightly, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "nightly"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "sanitizer": "",
+        "toolchain": "stable"
+      },
+      "name": "test (macos-latest, stable, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "stable"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "sanitizer": "-Zsanitizer=address",
+        "toolchain": "stable"
+      },
+      "name": "test (macos-latest, stable, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "stable"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[6]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "sanitizer": "",
+        "toolchain": "nightly"
+      },
+      "name": "test (macos-latest, nightly, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "nightly"
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[7]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "sanitizer": "-Zsanitizer=address",
+        "toolchain": "nightly"
+      },
+      "name": "test (macos-latest, nightly, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "nightly"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[8]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "sanitizer": "",
+        "toolchain": "stable"
+      },
+      "name": "test (windows-latest, stable, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "stable"
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[9]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "sanitizer": "-Zsanitizer=address",
+        "toolchain": "stable"
+      },
+      "name": "test (windows-latest, stable, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "stable"
+      },
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[10]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "sanitizer": "",
+        "toolchain": "nightly"
+      },
+      "name": "test (windows-latest, nightly, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "nightly"
+      },
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[11]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "sanitizer": "-Zsanitizer=address",
+        "toolchain": "nightly"
+      },
+      "name": "test (windows-latest, nightly, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "toolchain": "nightly"
+      },
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "cargo fmt --check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "cargo clippy --all-targets",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "cargo test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "audit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "cargo audit",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "cargo test --release",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run"
+    },
+    {
+      "argv": [
+        "cargo",
+        "llvm-cov",
+        "--branch",
+        "--mcdc"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "cargo llvm-cov --branch --mcdc",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/codeql.yml:analyze",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "analyze",
+      "origin": ".github/workflows/codeql.yml:jobs.analyze",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "languages": "python"
+      },
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[1]",
+      "uses": "github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "uses": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+    },
+    {
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run"
+    }
+  ],
   "map": {
     "build_systems": [
       "Cargo"

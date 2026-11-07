@@ -135,9 +135,14 @@ except where a step deliberately changes results and says so.
    test layouts (`tests/layouts/<name>.py`) and documentation page (`docs/ecosystems/<name>.md`) are named after its
    module; tests derive their language lists from the registry; the README describes each check without per-language
    detail; the skip message stops listing every language.
-2. **Facts and the CI command graph.** The fact store, CI job and command facts with provenance and unknowns, and
-   command expansion (package scripts, Composer scripts, Rake, Make, CMake presets, Maven phases, pre-commit). Job
-   build types come from the build systems.
+2. **Facts and the CI command graph**, in three parts:
+   1. The fact store (`project_validator/facts`) and the CI facts: each provider extracts its jobs (one per matrix
+      combination), the commands each one runs (split by `project_validator/facts/shell.py`) with the step's
+      condition, the actions it uses with their inputs, and what it could not read. `--facts` prints them.
+   2. Command expansion: package scripts, Composer scripts, Rake, Make, CMake presets, Maven phases and pre-commit
+      hooks add the commands they run, each with the chain that led to it.
+   3. Job build types and toolchains come from the command facts and the build systems, not from text searches of
+      the whole job.
 3. **Coverage end to end.** Coverage extractors for every supported language, the coverage question and its policy;
    the `coverage` check moves to them and the `CoverageTools` rules are deleted.
 4. **The remaining practices**, one at a time, each deleting its rule type from `rules.py`.
