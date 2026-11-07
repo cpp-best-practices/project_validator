@@ -1,8 +1,8 @@
 """Secrets committed by mistake are caught: CI, or a pre-commit hook, runs a secret scanner."""
 
 from project_validator.core import Context, Result, check
-from project_validator.evidence import PRE_COMMIT_CONFIGURATION, existing_texts
-from project_validator.text import matching_names, pattern
+from project_validator.facts.practices import named
+from project_validator.text import pattern
 
 SECRET_SCANNERS = (
     pattern("gitleaks", r"\bgitleaks\b"),
@@ -25,9 +25,7 @@ HINT = (
 
 @check(name="secret-scanning", description="CI scans for committed secrets (e.g. gitleaks, TruffleHog)")
 def secret_scanning(context: Context) -> Result:
-    if scanners := matching_names(
-        (*context.ci_texts, *existing_texts(context, PRE_COMMIT_CONFIGURATION)), SECRET_SCANNERS
-    ):
+    if scanners := named(context.facts, SECRET_SCANNERS):
         return Result.passed(f"secrets are scanned for with {', '.join(scanners)}")
     configured = [name for name, files in SCANNER_CONFIGURATION.items() if any(map(context.project.exists, files))]
     if configured:

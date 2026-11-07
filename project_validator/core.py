@@ -201,10 +201,6 @@ class Context:
         return found + tool_runs(found, known_tools())
 
     @cached_property
-    def ci_texts(self) -> tuple[str, ...]:
-        return tuple(self.project.read_text(ci_file.path) for ci_file in self.ci_files)
-
-    @cached_property
     def structure(self) -> ProjectStructure:
         from project_validator.structure import map_project
 

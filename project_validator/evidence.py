@@ -8,10 +8,6 @@ from project_validator.core import Context
 from project_validator.text import strip_json_comments
 
 
-def existing_texts(context: Context, names: Iterable[str]) -> tuple[str, ...]:
-    return tuple(context.project.read_text(name) for name in names if context.project.exists(name))
-
-
 def _at(value: object, keys: tuple[str, ...]) -> object | None:
     """The value at `keys` in nested tables; None when one is missing."""
     for key in keys:

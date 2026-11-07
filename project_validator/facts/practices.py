@@ -197,6 +197,14 @@ def met(
     return tuple(dict.fromkeys((*commands, *runs, *settings, *requirement.found(facts, compiler))))
 
 
+def named(facts: Facts, patterns: Iterable[Pattern]) -> list[str]:
+    """The names of the `patterns` a CI command or reusable step, or a pre-commit hook, matches, in order: a tool that
+    either runs is run."""
+    hooks = (str(setting.value) for setting in facts.where(Setting, tool="pre-commit", key="hook"))
+    texts = (*(text for _, text in ci_texts(facts).found), *hooks)
+    return list(dict.fromkeys(pattern.name for pattern in patterns for text in texts if pattern.regex.search(text)))
+
+
 def _steps(facts: Facts) -> Iterator[tuple[ActionStep, str]]:
     """Each reusable step CI uses, as `uses: owner/repo@ref` and its inputs (`ini-values: error_reporting=E_ALL`)."""
     for step in facts.of(ActionStep):
@@ -222,6 +230,7 @@ __all__ = [
     "handled",
     "known_practices",
     "met",
+    "named",
     "practices_of",
     "required",
     "requirement_reader",

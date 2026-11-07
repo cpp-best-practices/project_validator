@@ -201,3 +201,17 @@ class StructureTests(unittest.TestCase):
 class QuestionTests(unittest.TestCase):
     def test_questions_are_found_not_listed(self) -> None:
         self.assertIn("coverage", {question.name for question in known_questions()})
+
+
+class PreCommitHookTests(unittest.TestCase):
+    def test_each_hook_is_recorded_and_an_unparsed_configuration_is_unknown(self) -> None:
+        hooks = (
+            "repos:\n  - repo: local\n    hooks:\n      - id: lint\n        entry: lizard\n        args: [-L, '30']\n"
+        )
+        self.assertEqual(
+            _settings(".pre-commit-config.yaml", {".pre-commit-config.yaml": hooks}),
+            [("pre-commit", "hook", "local lint lizard -L 30")],
+        )
+        with temp_project({".pre-commit-config.yaml": "repos: [\n"}) as root:
+            [unknown] = make_context(root).facts.of(Unknown)
+        self.assertEqual(unknown.subject, "the pre-commit hooks")

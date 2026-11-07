@@ -201,6 +201,12 @@ def github_job(runs_on: str, *steps: str, matrix: Mapping[str, object] | None = 
     return {GITHUB_WORKFLOW: json.dumps({"jobs": {"build": job}})}
 
 
+def github_steps(*steps: str) -> dict[str, str]:
+    """A GitHub workflow whose one job runs `steps`, each written `run: command` or `uses: action`."""
+    parsed = [dict([step.split(": ", 1)]) for step in steps]
+    return {GITHUB_WORKFLOW: json.dumps({"jobs": {"build": {"runs-on": "ubuntu-latest", "steps": parsed}}})}
+
+
 def ci_running(provider: str, *commands: str) -> dict[str, str]:
     """A CI configuration of `provider` (see `CI_FILES`) with a job that runs `commands`."""
     if provider == "GitHub Actions":
