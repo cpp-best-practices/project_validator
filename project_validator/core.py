@@ -174,15 +174,15 @@ class Context:
         commands name included), and the tools those commands run."""
         from project_validator.ci import ci_facts
         from project_validator.facts import Facts
-        from project_validator.facts.expansion import built_in_expanders, expanded
-        from project_validator.facts.settings import built_in_settings_readers, settings_facts
+        from project_validator.facts.expansion import expanded, known_actions, known_expanders
+        from project_validator.facts.settings import known_settings_readers, settings_facts
         from project_validator.facts.structure import structure_facts
-        from project_validator.facts.tools import built_in_tools, tool_runs
+        from project_validator.facts.tools import known_tools, tool_runs
 
         found = Facts(structure_facts(self.project))
-        found += expanded(ci_facts(self.project, self.ci_files), self, built_in_expanders())
-        found += settings_facts(self.project, built_in_settings_readers(), found)
-        return found + tool_runs(found, built_in_tools())
+        found += expanded(ci_facts(self.project, self.ci_files), self, known_expanders(), known_actions())
+        found += settings_facts(self.project, known_settings_readers(), found)
+        return found + tool_runs(found, known_tools())
 
     @cached_property
     def ci_texts(self) -> tuple[str, ...]:
@@ -222,6 +222,8 @@ class Check:
     rule: type[object] | None = None
     # Former names, still accepted by --only and --skip.
     aliases: tuple[str, ...] = ()
+    # The languages of the components the check judges, as now known (plugins add components).
+    languages_from: Callable[[], frozenset[str]] | None = field(default=None, repr=False, compare=False)
 
     def applies_to(self, languages: frozenset[str]) -> bool:
         """A check without languages is language agnostic; others apply to projects using one of their languages."""

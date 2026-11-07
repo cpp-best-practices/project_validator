@@ -33,8 +33,8 @@ Psalm `errorLevel` 1 or 2.
 
 ## `code-formatting`
 
-`php-cs-fixer check` / `--dry-run`, phpcs or `pint --test`, in CI or the Composer scripts it runs; they have a
-default style, so CI enforcement alone passes.
+`php-cs-fixer check` (or `fix --dry-run`), phpcs or `pint --test`, in CI or the Composer scripts it runs; phpcbf
+and `php-cs-fixer fix` only rewrite files. They have a default style, so CI enforcement alone passes.
 
 ## `function-limits`
 

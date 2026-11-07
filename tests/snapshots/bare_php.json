@@ -42,6 +42,33 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "PHP-CS-Fixer",
+              "PHP_CodeSniffer",
+              "Pint"
+            ],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "PHP-CS-Fixer": "php-cs-fixer check",
+              "PHP_CodeSniffer": "phpcs",
+              "Pint": "pint --test"
+            },
+            "language": "PHP",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -138,7 +165,7 @@
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that runs php-cs-fixer check (or phpcs, or pint --test)"
+        "consider a CI job that runs php-cs-fixer check (or phpcs or pint --test)"
       ],
       "message": "CI never runs PHP-CS-Fixer, PHP_CodeSniffer or Pint; its formatting is not enforced",
       "status": "FAIL"

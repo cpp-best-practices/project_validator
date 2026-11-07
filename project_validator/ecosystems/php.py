@@ -22,8 +22,9 @@ from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resol
 from project_validator.facts.arguments import has_option, positional, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
-from project_validator.facts.settings import SettingsReader, settings, xml_root
-from project_validator.facts.tools import Run
+from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.settings import SettingsReader, file_reader, settings, xml_root
+from project_validator.facts.tools import Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -33,7 +34,6 @@ from project_validator.rules import (
     DependencyAudit,
     DependencyManagement,
     Evidence,
-    Formatter,
     FunctionLimits,
     SecurityLints,
     StaticAnalysis,
@@ -47,8 +47,9 @@ from project_validator.rules import (
 from project_validator.text import Pattern, pattern
 
 PHP_LANGUAGE = "PHP"
+PHP_ONLY = frozenset({PHP_LANGUAGE})
 COMPOSER_JSON = "composer.json"
-COMPOSER = BuildSystem(name="Composer", files=(COMPOSER_JSON,), languages=frozenset({PHP_LANGUAGE}))
+COMPOSER = BuildSystem(name="Composer", files=(COMPOSER_JSON,), languages=PHP_ONLY)
 PHPUNIT_CONFIG_FILES = ("phpunit.xml", "phpunit.xml.dist", "phpunit.dist.xml")
 
 
@@ -147,19 +148,31 @@ def _with_files(*files: str) -> Evidence:
 
 CS_FIXER_CONFIG_FILES = (".php-cs-fixer.dist.php", ".php-cs-fixer.php")
 PHPCS_CONFIG_FILES = ("phpcs.xml", "phpcs.xml.dist", ".phpcs.xml", ".phpcs.xml.dist")
+CS_FIXER_FILES = file_reader("PHP-CS-Fixer", CS_FIXER_CONFIG_FILES)
+PHPCS_FILES = file_reader("PHP_CodeSniffer", PHPCS_CONFIG_FILES)
+PINT_FILES = file_reader("Pint", ("pint.json",))
 
 # Each of them has a default style: PHP-CS-Fixer and PHP_CodeSniffer a PSR one, Pint Laravel's.
-FORMATTERS = Formatter(
-    name="PHP-CS-Fixer, PHP_CodeSniffer or Pint",
-    config_file=configuration((*CS_FIXER_CONFIG_FILES, *PHPCS_CONFIG_FILES, "pint.json")),
-    runs=(
-        pattern("PHP-CS-Fixer", r"\bphp-cs-fixer\b[^\n]*(?:\bcheck\b|--dry-run\b)"),
-        pattern("PHP_CodeSniffer", r"(?<![\w-])phpcs\b(?!\.xml)"),
-        pattern("Pint", r"\bpint\b[^\n]*\s--test\b"),
-    ),
-    hint="consider a CI job that runs php-cs-fixer check (or phpcs, or pint --test)",
-    default_style=True,
-    texts=_run_texts,
+PHP_CS_FIXER = format_tool(
+    name="PHP-CS-Fixer",
+    languages=PHP_ONLY,
+    can={Enforcement.CHECK: "php-cs-fixer check", Enforcement.APPLY: "php-cs-fixer fix"},
+    formats=flagged(("php-cs-fixer", "fix"), ("php-cs-fixer", "check"), checks=("check", "--dry-run")),
+    style=defined_by(files=("PHP-CS-Fixer",)),
+)
+PHP_CODESNIFFER = format_tool(
+    name="PHP_CodeSniffer",
+    languages=PHP_ONLY,
+    can={Enforcement.CHECK: "phpcs", Enforcement.APPLY: "phpcbf"},
+    formats=either(flagged(("phpcs",), applies=()), flagged(("phpcbf",), checks=())),
+    style=defined_by(files=("PHP_CodeSniffer",)),
+)
+PINT = format_tool(
+    name="Pint",
+    languages=PHP_ONLY,
+    can={Enforcement.CHECK: "pint --test", Enforcement.APPLY: "pint"},
+    formats=flagged(("pint",), checks=("--test",)),
+    style=defined_by(files=("Pint",)),
 )
 
 TEST_CASE = re.compile(r"\bextends\s+\\?(?:[\w\\]*\\)?\w*TestCase\b|^\s*(?:test|it|describe)\s*\(", re.MULTILINE)
@@ -230,7 +243,7 @@ def _phpunit(command: Command, facts: Facts) -> Run | None:
 
 PHPUNIT = coverage_tool(
     name="PHPUnit",
-    languages=frozenset({"PHP"}),
+    languages=PHP_ONLY,
     can={
         Granularity.LINE: "phpunit --coverage-clover",
         Granularity.BRANCH: "phpunit --path-coverage",
@@ -435,7 +448,7 @@ _PHP_VERSION = r"(\d+\.\d+)"
 
 PHP = Ecosystem(
     label="PHP",
-    languages=frozenset({PHP_LANGUAGE}),
+    languages=PHP_ONLY,
     build_systems=(COMPOSER,),
     source_suffixes={".php": PHP_LANGUAGE},
     toolchain=ToolchainPatterns(
@@ -445,7 +458,6 @@ PHP = Ecosystem(
     ),
     rules=(
         versions_axis("PHP version", PHP_LANGUAGE),
-        FORMATTERS,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

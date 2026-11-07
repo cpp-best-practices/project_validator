@@ -51,6 +51,37 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "prettier",
+              "biome",
+              "deno fmt",
+              "oxfmt",
+              "dprint"
+            ],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "biome": "biome ci",
+              "deno fmt": "deno fmt --check",
+              "dprint": "dprint check",
+              "oxfmt": "oxfmt --check",
+              "prettier": "prettier --check ."
+            },
+            "language": "JavaScript",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -85,6 +116,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json prettier"
     },
     {
       "kind": "ConfigurationFile",
@@ -152,9 +188,9 @@
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that runs prettier --check . (or biome ci, deno fmt --check or dprint check)"
+        "consider a CI job that runs prettier --check . (or biome ci, deno fmt --check, oxfmt --check or dprint check)"
       ],
-      "message": "CI never runs prettier, biome, deno fmt or dprint; its formatting is not enforced",
+      "message": "CI never runs prettier, biome, deno fmt, oxfmt or dprint; its formatting is not enforced",
       "status": "FAIL"
     },
     "committed-artifacts": {

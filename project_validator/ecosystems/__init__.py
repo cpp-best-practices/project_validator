@@ -121,10 +121,13 @@ def register(ecosystem: Ecosystem) -> None:
 
 @contextmanager
 def isolated_registry() -> Iterator[None]:
-    """Undo, on leaving, every registration made inside (for tests)."""
+    """Undo, on leaving, every registration made inside, and every plugin's components (for tests)."""
+    from project_validator.components import isolated_plugins
+
     saved = list(_registered)
     try:
-        yield
+        with isolated_plugins():
+            yield
     finally:
         _registered[:] = saved
 
@@ -153,7 +156,10 @@ def applies_to(selected: Check) -> tuple[str, ...]:
 
 
 def with_registered_languages(selected: Check) -> Check:
-    """`selected`, applying to the languages of every ecosystem now registered that has its rule."""
+    """`selected`, applying to the languages of every ecosystem now registered that has its rule, or to the languages
+    its components now known handle."""
+    if selected.languages_from is not None:
+        return replace(selected, languages=selected.languages_from())
     if selected.rule is None:
         return selected
     return replace(selected, languages=languages_of(providers(selected.rule)))

@@ -109,6 +109,46 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "clang-format": "clang-format --dry-run -Werror"
+            },
+            "language": "C",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "clang-format": "clang-format --dry-run -Werror"
+            },
+            "language": "C++",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -195,7 +235,7 @@
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that checks formatting (clang-format --dry-run -Werror) or applies it automatically"
+        "consider a CI job that runs clang-format --dry-run -Werror"
       ],
       "message": "no clang-format configuration found; formatting is not defined",
       "status": "FAIL"

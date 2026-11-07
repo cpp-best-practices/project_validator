@@ -1,15 +1,16 @@
 """Splitting the shell scripts CI runs into commands, the way a POSIX shell splits simple commands.
 
 Only what the validator needs is understood: line continuations, comments, quoting (a quoted string may span
-lines), and the operators that separate commands (`;`, `&&`, `||`, `|`, `&`). Leading `NAME=value` assignments are
+lines), the operators that separate commands (`;`, `&&`, `||`, `|`, `&`), and command substitution (`$(…)` and
+backquotes), whose commands run before the command they are part of. Leading `NAME=value` assignments are
 the command's environment. Compound commands (`if`, `for`, `case`) and here-documents are not interpreted; their
 lines are split like any other.
 """
 
 import re
 import shlex
-from collections.abc import Iterator
-from dataclasses import dataclass
+from collections.abc import Callable, Iterator
+from dataclasses import dataclass, field
 
 _CONTINUATION = re.compile(r"\\\r?\n")
 _SEPARATORS = frozenset({";", "&&", "||", "|", "&", ";;", "|&"})
@@ -107,40 +108,98 @@ def _commands_of(words: list[str], line: str) -> Iterator[ShellCommand]:
             current.append(word)
 
 
-def _restored(command: ShellCommand, hidden: list[str]) -> ShellCommand:
-    def restore(text: str) -> str:
-        return _PLACEHOLDER.sub(lambda match: hidden[int(match[1])], text)
-
-    return ShellCommand(
-        argv=tuple(map(restore, command.argv)),
-        env=tuple((name, restore(value)) for name, value in command.env),
-        line=restore(command.line),
-    )
-
-
 _PLACEHOLDER = re.compile(r"__opaque_(\d+)__")
 
 
+@dataclass(slots=True)
+class _Hidden:
+    """The text hidden from the splitter while a script is split, by placeholder: opaque text, and command
+    substitutions with the commands they run."""
+
+    texts: list[str] = field(default_factory=list)
+    substitutions: dict[int, str] = field(default_factory=dict)
+
+    def shown(self, text: str) -> str:
+        return _PLACEHOLDER.sub(lambda match: self.texts[int(match[1])], text)
+
+    def hide(self, text: str, commands: str | None = None) -> str:
+        self.texts.append(self.shown(text))
+        if commands is not None:
+            self.substitutions[len(self.texts) - 1] = self.shown(commands)
+        return f"__opaque_{len(self.texts) - 1}__"
+
+    def substituted(self, line: str) -> list[str]:
+        """The commands of the command substitutions in `line`."""
+        return [
+            self.substitutions[index] for index in map(int, _PLACEHOLDER.findall(line)) if index in self.substitutions
+        ]
+
+    def restored(self, command: ShellCommand) -> ShellCommand:
+        return ShellCommand(
+            argv=tuple(map(self.shown, command.argv)),
+            env=tuple((name, self.shown(value)) for name, value in command.env),
+            line=self.shown(command.line),
+        )
+
+
 def split_script(script: str, opaque: re.Pattern[str] | None = None) -> Iterator[ShellCommand | Unsplittable]:
-    """The simple commands of `script`, in order, each with the line it was written on.
+    """The simple commands of `script`, in order, each with the line it was written on; the commands of a command
+    substitution come before the command it is part of.
 
     Text matching `opaque` (such as a CI expression the CI service evaluates before the shell runs) is kept as
     written, quotes and all, inside the word it is part of.
     """
-    hidden: list[str] = []
+    hidden = _Hidden()
+    # Opaque text first: a Make variable `$(CC)` is not a command substitution.
     if opaque is not None:
-
-        def hide(match: re.Match[str]) -> str:
-            hidden.append(match[0])
-            return f"__opaque_{len(hidden) - 1}__"
-
-        script = opaque.sub(hide, script)
+        script = opaque.sub(lambda match: hidden.hide(match[0]), script)
+    script = _substitutions(script, hidden.hide)
     for line, words in _lines(_CONTINUATION.sub(" ", script).splitlines()):
+        for commands in hidden.substituted(line):
+            yield from split_script(commands, opaque)
         if isinstance(words, ValueError):
-            yield Unsplittable(line=_PLACEHOLDER.sub(lambda match: hidden[int(match[1])], line), reason=str(words))
+            yield Unsplittable(line=hidden.shown(line), reason=str(words))
             continue
-        for command in _commands_of(words, line):
-            yield _restored(command, hidden)
+        yield from map(hidden.restored, _commands_of(words, line))
+
+
+def _substitutions(script: str, hide: Callable[[str, str], str]) -> str:
+    """`script` with each command substitution outside single quotes (`$(…)`, `` `…` ``, but not arithmetic `$((…))`)
+    replaced by what `hide` returns for its text and its commands."""
+    out: list[str] = []
+    index, quote = 0, ""
+    while index < len(script):
+        character = script[index]
+        end = None if quote == "'" else _substitution_end(script, index)
+        if end is not None:
+            text = script[index:end]
+            out.append(hide(text, text[2:-1] if text.startswith("$(") else text[1:-1]))
+            index = end
+            continue
+        if character == "\\" and quote != "'":
+            out.append(script[index : index + 2])
+            index += 2
+            continue
+        if character in "'\"" and quote in ("", character):
+            quote = "" if quote else character
+        out.append(character)
+        index += 1
+    return "".join(out)
+
+
+def _substitution_end(script: str, start: int) -> int | None:
+    """Where the command substitution starting at `start` ends (just after it), or None if none starts there."""
+    if script.startswith("`", start):
+        end = script.find("`", start + 1)
+        return None if end < 0 else end + 1
+    if not script.startswith("$(", start) or script.startswith("$((", start):
+        return None
+    depth = 0
+    for index in range(start + 1, len(script)):
+        depth += {"(": 1, ")": -1}.get(script[index], 0)
+        if depth == 0:
+            return index + 1
+    return None
 
 
 def _lines(raw: list[str]) -> Iterator[tuple[str, list[str] | ValueError]]:

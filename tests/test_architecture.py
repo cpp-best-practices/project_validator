@@ -9,9 +9,9 @@ from pathlib import Path
 
 import project_validator
 from project_validator import ecosystems
-from project_validator.core import Context
+from project_validator.core import Context, Result
 from project_validator.ecosystems import BUILT_IN, PROFILES, Ecosystem, languages_of
-from project_validator.rules import Formatter
+from project_validator.rules import TestSuite
 from tests import layouts as tests_layouts
 
 PACKAGE = Path(project_validator.__file__).parent
@@ -56,11 +56,11 @@ def _import_fresh(module: str) -> None:
         sys.modules.update(saved)
 
 
-def _formatter(name: str) -> Formatter:
-    def no_config(_: Context) -> str | None:
-        return None
+def _suite(runner: str) -> TestSuite:
+    def no_tests(_: Context) -> Result:
+        return Result.failed("no tests")
 
-    return Formatter(name=name, config_file=no_config, runs=(), hint="")
+    return TestSuite(found=no_tests, runs=(), runner=runner)
 
 
 class ArchitectureTests(unittest.TestCase):
@@ -117,10 +117,10 @@ class EcosystemRuleTests(unittest.TestCase):
             with self.subTest(ecosystem=ecosystem.label):
                 kinds = [type(rule) for rule in ecosystem.rules]
                 self.assertEqual(len(kinds), len(set(kinds)))
-        with self.assertRaisesRegex(ValueError, "several rules of type Formatter"):
-            Ecosystem(label="Twice", languages=frozenset({"X"}), rules=(_formatter("a"), _formatter("b")))
+        with self.assertRaisesRegex(ValueError, "several rules of type TestSuite"):
+            Ecosystem(label="Twice", languages=frozenset({"X"}), rules=(_suite("a"), _suite("b")))
 
     def test_a_missing_rule_is_none(self) -> None:
         ecosystem = Ecosystem(label="Bare", languages=frozenset({"X"}))
-        self.assertIsNone(ecosystem.rule(Formatter))
+        self.assertIsNone(ecosystem.rule(TestSuite))
         self.assertEqual(repr(ecosystem), "Ecosystem(Bare)")

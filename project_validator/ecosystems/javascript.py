@@ -27,8 +27,18 @@ from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resol
 from project_validator.facts.arguments import option_values, positional, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
-from project_validator.facts.settings import Read, SettingsReader, json_settings, matched_settings
-from project_validator.facts.tools import Claim, Run, Tool
+from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.settings import (
+    Read,
+    SettingsReader,
+    file_reader,
+    json_settings,
+    matched_settings,
+    plain,
+    settings,
+    unreadable,
+)
+from project_validator.facts.tools import Claim, Run, Tool, defined_by
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -37,7 +47,6 @@ from project_validator.rules import (
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
-    Formatter,
     FunctionLimits,
     SecurityLints,
     StaticAnalysis,
@@ -275,6 +284,7 @@ def _deno_tasks(command: Command, context: Context) -> Iterator[Expansion] | Non
 DENO_TASKS = CommandExpander(name="deno.json tasks", expand=_deno_tasks)
 
 
+JS_LANGUAGES = frozenset({JAVASCRIPT, TYPESCRIPT})
 PRETTIER_CONFIG_FILES = tuple(
     f"{stem}{suffix}"
     for stem, suffixes in (
@@ -283,28 +293,66 @@ PRETTIER_CONFIG_FILES = tuple(
     )
     for suffix in suffixes
 )
-FORMATTER_CONFIG_FILES = (*PRETTIER_CONFIG_FILES, "biome.json", "biome.jsonc", "dprint.json", ".dprint.json")
 
 
-def _formatter_config(context: Context) -> str | None:
-    if found := first_existing(context, FORMATTER_CONFIG_FILES):
-        return found
-    return PACKAGE_JSON if json_value(context, PACKAGE_JSON, "prettier") is not None else None
+def _read_prettier_key(path: str, text: str) -> Iterator[Fact]:
+    """The `prettier` key of package.json: its options, or the name of a shared configuration."""
+    try:
+        document = json.loads(text)
+    except json.JSONDecodeError as error:
+        yield unreadable("prettier", path, error)
+        return
+    if isinstance(document, dict) and "prettier" in document:
+        yield from settings("prettier", path, (("prettier", plain(document["prettier"])),))
 
+
+PRETTIER_FILES = file_reader("prettier", PRETTIER_CONFIG_FILES)
+PRETTIER_IN_PACKAGE_JSON = SettingsReader(name="package.json prettier", files=(PACKAGE_JSON,), read=_read_prettier_key)
+BIOME_FILES = file_reader("biome", ("biome.json", "biome.jsonc"))
+DPRINT_FILES = file_reader("dprint", ("dprint.json", ".dprint.json"))
+OXFMT_FILES = file_reader("oxfmt", (".oxfmtrc.json", ".oxfmtrc.jsonc"))
 
 # Every one of them has a default style, so a configuration file is not needed.
-FORMATTERS = Formatter(
-    name="prettier, biome, deno fmt or dprint",
-    config_file=_formatter_config,
-    runs=(
-        pattern("prettier", r"\bprettier\b[^\n]*\s(?:--check|-c|--list-different|-l)\b"),
-        pattern("biome", r"\bbiome\s+(?:format|check|ci)\b"),
-        pattern("deno fmt", r"\bdeno\s+fmt\b[^\n]*\s--check\b"),
-        pattern("dprint", r"\bdprint\s+check\b"),
+PRETTIER = format_tool(
+    name="prettier",
+    languages=JS_LANGUAGES,
+    can={Enforcement.CHECK: "prettier --check .", Enforcement.APPLY: "prettier --write ."},
+    formats=flagged(("prettier",), checks=("--check", "-c", "--list-different", "-l"), applies=("--write", "-w")),
+    style=defined_by(files=("prettier",), settings=("prettier",)),
+    reads=("prettier", "package.json prettier"),
+)
+BIOME = format_tool(
+    name="biome",
+    languages=JS_LANGUAGES,
+    can={Enforcement.CHECK: "biome ci", Enforcement.APPLY: "biome format --write"},
+    formats=flagged(
+        ("biome", "format"),
+        ("biome", "check"),
+        ("biome", "ci"),
+        applies=("--write", "--apply", "--fix", "--apply-unsafe"),
     ),
-    hint="consider a CI job that runs prettier --check . (or biome ci, deno fmt --check or dprint check)",
-    default_style=True,
-    texts=_run_texts,
+    style=defined_by(files=("biome",)),
+)
+DENO_FMT = format_tool(
+    name="deno fmt",
+    languages=JS_LANGUAGES,
+    can={Enforcement.CHECK: "deno fmt --check", Enforcement.APPLY: "deno fmt"},
+    formats=flagged(("deno", "fmt"), checks=("--check",)),
+    style=defined_by(),
+)
+OXFMT = format_tool(
+    name="oxfmt",
+    languages=JS_LANGUAGES,
+    can={Enforcement.CHECK: "oxfmt --check", Enforcement.APPLY: "oxfmt"},
+    formats=flagged(("oxfmt",), checks=("--check", "--list-different")),
+    style=defined_by(files=("oxfmt",)),
+)
+DPRINT = format_tool(
+    name="dprint",
+    languages=JS_LANGUAGES,
+    can={Enforcement.CHECK: "dprint check", Enforcement.APPLY: "dprint fmt"},
+    formats=flagged(("dprint", "check"), ("dprint", "fmt"), checks=("check",)),
+    style=defined_by(files=("dprint",)),
 )
 
 JS_SUFFIXES = (".js", ".mjs", ".cjs", ".jsx")
@@ -447,7 +495,6 @@ def _reports_branches(name: str, how: str, measures: Claim, reads: tuple[str, ..
     )
 
 
-JS_LANGUAGES = frozenset({JAVASCRIPT, TYPESCRIPT})
 # Istanbul (nyc, Jest, Vitest's istanbul provider) and V8 coverage (c8, Vitest, Node.js, Deno) both count branches.
 C8 = _reports_branches("c8", "c8", _instrumenter("c8"))
 NYC = _reports_branches("nyc", "nyc", _instrumenter("nyc"))
@@ -693,7 +740,6 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
     ),
     rules=(
         versions_axis("runtime version", "JavaScript runtime"),
-        FORMATTERS,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

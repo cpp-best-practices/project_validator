@@ -16,8 +16,9 @@ from project_validator.evidence import ci_and_hook_texts, configuration, first_e
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
-from project_validator.facts.tools import Claim, Run
+from project_validator.facts.tools import Claim, Definition, Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -25,7 +26,6 @@ from project_validator.rules import (
     BuildOutputs,
     DependencyAudit,
     DependencyManagement,
-    Formatter,
     FunctionLimits,
     SecurityLints,
     StaticAnalysis,
@@ -121,34 +121,6 @@ GRADLE_PLUGIN = r"""(?:id\s*\(?\s*|apply\s+plugin:\s*|plugins\.apply\s*\(\s*)["'
 def _gradle_plugin(plugin_id: str) -> str:
     return GRADLE_PLUGIN.format(re.escape(plugin_id))
 
-
-def _spotless_config(context: Context) -> str | None:
-    return next((path for path in _build_files(context) if "spotless" in context.project.read_text(path)), None)
-
-
-# Every formatter here has a built-in style (Spotless applies one of them).
-FORMATTERS = Formatter(
-    name="Spotless, google-java-format, ktfmt or ktlint",
-    config_file=_spotless_config,
-    runs=(
-        _setting(
-            "Spotless",
-            rf"\bspotless:check\b|\bspotlessCheck\b|{_bound_goal('spotless-maven-plugin', 'check')}"
-            rf"|{_gradle_plugin('com.diffplug.spotless')}",
-        ),
-        _setting("fmt-maven-plugin", _bound_goal("fmt-maven-plugin", "check")),
-        _setting("google-java-format", r"\bgoogle-java-format\b[^\n]*--set-exit-if-changed\b"),
-        _setting("ktfmt", r"\bktfmt\b[^\n]*--set-exit-if-changed\b"),
-        _setting(
-            "ktlint",
-            rf"(?<![\w-])ktlint(?:Check)?\b(?![^\n]*\s(?:-F|--format)\b)|{_gradle_plugin('org.jlleitschuh.gradle.ktlint')}",
-        ),
-    ),
-    hint="consider Spotless (spotless:check bound in pom.xml, or the com.diffplug.spotless Gradle plugin, run by "
-    "mvn verify or gradle check) with google-java-format, palantir-java-format, ktfmt or ktlint",
-    default_style=True,
-    texts=_verification_texts,
-)
 
 SOURCE_SUFFIXES = (".java", ".kt")
 TEST_SOURCES = re.compile(r"(?:^|/)src/test/(?:java|kotlin)/.+\.(?:java|kt)$")
@@ -260,7 +232,8 @@ def _read_gradle_settings(path: str, text: str) -> Iterator[Setting]:
     )
 
 
-GRADLE_SETTINGS = SettingsReader(name="Gradle", files=GRADLE_BUILD_FILES, read=_read_gradle_settings)
+# Every Gradle script: a convention plugin (`buildSrc/src/main/kotlin/conventions.gradle.kts`) applies plugins too.
+GRADLE_SETTINGS = SettingsReader(name="Gradle", files=("*.gradle", "*.gradle.kts"), read=_read_gradle_settings)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -288,17 +261,24 @@ def _wired(wiring: _Wiring, kind: str, facts: Facts) -> list[Setting]:
     return [*applied, *linked]
 
 
+def _runs(wiring: _Wiring, command: Command, facts: Facts) -> tuple[Setting, ...] | None:
+    """Whether a Maven or Gradle command runs the wiring's goal or task: directly (reading no settings), or through a
+    plugin its verification brings in (reading the settings that wire it). None when it does not."""
+    found = _build_steps(command)
+    if found is None:
+        return None
+    kind, steps = found
+    if any(wiring.report.fullmatch(step) for step in steps):
+        return ()
+    if _verifies(kind, steps) and (read := _wired(wiring, kind, facts)):
+        return tuple(read)
+    return None
+
+
 def _jvm_coverage(wiring: _Wiring) -> Claim:
     def measures(command: Command, facts: Facts) -> Run | None:
-        found = _build_steps(command)
-        if found is None:
-            return None
-        kind, steps = found
-        if any(wiring.report.fullmatch(step) for step in steps):
-            return measured(Granularity.LINE, Granularity.BRANCH)
-        if _verifies(kind, steps) and (read := _wired(wiring, kind, facts)):
-            return measured(Granularity.LINE, Granularity.BRANCH, read=read)
-        return None
+        read = _runs(wiring, command, facts)
+        return None if read is None else measured(Granularity.LINE, Granularity.BRANCH, read=read)
 
     return measures
 
@@ -335,6 +315,104 @@ KOVER = coverage_tool(
             gradle_plugin="org.jetbrains.kotlinx.kover",
         )
     ),
+    reads=("Maven", "Gradle"),
+)
+
+
+def _build_formatter(check: _Wiring, apply: re.Pattern[str]) -> Claim:
+    """A formatter a Maven or Gradle build runs: its check goal or task, directly or bound to the verification the
+    build runs; or its apply goal or task."""
+
+    def formats(command: Command, facts: Facts) -> Run | None:
+        read = _runs(check, command, facts)
+        if read is not None:
+            return formatted(command, facts, checks=True, read=read)
+        found = _build_steps(command)
+        applies = found is not None and any(map(apply.fullmatch, found[1]))
+        return formatted(command, facts, checks=False) if applies else None
+
+    return formats
+
+
+def _plugin_definition(maven_plugin: str, gradle_plugin: str | None = None) -> Definition:
+    """A formatter a build plugin runs is defined where the build declares the plugin."""
+
+    def found(facts: Facts) -> Iterator[str]:
+        yield from (setting.path for setting in facts.where(Setting, tool="Maven", key=f"plugin.{maven_plugin}"))
+        gradle = (setting for setting in facts.where(Setting, tool="Gradle", key="plugin"))
+        yield from (setting.path for setting in gradle if setting.value == gradle_plugin)
+
+    return Definition(found=found)
+
+
+# Every formatter here has a built-in style (Spotless applies one of them).
+SPOTLESS = format_tool(
+    name="Spotless",
+    languages=JVM_LANGUAGES,
+    can={Enforcement.CHECK: "mvn spotless:check or gradle spotlessCheck", Enforcement.APPLY: "spotless:apply"},
+    formats=_build_formatter(
+        _Wiring(
+            report=re.compile(
+                r"(?:com\.diffplug\.spotless:)?spotless(?:-maven-plugin)?(?::[^:]+)?:check|spotlessCheck"
+            ),
+            maven_plugin="spotless-maven-plugin",
+            bound_goal=re.compile("check"),
+            gradle_plugin="com.diffplug.spotless",
+        ),
+        apply=re.compile(r"(?:\S+:)?spotless(?:-maven-plugin)?(?::[^:]+)?:apply|spotlessApply"),
+    ),
+    style=_plugin_definition("spotless-maven-plugin", "com.diffplug.spotless"),
+    reads=("Maven", "Gradle"),
+)
+FMT_MAVEN_PLUGIN = format_tool(
+    name="fmt-maven-plugin",
+    languages=frozenset({JAVA}),
+    can={Enforcement.CHECK: "mvn fmt:check", Enforcement.APPLY: "mvn fmt:format"},
+    formats=_build_formatter(
+        _Wiring(
+            report=re.compile(r"(?:com\.spotify\.fmt:)?fmt(?:-maven-plugin)?(?::[^:]+)?:check"),
+            maven_plugin="fmt-maven-plugin",
+            bound_goal=re.compile("check"),
+        ),
+        apply=re.compile(r"(?:com\.spotify\.fmt:)?fmt(?:-maven-plugin)?(?::[^:]+)?:format"),
+    ),
+    style=_plugin_definition("fmt-maven-plugin"),
+    reads=("Maven",),
+)
+GOOGLE_JAVA_FORMAT = format_tool(
+    name="google-java-format",
+    languages=frozenset({JAVA}),
+    can={
+        Enforcement.CHECK: "google-java-format --set-exit-if-changed",
+        Enforcement.APPLY: "google-java-format --replace",
+    },
+    formats=flagged(("google-java-format",), checks=("--set-exit-if-changed",), applies=("--replace", "-i", "-r")),
+    style=defined_by(),
+)
+KTFMT = format_tool(
+    name="ktfmt",
+    languages=frozenset({KOTLIN}),
+    can={Enforcement.CHECK: "ktfmt --set-exit-if-changed", Enforcement.APPLY: "ktfmt"},
+    formats=flagged(("ktfmt",), checks=("--set-exit-if-changed",)),
+    style=defined_by(),
+)
+KTLINT = format_tool(
+    name="ktlint",
+    languages=frozenset({KOTLIN}),
+    can={Enforcement.CHECK: "ktlint or gradle ktlintCheck", Enforcement.APPLY: "ktlint --format"},
+    formats=either(
+        flagged(("ktlint",), applies=("-F", "--format")),
+        _build_formatter(
+            _Wiring(
+                report=re.compile(r"ktlint(?:-maven-plugin)?(?::[^:]+)?:check|ktlint\w*Check"),
+                maven_plugin="ktlint-maven-plugin",
+                bound_goal=re.compile("check"),
+                gradle_plugin="org.jlleitschuh.gradle.ktlint",
+            ),
+            apply=re.compile(r"ktlint(?:-maven-plugin)?(?::[^:]+)?:format|ktlint\w*Format"),
+        ),
+    ),
+    style=_plugin_definition("ktlint-maven-plugin", "org.jlleitschuh.gradle.ktlint"),
     reads=("Maven", "Gradle"),
 )
 
@@ -518,7 +596,6 @@ JVM = Ecosystem(
     ),
     rules=(
         versions_axis("JDK version", "JDK"),
-        FORMATTERS,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

@@ -46,6 +46,33 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "swift-format",
+              "SwiftFormat"
+            ],
+            "defined": {},
+            "enforced": "yes",
+            "known": {
+              "SwiftFormat": "swiftformat --lint",
+              "swift-format": "swift format lint --strict"
+            },
+            "language": "Swift",
+            "tools": [
+              "swift-format"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -1910,6 +1937,26 @@
       "languages": [
         "Swift"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
@@ -1922,6 +1969,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
       "via": []
     },
     {
@@ -1952,6 +2019,26 @@
       "languages": [
         "Swift"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
@@ -1964,6 +2051,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
       "via": []
     },
     {
@@ -1994,6 +2101,26 @@
       "languages": [
         "Swift"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
@@ -2006,6 +2133,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
       "via": []
     },
     {
@@ -2036,6 +2183,26 @@
       "languages": [
         "Swift"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
@@ -2048,6 +2215,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
       "via": []
     },
     {
@@ -2078,6 +2265,26 @@
       "languages": [
         "Swift"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
@@ -2090,6 +2297,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
       "via": []
     },
     {
@@ -2120,6 +2347,26 @@
       "languages": [
         "Swift"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
@@ -2132,6 +2379,26 @@
         "."
       ],
       "tool": "swift test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "swift-format",
       "via": []
     },
     {

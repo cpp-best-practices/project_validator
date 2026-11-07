@@ -108,11 +108,31 @@ class BuildLifecycleTests(unittest.TestCase):
         self.assertEqual(_gradle_kotlin(self, CODE_FORMATTING, {**build, **_ci(GRADLE_CHECK)}).status, Status.PASS)
         self.assertEqual(_gradle_kotlin(self, CODE_FORMATTING, {**build, **_ci("./gradlew test")}).status, Status.WARN)
 
+    def test_a_convention_plugin_applies_its_plugins(self) -> None:
+        convention = {
+            "buildSrc/src/main/kotlin/conventions.gradle.kts": 'plugins {\n    id("com.diffplug.spotless")\n}\n',
+            **_gradle('plugins {\n    id("conventions")\n}\n'),
+        }
+        result = _gradle_kotlin(self, CODE_FORMATTING, {**convention, **_ci(GRADLE_CHECK)})
+        self.assertEqual(
+            result, Result.passed("buildSrc/src/main/kotlin/conventions.gradle.kts is defined and CI runs Spotless")
+        )
+
     def test_formatters_run_directly(self) -> None:
-        for command in ("mvn spotless:check", "./gradlew spotlessCheck", "ktlint", "ktfmt --set-exit-if-changed src"):
+        for command in ("mvn spotless:check", "./gradlew spotlessCheck"):
             with self.subTest(command=command):
                 self.assertEqual(self._run(CODE_FORMATTING, _ci(command)).status, Status.PASS)
-        self.assertEqual(self._run(CODE_FORMATTING, _ci("ktlint -F")).status, Status.FAIL)
+        # Each formatter formats its own language: ktlint and ktfmt Kotlin, google-java-format Java.
+        for command in ("ktlint", "ktfmt --set-exit-if-changed src", "./gradlew ktlintCheck"):
+            with self.subTest(command=command):
+                self.assertEqual(_gradle_kotlin(self, CODE_FORMATTING, _ci(command)).status, Status.PASS)
+                self.assertEqual(_maven(self, CODE_FORMATTING, _ci(command)).status, Status.FAIL)
+        java = _maven(self, CODE_FORMATTING, _ci("google-java-format --set-exit-if-changed -n src/**/*.java"))
+        self.assertEqual(java.status, Status.PASS)
+        rewritten = _gradle_kotlin(self, CODE_FORMATTING, _ci("ktlint -F"))
+        self.assertEqual(
+            rewritten.message, "CI runs ktlint but only to rewrite files; nothing fails when they are not formatted"
+        )
 
     def test_tests_are_annotated_or_kotest_specs_under_src_test(self) -> None:
         kotest = {"src/test/kotlin/AppSpec.kt": "class AppSpec : FunSpec({})\n"}

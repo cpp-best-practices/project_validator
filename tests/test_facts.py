@@ -65,6 +65,19 @@ class ShellTests(unittest.TestCase):
         [unsplittable] = split_script("echo ${{ 'a' }} 'open", EXPRESSION)
         self.assertEqual(unsplittable, Unsplittable(line="echo ${{ 'a' }} 'open", reason="No closing quotation"))
 
+    def test_command_substitutions_run_before_their_command(self) -> None:
+        for script, expected in (
+            ('test -z "$(gofmt -l .)"', [("gofmt", "-l", "."), ("test", "-z", "$(gofmt -l .)")]),
+            ("echo `git rev-parse HEAD` x", [("git", "rev-parse", "HEAD"), ("echo", "`git rev-parse HEAD`", "x")]),
+            ("cd $(dirname $(pwd)) && ls", [("pwd",), ("dirname", "$(pwd)"), ("cd", "$(dirname $(pwd))"), ("ls",)]),
+            ("echo $((1 + 2)) '$(not run)'", [("echo", "$", "((", "1", "+", "2", "))", "$(not run)")]),
+            ('echo "\\$(not run)" \\`x', [("echo", "\\$(not run)", "`x")]),
+            ("echo $(unclosed", [("echo", "$", "unclosed")]),
+            ("echo `unclosed", [("echo", "`unclosed")]),
+        ):
+            with self.subTest(script=script):
+                self.assertEqual(self._split(script), expected)
+
     def test_quoted_and_escaped_operator_characters_are_text(self) -> None:
         for script, expected in (
             ("awk -F '|' '{print $1}' f", [("awk", "-F", "|", "{print $1}", "f")]),

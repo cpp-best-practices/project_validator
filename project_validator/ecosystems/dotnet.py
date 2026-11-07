@@ -11,13 +11,14 @@ from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
-from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts
+from project_validator.evidence import ci_and_hook_texts, existing_texts
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined
-from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
-from project_validator.facts.tools import Run
+from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
+from project_validator.facts.tools import Run, defined_by
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -26,7 +27,6 @@ from project_validator.rules import (
     DeclaredLicense,
     DependencyAudit,
     DependencyManagement,
-    Formatter,
     FunctionLimits,
     SecurityLints,
     StaticAnalysis,
@@ -88,17 +88,30 @@ def _property(name: str, values: str) -> str:
     return rf"<{name}>\s*(?:{values})\s*</{name}>|[-/]p(?:roperty)?:{name}=(?:{values})\b"
 
 
+EDITORCONFIG_FILES = file_reader("EditorConfig", (".editorconfig",))
+CSHARPIER_FILES = file_reader("CSharpier", (".csharpierrc", ".csharpierrc.json", ".csharpierrc.yaml"))
+
 # Each of them has a default style: dotnet format reads .editorconfig, and CSharpier and Fantomas have their own.
-FORMATTERS = Formatter(
-    name="dotnet format, CSharpier or Fantomas",
-    config_file=configuration((".editorconfig", ".csharpierrc", ".csharpierrc.json", ".csharpierrc.yaml")),
-    runs=(
-        pattern("dotnet format", r"\bdotnet\s+format\b[^\n]*--verify-no-changes\b"),
-        pattern("CSharpier", r"\bcsharpier\s+(?:check\b|[^\n]*--check\b)"),
-        pattern("Fantomas", r"\bfantomas\b[^\n]*--check\b"),
-    ),
-    hint="consider a CI job that runs dotnet format --verify-no-changes (or csharpier check, or fantomas --check)",
-    default_style=True,
+DOTNET_FORMAT = format_tool(
+    name="dotnet format",
+    languages=frozenset({CSHARP}),
+    can={Enforcement.CHECK: "dotnet format --verify-no-changes", Enforcement.APPLY: "dotnet format"},
+    formats=flagged(("dotnet", "format"), checks=("--verify-no-changes",)),
+    style=defined_by(files=("EditorConfig",)),
+)
+CSHARPIER = format_tool(
+    name="CSharpier",
+    languages=frozenset({CSHARP}),
+    can={Enforcement.CHECK: "csharpier check .", Enforcement.APPLY: "csharpier format ."},
+    formats=flagged(("csharpier",), ("dotnet", "csharpier"), checks=("check", "--check")),
+    style=defined_by(files=("CSharpier",)),
+)
+FANTOMAS = format_tool(
+    name="Fantomas",
+    languages=frozenset({FSHARP}),
+    can={Enforcement.CHECK: "fantomas --check .", Enforcement.APPLY: "fantomas ."},
+    formats=flagged(("fantomas",), ("dotnet", "fantomas"), checks=("--check",)),
+    style=defined_by(files=("EditorConfig",)),
 )
 
 TEST_SDK = re.compile(r"\bMicrosoft\.NET\.Test\.Sdk\b|\bSdk\s*=\s*[\"']MSTest\.Sdk\b")
@@ -376,7 +389,6 @@ DOTNET = Ecosystem(
     ),
     rules=(
         versions_axis(".NET SDK version", ".NET SDK"),
-        FORMATTERS,
         TESTS,
         WARNINGS,
         WARNINGS_AS_ERRORS,

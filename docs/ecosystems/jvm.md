@@ -28,8 +28,10 @@ javac's `-Xlint:all`; a Kotlin-only project passes on Kotlin's default warnings.
 
 ## `code-formatting`
 
-Spotless, fmt-maven-plugin, google-java-format, ktfmt or ktlint; they have a default style, so CI enforcement alone
-passes.
+Spotless (`spotless:check` or `spotlessCheck`, or the plugin bound to `check` in pom.xml or applied in a Gradle
+build, run by `mvn verify` or `gradle check`) and fmt-maven-plugin for Java and Kotlin or Java; google-java-format
+(`--set-exit-if-changed`) for Java; ktfmt (`--set-exit-if-changed`) and ktlint (without `-F`, or `ktlintCheck`) for
+Kotlin. They have a default style, so CI enforcement alone passes.
 
 ## `function-limits`
 

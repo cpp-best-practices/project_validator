@@ -46,6 +46,37 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "dotnet format",
+              "CSharpier"
+            ],
+            "defined": {
+              "dotnet format": [
+                ".editorconfig"
+              ]
+            },
+            "enforced": "yes",
+            "known": {
+              "CSharpier": "csharpier check .",
+              "dotnet format": "dotnet format --verify-no-changes"
+            },
+            "language": "C#",
+            "tools": [
+              "dotnet format"
+            ],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -234,6 +265,22 @@
     {
       "argv": [
         "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -243,7 +290,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -259,7 +306,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -328,6 +375,22 @@
     {
       "argv": [
         "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -337,7 +400,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -353,7 +416,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -422,6 +485,22 @@
     {
       "argv": [
         "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -431,7 +510,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -447,7 +526,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -516,6 +595,22 @@
     {
       "argv": [
         "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -525,7 +620,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -541,7 +636,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -610,6 +705,22 @@
     {
       "argv": [
         "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -619,7 +730,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -635,7 +746,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -704,6 +815,22 @@
     {
       "argv": [
         "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
         "build",
         "--no-restore"
       ],
@@ -713,7 +840,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "dotnet build --no-restore",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -729,7 +856,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -861,6 +988,11 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": ".editorconfig",
+      "reader": "EditorConfig"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "Directory.Build.props",
       "reader": "MSBuild"
     },
@@ -967,10 +1099,50 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "coverage": [
           "branch",
@@ -989,10 +1161,50 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1011,10 +1223,50 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1033,10 +1285,50 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1055,10 +1347,50 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "coverage": [
           "branch",
@@ -1077,10 +1409,50 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "coverage": [
           "branch",

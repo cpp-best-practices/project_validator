@@ -1,5 +1,6 @@
 """The Go profile's rules, judged by the generic checks in every Go project layout."""
 
+import json
 import unittest
 
 from project_validator.checks.code_formatting import code_formatting
@@ -31,6 +32,30 @@ class GoTests(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertEqual(self._run(code_formatting, _ci(command)).status, Status.PASS)
         self.assertEqual(self._run(code_formatting, _ci("golangci-lint run")).status, Status.FAIL)
+        self.assertEqual(self._run(code_formatting, _ci("gofmt -w . && go fmt ./...")).status, Status.FAIL)
+
+    def test_golangci_lint_runs_the_formatters_its_configuration_enables(self) -> None:
+        action = {
+            GITHUB_WORKFLOW: json.dumps(
+                {
+                    "jobs": {
+                        "lint": {"runs-on": "ubuntu-latest", "steps": [{"uses": "golangci/golangci-lint-action@v8"}]}
+                    }
+                }
+            )
+        }
+        for config, text in (
+            (".golangci.yml", "version: '2'\nformatters:\n  enable: [gofumpt, goimports]\n"),
+            (".golangci.toml", "[linters]\nenable = ['gofmt']\n"),
+            (".golangci.json", '{"formatters": {"enable": ["gci"]}}'),
+        ):
+            with self.subTest(config=config):
+                result = self._run(code_formatting, {config: text, **action})
+                self.assertEqual(result, Result.passed("CI enforces the gofmt style"))
+        linters_only = {".golangci.yml": "linters:\n  enable: [govet]\n", **action}
+        self.assertEqual(self._run(code_formatting, linters_only).status, Status.FAIL)
+        broken = {".golangci.yml": "formatters: [", **action}
+        self.assertEqual(self._run(code_formatting, broken).status, Status.ERROR)
 
     def test_golangci_lint_runs_both_required_linters(self) -> None:
         result = self._run(compiler_warnings, _ci("golangci-lint run ./..."))

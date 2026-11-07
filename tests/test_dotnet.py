@@ -91,10 +91,20 @@ class BuildSettingTests(unittest.TestCase):
         self.assertEqual(run_as(self, WARNINGS_AS_ERRORS, only_some, DOTNET).status, Status.FAIL)
 
     def test_formatters_check_without_changing(self) -> None:
-        for command in ("dotnet format --verify-no-changes", "dotnet csharpier check .", "dotnet fantomas --check ."):
+        # dotnet format and CSharpier format C#; Fantomas formats F#.
+        for layout, command in (
+            (CSHARP, "dotnet format --verify-no-changes"),
+            (CSHARP, "dotnet csharpier check ."),
+            (CSHARP, "csharpier --check ."),
+            (FSHARP, "dotnet fantomas --check ."),
+        ):
             with self.subTest(command=command):
-                self.assertEqual(run_as(self, CODE_FORMATTING, _ci(command), DOTNET).status, Status.PASS)
-        self.assertEqual(run_as(self, CODE_FORMATTING, _ci("dotnet format"), DOTNET).status, Status.FAIL)
+                self.assertEqual(run_in_layout(self, layout, CODE_FORMATTING, _ci(command)).status, Status.PASS)
+                other = FSHARP if layout == CSHARP else CSHARP
+                self.assertEqual(run_in_layout(self, other, CODE_FORMATTING, _ci(command)).status, Status.FAIL)
+        rewritten = run_in_layout(self, CSHARP, CODE_FORMATTING, _ci("dotnet format"))
+        self.assertEqual(rewritten.status, Status.FAIL)
+        self.assertIn("only to rewrite files", rewritten.message)
 
 
 class TestAndCoverageTests(unittest.TestCase):

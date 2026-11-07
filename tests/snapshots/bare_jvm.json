@@ -42,6 +42,33 @@
           }
         ]
       }
+    ],
+    "formatting": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "applied": [],
+            "default_style": [
+              "Spotless",
+              "fmt-maven-plugin",
+              "google-java-format"
+            ],
+            "defined": {},
+            "enforced": "no",
+            "known": {
+              "Spotless": "mvn spotless:check or gradle spotlessCheck",
+              "fmt-maven-plugin": "mvn fmt:check",
+              "google-java-format": "google-java-format --set-exit-if-changed"
+            },
+            "language": "Java",
+            "tools": [],
+            "undefined": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
     ]
   },
   "facts": [
@@ -129,9 +156,9 @@
     },
     "code-formatting": {
       "details": [
-        "consider Spotless (spotless:check bound in pom.xml, or the com.diffplug.spotless Gradle plugin, run by mvn verify or gradle check) with google-java-format, palantir-java-format, ktfmt or ktlint"
+        "consider a CI job that runs mvn spotless:check or gradle spotlessCheck (or mvn fmt:check or google-java-format --set-exit-if-changed)"
       ],
-      "message": "CI never runs Spotless, google-java-format, ktfmt or ktlint; its formatting is not enforced",
+      "message": "CI never runs Spotless, fmt-maven-plugin or google-java-format; its formatting is not enforced",
       "status": "FAIL"
     },
     "committed-artifacts": {

@@ -1,15 +1,20 @@
 """Go: built with Go modules, judged by the Go versions CI runs and the go tool's own test, vet and format commands."""
 
 import re
+import shlex
+from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.core import Context, Result, Status
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts, configuration, existing_texts, first_existing
-from project_validator.facts import Command, Facts, resolved
+from project_validator.facts import Command, Fact, Facts, resolved
 from project_validator.facts.arguments import has_option, program
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
-from project_validator.facts.tools import Run
+from project_validator.facts.expansion import Action
+from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
+from project_validator.facts.tools import Run, defined_by, either
 from project_validator.rules import (
     MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
@@ -17,7 +22,6 @@ from project_validator.rules import (
     BuildOutputs,
     DependencyAudit,
     DependencyManagement,
-    Formatter,
     FunctionLimits,
     Hardening,
     SecurityLints,
@@ -40,10 +44,11 @@ def _go_work_members(text: str) -> tuple[str, ...]:
     return tuple(match[1] for match in _USE.finditer(text) if match[1] != ".")
 
 
+GO_LANGUAGE = frozenset({"Go"})
 GO_MODULES = BuildSystem(
     name="Go modules",
     files=("go.mod", "go.sum", "go.work", "go.work.sum"),
-    languages=frozenset({"Go"}),
+    languages=GO_LANGUAGE,
     members=_go_work_members,
 )
 
@@ -51,22 +56,57 @@ GOLANGCI_CONFIG_FILES = (".golangci.yml", ".golangci.yaml", ".golangci.toml", ".
 RUNS_GOLANGCI_LINT = r"\bgolangci-lint\b(?!\s+fmt)|\bgolangci/golangci-lint-action\b"
 
 
-def _no_config(_: Context) -> str | None:
-    """gofmt has one style and no configuration."""
-    return None
+# gofmt and the tools in its style list the files they would change (`-l`, `-d`), which CI fails on
+# (`test -z "$(gofmt -l .)"`), or rewrite them (`-w`; `go fmt` runs `gofmt -l -w`).
+_GOFMT_STYLE = (("gofmt",), ("gofumpt",), ("goimports",))
+
+# golangci-lint runs the formatters its configuration enables (`formatters.enable` since v2, `linters.enable` before).
+_GOFMT_FORMATTERS = frozenset({"gofmt", "gofumpt", "goimports", "gci", "golines", "swaggo"})
 
 
-GOFMT = Formatter(
+def _read_golangci(path: str, text: str) -> Iterator[Fact]:
+    if path.endswith(".json"):
+        return json_settings("golangci-lint", path, text)
+    if path.endswith(".toml"):
+        return toml_settings("golangci-lint", path, text)
+    return yaml_settings("golangci-lint", path, text)
+
+
+GOLANGCI_SETTINGS = SettingsReader(name="golangci-lint", files=GOLANGCI_CONFIG_FILES, read=_read_golangci)
+
+
+def _golangci_formatters(command: Command, facts: Facts) -> Run | None:
+    """`golangci-lint run`, which fails on what the formatters its configuration enables would change."""
+    argv = resolved(command)
+    if program(argv) != "golangci-lint" or argv[1:2] != ("run",):
+        return None
+    read = [
+        setting
+        for setting in facts.settings("golangci-lint")
+        if setting.key in ("formatters.enable", "linters.enable")
+        and isinstance(setting.value, tuple)
+        and _GOFMT_FORMATTERS & set(map(str, setting.value))
+    ]
+    return formatted(command, facts, checks=True, read=read) if read else None
+
+
+GOLANGCI_LINT_ACTION = Action(
+    name="golangci/golangci-lint-action",
+    runs=lambda inputs: (("golangci-lint", "run", *shlex.split(inputs.get("args", ""))),),
+)
+
+GOFMT = format_tool(
     name="gofmt",
-    config_file=_no_config,
-    runs=(
-        pattern("gofmt", r"(?<![\w-])gofmt\b"),
-        pattern("gofumpt", r"\bgofumpt\b"),
-        pattern("goimports", r"\bgoimports\b"),
-        pattern("golangci-lint fmt", r"\bgolangci-lint\s+fmt\b"),
+    languages=GO_LANGUAGE,
+    can={Enforcement.CHECK: 'test -z "$(gofmt -l .)"', Enforcement.APPLY: "gofmt -w ."},
+    formats=either(
+        flagged(*_GOFMT_STYLE, checks=("-l", "-d"), applies=("-w",)),
+        flagged(("go", "fmt"), checks=()),
+        flagged(("golangci-lint", "fmt"), checks=("--diff", "-d")),
+        _golangci_formatters,
     ),
-    hint='consider a CI job that fails when gofmt -l . lists files (test -z "$(gofmt -l .)")',
-    default_style=True,
+    style=defined_by(),
+    reads=("golangci-lint",),
 )
 
 # The go tool measures statement coverage only.
@@ -83,7 +123,7 @@ def _go_cover(command: Command, _: Facts) -> Run | None:
 
 GO_COVER = coverage_tool(
     name="go test -cover",
-    languages=frozenset({"Go"}),
+    languages=GO_LANGUAGE,
     can={Granularity.LINE: "go test -cover", Granularity.STATEMENT: "go test -cover"},
     measures=_go_cover,
 )
@@ -235,7 +275,7 @@ _GO_VERSION = r"(\d+\.\d+(?:\.\d+|\.x)?|stable|oldstable)"
 
 GO = Ecosystem(
     label="Go",
-    languages=frozenset({"Go"}),
+    languages=GO_LANGUAGE,
     build_systems=(GO_MODULES,),
     source_suffixes={".go": "Go"},
     toolchain=ToolchainPatterns(
@@ -245,7 +285,6 @@ GO = Ecosystem(
     ),
     rules=(
         versions_axis("Go version", "Go"),
-        GOFMT,
         TESTS,
         WARNINGS,
         HARDENING,

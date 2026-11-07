@@ -105,8 +105,8 @@ class LanguagesOfOneEcosystemTests(unittest.TestCase):
         )
         files = {"main.c": "", "app.cpp": "", **github_job("ubuntu-latest", "ccov")}
         with (
-            mock.patch("project_validator.questions.coverage.built_in_tools", return_value=(c_only,)),
-            mock.patch("project_validator.facts.tools.built_in_tools", return_value=(c_only,)),
+            mock.patch("project_validator.questions.coverage.known_tools", return_value=(c_only,)),
+            mock.patch("project_validator.facts.tools.known_tools", return_value=(c_only,)),
             temp_project(files) as root,
         ):
             result = coverage.run(make_context(root))
@@ -117,12 +117,15 @@ class LanguagesOfOneEcosystemTests(unittest.TestCase):
 
 class UnitTests(unittest.TestCase):
     def test_a_run_covers_its_directory_what_is_below_it_and_the_unit_it_is_in(self) -> None:
+        units = (".", "packages/a", "packages/a/sub", "packages/b", "packages/ab")
         run = _measured("cov", BRANCH, scope=("packages/a",))
-        self.assertEqual(
-            [run.covers(unit) for unit in (".", "packages/a", "packages/a/sub", "packages/b", "packages/ab")],
-            [True, True, True, False, False],
-        )
-        self.assertTrue(_measured("cov", BRANCH).covers("packages/b"))
+        # A workspace member is a unit of its own: a run in it does not cover the root unit above it.
+        self.assertEqual([run.covers(unit, units) for unit in units], [False, True, True, False, False])
+        self.assertTrue(_measured("cov", BRANCH).covers("packages/b", units))
+        # A run in a directory of a unit (its `src/`) covers that unit.
+        inside = _measured("cov", BRANCH, scope=("packages/a/src",))
+        self.assertEqual([inside.covers(unit, units) for unit in units], [False, True, False, False, False])
+        self.assertTrue(_measured("cov", BRANCH, scope=("src",)).covers(".", units))
 
     def test_each_unit_of_a_language_is_answered(self) -> None:
         facts = Facts(
