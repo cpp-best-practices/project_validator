@@ -124,15 +124,29 @@ class DeepJsonTests(unittest.TestCase):
             with self.subTest(where=where), temp_project({"deep.json": text}) as root:
                 result = data_wellformed.run(make_context(root))
                 self.assertEqual(result.status, Status.FAIL)
-                self.assertIn(f"deep.json{where}: malformed JSON", result.details)
+                # Python's parser may read it (where the C stack is deep enough) or not: either says where it breaks.
+                [detail] = result.details
+                self.assertTrue(detail.startswith(f"deep.json{where}: "), detail)
         for text in ('{"a":' * 5000 + "[1]:2" + "}" * 5000, '{"a"' * 5000, "[" * 5000 + "}" * 5000):
             with self.subTest(text=text[:12]), temp_project({"deep.json": text}) as root:
                 self.assertEqual(data_wellformed.run(make_context(root)).status, Status.FAIL)
 
     def test_the_reader_without_recursion_agrees_with_json(self) -> None:
         good = ("1", "[]", "{}", '{"a":[1,2,{"b":null}]}', ' "x" ', '{"a":{"b":[true,false]},"c":"\\u0041"}')
-        bad = ("[1,]", '{"a"}', "{1:2}", "[1 2]", "[", '{"a":1,}', "[]]", "[}", '{"a":1 "b":2}', "", "{[1]:2}")
-        bad += ("1 2", ":", ",", '{"a":}', "]", '{"a",1}', "[1:2]")
+        bad: tuple[str, ...] = (
+            "[1,]",
+            '{"a"}',
+            "{1:2}",
+            "[1 2]",
+            "[",
+            '{"a":1,}',
+            "[]]",
+            "[}",
+            '{"a":1 "b":2}',
+            "",
+            "{[1]:2}",
+        )
+        bad = (*bad, "1 2", ":", ",", '{"a":}', "]", '{"a",1}', "[1:2]")
         for text in good:
             with self.subTest(text=text):
                 module._check_deep_json(text)
