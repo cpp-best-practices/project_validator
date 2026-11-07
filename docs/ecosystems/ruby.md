@@ -42,7 +42,8 @@ RuboCop or Standard (without autocorrecting, run directly or as the Rake task a 
 
 ## `security-scanning`
 
-brakeman, or RuboCop, whose Security cops are on by default.
+brakeman, or RuboCop linting, whose Security cops are on by default. In CI, where the tool runs (a setting alone, which
+nothing CI runs reads, does not count); CodeQL, GitLab SAST or semgrep count too.
 
 ## `dependency-management`
 

@@ -167,7 +167,5 @@ class MixedLanguageFunctionLimitsTests(unittest.TestCase):
 
     def test_one_lizard_length_limit_covers_every_language(self) -> None:
         result = run_as(self, function_limits, {GITHUB_WORKFLOW: "run: lizard -L 30\n"}, C_AND_CXX, PYTHON)
-        expected = Result.passed(
-            "C/C++: function length is limited with lizard -L 30; Python: function length is limited with lizard -L 30"
-        )
-        self.assertEqual(result, expected)
+        # The same result for every ecosystem is said once.
+        self.assertEqual(result, Result.passed("function length is limited with lizard -L 30"))

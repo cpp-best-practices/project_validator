@@ -55,6 +55,13 @@
             "answer": "yes",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "NuGet audit of every package": {
                 "can": {
                   "runs": "a restore with <NuGetAuditMode>all</NuGetAuditMode>"
@@ -147,6 +154,62 @@
                   "check"
                 ],
                 "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              ".NET security analyzers": {
+                "can": {
+                  "scans": "<AnalysisModeSecurity>Recommended</AnalysisModeSecurity> (or Security Code Scan)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C#",
+            "level": "scans",
+            "runs": {
+              ".NET security analyzers": {
+                "levels": [
+                  "scans"
+                ],
+                "read": [
+                  "Directory.Build.props"
+                ]
               }
             },
             "unit": ".",
@@ -1296,6 +1359,11 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": ".editorconfig",
+      "reader": "analyzer configuration"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "Directory.Build.props",
       "reader": "MSBuild"
     },
@@ -1564,6 +1632,29 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
@@ -1652,6 +1743,29 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
@@ -1780,6 +1894,29 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
@@ -1861,6 +1998,29 @@
         "."
       ],
       "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -1996,6 +2156,29 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
@@ -2077,6 +2260,29 @@
         "."
       ],
       "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -2212,6 +2418,29 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
@@ -2293,6 +2522,29 @@
         "."
       ],
       "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -2428,6 +2680,29 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
@@ -2509,6 +2784,29 @@
         "."
       ],
       "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -2644,6 +2942,29 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
@@ -2725,6 +3046,29 @@
         "."
       ],
       "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -3034,7 +3378,7 @@
     },
     "security-scanning": {
       "details": [],
-      "message": "security lints are enabled: .NET security analyzers",
+      "message": "CI scans the code for security problems with .NET security analyzers",
       "status": "PASS"
     },
     "static-analysis": {

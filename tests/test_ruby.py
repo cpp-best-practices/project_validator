@@ -119,7 +119,11 @@ class SecurityAndTypingTests(unittest.TestCase):
 
     def test_brakeman_or_rubocop_security_cops(self) -> None:
         result = run_in_layout(self, "Bundler Ruby", SECURITY_SCANNING, _ci("bundle exec brakeman"))
-        self.assertEqual(result, Result.passed("security lints are enabled: brakeman"))
+        self.assertEqual(result, Result.passed("CI scans the code for security problems with brakeman"))
+        rubocop = run_in_layout(self, "Bundler Ruby", SECURITY_SCANNING, _ci("bundle exec rubocop"))
+        self.assertEqual(rubocop, Result.passed("CI scans the code for security problems with RuboCop Security cops"))
+        autocorrect = run_in_layout(self, "Bundler Ruby", SECURITY_SCANNING, _ci("bundle exec rubocop -A"))
+        self.assertEqual(autocorrect.status, Status.WARN)
 
     def test_sorbet_or_steep_type_check_and_strict_sigils_are_the_bonus(self) -> None:
         sorbet = {"lib/app.rb": "# typed: strict\nmodule App; end\n", **_ci("bundle exec srb tc")}

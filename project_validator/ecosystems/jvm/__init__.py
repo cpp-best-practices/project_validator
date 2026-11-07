@@ -27,7 +27,6 @@ from project_validator.rules import (
     BuildOutputs,
     DependencyManagement,
     FunctionLimits,
-    SecurityLints,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -441,14 +440,6 @@ WARNINGS_AS_ERRORS = WarningsAsErrors(
     hint="add -Werror to javac's compilerArgs (Kotlin: allWarningsAsErrors = true)",
 )
 
-SECURITY_LINTS = SecurityLints(
-    texts=_verification_texts,
-    lints=(
-        _setting("Find Security Bugs", r"\bfindsecbugs-plugin\b|\bcom\.h3xstream\.findsecbugs\b"),
-        _setting("PMD security rules", r"\bcategory/java/security\.xml\b"),
-    ),
-)
-
 
 def _dependency_check(command: Command, facts: Facts) -> Run | None:
     """OWASP dependency-check: its goal or task, the plugin a build's verification brings in, or its CLI."""
@@ -588,7 +579,6 @@ JVM = Ecosystem(
         versions_axis("JDK version", "JDK"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        SECURITY_LINTS,
         FunctionLimits(without_lizard=_method_length_enforced),
         DEPENDENCIES,
         CLASS_FILES,

@@ -39,6 +39,10 @@ Releases keep the language's runtime safety checks: no build uses `-Ounchecked` 
 `swift format lint --strict` (or `swift-format lint -s`; plain `lint` only warns) or `swiftformat --lint`.
 They have a default style, so CI enforcement alone passes; `swift format -i` and `swiftformat` only rewrite files.
 
+## `security-scanning`
+
+No security lints of its own here: CodeQL, GitLab SAST or semgrep in CI.
+
 ## `function-limits`
 
 lizard runs with a length limit, or SwiftLint runs with `function_body_length` not disabled (it is on by default).

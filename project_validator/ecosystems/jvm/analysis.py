@@ -17,8 +17,10 @@ from project_validator.ecosystems.jvm import (
 )
 from project_validator.facts import Command, Fact, Facts, Setting
 from project_validator.facts.analysis import analysed, analyzer
+from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
-from project_validator.facts.tools import Claim, Run, defined_by, either
+from project_validator.facts.tools import Claim, Run, Tool, defined_by, either
+from project_validator.tools.scanners import multi_language_scanners
 
 
 def _wired(wiring: Wiring) -> Claim:
@@ -137,4 +139,49 @@ ERROR_PRONE = analyzer(
     analyses=_error_prone,
     rules=defined_by(settings=("Error Prone",)),
     reads=("Error Prone",),
+)
+
+# The security rules of SpotBugs and PMD, configured in the build files: matched in their text until they are read
+# structurally.
+_FIND_SECURITY_BUGS = re.compile(r"\bfindsecbugs-plugin\b|\bcom\.h3xstream\.findsecbugs\b")
+_PMD_SECURITY_RULES = re.compile(r"\bcategory/java/security\.xml\b")
+JVM_SECURITY_SETTINGS = SettingsReader(
+    name="JVM security rules",
+    files=(POM, "*.gradle", "*.gradle.kts"),
+    read=lambda path, text: matched_settings(
+        "JVM security rules",
+        path,
+        text,
+        {"Find Security Bugs": (_FIND_SECURITY_BUGS, True), "PMD security rules": (_PMD_SECURITY_RULES, True)},
+    ),
+)
+
+
+def _with_rules(analyser: Tool, rules: str) -> Claim:
+    """A run of `analyser` whose build configures its security `rules`."""
+
+    def scans(command: Command, facts: Facts) -> Run | None:
+        run = analyser.claims(command, facts)
+        read = facts.where(Setting, tool="JVM security rules", key=rules)
+        return scanned(read=(*run.read, *read)) if run is not None and read else None
+
+    return scans
+
+
+SECURITY_SCANNERS = (
+    scanner(
+        name="Find Security Bugs",
+        languages=JVM_LANGUAGES,
+        how="Find Security Bugs (the findsecbugs-plugin of SpotBugs)",
+        scans=_with_rules(SPOTBUGS, "Find Security Bugs"),
+        reads=("Maven", "Gradle", "JVM security rules"),
+    ),
+    scanner(
+        name="PMD security rules",
+        languages=frozenset({JAVA}),
+        how="PMD with category/java/security.xml",
+        scans=_with_rules(PMD, "PMD security rules"),
+        reads=("Maven", "Gradle", "JVM security rules"),
+    ),
+    *multi_language_scanners(JVM_LANGUAGES),
 )

@@ -118,6 +118,13 @@
             "answer": "yes",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "bun audit": {
                 "can": {
                   "runs": "bun audit"
@@ -198,6 +205,13 @@
             "answer": "yes",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "bun audit": {
                 "can": {
                   "runs": "bun audit"
@@ -393,6 +407,118 @@
                   "check"
                 ],
                 "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "eslint-plugin-security": {
+                "can": {
+                  "scans": "eslint with eslint-plugin-security"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "scans",
+            "runs": {
+              "eslint-plugin-security": {
+                "levels": [
+                  "scans"
+                ],
+                "read": [
+                  "eslint.config.js",
+                  "package.json"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "eslint-plugin-security": {
+                "can": {
+                  "scans": "eslint with eslint-plugin-security"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "scans",
+            "runs": {
+              "eslint-plugin-security": {
+                "levels": [
+                  "scans"
+                ],
+                "read": [
+                  "eslint.config.js",
+                  "package.json"
+                ]
               }
             },
             "unit": ".",
@@ -2085,6 +2211,19 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "eslint.config.js",
+      "reader": "eslint security"
+    },
+    {
+      "heuristic": true,
+      "key": "security plugin",
+      "kind": "Setting",
+      "origin": "eslint.config.js:security plugin",
+      "tool": "eslint",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "package.json",
       "reader": "package.json prettier"
     },
@@ -2092,6 +2231,19 @@
       "kind": "ConfigurationFile",
       "origin": "package.json",
       "reader": "Jest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "eslint security"
+    },
+    {
+      "heuristic": true,
+      "key": "security plugin",
+      "kind": "Setting",
+      "origin": "package.json:security plugin",
+      "tool": "eslint",
+      "value": true
     },
     {
       "kind": "ConfigurationFile",
@@ -2187,6 +2339,32 @@
       ]
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2322,6 +2500,32 @@
         "."
       ],
       "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[4].run"
       ]
@@ -2467,6 +2671,32 @@
       ]
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2602,6 +2832,32 @@
         "."
       ],
       "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[4].run"
       ]
@@ -2742,6 +2998,32 @@
         "."
       ],
       "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[4].run"
       ]
@@ -2882,6 +3164,32 @@
         "."
       ],
       "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[4].run"
       ]
@@ -3269,7 +3577,7 @@
     },
     "security-scanning": {
       "details": [],
-      "message": "security lints are enabled: eslint-plugin-security",
+      "message": "CI scans the code for security problems with eslint-plugin-security",
       "status": "PASS"
     },
     "static-analysis": {

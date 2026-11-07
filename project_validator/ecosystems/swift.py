@@ -41,6 +41,7 @@ from project_validator.rules import (
 )
 from project_validator.text import Pattern, found_and_missing, matching_names, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.scanners import multi_language_scanners
 
 SWIFT_LANGUAGE = "Swift"
 SWIFT_ONLY = frozenset({SWIFT_LANGUAGE})
@@ -332,6 +333,8 @@ SWIFTLINT_ACTION = Action(name="norio-nomura/action-swiftlint", runs=lambda _inp
 # osv-scanner reads Package.resolved; Swift has no audit tool of its own.
 # osv-scanner audits the packages Package.resolved pins.
 AUDITORS = multi_ecosystem_audits(SWIFT_ONLY)
+# Swift has no security lints of its own here: CodeQL, GitLab SAST or semgrep scan it.
+SECURITY_SCANNERS = multi_language_scanners(SWIFT_ONLY)
 
 PACKAGE_DEPENDENCY = re.compile(r"\.package\s*\(")
 EXECUTABLE = re.compile(r"\.executable(?:Target)?\s*\(")

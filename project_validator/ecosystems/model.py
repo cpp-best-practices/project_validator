@@ -170,13 +170,14 @@ def ecosystems_for(languages: frozenset[str], supported: Iterable[Ecosystem]) ->
 
 
 def combined(results: Mapping[Ecosystem, Result]) -> Result:
-    """One result for several ecosystems; ecosystems a practice does not apply to are left out, unless all are."""
+    """One result for several ecosystems, labelled by ecosystem where they differ; ecosystems a practice does not apply
+    to are left out, unless all are."""
     if not results:
         return Result(status=Status.SKIP, message="no recognised ecosystem in the project")
     if judged := {ecosystem: result for ecosystem, result in results.items() if result.status is not Status.SKIP}:
         results = judged
-    if len(results) == 1:
-        return next(iter(results.values()))
+    if len(set(results.values())) == 1:
+        return next(iter(results.values()))  # one result, or the same for every ecosystem
     return labelled({ecosystem.label: result for ecosystem, result in results.items()})
 
 

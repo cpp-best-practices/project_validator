@@ -12,7 +12,7 @@ import re
 from collections.abc import Iterator, Mapping
 
 from project_validator.ci import CiProvider, Load, strings
-from project_validator.facts import CiJob, Fact, Origin, Unknown
+from project_validator.facts import CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.expansion import script_facts
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
@@ -130,21 +130,44 @@ def _local_include(entry: object) -> str | None:
     return path.lstrip("/")
 
 
+# GitLab's templates whose jobs are known by what they do (security scanners), though their commands are not read.
+_KNOWN_TEMPLATES = re.compile(
+    r"(?:Security|Jobs)/(?:SAST|SAST-IaC|Secret-Detection|Dependency-Scanning|Container-Scanning)(?:\.latest)?\.gitlab-ci\.yml"
+)
+
+
+def _known_template(entry: object) -> str | None:
+    template = entry.get("template") if isinstance(entry, Mapping) else None
+    return template if isinstance(template, str) and _KNOWN_TEMPLATES.fullmatch(template) else None
+
+
+def _template_facts(path: str, index: int, template: str) -> Iterator[Fact]:
+    """The jobs a known template adds: one job, which builds nothing, running the template as a marker command
+    (`gitlab-template Security/SAST.gitlab-ci.yml`) that the tools it runs claim."""
+    origin = Origin(path=path, at=("include", index))
+    identity = f"{path}:template:{template}"
+    yield CiJob(origin=origin, id=identity, provider=GITLAB_CI.name, name=template, os="linux", builds=False)
+    yield Command(origin=origin, job=identity, argv=("gitlab-template", template), line=f"template: {template}")
+
+
 def _include_entries(document: Mapping[str, object]) -> list[object]:
     includes = document.get("include")
     return includes if isinstance(includes, list) else [] if includes is None else [includes]
 
 
-type _Pipeline = tuple[dict[str, object], dict[str, str], list[Unknown]]
+type _Pipeline = tuple[dict[str, object], dict[str, str], list[Fact]]
 
 
 def _included(path: str, document: Mapping[str, object], load: Load | None, depth: int = 0) -> _Pipeline:
     """The pipeline: `document` over the local files it includes; the file that defines each top-level key; and the
-    includes that are not read."""
+    facts of the includes that are not merged (the jobs of known templates, and unknowns for the others)."""
     pipeline: dict[str, object] = {}
     sources: dict[str, str] = {}
-    unread: list[Unknown] = []
+    unread: list[Fact] = []
     for index, entry in enumerate(_include_entries(document)):
+        if (template := _known_template(entry)) is not None:
+            unread.extend(_template_facts(path, index, template))
+            continue
         local = _local_include(entry)
         found = load(local) if local is not None and load is not None and depth < _DEPTH else None
         if local is None or not isinstance(found, Mapping):

@@ -361,6 +361,20 @@ except where a step deliberately changes results and says so.
    - `starts(*prefixes)` and `when(matches, run)` (`project_validator/facts/tools.py`) spell the commonest claim: a
      program, and the subcommands after it.
 
+   **4e. Security scanning** (`security-scanning`; the `SecurityLints` rule is deleted).
+   - **The `security` aspect** (`project_validator/facts/security.py`), one level, `scans`. CodeQL, GitLab SAST and
+     semgrep are made by `multi_language_scanners(languages)` (`project_validator/tools/scanners.py`) for each
+     profile's languages (CodeQL not for PHP, which it does not analyse). A language's security lints are claims on
+     the tool that runs them with the settings that turn its security rules on: ruff with `S`, golangci-lint with
+     gosec, eslint with eslint-plugin-security, Psalm's taint analysis, SpotBugs with Find Security Bugs, PMD with its
+     security rules, a .NET build with the Security category turned up, a cargo build with `unsafe_code` forbidden.
+     A setting alone, which nothing CI runs reads, no longer counts.
+   - **GitLab's known templates** (`Security/SAST`, `Dependency-Scanning`, `Secret-Detection`, ...) are jobs that
+     build nothing and run the template as a marker command (`gitlab-template <name>`), which the scanners claim;
+     other templates stay unknowns that hide jobs.
+   - Settings readers may name files in hidden directories (`.cargo/config.toml`); those directories are read.
+   - The same result for every ecosystem is said once (`combined`), rather than labelled ecosystem by ecosystem.
+
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; lizard, llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice

@@ -46,7 +46,9 @@ PHPStan, Psalm, PHPMD or Phan.
 
 ## `security-scanning`
 
-Psalm's taint analysis or phpcs-security-audit.
+Psalm's taint analysis (`--taint-analysis`, or `runTaintAnalysis` in `psalm.xml`), or phpcs with phpcs-security-audit.
+CodeQL does not analyse PHP. In CI, where the tool runs (a setting alone, which nothing CI runs reads, does not count);
+CodeQL, GitLab SAST or semgrep count too.
 
 ## `dependency-management`
 

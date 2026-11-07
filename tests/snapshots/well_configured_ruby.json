@@ -53,6 +53,13 @@
             "answer": "yes",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "bundler-audit": {
                 "can": {
                   "runs": "bundle audit check --update"
@@ -142,6 +149,69 @@
               "RuboCop": {
                 "levels": [
                   "check"
+                ],
+                "read": [
+                  "Rakefile"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "RuboCop Security cops": {
+                "can": {
+                  "scans": "rubocop"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "brakeman": {
+                "can": {
+                  "scans": "brakeman"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ruby",
+            "level": "scans",
+            "runs": {
+              "RuboCop Security cops": {
+                "levels": [
+                  "scans"
                 ],
                 "read": [
                   "Rakefile"
@@ -1513,6 +1583,30 @@
       ]
     },
     {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop Security cops",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1636,6 +1730,30 @@
       ]
     },
     {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop Security cops",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1759,6 +1877,30 @@
       ]
     },
     {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop Security cops",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1882,6 +2024,30 @@
       ]
     },
     {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop Security cops",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2005,6 +2171,30 @@
       ]
     },
     {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop Security cops",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2123,6 +2313,30 @@
         "."
       ],
       "tool": "SimpleCov",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Rakefile"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "RuboCop Security cops",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[2].run"
       ]
@@ -2466,7 +2680,7 @@
     },
     "security-scanning": {
       "details": [],
-      "message": "security lints are enabled: RuboCop Security cops",
+      "message": "CI scans the code for security problems with RuboCop Security cops",
       "status": "PASS"
     },
     "static-analysis": {

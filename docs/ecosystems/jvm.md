@@ -47,7 +47,9 @@ check`). Error Prone, a compiler plugin, runs on every build that compiles.
 
 ## `security-scanning`
 
-SpotBugs with Find Security Bugs, or PMD's `category/java/security.xml` rules.
+SpotBugs with Find Security Bugs, or PMD with its `category/java/security.xml` rules, where the build runs them. In CI,
+where the tool runs (a setting alone, which nothing CI runs reads, does not count); CodeQL, GitLab SAST or semgrep count
+too.
 
 ## `dependency-management`
 

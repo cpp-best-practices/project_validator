@@ -205,16 +205,12 @@ class StaticAnalysisTests(unittest.TestCase):
         self.assertEqual(warned.message, "biome is configured (biome.json) but does not run")
 
     def test_security_lints_are_a_plugin_or_semgrep_rules(self) -> None:
-        for files in (
-            {"eslint.config.mjs": 'import security from "eslint-plugin-security";\n'},
-            _ci("semgrep scan --config p/typescript"),
-        ):
+        plugin = {"eslint.config.mjs": 'import security from "eslint-plugin-security";\n'}
+        for files in ({**plugin, **_ci("npx eslint .")}, _ci("semgrep scan --config p/typescript")):
             with self.subTest(files=files):
                 self.assertEqual(run_in_layout(self, "npm JavaScript", security_scanning, files).status, Status.PASS)
-        self.assertEqual(
-            run_in_layout(self, "npm JavaScript", security_scanning, _ci("semgrep scan --config p/python")).status,
-            Status.WARN,
-        )
+        # The plugin finds problems where CI runs eslint.
+        self.assertEqual(run_in_layout(self, "npm JavaScript", security_scanning, plugin).status, Status.WARN)
 
 
 class TypeCheckingTests(unittest.TestCase):

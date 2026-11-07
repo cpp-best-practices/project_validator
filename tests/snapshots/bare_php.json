@@ -51,6 +51,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "composer audit": {
                 "can": {
                   "runs": "composer audit"
@@ -132,6 +139,53 @@
             },
             "language": "PHP",
             "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Psalm taint analysis": {
+                "can": {
+                  "scans": "psalm --taint-analysis"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "phpcs-security-audit": {
+                "can": {
+                  "scans": "phpcs with phpcs-security-audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "PHP",
+            "level": "scans",
             "runs": {},
             "unit": ".",
             "unknown_definitions": [],
@@ -400,7 +454,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running in CI: composer audit, requiring roave/security-advisories, osv-scanner, trivy fs or snyk test"
+        "consider running in CI: composer audit, requiring roave/security-advisories, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
@@ -462,8 +516,7 @@
     },
     "security-scanning": {
       "details": [
-        "consider adding CodeQL (github/codeql-action) or GitLab SAST (Security/SAST.gitlab-ci.yml)",
-        "or enable each language's security lints (PHP: Psalm taint analysis, phpcs-security-audit)"
+        "consider running in CI: psalm --taint-analysis, phpcs with phpcs-security-audit, GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci"
       ],
       "message": "no code security scanning found in CI configuration",
       "status": "WARN"

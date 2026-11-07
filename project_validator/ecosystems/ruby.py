@@ -19,6 +19,7 @@ from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
+from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, combined, defined_by, either, starts, when
@@ -28,13 +29,13 @@ from project_validator.rules import (
     DeclaredLicense,
     DependencyManagement,
     FunctionLimits,
-    SecurityLints,
     WarningPolicy,
     directories,
     ignored_at_top_level,
 )
 from project_validator.text import Pattern, matching_names, pattern
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.scanners import multi_language_scanners
 
 RUBY_LANGUAGE = "Ruby"
 RUBY_ONLY = frozenset({RUBY_LANGUAGE})
@@ -292,10 +293,18 @@ AUDITORS = (
     *multi_ecosystem_audits(RUBY_ONLY),
 )
 
+
 # RuboCop's Security cops are on by default.
-SECURITY_LINTS = SecurityLints(
-    texts=_run_texts,
-    lints=(pattern("brakeman", r"\bbrakeman\b"), pattern("RuboCop Security cops", RUNS_RUBOCOP)),
+def _rubocop_security(command: Command, facts: Facts) -> Run | None:
+    """RuboCop linting, whose Security cops are on by default."""
+    linted = _lints("rubocop", _RUBOCOP_CORRECTS, "RuboCop")(command, facts)
+    return None if linted is None else scanned(read=linted.read)
+
+
+SECURITY_SCANNERS = (
+    scanner(name="brakeman", languages=RUBY_ONLY, how="brakeman", scans=when(starts(("brakeman",)), scanned)),
+    scanner(name="RuboCop Security cops", languages=RUBY_ONLY, how="rubocop", scans=_rubocop_security, reads=("Rake",)),
+    *multi_language_scanners(RUBY_ONLY),
 )
 
 # Metrics/MethodLength is on by default; Standard turns the Metrics cops off.
@@ -442,7 +451,6 @@ RUBY = Ecosystem(
     rules=(
         versions_axis("Ruby version", RUBY_LANGUAGE),
         WARNINGS,
-        SECURITY_LINTS,
         FunctionLimits(without_lizard=_method_length_enforced),
         DEPENDENCIES,
         BUNDLE,
