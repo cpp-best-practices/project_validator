@@ -110,6 +110,29 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "Maven",
+                "manifest": "pom.xml"
+              }
+            ],
+            "language": "Java",
+            "lock_required": true,
+            "locked": [
+              "CI (.github/workflows/ci.yml)"
+            ],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Java",
@@ -996,6 +1019,16 @@
       "value": [
         "check"
       ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Maven dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Maven",
+      "origin": "pom.xml"
     },
     {
       "kind": "ConfigurationFile",
@@ -2284,7 +2317,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "dependencies are managed with Maven and locked in CI (mvn --strict-checksums)",
+      "message": "dependencies are declared in pom.xml (Maven) and locked in CI (.github/workflows/ci.yml)",
       "status": "PASS"
     },
     "dependency-updates": {

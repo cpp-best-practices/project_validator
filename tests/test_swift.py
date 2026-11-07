@@ -3,7 +3,7 @@
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems.swift import DEPENDENCIES, SWIFT, swiftpm_build_types, xcode_build_types
+from project_validator.ecosystems.swift import SWIFT, SWIFTPM_PACKAGES, swiftpm_build_types, xcode_build_types
 from tests.support import (
     GITHUB_WORKFLOW,
     checks_named,
@@ -157,16 +157,20 @@ class DependencyAndOutputTests(unittest.TestCase):
 
     def test_an_application_commits_package_resolved(self) -> None:
         app = {"Package.swift": f'dependencies: [{self.PACKAGE}], targets: [.executableTarget(name: "App")]\n'}
-        expected = Result.warned("dependencies are managed with SwiftPM but not locked", DEPENDENCIES.lock_hint)
+        expected = Result.warned(
+            "dependencies are declared in Package.swift (SwiftPM) but not locked", SWIFTPM_PACKAGES.lock_hint
+        )
         self.assertEqual(run_in_layout(self, SWIFTPM, DEPENDENCY_MANAGEMENT, app), expected)
         locked = run_in_layout(self, SWIFTPM, DEPENDENCY_MANAGEMENT, {**app, "Package.resolved": "{}"})
-        self.assertEqual(locked.message, "dependencies are managed with SwiftPM and locked in Package.resolved")
+        self.assertEqual(
+            locked.message, "dependencies are declared in Package.swift (SwiftPM) and locked in Package.resolved"
+        )
 
     def test_a_library_need_not(self) -> None:
         library = {"Package.swift": f'dependencies: [{self.PACKAGE}], targets: [.target(name: "Lib")]\n'}
         self.assertEqual(
             run_in_layout(self, SWIFTPM, DEPENDENCY_MANAGEMENT, library),
-            Result.passed("dependencies are managed with SwiftPM"),
+            Result.passed("dependencies are declared in Package.swift (SwiftPM)"),
         )
 
     def test_an_xcode_app_with_swiftpm_packages_locks_them(self) -> None:

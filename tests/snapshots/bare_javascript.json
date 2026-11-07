@@ -134,6 +134,27 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "npm packages",
+                "manifest": "package.json"
+              }
+            ],
+            "language": "JavaScript",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "JavaScript",
@@ -428,6 +449,16 @@
     {
       "kind": "ConfigurationFile",
       "origin": "package.json",
+      "reader": "package.json dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "npm packages",
+      "origin": "package.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
       "reader": "eslint rules"
     }
   ],
@@ -544,7 +575,7 @@
       "details": [
         "commit the package manager's lockfile (package-lock.json, pnpm-lock.yaml, yarn.lock, bun.lock or deno.lock) and install from it in CI (npm ci, pnpm install --frozen-lockfile, yarn install --immutable)"
       ],
-      "message": "dependencies are declared in package.json but not locked",
+      "message": "dependencies are declared in package.json (npm packages) but not locked",
       "status": "WARN"
     },
     "dependency-updates": {

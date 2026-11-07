@@ -19,7 +19,7 @@ from project_validator.checks.type_checking import type_checking
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems.javascript import DEPENDENCIES, JAVASCRIPT_AND_TYPESCRIPT, NODE_MODULES
+from project_validator.ecosystems.javascript import JAVASCRIPT_AND_TYPESCRIPT, JS_PACKAGE_MANAGER, NODE_MODULES
 from project_validator.facts import Command, Unknown
 from tests.support import (
     GITHUB_WORKFLOW,
@@ -249,23 +249,26 @@ class DependencyTests(unittest.TestCase):
 
     def test_declared_dependencies_must_be_locked_even_in_a_library(self) -> None:
         declared = _package(main="index.js", peerDependencies={"react": "^19"})
-        expected = Result.warned("dependencies are declared in package.json but not locked", DEPENDENCIES.lock_hint)
+        expected = Result.warned(
+            "dependencies are declared in package.json (npm packages) but not locked", JS_PACKAGE_MANAGER.lock_hint
+        )
         self.assertEqual(self._npm(dependency_management, declared), expected)
         locked = self._npm(dependency_management, {**declared, "pnpm-lock.yaml": "lockfileVersion: '9.0'\n"})
         self.assertEqual(
-            locked, Result.passed("dependencies are declared in package.json and locked in pnpm-lock.yaml")
+            locked,
+            Result.passed("dependencies are declared in package.json (npm packages) and locked in pnpm-lock.yaml"),
         )
 
     def test_deno_imports_are_dependencies(self) -> None:
         files = {"deno.jsonc": '{"imports": {"@std/assert": "jsr:@std/assert@1"}}', "deno.lock": "{}"}
-        expected = Result.passed("dependencies are declared in deno.jsonc and locked in deno.lock")
+        expected = Result.passed("dependencies are declared in deno.jsonc (npm packages) and locked in deno.lock")
         self.assertEqual(run_in_layout(self, "Deno TypeScript", dependency_management, files), expected)
 
     def test_without_dependencies_there_is_nothing_to_lock(self) -> None:
         self.assertEqual(self._npm(dependency_management, {}), Result.passed("no dependencies are declared"))
-        # A package.json that does not parse declares nothing.
+        # Whether a package.json that does not parse declares any is unknown.
         broken = {"package.json": '{"main": "index.js", "dependencies": {', "index.js": ""}
-        self.assertEqual(self._npm(dependency_management, broken), Result.passed("no dependencies are declared"))
+        self.assertEqual(self._npm(dependency_management, broken).status, Status.ERROR)
 
     def test_the_package_license_must_match_the_license_file(self) -> None:
         mit = "Permission is hereby granted, free of charge, to any person obtaining a copy\n"

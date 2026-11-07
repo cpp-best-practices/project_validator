@@ -115,6 +115,29 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "Python packages",
+                "manifest": "pyproject.toml"
+              }
+            ],
+            "language": "Python",
+            "lock_required": true,
+            "locked": [
+              "uv.lock"
+            ],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Python",
@@ -1985,6 +2008,16 @@
     {
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
+      "reader": "Python dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Python packages",
+      "origin": "pyproject.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
       "reader": "pylint"
     },
     {
@@ -2014,6 +2047,16 @@
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
       "reader": "ty"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "uv.lock",
+      "reader": "Python packages lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "Python packages",
+      "origin": "uv.lock"
     },
     {
       "heuristic": false,
@@ -4606,7 +4649,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "dependencies are declared in pyproject.toml and locked in uv.lock",
+      "message": "dependencies are declared in pyproject.toml (Python packages) and locked in uv.lock",
       "status": "PASS"
     },
     "dependency-updates": {

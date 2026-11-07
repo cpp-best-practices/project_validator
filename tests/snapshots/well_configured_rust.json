@@ -126,6 +126,22 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [],
+            "language": "Rust",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Rust",
@@ -2309,6 +2325,11 @@
       "origin": "Cargo.toml:unsafe_code",
       "tool": "Rust lints",
       "value": "forbid"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Cargo dependencies"
     },
     {
       "kind": "ConfigurationFile",

@@ -117,6 +117,34 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "NuGet",
+                "manifest": "Directory.Build.props"
+              },
+              {
+                "manager": "NuGet",
+                "manifest": "tests/App.Tests/App.Tests.csproj"
+              }
+            ],
+            "language": "C#",
+            "lock_required": true,
+            "locked": [
+              "src/App/packages.lock.json",
+              "tests/App.Tests/packages.lock.json"
+            ],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "C#",
@@ -1475,6 +1503,16 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "Declared",
+      "manager": "NuGet",
+      "origin": "Directory.Build.props"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "src/App/App.csproj",
       "reader": "MSBuild"
     },
@@ -1493,6 +1531,21 @@
       "origin": "src/App/App.csproj:Sdk",
       "tool": "MSBuild",
       "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/packages.lock.json",
+      "reader": "NuGet lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "NuGet",
+      "origin": "src/App/packages.lock.json"
     },
     {
       "kind": "ConfigurationFile",
@@ -1554,6 +1607,26 @@
       "origin": "tests/App.Tests/App.Tests.csproj:Sdk",
       "tool": "MSBuild",
       "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "Declared",
+      "manager": "NuGet",
+      "origin": "tests/App.Tests/App.Tests.csproj"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/packages.lock.json",
+      "reader": "NuGet lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "NuGet",
+      "origin": "tests/App.Tests/packages.lock.json"
     },
     {
       "heuristic": false,
@@ -3566,7 +3639,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "dependencies are managed with NuGet and locked in 2 packages.lock.json files",
+      "message": "dependencies are declared in Directory.Build.props, tests/App.Tests/App.Tests.csproj (NuGet) and locked in src/App/packages.lock.json, tests/App.Tests/packages.lock.json",
       "status": "PASS"
     },
     "dependency-updates": {

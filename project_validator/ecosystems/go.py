@@ -12,6 +12,7 @@ from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, positional, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
@@ -22,7 +23,6 @@ from project_validator.facts.testing import TestFiles, test_runner, tested, test
 from project_validator.facts.tools import Definition, Run, defined_by, either, starts, when
 from project_validator.rules import (
     BuildOutputs,
-    DependencyManagement,
     Hardening,
     WarningPolicy,
     directories,
@@ -312,20 +312,16 @@ FUNCTION_LENGTH_LIMITERS = (FUNLEN, *function_length_limiters(GO_LANGUAGE))
 
 REQUIRE = re.compile(r"^\s*require\b", re.MULTILINE)
 
-
-def _requires_modules(context: Context) -> str | None:
-    if context.project.exists("go.mod") and REQUIRE.search(context.project.read_text("go.mod")):
-        return "managed with Go modules"
-    return None
-
-
-def _go_sum(context: Context) -> str | None:
-    return "go.sum" if context.committed("go.sum") else None
-
-
-DEPENDENCIES = DependencyManagement(
-    managed=_requires_modules,
-    locked=_go_sum,
+GO_MOD = manifest_reader(
+    name="Go module requirements",
+    manager="Go modules",
+    files=("go.mod",),
+    declares=lambda _path, text: bool(REQUIRE.search(text)),
+)
+GO_SUM = lockfile_reader(manager="Go modules", files=("go.sum",))
+GO_MODULES_MANAGER = PackageManager(
+    name="Go modules",
+    languages=GO_LANGUAGE,
     lock_hint="commit go.sum, which holds the checksum of every module go.mod requires",
     vendor_outputs=("vendor/modules.txt",),
 )
@@ -355,7 +351,6 @@ GO = Ecosystem(
         versions_axis("Go version", "Go"),
         WARNINGS,
         HARDENING,
-        DEPENDENCIES,
         BUILD_OUTPUTS,
     ),
 )

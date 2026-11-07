@@ -13,10 +13,11 @@ from pathlib import Path, PurePosixPath
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, versions_axis
 from project_validator.evidence import ci_and_hook_texts
-from project_validator.facts import Command, Facts, Setting, Unknown, resolved
+from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import Locked, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
@@ -24,7 +25,6 @@ from project_validator.facts.testing import TestFiles, test_runner, tested, test
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, either, starts
 from project_validator.rules import (
     BuildOutputs,
-    DependencyManagement,
     WarningPolicy,
     WarningsAsErrors,
     directories,
@@ -471,33 +471,49 @@ MAVEN_DEPENDENCY = re.compile(r"<dependency>")
 GRADLE_DEPENDENCY = re.compile(r"^\s*(?:implementation|api|compileOnly|runtimeOnly|testImplementation)\b", re.MULTILINE)
 GRADLE_LOCKS = ("gradle/verification-metadata.xml", "gradle.lockfile")
 MAVEN_CONFIG = ".mvn/maven.config"
-STRICT_CHECKSUMS = re.compile(rf"{MVN}(?:--strict-checksums|\s-C\b)")
+_STRICT_CHECKSUMS = frozenset({"--strict-checksums", "-C"})
+
+MAVEN_DEPENDENCIES = manifest_reader(
+    name="Maven dependencies",
+    manager="Maven",
+    files=(POM,),
+    declares=lambda _path, text: bool(MAVEN_DEPENDENCY.search(text)),
+)
+GRADLE_DEPENDENCIES = manifest_reader(
+    name="Gradle dependencies",
+    manager="Gradle",
+    files=("build.gradle", "build.gradle.kts"),
+    declares=lambda _path, text: bool(GRADLE_DEPENDENCY.search(text)),
+)
+# Gradle's dependency verification metadata, or its lockfile.
+GRADLE_LOCKFILES = lockfile_reader(manager="Gradle", files=GRADLE_LOCKS)
 
 
-def _managed(context: Context) -> str | None:
-    for path in _build_files(context):
-        text = context.project.read_text(path)
-        if PurePosixPath(path).name == POM and MAVEN_DEPENDENCY.search(text):
-            return "managed with Maven"
-        if PurePosixPath(path).name != POM and GRADLE_DEPENDENCY.search(text):
-            return "managed with Gradle"
-    return None
+def _read_maven_config(path: str, text: str) -> Iterator[Fact]:
+    """Maven's own options: with --strict-checksums, it fails on a dependency whose checksum does not match."""
+    if _STRICT_CHECKSUMS & set(text.split()):
+        yield Locked(origin=Origin(path=path), manager="Maven")
 
 
-def _verified(context: Context) -> str | None:
-    """Gradle's dependency verification metadata or lockfile, or Maven failing on a bad checksum."""
-    if lock := next((path for path in GRADLE_LOCKS if context.committed(path)), None):
-        return lock
-    if context.project.exists(MAVEN_CONFIG) and "--strict-checksums" in context.project.read_text(MAVEN_CONFIG):
-        return f"{MAVEN_CONFIG} (--strict-checksums)"
-    return "CI (mvn --strict-checksums)" if any(map(STRICT_CHECKSUMS.search, context.ci_texts)) else None
+MAVEN_STRICT_CHECKSUMS = SettingsReader(name="Maven options", files=(MAVEN_CONFIG,), read=_read_maven_config)
 
 
-DEPENDENCIES = DependencyManagement(
-    managed=_managed,
-    locked=_verified,
+def _maven_verifies(command: Command) -> bool:
+    argv = resolved(command)
+    return program(argv) in {"mvn", "mvnw"} and bool(_STRICT_CHECKSUMS & set(argv))
+
+
+MAVEN_PACKAGES = PackageManager(
+    name="Maven",
+    languages=JVM_LANGUAGES,
+    lock_hint="verify them: run Maven with --strict-checksums (in .mvn/maven.config)",
+    verified_by=_maven_verifies,
+)
+GRADLE_PACKAGES = PackageManager(
+    name="Gradle",
+    languages=JVM_LANGUAGES,
     lock_hint="verify them: commit gradle/verification-metadata.xml (gradle --write-verification-metadata sha256) "
-    "or a gradle.lockfile; with Maven, run with --strict-checksums",
+    "or a gradle.lockfile",
 )
 
 CLASS_FILES = BuildOutputs(
@@ -532,7 +548,6 @@ JVM = Ecosystem(
         versions_axis("JDK version", "JDK"),
         WARNINGS,
         WARNINGS_AS_ERRORS,
-        DEPENDENCIES,
         CLASS_FILES,
     ),
 )

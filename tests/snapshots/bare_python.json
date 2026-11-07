@@ -104,6 +104,27 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "Python packages",
+                "manifest": "pyproject.toml"
+              }
+            ],
+            "language": "Python",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Python",
@@ -399,6 +420,16 @@
     {
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
+      "reader": "Python dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Python packages",
+      "origin": "pyproject.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
       "reader": "pylint"
     },
     {
@@ -530,7 +561,7 @@
       "details": [
         "lock them: commit uv.lock (uv lock), poetry.lock, pdm.lock or pylock.toml, or pin requirements with hashes (pip-compile --generate-hashes) and install them with --require-hashes"
       ],
-      "message": "dependencies are declared in pyproject.toml but not locked",
+      "message": "dependencies are declared in pyproject.toml (Python packages) but not locked",
       "status": "WARN"
     },
     "dependency-updates": {

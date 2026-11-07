@@ -3,7 +3,7 @@
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems.dotnet import BUILD_OUTPUT, DEPENDENCIES, DOTNET
+from project_validator.ecosystems.dotnet import BUILD_OUTPUT, DOTNET, NUGET_PACKAGES
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, make_context, run_as, run_in_layout, temp_project
 
 (
@@ -188,10 +188,15 @@ class SecurityAndAnalysisTests(unittest.TestCase):
 
 class DependencyTests(unittest.TestCase):
     def test_package_references_are_locked_by_lock_files(self) -> None:
-        expected = Result.warned("dependencies are managed with NuGet but not locked", DEPENDENCIES.lock_hint)
+        expected = Result.warned(
+            "dependencies are declared in Directory.Build.props (NuGet) but not locked", NUGET_PACKAGES.lock_hint
+        )
         self.assertEqual(run_as(self, DEPENDENCY_MANAGEMENT, PACKAGES, DOTNET), expected)
         locked = run_as(self, DEPENDENCY_MANAGEMENT, {**PACKAGES, "packages.lock.json": "{}"}, DOTNET)
-        self.assertEqual(locked.message, "dependencies are managed with NuGet and locked in packages.lock.json")
+        self.assertEqual(
+            locked.message,
+            "dependencies are declared in Directory.Build.props (NuGet) and locked in packages.lock.json",
+        )
 
     def test_the_package_license_expression_is_the_declared_license(self) -> None:
         mit = "Permission is hereby granted, free of charge, to any person obtaining a copy\n"

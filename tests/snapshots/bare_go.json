@@ -95,6 +95,27 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "Go modules",
+                "manifest": "go.mod"
+              }
+            ],
+            "language": "Go",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Go",
@@ -319,6 +340,16 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "go.mod",
+      "reader": "Go module requirements"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Go modules",
+      "origin": "go.mod"
     }
   ],
   "map": {
@@ -434,7 +465,7 @@
       "details": [
         "commit go.sum, which holds the checksum of every module go.mod requires"
       ],
-      "message": "dependencies are managed with Go modules but not locked",
+      "message": "dependencies are declared in go.mod (Go modules) but not locked",
       "status": "WARN"
     },
     "dependency-updates": {

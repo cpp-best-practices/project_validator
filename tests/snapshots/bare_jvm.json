@@ -97,6 +97,27 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "Maven",
+                "manifest": "pom.xml"
+              }
+            ],
+            "language": "Java",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Java",
@@ -352,6 +373,16 @@
     {
       "kind": "ConfigurationFile",
       "origin": "pom.xml",
+      "reader": "Maven dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Maven",
+      "origin": "pom.xml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
       "reader": "Error Prone"
     },
     {
@@ -465,9 +496,9 @@
     },
     "dependency-management": {
       "details": [
-        "verify them: commit gradle/verification-metadata.xml (gradle --write-verification-metadata sha256) or a gradle.lockfile; with Maven, run with --strict-checksums"
+        "verify them: run Maven with --strict-checksums (in .mvn/maven.config)"
       ],
-      "message": "dependencies are managed with Maven but not locked",
+      "message": "dependencies are declared in pom.xml (Maven) but not locked",
       "status": "WARN"
     },
     "dependency-updates": {

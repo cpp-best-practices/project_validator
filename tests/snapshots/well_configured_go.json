@@ -106,6 +106,22 @@
         ]
       }
     ],
+    "dependency-management": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [],
+            "language": "Go",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Go",
@@ -2128,6 +2144,11 @@
         "errorlint",
         "revive"
       ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "go.mod",
+      "reader": "Go module requirements"
     },
     {
       "heuristic": false,
