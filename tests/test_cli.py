@@ -149,10 +149,12 @@ class CliTests(unittest.TestCase):
             for provider, path in CI_FILES.items():
                 with layout_project(self, layout, {path: "jobs: {}\n"}, ci=provider) as root:
                     code, output, _ = run_cli("--only", COMPILER_CHECKS, str(root))
-                    self.assertEqual(code, EXIT_FAILURE, output)
+                    expected = NOT_APPLICABLE[language] | layout.skipped
+                    # A language none of the checks applies to yet (a new profile) has nothing to fail.
+                    applying = set(COMPILER_CHECKS.split(",")) - expected
+                    self.assertEqual(code, EXIT_FAILURE if applying else EXIT_SUCCESS, output)
                     for name in COMPILER_CHECKS.split(","):
                         skipped = f"[SKIP] {name}:" in output
-                        expected = NOT_APPLICABLE[language] | layout.skipped
                         self.assertEqual(skipped, name in expected, name)
 
     def test_compiler_checks_run_for_c_family_languages(self) -> None:

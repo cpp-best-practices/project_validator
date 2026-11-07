@@ -53,7 +53,8 @@ def toolchains() -> dict[str, ToolchainPatterns]:
 
 
 def _named_versions(patterns: ToolchainPatterns, text: str) -> set[str]:
-    return {match[1] for regex in patterns.versions for match in regex.finditer(text)}
+    versions = {match[1] for regex in patterns.versions for match in regex.finditer(text)}
+    return versions | {label.format(match[1]) for regex, label in patterns.labelled for match in regex.finditer(text)}
 
 
 def _language_toolchains(language: str, patterns: ToolchainPatterns, texts: tuple[str, ...]) -> set[Toolchain]:

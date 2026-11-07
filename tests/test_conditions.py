@@ -114,6 +114,9 @@ class OpenDimensionTests(unittest.TestCase):
     def test_a_value_named_later_branches_as_other_did(self) -> None:
         not_msvc = negated(only("compilers", ["msvc"]))
         others = only("compilers", ["other"])
+        with self.assertRaises(ValueError):
+            only("compilers", ["zcc-for-a-test"])
+        conditions.extend("compilers", "zcc-for-a-test", "zcc-for-a-test")
         zcc = only("compilers", ["zcc-for-a-test"])
         self.assertIn("zcc-for-a-test", DIMENSIONS["compilers"])
         self.assertEqual(len(DIMENSIONS), 4)
