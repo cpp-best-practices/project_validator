@@ -45,6 +45,60 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "govulncheck": {
+                "can": {
+                  "runs": "govulncheck ./..."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Go",
+            "level": "runs",
+            "runs": {
+              "govulncheck": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Go",
@@ -2007,6 +2061,28 @@
       "languages": [
         "Go"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "govulncheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "provides": {
         "analysis": [
@@ -2090,6 +2166,28 @@
       "languages": [
         "Go"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "govulncheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "provides": {
         "analysis": [
@@ -2173,6 +2271,28 @@
       "languages": [
         "Go"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "govulncheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "provides": {
         "analysis": [
@@ -2248,6 +2368,28 @@
       ],
       "tool": "go test",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "govulncheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
     },
     {
       "heuristic": false,
@@ -2331,6 +2473,28 @@
       ],
       "tool": "go test",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "govulncheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
     },
     {
       "heuristic": false,
@@ -2414,6 +2578,28 @@
       ],
       "tool": "go test",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "govulncheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
+      ]
     },
     {
       "heuristic": false,

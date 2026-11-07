@@ -47,6 +47,62 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "OWASP dependency-check": {
+                "can": {
+                  "runs": "OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Java",
+            "level": "runs",
+            "runs": {
+              "OWASP dependency-check": {
+                "levels": [
+                  "runs"
+                ],
+                "read": [
+                  "pom.xml"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Java",
@@ -913,6 +969,29 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "OWASP dependency-check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "analysis": [
           "checks"
         ]
@@ -1004,6 +1083,29 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "OWASP dependency-check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "analysis": [
           "checks"
         ]
@@ -1095,6 +1197,29 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "OWASP dependency-check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
         "analysis": [
           "checks"
         ]
@@ -1174,6 +1299,29 @@
         "."
       ],
       "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "OWASP dependency-check",
       "via": []
     },
     {
@@ -1265,6 +1413,29 @@
         "."
       ],
       "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "OWASP dependency-check",
       "via": []
     },
     {
@@ -1356,6 +1527,29 @@
         "."
       ],
       "tool": "Spotless",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "OWASP dependency-check",
       "via": []
     },
     {

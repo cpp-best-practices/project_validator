@@ -52,6 +52,81 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "bun audit": {
+                "can": {
+                  "runs": "bun audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "npm audit": {
+                "can": {
+                  "runs": "npm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pnpm audit": {
+                "can": {
+                  "runs": "pnpm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yarn audit": {
+                "can": {
+                  "runs": "yarn audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yarn npm audit": {
+                "can": {
+                  "runs": "yarn npm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JavaScript",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "JavaScript",
@@ -368,7 +443,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running npm audit (or pnpm audit, yarn npm audit or bun audit) in CI"
+        "consider running in CI: npm audit, pnpm audit, yarn npm audit, bun audit, yarn audit, osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

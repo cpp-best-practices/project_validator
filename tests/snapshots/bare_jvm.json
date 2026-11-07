@@ -43,6 +43,53 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "OWASP dependency-check": {
+                "can": {
+                  "runs": "OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Java",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Java",
@@ -312,7 +359,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider OWASP dependency-check in CI (dependency-check-maven bound to check, or gradle dependencyCheckAnalyze)"
+        "consider running in CI: OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze), osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

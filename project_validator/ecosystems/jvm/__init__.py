@@ -15,16 +15,16 @@ from project_validator.ecosystems.model import BuildSystem, Ecosystem, Toolchain
 from project_validator.evidence import ci_and_hook_texts, first_existing
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.arguments import positional, program
+from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Claim, Definition, Run, defined_by, either
+from project_validator.facts.tools import Claim, Definition, Run, defined_by, either, starts
 from project_validator.rules import (
-    MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     BuildOutputs,
-    DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
@@ -34,6 +34,7 @@ from project_validator.rules import (
     ignored_at_top_level,
 )
 from project_validator.text import Pattern, matching_names, pattern
+from project_validator.tools.audits import multi_ecosystem_audits
 
 JAVA = "Java"
 KOTLIN = "Kotlin"
@@ -102,11 +103,6 @@ def _texts_when(runs: re.Pattern[str]) -> Callable[[Context], tuple[str, ...]]:
 
 _build_texts = _texts_when(RUNS_BUILD)
 _verification_texts = _texts_when(RUNS_VERIFICATION)
-
-
-def _bound_goal(artifact: str, goals: str) -> str:
-    """A Maven plugin whose execution binds one of `goals`, so that the lifecycle runs it."""
-    return rf"<artifactId>{artifact}</artifactId>(?:(?!</plugin>).)*?<goal>(?:{goals})</goal>"
 
 
 def _setting(name: str, regex: str) -> Pattern:
@@ -453,19 +449,34 @@ SECURITY_LINTS = SecurityLints(
     ),
 )
 
-DEPENDENCY_AUDIT = DependencyAudit(
-    tools=(
-        _setting(
-            "OWASP dependency-check",
-            rf"\bdependency-check:(?:check|aggregate)\b|\bdependencyCheck(?:Analyze|Aggregate)\b"
-            rf"|\bdependency-check\.sh\b|\bdependency-check/Dependency-Check_Action\b"
-            rf"|{_bound_goal('dependency-check-maven', 'check|aggregate')}",
+
+def _dependency_check(command: Command, facts: Facts) -> Run | None:
+    """OWASP dependency-check: its goal or task, the plugin a build's verification brings in, or its CLI."""
+    if starts(("dependency-check",), ("dependency-check.sh",))(command):
+        return audited()
+    wiring = Wiring(
+        report=re.compile(
+            r"(?:org\.owasp:)?dependency-check(?:-maven)?(?::[^:]+)?:(?:check|aggregate)|dependencyCheck(?:Analyze|Aggregate)"
         ),
-        *MULTI_ECOSYSTEM_AUDITS,
+        maven_plugin="dependency-check-maven",
+        bound_goal=re.compile("check|aggregate"),
+    )  # the Gradle plugin adds no task to check, so applying it runs nothing
+    read = wired_run(wiring, command, facts)
+    return None if read is None else audited(read=read)
+
+
+AUDITORS = (
+    auditor(
+        name="OWASP dependency-check",
+        languages=JVM_LANGUAGES,
+        how="OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze)",
+        audits=_dependency_check,
+        reads=("Maven", "Gradle"),
     ),
-    hint="consider OWASP dependency-check in CI (dependency-check-maven bound to check, or gradle "
-    "dependencyCheckAnalyze)",
-    texts=_verification_texts,
+    *multi_ecosystem_audits(JVM_LANGUAGES),
+)
+DEPENDENCY_CHECK_ACTION = AuditAction(
+    name="dependency-check/Dependency-Check_Action", runs=lambda _inputs: (("dependency-check",),)
 )
 
 
@@ -578,7 +589,6 @@ JVM = Ecosystem(
         WARNINGS,
         WARNINGS_AS_ERRORS,
         SECURITY_LINTS,
-        DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_method_length_enforced),
         DEPENDENCIES,
         CLASS_FILES,

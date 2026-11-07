@@ -50,6 +50,60 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "cargo audit": {
+                "can": {
+                  "runs": "cargo audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "cargo deny": {
+                "can": {
+                  "runs": "cargo deny check advisories"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Rust",
@@ -287,7 +341,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running cargo audit (rustsec/audit-check) or cargo deny check advisories in CI"
+        "consider running in CI: cargo audit, cargo deny check advisories, osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

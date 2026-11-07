@@ -52,7 +52,8 @@ A binary crate commits `Cargo.lock`; a library need not.
 
 ## `dependency-audit`
 
-cargo audit, or `cargo deny check` (advisories).
+cargo audit (or `rustsec/audit-check`, `actions-rust-lang/audit`), or `cargo deny check` with its advisories check
+(or `EmbarkStudios/cargo-deny-action`).
 
 ## `license`
 

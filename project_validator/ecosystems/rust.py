@@ -1,6 +1,7 @@
 """Rust: built with Cargo, judged by the Rust toolchains CI runs."""
 
 import re
+import shlex
 from collections.abc import Iterator
 from pathlib import Path, PurePosixPath
 
@@ -10,17 +11,17 @@ from project_validator.evidence import existing_texts, toml_value
 from project_validator.facts import Command, Fact, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
+from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import Action
+from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Run, defined_by, either
+from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.rules import (
-    MULTI_ECOSYSTEM_AUDITS,
     BuildOutputs,
     BuildTypes,
-    DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     Hardening,
@@ -30,7 +31,8 @@ from project_validator.rules import (
     ignored_at_top_level,
     toml_license,
 )
-from project_validator.text import Pattern, pattern
+from project_validator.text import Pattern
+from project_validator.tools.audits import multi_ecosystem_audits
 
 
 def is_cargo_target(directory: Path) -> bool:
@@ -236,18 +238,37 @@ SECURITY_LINTS = SecurityLints(
     ),
 )
 
-DEPENDENCY_AUDIT = DependencyAudit(
-    tools=(
-        pattern("cargo audit", r"\bcargo[- ]audit\b|\brustsec/audit-check\b|\bactions-rust-lang/audit\b"),
-        # cargo deny checks advisories unless told to run only its other checks.
-        pattern(
-            "cargo deny",
-            r"\bcargo[- ]deny\b[^\n]*\bcheck\b(?:[ \t]+advisories\b|(?![ \t]+(?:bans|licenses|sources)\b))"
-            r"|\bEmbarkStudios/cargo-deny-action\b",
-        ),
-        *MULTI_ECOSYSTEM_AUDITS,
+_DENY_CHECKS = frozenset({"advisories", "bans", "licenses", "sources"})
+
+
+def _cargo_deny(command: Command, _facts: Facts) -> Run | None:
+    """`cargo deny check`, which checks advisories unless told to run only its other checks."""
+    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    if not (argv[:2] == ("cargo", "deny") or program(argv) == "cargo-deny") or "check" not in argv:
+        return None
+    checks = [word for word in argv[argv.index("check") + 1 :] if word in _DENY_CHECKS]
+    return audited() if not checks or "advisories" in checks else None
+
+
+AUDITORS = (
+    auditor(
+        name="cargo audit",
+        languages=RUST_LANGUAGE,
+        how="cargo audit",
+        audits=when(starts(("cargo", "audit"), ("cargo-audit",)), audited),
     ),
-    hint="consider running cargo audit (rustsec/audit-check) or cargo deny check advisories in CI",
+    auditor(name="cargo deny", languages=RUST_LANGUAGE, how="cargo deny check advisories", audits=_cargo_deny),
+    *multi_ecosystem_audits(RUST_LANGUAGE),
+)
+CARGO_AUDIT_ACTIONS = tuple(
+    AuditAction(name=name, runs=lambda _inputs: (("cargo", "audit"),))
+    for name in ("rustsec/audit-check", "actions-rust-lang/audit")
+)
+CARGO_DENY_ACTION = AuditAction(
+    name="EmbarkStudios/cargo-deny-action",
+    runs=lambda inputs: (
+        ("cargo", "deny", *shlex.split(inputs.get("arguments", "")), *shlex.split(inputs.get("command", "check"))),
+    ),
 )
 
 TARGET_DIRECTORY = BuildOutputs(
@@ -344,7 +365,6 @@ RUST = Ecosystem(
         WARNINGS,
         HARDENING,
         SECURITY_LINTS,
-        DEPENDENCY_AUDIT,
         FunctionLimits(),
         DEPENDENCIES,
         TARGET_DIRECTORY,

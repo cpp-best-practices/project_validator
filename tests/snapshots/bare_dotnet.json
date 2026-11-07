@@ -43,6 +43,60 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "NuGet audit of every package": {
+                "can": {
+                  "runs": "a restore with <NuGetAuditMode>all</NuGetAuditMode>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dotnet list package --vulnerable": {
+                "can": {
+                  "runs": "dotnet list package --vulnerable --include-transitive"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C#",
+            "level": "runs",
+            "runs": {},
+            "unit": "src/App",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "C#",
@@ -323,7 +377,7 @@
     },
     "dependency-audit": {
       "details": [
-        "set <NuGetAuditMode>all</NuGetAuditMode>, so restoring audits transitive packages too, or run dotnet list package --vulnerable --include-transitive in CI"
+        "consider running in CI: a restore with <NuGetAuditMode>all</NuGetAuditMode>, dotnet list package --vulnerable --include-transitive, osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

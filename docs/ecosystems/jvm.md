@@ -56,7 +56,8 @@ or `gradle.lockfile`, or Maven runs with `--strict-checksums`.
 
 ## `dependency-audit`
 
-OWASP dependency-check (`dependency-check-maven` bound to `check`, or `dependencyCheckAnalyze`).
+OWASP dependency-check (`dependency-check:check`, `dependency-check-maven` bound to `check` or `aggregate` and run
+by `mvn verify`, `dependencyCheckAnalyze`, its CLI, or its action). The Gradle plugin adds no task to `check`.
 
 ## `committed-artifacts`
 

@@ -13,16 +13,16 @@ from project_validator.evidence import (
 )
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program
+from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
+from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Claim, Run, defined_by, either
+from project_validator.facts.tools import Claim, Run, defined_by, either, starts, when
 from project_validator.rules import (
-    MULTI_ECOSYSTEM_AUDITS,
     BuildOutputs,
-    DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     SecurityLints,
@@ -31,7 +31,8 @@ from project_validator.rules import (
     ignored_at_top_level,
     toml_license,
 )
-from project_validator.text import Pattern, pattern
+from project_validator.text import Pattern
+from project_validator.tools.audits import multi_ecosystem_audits
 
 PYTHON_ONLY = frozenset({"Python"})
 PYTHON_PACKAGING = BuildSystem(
@@ -348,14 +349,17 @@ SECURITY_LINTS = SecurityLints(
     ),
 )
 
-DEPENDENCY_AUDIT = DependencyAudit(
-    tools=(
-        pattern("pip-audit", r"\bpip-audit\b|\bpypa/gh-action-pip-audit\b"),
-        pattern("safety", r"\bsafety\s+(?:check|scan)\b"),
-        *MULTI_ECOSYSTEM_AUDITS,
+AUDITORS = (
+    auditor(name="pip-audit", languages=PYTHON_ONLY, how="pip-audit", audits=when(starts(("pip-audit",)), audited)),
+    auditor(
+        name="safety",
+        languages=PYTHON_ONLY,
+        how="safety scan",
+        audits=when(starts(("safety", "scan"), ("safety", "check")), audited),
     ),
-    hint="consider running pip-audit in CI (pypa/gh-action-pip-audit, or pip-audit -r requirements.txt)",
+    *multi_ecosystem_audits(PYTHON_ONLY),
 )
+PIP_AUDIT_ACTION = AuditAction(name="pypa/gh-action-pip-audit", runs=lambda _inputs: (("pip-audit",),))
 
 BYTECODE = BuildOutputs(
     name="Python bytecode",
@@ -428,7 +432,6 @@ PYTHON = Ecosystem(
         versions_axis("Python version", "Python"),
         WARNINGS,
         SECURITY_LINTS,
-        DEPENDENCY_AUDIT,
         FunctionLimits(),
         DEPENDENCIES,
         BYTECODE,

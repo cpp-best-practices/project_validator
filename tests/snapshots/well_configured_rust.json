@@ -58,6 +58,67 @@
         ]
       }
     ],
+    "dependency-audit": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "cargo audit": {
+                "can": {
+                  "runs": "cargo audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "cargo deny": {
+                "can": {
+                  "runs": "cargo deny check advisories"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "runs",
+            "runs": {
+              "cargo audit": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "formatting": [
       {
         "language": "Rust",
@@ -2206,6 +2267,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -2329,6 +2410,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -2452,6 +2553,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -2575,6 +2696,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -2698,6 +2839,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -2821,6 +2982,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -2944,6 +3125,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -3067,6 +3268,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -3190,6 +3411,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -3313,6 +3554,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -3436,6 +3697,26 @@
       "languages": [
         "Rust"
       ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "test": [
@@ -3550,6 +3831,26 @@
         "."
       ],
       "tool": "cargo test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cargo audit",
       "via": []
     },
     {

@@ -137,9 +137,11 @@ class WarningTests(unittest.TestCase):
 class SecurityTests(unittest.TestCase):
     def test_composer_audit_or_roave_security_advisories(self) -> None:
         roave = _composer(**{"require-dev": {"roave/security-advisories": "dev-latest"}})
-        for files in (_ci("composer audit --locked"), roave):
+        for files in (_ci("composer audit --locked"), {**roave, **_ci("composer install")}):
             with self.subTest(files=files):
                 self.assertEqual(run_as(self, DEPENDENCY_AUDIT, files, PHP).status, Status.PASS)
+        # roave/security-advisories stops Composer installing a vulnerable version; it acts where CI installs.
+        self.assertEqual(run_as(self, DEPENDENCY_AUDIT, roave, PHP).status, Status.WARN)
         # A script that CI never runs audits nothing.
         self.assertEqual(run_as(self, DEPENDENCY_AUDIT, _scripts(audit="composer audit"), PHP).status, Status.WARN)
 

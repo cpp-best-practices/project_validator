@@ -11,7 +11,8 @@ from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
-from project_validator.facts import NOTHING, Command, ConfigurationFile, Fact, Facts, Origin, Setting
+from project_validator.facts import NOTHING, Command, ConfigurationFile, Fact, Facts, Origin, Setting, resolved
+from project_validator.facts.arguments import program
 
 type Levels = frozenset[str]
 
@@ -134,6 +135,22 @@ def within(path: str, directory: str) -> bool:
     return directory == "." or path == directory or PurePosixPath(path).is_relative_to(directory)
 
 
+def starts(*prefixes: tuple[str, ...]) -> Callable[[Command], bool]:
+    """Whether a command starts with one of `prefixes`: a program (by name, `./vendor/bin/phpunit` is `phpunit`) and
+    the subcommands after it (`("cargo", "audit")`)."""
+
+    def matches(command: Command) -> bool:
+        argv = resolved(command)
+        return any(program(argv) == prefix[0] and argv[1 : len(prefix)] == prefix[1:] for prefix in prefixes)
+
+    return matches
+
+
+def when(matches: Callable[[Command], bool], run: Callable[[], Run]) -> Claim:
+    """A claim of the commands `matches` accepts, each of them `run`."""
+    return lambda command, _facts: run() if matches(command) else None
+
+
 def handling(aspect: str) -> Callable[[], frozenset[str]]:
     """The languages the tools now known handle for `aspect` (plugins add tools, so it is asked when needed)."""
     return lambda: frozenset().union(*(tool.languages for tool in known_tools() if aspect in tool.can))
@@ -229,6 +246,8 @@ __all__ = [
     "known_tools",
     "owner",
     "provided",
+    "starts",
     "tool_runs",
+    "when",
     "within",
 ]

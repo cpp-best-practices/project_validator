@@ -10,17 +10,17 @@ from project_validator.evidence import existing_texts, first_existing
 from project_validator.facts import Command, Fact, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, positional, program
+from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
+from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Definition, Run, defined_by, either
+from project_validator.facts.tools import Definition, Run, defined_by, either, starts, when
 from project_validator.rules import (
-    MULTI_ECOSYSTEM_AUDITS,
     SUGGESTED_LIZARD,
     BuildOutputs,
-    DependencyAudit,
     DependencyManagement,
     FunctionLimits,
     Hardening,
@@ -31,6 +31,7 @@ from project_validator.rules import (
     ignored_at_top_level,
 )
 from project_validator.text import Pattern, matching_names, pattern
+from project_validator.tools.audits import multi_ecosystem_audits
 
 _USE = re.compile(r"^\s*(?:use\s+)?(?:\(\s*)?(\.{1,2}/[^\s)]*|\.)\s*\)?\s*$", re.MULTILINE)
 
@@ -185,10 +186,16 @@ WARNINGS = WarningPolicy(
 
 SECURITY_LINTS = SecurityLints(texts=_lint_texts, lints=(pattern("gosec", r"\bgosec\b|\bsecurego/gosec\b"),))
 
-DEPENDENCY_AUDIT = DependencyAudit(
-    tools=(pattern("govulncheck", r"\bgovulncheck\b"), *MULTI_ECOSYSTEM_AUDITS),
-    hint="consider running govulncheck ./... in CI (golang/govulncheck-action)",
+AUDITORS = (
+    auditor(
+        name="govulncheck",
+        languages=GO_LANGUAGE,
+        how="govulncheck ./...",
+        audits=when(starts(("govulncheck",)), audited),
+    ),
+    *multi_ecosystem_audits(GO_LANGUAGE),
 )
+GOVULNCHECK_ACTION = AuditAction(name="golang/govulncheck-action", runs=lambda _inputs: (("govulncheck", "./..."),))
 
 MAIN_PACKAGE = re.compile(r"^package\s+main\b", re.MULTILINE)
 PIE = pattern("-buildmode=pie", r"-buildmode[=\s]+pie\b|\bbuildmode:\s*[\"']?pie\b")
@@ -305,7 +312,6 @@ GO = Ecosystem(
         WARNINGS,
         HARDENING,
         SECURITY_LINTS,
-        DEPENDENCY_AUDIT,
         FunctionLimits(without_lizard=_funlen_enforced),
         DEPENDENCIES,
         BUILD_OUTPUTS,

@@ -1,15 +1,13 @@
-from project_validator.core import Context, Result
-from project_validator.ecosystems import practice
-from project_validator.rules import DependencyAudit
-from project_validator.text import matching_names
+from project_validator.facts.audit import AUDIT
+from project_validator.facts.tools import handling
+from project_validator.judging import answered_check
+from project_validator.policy.audit import judge_audit
+from project_validator.questions.audit import dependency_audit as audit_answers
 
-
-@practice(
+dependency_audit = answered_check(
     name="dependency-audit",
     description="CI checks the dependencies against known vulnerabilities (e.g. pip-audit, cargo audit, govulncheck)",
-    rule=DependencyAudit,
+    languages=handling(AUDIT),
+    answers=audit_answers,
+    judge=lambda answer, allow_unknown: judge_audit(answer, allow_unknown=allow_unknown),
 )
-def dependency_audit(audit: DependencyAudit, context: Context) -> Result:
-    if tools := matching_names(audit.texts(context), audit.tools):
-        return Result.passed(f"CI audits the dependencies with {', '.join(tools)}")
-    return Result.warned("no dependency vulnerability audit found in CI configuration", audit.hint)
