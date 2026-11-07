@@ -9,10 +9,12 @@ from project_validator.build_systems.cmake import evaluation
 from project_validator.build_systems.cmake.presets import preset_facts
 from project_validator.facts import Command, Fact, Origin, Setting, Unknown
 from project_validator.facts.build import Applies, BuildSetting, CompilerOption
-from project_validator.facts.conditions import COMPILERS, PLATFORMS
+from project_validator.facts.conditions import DIMENSIONS
 from project_validator.facts.dependencies import Declared
 from tests.support import github_job, make_context, temp_project
 
+# Every value of a dimension, as the profiles have extended it.
+COMPILERS, PLATFORMS = DIMENSIONS["compilers"], DIMENSIONS["platforms"]
 ANY = Applies()
 MSVC = Applies(compilers=frozenset({"msvc"}))
 NOT_MSVC = Applies(compilers=frozenset(COMPILERS) - {"msvc"})
