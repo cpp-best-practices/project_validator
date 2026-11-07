@@ -218,12 +218,6 @@ class Context:
     def committed(self, relative: str) -> bool:
         return relative in self.tracked_files
 
-    @cached_property
-    def cmake_texts(self) -> tuple[str, ...]:
-        from project_validator.text import strip_cmake_comments
-
-        return tuple(strip_cmake_comments(self.project.read_text(path)) for path in self.project.cmake_files())
-
 
 type CheckFunction = Callable[[Context], Result]
 

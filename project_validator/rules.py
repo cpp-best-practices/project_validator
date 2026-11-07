@@ -11,7 +11,7 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
-from project_validator.core import Context, Result
+from project_validator.core import Context
 
 if TYPE_CHECKING:
     from project_validator.ci import Job
@@ -72,10 +72,3 @@ def ignored_at_top_level(names: str) -> re.Pattern[str]:
 def directories(*names: str) -> tuple[str, ...]:
     """The paths of `names` as an ignore rule sees them: the directory itself and what is inside it."""
     return tuple(path for name in names for path in (name, f"{name}/"))
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class CompilerExtensions:
-    """Judges whether the language is compiled as standardised, without compiler extensions (C/C++ only)."""
-
-    judge: Callable[[Context], Result]

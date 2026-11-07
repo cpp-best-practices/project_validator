@@ -32,25 +32,6 @@ def found_and_missing(texts: Iterable[str], patterns: Iterable[Pattern]) -> tupl
     return found, missing
 
 
-_CMAKE_TOKENS = re.compile(
-    r"""
-      (?P<quoted>"(?:\\.|[^"\\])*")
-    | (?P<bracket_comment>\#\[(?P<comment_level>=*)\[.*?\](?P=comment_level)\])
-    | (?P<line_comment>\#[^\n]*)
-    | (?P<bracket_argument>\[(?P<argument_level>=*)\[.*?\](?P=argument_level)\])
-    """,
-    re.VERBOSE | re.DOTALL,
-)
-
-
-def _keep_unless_comment(match: re.Match[str]) -> str:
-    return "" if match["bracket_comment"] or match["line_comment"] else match[0]
-
-
-def strip_cmake_comments(text: str) -> str:
-    return _CMAKE_TOKENS.sub(_keep_unless_comment, text)
-
-
 # A string, a comment, or a comma that only whitespace separates from the closing bracket.
 _JSONC_TOKENS = re.compile(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/|,(?=\s*[}\]])', re.DOTALL)
 

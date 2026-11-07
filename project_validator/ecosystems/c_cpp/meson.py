@@ -1,39 +1,21 @@
 """Meson: C/C++ rules that depend on meson.build files, such as test() registration and the cpp_std option."""
 
-import re
-from pathlib import PurePosixPath
-
 from project_validator.build_systems.meson import declared_languages
-from project_validator.core import Context, Result
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.testing import test_runner, tested
 from project_validator.facts.tools import Definition, Run
-from project_validator.rules import CompilerExtensions
 
 BUILD_FILE = "meson.build"
 
 # Meson language name -> language, for the languages a project() declaration can enable.
 MESON_LANGUAGES = {"c": "C", "cpp": "C++", "rust": "Rust"}
 
-_MESON_COMMENT = re.compile(r"#[^\n]*")
-
-
-def strip_comments(text: str) -> str:
-    return _MESON_COMMENT.sub("", text)
-
 
 def meson_declared_languages(text: str) -> frozenset[str]:
     """The languages a meson.build's `project()` declares, as `project_validator.build_systems.meson` reads them."""
     return frozenset(MESON_LANGUAGES[name] for name in declared_languages(text) if name in MESON_LANGUAGES)
-
-
-def meson_texts(context: Context) -> tuple[str, ...]:
-    """Every meson.build of the project, without comments."""
-    project = context.project
-    paths = (path for path in project.files() if PurePosixPath(path).name == BUILD_FILE)
-    return tuple(strip_comments(project.read_text(path)) for path in paths)
 
 
 # --- tests
@@ -59,33 +41,6 @@ MESON_TESTS = test_runner(
     ),
     reads=("Meson",),
 )
-
-# --- compiler extensions
-
-# The `<lang>_std` option, in default_options or on the command line: c++20 is standard, gnu++20 and vc++20 are not.
-_STANDARDS = {"C++": ("cpp_std", r"c\+\+\w+", r"(?:gnu|vc)\+\+\w+"), "C": ("c_std", r"c\w+", r"gnu\w+")}
-
-
-def _std_option(option: str, value: str) -> re.Pattern[str]:
-    return re.compile(rf"(?<![\w-])(?:-D\s*)?{option}\s*=\s*{value}(?![\w+])")
-
-
-def _checked_language(texts: tuple[str, ...]) -> str:
-    declared = frozenset().union(*(meson_declared_languages(text) for text in texts))
-    return "C" if "C" in declared and "C++" not in declared else "C++"
-
-
-def _extensions_disabled(context: Context) -> Result:
-    texts = (*meson_texts(context), *context.ci_texts)
-    language = _checked_language(texts)
-    option, standard, extended = _STANDARDS[language]
-    fix = f"set default_options: ['{option}=c++20']" if language == "C++" else f"set default_options: ['{option}=c17']"
-    if found := next((match[0] for text in texts if (match := _std_option(option, extended).search(text))), None):
-        return Result.failed(f"{language} compiler extensions are enabled with {found}; {fix}")
-    if found := next((match[0] for text in texts if (match := _std_option(option, standard).search(text))), None):
-        return Result.passed(f"{language} compiler extensions are disabled with {found}")
-    return Result.failed(f"{language} compiler extensions are never disabled (the compiler's default is used); {fix}")
-
 
 # Meson builds only the languages its project() declares.
 # Meson's build types, by the kind of build each is; `plain` and `custom` say nothing about optimisation.
@@ -113,5 +68,4 @@ MESON = BuildSystem(
     files=(BUILD_FILE, "meson.options"),
     declared_languages=meson_declared_languages,
     build_types=meson_build_types,
-    rules=(CompilerExtensions(judge=_extensions_disabled),),
 )

@@ -69,15 +69,22 @@ def judge_hardening(answer: PracticeAnswer, *, allow_unknown: bool = False) -> R
     return Result.warned(f"missing {practice.kind}: {missing}", f"found {joined(answer.found())}")
 
 
-def judge_errors(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
-    """Warnings that fail the build in some configuration pass; none fails. Unknown is an error unless
-    `allow_unknown`."""
+def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
+    """A setting met in some configuration passes (with advice when only one that is not preferred is); none fails.
+    Unknown is an error unless `allow_unknown`."""
     practice = answer.practice
+    found = ", ".join(answer.found())
+    if answer.skipped is not None:
+        return Result(status=Status.SKIP, message=answer.skipped)
     if answer.answer is Answer.YES:
-        return Result.passed(f"warnings are treated as errors with {', '.join(answer.found())}")
+        passed = (practice.passed or "warnings are treated as errors with {found}").format(found=found)
+        advice = (
+            () if not practice.preferred or set(practice.preferred) & set(answer.found()) else (practice.preference,)
+        )
+        return Result.passed(passed, *advice)
     if answer.answer is Answer.UNKNOWN and not allow_unknown:
-        return unknown("whether warnings are treated as errors", answer.unknowns, practice.hint)
-    return Result.failed(f"warnings are not treated as errors in {practice.searched}", practice.hint)
+        return unknown(practice.question or "whether warnings are treated as errors", answer.unknowns, practice.hint)
+    return Result.failed(practice.failed or f"warnings are not treated as errors in {practice.searched}", practice.hint)
 
 
-__all__ = ["judge_errors", "judge_hardening", "judge_warnings"]
+__all__ = ["judge_any_one", "judge_hardening", "judge_warnings"]

@@ -21,6 +21,7 @@ from project_validator.text import Pattern
 WARNINGS = "compiler-warnings"
 WARNINGS_AS_ERRORS = "warnings-as-errors"
 HARDENING = "hardening"
+EXTENSIONS = "cxx-extensions"
 
 
 @dataclass(frozen=True, slots=True)
@@ -127,9 +128,16 @@ class Practice:
     forbids: bool = False
     # Why the practice does not apply to the project (a Go library builds no binary to harden); None when it does.
     skipped: Callable[[Facts], str | None] = lambda _facts: None
-    # What a met practice, and one met in nothing, are reported as, when not as the policy words it.
+    # What a met practice (with `{found}`, the requirements met), and one met in nothing, are reported as, when not
+    # as the policy words it.
     passed: str = ""
     failed: str = ""
+    # The question an unknown answer leaves open ("whether warnings are treated as errors"), when not as the policy
+    # words it.
+    question: str = ""
+    # The requirements to prefer, of a practice met by any one, and the advice when only others are met.
+    preferred: tuple[str, ...] = ()
+    preference: str = ""
 
 
 def known_practices() -> tuple[Practice, ...]:
@@ -201,6 +209,7 @@ def handled(name: str) -> Callable[[], frozenset[str]]:
 
 
 __all__ = [
+    "EXTENSIONS",
     "HARDENING",
     "WARNINGS",
     "WARNINGS_AS_ERRORS",

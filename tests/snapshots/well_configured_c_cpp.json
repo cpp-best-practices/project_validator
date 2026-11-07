@@ -4500,7 +4500,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "/W4",
-      "origin": "CMakeLists.txt:add_compile_options[7]",
+      "origin": "CMakeLists.txt:add_compile_options[8]",
       "target": null
     },
     {
@@ -4513,7 +4513,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "/permissive-",
-      "origin": "CMakeLists.txt:add_compile_options[7]",
+      "origin": "CMakeLists.txt:add_compile_options[8]",
       "target": null
     },
     {
@@ -4526,7 +4526,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "/sdl",
-      "origin": "CMakeLists.txt:add_compile_options[7]",
+      "origin": "CMakeLists.txt:add_compile_options[8]",
       "target": null
     },
     {
@@ -4539,7 +4539,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "/guard:cf",
-      "origin": "CMakeLists.txt:add_compile_options[7]",
+      "origin": "CMakeLists.txt:add_compile_options[8]",
       "target": null
     },
     {
@@ -4552,7 +4552,7 @@
       "kind": "CompilerOption",
       "linking": true,
       "option": "/DYNAMICBASE",
-      "origin": "CMakeLists.txt:add_link_options[8]",
+      "origin": "CMakeLists.txt:add_link_options[9]",
       "target": null
     },
     {
@@ -4565,7 +4565,7 @@
       "kind": "CompilerOption",
       "linking": true,
       "option": "/CETCOMPAT",
-      "origin": "CMakeLists.txt:add_link_options[8]",
+      "origin": "CMakeLists.txt:add_link_options[9]",
       "target": null
     },
     {
@@ -4582,7 +4582,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wall",
-      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "origin": "CMakeLists.txt:add_compile_options[11]",
       "target": null
     },
     {
@@ -4599,7 +4599,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wextra",
-      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "origin": "CMakeLists.txt:add_compile_options[11]",
       "target": null
     },
     {
@@ -4616,7 +4616,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wpedantic",
-      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "origin": "CMakeLists.txt:add_compile_options[11]",
       "target": null
     },
     {
@@ -4633,7 +4633,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wshadow",
-      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "origin": "CMakeLists.txt:add_compile_options[11]",
       "target": null
     },
     {
@@ -4650,7 +4650,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wconversion",
-      "origin": "CMakeLists.txt:add_compile_options[10]",
+      "origin": "CMakeLists.txt:add_compile_options[11]",
       "target": null
     },
     {
@@ -4667,7 +4667,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-fstack-protector-strong",
-      "origin": "CMakeLists.txt:add_compile_options[11]",
+      "origin": "CMakeLists.txt:add_compile_options[12]",
       "target": null
     },
     {
@@ -4684,7 +4684,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-fcf-protection",
-      "origin": "CMakeLists.txt:add_compile_options[11]",
+      "origin": "CMakeLists.txt:add_compile_options[12]",
       "target": null
     },
     {
@@ -4701,7 +4701,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-fstack-clash-protection",
-      "origin": "CMakeLists.txt:add_compile_options[11]",
+      "origin": "CMakeLists.txt:add_compile_options[12]",
       "target": null
     },
     {
@@ -4718,7 +4718,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-D_FORTIFY_SOURCE=3",
-      "origin": "CMakeLists.txt:add_compile_definitions[12]",
+      "origin": "CMakeLists.txt:add_compile_definitions[13]",
       "target": null
     },
     {
@@ -4735,7 +4735,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-D_GLIBCXX_ASSERTIONS",
-      "origin": "CMakeLists.txt:add_compile_definitions[12]",
+      "origin": "CMakeLists.txt:add_compile_definitions[13]",
       "target": null
     },
     {
@@ -4744,7 +4744,7 @@
       "default": true,
       "kind": "BuildSetting",
       "name": "ENABLE_COVERAGE",
-      "origin": "CMakeLists.txt:option[15]",
+      "origin": "CMakeLists.txt:option[16]",
       "target": null,
       "value": "OFF"
     },
@@ -4758,7 +4758,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "--coverage",
-      "origin": "CMakeLists.txt:add_compile_options[17]",
+      "origin": "CMakeLists.txt:add_compile_options[18]",
       "target": null
     },
     {
@@ -4771,7 +4771,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-fcondition-coverage",
-      "origin": "CMakeLists.txt:add_compile_options[17]",
+      "origin": "CMakeLists.txt:add_compile_options[18]",
       "target": null
     },
     {
@@ -4784,7 +4784,7 @@
       "kind": "CompilerOption",
       "linking": true,
       "option": "--coverage",
-      "origin": "CMakeLists.txt:add_link_options[18]",
+      "origin": "CMakeLists.txt:add_link_options[19]",
       "target": null
     },
     {
@@ -4793,7 +4793,7 @@
       "default": true,
       "kind": "BuildSetting",
       "name": "WARNINGS_AS_ERRORS",
-      "origin": "CMakeLists.txt:option[21]",
+      "origin": "CMakeLists.txt:option[22]",
       "target": null,
       "value": "ON"
     },
@@ -4807,7 +4807,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Werror",
-      "origin": "CMakeLists.txt:add_compile_options[23]",
+      "origin": "CMakeLists.txt:add_compile_options[24]",
       "target": null
     },
     {
@@ -4833,6 +4833,16 @@
       "kind": "BuildSetting",
       "name": "CMAKE_CXX_EXTENSIONS",
       "origin": "CMakeLists.txt:set[4]",
+      "target": null,
+      "value": "OFF"
+    },
+    {
+      "applies": {},
+      "build_system": "CMake",
+      "default": false,
+      "kind": "BuildSetting",
+      "name": "CMAKE_C_EXTENSIONS",
+      "origin": "CMakeLists.txt:set[5]",
       "target": null,
       "value": "OFF"
     },
@@ -8130,7 +8140,7 @@
     },
     "cxx-extensions": {
       "details": [],
-      "message": "C++ compiler extensions are disabled globally with set(CMAKE_CXX_EXTENSIONS OFF)",
+      "message": "C: C compiler extensions are disabled with set(CMAKE_C_EXTENSIONS OFF); C++: C++ compiler extensions are disabled with set(CMAKE_CXX_EXTENSIONS OFF)",
       "status": "PASS"
     },
     "data-wellformed": {

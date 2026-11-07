@@ -33,7 +33,9 @@ def judged[A: UnitAnswer](
         for language in sorted(languages & context.structure.languages)
         for answer in answers(language, context.facts).units
     ]
-    results = {(answer.language, answer.unit): judge(answer, context.options.allow_unknown) for answer in found}
+    judged_ = {(answer.language, answer.unit): judge(answer, context.options.allow_unknown) for answer in found}
+    # A language the practice does not apply to (C in a C++ project) says nothing beside those it does.
+    results = {key: result for key, result in judged_.items() if result.status is not Status.SKIP} or judged_
     if not results:
         return Result(
             status=Status.SKIP, message="only the docs, tooling, examples or test fixtures use these languages"
