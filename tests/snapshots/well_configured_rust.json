@@ -2362,6 +2362,445 @@
       "via": []
     },
     {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        },
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, stable, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "stable"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        },
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, stable, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "stable"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        },
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, nightly, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "nightly"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        },
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, nightly, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "nightly"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        },
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, stable, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "stable"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        },
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, stable, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "stable"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        },
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, nightly, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "nightly"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        },
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, nightly, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "nightly"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        },
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, stable, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "stable"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        },
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, stable, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "stable"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        },
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, nightly, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "nightly"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        },
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Rust"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, nightly, -Zsanitizer=address)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Rust",
+          "version": "nightly"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/codeql.yml:analyze",
+      "kind": "Job",
+      "name": ".github/workflows/codeql.yml: analyze",
+      "origin": ".github/workflows/codeql.yml:jobs.analyze",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
       "kind": "ConfigurationFile",
       "origin": ".gitignore",
       "reader": ".gitignore entries"

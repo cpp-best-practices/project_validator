@@ -213,7 +213,7 @@ def _plain(value: object) -> object:
     if isinstance(value, tuple):
         return [_plain(item) for item in value]
     if isinstance(value, frozenset):
-        return sorted(_plain(item) for item in value)  # type: ignore[type-var]
+        return sorted((_plain(item) for item in value), key=repr)
     return value
 
 

@@ -3538,6 +3538,510 @@
       "via": []
     },
     {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "clang"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "clang"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "clang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "clang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "clang"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, clang, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "clang"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, clang, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "clang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, clang, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "clang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, clang, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Release, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Release, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, ON)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, OFF)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: format",
+      "origin": ".github/workflows/ci.yml:jobs.format",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "C/C++"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/codeql-analysis.yml:analyze",
+      "kind": "Job",
+      "name": ".github/workflows/codeql-analysis.yml: analyze",
+      "origin": ".github/workflows/codeql-analysis.yml:jobs.analyze",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:cpd",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: cpd",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.cpd",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
       "kind": "ConfigurationFile",
       "origin": ".clang-format",
       "reader": "clang-format"
