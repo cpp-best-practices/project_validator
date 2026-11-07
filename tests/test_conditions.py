@@ -92,3 +92,12 @@ class DisjunctTests(unittest.TestCase):
         self.assertEqual(applies.allowed("platforms"), set(conditions.PLATFORMS))
         self.assertFalse(applies.unconditional)
         self.assertTrue(Applies().unconditional)
+
+
+class DimensionTests(unittest.TestCase):
+    def test_identifiers_name_values(self) -> None:
+        compilers = conditions.Dimension("compilers", {"GNU": "gcc", "Clang": ("clang", "appleclang")})
+        self.assertEqual(compilers.equal_to("Clang"), only("compilers", ["clang", "appleclang"]))
+        self.assertEqual(compilers.equal_to("Unheard"), only("compilers", ["other"]))
+        insensitive = conditions.Dimension("configurations", {"Debug": "debug"}, case_sensitive=False)
+        self.assertEqual(insensitive.listed(["debug", "x"]), only("configurations", ["debug", "other"]))

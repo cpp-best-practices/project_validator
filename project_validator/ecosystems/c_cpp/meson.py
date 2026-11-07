@@ -3,12 +3,12 @@
 import re
 from pathlib import PurePosixPath
 
+from project_validator.build_systems.meson import declared_languages
 from project_validator.core import Context, Result
 from project_validator.ecosystems.c_cpp.compiler_flags import WARNINGS_AS_ERRORS
 from project_validator.ecosystems.model import C_FAMILY, BuildSystem
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.arguments import option_values, program
-from project_validator.facts.settings import SettingsReader, matched_settings
 from project_validator.facts.testing import test_runner, tested
 from project_validator.facts.tools import Definition, Run
 from project_validator.rules import CompilerExtensions, WarningsAsErrors
@@ -19,9 +19,6 @@ BUILD_FILE = "meson.build"
 # Meson language name -> language, for the languages a project() declaration can enable.
 MESON_LANGUAGES = {"c": "C", "cpp": "C++", "rust": "Rust"}
 
-_MESON_PROJECT = re.compile(r"\bproject\s*\(([^)]*)")
-_MESON_KEYWORD_ARGUMENT = re.compile(r"\b\w+\s*:")
-_MESON_STRING = re.compile(r"'([^']*)'")
 _MESON_COMMENT = re.compile(r"#[^\n]*")
 
 
@@ -30,13 +27,8 @@ def strip_comments(text: str) -> str:
 
 
 def meson_declared_languages(text: str) -> frozenset[str]:
-    """The languages after the name in `project('name', 'c', ['cpp'], ...)`, before any keyword argument."""
-    declaration = _MESON_PROJECT.search(strip_comments(text))
-    if declaration is None:
-        return frozenset()
-    positional = _MESON_KEYWORD_ARGUMENT.split(declaration.group(1), maxsplit=1)[0]
-    declared = _MESON_STRING.findall(positional)[1:]
-    return frozenset(MESON_LANGUAGES[name] for name in declared if name in MESON_LANGUAGES)
+    """The languages a meson.build's `project()` declares, as `project_validator.build_systems.meson` reads them."""
+    return frozenset(MESON_LANGUAGES[name] for name in declared_languages(text) if name in MESON_LANGUAGES)
 
 
 def meson_texts(context: Context) -> tuple[str, ...]:
@@ -47,13 +39,6 @@ def meson_texts(context: Context) -> tuple[str, ...]:
 
 
 # --- tests
-
-_REGISTERS_TESTS = re.compile(r"(?<![\w.])test\s*\(")
-MESON_TEST_REGISTRATIONS = SettingsReader(
-    name="Meson tests",
-    files=(BUILD_FILE,),
-    read=lambda path, text: matched_settings("Meson", path, strip_comments(text), {"test": (_REGISTERS_TESTS, True)}),
-)
 
 
 def _meson_test(command: Command, _facts: Facts) -> Run | None:
@@ -74,7 +59,7 @@ MESON_TESTS = test_runner(
         from_test_units=True,
         describe=f"tests registered with Meson's test() in {BUILD_FILE}",
     ),
-    reads=("Meson tests",),
+    reads=("Meson",),
 )
 
 # --- compiler extensions

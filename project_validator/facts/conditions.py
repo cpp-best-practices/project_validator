@@ -8,7 +8,7 @@ in the same builds, and negating, joining and intersecting them stays cheap howe
 `disjuncts` writes a condition out as the `Applies` facts hold.
 """
 
-from collections.abc import Iterable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from itertools import groupby
 
@@ -188,6 +188,40 @@ def paths(condition: Condition) -> list[Path]:
     return found
 
 
+@dataclass(frozen=True, slots=True)
+class Dimension:
+    """How a build system names the values of a dimension (CMake's `GNU`, Meson's `gcc`): by identifiers, each
+    known one standing for one value or several (Meson's `clang` is Clang or Apple Clang); any other identifier, such
+    as those in `others`, stands for OTHER."""
+
+    name: str
+    identifiers: Mapping[str, str | tuple[str, ...]]
+    others: tuple[str, ...] = ()
+    case_sensitive: bool = True
+
+    def named(self, test: Callable[[str], bool]) -> Condition:
+        """The builds whose identifier passes `test`."""
+        values = [
+            value for identifier, found in self.identifiers.items() if test(identifier) for value in _values(found)
+        ]
+        return only(self.name, [*values, *([OTHER] if any(test(other) for other in self.others) else [])])
+
+    def _same(self, known: str, identifier: str) -> bool:
+        return known == identifier if self.case_sensitive else known.lower() == identifier.lower()
+
+    def equal_to(self, identifier: str) -> Condition:
+        if not any(self._same(known, identifier) for known in self.identifiers):
+            return only(self.name, [OTHER])
+        return self.named(lambda known: self._same(known, identifier))
+
+    def listed(self, identifiers: Iterable[str]) -> Condition:
+        return either(*(self.equal_to(identifier) for identifier in identifiers))
+
+
+def _values(found: str | tuple[str, ...]) -> tuple[str, ...]:
+    return (found,) if isinstance(found, str) else found
+
+
 __all__ = [
     "ALWAYS",
     "COMPILERS",
@@ -199,6 +233,7 @@ __all__ = [
     "OTHER",
     "PLATFORMS",
     "Condition",
+    "Dimension",
     "both",
     "either",
     "negated",
