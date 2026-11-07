@@ -209,6 +209,20 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Java",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Java",

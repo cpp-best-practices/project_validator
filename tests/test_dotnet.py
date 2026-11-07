@@ -202,7 +202,7 @@ class DependencyTests(unittest.TestCase):
         mit = "Permission is hereby granted, free of charge, to any person obtaining a copy\n"
         files = {"LICENSE": mit, **_props("PackageLicenseExpression=Apache-2.0")}
         result = run_in_layout(self, CSHARP, LICENSE, files)
-        self.assertIn("PackageLicenseExpression declares Apache-2.0", result.details[0])
+        self.assertIn("Directory.Build.props declares Apache-2.0", result.details[0])
 
     def test_object_directories_and_assemblies_are_outputs(self) -> None:
         self.assertEqual(BUILD_OUTPUT.artifact("src/App/obj/project.assets.json"), "src/App/obj/")

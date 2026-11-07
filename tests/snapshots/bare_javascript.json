@@ -262,6 +262,20 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "JavaScript",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "JavaScript",
@@ -502,6 +516,11 @@
       "kind": "Declared",
       "manager": "npm packages",
       "origin": "package.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json license"
     },
     {
       "kind": "ConfigurationFile",

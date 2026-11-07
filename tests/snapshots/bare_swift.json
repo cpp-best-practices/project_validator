@@ -194,6 +194,20 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Swift",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Swift",

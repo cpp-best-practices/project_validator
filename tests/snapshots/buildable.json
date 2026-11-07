@@ -314,6 +314,32 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "C",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "C++",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C",

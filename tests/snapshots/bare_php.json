@@ -216,6 +216,20 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "PHP",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "PHP",
@@ -450,6 +464,11 @@
       "kind": "Declared",
       "manager": "Composer",
       "origin": "composer.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "composer.json license"
     }
   ],
   "map": {

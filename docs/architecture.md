@@ -410,6 +410,13 @@ except where a step deliberately changes results and says so.
    - **Ignore entries** are facts read from `.gitignore`, `.hgignore`, `.bzrignore` and Fossil's `ignore-glob`
      (`project_validator/tools/version_control.py`).
 
+   **4i. License** (`license`; the `DeclaredLicense` rule is deleted).
+   - **Facts** (`project_validator/facts/licenses.py`): each `LicenseFile` with the licenses it holds (read by
+     `project_validator/tools/licenses.py`), and each manifest's `DeclaredLicense`, read by the profiles.
+   - The project's license is that of the license files at its root (and REUSE's `LICENSES/`). A product manifest
+     is compared with the license files nearest to it, in its directory or the nearest above it, so a monorepo member
+     may hold its own; the manifests of the docs, examples, tooling and tests are not compared.
+
 5. **Shared build systems, toolchains and tools**: CMake, Meson, MSBuild, Gradle and Xcode, and the GCC, Clang and
    MSVC flag knowledge, leave the C/C++ profile; llvm-cov, gcov and osv-scanner become shared tools.
 6. **Profiles shrink** to language recognition and the language's own tools; `rules.py` and the per-practice

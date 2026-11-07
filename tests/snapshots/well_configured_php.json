@@ -244,6 +244,24 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "PHP",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "PHP",
@@ -1940,6 +1958,18 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "composer.json",
       "reader": "Composer"
     },
@@ -1999,6 +2029,19 @@
     {
       "kind": "Declared",
       "manager": "Composer",
+      "origin": "composer.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "composer.json license"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "PHP"
+      ],
       "origin": "composer.json"
     },
     {

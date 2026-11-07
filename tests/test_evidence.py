@@ -9,6 +9,10 @@ class JsonValueTests(unittest.TestCase):
         with temp_project({"package.json": '{"license": '}) as root:
             self.assertIsNone(json_value(make_context(root), "package.json", "license"))
 
+    def test_a_value_below_one_that_is_not_an_object_is_missing(self) -> None:
+        with temp_project({"package.json": '{"license": "MIT"}'}) as root:
+            self.assertIsNone(json_value(make_context(root), "package.json", "license", "type"))
+
     def test_json_with_comments_is_read_when_asked(self) -> None:
         with temp_project({"deno.jsonc": '{\n  // the license\n  "license": "MIT",\n}\n'}) as root:
             self.assertEqual(json_value(make_context(root), "deno.jsonc", "license", comments=True), "MIT")

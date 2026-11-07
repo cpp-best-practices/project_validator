@@ -246,6 +246,24 @@
         ]
       }
     ],
+    "license": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Ruby",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Ruby",
@@ -1585,6 +1603,18 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "Rakefile",
       "reader": "Rake"
     },
@@ -1637,6 +1667,19 @@
     {
       "kind": "Library",
       "manager": "Bundler",
+      "origin": "app.gemspec"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "app.gemspec",
+      "reader": "gemspec license"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "Ruby"
+      ],
       "origin": "app.gemspec"
     },
     {

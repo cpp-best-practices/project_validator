@@ -5,7 +5,7 @@ Every module of this package except `model` is a profile, defining one ecosystem
 
 import importlib
 import pkgutil
-from collections.abc import Callable, Iterable, Iterator, Mapping
+from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import replace
 from fnmatch import fnmatchcase
@@ -141,11 +141,6 @@ def providers(kind: type[object]) -> tuple[Ecosystem, ...]:
     return tuple(ecosystem for ecosystem in _registered if ecosystem.has_rule(kind))
 
 
-def rules_of[R](kind: type[R]) -> Mapping[Ecosystem, R]:
-    """The ecosystem-wide rule of type `kind` of every ecosystem that has one, in registry order."""
-    return {ecosystem: rule for ecosystem in _registered if (rule := ecosystem.rule(kind)) is not None}
-
-
 def applies_to(selected: Check) -> tuple[str, ...]:
     """The labels of the ecosystems `selected` judges; none for a check that judges every project."""
     if selected.rule is not None:
@@ -237,7 +232,6 @@ __all__ = [
     "providers",
     "register",
     "registered",
-    "rules_of",
     "toolchain_versions",
     "with_registered_languages",
 ]
