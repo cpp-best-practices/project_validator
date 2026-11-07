@@ -90,7 +90,24 @@ def resolved(command: Command) -> tuple[str, ...]:
 
     A command that runs another (`sudo make`, `bundle exec rake`) is expanded into that command by a launcher (see
     `project_validator.facts.expansion.launcher`)."""
+    if not any("$" in word for word in command.argv):
+        return command.argv
+    # Every tool asks of every command: each command is resolved once (it is kept, so its id stays its own).
+    cached = _RESOLVED.get(id(command))
+    if cached is not None and cached[0] is command:
+        return cached[1]
+    if len(_RESOLVED) > _MOST_RESOLVED:
+        _RESOLVED.clear()
+    found = _resolve(command)
+    _RESOLVED[id(command)] = (command, found)
+    return found
 
+
+_RESOLVED: dict[int, tuple[Command, tuple[str, ...]]] = {}
+_MOST_RESOLVED = 500_000
+
+
+def _resolve(command: Command) -> tuple[str, ...]:
     def value(match: re.Match[str]) -> str:
         return command.env.get(match[1] or match[2], match[0])
 
