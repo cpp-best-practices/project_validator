@@ -4,11 +4,11 @@ and `meson test`, which runs the tests test() registers."""
 from project_validator.build_systems.meson import declared_languages
 from project_validator.build_systems.meson.evaluation import LANGUAGES
 from project_validator.build_systems.model import BuildSystem
-from project_validator.facts import Command, Facts, Setting, resolved
-from project_validator.facts.arguments import option_values, program
+from project_validator.facts import Command, Setting, resolved
+from project_validator.facts.arguments import option_values
 from project_validator.facts.dependencies import Lock, PackageManager, manifest_reader
 from project_validator.facts.testing import test_runner, tested
-from project_validator.facts.tools import Definition, Run
+from project_validator.facts.tools import Definition, all_of, any_of, starts, when, with_option
 
 BUILD_FILE = "meson.build"
 
@@ -26,11 +26,8 @@ def meson_declared_languages(_path: str, text: str) -> frozenset[str]:
 # --- tests
 
 
-def _meson_test(command: Command, _facts: Facts) -> Run | None:
-    """`meson test`, or ninja's `test` target in a Meson build directory."""
-    argv = resolved(command)
-    runs = argv[:2] == ("meson", "test") or (program(argv) == "ninja" and "test" in argv[1:])
-    return tested() if runs else None
+# `meson test`, or ninja's `test` target in a Meson build directory.
+_meson_test = when(any_of(starts(("meson", "test")), all_of(starts(("ninja",)), with_option("test"))), tested)
 
 
 MESON_TESTS = test_runner(

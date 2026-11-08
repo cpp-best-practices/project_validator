@@ -9,7 +9,7 @@ from project_validator.facts.analysis import Strictness, analysed, analyzer, typ
 from project_validator.facts.arguments import has_option, program
 from project_validator.facts.expansion import Action, from_hook
 from project_validator.facts.settings import Read, SettingsReader, ini_settings, json_settings, toml_settings
-from project_validator.facts.tools import Run, defined_by
+from project_validator.facts.tools import Run, defined_by, starts
 from project_validator.tools.limits import function_length_limiters
 
 PYTHON = frozenset({"Python"})
@@ -59,11 +59,8 @@ TY_SETTINGS = SettingsReader(name="ty", files=("ty.toml", "pyproject.toml"), rea
 
 
 def _programs(*names: str, subcommand: str | None = None) -> Callable[[Command], bool]:
-    def runs(command: Command) -> bool:
-        argv = resolved(command)
-        return program(argv) in names and (subcommand is None or argv[1:2] == (subcommand,))
-
-    return runs
+    """Whether a command runs one of the programs `names` (with `subcommand`, when given)."""
+    return starts(*((name,) if subcommand is None else (name, subcommand) for name in names))
 
 
 def _analyses(runs: Callable[[Command], bool]) -> Callable[[Command, Facts], Run | None]:

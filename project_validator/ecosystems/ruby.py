@@ -12,7 +12,7 @@ from pathlib import PurePosixPath
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
-from project_validator.facts.arguments import has_option, positional, program
+from project_validator.facts.arguments import has_option, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
@@ -100,7 +100,7 @@ def _lints(program_name: str, autocorrects: frozenset[str], tool: str) -> Claim:
 
     def analyses(command: Command, facts: Facts) -> Run | None:
         argv = resolved(command)
-        if program(argv) == program_name and not has_option(argv, *autocorrects):
+        if starts_with(argv, (program_name,)) and not has_option(argv, *autocorrects):
             return analysed()
         read = _rake_tasks(command, facts, tool)
         return analysed(read=read) if read else None

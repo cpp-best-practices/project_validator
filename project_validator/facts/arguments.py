@@ -9,6 +9,15 @@ def program(argv: tuple[str, ...]) -> str:
     return name
 
 
+def starts_with(argv: tuple[str, ...], *prefixes: tuple[str, ...]) -> tuple[str, ...] | None:
+    """The first of `prefixes` that `argv` starts with: a program, by name (`./vendor/bin/phpunit` is `phpunit`), and
+    the subcommands right after it (`("cargo", "test")`); None when it starts with none."""
+    name = program(argv)
+    return next(
+        (prefix for prefix in prefixes if prefix and name == prefix[0] and argv[1 : len(prefix)] == prefix[1:]), None
+    )
+
+
 def has_option(argv: tuple[str, ...], *names: str) -> bool:
     """Whether `argv` gives one of the options `names`, alone or with a value (`--name=value`)."""
     return any(word in names or word.partition("=")[0] in names for word in argv[1:])
@@ -59,4 +68,4 @@ def positional(argv: tuple[str, ...], with_values: frozenset[str] = frozenset())
     return words, options
 
 
-__all__ = ["has_option", "option_values", "positional", "program", "short_flags"]
+__all__ = ["has_option", "option_values", "positional", "program", "short_flags", "starts_with"]

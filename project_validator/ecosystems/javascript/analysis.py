@@ -8,13 +8,13 @@ from pathlib import PurePosixPath
 from project_validator.ecosystems.javascript import DENO_CONFIG_FILES, ESLINT_CONFIG_FILES, JS_LANGUAGES, PACKAGE_JSON
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
-from project_validator.facts.arguments import option_values, program
+from project_validator.facts.arguments import option_values
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings, matched_settings
-from project_validator.facts.tools import Run, combined, defined_by
+from project_validator.facts.tools import Run, combined, defined_by, starts
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
@@ -33,14 +33,6 @@ DENO_SETTINGS = SettingsReader(
 _STRICTEST = re.compile(r"@tsconfig/strictest\b")
 
 
-def _programs(*prefixes: tuple[str, ...]) -> Callable[[Command], bool]:
-    def runs(command: Command) -> bool:
-        argv = resolved(command)
-        return any(program(argv) == prefix[0] and argv[1 : len(prefix)] == prefix[1:] for prefix in prefixes)
-
-    return runs
-
-
 def _analyses(runs: Callable[[Command], bool]) -> Callable[[Command, Facts], Run | None]:
     return lambda command, _facts: analysed() if runs(command) else None
 
@@ -49,21 +41,21 @@ ESLINT = analyzer(
     name="eslint",
     languages=JS_LANGUAGES,
     how="eslint",
-    analyses=_analyses(_programs(("eslint",), ("next", "lint"))),
+    analyses=_analyses(starts(("eslint",), ("next", "lint"))),
     rules=defined_by(files=("eslint",)),
 )
 OXLINT = analyzer(
     name="oxlint",
     languages=JS_LANGUAGES,
     how="oxlint",
-    analyses=_analyses(_programs(("oxlint",))),
+    analyses=_analyses(starts(("oxlint",))),
     rules=defined_by(files=("oxlint",)),
 )
 DENO_LINT = analyzer(
     name="deno lint",
     languages=JS_LANGUAGES,
     how="deno lint",
-    analyses=_analyses(_programs(("deno", "lint"))),
+    analyses=_analyses(starts(("deno", "lint"))),
     rules=defined_by(settings=("Deno",)),
     reads=("Deno",),
 )
@@ -85,7 +77,7 @@ BIOME = combined(
         name="biome",
         languages=JS_LANGUAGES,
         how="biome lint",
-        analyses=_analyses(_programs(("biome", "lint"), ("biome", "check"), ("biome", "ci"))),
+        analyses=_analyses(starts(("biome", "lint"), ("biome", "check"), ("biome", "ci"))),
         rules=defined_by(files=("biome",)),
     ),
 )
@@ -126,7 +118,7 @@ def _strict_settings(path: str, facts: Facts, depth: int = 0) -> list[Setting]:
 
 
 def _tsc(command: Command, facts: Facts) -> Run | None:
-    if not _programs(("tsc",), ("vue-tsc",))(command):
+    if not starts(("tsc",), ("vue-tsc",))(command):
         return None
     strict = _strict_settings(_tsconfig(command), facts)
     return type_checked(strict=bool(strict), read=strict)
@@ -134,7 +126,7 @@ def _tsc(command: Command, facts: Facts) -> Run | None:
 
 def _deno_check(command: Command, facts: Facts) -> Run | None:
     """`deno check`, or `deno test`, which type checks the code it runs; Deno is strict unless told not to."""
-    if not _programs(("deno", "check"), ("deno", "test"))(command):
+    if not starts(("deno", "check"), ("deno", "test"))(command):
         return None
     lax = facts.setting("Deno", "compilerOptions.strict")
     return type_checked(strict=lax is None or lax.value is not False, read=[lax] if lax else ())
@@ -180,7 +172,7 @@ ESLINT_RULES = SettingsReader(
 
 
 def _eslint_security(command: Command, facts: Facts) -> Run | None:
-    if not _programs(("eslint",), ("next", "lint"))(command):
+    if not starts(("eslint",), ("next", "lint"))(command):
         return None
     read = facts.where(Setting, tool="eslint", key="security plugin")
     return scanned(read=read) if read else None

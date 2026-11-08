@@ -4,7 +4,7 @@ told. Each profile makes it its own, for the languages lizard measures (`functio
 import re
 
 from project_validator.facts import Command, Facts, resolved
-from project_validator.facts.arguments import program
+from project_validator.facts.arguments import starts_with
 from project_validator.facts.limits import FUNCTION_LENGTH, LIMITS, limited
 from project_validator.facts.tools import Definition, Run, Tool
 
@@ -33,7 +33,7 @@ def _limit(argv: tuple[str, ...]) -> bool:
 def _lizard(command: Command, _facts: Facts) -> Run | None:
     """lizard, which limits function length when it is told a limit."""
     argv = resolved(command)
-    return limited(active=_limit(argv)) if program(argv) == "lizard" else None
+    return limited(active=_limit(argv)) if starts_with(argv, ("lizard",)) else None
 
 
 def function_length_limiters(languages: frozenset[str]) -> tuple[Tool, ...]:
