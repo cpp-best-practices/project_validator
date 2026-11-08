@@ -28,7 +28,9 @@ jobs:
 
 
 def _check(name: str, languages: frozenset[str] = frozenset()) -> Check:
-    return Check(name=name, description=name, run=lambda context: Result.passed("ran"), languages=languages)
+    return Check(
+        name=name, description=name, run=lambda context: Result.passed("ran"), languages_from=lambda: languages
+    )
 
 
 class ProjectStructureTests(unittest.TestCase):
@@ -150,7 +152,7 @@ class LanguageApplicabilityTests(unittest.TestCase):
         for layout in PROJECT_LAYOUTS:
             with (
                 layout_project(self, layout) as root,
-                mock.patch("project_validator.structure.map_project", side_effect=RuntimeError("unparseable CI")),
+                mock.patch("project_validator.project_map.map_project", side_effect=RuntimeError("unparseable CI")),
             ):
                 context = make_context(root)
                 self.assertEqual(run_check(_check("generic"), context).status, Status.PASS)

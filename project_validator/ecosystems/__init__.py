@@ -7,7 +7,6 @@ import importlib
 import pkgutil
 from collections.abc import Iterable, Iterator
 from contextlib import contextmanager
-from dataclasses import replace
 from fnmatch import fnmatchcase
 from pathlib import Path
 from types import ModuleType
@@ -140,14 +139,6 @@ def applies_to(selected: Check) -> tuple[str, ...]:
     return ()
 
 
-def with_registered_languages(selected: Check) -> Check:
-    """`selected`, applying to the languages of every ecosystem now registered that has its rule, or to the languages
-    its components now known handle."""
-    if selected.languages_from is not None:
-        return replace(selected, languages=selected.languages_from())
-    return selected
-
-
 def is_build_tree(directory: Path) -> bool:
     """Whether `directory` holds the output of a build, which is never part of the project's sources."""
     return any(system.is_build_tree(directory) for system in build_systems() if system.is_build_tree is not None)
@@ -171,5 +162,4 @@ __all__ = [
     "register",
     "registered",
     "toolchain_patterns",
-    "with_registered_languages",
 ]

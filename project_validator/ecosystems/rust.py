@@ -15,13 +15,10 @@ from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
-from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
+from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -200,7 +197,7 @@ RUST_LINT_SETTINGS_FILES = (*CARGO_CONFIG_FILES, "Cargo.toml", "lib.rs", "main.r
 _RUST_LINTS = tuple(required(lint) for lint in RUST_LINTS)
 RUST_WARNING_SETTINGS = requirement_reader("Rust lint settings", RUST_LINT_SETTINGS_FILES, _RUST_LINTS)
 WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=RUST_LANGUAGE,
     requirements=always(*_RUST_LINTS),
     reads=(RUST_WARNING_SETTINGS.name,),
@@ -222,7 +219,7 @@ _OVERFLOW_CHECKS = required(
 )
 RUST_HARDENING_SETTINGS = requirement_reader("Rust build settings", RUST_LINT_SETTINGS_FILES, (_OVERFLOW_CHECKS,))
 HARDENING = Practice(
-    name=HARDENING_PRACTICE,
+    name=PracticeName.HARDENING,
     languages=RUST_LANGUAGE,
     requirements=always(_OVERFLOW_CHECKS),
     reads=(RUST_HARDENING_SETTINGS.name,),
@@ -319,10 +316,10 @@ AUDITORS = (
     *multi_ecosystem_audits(RUST_LANGUAGE),
 )
 CARGO_AUDIT_ACTIONS = tuple(
-    AuditAction(name=name, runs=lambda _inputs: (("cargo", "audit"),))
+    Action(name=name, runs=lambda _inputs: (("cargo", "audit"),))
     for name in ("rustsec/audit-check", "actions-rust-lang/audit")
 )
-CARGO_DENY_ACTION = AuditAction(
+CARGO_DENY_ACTION = Action(
     name="EmbarkStudios/cargo-deny-action",
     runs=lambda inputs: (
         ("cargo", "deny", *shlex.split(inputs.get("arguments", "")), *shlex.split(inputs.get("command", "check"))),

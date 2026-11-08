@@ -24,10 +24,7 @@ from project_validator.facts.flags import errors_requirements, flag_requirements
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import EXTENSIONS, Evidence, Found, Practice, Requirement, Wording
-from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
+from project_validator.facts.practices import Evidence, Found, Practice, PracticeName, Requirement, Wording
 from project_validator.facts.settings import SettingsReader, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by, starts, when
@@ -216,7 +213,7 @@ def _errors(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
 
 
 WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=FORTRAN_LANGUAGE,
     requirements=_warnings,
     reads=BUILD_FILES,
@@ -228,7 +225,7 @@ WARNINGS = Practice(
     ),
 )
 WARNINGS_AS_ERRORS = Practice(
-    name=WARNINGS_AS_ERRORS_PRACTICE,
+    name=PracticeName.WARNINGS_AS_ERRORS,
     languages=FORTRAN_LANGUAGE,
     requirements=_errors,
     any_one=True,
@@ -259,8 +256,8 @@ def _meson_standard(facts: Facts, _compiler: str | None) -> Iterator[Evidence]:
             yield Evidence(setting.origin.path, setting.applies.requires)
 
 
-EXTENSIONS_PRACTICE = Practice(
-    name=EXTENSIONS,
+EXTENSIONS = Practice(
+    name=PracticeName.EXTENSIONS,
     languages=FORTRAN_LANGUAGE,
     requirements=_standard,
     any_one=True,
@@ -309,7 +306,7 @@ def _no_program(facts: Facts) -> str | None:
 
 
 HARDENING = Practice(
-    name=HARDENING_PRACTICE,
+    name=PracticeName.HARDENING,
     languages=FORTRAN_LANGUAGE,
     requirements=_hardening,
     reads=BUILD_FILES,

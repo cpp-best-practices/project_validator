@@ -6,15 +6,15 @@ It is not code security scanning (see `project_validator.facts.security`) nor de
 `project_validator.facts.audit`); a language that builds no binary asks for none.
 """
 
-from project_validator.facts.practices import HARDENING, handled
+from project_validator.facts.practices import PracticeName, handled
 from project_validator.judging import answered_check
 from project_validator.policy.practices import judge_hardening
 from project_validator.questions.practices import hardening_answers
 
 hardening = answered_check(
-    name=HARDENING,
+    name=PracticeName.HARDENING,
     description="Security hardening options are enabled",
-    languages=handled(HARDENING),
+    languages=handled(PracticeName.HARDENING),
     answers=hardening_answers,
     judge=judge_hardening,
 )

@@ -6,6 +6,7 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from typing import Protocol
 
+from project_validator.components import known
 from project_validator.facts.jobs import Job
 
 
@@ -51,8 +52,6 @@ def versions_axis(noun: str, toolchain: str, languages: frozenset[str], *, compi
 
 def known_axes() -> tuple[ToolchainAxis, ...]:
     """Every axis defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import known
-
     return known(ToolchainAxis)
 
 

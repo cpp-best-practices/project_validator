@@ -26,9 +26,7 @@ from project_validator.facts.expansion import CommandExpander, Expansion, Script
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, Requirement, Wording, always, met, required
+from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording, always, met, required
 from project_validator.facts.settings import (
     Read,
     SettingsReader,
@@ -508,7 +506,7 @@ _LINTER_TOOLS = ("eslint", "biome", "deno lint")
 # JavaScript has no compiler warnings; its linters report what other compilers warn about.
 # JavaScript has no compiler warnings; its linters report what other compilers warn about.
 WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=JS_LANGUAGES,
     requirements=_linters_required,
     words=Wording(
@@ -518,7 +516,7 @@ WARNINGS = Practice(
 )
 
 WARNINGS_AS_ERRORS = Practice(
-    name=WARNINGS_AS_ERRORS_PRACTICE,
+    name=PracticeName.WARNINGS_AS_ERRORS,
     languages=JS_LANGUAGES,
     requirements=always(
         required(pattern("eslint --max-warnings 0", rf"{RUNS_ESLINT}[^\n]*\s--max-warnings[=\s]+0\b"), in_files=False),

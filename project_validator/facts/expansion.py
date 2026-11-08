@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
+from project_validator.components import known
 from project_validator.evidence import PRE_COMMIT_CONFIGURATION
 from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, Unknown, resolved
 from project_validator.facts.arguments import starts_with
@@ -263,15 +264,11 @@ def from_hook(command: Command) -> bool:
 
 def known_expanders() -> tuple[CommandExpander, ...]:
     """Every command expander defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import known
-
     return known(CommandExpander)
 
 
 def known_actions() -> tuple[Action, ...]:
     """Every action defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import known
-
     return known(Action)
 
 

@@ -18,10 +18,7 @@ from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
+from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.settings import (
     SettingsReader,
     file_reader,
@@ -223,7 +220,7 @@ COMPLETE_CONCURRENCY = pattern(
 SWIFT_BUILD_SETTINGS_FILES = (PACKAGE_SWIFT, "*.pbxproj", "*.xcconfig", "*.xcscheme")
 _SWIFT_WARNINGS = (required(SWIFTLINT, tools=("SwiftLint",)), required(COMPLETE_CONCURRENCY))
 WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=SWIFT_ONLY,
     requirements=always(*_SWIFT_WARNINGS),
     reads=("Swift build settings",),
@@ -246,7 +243,7 @@ SWIFT_BUILD_SETTINGS = requirement_reader(
     "Swift build settings", SWIFT_BUILD_SETTINGS_FILES, (*_SWIFT_WARNINGS, *_SWIFT_WARNINGS_AS_ERRORS)
 )
 WARNINGS_AS_ERRORS = Practice(
-    name=WARNINGS_AS_ERRORS_PRACTICE,
+    name=PracticeName.WARNINGS_AS_ERRORS,
     languages=SWIFT_ONLY,
     requirements=always(*_SWIFT_WARNINGS_AS_ERRORS),
     any_one=True,
@@ -269,7 +266,7 @@ UNCHECKED = (
 _UNCHECKED = tuple(required(option) for option in UNCHECKED)
 SWIFT_HARDENING_SETTINGS = requirement_reader("Swift optimization settings", SWIFT_BUILD_SETTINGS_FILES, _UNCHECKED)
 HARDENING = Practice(
-    name=HARDENING_PRACTICE,
+    name=PracticeName.HARDENING,
     languages=SWIFT_ONLY,
     requirements=always(*_UNCHECKED),
     reads=(SWIFT_HARDENING_SETTINGS.name,),

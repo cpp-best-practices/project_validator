@@ -1,7 +1,6 @@
 """Every JSON, TOML, YAML and XML file parses: real validation, since a broken data file is a bug."""
 
 import json
-import re
 import tomllib
 from collections import Counter
 from collections.abc import Callable, Mapping
@@ -11,7 +10,7 @@ from xml.parsers import expat
 
 from project_validator import yaml_support
 from project_validator.core import Context, Result, check
-from project_validator.text import strip_json_comments
+from project_validator.text import JsonSyntaxError, check_json, strip_json_comments
 
 # Hidden directories that hold configuration worth parsing (CI, editors, dev containers).
 CONFIGURATION_DIRECTORIES = frozenset({".github", ".gitlab", ".circleci", ".buildkite", ".devcontainer", ".vscode"})
@@ -45,67 +44,11 @@ def _parse_json(data: bytes, *, comments: bool = False) -> None:
         _check_deep_json(text)  # nested deeper than Python's parser recurses (test data of JSON parsers)
 
 
-_JSON_TOKEN = re.compile(
-    r"""\s*(?:(?P<open>[\[{])|(?P<close>[\]}])|(?P<colon>:)|(?P<comma>,)"""
-    r"""|(?P<value>"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*"|true|false|null"""
-    r"""|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?))"""
-)
-
-
-# An open container and what may come next in it: "value", "key", "colon", "comma or close" (or "value or close" and
-# "key or close" right after it opens).
-type _Stack = list[list[str]]
-
-
-def _value(stack: _Stack, match: re.Match[str]) -> bool:
-    """A value or an opening bracket: where a value (or, as a key, a string) may come."""
-    expecting = (stack[-1][1] if stack else "value").removesuffix(" or close")
-    if expecting not in ("value", "key") or (expecting == "key" and not str(match["value"] or "").startswith('"')):
-        return False
-    if stack:
-        stack[-1][1] = "colon" if expecting == "key" else "comma or close"
-    if match["open"]:
-        stack.append([match["open"], "key or close" if match["open"] == "{" else "value or close"])
-    return True
-
-
-def _close(stack: _Stack, match: re.Match[str]) -> bool:
-    if not stack or stack[-1][1] == "value" or stack[-1][1] in ("key", "colon"):
-        return False
-    return stack.pop()[0] == {"]": "[", "}": "{"}[match["close"]]
-
-
-def _colon(stack: _Stack, _match: re.Match[str]) -> bool:
-    if not stack or stack[-1][1] != "colon":
-        return False
-    stack[-1][1] = "value"
-    return True
-
-
-def _comma(stack: _Stack, _match: re.Match[str]) -> bool:
-    if not stack or stack[-1][1] != "comma or close":
-        return False
-    stack[-1][1] = "key" if stack[-1][0] == "{" else "value"
-    return True
-
-
-_READ = {"open": _value, "value": _value, "close": _close, "colon": _colon, "comma": _comma}
-
-
 def _check_deep_json(text: str) -> None:
-    """Whether `text` is one JSON value, read without recursion: each container on a stack, with what may come next
-    in it. An error is reported where the token that breaks it starts."""
-    stack: _Stack = []
-    position, done = 0, False
-    while not done and (match := _JSON_TOKEN.match(text, position)) is not None:
-        kind = match.lastgroup or ""
-        position = match.start(kind)
-        if not _READ[kind](stack, match):
-            break
-        position, done = match.end(), not stack and kind != "colon" and kind != "comma"
-    if not done or text[position:].strip():
-        line = text.count("\n", 0, position) + 1
-        raise _ParseError("malformed JSON", line, position - text.rfind("\n", 0, position))
+    try:
+        check_json(text)
+    except JsonSyntaxError as error:
+        raise _ParseError(str(error), error.line, error.column) from error
 
 
 def _parse_toml(data: bytes) -> None:

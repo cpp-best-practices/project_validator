@@ -16,12 +16,10 @@ from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Declared, Locked, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
-from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
+from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -311,7 +309,7 @@ _PYTHON_WARNINGS = tuple(
 )
 PYTHON_WARNING_SETTINGS = requirement_reader("Python warning settings", WARNING_SETTINGS_FILES, _PYTHON_WARNINGS)
 WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=PYTHON_ONLY,
     requirements=always(*_PYTHON_WARNINGS),
     reads=(PYTHON_WARNING_SETTINGS.name,),
@@ -371,7 +369,7 @@ AUDITORS = (
     ),
     *multi_ecosystem_audits(PYTHON_ONLY),
 )
-PIP_AUDIT_ACTION = AuditAction(name="pypa/gh-action-pip-audit", runs=lambda _inputs: (("pip-audit",),))
+PIP_AUDIT_ACTION = Action(name="pypa/gh-action-pip-audit", runs=lambda _inputs: (("pip-audit",),))
 
 BYTECODE = BuildOutput(
     languages=PYTHON_ONLY,

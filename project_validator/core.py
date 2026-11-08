@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
     from project_validator.ci import CiAnalysis, CiFile, CiProvider
     from project_validator.facts import Facts
-    from project_validator.structure import ProjectStructure
+    from project_validator.project_map import ProjectStructure
 
 
 class Status(enum.StrEnum):
@@ -206,7 +206,7 @@ class Context:
 
     @cached_property
     def structure(self) -> ProjectStructure:
-        from project_validator.structure import map_project
+        from project_validator.project_map import map_project
 
         return map_project(self.facts, self.ci_files, self.ci_analysis)
 
@@ -222,16 +222,25 @@ class Context:
 type CheckFunction = Callable[[Context], Result]
 
 
+def _no_languages() -> frozenset[str]:
+    return frozenset()
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Check:
     name: str
     description: str
     run: CheckFunction = field(repr=False)
-    languages: frozenset[str] = frozenset()
     # Former names, still accepted by --only and --skip.
     aliases: tuple[str, ...] = ()
-    # The languages of the components the check judges, as now known (plugins add components).
-    languages_from: Callable[[], frozenset[str]] | None = field(default=None, repr=False, compare=False)
+    # The languages of the components the check judges, asked when needed (plugins add components); none for a check
+    # of every project.
+    languages_from: Callable[[], frozenset[str]] = field(default=_no_languages, repr=False, compare=False)
+
+    @property
+    def languages(self) -> frozenset[str]:
+        """The languages the check judges, as now known; none for a check that judges every project."""
+        return self.languages_from()
 
     def applies_to(self, languages: frozenset[str]) -> bool:
         """A check without languages is language agnostic; others apply to projects using one of their languages."""
@@ -242,6 +251,6 @@ def check(*, name: str, description: str, languages: frozenset[str] = frozenset(
     """Turn a function taking a `Context` and returning a `Result` into a discoverable `Check`."""
 
     def wrap(function: CheckFunction) -> Check:
-        return Check(name=name, description=description, run=function, languages=languages)
+        return Check(name=name, description=description, run=function, languages_from=lambda: languages)
 
     return wrap

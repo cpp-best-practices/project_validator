@@ -103,9 +103,7 @@ def answered_check[A: UnitAnswer](
             context, by_ecosystem_, lambda judged_languages, found: judged(judged_languages, found, answers, judge)
         )
 
-    return Check(
-        name=name, description=description, run=run, languages=languages(), languages_from=languages, aliases=aliases
-    )
+    return Check(name=name, description=description, run=run, languages_from=languages, aliases=aliases)
 
 
 __all__ = ["answered_check", "by_ecosystem", "check_each_ecosystem", "combined", "judged", "labelled"]
