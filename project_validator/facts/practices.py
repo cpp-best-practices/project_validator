@@ -157,14 +157,15 @@ class Texts:
     matches is kept, as practices judged per language and per compiler ask for the same requirements again."""
 
     found: tuple[tuple[Fact, str], ...]
-    matched: dict[str, tuple[Fact, ...]] = field(default_factory=dict)
+    matched: dict[tuple[str, int, tuple[str, ...]], tuple[Fact, ...]] = field(default_factory=dict)
 
     def matching(self, pattern: re.Pattern[str], hints: tuple[str, ...] = ()) -> tuple[Fact, ...]:
         """The commands and steps whose text `pattern` matches (those holding none of `hints` are not searched)."""
-        if pattern.pattern not in self.matched:
+        key = (pattern.pattern, pattern.flags, hints)
+        if key not in self.matched:
             searched = ((fact, text) for fact, text in self.found if not hints or any(hint in text for hint in hints))
-            self.matched[pattern.pattern] = tuple(fact for fact, text in searched if pattern.search(text))
-        return self.matched[pattern.pattern]
+            self.matched[key] = tuple(fact for fact, text in searched if pattern.search(text))
+        return self.matched[key]
 
 
 _TEXTS: dict[int, tuple[Facts, Texts]] = {}
