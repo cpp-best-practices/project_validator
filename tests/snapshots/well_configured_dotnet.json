@@ -1813,6 +1813,75 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Directory.Build.props",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "Declared",
+      "manager": "NuGet",
+      "origin": "Directory.Build.props"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "PackageLicenseExpression"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": "Directory.Build.props"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "MSBuild warning settings"
+    },
+    {
+      "heuristic": true,
+      "key": "AnalysisMode Recommended or All",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "EnforceCodeStyleInBuild",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "Nullable enable",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "F# --warnon",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "TreatWarningsAsErrors",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
       "reader": "MSBuild"
     },
     {
@@ -1897,75 +1966,6 @@
     },
     {
       "kind": "ConfigurationFile",
-      "origin": "Directory.Build.props",
-      "reader": "MSBuild warning settings"
-    },
-    {
-      "heuristic": true,
-      "key": "AnalysisMode Recommended or All",
-      "kind": "Setting",
-      "origin": "Directory.Build.props",
-      "tool": "MSBuild warning settings",
-      "value": true
-    },
-    {
-      "heuristic": true,
-      "key": "EnforceCodeStyleInBuild",
-      "kind": "Setting",
-      "origin": "Directory.Build.props",
-      "tool": "MSBuild warning settings",
-      "value": true
-    },
-    {
-      "heuristic": true,
-      "key": "Nullable enable",
-      "kind": "Setting",
-      "origin": "Directory.Build.props",
-      "tool": "MSBuild warning settings",
-      "value": true
-    },
-    {
-      "heuristic": true,
-      "key": "F# --warnon",
-      "kind": "Setting",
-      "origin": "Directory.Build.props",
-      "tool": "MSBuild warning settings",
-      "value": true
-    },
-    {
-      "heuristic": true,
-      "key": "TreatWarningsAsErrors",
-      "kind": "Setting",
-      "origin": "Directory.Build.props",
-      "tool": "MSBuild warning settings",
-      "value": true
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "Directory.Build.props",
-      "reader": "NuGet package references"
-    },
-    {
-      "kind": "Declared",
-      "manager": "NuGet",
-      "origin": "Directory.Build.props"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "Directory.Build.props",
-      "reader": "PackageLicenseExpression"
-    },
-    {
-      "expression": "MIT",
-      "kind": "DeclaredLicense",
-      "languages": [
-        "C#",
-        "F#"
-      ],
-      "origin": "Directory.Build.props"
-    },
-    {
-      "kind": "ConfigurationFile",
       "origin": "LICENSE",
       "reader": "license files"
     },
@@ -1975,6 +1975,21 @@
         "MIT"
       ],
       "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "PackageLicenseExpression"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "MSBuild warning settings"
     },
     {
       "kind": "ConfigurationFile",
@@ -1999,21 +2014,6 @@
     },
     {
       "kind": "ConfigurationFile",
-      "origin": "src/App/App.csproj",
-      "reader": "MSBuild warning settings"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "src/App/App.csproj",
-      "reader": "NuGet package references"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "src/App/App.csproj",
-      "reader": "PackageLicenseExpression"
-    },
-    {
-      "kind": "ConfigurationFile",
       "origin": "src/App/packages.lock.json",
       "reader": "NuGet lockfile"
     },
@@ -2021,6 +2021,26 @@
       "kind": "Locked",
       "manager": "NuGet",
       "origin": "src/App/packages.lock.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "Declared",
+      "manager": "NuGet",
+      "origin": "tests/App.Tests/App.Tests.csproj"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "PackageLicenseExpression"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "MSBuild warning settings"
     },
     {
       "kind": "ConfigurationFile",
@@ -2082,26 +2102,6 @@
       "origin": "tests/App.Tests/App.Tests.csproj:Sdk",
       "tool": "MSBuild",
       "value": "Microsoft.NET.Sdk"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "tests/App.Tests/App.Tests.csproj",
-      "reader": "MSBuild warning settings"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "tests/App.Tests/App.Tests.csproj",
-      "reader": "NuGet package references"
-    },
-    {
-      "kind": "Declared",
-      "manager": "NuGet",
-      "origin": "tests/App.Tests/App.Tests.csproj"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "tests/App.Tests/App.Tests.csproj",
-      "reader": "PackageLicenseExpression"
     },
     {
       "kind": "ConfigurationFile",
@@ -2201,6 +2201,28 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
@@ -2249,7 +2271,7 @@
       "languages": [
         "C#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "analysis": [
           "checks"
@@ -2351,28 +2373,6 @@
         "."
       ],
       "tool": ".NET security analyzers",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
       "via": []
     },
     {
@@ -2463,6 +2463,28 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
@@ -2511,7 +2533,7 @@
       "languages": [
         "C#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "analysis": [
           "checks"
@@ -2613,28 +2635,6 @@
         "."
       ],
       "tool": ".NET security analyzers",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
       "via": []
     },
     {
@@ -2725,6 +2725,28 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
@@ -2773,7 +2795,7 @@
       "languages": [
         "C#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "analysis": [
           "checks"
@@ -2875,28 +2897,6 @@
         "."
       ],
       "tool": ".NET security analyzers",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
       "via": []
     },
     {
@@ -2987,6 +2987,28 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
@@ -3035,7 +3057,7 @@
       "languages": [
         "C#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "analysis": [
           "checks"
@@ -3137,28 +3159,6 @@
         "."
       ],
       "tool": ".NET security analyzers",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
       "via": []
     },
     {
@@ -3249,6 +3249,28 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
@@ -3297,7 +3319,7 @@
       "languages": [
         "C#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "analysis": [
           "checks"
@@ -3399,28 +3421,6 @@
         "."
       ],
       "tool": ".NET security analyzers",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
       "via": []
     },
     {
@@ -3511,6 +3511,28 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
         "C#",
         "F#"
       ],
@@ -3559,7 +3581,7 @@
       "languages": [
         "C#"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "analysis": [
           "checks"
@@ -3661,28 +3683,6 @@
         "."
       ],
       "tool": ".NET security analyzers",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
       "via": []
     },
     {

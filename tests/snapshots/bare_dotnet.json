@@ -475,6 +475,26 @@
     {
       "kind": "ConfigurationFile",
       "origin": "src/App/App.csproj",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "Declared",
+      "manager": "NuGet",
+      "origin": "src/App/App.csproj"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "PackageLicenseExpression"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "MSBuild warning settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
       "reader": "MSBuild"
     },
     {
@@ -500,26 +520,6 @@
       "origin": "src/App/App.csproj:Sdk",
       "tool": "MSBuild",
       "value": "Microsoft.NET.Sdk"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "src/App/App.csproj",
-      "reader": "MSBuild warning settings"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "src/App/App.csproj",
-      "reader": "NuGet package references"
-    },
-    {
-      "kind": "Declared",
-      "manager": "NuGet",
-      "origin": "src/App/App.csproj"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "src/App/App.csproj",
-      "reader": "PackageLicenseExpression"
     }
   ],
   "map": {

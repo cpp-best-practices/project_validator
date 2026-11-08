@@ -461,21 +461,6 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
-      "reader": "Rust lint settings"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "Cargo.toml",
-      "reader": "Rust build settings"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "Cargo.toml",
-      "reader": "Rust lints"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "Cargo.toml",
       "reader": "Cargo.toml license"
     },
     {
@@ -487,6 +472,21 @@
       "kind": "Declared",
       "manager": "Cargo",
       "origin": "Cargo.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Rust lint settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Rust build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Rust lints"
     },
     {
       "kind": "ConfigurationFile",
@@ -511,6 +511,16 @@
     {
       "kind": "ConfigurationFile",
       "origin": "src/main.rs",
+      "reader": "Cargo binaries"
+    },
+    {
+      "kind": "Application",
+      "manager": "Cargo",
+      "origin": "src/main.rs"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/main.rs",
       "reader": "Rust lint settings"
     },
     {
@@ -522,16 +532,6 @@
       "kind": "ConfigurationFile",
       "origin": "src/main.rs",
       "reader": "Rust lints"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "src/main.rs",
-      "reader": "Cargo binaries"
-    },
-    {
-      "kind": "Application",
-      "manager": "Cargo",
-      "origin": "src/main.rs"
     }
   ],
   "map": {

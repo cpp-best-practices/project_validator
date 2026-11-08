@@ -1355,6 +1355,71 @@
     {
       "kind": "ConfigurationFile",
       "origin": "pom.xml",
+      "reader": "Maven dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Maven",
+      "origin": "pom.xml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Error Prone"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "JVM security rules"
+    },
+    {
+      "heuristic": true,
+      "key": "Find Security Bugs",
+      "kind": "Setting",
+      "origin": "pom.xml:Find Security Bugs",
+      "tool": "JVM security rules",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "Find Security Bugs",
+      "kind": "Setting",
+      "origin": "pom.xml:Find Security Bugs",
+      "tool": "JVM security rules",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "JVM warning settings"
+    },
+    {
+      "heuristic": true,
+      "key": "-Xlint:all",
+      "kind": "Setting",
+      "origin": "pom.xml",
+      "tool": "JVM warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "Kotlin's default warnings",
+      "kind": "Setting",
+      "origin": "pom.xml",
+      "tool": "JVM warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "-Werror",
+      "kind": "Setting",
+      "origin": "pom.xml",
+      "tool": "JVM warning settings",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
       "reader": "Maven"
     },
     {
@@ -1423,69 +1488,50 @@
       ]
     },
     {
-      "kind": "ConfigurationFile",
-      "origin": "pom.xml",
-      "reader": "JVM warning settings"
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "SpotBugs",
+      "via": []
     },
     {
       "heuristic": true,
-      "key": "-Xlint:all",
-      "kind": "Setting",
-      "origin": "pom.xml",
-      "tool": "JVM warning settings",
-      "value": true
-    },
-    {
-      "heuristic": true,
-      "key": "Kotlin's default warnings",
-      "kind": "Setting",
-      "origin": "pom.xml",
-      "tool": "JVM warning settings",
-      "value": true
-    },
-    {
-      "heuristic": true,
-      "key": "-Werror",
-      "kind": "Setting",
-      "origin": "pom.xml",
-      "tool": "JVM warning settings",
-      "value": true
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "pom.xml",
-      "reader": "Maven dependencies"
-    },
-    {
-      "kind": "Declared",
-      "manager": "Maven",
-      "origin": "pom.xml"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "pom.xml",
-      "reader": "Error Prone"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "pom.xml",
-      "reader": "JVM security rules"
-    },
-    {
-      "heuristic": true,
-      "key": "Find Security Bugs",
-      "kind": "Setting",
-      "origin": "pom.xml:Find Security Bugs",
-      "tool": "JVM security rules",
-      "value": true
-    },
-    {
-      "heuristic": true,
-      "key": "Find Security Bugs",
-      "kind": "Setting",
-      "origin": "pom.xml:Find Security Bugs",
-      "tool": "JVM security rules",
-      "value": true
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "pom.xml"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Find Security Bugs",
+      "via": []
     },
     {
       "heuristic": false,
@@ -1580,7 +1626,7 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[0]",
+      "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -1603,7 +1649,7 @@
     },
     {
       "heuristic": true,
-      "job": ".github/workflows/ci.yml:test[0]",
+      "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -1717,7 +1763,7 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[1]",
+      "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -1740,7 +1786,7 @@
     },
     {
       "heuristic": true,
-      "job": ".github/workflows/ci.yml:test[1]",
+      "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -1854,7 +1900,7 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[2]",
+      "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -1877,7 +1923,7 @@
     },
     {
       "heuristic": true,
-      "job": ".github/workflows/ci.yml:test[2]",
+      "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -1991,7 +2037,7 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[3]",
+      "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -2014,7 +2060,7 @@
     },
     {
       "heuristic": true,
-      "job": ".github/workflows/ci.yml:test[3]",
+      "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -2128,7 +2174,7 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[4]",
+      "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -2151,7 +2197,7 @@
     },
     {
       "heuristic": true,
-      "job": ".github/workflows/ci.yml:test[4]",
+      "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
         "Java",
@@ -2261,52 +2307,6 @@
         "."
       ],
       "tool": "OWASP dependency-check",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "ToolRun",
-      "languages": [
-        "Java",
-        "Kotlin"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "pom.xml"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "SpotBugs",
-      "via": []
-    },
-    {
-      "heuristic": true,
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "ToolRun",
-      "languages": [
-        "Java",
-        "Kotlin"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [
-        "pom.xml"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Find Security Bugs",
       "via": []
     },
     {

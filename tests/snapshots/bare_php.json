@@ -513,19 +513,6 @@
     {
       "kind": "ConfigurationFile",
       "origin": "composer.json",
-      "reader": "Composer"
-    },
-    {
-      "heuristic": false,
-      "key": "psr/log",
-      "kind": "Setting",
-      "origin": "composer.json:psr/log",
-      "tool": "Composer",
-      "value": "^3.0"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "composer.json",
       "reader": "Composer dependencies"
     },
     {
@@ -537,6 +524,19 @@
       "kind": "ConfigurationFile",
       "origin": "composer.json",
       "reader": "composer.json license"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "Composer"
+    },
+    {
+      "heuristic": false,
+      "key": "psr/log",
+      "kind": "Setting",
+      "origin": "composer.json:psr/log",
+      "tool": "Composer",
+      "value": "^3.0"
     }
   ],
   "map": {

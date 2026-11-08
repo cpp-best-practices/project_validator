@@ -520,6 +520,9 @@ except where a step deliberately changes results and says so.
    `WARNINGS` practice no longer collides with the constant; a `Command` resolves its `words` once when it is made,
    and `Facts.shared` holds what is made of the facts once, instead of module-level caches keyed by `id()`; a
    `Check`'s languages are always asked of its components (`languages_from`), never copied; the project map is
-   `project_validator/project_map.py`; the non-recursive JSON reader is `text.check_json`.
+   `project_validator/project_map.py`; the non-recursive JSON reader is `text.check_json`. Every profile of more
+   than a few hundred lines is a package laid out as the scaffold writes one: `__init__.py` recognises the
+   ecosystem (its build systems, toolchain, package managers, outputs), `tools.py` holds its tools and their
+   settings readers, `practices.py` its practices.
 
 `--facts` and `--answers` expose the database and the answers.

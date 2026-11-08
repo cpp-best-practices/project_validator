@@ -151,7 +151,8 @@ class ReaderTests(unittest.TestCase):
     def test_build_and_test_settings(self) -> None:
         for path, text, expected in READ:
             with self.subTest(path=path, text=text):
-                self.assertEqual(_settings(path, {path: text}), expected)
+                # Readers are found module by module, so their order is not part of what is read.
+                self.assertCountEqual(_settings(path, {path: text}), expected)
 
     def test_a_scheme_that_does_not_parse_is_unknown(self) -> None:
         with temp_project({"A.xcscheme": "<Scheme>"}) as root:
