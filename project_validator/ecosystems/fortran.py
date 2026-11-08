@@ -30,7 +30,7 @@ from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
 from project_validator.facts.settings import SettingsReader, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Definition, Run, defined_by
+from project_validator.facts.tools import Definition, Run, defined_by, starts, when
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.toolchains import (
     FHARDENED,
@@ -351,9 +351,7 @@ FPRETTIFY = format_tool(
 )
 
 
-def _fortitude(command: Command, _facts: Facts) -> Run | None:
-    argv = resolved(command)
-    return analysed() if program(argv) == "fortitude" and argv[1:2] == ("check",) else None
+_fortitude = when(starts(("fortitude", "check")), analysed)
 
 
 FORTITUDE_SETTINGS = SettingsReader(

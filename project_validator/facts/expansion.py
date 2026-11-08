@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 from project_validator.evidence import PRE_COMMIT_CONFIGURATION
 from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, Unknown, resolved
-from project_validator.facts.arguments import program
+from project_validator.facts.arguments import starts_with
 from project_validator.facts.shell import ShellCommand, split_script
 
 if TYPE_CHECKING:
@@ -289,8 +289,8 @@ def launcher(
 
     def expand(command: Command, _: Context) -> list[Expansion] | None:
         argv = resolved(command)
-        prefix = next((start for start in starts if _starts_with(argv, start)), None)
-        return None if prefix is None else _launched(argv[len(prefix) :], with_values)
+        prefix = starts_with(argv, *starts)
+        return None if prefix is None or len(argv) == len(prefix) else _launched(argv[len(prefix) :], with_values)
 
     return CommandExpander(name=name, expand=expand)
 
@@ -306,10 +306,6 @@ def _launched(words: tuple[str, ...], with_values: frozenset[str]) -> list[Expan
         elif word in with_values:
             next(rest, None)
     return []
-
-
-def _starts_with(argv: tuple[str, ...], prefix: tuple[str, ...]) -> bool:
-    return len(argv) > len(prefix) and program(argv) == prefix[0] and argv[1 : len(prefix)] == prefix[1:]
 
 
 def found_at(context: Context, directory: str | None, names: Iterable[str]) -> str | None:

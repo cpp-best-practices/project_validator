@@ -12,7 +12,7 @@ from pathlib import Path, PurePosixPath
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import option_values, program
+from project_validator.facts.arguments import option_values, program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
@@ -164,7 +164,7 @@ def _read_run_settings(path: str, text: str) -> Iterator[Setting]:
 
 def _dotnet_test(command: Command) -> tuple[str, ...] | None:
     argv = resolved(command)
-    return argv if program(argv) == "dotnet" and argv[1:2] == ("test",) else None
+    return argv if starts_with(argv, ("dotnet", "test")) else None
 
 
 def _named_run_settings(command: Command) -> list[str]:
@@ -187,7 +187,7 @@ def _relative(setting: Setting) -> str:
 def _coverlet(command: Command, facts: Facts) -> Run | None:
     """coverlet: its data collector (`--collect "XPlat Code Coverage"`, or a .runsettings that adds it), its MSBuild
     integration (`CollectCoverage=true` on the command line or in the project settings), or its console tool."""
-    if program(resolved(command)) == "coverlet":
+    if starts_with(resolved(command), ("coverlet",)):
         return measured(Granularity.LINE, Granularity.BRANCH)
     if (argv := _dotnet_test(command)) is None:
         return None
@@ -213,7 +213,7 @@ def _coverlet(command: Command, facts: Facts) -> Run | None:
 def _microsoft_coverage(command: Command, _: Facts) -> Run | None:
     """Microsoft code coverage: `dotnet-coverage collect`, or Microsoft.Testing.Platform's `dotnet test --coverage`."""
     argv = resolved(command)
-    collects = program(argv) == "dotnet-coverage" and argv[1:2] == ("collect",)
+    collects = starts_with(argv, ("dotnet-coverage", "collect")) is not None
     if collects or (_dotnet_test(command) is not None and "--coverage" in argv):
         return measured(Granularity.LINE, Granularity.BRANCH)
     return None
@@ -300,9 +300,7 @@ _RESTORES = frozenset({"restore", "build", "test", "pack", "publish", "run"})
 def _nuget_audit(command: Command, facts: Facts) -> Run | None:
     """Restoring with `<NuGetAuditMode>all</NuGetAuditMode>`, which audits the transitive packages too."""
     argv = resolved(command)
-    restores = program(argv) in ("msbuild", "MSBuild") or (
-        program(argv) == "dotnet" and argv[1:2] and argv[1] in _RESTORES
-    )
+    restores = starts_with(argv, ("msbuild",), ("MSBuild",), *(("dotnet", restore) for restore in _RESTORES))
     read = [
         found
         for found in facts.where(Setting, tool="MSBuild", key="NuGetAuditMode")

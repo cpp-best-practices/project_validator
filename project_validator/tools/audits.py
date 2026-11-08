@@ -4,7 +4,7 @@ languages (`multi_ecosystem_audits`), since they audit whatever lockfiles the pr
 import shlex
 
 from project_validator.facts import Command, Facts, resolved
-from project_validator.facts.arguments import program
+from project_validator.facts.arguments import starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.expansion import Action
 from project_validator.facts.tools import Run, Tool, starts, when
@@ -15,7 +15,7 @@ _TRIVY_FILESYSTEM = frozenset({"fs", "filesystem", "repo", "repository"})
 def _trivy(command: Command, _facts: Facts) -> Run | None:
     """trivy scanning the checkout (`trivy fs .`), not an image."""
     argv = resolved(command)
-    return audited() if program(argv) == "trivy" and argv[1:2] and argv[1] in _TRIVY_FILESYSTEM else None
+    return audited() if starts_with(argv, *(("trivy", scans) for scans in _TRIVY_FILESYSTEM)) else None
 
 
 def _gitlab_dependency_scanning(command: Command, _facts: Facts) -> Run | None:

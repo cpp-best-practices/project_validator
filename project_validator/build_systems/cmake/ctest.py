@@ -13,7 +13,7 @@ from project_validator.build_systems.cmake.build import cmake_configures
 from project_validator.build_systems.cmake.conditions import LANGUAGE_NAMES
 from project_validator.core import Options, Project
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
-from project_validator.facts.arguments import option_values, program
+from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.testing import Probe, test_runner, tested
 from project_validator.facts.tools import Definition, Run
 
@@ -84,9 +84,9 @@ def _registered(facts: Facts) -> Iterator[str]:
 def _ctest(command: Command, _facts: Facts) -> Run | None:
     """ctest, `cmake --build … --target test` (or RUN_TESTS), and `cmake --workflow`, whose presets run the tests."""
     argv = resolved(command)
-    if program(argv) == "ctest":
+    if starts_with(argv, ("ctest",)):
         return tested()
-    if program(argv) != "cmake":
+    if not starts_with(argv, ("cmake",)):
         return None
     if "--workflow" in argv:
         return tested()

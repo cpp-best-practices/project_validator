@@ -9,7 +9,7 @@ from pathlib import Path, PurePosixPath
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import has_option, option_values, program
+from project_validator.facts.arguments import has_option, option_values, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
@@ -79,7 +79,7 @@ RUSTFMT_SETTINGS = SettingsReader(
 def _cargo_fmt(command: Command, facts: Facts) -> Run | None:
     """`cargo fmt --check` (`cargo +nightly fmt --all -- --check`) checks; `cargo fmt` applies."""
     argv = tuple(word for word in resolved(command) if not word.startswith("+"))
-    if program(argv) != "cargo" or argv[1:2] != ("fmt",):
+    if not starts_with(argv, ("cargo", "fmt")):
         return None
     return formatted(command, facts, checks="--check" in argv)
 
@@ -116,7 +116,7 @@ def _cargo_tarpaulin(command: Command, _: Facts) -> Run | None:
 
 def _grcov(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
-    if program(argv) != "grcov":
+    if not starts_with(argv, ("grcov",)):
         return None
     return measured(LINE, BRANCH if has_option(argv, "--branch") else None)
 
@@ -169,7 +169,7 @@ RUST_TEST_FILES = TestFiles(
 def _cargo_test(command: Command, _facts: Facts) -> Run | None:
     """`cargo test`, and the cargo tools that run the tests: nextest, llvm-cov and tarpaulin (any toolchain)."""
     argv = tuple(word for word in resolved(command) if not word.startswith("+"))
-    runs = program(argv) == "cargo" and argv[1:2] in (("test",), ("nextest",), ("llvm-cov",), ("tarpaulin",))
+    runs = starts_with(argv, ("cargo", "test"), ("cargo", "nextest"), ("cargo", "llvm-cov"), ("cargo", "tarpaulin"))
     return tested() if runs else None
 
 
@@ -270,7 +270,7 @@ _CARGO_COMPILES = frozenset({"build", "check", "test", "clippy", "run", "rustc",
 def _unsafe_forbidden(command: Command, facts: Facts) -> Run | None:
     """A cargo build that compiles the crate with unsafe code forbidden, by its settings or flags."""
     argv = tuple(word for word in resolved(command) if not word.startswith("+"))
-    if program(argv) != "cargo" or not argv[1:2] or argv[1] not in _CARGO_COMPILES:
+    if not starts_with(argv, *(("cargo", compiles) for compiles in _CARGO_COMPILES)):
         return None
     if _UNSAFE_FLAG.search(" ".join((*argv, command.env.get("RUSTFLAGS", "")))):
         return scanned()
@@ -295,7 +295,7 @@ _DENY_CHECKS = frozenset({"advisories", "bans", "licenses", "sources"})
 def _cargo_deny(command: Command, _facts: Facts) -> Run | None:
     """`cargo deny check`, which checks advisories unless told to run only its other checks."""
     argv = tuple(word for word in resolved(command) if not word.startswith("+"))
-    if not (argv[:2] == ("cargo", "deny") or program(argv) == "cargo-deny") or "check" not in argv:
+    if not starts_with(argv, ("cargo", "deny"), ("cargo-deny",)) or "check" not in argv:
         return None
     checks = [word for word in argv[argv.index("check") + 1 :] if word in _DENY_CHECKS]
     return audited() if not checks or "advisories" in checks else None
@@ -391,7 +391,7 @@ CLIPPY_SETTINGS = SettingsReader(name="clippy", files=("clippy.toml", ".clippy.t
 def _clippy(command: Command, _facts: Facts) -> Run | None:
     """`cargo clippy`, with any toolchain (`cargo +nightly clippy`)."""
     argv = tuple(word for word in resolved(command) if not word.startswith("+"))
-    return analysed() if program(argv) in ("cargo", "cargo-clippy") and "clippy" in argv[:2] else None
+    return analysed() if starts_with(argv, ("cargo", "clippy"), ("cargo-clippy",)) else None
 
 
 CLIPPY = analyzer(

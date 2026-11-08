@@ -10,7 +10,7 @@ from project_validator.build_configurations import build_type_kinds
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import has_option, option_values, program
+from project_validator.facts.arguments import has_option, option_values, starts_with
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
@@ -32,7 +32,7 @@ from project_validator.facts.settings import (
     yaml_settings,
 )
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Run, defined_by
+from project_validator.facts.tools import Run, all_of, any_of, defined_by, starts, when, with_option
 from project_validator.text import pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
@@ -100,9 +100,10 @@ def _swift_format(command: Command, facts: Facts) -> Run | None:
     """`swift format lint --strict` (or `swift-format lint -s`) checks, as plain `lint` only warns; `swift format -i`
     (its default `format` subcommand) applies."""
     argv = resolved(command)
-    words = argv[2:] if argv[:2] == ("swift", "format") else argv[1:] if program(argv) == "swift-format" else None
-    if words is None:
+    prefix = starts_with(argv, ("swift", "format"), ("swift-format",))
+    if prefix is None:
         return None
+    words = argv[len(prefix) :]
     if words[:1] == ("lint",):
         return formatted(command, facts, checks=has_option(argv, "--strict", "-s"), applies=False)
     return formatted(command, facts, checks=False, applies=has_option(argv, "-i", "--in-place"))
@@ -132,10 +133,8 @@ SWIFT_TEST_FILES = TestFiles(
 )
 
 
-def _swift_tests(command: Command, _facts: Facts) -> Run | None:
-    argv = resolved(command)
-    xcode = program(argv) == "xcodebuild" and bool({"test", "test-without-building"} & set(argv[1:]))
-    return tested() if argv[:2] == ("swift", "test") or xcode else None
+_XCODEBUILD_TESTS = all_of(starts(("xcodebuild",)), with_option("test", "test-without-building"))
+_swift_tests = when(any_of(starts(("swift", "test")), _XCODEBUILD_TESTS), tested)
 
 
 SWIFT_TESTS = test_runner(
@@ -147,11 +146,10 @@ SWIFT_TESTS = test_runner(
 )
 
 
-def _swift_test(command: Command, _: Facts) -> Run | None:
-    argv = resolved(command)
-    if program(argv) != "swift" or argv[1:2] != ("test",) or not has_option(argv, "--enable-code-coverage"):
-        return None
-    return measured(Granularity.LINE, Granularity.REGION)
+_swift_test = when(
+    all_of(starts(("swift", "test")), with_option("--enable-code-coverage")),
+    lambda: measured(Granularity.LINE, Granularity.REGION),
+)
 
 
 def _read_xcode_settings(path: str, text: str) -> Iterator[Fact]:
@@ -180,7 +178,7 @@ def _xcodebuild(command: Command, facts: Facts) -> Run | None:
     """`xcodebuild test`, with code coverage turned on by its options, the scheme it runs or a test plan (any scheme
     when it names none)."""
     argv = resolved(command)
-    if program(argv) != "xcodebuild" or not {"test", "test-without-building"} & set(argv):
+    if not _XCODEBUILD_TESTS(command):
         return None
     if "YES" in option_values(argv, "-enableCodeCoverage"):
         return measured(Granularity.LINE, Granularity.REGION)
@@ -296,10 +294,10 @@ def _swiftlint(command: Command, facts: Facts) -> Run | None:
     """`swiftlint` (or `swiftlint lint`), which reports what it finds unless told to fix it, or a build that runs its
     build tool plugin."""
     argv = resolved(command)
-    if program(argv) == "swiftlint":
+    if starts_with(argv, ("swiftlint",)):
         fixes = has_option(argv, "--fix", "--autocorrect") or argv[1:2] in (("--fix",), ("autocorrect",))
         return None if fixes else analysed()
-    builds = any(argv[: len(prefix)] == prefix for prefix in _BUILDS)
+    builds = starts_with(argv, *_BUILDS) is not None
     read = facts.where(Setting, tool="SwiftPM", key="plugin", value="SwiftLint")
     return analysed(read=read) if builds and read else None
 

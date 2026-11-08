@@ -13,7 +13,7 @@ from project_validator.build_systems.meson import syntax
 from project_validator.build_systems.meson.evaluation import BUILD_FILE, Evaluation, Found, Frame
 from project_validator.core import Context, Project
 from project_validator.facts import Command, Fact, Origin, Setting, Unknown, resolved
-from project_validator.facts.arguments import positional, program
+from project_validator.facts.arguments import positional, starts_with
 from project_validator.facts.build import BuildSetting, CompilerOption, disjuncts, implied_options
 from project_validator.facts.conditions import both
 from project_validator.facts.expansion import CommandExpander, Expansion, Script
@@ -160,9 +160,9 @@ def _run_targets(command: Command, context: Context) -> list[Expansion] | None:
     """`meson compile [-C dir] <target>...` and `ninja [-C dir] <target>...`: the commands of the run targets."""
     argv = resolved(command)
     words, _ = positional(argv, _OPTIONS)
-    if argv[:2] == ("meson", "compile"):
+    if starts_with(argv, ("meson", "compile")):
         names = words[1:]
-    elif program(argv) == "ninja":
+    elif starts_with(argv, ("ninja",)):
         names = words
     else:
         return None

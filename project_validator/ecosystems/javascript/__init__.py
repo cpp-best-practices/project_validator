@@ -17,7 +17,7 @@ from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.evidence import json_value
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
-from project_validator.facts.arguments import option_values, positional, program
+from project_validator.facts.arguments import option_values, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
@@ -40,7 +40,7 @@ from project_validator.facts.settings import (
     unreadable,
 )
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Claim, Run, Tool, defined_by, starts, when
+from project_validator.facts.tools import Claim, Run, Tool, all_of, defined_by, starts, when, with_option
 from project_validator.text import pattern, strip_json_comments
 from project_validator.tools.audits import multi_ecosystem_audits
 
@@ -323,7 +323,7 @@ def _js_tests(command: Command, _facts: Facts) -> Run | None:
     name = program(argv)
     runs = (
         name in _JS_RUNNERS
-        or argv[:2] in (("playwright", "test"), ("deno", "test"), ("bun", "test"))
+        or starts_with(argv, ("playwright", "test"), ("deno", "test"), ("bun", "test"))
         or (name == "node" and "--test" in argv)
     )
     return tested() if runs else None
@@ -422,22 +422,12 @@ def _instrumenter(name: str) -> Claim:
 def _deno(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
     asked = any(word.partition("=")[0] == "--coverage" for word in argv)
-    return measured(*BOTH) if program(argv) == "deno" and argv[1:2] == ("test",) and asked else None
+    return measured(*BOTH) if starts_with(argv, ("deno", "test")) and asked else None
 
 
-def _node(command: Command, _: Facts) -> Run | None:
-    argv = resolved(command)
-    return measured(*BOTH) if program(argv) == "node" and "--experimental-test-coverage" in argv else None
-
-
-def _bun(command: Command, _: Facts) -> Run | None:
-    """Bun's test runner counts lines (and functions), not branches."""
-    argv = resolved(command)
-    return (
-        measured(Granularity.LINE)
-        if program(argv) == "bun" and argv[1:2] == ("test",) and "--coverage" in argv
-        else None
-    )
+_node = when(all_of(starts(("node",)), with_option("--experimental-test-coverage")), lambda: measured(*BOTH))
+# Bun's test runner counts lines (and functions), not branches.
+_bun = when(all_of(starts(("bun", "test")), with_option("--coverage")), lambda: measured(Granularity.LINE))
 
 
 def _reports_branches(name: str, how: str, measures: Claim, reads: tuple[str, ...] = ()) -> Tool:
