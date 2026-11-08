@@ -1,31 +1,20 @@
-"""PHP: managed with Composer, judged by the PHP versions CI runs.
+"""PHP's tools: what runs its tests, measures coverage, formats, analyses, scans and audits, and the
+settings each reads (see `project_validator.facts.tools`)."""
 
-PHP projects run their tools through Composer scripts (`composer test`, `composer cs-check`), so the scripts CI runs
-count as CI configuration, as package scripts do for JavaScript.
-"""
-
-import json
 import re
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
-from project_validator.evidence import (
-    json_value,
-)
+from project_validator.ecosystems.php import COMPOSER_JSON, PHP_ONLY, PHPUNIT_CONFIG_FILES, runs_analyzer
+from project_validator.evidence import json_value
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
-from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
+from project_validator.facts.analysis import analyzer
 from project_validator.facts.arguments import has_option, option_values, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
-from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
-from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
-from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.limits import Rule, limiter
-from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import (
     SettingsReader,
@@ -36,31 +25,21 @@ from project_validator.facts.settings import (
     xml_root,
 )
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by, either, starts, when
-from project_validator.text import Pattern, pattern
+from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
-
-PHP_LANGUAGE = "PHP"
-PHP_ONLY = frozenset({PHP_LANGUAGE})
-COMPOSER_JSON = "composer.json"
-COMPOSER = BuildSystem(name="Composer", files=(COMPOSER_JSON,), languages=PHP_ONLY)
-PHPUNIT_CONFIG_FILES = ("phpunit.xml", "phpunit.xml.dist", "phpunit.dist.xml")
-
-
-# `composer test`, `composer run-script lint`, and `@lint` or `@composer lint` inside a script.
-CALLS_SCRIPT = re.compile(
-    r"\bcomposer\s+(?:run(?:-script)?\s+)?(?P<command>[\w:.-]+)|(?:^|\s)@(?!composer\b|php\b)(?P<script>[\w:.-]+)"
-)
-
 
 # Composer's own commands, which are not script names; `install` and `update` run their event scripts.
 _COMPOSER_COMMANDS = frozenset(
     {"require", "remove", "dump-autoload", "dumpautoload", "validate", "show", "outdated", "audit", "config", "exec"}
     | {"global", "init", "create-project", "self-update", "diagnose", "licenses", "depends", "why", "fund"}
 )
+
+
 _EVENTS = {"install": ("pre-install-cmd", "post-install-cmd"), "update": ("pre-update-cmd", "post-update-cmd")}
+
+
 _CALLBACK = re.compile(r"^[\w\\]+::\w+$")
 
 
@@ -110,10 +89,19 @@ COMPOSER_SCRIPTS = CommandExpander(name="Composer scripts", expand=_composer_scr
 
 
 CS_FIXER_CONFIG_FILES = (".php-cs-fixer.dist.php", ".php-cs-fixer.php")
+
+
 PHPCS_CONFIG_FILES = ("phpcs.xml", "phpcs.xml.dist", ".phpcs.xml", ".phpcs.xml.dist")
+
+
 CS_FIXER_FILES = file_reader("PHP-CS-Fixer", CS_FIXER_CONFIG_FILES)
+
+
 PHPCS_FILES = file_reader("PHP_CodeSniffer", PHPCS_CONFIG_FILES)
+
+
 PINT_FILES = file_reader("Pint", ("pint.json",))
+
 
 # Each of them has a default style: PHP-CS-Fixer and PHP_CodeSniffer a PSR one, Pint Laravel's.
 PHP_CS_FIXER = format_tool(
@@ -123,6 +111,8 @@ PHP_CS_FIXER = format_tool(
     formats=flagged(("php-cs-fixer", "fix"), ("php-cs-fixer", "check"), checks=("check", "--dry-run")),
     style=defined_by(files=("PHP-CS-Fixer",)),
 )
+
+
 PHP_CODESNIFFER = format_tool(
     name="PHP_CodeSniffer",
     languages=PHP_ONLY,
@@ -130,6 +120,8 @@ PHP_CODESNIFFER = format_tool(
     formats=either(flagged(("phpcs",), applies=()), flagged(("phpcbf",), checks=())),
     style=defined_by(files=("PHP_CodeSniffer",)),
 )
+
+
 PINT = format_tool(
     name="Pint",
     languages=PHP_ONLY,
@@ -138,12 +130,15 @@ PINT = format_tool(
     style=defined_by(files=("Pint",)),
 )
 
+
 PHP_TEST_FILES = TestFiles(
     name="*Test.php files with PHPUnit test cases or Pest tests",
     languages=PHP_ONLY,
     path=re.compile(r"Test\.php$"),
     contains=re.compile(r"\bextends\s+\\?(?:[\w\\]*\\)?\w*TestCase\b|^\s*(?:test|it|describe)\s*\(", re.MULTILINE),
 )
+
+
 PHP_TESTS = test_runner(
     name="phpunit, pest or composer test",
     languages=PHP_ONLY,
@@ -154,6 +149,8 @@ PHP_TESTS = test_runner(
 
 
 _PHPUNIT_PROGRAMS = frozenset({"phpunit", "pest", "paratest"})
+
+
 _CONFIGURATION_OPTIONS = frozenset({"--configuration", "-c"})
 
 
@@ -212,65 +209,6 @@ PHPUNIT = coverage_tool(
     reads=("PHPUnit",),
 )
 
-# E_ALL & ~E_DEPRECATED leaves some out.
-ALL_ERRORS = r"(?:-1|E_ALL)\b(?!\s*(?:&|&amp;|\^|\|))"
-ERROR_REPORTING = Pattern(
-    "error_reporting = E_ALL",
-    re.compile(
-        rf"""\berror_reporting["']?\s*(?:[=:,]|value\s*=)\s*["']?{ALL_ERRORS}"""
-        rf"""|name\s*=\s*["']error_reporting["']\s+value\s*=\s*["']{ALL_ERRORS}"""
-        rf"""|value\s*=\s*["']{ALL_ERRORS}["']\s+name\s*=\s*["']error_reporting["']"""
-    ),
-)
-
-
-# PHP reports notices, warnings and deprecations at run time; the tests must see every one of them.
-def _fails_on(issue: str) -> str:
-    return rf"(?:\b{issue}\s*=\s*[\"']true[\"']|--fail-on-{issue.removeprefix('failOn').lower()}\b)"
-
-
-_PHP_WARNINGS_AS_ERRORS = (
-    required(
-        Pattern(
-            "PHPUnit failOnWarning, failOnNotice and failOnDeprecation",
-            re.compile(
-                rf"(?=[\s\S]*{_fails_on('failOnWarning')})(?=[\s\S]*{_fails_on('failOnNotice')})"
-                rf"(?=[\s\S]*{_fails_on('failOnDeprecation')})"
-            ),
-        )
-    ),
-    required(pattern("PHPUnit failOnAllIssues", r"\bfailOnAllIssues\s*=\s*[\"']true[\"']|--fail-on-all-issues\b")),
-)
-PHP_WARNING_SETTINGS = requirement_reader(
-    "PHPUnit warning settings", PHPUNIT_CONFIG_FILES, (required(ERROR_REPORTING), *_PHP_WARNINGS_AS_ERRORS)
-)
-# PHP reports notices, warnings and deprecations at run time; the tests must see every one of them.
-WARNINGS = Practice(
-    name=PracticeName.WARNINGS,
-    languages=PHP_ONLY,
-    requirements=always(required(ERROR_REPORTING)),
-    reads=(PHP_WARNING_SETTINGS.name,),
-    words=Wording(
-        kind="PHP error reporting settings",
-        separator=" ",
-        hint='set <ini name="error_reporting" value="-1"/> in phpunit.xml',
-    ),
-)
-
-
-WARNINGS_AS_ERRORS = Practice(
-    name=PracticeName.WARNINGS_AS_ERRORS,
-    languages=PHP_ONLY,
-    requirements=always(*_PHP_WARNINGS_AS_ERRORS),
-    any_one=True,
-    reads=(PHP_WARNING_SETTINGS.name,),
-    words=Wording(
-        kind="warnings as errors",
-        searched="phpunit.xml, CI configuration or the Composer scripts it runs",
-        hint='set failOnWarning="true", failOnNotice="true" and failOnDeprecation="true" in phpunit.xml',
-    ),
-)
-
 
 COMPOSER_REQUIRES = SettingsReader(
     name="Composer",
@@ -279,6 +217,8 @@ COMPOSER_REQUIRES = SettingsReader(
         fact for table in ("require", "require-dev") for fact in json_settings("Composer", path, text, table)
     ),
 )
+
+
 # roave/security-advisories conflicts with every vulnerable version, so Composer refuses to install one.
 _INSTALLS = (("composer", "install"), ("composer", "update"), ("composer", "require"))
 
@@ -305,23 +245,32 @@ AUDITORS = (
     *multi_ecosystem_audits(PHP_ONLY),
 )
 
+
 PSALM_CONFIG_FILES = ("psalm.xml", "psalm.xml.dist")
 
 
 PHPMD_CONFIG_FILES = ("phpmd.xml", "phpmd.xml.dist", ".phpmd.xml", ".phpmd.xml.dist")
+
+
 PHPSTAN_CONFIG_FILES = ("phpstan.neon", "phpstan.neon.dist", "phpstan.dist.neon")
+
+
 _PHPSTAN_LEVEL = re.compile(r"^\s*level:\s*(\w+)\b", re.MULTILINE)
+
+
 _PSALM_LEVEL = re.compile(r"""\berrorLevel\s*=\s*["'](\d+)["']""")
+
+
 _TAINT_ANALYSIS = re.compile(r"""\brunTaintAnalysis\s*=\s*["']true["']""")
-# Strict: PHPStan at level 8 or higher, Psalm at error level 1 or 2.
-_STRICT_PHPSTAN = re.compile(r"[89]|1\d|max")
-_STRICT_PSALM = frozenset({"1", "2"})
+
 
 PHPSTAN_SETTINGS = SettingsReader(
     name="PHPStan",
     files=PHPSTAN_CONFIG_FILES,
     read=lambda path, text: matched_settings("PHPStan", path, text, {"level": (_PHPSTAN_LEVEL, None)}),
 )
+
+
 PSALM_SETTINGS = SettingsReader(
     name="Psalm",
     files=PSALM_CONFIG_FILES,
@@ -357,56 +306,11 @@ PHPMD_SETTINGS = SettingsReader(
 )
 
 
-def _phpstan_strict(argv: tuple[str, ...], facts: Facts) -> list[Setting] | bool:
-    if any(_STRICT_PHPSTAN.fullmatch(level) for level in option_values(argv, "--level", "-l")):
-        return True
-    return [setting for setting in facts.settings("PHPStan") if _STRICT_PHPSTAN.fullmatch(str(setting.value))]
-
-
-def _psalm_strict(_argv: tuple[str, ...], facts: Facts) -> list[Setting] | bool:
-    return [setting for setting in facts.settings("Psalm") if str(setting.value) in _STRICT_PSALM]
-
-
-type _Strict = Callable[[tuple[str, ...], Facts], list[Setting] | bool]
-
-
-def _runs(name: str) -> Callable[[Command, Facts], Run | None]:
-    return lambda command, _facts: analysed() if program(resolved(command)) == name else None
-
-
-def _type_checks(name: str, strict: _Strict) -> Claim:
-    def checks(command: Command, facts: Facts) -> Run | None:
-        argv = resolved(command)
-        if program(argv) != name:
-            return None
-        found = strict(argv, facts)
-        return type_checked(strict=bool(found), read=found if isinstance(found, list) else ())
-
-    return checks
-
-
-def _analyser_and_checker(name: str, strict: _Strict, how: str, strict_how: str) -> Tool:
-    """PHPStan or Psalm: a run analyses the code and type checks it, strictly at a strict level."""
-    command = name.lower()
-    definition = defined_by(files=(name,), settings=(name,))
-    return combined(
-        analyzer(name=name, languages=PHP_ONLY, how=how, analyses=_runs(command), rules=definition, reads=(name,)),
-        type_checker(
-            name=name,
-            languages=PHP_ONLY,
-            can={Strictness.CHECKS: how, Strictness.STRICT: strict_how},
-            checks=_type_checks(command, strict),
-            configuration=definition,
-            reads=(name,),
-        ),
-    )
-
-
-PHPSTAN = _analyser_and_checker("PHPStan", _phpstan_strict, "phpstan analyse", "level: 8 (or max) in phpstan.neon")
-PSALM = _analyser_and_checker("Psalm", _psalm_strict, "psalm", 'errorLevel="2" in psalm.xml')
 PHPMD = analyzer(
-    name="PHPMD", languages=PHP_ONLY, how="phpmd", analyses=_runs("phpmd"), rules=defined_by(files=("PHPMD",))
+    name="PHPMD", languages=PHP_ONLY, how="phpmd", analyses=runs_analyzer("phpmd"), rules=defined_by(files=("PHPMD",))
 )
+
+
 # codesize is the PHPMD rule set that has ExcessiveMethodLength.
 _METHOD_LENGTH_RULES = re.compile(r"\bExcessiveMethodLength\b|\bcodesize\b")
 
@@ -438,7 +342,7 @@ EXCESSIVE_METHOD_LENGTH = limiter(
     name="PHPMD's ExcessiveMethodLength",
     languages=PHP_ONLY,
     how="phpmd with its codesize rules (ExcessiveMethodLength)",
-    runs=_runs("phpmd"),
+    runs=runs_analyzer("phpmd"),
     rule=Rule(
         describe="the codesize rules (ExcessiveMethodLength) in the PHPMD rule set",
         enabled=_excessive_method_length,
@@ -446,10 +350,17 @@ EXCESSIVE_METHOD_LENGTH = limiter(
     ),
     reads=("PHPMD",),
 )
+
+
 FUNCTION_LENGTH_LIMITERS = (EXCESSIVE_METHOD_LENGTH, *function_length_limiters(PHP_ONLY))
-PHAN = analyzer(name="Phan", languages=PHP_ONLY, how="phan", analyses=_runs("phan"))
+
+
+PHAN = analyzer(name="Phan", languages=PHP_ONLY, how="phan", analyses=runs_analyzer("phan"))
+
 
 _SECURITY_AUDIT = re.compile(r"\bPHPCS_SecurityAudit\b|\bphpcs-security-audit\b")
+
+
 PHPCS_SECURITY_SETTINGS = SettingsReader(
     name="PHP_CodeSniffer security",
     files=PHPCS_CONFIG_FILES,
@@ -499,77 +410,3 @@ SECURITY_SCANNERS = (
     # CodeQL does not analyse PHP.
     *(tool for tool in multi_language_scanners(PHP_ONLY) if tool.name != "CodeQL"),
 )
-
-# The platform (php, ext-*, lib-*) is not a package Composer installs.
-PLATFORM_PACKAGE = re.compile(r"^(?:php|php-64bit|hhvm|composer(?:-plugin|-runtime)?-api|(?:ext|lib)-.+)$")
-
-
-def _composer(text: str) -> dict[str, object]:
-    manifest = json.loads(text)
-    return manifest if isinstance(manifest, dict) else {}
-
-
-def _composer_declares(_path: str, text: str) -> bool:
-    """composer.json requires packages beyond the platform (PHP itself, its extensions)."""
-    manifest = _composer(text)
-    tables = (manifest.get(table) for table in ("require", "require-dev"))
-    packages = (name for table in tables if isinstance(table, dict) for name in table)
-    return any(not PLATFORM_PACKAGE.match(name) for name in packages)
-
-
-COMPOSER_DEPENDENCIES = manifest_reader(
-    name="Composer dependencies",
-    manager="Composer",
-    files=(COMPOSER_JSON,),
-    declares=_composer_declares,
-    library=lambda _path, text: _composer(text).get("type") == "library",
-)
-COMPOSER_LOCK = lockfile_reader(manager="Composer", files=("composer.lock",))
-# A library's users resolve its dependencies themselves; anything not declared a library locks them.
-COMPOSER_PACKAGES = PackageManager(
-    name="Composer",
-    languages=PHP_ONLY,
-    lock=Lock.APPLICATIONS,
-    lock_hint="commit composer.lock, so the application is installed with the dependencies it was tested with",
-)
-
-
-def _composer_license(text: str) -> str | None:
-    """Composer's license is an SPDX expression, or a list of licenses to choose from."""
-    license_ = _composer(text).get("license")
-    if isinstance(license_, list) and all(isinstance(item, str) for item in license_):
-        return " OR ".join(license_) or None
-    return license_ if isinstance(license_, str) else None
-
-
-COMPOSER_LICENSE = declared_license_reader(
-    name="composer.json license", files=(COMPOSER_JSON,), languages=PHP_ONLY, declared=_composer_license
-)
-
-VENDOR = BuildOutput(
-    languages=PHP_ONLY,
-    name="vendor",
-    globs=ignored_at_top_level("vendor"),
-    paths=directories("vendor"),
-    hint="consider ignoring /vendor/ (and .phpunit.cache/ or .phpunit.result.cache)",
-    artifacts=("/vendor/", ".phpunit.cache/", ".phpunit.result.cache"),
-)
-
-_PHP_VERSION = r"(\d+\.\d+)"
-
-PHP = Ecosystem(
-    label="PHP",
-    languages=PHP_ONLY,
-    build_systems=(COMPOSER,),
-    source_suffixes={".php": PHP_LANGUAGE},
-    toolchain=toolchain_patterns(
-        PHP_LANGUAGE,
-        version=_PHP_VERSION,
-        inputs=("php-version",),
-        images=("php",),
-        commands=r"\bcomposer\s+(?:install|update|test|run|audit)\b|\bvendor/bin/|\bphp\s+-",
-        setup=("php",),
-    ),
-)
-
-PHP_VERSIONS = versions_axis("PHP version", PHP_LANGUAGE, PHP_ONLY)

@@ -1,70 +1,26 @@
-"""Rust: built with Cargo, judged by the Rust toolchains CI runs."""
+"""Rust's tools: what runs its tests, measures coverage, formats, analyses, scans and audits, and the
+settings each reads (see `project_validator.facts.tools`)."""
 
 import re
 import shlex
-import tomllib
 from collections.abc import Iterator
-from pathlib import Path, PurePosixPath
+from pathlib import PurePosixPath
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toml_members, toolchain_patterns
+from project_validator.ecosystems.rust import RUST_LANGUAGE
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import has_option, option_values, starts_with
+from project_validator.facts.arguments import has_option, starts_with
 from project_validator.facts.audit import audited, auditor
-from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
-from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
-from project_validator.facts.licenses import declared_license_reader, toml_license
-from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either, starts, when
-from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
-
-
-def is_cargo_target(directory: Path) -> bool:
-    """Cargo tags its output with CACHEDIR.TAG and, by default, puts it in `target/` beside `Cargo.toml`."""
-    return (directory / "CACHEDIR.TAG").is_file() or (
-        directory.name == "target" and (directory.parent / "Cargo.toml").is_file()
-    )
-
-
-_CARGO_BUILDS = (("build",), ("test",), ("run",), ("nextest", "run"))
-
-
-def cargo_build_types(command: Command) -> frozenset[str]:
-    """The profile `cargo build`, `test`, `run` or `nextest run` builds: release with `--release` or
-    `--profile release`, debug without either, and neither with another profile."""
-    argv = [word for word in resolved(command) if not word.startswith("+")]
-    if argv[:1] != ["cargo"] or not any(tuple(argv[1 : 1 + len(sub)]) == sub for sub in _CARGO_BUILDS):
-        return frozenset()
-    profiles = option_values(tuple(argv), "--profile")
-    if "--release" in argv or "release" in profiles:
-        return frozenset({"release"})
-    return frozenset() if profiles else frozenset({"debug"})
-
-
-RUST_LANGUAGE = frozenset({"Rust"})
-CARGO = BuildSystem(
-    name="Cargo",
-    files=("Cargo.toml",),
-    languages=RUST_LANGUAGE,
-    is_build_tree=is_cargo_target,
-    build_types=cargo_build_types,
-    members=toml_members("workspace"),
-)
-
-_RUST_VERSION = r"(stable|beta|nightly|\d+\.\d+(?:\.\d+)?)"
-
-RUST_TOOLCHAINS = versions_axis("Rust toolchain", "Rust", RUST_LANGUAGE, compiled=True)
-
 
 RUSTFMT_SETTINGS = SettingsReader(
     name="rustfmt",
@@ -89,6 +45,8 @@ RUSTFMT = format_tool(
     style=defined_by(files=("rustfmt",)),
     reads=("rustfmt",),
 )
+
+
 RUSTFMT_ACTION = Action(name="actions-rust-lang/rustfmt", runs=lambda _inputs: (("cargo", "fmt", "--check"),))
 
 
@@ -128,6 +86,8 @@ def _rustc_mcdc(command: Command, _: Facts) -> Run | None:
 
 
 LINE, REGION, BRANCH, PATH = Granularity.LINE, Granularity.REGION, Granularity.BRANCH, Granularity.PATH
+
+
 CARGO_LLVM_COV = coverage_tool(
     name="cargo-llvm-cov",
     languages=RUST_LANGUAGE,
@@ -139,21 +99,28 @@ CARGO_LLVM_COV = coverage_tool(
     },
     measures=_cargo_llvm_cov,
 )
+
+
 CARGO_TARPAULIN = coverage_tool(
     name="cargo-tarpaulin",
     languages=RUST_LANGUAGE,
     can={LINE: "cargo tarpaulin", BRANCH: "cargo tarpaulin --branch"},
     measures=_cargo_tarpaulin,
 )
+
+
 GRCOV = coverage_tool(
     name="grcov", languages=RUST_LANGUAGE, can={LINE: "grcov", BRANCH: "grcov --branch"}, measures=_grcov
 )
+
+
 RUSTC_MCDC = coverage_tool(
     name="rustc MC/DC",
     languages=RUST_LANGUAGE,
     can={PATH: "RUSTFLAGS=-Zcoverage-options=mcdc"},
     measures=_rustc_mcdc,
 )
+
 
 RUST_TEST_FILES = TestFiles(
     name="#[test] functions",
@@ -175,64 +142,14 @@ CARGO_TEST = test_runner(
 )
 
 
-CARGO_CONFIG_FILES = (".cargo/config.toml", ".cargo/config")
-CRATE_SETTINGS_FILES = frozenset({"Cargo.toml", "lib.rs", "main.rs"})
-
-
-def _setting(name: str, regex: str) -> Pattern:
-    return Pattern(name, re.compile(regex, re.MULTILINE))
-
-
-RUST_LINTS = (
-    _setting("cargo clippy", r"\bcargo\s+(?:\+\S+\s+)?clippy\b"),
-    _setting(
-        "-D warnings",
-        r"""-D[\s"',]*warnings\b|--deny[=\s]+warnings\b|\bdeny\s*\(\s*warnings\s*\)|^\s*warnings\s*=\s*["']deny["']""",
-    ),
-    _setting("clippy::pedantic", r"\bclippy::pedantic\b|^\s*pedantic\s*="),
-)
-
-
-RUST_LINT_SETTINGS_FILES = (*CARGO_CONFIG_FILES, "Cargo.toml", "lib.rs", "main.rs")
-_RUST_LINTS = tuple(required(lint) for lint in RUST_LINTS)
-RUST_WARNING_SETTINGS = requirement_reader("Rust lint settings", RUST_LINT_SETTINGS_FILES, _RUST_LINTS)
-WARNINGS = Practice(
-    name=PracticeName.WARNINGS,
-    languages=RUST_LANGUAGE,
-    requirements=always(*_RUST_LINTS),
-    reads=(RUST_WARNING_SETTINGS.name,),
-    words=Wording(
-        kind="Rust lint settings",
-        separator=" ",
-        hint='run cargo clippy, deny warnings (-D warnings or [lints.rust] warnings = "deny") and enable '
-        "clippy::pedantic",
-    ),
-)
-
-# Overflow checks are compiled into the binary; release builds leave them out unless the profile asks for them.
-_OVERFLOW_CHECKS = required(
-    _setting(
-        "release overflow-checks",
-        r"^\[profile\.release\][^\[]*^\s*overflow-checks\s*=\s*true\b"
-        r"""|-C[\s"',]*overflow-checks(?:=(?:on|yes|y|true))?(?![\w=-])""",
-    )
-)
-RUST_HARDENING_SETTINGS = requirement_reader("Rust build settings", RUST_LINT_SETTINGS_FILES, (_OVERFLOW_CHECKS,))
-HARDENING = Practice(
-    name=PracticeName.HARDENING,
-    languages=RUST_LANGUAGE,
-    requirements=always(_OVERFLOW_CHECKS),
-    reads=(RUST_HARDENING_SETTINGS.name,),
-    words=Wording(
-        kind="hardening options",
-        hint="set overflow-checks = true in [profile.release] of Cargo.toml",
-    ),
-)
-
 # Forbidding unsafe code crate-wide makes the compiler reject the code whose memory safety it cannot check: in the
 # manifest's lints table, as a crate attribute, or on the command line.
 _FORBIDS_UNSAFE = re.compile(r"#!\[\s*(?:forbid|deny)\s*\([^)]*\bunsafe_code\b")
+
+
 _UNSAFE_FLAG = re.compile(r"""-[FD][\s"',]*unsafe_code\b|--(?:forbid|deny)[=\s]+unsafe_code\b""")
+
+
 _FORBIDDEN = frozenset({"forbid", "deny"})
 
 
@@ -266,6 +183,8 @@ RUST_LINT_SETTINGS = SettingsReader(
     files=("Cargo.toml", "lib.rs", "main.rs", ".cargo/config.toml", ".cargo/config"),
     read=_read_unsafe_code,
 )
+
+
 _CARGO_COMPILES = frozenset({"build", "check", "test", "clippy", "run", "rustc", "nextest", "llvm-cov", "tarpaulin"})
 
 
@@ -291,6 +210,7 @@ SECURITY_SCANNERS = (
     *multi_language_scanners(RUST_LANGUAGE),
 )
 
+
 _DENY_CHECKS = frozenset({"advisories", "bans", "licenses", "sources"})
 
 
@@ -305,6 +225,8 @@ def _cargo_deny(command: Command, _facts: Facts) -> Run | None:
 
 # Rust has no function length limit of its own here (clippy's too_many_lines counts lines, but is off by default).
 FUNCTION_LENGTH_LIMITERS = function_length_limiters(RUST_LANGUAGE)
+
+
 AUDITORS = (
     auditor(
         name="cargo audit",
@@ -315,64 +237,13 @@ AUDITORS = (
     auditor(name="cargo deny", languages=RUST_LANGUAGE, how="cargo deny check advisories", audits=_cargo_deny),
     *multi_ecosystem_audits(RUST_LANGUAGE),
 )
-CARGO_AUDIT_ACTIONS = tuple(
-    Action(name=name, runs=lambda _inputs: (("cargo", "audit"),))
-    for name in ("rustsec/audit-check", "actions-rust-lang/audit")
-)
+
+
 CARGO_DENY_ACTION = Action(
     name="EmbarkStudios/cargo-deny-action",
     runs=lambda inputs: (
         ("cargo", "deny", *shlex.split(inputs.get("arguments", "")), *shlex.split(inputs.get("command", "check"))),
     ),
-)
-
-TARGET_DIRECTORY = BuildOutput(
-    languages=RUST_LANGUAGE,
-    name="the target directory",
-    globs=ignored_at_top_level("target"),
-    paths=directories("target"),
-    hint="consider ignoring /target",
-    artifacts=("/target/",),
-)
-
-CARGO_LICENSE = declared_license_reader(
-    name="Cargo.toml license", files=("Cargo.toml",), languages=RUST_LANGUAGE, declared=toml_license("package")
-)
-
-DEPENDENCY_TABLES = ("dependencies", "dev-dependencies", "build-dependencies")
-
-
-def _cargo_declares(_path: str, text: str) -> bool:
-    """Cargo manages the dependencies a crate (or its workspace) declares in Cargo.toml."""
-    manifest = tomllib.loads(text)
-    workspace = manifest.get("workspace")
-    tables = [manifest.get(table) for table in DEPENDENCY_TABLES]
-    return any(tables) or (isinstance(workspace, dict) and bool(workspace.get("dependencies")))
-
-
-CARGO_MANIFESTS = manifest_reader(
-    name="Cargo dependencies",
-    manager="Cargo",
-    files=("Cargo.toml",),
-    declares=_cargo_declares,
-    application=lambda _path, text: "[[bin]]" in text,
-)
-# A crate with a binary target (src/main.rs, or src/bin/) is an application.
-CARGO_BINARIES = manifest_reader(
-    name="Cargo binaries",
-    manager="Cargo",
-    files=("src/main.rs", "src/bin/*.rs"),
-    declares=lambda _path, _text: False,
-    application=lambda _path, _text: True,
-)
-CARGO_LOCK = lockfile_reader(manager="Cargo", files=("Cargo.lock",))
-# A binary's builds should be reproducible, so it commits Cargo.lock; a library's users resolve their own.
-CARGO_PACKAGES = PackageManager(
-    name="Cargo",
-    languages=RUST_LANGUAGE,
-    lock=Lock.APPLICATIONS,
-    applications_by_default=False,
-    lock_hint="commit Cargo.lock, so the binary is always built with the dependencies it was tested with",
 )
 
 
@@ -403,26 +274,4 @@ CLIPPY = analyzer(
     analyses=_clippy,
     rules=defined_by(settings=("clippy",)),
     reads=("clippy",),
-)
-CLIPPY_ACTIONS = tuple(
-    Action(name=name, runs=lambda _inputs: (("cargo", "clippy"),))
-    for name in ("actions-rs/clippy-check", "giraffate/clippy-action", "clechasseur/rs-clippy-check")
-)
-
-RUST = Ecosystem(
-    label="Rust",
-    languages=RUST_LANGUAGE,
-    build_systems=(CARGO,),
-    source_suffixes={".rs": "Rust"},
-    toolchain=toolchain_patterns(
-        "Rust",
-        images=("rust",),
-        more=(
-            rf"\brust-toolchain@{_RUST_VERSION}",
-            rf"\btoolchain\W+{_RUST_VERSION}",
-            rf"\bcargo\s+\+{_RUST_VERSION}",
-            rf"\brustup\s+(?:default|toolchain\s+install|install)\s+{_RUST_VERSION}",
-        ),
-        commands=r"\bcargo\b|\brustup\b|\brustc\b",
-    ),
 )

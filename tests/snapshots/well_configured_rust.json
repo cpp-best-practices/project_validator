@@ -2978,6 +2978,24 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
+      "reader": "Cargo.toml license"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "Cargo.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Cargo dependencies"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
       "reader": "Rust lint settings"
     },
     {
@@ -3013,24 +3031,6 @@
       "origin": "Cargo.toml:unsafe_code",
       "tool": "Rust lints",
       "value": "forbid"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "Cargo.toml",
-      "reader": "Cargo.toml license"
-    },
-    {
-      "expression": "MIT",
-      "kind": "DeclaredLicense",
-      "languages": [
-        "Rust"
-      ],
-      "origin": "Cargo.toml"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "Cargo.toml",
-      "reader": "Cargo dependencies"
     },
     {
       "kind": "ConfigurationFile",
