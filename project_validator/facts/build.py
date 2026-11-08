@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from itertools import product
 
 from project_validator.facts import Fact, Origin
-from project_validator.facts.conditions import DIMENSIONS, Condition, both, only, paths
+from project_validator.facts.conditions import DIMENSIONS, OTHER, Condition, both, only, paths
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -34,6 +34,20 @@ class Applies:
     def unconditional(self) -> bool:
         """Whether the build decides it alone: it requires nothing the build system cannot decide."""
         return not self.requires
+
+    def as_dict(self) -> dict[str, object]:
+        """JSON-ready: each dimension that is restricted, as its members, or, for a set open to every value not named
+        (`if(NOT MSVC)` holds for a compiler named later too), as what it leaves out: `all but msvc`."""
+        found: dict[str, object] = {}
+        for dimension in DIMENSIONS:
+            values: frozenset[str] | None = getattr(self, dimension)
+            if values is None:
+                continue
+            left_out = sorted(set(DIMENSIONS[dimension]) - values)
+            found[dimension] = f"all but {', '.join(left_out)}" if OTHER in values and left_out else sorted(values)
+        if self.requires:
+            found["requires"] = sorted(self.requires)
+        return found
 
 
 def _applies(path: Iterable[tuple[str, frozenset[str]]]) -> Applies:

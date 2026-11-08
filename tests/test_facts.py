@@ -5,6 +5,8 @@ import unittest
 
 from project_validator.ci.github_actions import EXPRESSION
 from project_validator.facts import ActionStep, CiConfiguration, CiJob, Command, Facts, Origin, Unknown, as_dict
+from project_validator.facts.build import Applies, CompilerOption
+from project_validator.facts.conditions import DIMENSIONS
 from project_validator.facts.jobs import Job
 from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
 from project_validator.facts.tools import ToolRun
@@ -338,6 +340,10 @@ class OtherProviderFactTests(unittest.TestCase):
         self.assertEqual(facts.of(Unknown)[0].subject, "the command 'echo \"open'")
 
 
+def _option(applies: Applies) -> CompilerOption:
+    return CompilerOption(origin=Origin(path="CMakeLists.txt"), build_system="CMake", option="-Wall", applies=applies)
+
+
 class SerialisationTests(unittest.TestCase):
     def test_a_fact_is_its_kind_and_fields(self) -> None:
         command = Command(
@@ -362,3 +368,15 @@ class SerialisationTests(unittest.TestCase):
         )
         self.assertEqual(str(Origin(path="ci.yml")), "ci.yml")
         json.dumps(Facts((command,)).as_dicts())
+
+    def test_an_open_set_of_values_is_written_as_what_it_leaves_out(self) -> None:
+        """`if(NOT MSVC)` holds for every compiler, named or not, but MSVC: written as such, adding a compiler
+        changes no other project's facts. A closed set names its members."""
+        not_msvc = frozenset(DIMENSIONS["compilers"]) - {"msvc"}
+        applies = Applies(compilers=not_msvc, languages=frozenset({"C++", "C"}))
+        self.assertEqual(as_dict(_option(applies))["applies"], {"compilers": "all but msvc", "languages": ["C", "C++"]})
+        gcc_or_clang = Applies(compilers=frozenset({"gcc", "clang"}), requires=frozenset({"ENABLE_X"}))
+        self.assertEqual(
+            as_dict(_option(gcc_or_clang))["applies"], {"compilers": ["clang", "gcc"], "requires": ["ENABLE_X"]}
+        )
+        self.assertEqual(as_dict(_option(Applies()))["applies"], {})
