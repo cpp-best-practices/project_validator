@@ -509,6 +509,8 @@ except where a step deliberately changes results and says so.
    policy itself); what settles an answer before a policy judges it (`skipped_or_unknown`: no known tool, or an
    unknown that is not allowed) is said once, as is a policy that only advises (`policy/tooling.advised`: security
    scanning and dependency audits); `Result.skipped`; and one `combined` merges results, whether by ecosystem or
-   by language and unit.
+   by language and unit. A compiler's warning set, warnings as errors and hardening become requirements through
+   `facts.flags` (`warning_requirements`, `errors_requirements`, `flag_requirements`), which C/C++ and Fortran both
+   call, and `hardening_flags` picks a back end's subset; every answer's JSON starts with `answer_dict`.
 
 `--facts` and `--answers` expose the database and the answers.

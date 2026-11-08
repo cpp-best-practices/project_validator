@@ -3,7 +3,7 @@ hardening."""
 
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Facts
-from project_validator.facts.flags import flag_requirement
+from project_validator.facts.flags import errors_requirements, flag_requirements, warning_requirements
 from project_validator.facts.jobs import Job
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
@@ -13,13 +13,8 @@ from project_validator.tools.toolchains import (
     FHARDENED,
     GCC_HARDENING,
     MSVC_HARDENING,
-    WARNING_LEVEL_HINTS,
-    WARNINGS_AS_ERRORS_SETTING_HINTS,
-    WARNINGS_AS_ERRORS_SETTINGS,
-    Flag,
     hardening_flags,
     warning_flags,
-    warning_level_settings,
     warnings_as_errors_flag,
 )
 
@@ -43,21 +38,12 @@ def ci_compilers(facts: Facts) -> tuple[str, ...]:
     return tuple(sorted(found)) or ("gcc",)
 
 
-def _flag(flag: Flag, configured: tuple[str, ...] = (), hints: tuple[str, ...] = ()) -> Requirement:
-    """A flag for C or C++ builds, on a command line or in the build files; `configured` are the build system
-    settings a command line can set it with (`-Dwarning_level=3`), found by `hints`."""
-    return flag_requirement(flag, C_FAMILY, configured=configured, configured_hints=hints)
-
-
 def _warnings(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
-    return tuple(
-        _flag(flag, warning_level_settings(flag), WARNING_LEVEL_HINTS) for flag in warning_flags(compiler or "gcc")
-    )
+    return warning_requirements(warning_flags(compiler or "gcc"), C_FAMILY)
 
 
 def _errors(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
-    flag = warnings_as_errors_flag(compiler or "gcc")
-    return () if flag is None else (_flag(flag, WARNINGS_AS_ERRORS_SETTINGS, WARNINGS_AS_ERRORS_SETTING_HINTS),)
+    return errors_requirements(warnings_as_errors_flag(compiler or "gcc"), C_FAMILY)
 
 
 WARNINGS = Practice(
@@ -87,7 +73,7 @@ WARNINGS_AS_ERRORS = Practice(
 
 
 def _hardening(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
-    return tuple(_flag(flag) for flag in hardening_flags(compiler or "gcc"))
+    return flag_requirements(hardening_flags(compiler or "gcc"), C_FAMILY)
 
 
 HARDENING = Practice(

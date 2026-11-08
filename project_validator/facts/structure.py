@@ -13,7 +13,7 @@ from project_validator.core import Project
 from project_validator.ecosystems import Ecosystem, build_systems, registered
 from project_validator.facts import Fact, Facts, Origin
 from project_validator.facts.roles import AUXILIARY, role
-from project_validator.facts.tools import within
+from project_validator.facts.tools import owner, within
 
 # Suffixes of files that are not source code of any language: documents, styles, media, archives, binaries and plain
 # data or configuration. They, and editor backups (`main.cpp~`), are never reported as unrecognised.
@@ -218,15 +218,9 @@ def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[s
 
 def _units(project: Project, facts: Facts) -> Iterator[Unit]:
     roots, workspaces = _unit_roots(project, facts.of(BuildFile))
-
-    def owner(path: str) -> str:
-        return max(
-            (root for root in roots if within(path, root)), key=lambda root: (root != ".", len(root)), default="."
-        )
-
     languages: dict[str, set[str]] = {root: set() for root in roots}
     for source in facts.of(SourceFile):
-        unit = owner(source.path)
+        unit = owner(source.path, roots)
         # Auxiliary code (docs, tooling) counts only in a unit of that role; vendored code is in no unit of its own.
         counts = source.role not in AUXILIARY or source.role == role(unit, directory=True)
         if source.language is not None and counts:
@@ -234,7 +228,7 @@ def _units(project: Project, facts: Facts) -> Iterator[Unit]:
     # What a build file builds counts for its unit too, unless the build file only declares a workspace.
     for build in facts.of(BuildFile):
         if (directory := _directory(build)) not in workspaces or languages.get(directory):
-            languages.setdefault(owner(directory), set()).update(build.languages)
+            languages.setdefault(owner(directory, roots), set()).update(build.languages)
     for content in facts.of(ContentLanguages):
         languages.setdefault(".", set()).update(content.languages)
     for directory in sorted(languages, key=lambda root: (root != ".", root)):

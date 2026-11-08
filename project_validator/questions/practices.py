@@ -4,7 +4,7 @@ warnings as errors) are met, and where; for each compiler CI builds with, where 
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from project_validator.facts import Facts, Unknown
+from project_validator.facts import Facts
 from project_validator.facts.practices import (
     HARDENING,
     WARNINGS,
@@ -15,7 +15,7 @@ from project_validator.facts.practices import (
     met,
     practices_of,
 )
-from project_validator.questions import Answer, LanguageAnswers, Question
+from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, unknowns_for
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -46,14 +46,13 @@ class PracticeAnswer:
         return tuple(dict.fromkeys(name for compiled in self.compiled for name, _ in compiled.found))
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "language": self.language,
-            "unit": self.unit,
-            "practice": self.practice.name,
-            "answer": self.answer.value,
-            "compilers": [compiled.as_dict() for compiled in self.compiled],
-            "unknowns": list(self.unknowns),
-        }
+        return answer_dict(
+            self,
+            self.answer,
+            practice=self.practice.name,
+            compilers=[compiled.as_dict() for compiled in self.compiled],
+            unknowns=list(self.unknowns),
+        )
 
 
 def _compiled(practice: Practice, facts: Facts, compiler: str | None, texts: Texts) -> Compiled:
@@ -65,16 +64,6 @@ def _compiled(practice: Practice, facts: Facts, compiler: str | None, texts: Tex
         else:
             missing.append(requirement.name)
     return Compiled(compiler=compiler, found=tuple(found), missing=tuple(missing))
-
-
-def _unknowns(practice: Practice, facts: Facts) -> tuple[str, ...]:
-    """What was not read that may hide a command, or a setting of the files the practice reads."""
-    hidden = (
-        fact
-        for fact in facts.of(Unknown)
-        if fact.hides in ("jobs", "commands") or (fact.hides == "settings" and set(fact.tools) & set(practice.reads))
-    )
-    return tuple(f"{fact.subject}: {fact.reason} ({fact.origin})" for fact in hidden)
 
 
 def _met(practice: Practice, compiled: tuple[Compiled, ...]) -> bool:
@@ -107,7 +96,7 @@ def practice_answer(name: str, language: str, facts: Facts) -> PracticeAnswer | 
     compilers = practice.compilers(facts) if practice.compilers else (None,)
     texts = ci_texts(facts)
     compiled = tuple(_compiled(practice, facts, compiler, texts) for compiler in compilers)
-    unknowns = _unknowns(practice, facts)
+    unknowns = unknowns_for((), facts, reads=practice.reads)
     answer = _answer(practice, _met(practice, compiled), bool(unknowns))
     return PracticeAnswer(
         language=language, unit=".", practice=practice, answer=answer, compiled=compiled, unknowns=unknowns

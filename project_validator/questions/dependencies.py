@@ -24,7 +24,7 @@ from project_validator.facts.repository import Untracked
 from project_validator.facts.roles import AUXILIARY, role
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import owner, within
-from project_validator.questions import Answer, LanguageAnswers, Question, per_unit
+from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, per_unit
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -52,15 +52,14 @@ class DependencyAnswer:
         return tuple(sorted({path for _, path in self.declared}))
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "language": self.language,
-            "unit": self.unit,
-            "answer": str(self.answer),
-            "declared": [{"manager": manager, "manifest": path} for manager, path in self.declared],
-            "locked": list(self.locked),
-            "lock_required": self.lock_required,
-            "unknowns": list(self.unknowns),
-        }
+        return answer_dict(
+            self,
+            self.answer,
+            declared=[{"manager": manager, "manifest": path} for manager, path in self.declared],
+            locked=list(self.locked),
+            lock_required=self.lock_required,
+            unknowns=list(self.unknowns),
+        )
 
 
 class _Unit:

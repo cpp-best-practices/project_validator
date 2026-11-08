@@ -20,7 +20,7 @@ from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.axes import ToolchainAxis
 from project_validator.facts.build import BuildSetting
 from project_validator.facts.dependencies import Lock, PackageManager, manifest_reader
-from project_validator.facts.flags import flag_requirement
+from project_validator.facts.flags import errors_requirements, flag_requirements, warning_requirements
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
@@ -32,15 +32,7 @@ from project_validator.facts.settings import SettingsReader, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by, starts, when
 from project_validator.tools.limits import function_length_limiters
-from project_validator.tools.toolchains import (
-    FHARDENED,
-    GCC_HARDENING,
-    WARNING_LEVEL_HINTS,
-    WARNINGS_AS_ERRORS_SETTING_HINTS,
-    WARNINGS_AS_ERRORS_SETTINGS,
-    Flag,
-    warning_level_settings,
-)
+from project_validator.tools.toolchains import FHARDENED, Flag, hardening_flags
 
 FORTRAN = "Fortran"
 FORTRAN_LANGUAGE = frozenset({FORTRAN})
@@ -193,15 +185,7 @@ _STANDARDS = {
 # The stack and control-flow protections GCC's (and so gfortran's) back end adds; library-call checks and assertions
 # are C's and C++'s. Intel's LLVM-based ifx takes the first two.
 _PROTECTIONS = ("-fstack-protector-strong", "-fcf-protection", "-fstack-clash-protection")
-_GFORTRAN_HARDENING = tuple(
-    Flag(flag.name, f"{flag.spellings}|{FHARDENED}", (*flag.hints, FHARDENED))
-    for flag in GCC_HARDENING
-    if flag.name in _PROTECTIONS
-)
-_HARDENING = {
-    "gcc": _GFORTRAN_HARDENING,
-    "intel": tuple(flag for flag in GCC_HARDENING if flag.name in _PROTECTIONS[:2]),
-}
+_HARDENING = {"gcc": hardening_flags("gcc", _PROTECTIONS), "intel": hardening_flags("intel", _PROTECTIONS[:2])}
 
 
 def _fpm_profile_flags(flag: Flag) -> Found:
@@ -215,26 +199,20 @@ def _fpm_profile_flags(flag: Flag) -> Found:
     return found
 
 
-def _flag(flag: Flag, configured: tuple[str, ...] = (), hints: tuple[str, ...] = ()) -> Requirement:
-    """A flag for Fortran builds: on a command line, in the build files, or in the fpm profile a command builds
-    with; `configured` are the build system settings a command line sets it with, found by `hints`."""
-    return flag_requirement(
-        flag, FORTRAN_LANGUAGE, configured=configured, configured_hints=hints, also=(_fpm_profile_flags(flag),)
-    )
+def _in_fpm_profiles(flag: Flag) -> tuple[Found, ...]:
+    """Besides a command line and the build files, a Fortran flag is set by the fpm profile a command builds with."""
+    return (_fpm_profile_flags(flag),)
 
 
 BUILD_FILES = ("CMake", "Meson")
 
 
 def _warnings(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
-    return tuple(
-        _flag(flag, warning_level_settings(flag), WARNING_LEVEL_HINTS) for flag in _WARNINGS.get(compiler or "gcc", ())
-    )
+    return warning_requirements(_WARNINGS.get(compiler or "gcc", ()), FORTRAN_LANGUAGE, also=_in_fpm_profiles)
 
 
 def _errors(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
-    flag = _ERRORS.get(compiler or "gcc")
-    return () if flag is None else (_flag(flag, WARNINGS_AS_ERRORS_SETTINGS, WARNINGS_AS_ERRORS_SETTING_HINTS),)
+    return errors_requirements(_ERRORS.get(compiler or "gcc"), FORTRAN_LANGUAGE, also=_in_fpm_profiles)
 
 
 WARNINGS = Practice(
@@ -268,7 +246,7 @@ def _standard(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
         runs=re.compile(r"(?<![\w-])(?:-D\s*)?fortran_std\s*=\s*f\d+\b"),
         found=_meson_standard,
     )
-    return (meson,) if flag is None else (_flag(flag), meson)
+    return (*flag_requirements(() if flag is None else (flag,), FORTRAN_LANGUAGE, also=_in_fpm_profiles), meson)
 
 
 def _meson_standard(facts: Facts, _compiler: str | None) -> Iterator[Evidence]:
@@ -293,7 +271,7 @@ EXTENSIONS_PRACTICE = Practice(
 
 
 def _hardening(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
-    return tuple(_flag(flag) for flag in _HARDENING.get(compiler or "gcc", ()))
+    return flag_requirements(_HARDENING.get(compiler or "gcc", ()), FORTRAN_LANGUAGE, also=_in_fpm_profiles)
 
 
 PROGRAM = re.compile(r"^\s*program\s+\w", re.MULTILINE | re.IGNORECASE)
