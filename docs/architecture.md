@@ -195,8 +195,9 @@ except where a step deliberately changes results and says so.
    - **Queries** (`Facts`): indexed by kind, with `where(kind, **fields)`, `settings(tool, paths=…)`,
      `setting(tool, key, paths=…)`, `configured(tool, paths)` (the first file with the tool's settings) and
      `first_file(reader, paths)` (the first file that exists).
-   - **Extraction stages** (`Context.facts`): structure, then CI and command expansion, then settings (which
-     need the commands that name configuration files), then the tools those commands run.
+   - **Extraction stages** (`project_validator/extraction.py`, which `Context.facts` calls): structure, then CI and
+     command expansion, then settings (which need the commands that name configuration files), then the tools those
+     commands run.
    - **Coverage, rebuilt on them**: coverage tools are pure functions of a command and the facts; none reads a
      file. Each declares the settings tools it `reads`, which scopes the unknowns that matter to its answers.
    - **Questions are components** (`Question` in `project_validator/questions`), found like the others, so
@@ -444,8 +445,9 @@ except where a step deliberately changes results and says so.
    - Each build system turns its own settings into the compiler options they pass (`implied_options`): CMake's
      `COMPILE_WARNING_AS_ERROR` passes GCC `-Werror` and MSVC `/WX`, Meson's `warning_level` (1 by default) and
      `werror` theirs. The C and C++ compilers' flag vocabulary is a shared tool (`project_validator/tools/toolchains.py`).
-   - What CI builds with is a fact: a `Job` holds each CI job's OS, compilers (or the runner's default), toolchains,
-     build configurations and ecosystems, extracted once after the jobs' commands are expanded.
+   - What CI builds with is a fact: a `Job` (`project_validator/facts/jobs.py`) holds each CI job's OS, compilers (or
+     the runner's default), toolchains, build configurations and ecosystems, extracted once after the jobs' commands
+     are expanded.
    - Practices that ask for settings (`compiler-warnings`, `warnings-as-errors`) are `Practice` components
      (`project_validator/facts/practices.py`) in the profile that knows the language: the `Requirement`s it asks
      for, all of them or any one, each met by a CI command or reusable step (matched in it, with its variables and
@@ -497,5 +499,12 @@ except where a step deliberately changes results and says so.
      a package manager says whether its lockfiles lock from deeper in a unit (`nested_locks`).
    - A toolchain can be named by something other than its version (`ToolchainPatterns.labelled`: a Stackage
      snapshot), and `python -m project_validator.scaffold` starts a profile with everything the contract asks for.
+
+9. **What a review of the whole found** (steps 9a–): two defects (a step conditioned on a matrix computed by an
+   expression was dropped; requirements sharing a pattern shared a match cache), then what was written more than
+   once: one way to say which commands a tool claims (`facts.arguments.starts_with`; `starts`, `with_option`,
+   `all_of` and `any_of` in `facts.tools`); `Job` in `facts/jobs.py`, so that extractors depend on facts only and
+   nothing imports inside a function to break a cycle; the extraction stages in `project_validator/extraction.py`;
+   a project's files listed once.
 
 `--facts` and `--answers` expose the database and the answers.

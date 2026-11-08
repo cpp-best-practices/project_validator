@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from project_validator.ecosystems import BuildSystem, build_systems, registered
 from project_validator.facts import Facts
+from project_validator.facts.jobs import Job
 from project_validator.facts.structure import (
     BuildFile,
     ContentLanguages,
@@ -18,7 +19,7 @@ from project_validator.facts.structure import (
 )
 
 if TYPE_CHECKING:
-    from project_validator.ci import CiAnalysis, CiFile, Job
+    from project_validator.ci import CiAnalysis, CiFile
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

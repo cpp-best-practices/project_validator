@@ -2,8 +2,8 @@ import re
 import unittest
 
 from project_validator.ecosystems import ToolchainPatterns
+from project_validator.facts.jobs import Toolchain
 from project_validator.platforms import (
-    Toolchain,
     _language_toolchains,
     detect_compilers,
     detect_operating_systems,

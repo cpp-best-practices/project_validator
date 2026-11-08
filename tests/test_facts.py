@@ -3,9 +3,9 @@
 import json
 import unittest
 
-from project_validator.ci import Job
 from project_validator.ci.github_actions import EXPRESSION
 from project_validator.facts import ActionStep, CiConfiguration, CiJob, Command, Facts, Origin, Unknown, as_dict
+from project_validator.facts.jobs import Job
 from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
 from project_validator.facts.tools import ToolRun
 from tests.support import GITHUB_WORKFLOW, make_context, temp_project

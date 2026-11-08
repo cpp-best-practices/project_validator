@@ -8,7 +8,6 @@ fpm, and the Fortran compilers' flags for the practices.
 
 import re
 from collections.abc import Iterator
-from typing import TYPE_CHECKING
 
 from project_validator.build_configurations import build_type_kinds
 from project_validator.build_systems.cmake.build import CMAKE
@@ -23,6 +22,7 @@ from project_validator.facts.build import BuildSetting
 from project_validator.facts.dependencies import Lock, PackageManager, manifest_reader
 from project_validator.facts.flags import flag_requirement
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import EXTENSIONS, Evidence, Found, Practice, Requirement
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
@@ -41,9 +41,6 @@ from project_validator.tools.toolchains import (
     Flag,
     warning_level_settings,
 )
-
-if TYPE_CHECKING:
-    from project_validator.ci import Job
 
 FORTRAN = "Fortran"
 FORTRAN_LANGUAGE = frozenset({FORTRAN})
@@ -167,8 +164,6 @@ FORTRAN_COMPILERS_AXIS = ToolchainAxis(
 
 def ci_compilers(facts: Facts) -> tuple[str, ...]:
     """The Fortran compilers CI builds with; gfortran's flags are asked for when CI names none."""
-    from project_validator.ci import Job
-
     found = {compiler for job in facts.of(Job) for compiler in _compilers(job)}
     return tuple(sorted(found)) or ("gcc",)
 

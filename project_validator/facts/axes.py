@@ -4,10 +4,9 @@ compiled language's axis is `compiled`: its CI must build each platform in every
 
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
-if TYPE_CHECKING:
-    from project_validator.ci import Job
+from project_validator.facts.jobs import Job
 
 
 class _Versioned(Protocol):

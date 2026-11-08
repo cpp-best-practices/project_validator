@@ -3,15 +3,12 @@ run on, and which build configurations each of those builds."""
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from project_validator.build_configurations import BuildConfiguration
 from project_validator.facts import CiConfiguration, Facts, Unknown
 from project_validator.facts.axes import ToolchainAxis, axis_of
+from project_validator.facts.jobs import Job
 from project_validator.questions import Answer, LanguageAnswers, Question
-
-if TYPE_CHECKING:
-    from project_validator.ci import Job
 
 type Platform = tuple[str, str]
 _JOBS = "the jobs and commands"
@@ -46,8 +43,6 @@ class PlatformAnswer:
 
 def platform_answer(language: str, facts: Facts) -> PlatformAnswer | None:
     """Where CI runs `language`; None when no axis covers it. No CI at all is the answer NO."""
-    from project_validator.ci import Job
-
     axis = axis_of(language)
     if axis is None:
         return None
