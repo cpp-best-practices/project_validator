@@ -1,68 +1,38 @@
-""".NET (C# and F#): built with MSBuild and the dotnet CLI, judged by the .NET SDK versions CI runs.
-
-A .NET build reads its settings (analyzers, warnings, coverage, auditing) from the project files and
-Directory.Build.props, so those count as CI configuration when CI builds the project.
-"""
+""".NET's tools: what runs its tests, measures coverage, formats, analyses, scans and audits, and the
+settings each reads (see `project_validator.facts.tools`)."""
 
 import re
 from collections.abc import Iterator
-from fnmatch import fnmatchcase
-from pathlib import Path, PurePosixPath
+from pathlib import PurePosixPath
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.dotnet import (
+    CSHARP,
+    DOTNET_LANGUAGES,
+    FSHARP,
+    SETTINGS_FILES,
+    builds_project,
+    msbuild_property,
+)
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import option_values, program, starts_with
+from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.audit import audited, auditor
-from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
-from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
-from project_validator.facts.licenses import declared_license_reader
-from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
-from project_validator.facts.tools import Claim, Definition, Run, defined_by, starts
-from project_validator.text import Pattern, pattern
+from project_validator.facts.tools import Definition, Run, defined_by, starts
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
-CSHARP = "C#"
-FSHARP = "F#"
-DOTNET_LANGUAGES = frozenset({CSHARP, FSHARP})
-PROJECT_FILES = ("*.csproj", "*.fsproj")
-# MSBuild reads these beside (or above) every project.
-SHARED_SETTINGS = ("Directory.Build.props", "Directory.Build.targets", "Directory.Packages.props")
-SETTINGS_FILES = (*PROJECT_FILES, *SHARED_SETTINGS)
-
-
-def _is_build_output(directory: Path) -> bool:
-    """`bin/` and `obj/` beside a project file hold its build output."""
-    if directory.name not in {"bin", "obj"}:
-        return False
-    return any(fnmatchcase(entry.name, glob) for entry in directory.parent.iterdir() for glob in PROJECT_FILES)
-
-
-MSBUILD = BuildSystem(
-    name="MSBuild",
-    files=(*PROJECT_FILES, "*.sln", "*.slnx", *SHARED_SETTINGS, "global.json"),
-    is_build_tree=_is_build_output,
-)
-
-RUNS_BUILD = re.compile(r"\bdotnet\s+(?:build|test|publish|pack|run|restore)\b")
-
-
-def _property(name: str, values: str) -> str:
-    """An MSBuild property set to one of `values`, in a project file or on the command line."""
-    return rf"<{name}>\s*(?:{values})\s*</{name}>|[-/]p(?:roperty)?:{name}=(?:{values})\b"
-
-
 EDITORCONFIG_FILES = file_reader("EditorConfig", (".editorconfig",))
+
+
 CSHARPIER_FILES = file_reader("CSharpier", (".csharpierrc", ".csharpierrc.json", ".csharpierrc.yaml"))
+
 
 # Each of them has a default style: dotnet format reads .editorconfig, and CSharpier and Fantomas have their own.
 DOTNET_FORMAT = format_tool(
@@ -72,6 +42,8 @@ DOTNET_FORMAT = format_tool(
     formats=flagged(("dotnet", "format"), checks=("--verify-no-changes",)),
     style=defined_by(files=("EditorConfig",)),
 )
+
+
 CSHARPIER = format_tool(
     name="CSharpier",
     languages=frozenset({CSHARP}),
@@ -79,6 +51,8 @@ CSHARPIER = format_tool(
     formats=flagged(("csharpier",), ("dotnet", "csharpier"), checks=("check", "--check")),
     style=defined_by(files=("CSharpier",)),
 )
+
+
 FANTOMAS = format_tool(
     name="Fantomas",
     languages=frozenset({FSHARP}),
@@ -86,6 +60,7 @@ FANTOMAS = format_tool(
     formats=flagged(("fantomas",), ("dotnet", "fantomas"), checks=("--check",)),
     style=defined_by(files=("EditorConfig",)),
 )
+
 
 # xUnit, NUnit and MSTest, in C# ([Fact]) and F# ([<Fact>]).
 DOTNET_TEST_FILES = TestFiles(
@@ -123,9 +98,15 @@ DOTNET_TEST = test_runner(
 
 
 # coverlet and Microsoft's code coverage (dotnet-coverage, Microsoft.Testing.Platform) both count branches.
-_COLLECT_COVERAGE = re.compile(_property("CollectCoverage", "true"), re.IGNORECASE)
+_COLLECT_COVERAGE = re.compile(msbuild_property("CollectCoverage", "true"), re.IGNORECASE)
+
+
 _ELEMENT = re.compile(r"<(\w+)>\s*([^<]*?)\s*</\1>")
+
+
 _REFERENCE = re.compile(r"""<(?:Global)?PackageReference\s+(?:Include|Update)\s*=\s*["']([^"']+)""")
+
+
 _FRIENDLY_NAME = re.compile(r"""friendlyName\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
 
 
@@ -171,6 +152,8 @@ def _named_run_settings(command: Command) -> list[str]:
 
 
 MSBUILD_PROPERTIES = SettingsReader(name="MSBuild", files=SETTINGS_FILES, read=_read_msbuild_properties)
+
+
 RUN_SETTINGS = SettingsReader(
     name="VSTest", files=("*.runsettings",), read=_read_run_settings, named_by=_named_run_settings
 )
@@ -227,6 +210,8 @@ COVERLET = coverage_tool(
     measures=_coverlet,
     reads=("MSBuild", "VSTest"),
 )
+
+
 MICROSOFT_CODE_COVERAGE = coverage_tool(
     name="Microsoft code coverage",
     languages=DOTNET_LANGUAGES,
@@ -234,68 +219,6 @@ MICROSOFT_CODE_COVERAGE = coverage_tool(
     measures=_microsoft_coverage,
 )
 
-ANALYSIS_MODE = Pattern(
-    "AnalysisMode Recommended or All",
-    re.compile(
-        r"<AnalysisMode>\s*(?:Recommended|All)\s*</AnalysisMode>"
-        r"|<AnalysisLevel>\s*[\w.]*-?(?:recommended|all)\s*</AnalysisLevel>",
-        re.IGNORECASE,
-    ),
-)
-ENFORCE_CODE_STYLE = Pattern("EnforceCodeStyleInBuild", re.compile(_property("EnforceCodeStyleInBuild", "true"), re.I))
-NULLABLE = Pattern("Nullable enable", re.compile(_property("Nullable", "enable"), re.IGNORECASE))
-# The .NET analyzers do not analyze F#; its compiler has warnings to turn on.
-FSHARP_WARNINGS = Pattern("F# --warnon", re.compile(r"<WarnOn>[^<]+</WarnOn>|--warnon:\S+", re.IGNORECASE))
-
-
-_CSHARP_WARNINGS = (required(ANALYSIS_MODE), required(ENFORCE_CODE_STYLE), required(NULLABLE))
-_FSHARP_WARNINGS = (required(FSHARP_WARNINGS),)
-_DOTNET_WARNINGS_AS_ERRORS = (
-    required(
-        pattern(
-            "TreatWarningsAsErrors",
-            rf"{_property('TreatWarningsAsErrors', 'true')}|(?<![\w-])[-/]{{1,2}}warnaserror(?![\w:-])",
-        )
-    ),
-)
-DOTNET_WARNING_SETTINGS = requirement_reader(
-    "MSBuild warning settings", SETTINGS_FILES, (*_CSHARP_WARNINGS, *_FSHARP_WARNINGS, *_DOTNET_WARNINGS_AS_ERRORS)
-)
-# The .NET analyzers analyze C#; F#'s compiler has warnings to turn on instead.
-CSHARP_WARNINGS = Practice(
-    name=PracticeName.WARNINGS,
-    languages=frozenset({CSHARP}),
-    requirements=always(*_CSHARP_WARNINGS),
-    reads=(DOTNET_WARNING_SETTINGS.name,),
-    words=Wording(
-        kind=".NET analyzer settings",
-        hint="set <AnalysisMode>All</AnalysisMode>, <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> and "
-        "<Nullable>enable</Nullable> in Directory.Build.props",
-    ),
-)
-FSHARP_WARNINGS_PRACTICE = Practice(
-    name=PracticeName.WARNINGS,
-    languages=frozenset({FSHARP}),
-    requirements=always(*_FSHARP_WARNINGS),
-    reads=(DOTNET_WARNING_SETTINGS.name,),
-    words=Wording(
-        kind=".NET analyzer settings",
-        hint="turn on F# warnings with <WarnOn> (or --warnon:)",
-    ),
-)
-
-WARNINGS_AS_ERRORS = Practice(
-    name=PracticeName.WARNINGS_AS_ERRORS,
-    languages=DOTNET_LANGUAGES,
-    requirements=always(*_DOTNET_WARNINGS_AS_ERRORS),
-    any_one=True,
-    reads=(DOTNET_WARNING_SETTINGS.name,),
-    words=Wording(
-        kind="warnings as errors",
-        searched="the MSBuild settings or CI configuration",
-        hint="set <TreatWarningsAsErrors>true</TreatWarningsAsErrors> in Directory.Build.props",
-    ),
-)
 
 # The commands that restore a project's packages, which NuGet audits as it restores them.
 _RESTORES = frozenset({"restore", "build", "test", "pack", "publish", "run"})
@@ -336,21 +259,27 @@ AUDITORS = (
     *multi_ecosystem_audits(DOTNET_LANGUAGES),
 )
 
+
 ANALYZER_CONFIGURATION = (".editorconfig", ".globalconfig")
 
+
 _SECURITY_SEVERITY = re.compile(r"\bdotnet_analyzer_diagnostic\.category-Security\.severity\s*=\s*(warning|error)\b")
+
+
 ANALYZER_SETTINGS = SettingsReader(
     name="analyzer configuration",
     files=ANALYZER_CONFIGURATION,
     read=lambda path, text: matched_settings("MSBuild", path, text, {"SecuritySeverity": (_SECURITY_SEVERITY, None)}),
 )
+
+
 _SECURE = frozenset({"recommended", "all", "warning", "error"})
 
 
 def _security_analysis(command: Command, facts: Facts) -> Run | None:
     """A build with the SDK's security analyzers turned up (`AnalysisModeSecurity`, or the Security category's
     severity in .editorconfig), or with Security Code Scan's package referenced."""
-    if not _builds(command):
+    if not builds_project(command):
         return None
     read = [
         found
@@ -377,54 +306,6 @@ SECURITY_SCANNERS = (
 FUNCTION_LENGTH_LIMITERS = function_length_limiters(frozenset({CSHARP}))
 
 
-# The commands that build a project, and so run the analyzers its packages add.
-_BUILDS = frozenset({"build", "test", "pack", "publish", "run", "msbuild"})
-
-
-def _builds(command: Command) -> bool:
-    """Whether a command builds a project, and so runs the analyzers it references."""
-    argv = resolved(command)
-    return program(argv) in ("msbuild", "MSBuild") or (
-        program(argv) == "dotnet" and argv[1:2] != () and argv[1] in _BUILDS
-    )
-
-
-def _analyzer_package(prefix: str) -> Claim:
-    """An analyzer a NuGet package adds to the compiler, which runs on every build of a project that references it."""
-
-    def analyses(command: Command, facts: Facts) -> Run | None:
-        references = facts.where(Setting, tool="MSBuild", key="PackageReference")
-        read = [found for found in references if str(found.value).lower().startswith(prefix.lower())]
-        return analysed(read=read) if _builds(command) and read else None
-
-    return analyses
-
-
-def _analyzer_definition(prefix: str) -> Definition:
-    def found(facts: Facts) -> Iterator[str]:
-        references = facts.where(Setting, tool="MSBuild", key="PackageReference")
-        return (found.path for found in references if str(found.value).lower().startswith(prefix.lower()))
-
-    return Definition(found=found)
-
-
-# The SDK's own analyzers are judged by compiler-warnings; static analysis asks for a package beyond them.
-DOTNET_ANALYZERS = tuple(
-    analyzer(
-        name=name,
-        languages=frozenset({CSHARP}),
-        how=name,
-        analyses=_analyzer_package(prefix),
-        rules=_analyzer_definition(prefix),
-        reads=("MSBuild",),
-    )
-    for name, prefix in (
-        ("Roslynator", "Roslynator"),
-        ("SonarAnalyzer", "SonarAnalyzer"),
-        ("StyleCop.Analyzers", "StyleCop.Analyzers"),
-        ("Meziantou.Analyzer", "Meziantou.Analyzer"),
-    )
-)
 FSHARPLINT = analyzer(
     name="FSharpLint",
     languages=frozenset({FSHARP}),
@@ -433,63 +314,3 @@ FSHARPLINT = analyzer(
         analysed() if command.argv[:2] in (("fsharplint", "lint"), ("dotnet", "fsharplint")) else None
     ),
 )
-
-PACKAGE_REFERENCE = re.compile(r"<PackageReference\b")
-LOCKFILE = "packages.lock.json"
-
-
-NUGET_DEPENDENCIES = manifest_reader(
-    name="NuGet package references",
-    manager="NuGet",
-    files=SETTINGS_FILES,
-    declares=lambda _path, text: bool(PACKAGE_REFERENCE.search(text)),
-)
-NUGET_LOCKFILES = lockfile_reader(manager="NuGet", files=(LOCKFILE,))
-NUGET_PACKAGES = PackageManager(
-    name="NuGet",
-    languages=DOTNET_LANGUAGES,
-    lock_hint="set <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>, commit the packages.lock.json "
-    "files, and restore them in CI with --locked-mode",
-)
-
-PACKAGE_LICENSE = re.compile(r"<PackageLicenseExpression>\s*([^<]+?)\s*</PackageLicenseExpression>")
-
-
-def _package_license(text: str) -> str | None:
-    return match[1] if (match := PACKAGE_LICENSE.search(text)) else None
-
-
-PACKAGE_LICENSE_EXPRESSION = declared_license_reader(
-    name="PackageLicenseExpression", files=SETTINGS_FILES, languages=DOTNET_LANGUAGES, declared=_package_license
-)
-
-BUILD_OUTPUT = BuildOutput(
-    languages=DOTNET_LANGUAGES,
-    name="bin/ and obj/",
-    globs=ignored_at_top_level(r"\[Bb\]in|\[Oo\]bj|bin|obj"),
-    paths=directories("bin", "obj"),
-    hint="consider ignoring bin/ and obj/ (the dotnet new gitignore template does)",
-    # bin/ is a common name for scripts too; obj/ and compiled assemblies are .NET's own.
-    artifacts=("obj/", "*.dll", "*.pdb", "*.nupkg"),
-)
-
-_SDK_VERSION = r"(\d+\.\d+(?:\.[\dx]+)?|\d+\.x)"
-
-DOTNET = Ecosystem(
-    label=".NET",
-    languages=frozenset({CSHARP, FSHARP}),
-    build_systems=(MSBUILD,),
-    source_suffixes={".cs": CSHARP, ".fs": FSHARP, ".fsi": FSHARP},
-    # F# scripts and Razor views belong to .NET projects, but name no language on their own.
-    ambiguous_suffixes={".fsx": None, ".razor": None, ".cshtml": None},
-    toolchain=toolchain_patterns(
-        ".NET SDK",
-        version=_SDK_VERSION,
-        inputs=("dotnet-version",),
-        images=("mcr.microsoft.com/dotnet/sdk",),
-        commands=r"\bdotnet\s+(?:build|test|restore|publish|pack|run|format)\b",
-        setup=("dotnet",),
-    ),
-)
-
-DOTNET_SDK_VERSIONS = versions_axis(".NET SDK version", ".NET SDK", DOTNET_LANGUAGES)

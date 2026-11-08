@@ -507,16 +507,6 @@
     {
       "kind": "ConfigurationFile",
       "origin": "pom.xml",
-      "reader": "Maven"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "pom.xml",
-      "reader": "JVM warning settings"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "pom.xml",
       "reader": "Maven dependencies"
     },
     {
@@ -533,6 +523,16 @@
       "kind": "ConfigurationFile",
       "origin": "pom.xml",
       "reader": "JVM security rules"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "JVM warning settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Maven"
     }
   ],
   "map": {

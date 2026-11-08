@@ -2279,6 +2279,29 @@
     {
       "kind": "ConfigurationFile",
       "origin": "composer.json",
+      "reader": "Composer dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Composer",
+      "origin": "composer.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "composer.json license"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
       "reader": "Composer"
     },
     {
@@ -2331,29 +2354,6 @@
     },
     {
       "kind": "ConfigurationFile",
-      "origin": "composer.json",
-      "reader": "Composer dependencies"
-    },
-    {
-      "kind": "Declared",
-      "manager": "Composer",
-      "origin": "composer.json"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "composer.json",
-      "reader": "composer.json license"
-    },
-    {
-      "expression": "MIT",
-      "kind": "DeclaredLicense",
-      "languages": [
-        "PHP"
-      ],
-      "origin": "composer.json"
-    },
-    {
-      "kind": "ConfigurationFile",
       "origin": "composer.lock",
       "reader": "Composer lockfile"
     },
@@ -2378,11 +2378,6 @@
     {
       "kind": "ConfigurationFile",
       "origin": "phpunit.xml.dist",
-      "reader": "PHPUnit"
-    },
-    {
-      "kind": "ConfigurationFile",
-      "origin": "phpunit.xml.dist",
       "reader": "PHPUnit warning settings"
     },
     {
@@ -2400,6 +2395,11 @@
       "origin": "phpunit.xml.dist",
       "tool": "PHPUnit warning settings",
       "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "phpunit.xml.dist",
+      "reader": "PHPUnit"
     },
     {
       "heuristic": false,
