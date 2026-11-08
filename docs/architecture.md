@@ -525,4 +525,12 @@ except where a step deliberately changes results and says so.
    ecosystem (its build systems, toolchain, package managers, outputs), `tools.py` holds its tools and their
    settings readers, `practices.py` its practices.
 
+10. **What the review left open, decided** (steps 10a–10c). A set of a dimension's values that is open to every
+    value not named (`if(NOT MSVC)`) is written as what it leaves out, `all but msvc` (`Applies.as_dict`): a
+    compiler named later changes no other project's facts. `data-wellformed` judges the product's, docs' and
+    tooling's data files by their path role, and reports a test suite's deliberately malformed data as details. The
+    CI-facing checks that read the configuration themselves (`action-pinning`, `secret-scanning`, `ci-lint`) are
+    questions and policies over facts; the repository-hygiene checks (`large-files`, `security-policy`,
+    `status-badges`, `data-wellformed`) read the files, which is what they are about.
+
 `--facts` and `--answers` expose the database and the answers.
