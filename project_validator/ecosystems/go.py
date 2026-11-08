@@ -8,7 +8,7 @@ from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import has_option, positional, program
+from project_validator.facts.arguments import has_option, positional, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
@@ -64,7 +64,7 @@ def _go_run(command: Command, _context: Context) -> list[Expansion] | None:
     (`go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run`); a local package (`.`) is the
     project's own code."""
     argv = resolved(command)
-    if program(argv) != "go" or argv[1:2] not in (("run",), ("tool",)):
+    if not starts_with(argv, ("go", "run"), ("go", "tool")):
         return None
     words, _ = positional(argv[1:], _GO_RUN_VALUES)
     if not words or words[0].startswith((".", "/")) or words[0].endswith(".go"):
@@ -93,7 +93,7 @@ GOLANGCI_SETTINGS = SettingsReader(name="golangci-lint", files=GOLANGCI_CONFIG_F
 def _golangci_formatters(command: Command, facts: Facts) -> Run | None:
     """`golangci-lint run`, which fails on what the formatters its configuration enables would change."""
     argv = resolved(command)
-    if program(argv) != "golangci-lint" or argv[1:2] != ("run",):
+    if not starts_with(argv, ("golangci-lint", "run")):
         return None
     read = [
         setting
@@ -131,7 +131,7 @@ _COVER = ("-cover", "-coverprofile", "-covermode", "-coverpkg")
 def _go_cover(command: Command, _: Facts) -> Run | None:
     """`go test -cover` (or `go build -cover`), which counts statements (and so lines): nothing finer."""
     argv = resolved(command)
-    if program(argv) != "go" or argv[1:2] not in (("test",), ("build",)) or not has_option(argv, *_COVER):
+    if not starts_with(argv, ("go", "test"), ("go", "build")) or not has_option(argv, *_COVER):
         return None
     return measured(Granularity.LINE, Granularity.STATEMENT)
 
@@ -151,13 +151,12 @@ GO_TEST_FILES = TestFiles(
 )
 
 
-def _go_test(command: Command, _facts: Facts) -> Run | None:
-    argv = resolved(command)
-    return tested() if argv[:2] == ("go", "test") or program(argv) == "gotestsum" else None
-
-
 GO_TEST = test_runner(
-    name="go test", languages=GO_LANGUAGE, how="go test", runs=_go_test, tests=tests_of(GO_TEST_FILES.name)
+    name="go test",
+    languages=GO_LANGUAGE,
+    how="go test",
+    runs=when(starts(("go", "test"), ("gotestsum",)), tested),
+    tests=tests_of(GO_TEST_FILES.name),
 )
 
 
@@ -286,9 +285,7 @@ def _more_linters(facts: Facts) -> Iterator[str]:
             yield setting.path
 
 
-def _golangci_lint(command: Command, _facts: Facts) -> Run | None:
-    argv = resolved(command)
-    return analysed() if program(argv) == "golangci-lint" and argv[1:2] == ("run",) else None
+_golangci_lint = when(starts(("golangci-lint", "run")), analysed)
 
 
 # go vet and staticcheck are required as warnings (see WARNINGS); static analysis asks for golangci-lint's others.

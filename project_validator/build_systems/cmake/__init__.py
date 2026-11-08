@@ -17,7 +17,7 @@ from project_validator.build_systems.cmake.evaluation import Evaluation
 from project_validator.build_systems.cmake.presets import PRESET_FILES, preset_facts
 from project_validator.core import Context, Project
 from project_validator.facts import Command, Fact, Origin, Unknown, resolved
-from project_validator.facts.arguments import program
+from project_validator.facts.arguments import starts_with
 from project_validator.facts.expansion import CommandExpander, Expansion, Script
 from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader
@@ -123,7 +123,7 @@ def _scripts(project: CMakeProject, name: str, built: set[tuple[str, str]]) -> I
 def _custom_targets(command: Command, context: Context) -> list[Expansion] | None:
     """`cmake --build <dir> [--target <name>...]`: the commands of the custom targets it builds."""
     argv = resolved(command)
-    if program(argv) != "cmake" or argv[1:2] != ("--build",):
+    if not starts_with(argv, ("cmake", "--build")):
         return None
     project = cmake_project(context)
     built: set[tuple[str, str]] = set()

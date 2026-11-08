@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 
 from project_validator.facts import NOTHING, Command, ConfigurationFile, Fact, Facts, Origin, Setting, resolved
-from project_validator.facts.arguments import program
+from project_validator.facts.arguments import has_option, starts_with
 
 type Levels = frozenset[str]
 
@@ -136,18 +136,29 @@ def within(path: str, directory: str) -> bool:
     return directory == "." or path == directory or PurePosixPath(path).is_relative_to(directory)
 
 
-def starts(*prefixes: tuple[str, ...]) -> Callable[[Command], bool]:
-    """Whether a command starts with one of `prefixes`: a program (by name, `./vendor/bin/phpunit` is `phpunit`) and
-    the subcommands after it (`("cargo", "audit")`)."""
-
-    def matches(command: Command) -> bool:
-        argv = resolved(command)
-        return any(program(argv) == prefix[0] and argv[1 : len(prefix)] == prefix[1:] for prefix in prefixes)
-
-    return matches
+type Condition = Callable[[Command], bool]
 
 
-def when(matches: Callable[[Command], bool], run: Callable[[], Run]) -> Claim:
+def starts(*prefixes: tuple[str, ...]) -> Condition:
+    """Whether a command, as run, starts with one of `prefixes`: a program (by name, `./vendor/bin/phpunit` is
+    `phpunit`) and the subcommands after it (`("cargo", "audit")`)."""
+    return lambda command: starts_with(resolved(command), *prefixes) is not None
+
+
+def with_option(*names: str) -> Condition:
+    """Whether a command, as run, gives one of the options `names`, alone or with a value (`--coverage=lcov`)."""
+    return lambda command: has_option(resolved(command), *names)
+
+
+def all_of(*conditions: Condition) -> Condition:
+    return lambda command: all(condition(command) for condition in conditions)
+
+
+def any_of(*conditions: Condition) -> Condition:
+    return lambda command: any(condition(command) for condition in conditions)
+
+
+def when(matches: Condition, run: Callable[[], Run]) -> Claim:
     """A claim of the commands `matches` accepts, each of them `run`."""
     return lambda command, _facts: run() if matches(command) else None
 
@@ -271,11 +282,14 @@ def provided(aspect: str, *levels: str | None, read: Iterable[Setting | str] = (
 
 __all__ = [
     "Claim",
+    "Condition",
     "Definition",
     "Levels",
     "Run",
     "Tool",
     "ToolRun",
+    "all_of",
+    "any_of",
     "combined",
     "defined_by",
     "either",
@@ -286,5 +300,6 @@ __all__ = [
     "starts",
     "tool_runs",
     "when",
+    "with_option",
     "within",
 ]

@@ -15,7 +15,7 @@ from project_validator.evidence import (
 )
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
-from project_validator.facts.arguments import has_option, option_values, positional, program
+from project_validator.facts.arguments import has_option, option_values, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
@@ -460,7 +460,7 @@ PHPCS_SECURITY_SETTINGS = SettingsReader(
 def _taint_analysis(command: Command, facts: Facts) -> Run | None:
     """Psalm's taint analysis: `psalm --taint-analysis`, or `runTaintAnalysis="true"` in its configuration."""
     argv = resolved(command)
-    if program(argv) != "psalm":
+    if not starts_with(argv, ("psalm",)):
         return None
     if "--taint-analysis" in argv:
         return scanned()
@@ -471,7 +471,7 @@ def _taint_analysis(command: Command, facts: Facts) -> Run | None:
 def _phpcs_security(command: Command, facts: Facts) -> Run | None:
     """phpcs with the phpcs-security-audit standard: in its configuration, or named by --standard."""
     argv = resolved(command)
-    if program(argv) != "phpcs":
+    if not starts_with(argv, ("phpcs",)):
         return None
     if any(_SECURITY_AUDIT.search(value) or "Security" in value for value in option_values(argv, "--standard")):
         return scanned()

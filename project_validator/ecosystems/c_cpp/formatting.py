@@ -4,7 +4,7 @@ import re
 
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Command, Facts, resolved
-from project_validator.facts.arguments import has_option, program
+from project_validator.facts.arguments import has_option, program, starts_with
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, format_tool, formatted
 from project_validator.facts.settings import file_reader
@@ -21,7 +21,7 @@ def _clang_format(command: Command, facts: Facts) -> Run | None:
     name = program(argv)
     if name in ("run-clang-format", "run-clang-format.py"):
         return formatted(command, facts, checks=True)
-    if name == "git" and argv[1:2] == ("clang-format",):
+    if starts_with(argv, ("git", "clang-format")):
         return formatted(command, facts, checks=has_option(argv, "--diff"))
     if not _CLANG_FORMAT.fullmatch(name):
         return None

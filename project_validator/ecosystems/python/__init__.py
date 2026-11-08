@@ -10,7 +10,7 @@ from pathlib import PurePosixPath
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
-from project_validator.facts.arguments import has_option, option_values, program
+from project_validator.facts.arguments import has_option, option_values, program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
@@ -155,7 +155,7 @@ def _measured_lines_and(branch: bool, *read: Setting | None) -> Run:
 
 def _coverage_py(command: Command, facts: Facts) -> Run | None:
     argv = resolved(command)
-    if program(argv) != "coverage" or argv[1:2] != ("run",):
+    if not starts_with(argv, ("coverage", "run")):
         return None
     named = _named_rcfile(command)
     setting = _coverage_settings(command, facts, named[0] if named else None)
@@ -164,7 +164,7 @@ def _coverage_py(command: Command, facts: Facts) -> Run | None:
 
 def _pytest_cov(command: Command, facts: Facts) -> Run | None:
     argv = resolved(command)
-    if program(argv) not in ("pytest", "py.test"):
+    if not starts_with(argv, ("pytest",), ("py.test",)):
         return None
     files = [joined(command.directory, name) for name in ("pytest.ini", "pyproject.toml", "tox.ini", "setup.cfg")]
     configuration = facts.configured("pytest", files)
@@ -332,7 +332,7 @@ def _selects_bandit(values: Iterable[object]) -> bool:
 def _ruff_security(command: Command, facts: Facts) -> Run | None:
     """`ruff check` with flake8-bandit's rules (`S`) selected, on its command line or in its settings."""
     argv = resolved(command)
-    if program(argv) != "ruff" or argv[1:2] != ("check",):
+    if not starts_with(argv, ("ruff", "check")):
         return None
     if _selects_bandit(
         rule for value in option_values(argv, "--select", "--extend-select") for rule in value.split(",")

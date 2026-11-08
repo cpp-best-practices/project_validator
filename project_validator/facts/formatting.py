@@ -11,7 +11,7 @@ import enum
 from collections.abc import Iterable, Mapping
 
 from project_validator.facts import ActionStep, Command, Facts, Setting, resolved
-from project_validator.facts.arguments import has_option, program
+from project_validator.facts.arguments import has_option, program, starts_with
 from project_validator.facts.expansion import from_hook
 from project_validator.facts.tools import Claim, Definition, Run, Tool, provided
 
@@ -101,12 +101,6 @@ def _given(argv: tuple[str, ...], words: frozenset[str]) -> bool:
     return any(has_option(argv, word) if word.startswith("-") else word in argv[1:] for word in words)
 
 
-def _prefix(argv: tuple[str, ...], prefixes: tuple[tuple[str, ...], ...]) -> tuple[str, ...] | None:
-    return next(
-        (prefix for prefix in prefixes if argv[1 : len(prefix)] == prefix[1:] and program(argv) == prefix[0]), None
-    )
-
-
 def flagged(
     *prefixes: tuple[str, ...], checks: Iterable[str] | None = None, applies: Iterable[str] | None = None
 ) -> Claim:
@@ -119,7 +113,7 @@ def flagged(
 
     def claims(command: Command, facts: Facts) -> Run | None:
         argv = resolved(command)
-        if _prefix(argv, prefixes) is None:
+        if starts_with(argv, *prefixes) is None:
             return None
         applied = applying is not None and _given(argv, applying)
         checked = not applied if checking is None else _given(argv, checking)
