@@ -195,7 +195,7 @@ class _Combination:
     def facts(self, job: Mapping[str, object], workflow_env: object) -> Iterator[Fact]:
         env = {**self.substituted(workflow_env), **self.substituted(job.get("env"))}
         os = _runner_os(job, self.combination)
-        known = Known(os=os, matrix=self.combination, env=env)
+        known = Known(os=os, matrix=self.combination, env=env, matrix_known=self.matrix_known)
         if self.runs(job.get("if"), known) is False:
             return
         defaults = job.get("defaults")

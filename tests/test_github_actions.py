@@ -8,7 +8,8 @@ from project_validator.ci.github_actions import (
     expand_matrix,
     substitute_matrix,
 )
-from tests.support import GITHUB_WORKFLOW, ci_jobs
+from project_validator.facts import Command, Unknown
+from tests.support import GITHUB_WORKFLOW, ci_jobs, make_context, temp_project
 
 
 class ExpandMatrixTests(unittest.TestCase):
@@ -111,6 +112,32 @@ class WorkflowJobTests(unittest.TestCase):
         [job] = self._jobs(workflow)
         self.assertEqual(job.os, "linux")
         self.assertIn("expression", job.name)
+
+    def test_steps_conditioned_on_a_computed_matrix_still_run(self) -> None:
+        """When the matrix is computed by an expression, a step `if: matrix.x` may run in some combination: it is
+        kept, with its condition as written, beside the unknown that says the matrix was not read."""
+        workflow = {
+            "jobs": {
+                "test": {
+                    "runs-on": "ubuntu-latest",
+                    "strategy": {"matrix": "${{ fromJSON(needs.plan.outputs.matrix) }}"},
+                    "steps": [
+                        {"run": "pytest"},
+                        {"if": "matrix.coverage == 'true'", "run": "coverage run --branch -m pytest"},
+                        {"if": "matrix.lint", "run": "ruff check ."},
+                    ],
+                }
+            }
+        }
+        with temp_project({GITHUB_WORKFLOW: json.dumps(workflow)}) as root:
+            facts = make_context(root).facts
+        commands = [command for command in facts.of(Command) if not command.via]  # not what they run in turn
+        self.assertEqual(
+            [command.argv for command in commands],
+            [("pytest",), ("coverage", "run", "--branch", "-m", "pytest"), ("ruff", "check", ".")],
+        )
+        self.assertEqual([command.condition for command in commands][1:], ["matrix.coverage == 'true'", "matrix.lint"])
+        self.assertEqual([unknown.hides for unknown in facts.of(Unknown)], ["matrix"])
 
     def test_a_job_whose_condition_is_false_does_not_run(self) -> None:
         workflow = {
