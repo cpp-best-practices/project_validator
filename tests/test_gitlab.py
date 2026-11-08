@@ -2,8 +2,8 @@ import json
 import unittest
 
 from project_validator.build_configurations import BuildConfiguration
-from project_validator.ci import Job
 from project_validator.ci.gitlab import expand_parallel
+from project_validator.facts.jobs import Job
 from tests.support import ci_jobs
 
 

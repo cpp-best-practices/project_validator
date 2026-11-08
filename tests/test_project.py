@@ -23,6 +23,15 @@ class ProjectTests(unittest.TestCase):
                 Project(root).cmake_files(), ["CMakeLists.txt", "cmake/Warnings.cmake", "src/CMakeLists.txt"]
             )
 
+    def test_a_project_is_read_as_it_was_first_listed(self) -> None:
+        """The tree is walked once: extractors ask for the files many times, and a project does not change under a
+        run."""
+        with temp_project({"src/main.c": ""}) as root:
+            project = Project(root)
+            self.assertEqual((project.files(), project.tracked_files()), (["src/main.c"], ["src/main.c"]))
+            (root / "src" / "later.c").write_text("")
+            self.assertEqual((project.files(), project.tracked_files()), (["src/main.c"], ["src/main.c"]))
+
     def test_lists_every_file_of_every_layout(self) -> None:
         for layout in PROJECT_LAYOUTS:
             with layout_project(self, layout) as root:

@@ -1,8 +1,7 @@
 """Recognising operating systems, compilers and language toolchains in CI configuration text."""
 
-from dataclasses import dataclass
-
 from project_validator.ecosystems import ToolchainPatterns, registered
+from project_validator.facts.jobs import Toolchain
 from project_validator.text import matching_names, pattern
 
 OPERATING_SYSTEMS = (
@@ -31,17 +30,6 @@ def detect_operating_systems(text: str) -> list[str]:
 
 def detect_compilers(text: str) -> list[str]:
     return matching_names((text,), COMPILERS)
-
-
-@dataclass(frozen=True, slots=True, order=True, kw_only=True)
-class Toolchain:
-    """A language toolchain a CI job runs with, e.g. Python 3.14 or Rust nightly."""
-
-    language: str
-    version: str
-
-    def __str__(self) -> str:
-        return f"{self.language} {self.version}"
 
 
 DEFAULT_VERSION = "default"

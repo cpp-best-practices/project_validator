@@ -10,12 +10,12 @@ from pathlib import Path
 from types import MappingProxyType
 
 from project_validator import pretty
-from project_validator.ci import Job
 from project_validator.core import Check, Context, Options, Project, Result
 from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for
 from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.facts import Command, Origin
 from project_validator.facts.expansion import script_facts
+from project_validator.facts.jobs import Job
 from project_validator.plugins import discover
 from tests import layouts
 from tests.layouts.model import ProjectLayout

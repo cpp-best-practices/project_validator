@@ -1,7 +1,6 @@
 import json
 import unittest
 
-from project_validator.ci import Job
 from project_validator.ci.github_actions import (
     Combination,
     action_references,
@@ -9,6 +8,7 @@ from project_validator.ci.github_actions import (
     substitute_matrix,
 )
 from project_validator.facts import Command, Unknown
+from project_validator.facts.jobs import Job
 from tests.support import GITHUB_WORKFLOW, ci_jobs, make_context, temp_project
 
 

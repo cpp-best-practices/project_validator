@@ -5,18 +5,14 @@ CMake project.
 """
 
 import re
-from typing import TYPE_CHECKING
 
 from project_validator.build_systems.cmake.build import CMAKE
 from project_validator.build_systems.meson.build import MESON
 from project_validator.ecosystems.c_cpp.compiler_flags import builds_c_or_cxx
 from project_validator.ecosystems.model import C_FAMILY, Ecosystem
 from project_validator.facts.axes import ToolchainAxis
+from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-
-if TYPE_CHECKING:
-    from project_validator.ci import Job
-
 
 # Building C or C++, as opposed to running another ecosystem's tools on a runner that has a C/C++ compiler.
 CI_USAGE = re.compile(

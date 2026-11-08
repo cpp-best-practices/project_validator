@@ -75,6 +75,8 @@ class Project:
 
     root: Path
     excluded: frozenset[PurePosixPath] = frozenset()
+    # The files listed so far, by what was asked: the tree is walked once, as it is when first asked.
+    _listed: dict[object, list[str]] = field(default_factory=dict, repr=False, compare=False)
 
     def exists(self, relative: str) -> bool:
         """Whether the file exists, with its name spelled exactly so (`makefile` is not `Makefile`, even where file
@@ -108,10 +110,17 @@ class Project:
 
         `hidden` names hidden top-level directories (`.github`) to include all the same.
         """
-        return sorted(self._walk_files(hidden))
+        if ("files", hidden) not in self._listed:
+            self._listed[("files", hidden)] = sorted(self._walk_files(hidden))
+        return list(self._listed[("files", hidden)])
 
     def tracked_files(self) -> list[str]:
         """The files git tracks in the project, or every file when it is not a git checkout; exclusions apply."""
+        if "tracked" not in self._listed:
+            self._listed["tracked"] = self._git_tracked_files()
+        return list(self._listed["tracked"])
+
+    def _git_tracked_files(self) -> list[str]:
         git = shutil.which("git")
         if git is None:
             return self.files()
@@ -177,31 +186,10 @@ class Context:
 
     @cached_property
     def facts(self) -> Facts:
-        """The fact database (see `project_validator.facts`), extracted in stages: the project's structure, the files
-        git does not track and the build outputs it does, and its test files (and, with `--build`, what probes find by
-        building it), the CI jobs and what they run (with what that runs in turn) and on, the settings the configuration
-        files hold (those commands name included), and the tools those commands run."""
-        from project_validator.ci import ci_facts, job_facts
-        from project_validator.facts import Facts
-        from project_validator.facts.expansion import expanded, known_actions, known_expanders
-        from project_validator.facts.outputs import known_build_outputs
-        from project_validator.facts.repository import repository_facts
-        from project_validator.facts.settings import known_settings_readers, settings_facts
-        from project_validator.facts.structure import project_languages, structure_facts
-        from project_validator.facts.testing import known_probes, known_test_files, test_file_facts
-        from project_validator.facts.tools import known_tools, tool_runs
+        """The fact database (see `project_validator.facts`), built in stages by `project_validator.extraction`."""
+        from project_validator.extraction import extract_facts
 
-        found = Facts(structure_facts(self.project))
-        # Only the build outputs of the project's languages can be committed by it.
-        languages = project_languages(found)
-        found += repository_facts(self.project, (out for out in known_build_outputs() if out.languages & languages))
-        found += test_file_facts(self.project, found, known_test_files())
-        if self.options.build:
-            found += (fact for probe in known_probes() for fact in probe.run(self.project, self.options))
-        found += expanded(ci_facts(self.project, self.ci_files), self, known_expanders(), known_actions())
-        found += job_facts(found, self.project)
-        found += settings_facts(self, known_settings_readers(), found)
-        return found + tool_runs(found, known_tools())
+        return extract_facts(self)
 
     @cached_property
     def structure(self) -> ProjectStructure:

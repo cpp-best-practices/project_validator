@@ -22,33 +22,15 @@ from project_validator.facts import (
     resolved,
 )
 from project_validator.facts.expansion import script_facts
+from project_validator.facts.jobs import Job, Toolchain
 from project_validator.platforms import (
     RUNNER_DEFAULT_COMPILERS,
-    Toolchain,
     detect_compilers,
     detect_ecosystems,
     detect_operating_systems,
     detect_toolchains,
 )
 from project_validator.text import Pattern
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class Job(Fact):
-    """One CI job (the `CiJob` whose id is `job`) as it would run: a single OS, plus every compiler, toolchain and
-    build configuration it uses. A compiler is the runner's default (`default_compiler`) when the job names none."""
-
-    job: str
-    name: str
-    os: str
-    compilers: frozenset[str]
-    configurations: frozenset[BuildConfiguration] = frozenset()
-    toolchains: frozenset[Toolchain] = frozenset()
-    # The labels of the ecosystems the job is seen building with or running (see `Ecosystem.used_by`).
-    ecosystems: frozenset[str] = frozenset()
-    default_compiler: bool = False
-    heuristic: bool = False
-
 
 # Facts from a parsed configuration document at a path (see `project_validator.facts`).
 # Reads another configuration file of the project (a reusable workflow, an included file), or None.
