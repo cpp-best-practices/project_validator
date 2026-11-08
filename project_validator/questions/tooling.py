@@ -15,7 +15,7 @@ from project_validator.facts import Facts
 from project_validator.facts.roles import AUXILIARY, role
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import Tool, known_tools, owner, within
-from project_validator.questions import Answer, LanguageAnswers, per_unit, runs_of, unknowns_for
+from project_validator.questions import Answer, LanguageAnswers, answer_dict, per_unit, runs_of, unknowns_for
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -99,20 +99,19 @@ class ToolAnswer:
         return tuple(tool.name for tool in self.known)
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "language": self.language,
-            "unit": self.unit,
-            "level": self.level,
-            "answer": str(self.answer),
-            "runs": {ran.name: {"levels": sorted(ran.levels), "read": list(ran.read)} for ran in self.runs},
-            "defined": {name: list(paths) for name, paths in self.defined},
-            "known": {
+        return answer_dict(
+            self,
+            self.answer,
+            level=self.level,
+            runs={ran.name: {"levels": sorted(ran.levels), "read": list(ran.read)} for ran in self.runs},
+            defined={name: list(paths) for name, paths in self.defined},
+            known={
                 tool.name: {"can": dict(tool.can), "needs_definition": tool.needs_definition, "required": tool.required}
                 for tool in self.known
             },
-            "unknowns": list(self.unknowns),
-            "unknown_definitions": list(self.unknown_definitions),
-        }
+            unknowns=list(self.unknowns),
+            unknown_definitions=list(self.unknown_definitions),
+        )
 
 
 def _relevant(path: str, unit: str) -> bool:

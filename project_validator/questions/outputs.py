@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from project_validator.facts import ConfigurationFile, Facts
 from project_validator.facts.outputs import BuildOutput, CommittedOutput, IgnoreEntry, known_build_outputs, outputs_of
 from project_validator.facts.structure import BuildFile
-from project_validator.questions import Answer, LanguageAnswers, Question
+from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict
 from project_validator.tools.version_control import IGNORE_FILES
 
 
@@ -37,12 +37,7 @@ class IgnoreAnswer:
     outputs: tuple[OutputIgnored, ...] = ()
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "language": self.language,
-            "unit": self.unit,
-            "answer": str(self.answer),
-            "outputs": {output.name: dict(output.entries) for output in self.outputs},
-        }
+        return answer_dict(self, self.answer, outputs={output.name: dict(output.entries) for output in self.outputs})
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -55,12 +50,7 @@ class CommittedAnswer:
     committed: tuple[str, ...] = ()
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "language": self.language,
-            "unit": self.unit,
-            "answer": str(self.answer),
-            "committed": list(self.committed),
-        }
+        return answer_dict(self, self.answer, committed=list(self.committed))
 
 
 def ignore_files(facts: Facts) -> tuple[str, ...]:

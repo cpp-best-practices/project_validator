@@ -8,7 +8,7 @@ from project_validator.build_configurations import BuildConfiguration
 from project_validator.facts import CiConfiguration, Facts, Unknown
 from project_validator.facts.axes import ToolchainAxis, axis_of
 from project_validator.facts.jobs import Job
-from project_validator.questions import Answer, LanguageAnswers, Question
+from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict
 
 type Platform = tuple[str, str]
 _JOBS = "the jobs and commands"
@@ -28,17 +28,16 @@ class PlatformAnswer:
     notes: tuple[str, ...]
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "language": self.language,
-            "unit": self.unit,
-            "axis": self.axis.noun,
-            "answer": self.answer.value,
-            "platforms": [
+        return answer_dict(
+            self,
+            self.answer,
+            axis=self.axis.noun,
+            platforms=[
                 {"os": os, self.axis.noun: toolchain, "configurations": sorted(map(str, configurations))}
                 for (os, toolchain), configurations in self.platforms
             ],
-            "notes": list(self.notes),
-        }
+            notes=list(self.notes),
+        )
 
 
 def platform_answer(language: str, facts: Facts) -> PlatformAnswer | None:

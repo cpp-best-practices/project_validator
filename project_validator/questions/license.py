@@ -14,7 +14,7 @@ from project_validator.facts import Facts
 from project_validator.facts.licenses import DeclaredLicense, LicenseFile
 from project_validator.facts.roles import role
 from project_validator.facts.structure import Unit
-from project_validator.questions import Answer, LanguageAnswers, Question
+from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict
 from project_validator.tools.licenses import REUSE_DIRECTORY, identifiers_in
 
 
@@ -50,16 +50,15 @@ class LicenseAnswer:
         return tuple(path for path, licenses in self.files if not licenses)
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "language": self.language,
-            "unit": self.unit,
-            "answer": str(self.answer),
-            "files": {path: sorted(licenses) for path, licenses in self.files},
-            "mismatches": [
+        return answer_dict(
+            self,
+            self.answer,
+            files={path: sorted(licenses) for path, licenses in self.files},
+            mismatches=[
                 {"manifest": found.manifest, "declared": found.declared, "licenses": sorted(found.licenses)}
                 for found in self.mismatches
             ],
-        }
+        )
 
 
 def _comparable(identifiers: frozenset[str]) -> frozenset[str]:
