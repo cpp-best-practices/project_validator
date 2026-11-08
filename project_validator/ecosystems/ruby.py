@@ -9,7 +9,7 @@ import re
 from collections.abc import Iterator
 from pathlib import PurePosixPath
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.ecosystems.model import VERSION, BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, positional, program, starts_with
@@ -23,7 +23,7 @@ from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import Practice, always, required, requirement_reader
+from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -255,10 +255,12 @@ RUBY_WARNING_SETTINGS = requirement_reader(
 WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=RUBY_ONLY,
-    kind="Ruby warning settings",
     requirements=always(required(RUBY_WARNINGS), required(RUBY_LINTER, in_files=False, tools=("RuboCop", "Standard"))),
     reads=(RUBY_WARNING_SETTINGS.name,),
-    hint="run Ruby with -w (RUBYOPT=-w, or --warnings in .rspec) and run RuboCop or Standard",
+    words=Wording(
+        kind="Ruby warning settings",
+        hint="run Ruby with -w (RUBYOPT=-w, or --warnings in .rspec) and run RuboCop or Standard",
+    ),
 )
 
 AUDITORS = (
@@ -436,10 +438,14 @@ RUBY = Ecosystem(
     source_suffixes={".rb": RUBY_LANGUAGE, ".rake": RUBY_LANGUAGE},
     # Rack configuration and ERB templates belong to Ruby projects, but name no language on their own.
     ambiguous_suffixes={".ru": None, ".erb": None},
-    toolchain=ToolchainPatterns(
-        language=RUBY_LANGUAGE,
-        versions=(re.compile(rf"\bruby-version\W+{_RUBY_VERSION}"), re.compile(r"\bruby:(\d+\.\d+(?:\.\d+)?)")),
-        usage=re.compile(r"\bbundle\s+(?:exec|install)\b|\bsetup-ruby\b|(?<![\w-])(?:rake|rspec)\b"),
+    toolchain=toolchain_patterns(
+        RUBY_LANGUAGE,
+        version=_RUBY_VERSION,
+        inputs=("ruby-version",),
+        images=("ruby",),
+        image_version=VERSION,
+        commands=r"\bbundle\s+(?:exec|install)\b|(?<![\w-])(?:rake|rspec)\b",
+        setup=("ruby",),
     ),
 )
 

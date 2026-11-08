@@ -27,7 +27,9 @@ class ScaffoldTests(unittest.TestCase):
         }
         self.assertLessEqual(
             {
-                "project_validator/ecosystems/nim.py",
+                "project_validator/ecosystems/nim/__init__.py",
+                "project_validator/ecosystems/nim/tools.py",
+                "project_validator/ecosystems/nim/practices.py",
                 "tests/layouts/nim.py",
                 "docs/ecosystems/nim.md",
                 "tests/fixtures/bare_nim/src/main.nim",
@@ -37,13 +39,27 @@ class ScaffoldTests(unittest.TestCase):
             written,
         )
         spec = importlib.util.spec_from_file_location(
-            "scaffolded_nim", self.root / "project_validator/ecosystems/nim.py"
+            "scaffolded_nim", self.root / "project_validator/ecosystems/nim/__init__.py"
         )
         self.assertIsNotNone(spec)
         module = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
         spec.loader.exec_module(module)  # type: ignore[union-attr]
         self.assertIsInstance(module.NIM, Ecosystem)
         self.assertEqual(module.NIM.source_suffixes, {".nim": "Nim", ".nims": "Nim"})
+
+    def test_the_toolchain_is_guessed_from_the_module_name(self) -> None:
+        """A setup action, its version input and a container image, named after the module: to be checked."""
+        scaffold(self.root, "nim", "Nim", [".nim"])
+        spec = importlib.util.spec_from_file_location(
+            "scaffolded_nim_toolchain", self.root / "project_validator/ecosystems/nim/__init__.py"
+        )
+        module = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
+        spec.loader.exec_module(module)  # type: ignore[union-attr]
+        self.assertTrue(module.NIM.used_by("uses: jiro4989/setup-nim-action@v2\nwith:\n  nim-version: 2.0.8"))
+        [named] = (found for found in module.NIM.toolchain.versions if found.search("nim-version: 2.0.8"))
+        self.assertEqual(named.search("nim-version: 2.0.8")[1], "2.0.8")
+        self.assertTrue(module.NIM.used_by("image: nim:2.0"))
+        self.assertFalse(module.NIM.used_by("echo nim"))
         self.assertTrue((self.root / "docs/ecosystems/nim.md").read_text(encoding="utf-8").startswith("# Nim\n"))
 
     def test_nothing_is_overwritten_and_names_are_checked(self) -> None:

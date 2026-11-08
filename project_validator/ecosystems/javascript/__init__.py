@@ -14,7 +14,7 @@ from pathlib import PurePosixPath
 
 from project_validator import yaml_support
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.evidence import json_value
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
 from project_validator.facts.arguments import option_values, positional, program, starts_with
@@ -28,7 +28,7 @@ from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, Requirement, always, met, required
+from project_validator.facts.practices import Practice, Requirement, Wording, always, met, required
 from project_validator.facts.settings import (
     Read,
     SettingsReader,
@@ -510,15 +510,16 @@ _LINTER_TOOLS = ("eslint", "biome", "deno lint")
 WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=JS_LANGUAGES,
-    kind="JavaScript linters",
     requirements=_linters_required,
-    hint="run eslint (or biome lint, or deno lint) in CI",
+    words=Wording(
+        kind="JavaScript linters",
+        hint="run eslint (or biome lint, or deno lint) in CI",
+    ),
 )
 
 WARNINGS_AS_ERRORS = Practice(
     name=WARNINGS_AS_ERRORS_PRACTICE,
     languages=JS_LANGUAGES,
-    kind="warnings as errors",
     requirements=always(
         required(pattern("eslint --max-warnings 0", rf"{RUNS_ESLINT}[^\n]*\s--max-warnings[=\s]+0\b"), in_files=False),
         required(pattern("biome ci", r"\bbiome\s+ci\b|\bbiome\b[^\n]*\s--error-on-warnings\b"), in_files=False),
@@ -526,8 +527,11 @@ WARNINGS_AS_ERRORS = Practice(
         required(pattern("deno lint", RUNS_DENO_LINT), in_files=False),
     ),
     any_one=True,
-    searched="CI configuration or the package scripts it runs",
-    hint="run eslint with --max-warnings 0 (or biome ci, or deno lint), so that a lint warning fails CI",
+    words=Wording(
+        kind="warnings as errors",
+        searched="CI configuration or the package scripts it runs",
+        hint="run eslint with --max-warnings 0 (or biome ci, or deno lint), so that a lint warning fails CI",
+    ),
 )
 
 
@@ -632,14 +636,13 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
         **dict.fromkeys(JS_SUFFIXES, JAVASCRIPT),
         **dict.fromkeys(TS_SUFFIXES, TYPESCRIPT),
     },
-    toolchain=ToolchainPatterns(
-        language="JavaScript runtime",
-        versions=RUNTIME_VERSIONS,
+    toolchain=toolchain_patterns(
+        "JavaScript runtime",
+        more=RUNTIME_VERSIONS,
         # Not npx alone: other ecosystems' CI runs tools such as jscpd with it.
-        usage=re.compile(
-            r"\bnpm\s+(?:ci|install|i|test|t|run)\b|\b(?:pnpm|yarn)\s+\w|\bnode\s+(?:-\S|[\w./-]+\.[mc]?[jt]s\b)|\bsetup-(?:deno|bun)\b"
-            r"|\bdeno\s+(?:test|task|run|check|lint|fmt)\b|\bbun\s+(?:install|test|run)\b"
-        ),
+        commands=r"\bnpm\s+(?:ci|install|i|test|t|run)\b|\b(?:pnpm|yarn)\s+\w|\bnode\s+(?:-\S|[\w./-]+\.[mc]?[jt]s\b)"
+        r"|\bdeno\s+(?:test|task|run|check|lint|fmt)\b|\bbun\s+(?:install|test|run)\b",
+        setup=("deno", "bun"),
     ),
 )
 

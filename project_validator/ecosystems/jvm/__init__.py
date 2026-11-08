@@ -10,7 +10,7 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.audit import audited, auditor
@@ -22,7 +22,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, always, required, requirement_reader
+from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, either, starts
@@ -405,29 +405,35 @@ JVM_WARNING_SETTINGS = requirement_reader(
 JAVA_WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=frozenset({JAVA}),
-    kind="JVM compiler warnings",
     requirements=always(required(XLINT)),
     reads=(JVM_WARNING_SETTINGS.name,),
-    hint="add -Xlint:all to javac's compilerArgs",
+    words=Wording(
+        kind="JVM compiler warnings",
+        hint="add -Xlint:all to javac's compilerArgs",
+    ),
 )
 KOTLIN_WARNINGS_PRACTICE = Practice(
     name=WARNINGS_PRACTICE,
     languages=frozenset({KOTLIN}),
-    kind="JVM compiler warnings",
     requirements=always(required(KOTLIN_WARNINGS)),
     reads=(JVM_WARNING_SETTINGS.name,),
-    hint="build Kotlin with the Kotlin compiler plugin, whose warnings are on by default",
+    words=Wording(
+        kind="JVM compiler warnings",
+        hint="build Kotlin with the Kotlin compiler plugin, whose warnings are on by default",
+    ),
 )
 
 WARNINGS_AS_ERRORS = Practice(
     name=WARNINGS_AS_ERRORS_PRACTICE,
     languages=JVM_LANGUAGES,
-    kind="warnings as errors",
     requirements=always(*_JVM_WARNINGS_AS_ERRORS),
     any_one=True,
     reads=(JVM_WARNING_SETTINGS.name,),
-    searched="the Maven or Gradle build, or CI configuration",
-    hint="add -Werror to javac's compilerArgs (Kotlin: allWarningsAsErrors = true)",
+    words=Wording(
+        kind="warnings as errors",
+        searched="the Maven or Gradle build, or CI configuration",
+        hint="add -Werror to javac's compilerArgs (Kotlin: allWarningsAsErrors = true)",
+    ),
 )
 
 
@@ -534,10 +540,8 @@ JVM = Ecosystem(
     source_suffixes={".java": JAVA, ".kt": KOTLIN},
     # Kotlin and Groovy scripts are mostly Gradle builds and their helpers, which name no language.
     ambiguous_suffixes={".kts": None, ".gradle": None},
-    toolchain=ToolchainPatterns(
-        language="JDK",
-        versions=JDK_VERSIONS,
-        usage=re.compile(rf"{MAVEN_COMMAND}|{GRADLE_COMMAND}|\bsetup-java\b|\bjavac\b"),
+    toolchain=toolchain_patterns(
+        "JDK", more=JDK_VERSIONS, commands=rf"{MAVEN_COMMAND}|{GRADLE_COMMAND}|\bjavac\b", setup=("java",)
     ),
 )
 

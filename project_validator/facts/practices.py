@@ -106,38 +106,44 @@ def requirement_reader(name: str, files: tuple[str, ...], requirements: Iterable
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class Wording:
+    """How a practice's findings are worded, for the policy: what the profile knows about the language that the
+    policy's sentences need. `kind` names the requirements ("compiler warning flags"; listed joined by `separator`),
+    `hint` says how to meet them, and `searched` where they are looked for. The rest replaces a policy sentence where
+    it would not fit the practice: `passed` (with `{found}`, the requirements met) and `failed` (met in nothing),
+    `question` (what an unknown answer leaves open), and the `preferred` requirements of a practice met by any one,
+    with the `preference` advice when only others are met."""
+
+    kind: str
+    hint: str = ""
+    searched: str = "CI configuration"
+    separator: str = ", "
+    passed: str = ""
+    failed: str = ""
+    question: str = ""
+    preferred: tuple[str, ...] = ()
+    preference: str = ""
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class Practice:
     """What a practice (`WARNINGS`, `WARNINGS_AS_ERRORS`) asks of `languages`: `requirements` (which may depend on
     the facts: C# asks for other settings than F#), all of them or, with `any_one`, one. The settings the readers it
-    `reads` record under a requirement's name meet it (see `requirement_reader`), and their unknowns may hide it.
-    `kind` names the requirements in messages (listed joined by `separator`), `searched` says where they are looked
-    for, and `hint` how to meet them. A practice judged per compiler names the `compilers` CI builds with. A practice
-    that `forbids` its requirements is met when none of them is found."""
+    `reads` record under a requirement's name meet it (see `requirement_reader`), and their unknowns may hide it. A
+    practice judged per compiler names the `compilers` CI builds with. A practice that `forbids` its requirements is
+    met when none of them is found. How its findings are worded is `words`, apart from what it asks."""
 
     name: str
     languages: frozenset[str]
-    kind: str
     requirements: Callable[[Facts, str | None], Sequence[Requirement]]
+    words: Wording
     any_one: bool = False
     reads: tuple[str, ...] = ()
-    searched: str = "CI configuration"
-    hint: str = ""
-    separator: str = ", "
     compilers: Callable[[Facts], Sequence[str]] | None = None
     # Settings that must not be found (`-Ounchecked`), rather than settings that must.
     forbids: bool = False
     # Why the practice does not apply to the project (a Go library builds no binary to harden); None when it does.
     skipped: Callable[[Facts], str | None] = lambda _facts: None
-    # What a met practice (with `{found}`, the requirements met), and one met in nothing, are reported as, when not
-    # as the policy words it.
-    passed: str = ""
-    failed: str = ""
-    # The question an unknown answer leaves open ("whether warnings are treated as errors"), when not as the policy
-    # words it.
-    question: str = ""
-    # The requirements to prefer, of a practice met by any one, and the advice when only others are met.
-    preferred: tuple[str, ...] = ()
-    preference: str = ""
 
 
 def known_practices() -> tuple[Practice, ...]:
@@ -225,6 +231,7 @@ __all__ = [
     "Evidence",
     "Practice",
     "Requirement",
+    "Wording",
     "always",
     "ci_texts",
     "command_text",

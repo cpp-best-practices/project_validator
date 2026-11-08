@@ -2,6 +2,7 @@ import re
 import unittest
 
 from project_validator.ecosystems import ToolchainPatterns
+from project_validator.ecosystems.model import toolchain_patterns
 from project_validator.facts.jobs import Toolchain
 from project_validator.platforms import (
     _language_toolchains,
@@ -63,6 +64,33 @@ class ToolchainDetectionTests(unittest.TestCase):
     def test_mentioning_a_language_is_not_using_it(self) -> None:
         self.assertEqual(detect_toolchains("languages: python, rust\nname: python-docs\ncmake --version"), frozenset())
         self.assertEqual(detect_toolchains('{"python-version": "${{ matrix.python }}"}'), frozenset())
+
+
+class ToolchainPatternsTests(unittest.TestCase):
+    def test_a_toolchain_is_named_by_a_setup_input_an_image_tag_or_its_own_patterns(self) -> None:
+        patterns = toolchain_patterns(
+            "Zig",
+            version=r"(\d+\.\d+(?:\.\d+)?|master)",
+            inputs=("zig-version", "version"),
+            images=("ziglang/zig",),
+            image_version=r"(\d+\.\d+\.\d+)",
+            more=(r"\bzig-(\d+\.\d+)\.tar",),
+            commands=r"\bzig\s+(?:build|test)\b",
+            setup=("zig",),
+        )
+        texts = {
+            "zig-version: 0.13.0": "0.13.0",
+            "with:\n  version: master": "master",
+            "image: ziglang/zig:0.13.0": "0.13.0",
+            "curl zig-0.13.tar.xz": "0.13",
+        }
+        for text, version in texts.items():
+            with self.subTest(text=text):
+                self.assertEqual(_language_toolchains("Zig", patterns, (text,)), _toolchains("Zig", version))
+        for used in ("uses: goto-bus-stop/setup-zig@v2", "run: zig build test"):
+            with self.subTest(text=used):
+                self.assertEqual(_language_toolchains("Zig", patterns, (used,)), _toolchains("Zig", "default"))
+        self.assertEqual(_language_toolchains("Zig", patterns, ("echo zig",)), frozenset())
 
 
 class LabelledToolchainTests(unittest.TestCase):

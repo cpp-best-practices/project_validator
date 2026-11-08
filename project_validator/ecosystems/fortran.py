@@ -24,7 +24,7 @@ from project_validator.facts.flags import errors_requirements, flag_requirements
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import EXTENSIONS, Evidence, Found, Practice, Requirement
+from project_validator.facts.practices import EXTENSIONS, Evidence, Found, Practice, Requirement, Wording
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
@@ -218,24 +218,28 @@ def _errors(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
 WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=FORTRAN_LANGUAGE,
-    kind="Fortran compiler warning flags",
     requirements=_warnings,
     reads=BUILD_FILES,
-    separator=" ",
-    hint="enable -Wall -Wextra -Wpedantic -Wimplicit-interface (ifx: -warn all) for each compiler CI uses",
     compilers=ci_compilers,
+    words=Wording(
+        kind="Fortran compiler warning flags",
+        separator=" ",
+        hint="enable -Wall -Wextra -Wpedantic -Wimplicit-interface (ifx: -warn all) for each compiler CI uses",
+    ),
 )
 WARNINGS_AS_ERRORS = Practice(
     name=WARNINGS_AS_ERRORS_PRACTICE,
     languages=FORTRAN_LANGUAGE,
-    kind="warnings as errors",
     requirements=_errors,
     any_one=True,
     reads=BUILD_FILES,
-    searched="CI configuration or the build files (CMake files, presets, meson.build, fpm flags)",
-    hint="add -Werror (gfortran, flang), -warn errors (ifx) or set CMAKE_COMPILE_WARNING_AS_ERROR (Meson: "
-    "werror=true), at least as an option",
     compilers=ci_compilers,
+    words=Wording(
+        kind="warnings as errors",
+        searched="CI configuration or the build files (CMake files, presets, meson.build, fpm flags)",
+        hint="add -Werror (gfortran, flang), -warn errors (ifx) or set CMAKE_COMPILE_WARNING_AS_ERROR (Meson: "
+        "werror=true), at least as an option",
+    ),
 )
 
 
@@ -258,15 +262,17 @@ def _meson_standard(facts: Facts, _compiler: str | None) -> Iterator[Evidence]:
 EXTENSIONS_PRACTICE = Practice(
     name=EXTENSIONS,
     languages=FORTRAN_LANGUAGE,
-    kind="Fortran standard settings",
     requirements=_standard,
     any_one=True,
     reads=BUILD_FILES,
-    hint="compile to a standard: -std=f2018 (ifx: -stand f18; Meson: default_options: ['fortran_std=f2018'])",
-    passed="Fortran is compiled to a standard, without the compilers' extensions, with {found}",
-    failed="Fortran is never compiled to a standard; the compilers' extensions are allowed",
-    question="whether Fortran is compiled to a standard",
     compilers=ci_compilers,
+    words=Wording(
+        kind="Fortran standard settings",
+        hint="compile to a standard: -std=f2018 (ifx: -stand f18; Meson: default_options: ['fortran_std=f2018'])",
+        passed="Fortran is compiled to a standard, without the compilers' extensions, with {found}",
+        failed="Fortran is never compiled to a standard; the compilers' extensions are allowed",
+        question="whether Fortran is compiled to a standard",
+    ),
 )
 
 
@@ -305,12 +311,14 @@ def _no_program(facts: Facts) -> str | None:
 HARDENING = Practice(
     name=HARDENING_PRACTICE,
     languages=FORTRAN_LANGUAGE,
-    kind="hardening options",
     requirements=_hardening,
     reads=BUILD_FILES,
-    hint=f"enable {FHARDENED} (GCC 14+) or {', '.join(_PROTECTIONS)}",
     compilers=ci_compilers,
     skipped=_no_program,
+    words=Wording(
+        kind="hardening options",
+        hint=f"enable {FHARDENED} (GCC 14+) or {', '.join(_PROTECTIONS)}",
+    ),
 )
 
 # --- tools
