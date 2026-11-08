@@ -6,7 +6,7 @@ import tomllib
 from collections.abc import Iterator
 from pathlib import Path, PurePosixPath
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, toml_members, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, starts_with
@@ -21,7 +21,7 @@ from project_validator.facts.licenses import declared_license_reader, toml_licen
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import Practice, always, required, requirement_reader
+from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -202,11 +202,14 @@ RUST_WARNING_SETTINGS = requirement_reader("Rust lint settings", RUST_LINT_SETTI
 WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=RUST_LANGUAGE,
-    kind="Rust lint settings",
     requirements=always(*_RUST_LINTS),
     reads=(RUST_WARNING_SETTINGS.name,),
-    separator=" ",
-    hint='run cargo clippy, deny warnings (-D warnings or [lints.rust] warnings = "deny") and enable clippy::pedantic',
+    words=Wording(
+        kind="Rust lint settings",
+        separator=" ",
+        hint='run cargo clippy, deny warnings (-D warnings or [lints.rust] warnings = "deny") and enable '
+        "clippy::pedantic",
+    ),
 )
 
 # Overflow checks are compiled into the binary; release builds leave them out unless the profile asks for them.
@@ -221,10 +224,12 @@ RUST_HARDENING_SETTINGS = requirement_reader("Rust build settings", RUST_LINT_SE
 HARDENING = Practice(
     name=HARDENING_PRACTICE,
     languages=RUST_LANGUAGE,
-    kind="hardening options",
     requirements=always(_OVERFLOW_CHECKS),
     reads=(RUST_HARDENING_SETTINGS.name,),
-    hint="set overflow-checks = true in [profile.release] of Cargo.toml",
+    words=Wording(
+        kind="hardening options",
+        hint="set overflow-checks = true in [profile.release] of Cargo.toml",
+    ),
 )
 
 # Forbidding unsafe code crate-wide makes the compiler reject the code whose memory safety it cannot check: in the
@@ -412,15 +417,15 @@ RUST = Ecosystem(
     languages=RUST_LANGUAGE,
     build_systems=(CARGO,),
     source_suffixes={".rs": "Rust"},
-    toolchain=ToolchainPatterns(
-        language="Rust",
-        versions=(
-            re.compile(rf"\brust-toolchain@{_RUST_VERSION}"),
-            re.compile(rf"\btoolchain\W+{_RUST_VERSION}"),
-            re.compile(rf"\bcargo\s+\+{_RUST_VERSION}"),
-            re.compile(rf"\brustup\s+(?:default|toolchain\s+install|install)\s+{_RUST_VERSION}"),
-            re.compile(r"\brust:(\d+\.\d+(?:\.\d+)?)"),
+    toolchain=toolchain_patterns(
+        "Rust",
+        images=("rust",),
+        more=(
+            rf"\brust-toolchain@{_RUST_VERSION}",
+            rf"\btoolchain\W+{_RUST_VERSION}",
+            rf"\bcargo\s+\+{_RUST_VERSION}",
+            rf"\brustup\s+(?:default|toolchain\s+install|install)\s+{_RUST_VERSION}",
         ),
-        usage=re.compile(r"\bcargo\b|\brustup\b|\brustc\b"),
+        commands=r"\bcargo\b|\brustup\b|\brustc\b",
     ),
 )

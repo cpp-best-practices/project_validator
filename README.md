@@ -148,11 +148,12 @@ between its CI jobs (compilers, toolchain versions). The checks are generic: eac
 component handles, and does not apply to the others. A plugin can add an ecosystem and its components the same way,
 without changing the validator.
 
-A built-in profile is found by its module, `project_validator/ecosystems/<name>.py`; it comes with its own
-`tests/layouts/<name>.py`, fixtures `tests/fixtures/well_configured_<name>` and `tests/fixtures/bare_<name>`, and page
-`docs/ecosystems/<name>.md`, and no shared list names it. `python -m project_validator.scaffold <name> <Label>
-<suffix>...` writes them, recognising the language by its suffixes, with the fixtures' files that are not about the
-language; what is left is the language's own knowledge.
+A built-in profile is found by its module or package, `project_validator/ecosystems/<name>.py` or `<name>/`; it comes
+with its own `tests/layouts/<name>.py`, fixtures `tests/fixtures/well_configured_<name>` and
+`tests/fixtures/bare_<name>`, and page `docs/ecosystems/<name>.md`, and no shared list names it.
+`python -m project_validator.scaffold <name> <Label> <suffix>...` writes them: a package recognising the language by
+its suffixes and its CI toolchain (guessed from the name, to be checked), with a module each for its tools and its
+practices, and the fixtures' files that are not about the language; what is left is the language's own knowledge.
 
 A project is recognised as an ecosystem by any of:
 

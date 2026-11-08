@@ -511,6 +511,11 @@ except where a step deliberately changes results and says so.
    scanning and dependency audits); `Result.skipped`; and one `combined` merges results, whether by ecosystem or
    by language and unit. A compiler's warning set, warnings as errors and hardening become requirements through
    `facts.flags` (`warning_requirements`, `errors_requirements`, `flag_requirements`), which C/C++ and Fortran both
-   call, and `hardening_flags` picks a back end's subset; every answer's JSON starts with `answer_dict`.
+   call, and `hardening_flags` picks a back end's subset; every answer's JSON starts with `answer_dict`. What a
+   profile writes for a new language shrank: a `Practice` is what it asks (requirements, what it reads, its
+   compilers) and, apart, its `Wording` (what the settings are called, how to set them, the sentences the policy's
+   do not fit); a CI toolchain is `toolchain_patterns(...)`, which spells the setup action, its version input and
+   the container image once for the nine languages that name theirs that way; and the scaffold writes a package
+   with those filled in.
 
 `--facts` and `--answers` expose the database and the answers.

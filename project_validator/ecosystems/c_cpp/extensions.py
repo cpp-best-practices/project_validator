@@ -11,7 +11,7 @@ from project_validator.build_systems.cmake.presets import PRESET_FILES
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Facts
 from project_validator.facts.build import BuildSetting
-from project_validator.facts.practices import EXTENSIONS, Evidence, Found, Practice, Requirement, always
+from project_validator.facts.practices import EXTENSIONS, Evidence, Found, Practice, Requirement, Wording, always
 from project_validator.facts.structure import SourceFile
 
 _FALSE = r"(?i:OFF|FALSE|NO|N|0)\b"
@@ -73,17 +73,19 @@ def _practice(language: str, cmake: str, std: str, standard: str, example: str) 
     return Practice(
         name=EXTENSIONS,
         languages=frozenset({language}),
-        kind=f"{language} standard settings",
         requirements=always(*requirements),
         any_one=True,
         reads=("CMake", "Meson"),
-        hint=f"{global_setting} (Meson: default_options: ['{std}={example}'])",
-        passed=f"{language} compiler extensions are disabled with {{found}}",
-        failed=f"{language} compiler extensions are never disabled",
-        question=f"whether {language} compiler extensions are disabled",
-        preferred=tuple(requirement.name for requirement in requirements if not requirement.name.startswith(cmake)),
-        preference=f"consider {global_setting} so that every target has extensions disabled",
         skipped=_sources_of(language),
+        words=Wording(
+            kind=f"{language} standard settings",
+            hint=f"{global_setting} (Meson: default_options: ['{std}={example}'])",
+            passed=f"{language} compiler extensions are disabled with {{found}}",
+            failed=f"{language} compiler extensions are never disabled",
+            question=f"whether {language} compiler extensions are disabled",
+            preferred=tuple(requirement.name for requirement in requirements if not requirement.name.startswith(cmake)),
+            preference=f"consider {global_setting} so that every target has extensions disabled",
+        ),
     )
 
 

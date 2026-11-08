@@ -7,7 +7,7 @@ import re
 from collections.abc import Iterator
 
 from project_validator.build_configurations import build_type_kinds
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, starts_with
@@ -21,7 +21,7 @@ from project_validator.facts.outputs import BuildOutput, directories, ignored_at
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, always, required, requirement_reader
+from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
 from project_validator.facts.settings import (
     SettingsReader,
     file_reader,
@@ -225,10 +225,12 @@ _SWIFT_WARNINGS = (required(SWIFTLINT, tools=("SwiftLint",)), required(COMPLETE_
 WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=SWIFT_ONLY,
-    kind="Swift warning settings",
     requirements=always(*_SWIFT_WARNINGS),
     reads=("Swift build settings",),
-    hint="run SwiftLint and check concurrency completely (Swift 6 language mode, or -strict-concurrency=complete)",
+    words=Wording(
+        kind="Swift warning settings",
+        hint="run SwiftLint and check concurrency completely (Swift 6 language mode, or -strict-concurrency=complete)",
+    ),
 )
 
 _SWIFT_WARNINGS_AS_ERRORS = (
@@ -246,13 +248,15 @@ SWIFT_BUILD_SETTINGS = requirement_reader(
 WARNINGS_AS_ERRORS = Practice(
     name=WARNINGS_AS_ERRORS_PRACTICE,
     languages=SWIFT_ONLY,
-    kind="warnings as errors",
     requirements=always(*_SWIFT_WARNINGS_AS_ERRORS),
     any_one=True,
     reads=(SWIFT_BUILD_SETTINGS.name,),
-    searched="CI configuration, Package.swift or the Xcode build settings",
-    hint="build with -Xswiftc -warnings-as-errors (SwiftPM 6.2: treatAllWarnings(as: .error); Xcode: "
-    "SWIFT_TREAT_WARNINGS_AS_ERRORS = YES)",
+    words=Wording(
+        kind="warnings as errors",
+        searched="CI configuration, Package.swift or the Xcode build settings",
+        hint="build with -Xswiftc -warnings-as-errors (SwiftPM 6.2: treatAllWarnings(as: .error); Xcode: "
+        "SWIFT_TREAT_WARNINGS_AS_ERRORS = YES)",
+    ),
 )
 
 # Compiling away Swift's bounds, overflow and exclusivity checks removes the safety the language builds in.
@@ -267,13 +271,15 @@ SWIFT_HARDENING_SETTINGS = requirement_reader("Swift optimization settings", SWI
 HARDENING = Practice(
     name=HARDENING_PRACTICE,
     languages=SWIFT_ONLY,
-    kind="Swift's runtime safety checks",
     requirements=always(*_UNCHECKED),
     reads=(SWIFT_HARDENING_SETTINGS.name,),
     forbids=True,
-    hint="build releases with -O (the default), which keeps bounds, overflow and exclusivity checks",
-    passed="release builds keep Swift's runtime safety checks (no -Ounchecked)",
-    failed="Swift's runtime safety checks are compiled away",
+    words=Wording(
+        kind="Swift's runtime safety checks",
+        hint="build releases with -O (the default), which keeps bounds, overflow and exclusivity checks",
+        passed="release builds keep Swift's runtime safety checks (no -Ounchecked)",
+        failed="Swift's runtime safety checks are compiled away",
+    ),
 )
 
 SWIFTLINT_CONFIG = ".swiftlint.yml"
@@ -387,14 +393,12 @@ SWIFT = Ecosystem(
     languages=SWIFT_ONLY,
     build_systems=(SWIFTPM, XCODE),
     source_suffixes={".swift": SWIFT_LANGUAGE},
-    toolchain=ToolchainPatterns(
-        language=SWIFT_LANGUAGE,
-        versions=(
-            re.compile(r"\bswift-version\W+(\d+\.\d+(?:\.\d+)?)"),
-            re.compile(r"\bswift:(\d+\.\d+(?:\.\d+)?)"),
-            re.compile(r"\bxcode-version\W+(\d+(?:\.\d+)*|latest(?:-stable)?)"),
-            re.compile(r"\bXcode_(\d+(?:\.\d+)*)\.app\b"),
-        ),
-        usage=re.compile(r"\bswift\s+(?:build|test|run|package)\b|\bxcodebuild\b|\bsetup-swift\b"),
+    toolchain=toolchain_patterns(
+        SWIFT_LANGUAGE,
+        inputs=("swift-version",),
+        images=("swift",),
+        more=(r"\bxcode-version\W+(\d+(?:\.\d+)*|latest(?:-stable)?)", r"\bXcode_(\d+(?:\.\d+)*)\.app\b"),
+        commands=r"\bswift\s+(?:build|test|run|package)\b|\bxcodebuild\b",
+        setup=("swift",),
     ),
 )

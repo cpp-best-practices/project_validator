@@ -20,6 +20,7 @@ from project_validator.ecosystems.model import (
     ToolchainPatterns,
     ecosystems_for,
     languages_of,
+    toolchain_patterns,
 )
 
 
@@ -169,5 +170,6 @@ __all__ = [
     "languages_of",
     "register",
     "registered",
+    "toolchain_patterns",
     "with_registered_languages",
 ]
