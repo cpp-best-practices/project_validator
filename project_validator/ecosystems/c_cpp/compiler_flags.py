@@ -1,11 +1,10 @@
 """C/C++ compiler flags: the strict warning set and warnings as errors, for each compiler CI builds with, and security
 hardening."""
 
-from typing import TYPE_CHECKING
-
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Facts
 from project_validator.facts.flags import flag_requirement
+from project_validator.facts.jobs import Job
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
@@ -24,9 +23,6 @@ from project_validator.tools.toolchains import (
     warnings_as_errors_flag,
 )
 
-if TYPE_CHECKING:
-    from project_validator.ci import Job
-
 # The readers of the build files whose options the compiler flags are found among.
 BUILD_FILES = ("CMake", "Meson")
 PRESET_FILES = ("CMakePresets.json", "CMakeUserPresets.json")
@@ -43,8 +39,6 @@ def builds_c_or_cxx(job: Job) -> bool:
 
 def ci_compilers(facts: Facts) -> tuple[str, ...]:
     """The compilers CI builds C/C++ with; GCC's flags are asked for when CI names none."""
-    from project_validator.ci import Job
-
     found = {compiler for job in facts.of(Job) if builds_c_or_cxx(job) for compiler in job.compilers}
     return tuple(sorted(found)) or ("gcc",)
 
