@@ -10,6 +10,7 @@ from xml.parsers import expat
 
 from project_validator import yaml_support
 from project_validator.core import Context, Result, check
+from project_validator.facts.roles import role
 from project_validator.text import JsonSyntaxError, check_json, strip_json_comments
 
 # Hidden directories that hold configuration worth parsing (CI, editors, dev containers).
@@ -109,20 +110,38 @@ def _files(count: int) -> str:
     return f"{count} data file{'s' * (count != 1)}"
 
 
-@check(name="data-wellformed", description="Every JSON, TOML, YAML and XML file in the project parses")
-def data_wellformed(context: Context) -> Result:
+type DataFiles = dict[str, tuple[str, Parser]]
+
+
+def _problems(context: Context, files: DataFiles) -> list[str]:
+    return [problem for path, (_, parser) in files.items() if (problem := _problem(context, path, parser))]
+
+
+def _data_files(context: Context) -> tuple[DataFiles, DataFiles, tuple[str, ...]]:
+    """The data files to judge, a test suite's data files, and what is skipped as too large to parse."""
     project = context.project
     found = {path: parser for path in project.files(hidden=CONFIGURATION_DIRECTORIES) if (parser := _parser(path))}
     skipped = tuple(
         f"{path}: not parsed, larger than {MAX_SIZE >> 20} MiB" for path in found if project.size(path) > MAX_SIZE
     )
-    files = {path: parser for path, parser in found.items() if project.size(path) <= MAX_SIZE}
-    if problems := [problem for path, (_, parser) in files.items() if (problem := _problem(context, path, parser))]:
+    readable = {path: parser for path, parser in found.items() if project.size(path) <= MAX_SIZE}
+    judged = {path: parser for path, parser in readable.items() if role(path) != "test"}
+    test_data = {path: parser for path, parser in readable.items() if role(path) == "test"}
+    return judged, test_data, skipped
+
+
+@check(name="data-wellformed", description="Every JSON, TOML, YAML and XML file in the project parses")
+def data_wellformed(context: Context) -> Result:
+    """The product's, docs' and tooling's data files must parse. A test suite's data files are read too, but what
+    does not parse is only reported: a parser's test data is malformed on purpose."""
+    files, test_data, skipped = _data_files(context)
+    noted = (*(f"test data, not judged: {problem}" for problem in _problems(context, test_data)), *skipped)
+    if problems := _problems(context, files):
         verb = "does" if len(problems) == 1 else "do"
-        return Result.failed(f"{_files(len(problems))} {verb} not parse", *problems, *skipped)
+        return Result.failed(f"{_files(len(problems))} {verb} not parse", *problems, *noted)
     if not files:
-        return Result.passed("no JSON, TOML, YAML or XML files to parse", *skipped)
+        return Result.passed("no JSON, TOML, YAML or XML files to parse", *noted)
     formats = Counter(format_ for format_, _ in files.values())
     counts = ", ".join(f"{format_}: {count}" for format_, count in sorted(formats.items()))
     verb = "parses" if len(files) == 1 else "parse"
-    return Result.passed(f"{_files(len(files))} {verb} ({counts})", *skipped)
+    return Result.passed(f"{_files(len(files))} {verb} ({counts})", *noted)
