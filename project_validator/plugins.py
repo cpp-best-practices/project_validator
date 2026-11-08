@@ -12,7 +12,7 @@ from project_validator import checks, ci
 from project_validator.ci import CiProvider
 from project_validator.components import add_plugin_modules
 from project_validator.core import Check
-from project_validator.ecosystems import Ecosystem, RegistryError, register, with_registered_languages
+from project_validator.ecosystems import Ecosystem, RegistryError, register
 
 
 class PluginError(Exception):
@@ -73,7 +73,7 @@ def discover(plugin_directories: Iterable[Path] = ()) -> Plugins:
     modules = [*_package_modules(checks), *_package_modules(ci), *plugin_modules]
     _register_all(list(dict.fromkeys(_instances(modules, Ecosystem))))
     add_plugin_modules(plugin_modules)
-    found_checks = [with_registered_languages(found) for found in dict.fromkeys(_instances(modules, Check))]
+    found_checks = list(dict.fromkeys(_instances(modules, Check)))
     _reject_duplicates("check name", [found.name for found in found_checks])
     providers = tuple(dict.fromkeys(_instances(modules, CiProvider)))
     return Plugins(checks=tuple(found_checks), providers=providers)

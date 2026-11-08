@@ -17,6 +17,7 @@ from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator import yaml_support
+from project_validator.components import known
 from project_validator.core import Context, Project
 from project_validator.facts import Command, ConfigurationFile, Fact, Facts, Origin, Setting, Unknown
 from project_validator.facts.roles import role
@@ -54,8 +55,6 @@ def file_reader(name: str, files: tuple[str, ...]) -> SettingsReader:
 
 def known_settings_readers() -> tuple[SettingsReader, ...]:
     """Every settings reader defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import known
-
     return known(SettingsReader)
 
 

@@ -14,13 +14,10 @@ from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
-from project_validator.facts.expansion import Action as AuditAction
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
+from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -169,7 +166,7 @@ GO_LINTS = (
 
 
 WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=GO_LANGUAGE,
     requirements=always(*(required(lint, in_files=False, tools=("golangci-lint",)) for lint in GO_LINTS)),
     words=Wording(
@@ -234,7 +231,7 @@ AUDITORS = (
     ),
     *multi_ecosystem_audits(GO_LANGUAGE),
 )
-GOVULNCHECK_ACTION = AuditAction(name="golang/govulncheck-action", runs=lambda _inputs: (("govulncheck", "./..."),))
+GOVULNCHECK_ACTION = Action(name="golang/govulncheck-action", runs=lambda _inputs: (("govulncheck", "./..."),))
 
 MAIN_PACKAGE = re.compile(r"^package\s+main\b", re.MULTILINE)
 PIE = pattern("-buildmode=pie", r"-buildmode[=\s]+pie\b|\bbuildmode:\s*[\"']?pie\b")
@@ -264,7 +261,7 @@ GO_BUILD_SETTINGS = requirement_reader("Go build settings", BUILD_SETTINGS_FILES
 # Go is memory safe and bounds checked; what the build adds is a position-independent executable, so that the
 # program's own code is randomised in memory (ASLR). That is the default on Windows and macOS, not on Linux.
 HARDENING = Practice(
-    name=HARDENING_PRACTICE,
+    name=PracticeName.HARDENING,
     languages=GO_LANGUAGE,
     requirements=always(_PIE),
     reads=(GO_BUILD_SETTINGS.name,),

@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
+from project_validator.components import known
 from project_validator.facts import Fact
 
 
@@ -103,8 +104,6 @@ def directories(*names: str) -> tuple[str, ...]:
 
 def known_build_outputs() -> tuple[BuildOutput, ...]:
     """Every build output defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import known
-
     return known(BuildOutput)
 
 

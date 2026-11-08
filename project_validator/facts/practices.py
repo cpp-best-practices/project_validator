@@ -9,19 +9,25 @@ C++, the `CompilerOption`s that apply to the compiler being judged. A practice j
 `compilers` CI builds with.
 """
 
+import enum
 import re
 from collections.abc import Callable, Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
 
+from project_validator.components import known
 from project_validator.facts import ActionStep, Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.settings import SettingsReader
 from project_validator.facts.tools import ToolRun
 from project_validator.text import Pattern
 
-WARNINGS = "compiler-warnings"
-WARNINGS_AS_ERRORS = "warnings-as-errors"
-HARDENING = "hardening"
-EXTENSIONS = "cxx-extensions"
+
+class PracticeName(enum.StrEnum):
+    """The practices that ask for settings, as the checks are called."""
+
+    WARNINGS = "compiler-warnings"
+    WARNINGS_AS_ERRORS = "warnings-as-errors"
+    HARDENING = "hardening"
+    EXTENSIONS = "cxx-extensions"
 
 
 @dataclass(frozen=True, slots=True)
@@ -148,8 +154,6 @@ class Practice:
 
 def known_practices() -> tuple[Practice, ...]:
     """Every practice defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import known
-
     return known(Practice)
 
 
@@ -174,17 +178,13 @@ class Texts:
         return self.matched[key]
 
 
-_TEXTS: dict[int, tuple[Facts, Texts]] = {}
-
-
 def ci_texts(facts: Facts) -> Texts:
     """The texts requirements are matched in: every command (see `command_text`) and reusable step; made once for
     the facts."""
-    if id(facts) not in _TEXTS or _TEXTS[id(facts)][0] is not facts:
-        _TEXTS.clear()
-        found = (*((command, command_text(command)) for command in facts.of(Command)), *_steps(facts))
-        _TEXTS[id(facts)] = (facts, Texts(found))
-    return _TEXTS[id(facts)][1]
+    return facts.shared(
+        "ci texts",
+        lambda: Texts((*((command, command_text(command)) for command in facts.of(Command)), *_steps(facts))),
+    )
 
 
 def met(
@@ -224,12 +224,9 @@ def handled(name: str) -> Callable[[], frozenset[str]]:
 
 
 __all__ = [
-    "EXTENSIONS",
-    "HARDENING",
-    "WARNINGS",
-    "WARNINGS_AS_ERRORS",
     "Evidence",
     "Practice",
+    "PracticeName",
     "Requirement",
     "Wording",
     "always",

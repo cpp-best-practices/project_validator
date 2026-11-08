@@ -11,6 +11,7 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from typing import Protocol
 
+from project_validator.components import known
 from project_validator.facts import Facts, Unknown
 from project_validator.facts.roles import AUXILIARY, role
 from project_validator.facts.structure import Unit
@@ -124,8 +125,6 @@ class Question:
 
 def known_questions() -> tuple[Question, ...]:
     """Every question defined by a module of `project_validator.questions`."""
-    from project_validator.components import known
-
     return known(Question)
 
 

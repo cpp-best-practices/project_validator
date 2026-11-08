@@ -17,7 +17,7 @@ from project_validator.ecosystems import (
     isolated_registry,
     register,
 )
-from project_validator.structure import ProjectStructure
+from project_validator.project_map import ProjectStructure
 from tests.support import make_context, temp_project
 
 WIDGET = frozenset({"Widget"})

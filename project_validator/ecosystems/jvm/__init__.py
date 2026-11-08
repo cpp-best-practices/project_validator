@@ -17,12 +17,10 @@ from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Locked, PackageManager, lockfile_reader, manifest_reader
-from project_validator.facts.expansion import Action as AuditAction
+from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
+from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Definition, Run, defined_by, either, starts
@@ -403,7 +401,7 @@ JVM_WARNING_SETTINGS = requirement_reader(
     (required(XLINT), required(KOTLIN_WARNINGS), *_JVM_WARNINGS_AS_ERRORS),
 )
 JAVA_WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=frozenset({JAVA}),
     requirements=always(required(XLINT)),
     reads=(JVM_WARNING_SETTINGS.name,),
@@ -413,7 +411,7 @@ JAVA_WARNINGS = Practice(
     ),
 )
 KOTLIN_WARNINGS_PRACTICE = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=frozenset({KOTLIN}),
     requirements=always(required(KOTLIN_WARNINGS)),
     reads=(JVM_WARNING_SETTINGS.name,),
@@ -424,7 +422,7 @@ KOTLIN_WARNINGS_PRACTICE = Practice(
 )
 
 WARNINGS_AS_ERRORS = Practice(
-    name=WARNINGS_AS_ERRORS_PRACTICE,
+    name=PracticeName.WARNINGS_AS_ERRORS,
     languages=JVM_LANGUAGES,
     requirements=always(*_JVM_WARNINGS_AS_ERRORS),
     any_one=True,
@@ -462,7 +460,7 @@ AUDITORS = (
     ),
     *multi_ecosystem_audits(JVM_LANGUAGES),
 )
-DEPENDENCY_CHECK_ACTION = AuditAction(
+DEPENDENCY_CHECK_ACTION = Action(
     name="dependency-check/Dependency-Check_Action", runs=lambda _inputs: (("dependency-check",),)
 )
 

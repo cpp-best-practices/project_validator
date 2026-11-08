@@ -25,9 +25,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
+from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import (
     SettingsReader,
@@ -248,7 +246,7 @@ PHP_WARNING_SETTINGS = requirement_reader(
 )
 # PHP reports notices, warnings and deprecations at run time; the tests must see every one of them.
 WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=PHP_ONLY,
     requirements=always(required(ERROR_REPORTING)),
     reads=(PHP_WARNING_SETTINGS.name,),
@@ -261,7 +259,7 @@ WARNINGS = Practice(
 
 
 WARNINGS_AS_ERRORS = Practice(
-    name=WARNINGS_AS_ERRORS_PRACTICE,
+    name=PracticeName.WARNINGS_AS_ERRORS,
     languages=PHP_ONLY,
     requirements=always(*_PHP_WARNINGS_AS_ERRORS),
     any_one=True,

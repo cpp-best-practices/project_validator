@@ -2,12 +2,10 @@
 
 import unittest
 from typing import ClassVar
-from unittest import mock
 
-from project_validator import facts as facts_module
 from project_validator.build_systems.make import parse_makefile
 from project_validator.ecosystems.python.tox import braces
-from project_validator.facts import Command, Facts, Origin, Unknown, resolved
+from project_validator.facts import Command, Facts, Origin, Unknown, as_dict, resolved
 from project_validator.facts.arguments import positional
 from project_validator.facts.expansion import CommandExpander, known_expanders
 from project_validator.facts.tools import ToolRun
@@ -354,9 +352,9 @@ class CiEnvironmentTests(unittest.TestCase):
             env={"CC": "gcc -m32", "Y": "a b"},
         )
         self.assertEqual(resolved(command), ("gcc", "-m32", "-c", "xa b"))
-        self.assertIs(resolved(command), resolved(command))
-        with mock.patch.object(facts_module, "_MOST_RESOLVED", 0):
-            self.assertEqual(resolved(command), ("gcc", "-m32", "-c", "xa b"))
+        # Resolved once, when the command is made; derived, so not recorded among the facts.
+        self.assertIs(resolved(command), command.words)
+        self.assertNotIn("words", as_dict(command))
 
     def test_a_program_the_job_does_not_set_is_unknown(self) -> None:
         facts = self._facts("run: $CABAL v2-test all", "run: ${HOME}/bin/tool")

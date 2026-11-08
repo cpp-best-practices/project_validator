@@ -98,5 +98,7 @@ class RegistryTests(unittest.TestCase):
         def run(_: Context) -> Result:
             return Result.passed("")
 
-        self.assertEqual(applies_to(Check(name="c", description="", run=run, languages=frozenset({"C"}))), ("C/C++",))
+        self.assertEqual(
+            applies_to(Check(name="c", description="", run=run, languages_from=lambda: frozenset({"C"}))), ("C/C++",)
+        )
         self.assertEqual(applies_to(Check(name="any", description="", run=run)), ())

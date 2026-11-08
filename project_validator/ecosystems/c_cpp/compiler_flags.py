@@ -5,10 +5,7 @@ from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Facts
 from project_validator.facts.flags import errors_requirements, flag_requirements, warning_requirements
 from project_validator.facts.jobs import Job
-from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, Requirement, Wording
+from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording
 from project_validator.tools.toolchains import (
     FHARDENED,
     GCC_HARDENING,
@@ -47,7 +44,7 @@ def _errors(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
 
 
 WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=C_FAMILY,
     requirements=_warnings,
     reads=BUILD_FILES,
@@ -59,7 +56,7 @@ WARNINGS = Practice(
     ),
 )
 WARNINGS_AS_ERRORS = Practice(
-    name=WARNINGS_AS_ERRORS_PRACTICE,
+    name=PracticeName.WARNINGS_AS_ERRORS,
     languages=C_FAMILY,
     requirements=_errors,
     any_one=True,
@@ -81,7 +78,7 @@ def _hardening(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
 
 
 HARDENING = Practice(
-    name=HARDENING_PRACTICE,
+    name=PracticeName.HARDENING,
     languages=C_FAMILY,
     requirements=_hardening,
     reads=BUILD_FILES,
