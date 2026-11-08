@@ -11,5 +11,5 @@ type_checking = answered_check(
     description="CI runs a static type checker on dynamically typed code (e.g. mypy, pyright), ideally strictly",
     languages=handling(TYPE_CHECK),
     answers=type_checking_answers,
-    judge=lambda answer, allow_unknown: judge_type_checking(answer, allow_unknown=allow_unknown),
+    judge=judge_type_checking,
 )

@@ -9,5 +9,5 @@ coverage = answered_check(
     description="CI reports branch coverage (or the finest the language's tools measure; path coverage is a bonus)",
     languages=handling(COVERAGE),
     answers=language_coverage,
-    judge=lambda answer, allow_unknown: judge_coverage(answer, allow_unknown=allow_unknown),
+    judge=judge_coverage,
 )

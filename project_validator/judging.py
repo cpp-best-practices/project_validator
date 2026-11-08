@@ -1,23 +1,66 @@
 """Checks made of a question and its policy: each language the project uses is judged in each unit that has it, and
-the results are named by language, by unit, or by both, as far as they differ."""
+the results are named by language, by unit, or by both, as far as they differ.
 
-from collections.abc import Callable
+One result stands for several (`combined`): what was skipped is left out unless everything was, one result is
+said once when all agree, and otherwise each is labelled and the worst status wins.
+"""
+
+from collections.abc import Callable, Mapping
 
 from project_validator.core import Check, Context, Result, Status
-from project_validator.ecosystems import check_each_ecosystem, registered
-from project_validator.ecosystems.model import labelled
+from project_validator.ecosystems import Ecosystem, ecosystems_for, registered
 from project_validator.facts import Facts
+from project_validator.policy import Judge
 from project_validator.questions import LanguageAnswers, UnitAnswer
 
-type Judge[A] = Callable[[A, bool], Result]
+
+def labelled(results: Mapping[str, Result]) -> Result:
+    """One result for several subjects, each named by its label: the worst status wins."""
+    return Result(
+        status=max((result.status for result in results.values()), key=lambda status: status.severity),
+        message="; ".join(f"{label}: {result.message}" for label, result in results.items()),
+        details=tuple(f"{label}: {detail}" for label, result in results.items() for detail in result.details),
+    )
 
 
-def _label(language: str, unit: str, languages: set[str], units: set[str]) -> str:
+def combined[K](results: Mapping[K, Result], *, label: Callable[[K, tuple[K, ...]], str], none: str) -> Result:
+    """One result for several subjects: skipped with `none` when there are none; the skipped ones left out, unless
+    all are; the one result when all agree; otherwise each labelled (`label` is given the subject and every subject
+    kept, to name it as far as it differs from the others) and the worst status wins."""
+    if not results:
+        return Result.skipped(none)
+    if judged_ := {key: result for key, result in results.items() if result.status is not Status.SKIP}:
+        results = judged_
+    if len(set(results.values())) == 1:
+        return next(iter(results.values()))
+    kept = tuple(results)
+    return labelled({label(key, kept): result for key, result in results.items()})
+
+
+def by_ecosystem(results: Mapping[Ecosystem, Result]) -> Result:
+    """One result for several ecosystems, labelled by ecosystem where they differ."""
+    return combined(results, label=lambda ecosystem, _: ecosystem.label, none="no recognised ecosystem in the project")
+
+
+def check_each_ecosystem[Rules](
+    context: Context, rules: Mapping[Ecosystem, Rules], judge: Callable[[Rules, Context], Result]
+) -> Result:
+    """Judge each ecosystem the project uses by its rules: the worst result wins, and findings are labelled."""
+    used = ecosystems_for(context.structure.languages, rules)
+    return by_ecosystem({ecosystem: judge(rules[ecosystem], context) for ecosystem in used})
+
+
+type _Place = tuple[str, str]  # (language, unit)
+
+
+def _label(place: _Place, places: tuple[_Place, ...]) -> str:
     """How a result is named among the others: by language, by unit, or by both, as far as they differ."""
-    place = "the root" if unit == "." else unit
+    language, unit = place
+    languages, units = {language for language, _ in places}, {unit for _, unit in places}
+    where = "the root" if unit == "." else unit
     if len(units) == 1:
         return language
-    return place if len(languages) == 1 else f"{language} in {place}"
+    return where if len(languages) == 1 else f"{language} in {where}"
 
 
 def judged[A: UnitAnswer](
@@ -27,23 +70,16 @@ def judged[A: UnitAnswer](
     judge: Judge[A],
 ) -> Result:
     """The policy's judgement of each of `languages` the project uses, in each unit that has it; one result when they
-    agree."""
+    agree. A language the practice does not apply to (C in a C++ project) says nothing beside those it does."""
     found = [
         answer
         for language in sorted(languages & context.structure.languages)
         for answer in answers(language, context.facts).units
     ]
-    judged_ = {(answer.language, answer.unit): judge(answer, context.options.allow_unknown) for answer in found}
-    # A language the practice does not apply to (C in a C++ project) says nothing beside those it does.
-    results = {key: result for key, result in judged_.items() if result.status is not Status.SKIP} or judged_
-    if not results:
-        return Result(
-            status=Status.SKIP, message="only the docs, tooling, examples or test fixtures use these languages"
-        )
-    if len(set(results.values())) == 1:
-        return next(iter(results.values()))
-    named = {language for language, _ in results}, {unit for _, unit in results}
-    return labelled({_label(language, unit, *named): result for (language, unit), result in results.items()})
+    results = {
+        (answer.language, answer.unit): judge(answer, allow_unknown=context.options.allow_unknown) for answer in found
+    }
+    return combined(results, label=_label, none="only the docs, tooling, examples or test fixtures use these languages")
 
 
 def answered_check[A: UnitAnswer](
@@ -60,11 +96,11 @@ def answered_check[A: UnitAnswer](
 
     def run(context: Context) -> Result:
         handled = languages()
-        by_ecosystem = {
+        by_ecosystem_ = {
             ecosystem: ecosystem.languages & handled for ecosystem in registered() if ecosystem.languages & handled
         }
         return check_each_ecosystem(
-            context, by_ecosystem, lambda judged_languages, found: judged(judged_languages, found, answers, judge)
+            context, by_ecosystem_, lambda judged_languages, found: judged(judged_languages, found, answers, judge)
         )
 
     return Check(
@@ -72,4 +108,4 @@ def answered_check[A: UnitAnswer](
     )
 
 
-__all__ = ["answered_check", "judged"]
+__all__ = ["answered_check", "by_ecosystem", "check_each_ecosystem", "combined", "judged", "labelled"]

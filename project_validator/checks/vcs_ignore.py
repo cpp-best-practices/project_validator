@@ -34,6 +34,6 @@ vcs_ignore = _needing_an_ignore_file(
         "target/) out of version control",
         languages=output_languages,
         answers=ignored_outputs,
-        judge=lambda answer, allow_unknown: judge_ignored(answer, allow_unknown=allow_unknown),
+        judge=judge_ignored,
     )
 )

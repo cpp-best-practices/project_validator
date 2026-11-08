@@ -1,6 +1,6 @@
 """The tests policy: the project has tests, and CI runs them."""
 
-from project_validator.core import Result, Status
+from project_validator.core import Result
 from project_validator.facts.testing import RUNS
 from project_validator.policy import either, unknown
 from project_validator.questions import Answer
@@ -11,7 +11,7 @@ def judge_tests(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
     """Tests must exist (as each language's runners define them) and CI must run them; tests CI never runs warn. An
     unknown answer is an error unless `allow_unknown`."""
     if answer.answer is Answer.IMPOSSIBLE:
-        return Result(status=Status.SKIP, message=f"no known test runner runs {answer.language}")
+        return Result.skipped(f"no known test runner runs {answer.language}")
     files = answer.definitions()
     if not files and answer.unknown_definitions and not allow_unknown:
         return unknown("whether there are tests", answer.unknown_definitions)

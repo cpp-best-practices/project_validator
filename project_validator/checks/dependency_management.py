@@ -48,6 +48,6 @@ dependency_management = _with_vendored(
         description="Dependencies come from a package manager (CPM, vcpkg, uv, Cargo) and are locked, not vendored",
         languages=_languages,
         answers=dependency_answers,
-        judge=lambda answer, allow_unknown: judge_dependencies(answer, allow_unknown=allow_unknown),
+        judge=judge_dependencies,
     )
 )

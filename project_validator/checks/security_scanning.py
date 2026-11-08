@@ -12,5 +12,5 @@ security_scanning = answered_check(
     description="CI scans the code for security problems (CodeQL, GitLab SAST, or each language's security lints)",
     languages=handling(SECURITY),
     answers=security_answers,
-    judge=lambda answer, allow_unknown: judge_security(answer, allow_unknown=allow_unknown),
+    judge=judge_security,
 )

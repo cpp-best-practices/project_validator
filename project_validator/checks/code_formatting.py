@@ -9,5 +9,5 @@ code_formatting = answered_check(
     description="Formatting is defined (e.g. .clang-format, ruff, rustfmt) and CI enforces it",
     languages=handling(FORMAT),
     answers=formatting,
-    judge=lambda answer, allow_unknown: judge_formatting(answer, allow_unknown=allow_unknown),
+    judge=judge_formatting,
 )

@@ -1,8 +1,8 @@
 """The formatting policy: CI enforces the formatting with a tool whose style is defined, by a file or by default."""
 
-from project_validator.core import Result, Status
+from project_validator.core import Result
 from project_validator.facts.formatting import Enforcement
-from project_validator.policy import alternatives, either, unknown
+from project_validator.policy import alternatives, either, skipped_or_unknown
 from project_validator.policy import files as files_listed
 from project_validator.questions import Answer
 from project_validator.questions.tooling import ToolAnswer
@@ -25,13 +25,20 @@ def judge_formatting(answer: ToolAnswer, *, allow_unknown: bool = False) -> Resu
     """Formatting passes when CI enforces it with a tool whose style is defined (by a file, or by default); defined
     but not enforced warns. A language no known tool formats is skipped. An unknown answer is an error unless
     `allow_unknown`."""
-    if answer.answer is Answer.IMPOSSIBLE:
-        return Result(status=Status.SKIP, message=f"no known tool formats {answer.language}")
+    hint = _hint(answer)
+    settled = skipped_or_unknown(
+        answer.answer,
+        answer.unknowns,
+        impossible=f"no known tool formats {answer.language}",
+        asks="whether CI enforces the formatting",
+        hint=hint,
+        allow_unknown=allow_unknown,
+    )
+    if settled is not None:
+        return settled
     if answer.answer is Answer.YES:
         return _enforced(answer)
-    hint, names = _hint(answer), either(answer.names())
-    if answer.answer is Answer.UNKNOWN and not allow_unknown:
-        return unknown("whether CI enforces the formatting", answer.unknowns, hint)
+    names = either(answer.names())
     if applied := answer.others():
         return Result.failed(
             f"CI runs {', '.join(applied)} but only to rewrite files; nothing fails when they are not formatted", hint

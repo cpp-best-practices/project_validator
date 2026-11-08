@@ -1,4 +1,4 @@
-"""The registry of language ecosystems (one profile module each, plus plugins' ones), and judging per ecosystem.
+"""The registry of language ecosystems (one profile module each, plus plugins' ones).
 
 Every module of this package except `model` is a profile, defining one ecosystem; they are found, not listed.
 """
@@ -18,8 +18,6 @@ from project_validator.ecosystems.model import (
     BuildSystem,
     Ecosystem,
     ToolchainPatterns,
-    check_each_ecosystem,
-    combined,
     ecosystems_for,
     languages_of,
 )
@@ -164,9 +162,7 @@ __all__ = [
     "ToolchainPatterns",
     "applies_to",
     "build_systems",
-    "check_each_ecosystem",
     "claim_conflicts",
-    "combined",
     "ecosystems_for",
     "is_build_tree",
     "isolated_registry",
