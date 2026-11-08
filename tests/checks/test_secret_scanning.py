@@ -1,8 +1,9 @@
 import unittest
 from collections.abc import Mapping
 
-from project_validator.checks.secret_scanning import HINT, secret_scanning
+from project_validator.checks.secret_scanning import secret_scanning
 from project_validator.core import Result, Status
+from project_validator.policy.secrets import HINT
 from tests.support import CI_FILES, FIXTURES, GITHUB_WORKFLOW, github_steps, make_context, temp_project
 
 

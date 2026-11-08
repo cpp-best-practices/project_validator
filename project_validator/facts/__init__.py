@@ -129,6 +129,14 @@ class ActionStep(Fact):
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class StepReference(Fact):
+    """A reusable step a CI configuration file refers to (`actions/checkout@v4`, a reusable workflow a job calls), as
+    written, whether or not what refers to it runs: what it is pinned to is a property of the file."""
+
+    reference: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class Unknown(Fact):
     """Something an extractor could not read, so that its absence is not taken for "no".
 
@@ -278,6 +286,7 @@ __all__ = [
     "Facts",
     "Origin",
     "Setting",
+    "StepReference",
     "Unknown",
     "as_dict",
     "collected",

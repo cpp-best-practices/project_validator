@@ -1,5 +1,31 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "C#",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "C#",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "C#",
@@ -256,6 +282,20 @@
             "language": "C#",
             "notes": [],
             "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "C#",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "C#",
+            "scanners": [],
             "unit": "."
           }
         ]

@@ -1,5 +1,75 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Fortran",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/function-limits.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Fortran",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "Fortran",
@@ -347,6 +417,22 @@
         ]
       }
     ],
+    "secret-scanning": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "Fortran",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "Fortran",
@@ -661,6 +747,16 @@
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
       "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
       "builds": true,
@@ -3227,6 +3323,21 @@
       "via": []
     },
     {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -3282,6 +3393,11 @@
       "via": [
         ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
       ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
       "builds": true,
@@ -3354,6 +3470,11 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
       "compilers": [

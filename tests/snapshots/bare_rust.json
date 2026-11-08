@@ -1,5 +1,31 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Rust",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Rust",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "Rust",
@@ -272,6 +298,20 @@
             "language": "Rust",
             "notes": [],
             "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Rust",
+            "scanners": [],
             "unit": "."
           }
         ]
