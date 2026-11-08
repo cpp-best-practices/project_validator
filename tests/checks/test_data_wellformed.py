@@ -42,6 +42,19 @@ class DataWellformedTests(unittest.TestCase):
         self.assertEqual(_run(files).message, "6 data files parse (JSON: 1, TOML: 1, XML: 2, YAML: 2)")
         self.assertEqual(_run({"a.json": "[]"}).message, "1 data file parses (JSON: 1)")
 
+    def test_a_test_suites_malformed_data_is_reported_but_not_judged(self) -> None:
+        """A parser's test data is malformed on purpose (aeson ships 201 such files): it is listed, and the product's
+        own data files are judged."""
+        only_tests = _run({"tests/data/bad.json": "{", "spec/fixtures/also.yaml": "a: [", "config.json": "{}"})
+        self.assertEqual((only_tests.status, only_tests.message), (Status.PASS, "1 data file parses (JSON: 1)"))
+        self.assertEqual(len(only_tests.details), 2)
+        self.assertTrue(only_tests.details[0].startswith("test data, not judged: spec/fixtures/also.yaml:1:"))
+        self.assertTrue(only_tests.details[1].startswith("test data, not judged: tests/data/bad.json:1:2: "))
+        with_product = _run({"tests/data/bad.json": "{", "a.json": "{"})
+        self.assertEqual((with_product.status, with_product.message), (Status.FAIL, "1 data file does not parse"))
+        self.assertTrue(with_product.details[0].startswith("a.json:1:2: "), with_product.details)
+        self.assertTrue(with_product.details[1].startswith("test data, not judged: tests/data/bad.json:1:2: "))
+
     def test_reports_where_each_file_does_not_parse(self) -> None:
         self.assert_fails(
             {"package.json": '{\n  "name": "app",\n}\n', "Cargo.toml": "[package\n"},
