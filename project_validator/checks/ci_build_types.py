@@ -11,5 +11,5 @@ ci_build_types = answered_check(
     description="CI builds Debug and Release, with and without sanitizers, everywhere",
     languages=handled(compiled=True),
     answers=platform_answers,
-    judge=lambda answer, allow_unknown: judge_build_types(answer, allow_unknown=allow_unknown),
+    judge=judge_build_types,
 )

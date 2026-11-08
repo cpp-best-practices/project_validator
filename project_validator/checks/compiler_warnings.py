@@ -11,5 +11,5 @@ compiler_warnings = answered_check(
     description="A strict compiler warning (or lint) set is enabled",
     languages=handled(WARNINGS),
     answers=warning_answers,
-    judge=lambda answer, allow_unknown: judge_warnings(answer, allow_unknown=allow_unknown),
+    judge=judge_warnings,
 )

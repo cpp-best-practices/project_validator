@@ -16,5 +16,5 @@ hardening = answered_check(
     description="Security hardening options are enabled",
     languages=handled(HARDENING),
     answers=hardening_answers,
-    judge=lambda answer, allow_unknown: judge_hardening(answer, allow_unknown=allow_unknown),
+    judge=judge_hardening,
 )

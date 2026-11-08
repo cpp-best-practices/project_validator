@@ -11,5 +11,5 @@ static_analysis = answered_check(
     description="Static analyzers are configured and run (e.g. clang-tidy and cppcheck, ruff check, clippy)",
     languages=handling(ANALYSIS),
     answers=analysis_answers,
-    judge=lambda answer, allow_unknown: judge_analysis(answer, allow_unknown=allow_unknown),
+    judge=judge_analysis,
 )

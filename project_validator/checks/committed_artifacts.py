@@ -16,5 +16,5 @@ committed_artifacts = answered_check(
     description="No build outputs (e.g. object files, __pycache__/, target/) are committed",
     languages=output_languages,
     answers=committed_outputs,
-    judge=lambda answer, allow_unknown: judge_committed(answer, allow_unknown=allow_unknown),
+    judge=judge_committed,
 )

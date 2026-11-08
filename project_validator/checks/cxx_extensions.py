@@ -10,5 +10,5 @@ cxx_extensions = answered_check(
     description="Compiler extensions are disabled (-std=c++NN rather than -std=gnu++NN)",
     languages=handled(EXTENSIONS),
     answers=practice_answers(EXTENSIONS),
-    judge=lambda answer, allow_unknown: judge_any_one(answer, allow_unknown=allow_unknown),
+    judge=judge_any_one,
 )

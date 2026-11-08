@@ -505,6 +505,10 @@ except where a step deliberately changes results and says so.
    once: one way to say which commands a tool claims (`facts.arguments.starts_with`; `starts`, `with_option`,
    `all_of` and `any_of` in `facts.tools`); `Job` in `facts/jobs.py`, so that extractors depend on facts only and
    nothing imports inside a function to break a cycle; the extraction stages in `project_validator/extraction.py`;
-   a project's files listed once.
+   a project's files listed once. In the judging layer: a policy is a `Judge` (a protocol, so checks name the
+   policy itself); what settles an answer before a policy judges it (`skipped_or_unknown`: no known tool, or an
+   unknown that is not allowed) is said once, as is a policy that only advises (`policy/tooling.advised`: security
+   scanning and dependency audits); `Result.skipped`; and one `combined` merges results, whether by ecosystem or
+   by language and unit.
 
 `--facts` and `--answers` expose the database and the answers.

@@ -9,5 +9,5 @@ dependency_audit = answered_check(
     description="CI checks the dependencies against known vulnerabilities (e.g. pip-audit, cargo audit, govulncheck)",
     languages=handling(AUDIT),
     answers=audit_answers,
-    judge=lambda answer, allow_unknown: judge_audit(answer, allow_unknown=allow_unknown),
+    judge=judge_audit,
 )

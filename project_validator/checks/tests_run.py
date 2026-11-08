@@ -9,6 +9,6 @@ tests_run = answered_check(
     description="Tests exist (registered with CTest or Meson for C/C++) and CI runs them",
     languages=handling(TEST),
     answers=tests,
-    judge=lambda answer, allow_unknown: judge_tests(answer, allow_unknown=allow_unknown),
+    judge=judge_tests,
     aliases=("ctest-runs",),
 )

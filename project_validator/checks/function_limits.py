@@ -12,5 +12,5 @@ function_limits = answered_check(
     description="Function length is limited (lizard, or each language's linter rule)",
     languages=handling(FUNCTION_LENGTH),
     answers=limit_answers,
-    judge=lambda answer, allow_unknown: judge_limits(answer, allow_unknown=allow_unknown),
+    judge=judge_limits,
 )

@@ -4,7 +4,7 @@ import re
 from collections.abc import Iterator
 
 from project_validator import yaml_support
-from project_validator.core import Context, Result, Status, check
+from project_validator.core import Context, Result, check
 
 FULL_COMMIT = re.compile(r"[0-9a-f]{40}")
 SHORT_COMMIT = re.compile(r"[0-9a-f]{7,39}")
@@ -54,7 +54,7 @@ def _references(context: Context) -> Iterator[tuple[str, str]]:
 @check(name="action-pinning", description="The actions CI uses are pinned to full commit SHAs")
 def action_pinning(context: Context) -> Result:
     if not any(ci_file.provider.step_references for ci_file in context.ci_files):
-        return Result(status=Status.SKIP, message="no CI configuration with reusable steps")
+        return Result.skipped("no CI configuration with reusable steps")
     allow = context.options.allow_official_tags
     found = [
         (path, reference, pinning(reference, allow_official_tags=allow)) for path, reference in _references(context)

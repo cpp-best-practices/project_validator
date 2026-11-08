@@ -23,6 +23,14 @@ class Status(enum.StrEnum):
     ERROR = "ERROR"
     SKIP = "SKIP"
 
+    @property
+    def severity(self) -> int:
+        """How bad the status is, for the worst of several to win: SKIP < PASS < WARN < FAIL < ERROR."""
+        return _SEVERITY.index(self)
+
+
+_SEVERITY = (Status.SKIP, Status.PASS, Status.WARN, Status.FAIL, Status.ERROR)
+
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Result:
@@ -41,6 +49,11 @@ class Result:
     @classmethod
     def failed(cls, message: str, *details: str) -> Result:
         return cls(status=Status.FAIL, message=message, details=details)
+
+    @classmethod
+    def skipped(cls, message: str, *details: str) -> Result:
+        """The check does not apply (to the project, or to this language in it): not a finding."""
+        return cls(status=Status.SKIP, message=message, details=details)
 
     def with_details(self, *details: str) -> Result:
         return Result(status=self.status, message=self.message, details=self.details + details)
