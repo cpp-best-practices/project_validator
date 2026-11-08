@@ -10,11 +10,30 @@ from project_validator.facts.coverage import COVERAGE, Granularity, coverage_too
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import Run, Tool, ToolRun
 from project_validator.policy.coverage import judge_coverage, required_coverage
-from project_validator.questions import Answer
+from project_validator.questions import Answer, answer_dict, unknowns_for
 from project_validator.questions.coverage import coverage_answer
 from tests.support import github_job, make_context, temp_project
 
 ORIGIN = Origin(path="ci.yml", at=("jobs", "test"))
+
+
+class AnswerDictTests(unittest.TestCase):
+    def test_every_answer_starts_with_its_language_unit_and_verdict(self) -> None:
+        answer = coverage_answer("Lang", Facts(), ())
+        self.assertEqual(
+            answer_dict(answer, Answer.YES, extra=[1]), {"language": "Lang", "unit": ".", "answer": "yes", "extra": [1]}
+        )
+        self.assertEqual(answer_dict(answer), {"language": "Lang", "unit": "."})
+
+
+class UnknownsForTests(unittest.TestCase):
+    def test_unknown_settings_count_for_what_is_read(self) -> None:
+        settings = Unknown(origin=ORIGIN, subject="s", reason="not read", hides="settings", tools=("CMake",))
+        commands = Unknown(origin=ORIGIN, subject="c", reason="not split")
+        facts = Facts((settings, commands))
+        self.assertEqual(unknowns_for((), facts), ("c: not split (ci.yml:jobs.test)",))
+        self.assertEqual(len(unknowns_for((), facts, reads=("CMake",))), 2)
+        self.assertEqual(len(unknowns_for((), facts, reads=("Meson",))), 1)
 
 
 def _never(_: Command, __: Facts) -> Run | None:

@@ -87,17 +87,30 @@ def runs_of(aspect: str, language: str, unit: str, facts: Facts) -> tuple[ToolRu
 
 
 def unknowns_for(
-    tools: Iterable[Tool], facts: Facts, *, hiding: Iterable[str] = ("jobs", "commands", "settings")
+    tools: Iterable[Tool],
+    facts: Facts,
+    *,
+    hiding: Iterable[str] = ("jobs", "commands", "settings"),
+    reads: Iterable[str] = (),
 ) -> tuple[str, ...]:
-    """What was not read that may hide a run (a job or a command), or the settings the `tools` read, as
-    `subject: reason (origin)`; only what may hide one of `hiding`."""
-    reads = {name for tool in tools for name in (tool.name, *tool.reads)}
+    """What was not read that may hide a run (a job or a command), or the settings the `tools` read (or those of
+    `reads`, for a question that reads settings without a tool), as `subject: reason (origin)`; only what may hide one
+    of `hiding`."""
+    read = {name for tool in tools for name in (tool.name, *tool.reads)} | set(reads)
     kinds = frozenset(hiding)
     return tuple(
         f"{fact.subject}: {fact.reason} ({fact.origin})"
         for fact in facts.of(Unknown)
-        if fact.hides in kinds and (fact.hides != "settings" or reads & set(fact.tools))
+        if fact.hides in kinds and (fact.hides != "settings" or read & set(fact.tools))
     )
+
+
+def answer_dict(answer: UnitAnswer, verdict: Answer | None = None, /, **fields: object) -> dict[str, object]:
+    """An answer as JSON-ready data: its language and unit, its verdict when it has one, then its own `fields`."""
+    found: dict[str, object] = {"language": answer.language, "unit": answer.unit}
+    if verdict is not None:
+        found["answer"] = str(verdict)
+    return {**found, **fields}
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -122,6 +135,7 @@ __all__ = [
     "LanguageAnswers",
     "Question",
     "UnitAnswer",
+    "answer_dict",
     "known_questions",
     "per_unit",
     "runs_of",

@@ -6,6 +6,7 @@ and `warning_level`), and the C/C++ practices ask for them per compiler.
 """
 
 import re
+from collections.abc import Collection, Iterable
 from dataclasses import dataclass
 
 GCC_LIKE = frozenset({"gcc", "clang", "appleclang", "intel", "flang"})
@@ -67,16 +68,17 @@ MSVC_HARDENING = (
 FHARDENED = "-fhardened"
 
 
-def hardening_flags(compiler: str) -> tuple[Flag, ...]:
-    """The hardening `compiler` asks for, each flag also set by -fhardened for GCC; none for a compiler whose flags
-    are not known."""
-    if compiler == MSVC:
-        return MSVC_HARDENING
-    if compiler == "gcc":
-        return tuple(
-            Flag(flag.name, f"{flag.spellings}|{FHARDENED}", (*flag.hints, FHARDENED)) for flag in GCC_HARDENING
-        )
-    return GCC_HARDENING if compiler in GCC_LIKE else ()
+def with_fhardened(flags: Iterable[Flag]) -> tuple[Flag, ...]:
+    """`flags`, each also set by -fhardened."""
+    return tuple(Flag(flag.name, f"{flag.spellings}|{FHARDENED}", (*flag.hints, FHARDENED)) for flag in flags)
+
+
+def hardening_flags(compiler: str, names: Collection[str] | None = None) -> tuple[Flag, ...]:
+    """The hardening `compiler` asks for (all of it, or the flags `names`d: a language's back end may add only some),
+    each flag also set by -fhardened for GCC; none for a compiler whose flags are not known."""
+    flags: tuple[Flag, ...] = MSVC_HARDENING if compiler == MSVC else GCC_HARDENING if compiler in GCC_LIKE else ()
+    chosen = tuple(flag for flag in flags if names is None or flag.name in names)
+    return with_fhardened(chosen) if compiler == "gcc" else chosen
 
 
 def warning_flags(compiler: str) -> tuple[Flag, ...]:
@@ -132,4 +134,5 @@ __all__ = [
     "warning_flags",
     "warning_level_settings",
     "warnings_as_errors_flag",
+    "with_fhardened",
 ]

@@ -4,9 +4,31 @@ import unittest
 
 from project_validator.checks.compiler_warnings import compiler_warnings
 from project_validator.core import Status
-from project_validator.facts.flags import flag_requirement, literal_starts
-from project_validator.tools.toolchains import Flag
+from project_validator.facts.flags import errors_requirements, flag_requirement, literal_starts, warning_requirements
+from project_validator.tools.toolchains import GCC_HARDENING, Flag, hardening_flags, with_fhardened
 from tests.support import github_job, run_in_layout
+
+C = frozenset({"C"})
+
+
+class RequirementSetTests(unittest.TestCase):
+    def test_warnings_are_also_set_by_the_build_systems_warning_level(self) -> None:
+        [wall] = warning_requirements((Flag("-Wall", "-Wall"),), C)
+        self.assertIn("warning_level", wall.runs.pattern if wall.runs else "")
+        self.assertIn("-Dwarning_level=", wall.hints)
+
+    def test_warnings_as_errors_are_also_set_by_the_build_systems_setting(self) -> None:
+        self.assertEqual(errors_requirements(None, C), ())
+        [werror] = errors_requirements(Flag("-Werror", "-Werror"), C)
+        self.assertIn("COMPILE_WARNING_AS_ERROR", werror.runs.pattern if werror.runs else "")
+
+    def test_hardening_flags_may_be_a_subset_and_gcc_also_takes_fhardened(self) -> None:
+        [chosen] = hardening_flags("gcc", ("-fcf-protection",))
+        self.assertEqual((chosen.name, "-fhardened" in chosen.spellings), ("-fcf-protection", True))
+        [intel] = hardening_flags("intel", ("-fcf-protection",))
+        self.assertEqual((intel.name, "-fhardened" in intel.spellings), ("-fcf-protection", False))
+        self.assertEqual(hardening_flags("gcc"), with_fhardened(GCC_HARDENING))
+        self.assertEqual(hardening_flags("unknown"), ())
 
 
 class FlagTests(unittest.TestCase):

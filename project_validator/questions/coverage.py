@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from project_validator.facts import Facts
 from project_validator.facts.coverage import COVERAGE, Granularity
 from project_validator.facts.tools import Tool, ToolRun, known_tools
-from project_validator.questions import Answer, LanguageAnswers, Question, per_unit, runs_of, unknowns_for
+from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, per_unit, runs_of, unknowns_for
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -37,15 +37,14 @@ class CoverageAnswer:
         return tuple(found for found, answer in self.granularities.items() if answer.answer is not Answer.IMPOSSIBLE)
 
     def as_dict(self) -> dict[str, object]:
-        return {
-            "language": self.language,
-            "unit": self.unit,
+        return answer_dict(
+            self,
             **{
                 str(granularity): {"answer": str(found.answer), "tools": list(found.tools), "known": list(found.known)}
                 for granularity, found in self.granularities.items()
             },
-            "unknowns": list(self.unknowns),
-        }
+            unknowns=list(self.unknowns),
+        )
 
 
 type LanguageCoverage = LanguageAnswers[CoverageAnswer]
