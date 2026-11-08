@@ -5,7 +5,7 @@ import shlex
 from collections.abc import Callable, Iterator
 
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, positional, starts_with
@@ -20,7 +20,7 @@ from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import Practice, always, required, requirement_reader
+from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -171,9 +171,11 @@ GO_LINTS = (
 WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=GO_LANGUAGE,
-    kind="Go linters",
     requirements=always(*(required(lint, in_files=False, tools=("golangci-lint",)) for lint in GO_LINTS)),
-    hint="run go vet and staticcheck (golangci-lint runs both) in CI",
+    words=Wording(
+        kind="Go linters",
+        hint="run go vet and staticcheck (golangci-lint runs both) in CI",
+    ),
 )
 
 
@@ -264,13 +266,15 @@ GO_BUILD_SETTINGS = requirement_reader("Go build settings", BUILD_SETTINGS_FILES
 HARDENING = Practice(
     name=HARDENING_PRACTICE,
     languages=GO_LANGUAGE,
-    kind="hardening options",
     requirements=always(_PIE),
     reads=(GO_BUILD_SETTINGS.name,),
-    hint="build them with -buildmode=pie (GOFLAGS=-buildmode=pie, or buildmode: pie in .goreleaser.yaml); "
-    "it is the default on Windows and macOS but not on Linux",
     skipped=_no_program,
-    failed="Go programs are not built as position-independent executables",
+    words=Wording(
+        kind="hardening options",
+        hint="build them with -buildmode=pie (GOFLAGS=-buildmode=pie, or buildmode: pie in .goreleaser.yaml); "
+        "it is the default on Windows and macOS but not on Linux",
+        failed="Go programs are not built as position-independent executables",
+    ),
 )
 
 
@@ -341,10 +345,14 @@ GO = Ecosystem(
     languages=GO_LANGUAGE,
     build_systems=(GO_MODULES,),
     source_suffixes={".go": "Go"},
-    toolchain=ToolchainPatterns(
-        language="Go",
-        versions=(re.compile(rf"\bgo-version\W+{_GO_VERSION}"), re.compile(r"\bgolang:(\d+\.\d+)")),
-        usage=re.compile(r"\bgo\s+(?:build|test|vet|run|mod|install|generate)\b|\bsetup-go\b"),
+    toolchain=toolchain_patterns(
+        "Go",
+        version=_GO_VERSION,
+        inputs=("go-version",),
+        images=("golang",),
+        image_version=r"(\d+\.\d+)",
+        commands=r"\bgo\s+(?:build|test|vet|run|mod|install|generate)\b",
+        setup=("go",),
     ),
 )
 

@@ -8,7 +8,7 @@ from dataclasses import replace
 from pathlib import PurePosixPath
 
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns, toml_members
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, toml_members, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program, starts_with
 from project_validator.facts.audit import audited, auditor
@@ -21,7 +21,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import Practice, always, required, requirement_reader
+from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -313,11 +313,13 @@ PYTHON_WARNING_SETTINGS = requirement_reader("Python warning settings", WARNING_
 WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=PYTHON_ONLY,
-    kind="Python warning settings",
     requirements=always(*_PYTHON_WARNINGS),
     reads=(PYTHON_WARNING_SETTINGS.name,),
-    separator=" ",
-    hint='run the tests with -W error (or filterwarnings = ["error"] in the pytest settings)',
+    words=Wording(
+        kind="Python warning settings",
+        separator=" ",
+        hint='run the tests with -W error (or filterwarnings = ["error"] in the pytest settings)',
+    ),
 )
 
 # Python builds no binary, so it has no hardening rule: its interpreter is hardened by whoever builds it.
@@ -445,16 +447,15 @@ PYTHON = Ecosystem(
     languages=PYTHON_ONLY,
     build_systems=(PYTHON_PACKAGING,),
     source_suffixes={".py": "Python", ".pyi": "Python"},
-    toolchain=ToolchainPatterns(
-        language="Python",
-        versions=(
-            re.compile(r"\bpython-version\W+(\d+(?:\.(?:\d+|x))*|pypy[\d.]*)"),
-            re.compile(r"\bpython:(\d+(?:\.\d+)*)"),
-            re.compile(r"\bpython(\d\.\d+)\b"),
-        ),
-        usage=re.compile(
-            r"\bpython[\d.]*\s+(?:-|\S+\.py\b)|\bpip\d*\s+install\b|\bpytest\b|\btox\b|\bnox\b|\bsetup-python\b"
-        ),
+    toolchain=toolchain_patterns(
+        "Python",
+        version=r"(\d+(?:\.(?:\d+|x))*|pypy[\d.]*)",
+        inputs=("python-version",),
+        images=("python",),
+        image_version=r"(\d+(?:\.\d+)*)",
+        more=(r"\bpython(\d\.\d+)\b",),
+        commands=r"\bpython[\d.]*\s+(?:-|\S+\.py\b)|\bpip\d*\s+install\b|\bpytest\b|\btox\b|\bnox\b",
+        setup=("python",),
     ),
 )
 

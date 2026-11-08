@@ -9,7 +9,7 @@ from collections.abc import Iterator
 from fnmatch import fnmatchcase
 from pathlib import Path, PurePosixPath
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, program, starts_with
@@ -23,7 +23,7 @@ from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, always, required, requirement_reader
+from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
@@ -267,30 +267,36 @@ DOTNET_WARNING_SETTINGS = requirement_reader(
 CSHARP_WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=frozenset({CSHARP}),
-    kind=".NET analyzer settings",
     requirements=always(*_CSHARP_WARNINGS),
     reads=(DOTNET_WARNING_SETTINGS.name,),
-    hint="set <AnalysisMode>All</AnalysisMode>, <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> and "
-    "<Nullable>enable</Nullable> in Directory.Build.props",
+    words=Wording(
+        kind=".NET analyzer settings",
+        hint="set <AnalysisMode>All</AnalysisMode>, <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> and "
+        "<Nullable>enable</Nullable> in Directory.Build.props",
+    ),
 )
 FSHARP_WARNINGS_PRACTICE = Practice(
     name=WARNINGS_PRACTICE,
     languages=frozenset({FSHARP}),
-    kind=".NET analyzer settings",
     requirements=always(*_FSHARP_WARNINGS),
     reads=(DOTNET_WARNING_SETTINGS.name,),
-    hint="turn on F# warnings with <WarnOn> (or --warnon:)",
+    words=Wording(
+        kind=".NET analyzer settings",
+        hint="turn on F# warnings with <WarnOn> (or --warnon:)",
+    ),
 )
 
 WARNINGS_AS_ERRORS = Practice(
     name=WARNINGS_AS_ERRORS_PRACTICE,
     languages=DOTNET_LANGUAGES,
-    kind="warnings as errors",
     requirements=always(*_DOTNET_WARNINGS_AS_ERRORS),
     any_one=True,
     reads=(DOTNET_WARNING_SETTINGS.name,),
-    searched="the MSBuild settings or CI configuration",
-    hint="set <TreatWarningsAsErrors>true</TreatWarningsAsErrors> in Directory.Build.props",
+    words=Wording(
+        kind="warnings as errors",
+        searched="the MSBuild settings or CI configuration",
+        hint="set <TreatWarningsAsErrors>true</TreatWarningsAsErrors> in Directory.Build.props",
+    ),
 )
 
 # The commands that restore a project's packages, which NuGet audits as it restores them.
@@ -478,13 +484,13 @@ DOTNET = Ecosystem(
     source_suffixes={".cs": CSHARP, ".fs": FSHARP, ".fsi": FSHARP},
     # F# scripts and Razor views belong to .NET projects, but name no language on their own.
     ambiguous_suffixes={".fsx": None, ".razor": None, ".cshtml": None},
-    toolchain=ToolchainPatterns(
-        language=".NET SDK",
-        versions=(
-            re.compile(rf"\bdotnet-version\W+{_SDK_VERSION}"),
-            re.compile(rf"\bmcr\.microsoft\.com/dotnet/sdk:{_SDK_VERSION}"),
-        ),
-        usage=re.compile(r"\bdotnet\s+(?:build|test|restore|publish|pack|run|format)\b|\bsetup-dotnet\b"),
+    toolchain=toolchain_patterns(
+        ".NET SDK",
+        version=_SDK_VERSION,
+        inputs=("dotnet-version",),
+        images=("mcr.microsoft.com/dotnet/sdk",),
+        commands=r"\bdotnet\s+(?:build|test|restore|publish|pack|run|format)\b",
+        setup=("dotnet",),
     ),
 )
 

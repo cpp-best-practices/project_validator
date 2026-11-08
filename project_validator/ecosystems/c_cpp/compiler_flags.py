@@ -8,7 +8,7 @@ from project_validator.facts.jobs import Job
 from project_validator.facts.practices import HARDENING as HARDENING_PRACTICE
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, Requirement
+from project_validator.facts.practices import Practice, Requirement, Wording
 from project_validator.tools.toolchains import (
     FHARDENED,
     GCC_HARDENING,
@@ -49,24 +49,28 @@ def _errors(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
 WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=C_FAMILY,
-    kind="compiler warning flags",
     requirements=_warnings,
     reads=BUILD_FILES,
-    separator=" ",
-    hint="enable -Wall -Wextra -Wpedantic -Wshadow -Wconversion (MSVC: /W4 /permissive-) for each compiler CI uses",
     compilers=ci_compilers,
+    words=Wording(
+        kind="compiler warning flags",
+        separator=" ",
+        hint="enable -Wall -Wextra -Wpedantic -Wshadow -Wconversion (MSVC: /W4 /permissive-) for each compiler CI uses",
+    ),
 )
 WARNINGS_AS_ERRORS = Practice(
     name=WARNINGS_AS_ERRORS_PRACTICE,
     languages=C_FAMILY,
-    kind="warnings as errors",
     requirements=_errors,
     any_one=True,
     reads=BUILD_FILES,
-    searched="CI configuration or the build files (CMake files, presets, meson.build)",
-    hint="add -Werror (GCC/Clang), /WX (MSVC) or set CMAKE_COMPILE_WARNING_AS_ERROR (Meson: werror=true), at least as "
-    "an option",
     compilers=ci_compilers,
+    words=Wording(
+        kind="warnings as errors",
+        searched="CI configuration or the build files (CMake files, presets, meson.build)",
+        hint="add -Werror (GCC/Clang), /WX (MSVC) or set CMAKE_COMPILE_WARNING_AS_ERROR (Meson: werror=true), "
+        "at least as an option",
+    ),
 )
 
 # --- hardening
@@ -79,10 +83,12 @@ def _hardening(_facts: Facts, compiler: str | None) -> tuple[Requirement, ...]:
 HARDENING = Practice(
     name=HARDENING_PRACTICE,
     languages=C_FAMILY,
-    kind="hardening options",
     requirements=_hardening,
     reads=BUILD_FILES,
-    hint=f"enable {FHARDENED} (GCC 14+) or {', '.join(flag.name for flag in GCC_HARDENING)}; for MSVC "
-    f"{', '.join(flag.name for flag in MSVC_HARDENING)}",
     compilers=ci_compilers,
+    words=Wording(
+        kind="hardening options",
+        hint=f"enable {FHARDENED} (GCC 14+) or {', '.join(flag.name for flag in GCC_HARDENING)}; for MSVC "
+        f"{', '.join(flag.name for flag in MSVC_HARDENING)}",
+    ),
 )

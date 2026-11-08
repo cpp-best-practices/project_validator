@@ -9,7 +9,7 @@ import re
 from collections.abc import Callable, Iterator
 
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.evidence import (
     json_value,
 )
@@ -27,7 +27,7 @@ from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
 from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, always, required, requirement_reader
+from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import (
     SettingsReader,
@@ -250,23 +250,27 @@ PHP_WARNING_SETTINGS = requirement_reader(
 WARNINGS = Practice(
     name=WARNINGS_PRACTICE,
     languages=PHP_ONLY,
-    kind="PHP error reporting settings",
     requirements=always(required(ERROR_REPORTING)),
     reads=(PHP_WARNING_SETTINGS.name,),
-    separator=" ",
-    hint='set <ini name="error_reporting" value="-1"/> in phpunit.xml',
+    words=Wording(
+        kind="PHP error reporting settings",
+        separator=" ",
+        hint='set <ini name="error_reporting" value="-1"/> in phpunit.xml',
+    ),
 )
 
 
 WARNINGS_AS_ERRORS = Practice(
     name=WARNINGS_AS_ERRORS_PRACTICE,
     languages=PHP_ONLY,
-    kind="warnings as errors",
     requirements=always(*_PHP_WARNINGS_AS_ERRORS),
     any_one=True,
     reads=(PHP_WARNING_SETTINGS.name,),
-    searched="phpunit.xml, CI configuration or the Composer scripts it runs",
-    hint='set failOnWarning="true", failOnNotice="true" and failOnDeprecation="true" in phpunit.xml',
+    words=Wording(
+        kind="warnings as errors",
+        searched="phpunit.xml, CI configuration or the Composer scripts it runs",
+        hint='set failOnWarning="true", failOnNotice="true" and failOnDeprecation="true" in phpunit.xml',
+    ),
 )
 
 
@@ -560,10 +564,13 @@ PHP = Ecosystem(
     languages=PHP_ONLY,
     build_systems=(COMPOSER,),
     source_suffixes={".php": PHP_LANGUAGE},
-    toolchain=ToolchainPatterns(
-        language=PHP_LANGUAGE,
-        versions=(re.compile(rf"\bphp-version\W+{_PHP_VERSION}"), re.compile(rf"\bphp:{_PHP_VERSION}")),
-        usage=re.compile(r"\bcomposer\s+(?:install|update|test|run|audit)\b|\bsetup-php\b|\bvendor/bin/|\bphp\s+-"),
+    toolchain=toolchain_patterns(
+        PHP_LANGUAGE,
+        version=_PHP_VERSION,
+        inputs=("php-version",),
+        images=("php",),
+        commands=r"\bcomposer\s+(?:install|update|test|run|audit)\b|\bvendor/bin/|\bphp\s+-",
+        setup=("php",),
     ),
 )
 
