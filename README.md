@@ -170,9 +170,7 @@ Registering an ecosystem that claims another one's build file or source suffix i
 
 
 ```python
-import re
-
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, ToolchainPatterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.tools import defined_by
@@ -182,8 +180,9 @@ ZIG = Ecosystem(
     languages=frozenset({"Zig"}),
     build_systems=(BuildSystem(name="Zig build", files=("build.zig",), languages=frozenset({"Zig"})),),
     source_suffixes={".zig": "Zig"},
-    toolchain=ToolchainPatterns(
-        language="Zig", versions=(re.compile(r"\bzig-version\W+([\d.x]+)"),), usage=re.compile(r"\bzig\s+build\b")
+    # How CI names the toolchain: `zig-version: 0.13.0` to a setup action, or `setup-zig` / `zig build` without one.
+    toolchain=toolchain_patterns(
+        "Zig", version=r"([\d.x]+)", inputs=("zig-version",), commands=r"\bzig\s+build\b", setup=("zig",)
     ),
 )
 # platform-matrix: OS x Zig version.
@@ -202,8 +201,8 @@ ZIG_FMT = format_tool(
 
 ## Development
 
-[docs/architecture.md](docs/architecture.md) describes how the validator is put together, and the design it is
-moving to.
+[docs/architecture.md](docs/architecture.md) describes how the validator is put together, and what each step of its
+rearchitecture changed.
 
 ```sh
 python3 -W error -m unittest
