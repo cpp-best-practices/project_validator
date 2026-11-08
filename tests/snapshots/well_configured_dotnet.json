@@ -4135,7 +4135,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "7 data files parse (JSON: 2, YAML: 5)",
+      "message": "6 data files parse (JSON: 1, YAML: 5)",
       "status": "PASS"
     },
     "dependency-audit": {
