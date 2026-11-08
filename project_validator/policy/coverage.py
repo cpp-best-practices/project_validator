@@ -1,6 +1,6 @@
 """The coverage policy: branch coverage is required (or the finest a known tool measures), path coverage a bonus."""
 
-from project_validator.core import Result, Status
+from project_validator.core import Result
 from project_validator.facts.coverage import Granularity
 from project_validator.policy import unknown
 from project_validator.questions import Answer
@@ -31,7 +31,7 @@ def judge_coverage(answer: CoverageAnswer, *, allow_unknown: bool = False) -> Re
     tool measures is skipped. An unknown answer is an error unless `allow_unknown`."""
     required = required_coverage(answer)
     if required is None:
-        return Result(status=Status.SKIP, message=f"no known tool measures the coverage of {answer.language}")
+        return Result.skipped(f"no known tool measures the coverage of {answer.language}")
     if answer[required].answer is not Answer.YES:
         return _missing(answer, required, allow_unknown=allow_unknown)
     message = f"{required} coverage is reported with {', '.join(answer[required].tools)}"

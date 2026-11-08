@@ -8,8 +8,6 @@ from project_validator.ecosystems import (
     BuildSystem,
     Ecosystem,
     applies_to,
-    check_each_ecosystem,
-    combined,
     ecosystems_for,
     isolated_registry,
     register,
@@ -18,6 +16,7 @@ from project_validator.ecosystems import (
 from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
+from project_validator.judging import by_ecosystem, check_each_ecosystem
 from tests.support import make_context, temp_project
 
 
@@ -79,10 +78,10 @@ class CombinedTests(unittest.TestCase):
     SKIPPED = Result(status=Status.SKIP, message="not applicable")
 
     def test_skipped_ecosystems_are_left_out(self) -> None:
-        self.assertEqual(combined({C_AND_CXX: self.SKIPPED, PYTHON: Result.failed("no")}), Result.failed("no"))
+        self.assertEqual(by_ecosystem({C_AND_CXX: self.SKIPPED, PYTHON: Result.failed("no")}), Result.failed("no"))
 
     def test_a_skip_only_when_every_ecosystem_is_skipped(self) -> None:
-        result = combined({C_AND_CXX: self.SKIPPED, PYTHON: self.SKIPPED})
+        result = by_ecosystem({C_AND_CXX: self.SKIPPED, PYTHON: self.SKIPPED})
         self.assertEqual(result.status, Status.SKIP)
         # The same result for every ecosystem is said once.
         self.assertEqual(result.message, "not applicable")

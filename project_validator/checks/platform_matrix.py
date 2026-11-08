@@ -10,5 +10,5 @@ platform_matrix = answered_check(
     description="CI runs on several operating systems with several compilers (or interpreter/toolchain versions)",
     languages=handled(),
     answers=platform_answers,
-    judge=lambda answer, allow_unknown: judge_matrix(answer, allow_unknown=allow_unknown),
+    judge=judge_matrix,
 )

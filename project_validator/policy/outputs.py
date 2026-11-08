@@ -1,7 +1,7 @@
 """The build output policies: every version control system the project is set up for ignores the build outputs, and
 none is committed."""
 
-from project_validator.core import Result, Status
+from project_validator.core import Result
 from project_validator.questions import Answer
 from project_validator.questions.outputs import CommittedAnswer, IgnoreAnswer
 
@@ -11,7 +11,7 @@ COMMITTED_HINT = "remove them from version control (git rm -r --cached <path>) a
 
 
 def _skipped(language: str) -> Result:
-    return Result(status=Status.SKIP, message=f"no known build output of {language}")
+    return Result.skipped(f"no known build output of {language}")
 
 
 def judge_ignored(answer: IgnoreAnswer, *, allow_unknown: bool = False) -> Result:

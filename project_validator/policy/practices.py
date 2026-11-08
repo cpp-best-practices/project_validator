@@ -3,7 +3,7 @@ warnings fail the build in at least one configuration."""
 
 from collections.abc import Callable, Iterable
 
-from project_validator.core import Result, Status
+from project_validator.core import Result
 from project_validator.policy import unknown
 from project_validator.questions import Answer
 from project_validator.questions.practices import Compiled, PracticeAnswer
@@ -53,7 +53,7 @@ def judge_hardening(answer: PracticeAnswer, *, allow_unknown: bool = False) -> R
     practice = answer.practice
     joined = practice.separator.join
     if answer.skipped is not None:
-        return Result(status=Status.SKIP, message=answer.skipped)
+        return Result.skipped(answer.skipped)
     if answer.answer is Answer.YES:
         enabled = practice.passed or f"{practice.kind} are enabled: {_described(answer.compiled, _found, joined)}"
         return Result.passed(enabled)
@@ -75,7 +75,7 @@ def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Res
     practice = answer.practice
     found = ", ".join(answer.found())
     if answer.skipped is not None:
-        return Result(status=Status.SKIP, message=answer.skipped)
+        return Result.skipped(answer.skipped)
     if answer.answer is Answer.YES:
         passed = (practice.passed or "warnings are treated as errors with {found}").format(found=found)
         advice = (

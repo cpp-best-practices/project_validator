@@ -6,10 +6,18 @@ project, so it is an error unless the user allows unknowns; then it is judged by
 """
 
 from collections.abc import Iterable
+from typing import Protocol
 
 from project_validator.core import Result, Status
+from project_validator.questions import Answer
 
 _ALLOW_UNKNOWN = "--allow-unknown judges only what could be read"
+
+
+class Judge[A](Protocol):
+    """A policy: the judgement of one answer, erring on an unknown one unless `allow_unknown`."""
+
+    def __call__(self, answer: A, /, *, allow_unknown: bool = ...) -> Result: ...
 
 
 def unknown(message: str, unknowns: Iterable[str], *details: str) -> Result:
@@ -21,16 +29,35 @@ def unknown(message: str, unknowns: Iterable[str], *details: str) -> Result:
     )
 
 
+def skipped_or_unknown(
+    answer: Answer,
+    unknowns: Iterable[str],
+    *,
+    impossible: str,
+    asks: str,
+    hint: str | None = None,
+    allow_unknown: bool,
+) -> Result | None:
+    """What settles an answer before a policy judges it: skipped when no known tool could provide it (`impossible`
+    says so), an error when it is unknown and unknowns are not allowed (`asks` is what is left open, `hint` how to
+    meet it); None when the policy is to judge it."""
+    if answer is Answer.IMPOSSIBLE:
+        return Result.skipped(impossible)
+    if answer is Answer.UNKNOWN and not allow_unknown:
+        return unknown(asks, unknowns, *(() if hint is None else (hint,)))
+    return None
+
+
 def either(items: Iterable[str]) -> str:
     """`a`, `a or b`, `a, b or c`."""
     items = list(items)
-    return items[0] if len(items) == 1 else f"{', '.join(items[:-1])} or {items[-1]}"
+    return ", ".join(items[:-1]) + (" or " if len(items) > 1 else "") + (items[-1] if items else "")
 
 
 def both(items: Iterable[str]) -> str:
     """`a`, `a and b`, `a, b and c`."""
     items = list(items)
-    return items[0] if len(items) == 1 else f"{', '.join(items[:-1])} and {items[-1]}"
+    return ", ".join(items[:-1]) + (" and " if len(items) > 1 else "") + (items[-1] if items else "")
 
 
 def files(paths: Iterable[str], shown: int = 3) -> str:
@@ -43,7 +70,7 @@ def files(paths: Iterable[str], shown: int = 3) -> str:
 def alternatives(ways: Iterable[str]) -> str:
     """`a`, or `a (or b, c)`: the first way, and the others."""
     ways = list(ways)
-    return ways[0] if len(ways) == 1 else f"{ways[0]} (or {either(ways[1:])})"
+    return ways[0] + (f" (or {either(ways[1:])})" if len(ways) > 1 else "") if ways else ""
 
 
-__all__ = ["alternatives", "both", "either", "files", "unknown"]
+__all__ = ["Judge", "alternatives", "both", "either", "files", "skipped_or_unknown", "unknown"]

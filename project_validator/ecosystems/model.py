@@ -1,4 +1,5 @@
-"""The model of a language ecosystem: how it is recognised, what its CI toolchains are, and judging per ecosystem.
+"""The model of a language ecosystem: how it is recognised and what its CI toolchains are. Judging per ecosystem is
+`project_validator.judging`'s.
 
 Everything the validator knows about one ecosystem lives in that ecosystem's profile module next to this one.
 """
@@ -9,19 +10,9 @@ from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 
 from project_validator.build_systems.model import C_FAMILY, BuildSystem
-from project_validator.core import Context, Project, Result, Status
+from project_validator.core import Project
 
-__all__ = [
-    "C_FAMILY",
-    "BuildSystem",
-    "Ecosystem",
-    "ToolchainPatterns",
-    "check_each_ecosystem",
-    "combined",
-    "ecosystems_for",
-    "labelled",
-    "languages_of",
-]
+__all__ = ["C_FAMILY", "BuildSystem", "Ecosystem", "ToolchainPatterns", "ecosystems_for", "languages_of"]
 
 
 def toml_members(*table: str) -> Callable[[str], tuple[str, ...]]:
@@ -93,13 +84,6 @@ class Ecosystem:
         return used or ((self.default_build_system,) if self.default_build_system else ())
 
 
-_SEVERITY = (Status.SKIP, Status.PASS, Status.WARN, Status.FAIL, Status.ERROR)
-
-
-def _severity(status: Status) -> int:
-    return _SEVERITY.index(status)
-
-
 def languages_of(ecosystems: Iterable[Ecosystem]) -> frozenset[str]:
     return frozenset().union(*(ecosystem.languages for ecosystem in ecosystems))
 
@@ -107,32 +91,3 @@ def languages_of(ecosystems: Iterable[Ecosystem]) -> frozenset[str]:
 def ecosystems_for(languages: frozenset[str], supported: Iterable[Ecosystem]) -> tuple[Ecosystem, ...]:
     """The supported ecosystems among `languages`, in the order they are supported."""
     return tuple(ecosystem for ecosystem in supported if ecosystem.languages & languages)
-
-
-def combined(results: Mapping[Ecosystem, Result]) -> Result:
-    """One result for several ecosystems, labelled by ecosystem where they differ; ecosystems a practice does not apply
-    to are left out, unless all are."""
-    if not results:
-        return Result(status=Status.SKIP, message="no recognised ecosystem in the project")
-    if judged := {ecosystem: result for ecosystem, result in results.items() if result.status is not Status.SKIP}:
-        results = judged
-    if len(set(results.values())) == 1:
-        return next(iter(results.values()))  # one result, or the same for every ecosystem
-    return labelled({ecosystem.label: result for ecosystem, result in results.items()})
-
-
-def labelled(results: Mapping[str, Result]) -> Result:
-    """One result for several subjects, each named by its label: the worst status wins."""
-    return Result(
-        status=max((result.status for result in results.values()), key=_severity),
-        message="; ".join(f"{label}: {result.message}" for label, result in results.items()),
-        details=tuple(f"{label}: {detail}" for label, result in results.items() for detail in result.details),
-    )
-
-
-def check_each_ecosystem[Rules](
-    context: Context, rules: Mapping[Ecosystem, Rules], judge: Callable[[Rules, Context], Result]
-) -> Result:
-    """Judge each ecosystem the project uses by its rules: the worst result wins, and findings are labelled."""
-    used = ecosystems_for(context.structure.languages, rules)
-    return combined({ecosystem: judge(rules[ecosystem], context) for ecosystem in used})

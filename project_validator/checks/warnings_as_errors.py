@@ -10,5 +10,5 @@ warnings_as_errors = answered_check(
     description="Compiler warnings are treated as errors in at least one configuration",
     languages=handled(WARNINGS_AS_ERRORS),
     answers=error_answers,
-    judge=lambda answer, allow_unknown: judge_any_one(answer, allow_unknown=allow_unknown),
+    judge=judge_any_one,
 )
