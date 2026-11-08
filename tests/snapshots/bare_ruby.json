@@ -1,5 +1,31 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Ruby",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Ruby",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "Ruby",
@@ -261,6 +287,20 @@
             "language": "Ruby",
             "notes": [],
             "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Ruby",
+            "scanners": [],
             "unit": "."
           }
         ]

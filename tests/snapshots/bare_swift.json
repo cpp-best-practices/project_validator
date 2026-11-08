@@ -1,5 +1,31 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Swift",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Swift",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "Swift",
@@ -269,6 +295,20 @@
             "language": "Swift",
             "notes": [],
             "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Swift",
+            "scanners": [],
             "unit": "."
           }
         ]

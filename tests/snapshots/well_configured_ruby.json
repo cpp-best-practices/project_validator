@@ -1,5 +1,70 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Ruby",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/function-limits.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Ruby",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "Ruby",
@@ -338,6 +403,22 @@
                 "configurations": [],
                 "os": "windows"
               }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "Ruby",
+            "scanners": [
+              "gitleaks"
             ],
             "unit": "."
           }
@@ -728,6 +809,16 @@
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
       "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
       "builds": true,
@@ -1516,6 +1607,16 @@
       ]
     },
     {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651"
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1571,6 +1672,11 @@
       "via": [
         ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
       ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
       "builds": true,
@@ -1643,6 +1749,11 @@
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
       "compilers": [

@@ -1,5 +1,31 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Fortran",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Fortran",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "Fortran",
@@ -230,6 +256,20 @@
             "language": "Fortran",
             "notes": [],
             "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Fortran",
+            "scanners": [],
             "unit": "."
           }
         ]
