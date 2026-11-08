@@ -21,9 +21,7 @@ from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import WARNINGS as WARNINGS_PRACTICE
-from project_validator.facts.practices import WARNINGS_AS_ERRORS as WARNINGS_AS_ERRORS_PRACTICE
-from project_validator.facts.practices import Practice, Wording, always, required, requirement_reader
+from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, xml_root
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
@@ -265,7 +263,7 @@ DOTNET_WARNING_SETTINGS = requirement_reader(
 )
 # The .NET analyzers analyze C#; F#'s compiler has warnings to turn on instead.
 CSHARP_WARNINGS = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=frozenset({CSHARP}),
     requirements=always(*_CSHARP_WARNINGS),
     reads=(DOTNET_WARNING_SETTINGS.name,),
@@ -276,7 +274,7 @@ CSHARP_WARNINGS = Practice(
     ),
 )
 FSHARP_WARNINGS_PRACTICE = Practice(
-    name=WARNINGS_PRACTICE,
+    name=PracticeName.WARNINGS,
     languages=frozenset({FSHARP}),
     requirements=always(*_FSHARP_WARNINGS),
     reads=(DOTNET_WARNING_SETTINGS.name,),
@@ -287,7 +285,7 @@ FSHARP_WARNINGS_PRACTICE = Practice(
 )
 
 WARNINGS_AS_ERRORS = Practice(
-    name=WARNINGS_AS_ERRORS_PRACTICE,
+    name=PracticeName.WARNINGS_AS_ERRORS,
     languages=DOTNET_LANGUAGES,
     requirements=always(*_DOTNET_WARNINGS_AS_ERRORS),
     any_one=True,

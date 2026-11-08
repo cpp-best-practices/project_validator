@@ -11,6 +11,7 @@ import re
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 
+from project_validator.components import known
 from project_validator.core import Project
 from project_validator.facts import Fact, Facts, Setting
 from project_validator.facts.roles import role
@@ -48,14 +49,10 @@ class Probe:
 
 
 def known_test_files() -> tuple[TestFiles, ...]:
-    from project_validator.components import known
-
     return known(TestFiles)
 
 
 def known_probes() -> tuple[Probe, ...]:
-    from project_validator.components import known
-
     return known(Probe)
 
 

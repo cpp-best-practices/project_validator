@@ -12,6 +12,7 @@ from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
+from project_validator.components import known
 from project_validator.facts import NOTHING, Command, ConfigurationFile, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import has_option, starts_with
 
@@ -87,7 +88,7 @@ class Tool:
     can: Mapping[str, Mapping[str, str]]
     claims: Claim
     reads: tuple[str, ...] = ()
-    definitions: Mapping[str, Definition] = NOTHING  # type: ignore[assignment]
+    definitions: Mapping[str, Definition] = NOTHING
     # The aspects for which the tool is required alongside the others: it finds what they do not (clang-tidy and
     # cppcheck).
     required: frozenset[str] = frozenset()
@@ -109,7 +110,7 @@ class ToolRun(Fact):
     job: str
     tool: str
     languages: frozenset[str]
-    provides: Mapping[str, Levels] = NOTHING  # type: ignore[assignment]
+    provides: Mapping[str, Levels] = NOTHING
     # Directories relative to the project ("." for its root) whose code the run covers.
     scope: tuple[str, ...] = (".",)
     read: tuple[str, ...] = ()
@@ -195,8 +196,6 @@ def combined(*tools: Tool) -> Tool:
 
 def known_tools() -> tuple[Tool, ...]:
     """Every tool defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import known
-
     return known(Tool)
 
 

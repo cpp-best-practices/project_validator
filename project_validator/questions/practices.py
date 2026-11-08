@@ -6,10 +6,8 @@ from dataclasses import dataclass
 
 from project_validator.facts import Facts
 from project_validator.facts.practices import (
-    HARDENING,
-    WARNINGS,
-    WARNINGS_AS_ERRORS,
     Practice,
+    PracticeName,
     Texts,
     ci_texts,
     met,
@@ -111,22 +109,24 @@ def practice_answers(name: str) -> Callable[[str, Facts], LanguageAnswers[Practi
     return answers
 
 
-warning_answers = practice_answers(WARNINGS)
-error_answers = practice_answers(WARNINGS_AS_ERRORS)
-hardening_answers = practice_answers(HARDENING)
+warning_answers = practice_answers(PracticeName.WARNINGS)
+error_answers = practice_answers(PracticeName.WARNINGS_AS_ERRORS)
+hardening_answers = practice_answers(PracticeName.HARDENING)
 
 WARNINGS_QUESTION = Question(
-    name=WARNINGS,
+    name=PracticeName.WARNINGS,
     description="Which of the strict warning settings each language asks for are on?",
     answer=warning_answers,
 )
 HARDENING_QUESTION = Question(
-    name=HARDENING,
+    name=PracticeName.HARDENING,
     description="Which of the hardening settings each language asks for are on?",
     answer=hardening_answers,
 )
 WARNINGS_AS_ERRORS_QUESTION = Question(
-    name=WARNINGS_AS_ERRORS, description="Do warnings fail the build for each language?", answer=error_answers
+    name=PracticeName.WARNINGS_AS_ERRORS,
+    description="Do warnings fail the build for each language?",
+    answer=error_answers,
 )
 
 __all__ = [

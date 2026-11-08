@@ -1,6 +1,6 @@
 """Structure facts: the project's source files and their languages, its build files, and what its content shows.
 
-The project map (`--map`, `project_validator.structure`) is a view over these facts.
+The project map (`--map`, `project_validator.project_map`) is a view over these facts.
 """
 
 from collections import Counter
@@ -102,7 +102,7 @@ class UnrecognisedSuffix(Fact):
 def _build_files(project: Project, files: list[str]) -> Iterator[tuple[BuildFile | None, str]]:
     """For each project file that belongs to a build system: the build file it shows (None when already shown, as
     for the second file of a build directory), and the project file."""
-    from project_validator.structure import build_files
+    from project_validator.project_map import build_files
 
     known, seen = build_files(), set()
     for path in files:

@@ -516,6 +516,10 @@ except where a step deliberately changes results and says so.
    compilers) and, apart, its `Wording` (what the settings are called, how to set them, the sentences the policy's
    do not fit); a CI toolchain is `toolchain_patterns(...)`, which spells the setup action, its version input and
    the container image once for the nine languages that name theirs that way; and the scaffold writes a package
-   with those filled in.
+   with those filled in. Then the tidy-ups: the practices' names are a `PracticeName` enum, so a profile's own
+   `WARNINGS` practice no longer collides with the constant; a `Command` resolves its `words` once when it is made,
+   and `Facts.shared` holds what is made of the facts once, instead of module-level caches keyed by `id()`; a
+   `Check`'s languages are always asked of its components (`languages_from`), never copied; the project map is
+   `project_validator/project_map.py`; the non-recursive JSON reader is `text.check_json`.
 
 `--facts` and `--answers` expose the database and the answers.

@@ -11,7 +11,7 @@ from project_validator.build_systems.cmake.presets import PRESET_FILES
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Facts
 from project_validator.facts.build import BuildSetting
-from project_validator.facts.practices import EXTENSIONS, Evidence, Found, Practice, Requirement, Wording, always
+from project_validator.facts.practices import Evidence, Found, Practice, PracticeName, Requirement, Wording, always
 from project_validator.facts.structure import SourceFile
 
 _FALSE = r"(?i:OFF|FALSE|NO|N|0)\b"
@@ -71,7 +71,7 @@ def _practice(language: str, cmake: str, std: str, standard: str, example: str) 
     global_setting = f"set(CMAKE_{cmake}_EXTENSIONS OFF)"
     requirements = _requirements(cmake, std, standard, example)
     return Practice(
-        name=EXTENSIONS,
+        name=PracticeName.EXTENSIONS,
         languages=frozenset({language}),
         requirements=always(*requirements),
         any_one=True,

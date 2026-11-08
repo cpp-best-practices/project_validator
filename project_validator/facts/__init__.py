@@ -6,13 +6,16 @@ questions query them (see docs/architecture.md). Nothing here judges a project.
 
 import dataclasses
 import re
-from collections.abc import Iterable, Iterator, Mapping
-from dataclasses import dataclass
+from collections.abc import Callable, Iterable, Iterator, Mapping
+from dataclasses import dataclass, field
 from types import MappingProxyType
+from typing import Any, cast
 
 type Location = tuple[str | int, ...]
 
-NOTHING: Mapping[str, str] = MappingProxyType({})
+NOTHING: Mapping[str, Any] = MappingProxyType({})
+DERIVED: Mapping[str, Any] = MappingProxyType({"derived": True})
+"""The metadata of a field derived from a fact's others once it is made: not recorded (`as_dict`) or compared."""
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -79,6 +82,11 @@ class Command(Fact):
     condition: str | None = None
     # The commands that ran this one in turn, outermost first (CI's `npm test`, then the package's test script).
     via: tuple[Origin, ...] = ()
+    # The arguments as run (see `resolved`), derived from `argv` and `env` once the command is made.
+    words: tuple[str, ...] = field(init=False, repr=False, compare=False, metadata=DERIVED)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "words", _resolve(self.argv, self.env))
 
 
 _VARIABLE = re.compile(r"\$(?:\{(\w+)\}|(\w+))")
@@ -90,26 +98,15 @@ def resolved(command: Command) -> tuple[str, ...]:
 
     A command that runs another (`sudo make`, `bundle exec rake`) is expanded into that command by a launcher (see
     `project_validator.facts.expansion.launcher`)."""
-    if not any("$" in word for word in command.argv):
-        return command.argv
-    # Every tool asks of every command: each command is resolved once (it is kept, so its id stays its own).
-    cached = _RESOLVED.get(id(command))
-    if cached is not None and cached[0] is command:
-        return cached[1]
-    if len(_RESOLVED) > _MOST_RESOLVED:
-        _RESOLVED.clear()
-    found = _resolve(command)
-    _RESOLVED[id(command)] = (command, found)
-    return found
+    return command.words
 
 
-_RESOLVED: dict[int, tuple[Command, tuple[str, ...]]] = {}
-_MOST_RESOLVED = 500_000
+def _resolve(argv: tuple[str, ...], env: Mapping[str, str]) -> tuple[str, ...]:
+    if not any("$" in word for word in argv):
+        return argv
 
-
-def _resolve(command: Command) -> tuple[str, ...]:
     def value(match: re.Match[str]) -> str:
-        return command.env.get(match[1] or match[2], match[0])
+        return env.get(match[1] or match[2], match[0])
 
     def words(word: str) -> tuple[str, ...]:
         """A word that is one variable splits into the words of its value, as the shell splits an unquoted
@@ -118,7 +115,7 @@ def _resolve(command: Command) -> tuple[str, ...]:
         whole = _VARIABLE.fullmatch(word) is not None and expanded != word
         return tuple(expanded.split()) if whole and expanded.strip() else (expanded,)
 
-    return tuple(found for word in command.argv for found in words(word))
+    return tuple(found for word in argv for found in words(word))
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -176,11 +173,18 @@ class ConfigurationFile(Fact):
 class Facts:
     """Every fact about one project, in the order the extractors recorded them, with the queries questions use."""
 
-    __slots__ = ("_kinds", "all")
+    __slots__ = ("_kinds", "_shared", "all")
 
     def __init__(self, found: Iterable[Fact] = ()) -> None:
         self.all = tuple(found)
         self._kinds: dict[type[Fact], tuple[Fact, ...]] = {}
+        self._shared: dict[str, object] = {}
+
+    def shared[T](self, key: str, compute: Callable[[], T]) -> T:
+        """What `compute` makes of these facts, made once (the texts requirements are matched in)."""
+        if key not in self._shared:
+            self._shared[key] = compute()
+        return cast(T, self._shared[key])
 
     def __iter__(self) -> Iterator[Fact]:
         return iter(self.all)
@@ -228,8 +232,8 @@ def as_dict(fact: Fact) -> dict[str, object]:
     """A fact as JSON-ready data: its kind, then its fields, with the origin written out."""
     data: dict[str, object] = {"kind": type(fact).__name__}
     for item in dataclasses.fields(fact):
-        value = getattr(fact, item.name)
-        data[item.name] = _plain(value)
+        if not item.metadata.get("derived"):
+            data[item.name] = _plain(getattr(fact, item.name))
     return data
 
 
@@ -254,6 +258,7 @@ def collected(groups: Iterable[Iterable[Fact]]) -> Facts:
 
 
 __all__ = [
+    "DERIVED",
     "NOTHING",
     "ActionStep",
     "CiConfiguration",

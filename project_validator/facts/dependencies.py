@@ -12,6 +12,7 @@ from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
+from project_validator.components import known
 from project_validator.facts import Command, Fact, Origin
 from project_validator.facts.settings import Read, SettingsReader, unreadable
 
@@ -82,8 +83,6 @@ class PackageManager:
 
 def known_package_managers() -> tuple[PackageManager, ...]:
     """Every package manager defined by a module of the shared build systems, the shared tools or a profile."""
-    from project_validator.components import known
-
     return known(PackageManager)
 
 
