@@ -4109,14 +4109,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4127,14 +4120,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4145,14 +4131,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4163,14 +4142,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4181,14 +4153,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4199,14 +4164,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4217,14 +4175,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4235,14 +4186,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4253,14 +4197,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4271,14 +4208,7 @@
     },
     {
       "applies": {
-        "compilers": [
-          "appleclang",
-          "clang",
-          "flang",
-          "gcc",
-          "intel",
-          "other"
-        ]
+        "compilers": "all but msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",

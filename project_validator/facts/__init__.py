@@ -9,7 +9,7 @@ import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass, field
 from types import MappingProxyType
-from typing import Any, cast
+from typing import Any, Protocol, cast, runtime_checkable
 
 type Location = tuple[str | int, ...]
 
@@ -228,6 +228,13 @@ class Facts:
         return [as_dict(fact) for fact in self.all]
 
 
+@runtime_checkable
+class Plain(Protocol):
+    """A value of a fact that writes its own JSON-ready form."""
+
+    def as_dict(self) -> dict[str, object]: ...
+
+
 def as_dict(fact: Fact) -> dict[str, object]:
     """A fact as JSON-ready data: its kind, then its fields, with the origin written out."""
     data: dict[str, object] = {"kind": type(fact).__name__}
@@ -240,6 +247,8 @@ def as_dict(fact: Fact) -> dict[str, object]:
 def _plain(value: object) -> object:
     if isinstance(value, Origin):
         return str(value)
+    if isinstance(value, Plain):
+        return value.as_dict()  # a value that writes itself (an `Applies`, with its open sets)
     if dataclasses.is_dataclass(value) and not isinstance(value, type):
         # A value of a fact (where a build file's setting applies): its fields that say something.
         fields = ((item.name, getattr(value, item.name)) for item in dataclasses.fields(value))
