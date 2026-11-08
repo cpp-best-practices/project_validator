@@ -14,7 +14,12 @@ from functools import cache
 from types import ModuleType
 
 # The packages whose modules may define components, besides the profiles.
-_PACKAGES = ("project_validator.build_systems", "project_validator.tools", "project_validator.questions")
+_PACKAGES = (
+    "project_validator.build_systems",
+    "project_validator.ci",
+    "project_validator.tools",
+    "project_validator.questions",
+)
 # Plugin modules, by name: a plugin loaded again replaces its earlier module.
 _plugins: dict[str, ModuleType] = {}
 

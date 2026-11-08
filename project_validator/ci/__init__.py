@@ -17,6 +17,7 @@ from project_validator.facts import (
     Fact,
     Facts,
     Origin,
+    StepReference,
     Unknown,
     collected,
     resolved,
@@ -217,16 +218,22 @@ def _heuristic_facts(ci_file: CiFile, text: str, reason: str) -> Iterator[Fact]:
     yield Unknown(origin=origin, subject=_JOBS, reason=reason, hides="jobs")
 
 
-def _file_facts(project: Project, ci_file: CiFile) -> Iterable[Fact]:
+def _file_facts(project: Project, ci_file: CiFile) -> Iterator[Fact]:
     provider = ci_file.provider
     text = project.read_text(ci_file.path)
     if provider.facts is None:
-        return _heuristic_facts(ci_file, text, f"{provider.name} is scanned heuristically")
+        yield from _heuristic_facts(ci_file, text, f"{provider.name} is scanned heuristically")
+        return
     try:
         document = yaml_support.load(text)
     except yaml_support.YamlError as error:
-        return _heuristic_facts(ci_file, text, f"invalid YAML ({error}), scanned heuristically")
-    return provider.facts(ci_file.path, document, _loader(project))
+        yield from _heuristic_facts(ci_file, text, f"invalid YAML ({error}), scanned heuristically")
+        return
+    yield from provider.facts(ci_file.path, document, _loader(project))
+    if provider.step_references is not None:
+        origin = Origin(path=ci_file.path)
+        references = dict.fromkeys(provider.step_references(document))
+        yield from (StepReference(origin=origin, reference=reference) for reference in references)
 
 
 def _loader(project: Project) -> Load:

@@ -1,5 +1,31 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Java",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Java",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "Java",
@@ -262,6 +288,20 @@
             "language": "Java",
             "notes": [],
             "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Java",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Java",
+            "scanners": [],
             "unit": "."
           }
         ]

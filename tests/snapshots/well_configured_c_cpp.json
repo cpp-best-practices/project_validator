@@ -1,5 +1,75 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C++",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/codeql-analysis.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/codeql-analysis.yml",
+                "pinning": null,
+                "reference": "github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9"
+              },
+              {
+                "path": ".github/workflows/codeql-analysis.yml",
+                "pinning": null,
+                "reference": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C++",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "C++",
@@ -429,6 +499,22 @@
         ]
       }
     ],
+    "secret-scanning": [
+      {
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "C++",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "security-scanning": [
       {
         "language": "C++",
@@ -778,6 +864,16 @@
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
       "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
       "builds": true,
@@ -3310,6 +3406,11 @@
       ]
     },
     {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -3396,6 +3497,21 @@
       "via": []
     },
     {
+      "kind": "StepReference",
+      "origin": ".github/workflows/codeql-analysis.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/codeql-analysis.yml",
+      "reference": "github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/codeql-analysis.yml",
+      "reference": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -3437,6 +3553,11 @@
       "line": "pmd cpd --language cpp --minimum-tokens 100 --dir src --dir include",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.cpd.steps[1].run",
       "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
       "compilers": [

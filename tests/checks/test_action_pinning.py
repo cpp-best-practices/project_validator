@@ -1,8 +1,10 @@
 import unittest
 from collections.abc import Mapping
 
-from project_validator.checks.action_pinning import BRANCH, HINT, SHORT, TAG, UNPINNED, action_pinning, pinning
+from project_validator.checks.action_pinning import action_pinning
 from project_validator.core import Context, Options, Project, Result, Status
+from project_validator.policy.pinning import HINT
+from project_validator.questions.pinning import BRANCH, SHORT, TAG, UNPINNED, pinning
 from tests.support import CI_FILES, FIXTURES, GITHUB_WORKFLOW, make_context, temp_project
 
 COMMIT = "11d5960a326750d5838078e36cf38b85af677262"
@@ -42,11 +44,14 @@ class PinningTests(unittest.TestCase):
                 self.assertEqual(pinning(reference), expected)
 
     def test_official_actions_may_be_pinned_to_tags_when_allowed(self) -> None:
-        for reference in ("actions/checkout@v4", "github/codeql-action/init@v3"):
-            with self.subTest(reference):
-                self.assertIsNone(pinning(reference, allow_official_tags=True))
-        self.assertEqual(pinning("codecov/codecov-action@v5", allow_official_tags=True), TAG)
-        self.assertEqual(pinning("actions/checkout@main", allow_official_tags=True), BRANCH)
+        """The allowance is the policy's: the reference is still classified as pinned to a tag."""
+        official = {GITHUB_WORKFLOW: _workflow("actions/checkout@v4", "github/codeql-action/init@v3")}
+        self.assertEqual(_run(official).status, Status.WARN)
+        self.assertEqual(_run(official, allow_official_tags=True).status, Status.PASS)
+        third_party = {GITHUB_WORKFLOW: _workflow("codecov/codecov-action@v5")}
+        self.assertEqual(_run(third_party, allow_official_tags=True).status, Status.WARN)
+        branch = {GITHUB_WORKFLOW: _workflow("actions/checkout@main")}
+        self.assertEqual(_run(branch, allow_official_tags=True).status, Status.FAIL)
 
 
 class ActionPinningTests(unittest.TestCase):

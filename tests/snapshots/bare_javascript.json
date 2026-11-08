@@ -1,5 +1,31 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "JavaScript",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "JavaScript",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "JavaScript",
@@ -315,6 +341,20 @@
             "language": "JavaScript",
             "notes": [],
             "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "JavaScript",
+            "scanners": [],
             "unit": "."
           }
         ]

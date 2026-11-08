@@ -1,5 +1,31 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Go",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Go",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "Go",
@@ -262,6 +288,20 @@
             "language": "Go",
             "notes": [],
             "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Go",
+            "scanners": [],
             "unit": "."
           }
         ]

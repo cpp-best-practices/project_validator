@@ -1,5 +1,31 @@
 {
   "answers": {
+    "action-pinning": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Python",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Python",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "committed-artifacts": [
       {
         "language": "Python",
@@ -254,6 +280,20 @@
             "language": "Python",
             "notes": [],
             "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Python",
+            "scanners": [],
             "unit": "."
           }
         ]
