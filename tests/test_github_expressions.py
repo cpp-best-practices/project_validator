@@ -56,6 +56,14 @@ class EvaluateTests(unittest.TestCase):
     def test_an_unknown_runner_os_is_unknown(self) -> None:
         self.assertIsNone(evaluate("runner.os == 'Linux'", Known(os="unknown", matrix={}, env={})))
 
+    def test_a_matrix_computed_by_an_expression_is_unknown(self) -> None:
+        """A matrix that is not expanded (`${{ fromJSON(...) }}`) has values, just not seen: a condition on one is
+        not false, it is unknown, so the step is not dropped."""
+        known = Known(os="linux", matrix={}, env={}, matrix_known=False)
+        self.assertIsNone(evaluate("matrix.coverage == 'true'", known))
+        self.assertIsNone(evaluate("matrix.lint", known))
+        self.assertTrue(evaluate("runner.os == 'Linux'", known))
+
 
 class RenderedTests(unittest.TestCase):
     def test_values_are_rendered_as_github_renders_them(self) -> None:

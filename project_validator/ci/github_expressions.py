@@ -29,6 +29,8 @@ class Known:
     os: str
     matrix: Mapping[str, object]
     env: Mapping[str, str]
+    # Whether `matrix` is the combination's values; a matrix computed by an expression has values that are not seen.
+    matrix_known: bool = True
 
 
 def _tokens(text: str) -> list[str] | None:
@@ -126,7 +128,7 @@ class _Parser:
         if name == "runner.os":
             return _RUNNER_OS.get(self.known.os, _UNKNOWN)
         if head == "matrix":
-            return _lookup(self.known.matrix, rest)
+            return _lookup(self.known.matrix, rest) if self.known.matrix_known else _UNKNOWN
         if head == "env" and rest in self.known.env:
             return self.known.env[rest]
         return _UNKNOWN
