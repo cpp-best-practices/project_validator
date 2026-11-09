@@ -155,9 +155,16 @@ def split_script(
     written, quotes and all, inside the word it is part of.
     """
     try:
-        yield from _split_script(script, opaque, powershell=powershell)
+        found = list(_split_script(script, opaque, powershell=powershell))
     except RecursionError:
-        yield Unsplittable(line=script, reason="nested too deeply to split")
+        # Line by line, so only the lines nested too deeply are lost.
+        found = []
+        for line in script.splitlines():
+            try:
+                found.extend(_split_script(line, opaque, powershell=powershell))
+            except RecursionError:
+                found.append(Unsplittable(line=line, reason="nested too deeply to split"))
+    yield from found
 
 
 def _split_script(

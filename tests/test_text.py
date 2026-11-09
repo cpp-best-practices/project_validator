@@ -19,4 +19,10 @@ class CheckJsonTests(unittest.TestCase):
         for separator in ("\x0b", "\x0c", "\x1c", "\x1d", "\x1e", "\x1f"):
             with self.subTest(separator=separator), self.assertRaises(JsonSyntaxError):
                 check_json(f"[1{separator}]")
+            with self.subTest(trailing=separator), self.assertRaises(JsonSyntaxError):
+                check_json(f"[1]{separator}")
+        for text in ("[1]\xa0", "[1]\u3000", "[1\u0661]"):
+            with self.subTest(text=text), self.assertRaises(JsonSyntaxError):
+                check_json(text)
         check_json("[1 \t\r\n]")
+        check_json("[1] \t\r\n")

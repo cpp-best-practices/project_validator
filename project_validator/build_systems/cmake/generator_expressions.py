@@ -89,7 +89,8 @@ _TESTS: Mapping[str, Callable[[list[str]], Condition | None]] = {
 }
 
 
-def _test(text: str) -> Condition:
+def test(text: str) -> Condition:
+    """The builds in which `text`, a boolean expression or a constant, is 1."""
     if (known := constant(text)) is not None:
         return ALWAYS if known else NEVER
     contents = [content for content, expression in _parts(text) if expression]
@@ -99,22 +100,14 @@ def _test(text: str) -> Condition:
     arguments = _split(rest, ",")
     found: Condition | None
     if name == "NOT":
-        found = negated(_test(rest))
+        found = negated(test(rest))
     elif name in ("AND", "OR"):
-        found = (both if name == "AND" else either)(*(_test(argument) for argument in arguments))
+        found = (both if name == "AND" else either)(*(test(argument) for argument in arguments))
     elif _COMPILER_ID.fullmatch(name):
         found = _listed(COMPILER.listed)(arguments)
     else:
         found = _TESTS[name](arguments) if name in _TESTS else None
     return requiring(text) if found is None else found
-
-
-def test(text: str) -> Condition:
-    """The builds in which `text`, a boolean expression or a constant, is 1; unknown when it is nested too deeply."""
-    try:
-        return _test(text)
-    except RecursionError:
-        return requiring(text)
 
 
 _PASSED = frozenset({"BUILD_INTERFACE", "BUILD_LOCAL_INTERFACE", "HOST_LINK", "DEVICE_LINK", "LINK_ONLY"})
@@ -136,16 +129,16 @@ def _expression(content: str) -> list[Value]:
     """The values one expression (`content`, between `$<` and `>`) takes."""
     name, separator, rest = _head(content)
     if name in ("0", "1") or name.startswith(_START):
-        return _conditional(_test(name), rest)
+        return _conditional(test(name), rest)
     if name == "IF" and len(arguments := _split(rest, ",")) == 3:
-        when = _test(arguments[0])
+        when = test(arguments[0])
         return [*_in(when, arguments[1]), *_in(negated(when), arguments[2])]
     if name in _PASSED:
         return _generated(rest)
     if name in _CHARACTERS:
         return [Value(_CHARACTERS[name])]
     if (separator and name in _TESTS) or name in ("NOT", "AND", "OR") or _COMPILER_ID.fullmatch(name):
-        when = _test(f"$<{content}>")
+        when = test(f"$<{content}>")
         return [Value("1", when), Value("0", negated(when))]
     return [Value(f"$<{content}>")]
 

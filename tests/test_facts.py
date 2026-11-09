@@ -113,6 +113,16 @@ class ShellDepthTests(unittest.TestCase):
         self.assertEqual(found[0].reason, "nested too deeply to split")
 
 
+class ShellLineDepthTests(unittest.TestCase):
+    def test_only_the_line_nested_too_deeply_is_lost(self) -> None:
+        deep = "echo " + "$(" * 2000 + "x" + ")" * 2000
+        found = list(split_script(f"cmake --build build\nctest\n{deep}\n"))
+        self.assertEqual(
+            [item.argv if isinstance(item, ShellCommand) else item.line for item in found],
+            [("cmake", "--build", "build"), ("ctest",), deep],
+        )
+
+
 class GitHubActionsFactTests(unittest.TestCase):
     WORKFLOW = """\
         env:
