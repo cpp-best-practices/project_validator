@@ -105,6 +105,14 @@ class ShellTests(unittest.TestCase):
         )
 
 
+class ShellDepthTests(unittest.TestCase):
+    def test_deeply_nested_substitutions_are_unsplittable(self) -> None:
+        found = list(split_script("echo " + "$(" * 5000 + "x" + ")" * 5000))
+        self.assertEqual([type(item) for item in found], [Unsplittable])
+        assert isinstance(found[0], Unsplittable)  # noqa: S101
+        self.assertEqual(found[0].reason, "nested too deeply to split")
+
+
 class GitHubActionsFactTests(unittest.TestCase):
     WORKFLOW = """\
         env:

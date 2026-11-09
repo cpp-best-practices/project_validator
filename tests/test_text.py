@@ -1,6 +1,6 @@
 import unittest
 
-from project_validator.text import matching_names, pattern
+from project_validator.text import JsonSyntaxError, check_json, matching_names, pattern
 
 
 class MatchingNamesTests(unittest.TestCase):
@@ -10,3 +10,13 @@ class MatchingNamesTests(unittest.TestCase):
 
     def test_is_case_insensitive(self) -> None:
         self.assertEqual(matching_names(["CLANG"], (pattern("clang", "clang"),)), ["clang"])
+
+
+class CheckJsonTests(unittest.TestCase):
+    def test_only_json_whitespace_is_whitespace(self) -> None:
+        # The JSON grammar allows only space, tab, newline and carriage return between tokens; `\s` also accepts
+        # \x0b, \x0c and \x1c-\x1f, which json.loads rejects.
+        for separator in ("\x0b", "\x0c", "\x1c", "\x1d", "\x1e", "\x1f"):
+            with self.subTest(separator=separator), self.assertRaises(JsonSyntaxError):
+                check_json(f"[1{separator}]")
+        check_json("[1 \t\r\n]")

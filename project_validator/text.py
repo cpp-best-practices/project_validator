@@ -45,7 +45,7 @@ class JsonSyntaxError(ValueError):
 
 
 _JSON_TOKEN = re.compile(
-    r"""\s*(?:(?P<open>[\[{])|(?P<close>[\]}])|(?P<colon>:)|(?P<comma>,)"""
+    r"""[ \t\n\r]*(?:(?P<open>[\[{])|(?P<close>[\]}])|(?P<colon>:)|(?P<comma>,)"""
     r"""|(?P<value>"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*"|true|false|null"""
     r"""|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?))"""
 )

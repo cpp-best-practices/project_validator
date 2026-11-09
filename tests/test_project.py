@@ -4,8 +4,9 @@ import unittest
 from pathlib import Path, PurePosixPath
 from unittest import mock
 
-from project_validator.core import Project
-from tests.support import PROJECT_LAYOUTS, layout_project, temp_project
+from project_validator.checks.data_wellformed import data_wellformed
+from project_validator.core import Project, Status
+from tests.support import PROJECT_LAYOUTS, layout_project, make_context, temp_project
 
 
 class ProjectTests(unittest.TestCase):
@@ -95,3 +96,28 @@ class TrackedFilesTests(unittest.TestCase):
             self.assertEqual(Project(root).tracked_files(), ["src/main.c"])
             with mock.patch("shutil.which", return_value=None):
                 self.assertEqual(Project(root).tracked_files(), ["src/main.c"])
+
+    def test_deeply_nested_files_do_not_crash_the_extraction(self) -> None:
+        job = "jobs:\n  a:\n    runs-on: ubuntu-latest\n"
+        cmake = "project(x)\nadd_executable(a a.c)\n"
+        generator = "target_compile_options(a PRIVATE " + "$<$<BOOL:1>:" * 500 + "-W" + ">" * 500 + ")\n"
+        cases = {
+            "CMakeLists.txt": (
+                cmake + "if(A)\n" * 3000 + "endif()\n" * 3000,
+                cmake + "foreach(i 1)\n" * 3000 + "endforeach()\n" * 3000,
+                cmake + "if(" + "(" * 2000 + "A" + ")" * 2000 + ")\nendif()\n",
+                cmake + generator,
+            ),
+            ".github/workflows/ci.yml": (
+                job + "    steps:\n      - run: echo\n    x: " + "[" * 3000 + "]" * 3000 + "\n",
+                job + "    steps:\n      - run: echo " + "$(" * 2000 + "x" + ")" * 2000 + "\n",
+                job + "    if: ${{ " + "(" * 2000 + "true" + ")" * 2000 + " }}\n    steps:\n      - run: echo\n",
+            ),
+            "data.yaml": ("[" * 3000 + "]" * 3000 + "\n",),
+        }
+        for path, texts in cases.items():
+            for text in texts:
+                with self.subTest(path=path, text=text[-30:]), temp_project({path: text}) as root:
+                    context = make_context(root)
+                    self.assertIsNotNone(context.facts)
+                    self.assertIsInstance(data_wellformed.run(context).status, Status)
