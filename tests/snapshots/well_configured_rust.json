@@ -256,10 +256,17 @@
         "units": [
           {
             "answer": "yes",
-            "declared": [],
+            "declared": [
+              {
+                "manager": "Cargo",
+                "manifest": "fuzz/Cargo.toml"
+              }
+            ],
             "language": "Rust",
-            "lock_required": false,
-            "locked": [],
+            "lock_required": true,
+            "locked": [
+              "fuzz/Cargo.lock"
+            ],
             "unit": ".",
             "unknowns": []
           }
@@ -334,6 +341,50 @@
         ]
       }
     ],
+    "fuzz-testing": [
+      {
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Rust",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "yes",
+              "defined": {
+                "cargo-fuzz": [
+                  "fuzz/fuzz_targets/parse.rs"
+                ]
+              },
+              "known": {
+                "cargo-fuzz": {
+                  "can": {
+                    "runs": "cargo fuzz run <target> -- -max_total_time=60"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
+              "language": "Rust",
+              "level": "runs",
+              "runs": {
+                "cargo-fuzz": {
+                  "levels": [
+                    "runs"
+                  ],
+                  "read": []
+                }
+              },
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "hardening": [
       {
         "language": "Rust",
@@ -373,45 +424,6 @@
             "language": "Rust",
             "mismatches": [],
             "unit": "."
-          }
-        ]
-      }
-    ],
-    "mutation-testing": [
-      {
-        "language": "Rust",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {
-              "cargo-mutants": [
-                ".cargo/mutants.toml"
-              ]
-            },
-            "known": {
-              "cargo-mutants": {
-                "can": {
-                  "incremental": "cargo mutants --in-diff <changes.diff>",
-                  "runs": "cargo mutants"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
-            "language": "Rust",
-            "level": "runs",
-            "runs": {
-              "cargo-mutants": {
-                "levels": [
-                  "incremental",
-                  "runs"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
           }
         ]
       }
@@ -696,6 +708,21 @@
       "origin": "Cargo.toml"
     },
     {
+      "build_system": "Cargo",
+      "kind": "BuildFile",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "fuzz/Cargo.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Rust",
+      "origin": "fuzz/fuzz_targets/parse.rs",
+      "role": "test"
+    },
+    {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Rust",
@@ -712,6 +739,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "cargo-fuzz or AFL.rs fuzz targets (fuzz_target! or afl::fuzz!)",
+      "language": "Rust",
+      "origin": "fuzz/fuzz_targets/parse.rs"
     },
     {
       "kind": "#[test] functions",
@@ -969,41 +1001,6 @@
       "via": []
     },
     {
-      "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings "
-      },
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings "
-      },
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
-      "via": []
-    },
-    {
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings -Zsanitizer=address"
@@ -1139,41 +1136,6 @@
       "kind": "Command",
       "line": "cargo llvm-cov --branch --mcdc",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
-      },
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
-      },
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": []
     },
     {
@@ -1316,27 +1278,12 @@
     },
     {
       "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings "
-      },
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
         "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
+        "fuzz",
+        "run",
+        "parse",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
@@ -1345,8 +1292,8 @@
       },
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "line": "cargo fuzz run parse -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -1489,27 +1436,12 @@
     },
     {
       "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
-      },
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
         "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
+        "fuzz",
+        "run",
+        "parse",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
@@ -1518,8 +1450,8 @@
       },
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "line": "cargo fuzz run parse -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -1661,41 +1593,6 @@
       "via": []
     },
     {
-      "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings "
-      },
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings "
-      },
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
-      "via": []
-    },
-    {
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings -Zsanitizer=address"
@@ -1831,41 +1728,6 @@
       "kind": "Command",
       "line": "cargo llvm-cov --branch --mcdc",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
-      },
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
-      },
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": []
     },
     {
@@ -2008,27 +1870,12 @@
     },
     {
       "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings "
-      },
-      "job": ".github/workflows/ci.yml:test[6]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
         "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
+        "fuzz",
+        "run",
+        "parse",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
@@ -2037,8 +1884,8 @@
       },
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "line": "cargo fuzz run parse -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -2181,27 +2028,12 @@
     },
     {
       "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
-      },
-      "job": ".github/workflows/ci.yml:test[7]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
         "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
+        "fuzz",
+        "run",
+        "parse",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
@@ -2210,8 +2042,8 @@
       },
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "line": "cargo fuzz run parse -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -2353,41 +2185,6 @@
       "via": []
     },
     {
-      "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings "
-      },
-      "job": ".github/workflows/ci.yml:test[8]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings "
-      },
-      "job": ".github/workflows/ci.yml:test[8]",
-      "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
-      "via": []
-    },
-    {
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings -Zsanitizer=address"
@@ -2523,41 +2320,6 @@
       "kind": "Command",
       "line": "cargo llvm-cov --branch --mcdc",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
-      },
-      "job": ".github/workflows/ci.yml:test[9]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
-      },
-      "job": ".github/workflows/ci.yml:test[9]",
-      "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
       "via": []
     },
     {
@@ -2700,27 +2462,12 @@
     },
     {
       "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings "
-      },
-      "job": ".github/workflows/ci.yml:test[10]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
         "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
+        "fuzz",
+        "run",
+        "parse",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
@@ -2729,8 +2476,8 @@
       },
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "line": "cargo fuzz run parse -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -2873,27 +2620,12 @@
     },
     {
       "argv": [
-        "git",
-        "diff",
-        "origin/main...HEAD"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {
-        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
-      },
-      "job": ".github/workflows/ci.yml:test[11]",
-      "kind": "Command",
-      "line": "git diff origin/main...HEAD > changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
-      "argv": [
         "cargo",
-        "mutants",
-        "--in-diff",
-        "changes.diff"
+        "fuzz",
+        "run",
+        "parse",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
@@ -2902,8 +2634,8 @@
       },
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
-      "line": "cargo mutants --in-diff changes.diff",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "line": "cargo fuzz run parse -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -3565,11 +3297,6 @@
     },
     {
       "kind": "ConfigurationFile",
-      "origin": ".cargo/mutants.toml",
-      "reader": "cargo-mutants"
-    },
-    {
-      "kind": "ConfigurationFile",
       "origin": ".gitignore",
       "reader": ".gitignore entries"
     },
@@ -3672,6 +3399,56 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "fuzz/Cargo.lock",
+      "reader": "Cargo lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "Cargo",
+      "origin": "fuzz/Cargo.lock"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/Cargo.toml",
+      "reader": "Cargo.toml license"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/Cargo.toml",
+      "reader": "Cargo dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Cargo",
+      "origin": "fuzz/Cargo.toml"
+    },
+    {
+      "kind": "Application",
+      "manager": "Cargo",
+      "origin": "fuzz/Cargo.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/Cargo.toml",
+      "reader": "Rust lint settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/Cargo.toml",
+      "reader": "Rust build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/Cargo.toml",
+      "reader": "Rust lints"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/Cargo.toml",
+      "reader": "clippy"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "src/lib.rs",
       "reader": "Rust lint settings"
     },
@@ -3918,27 +3695,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "ToolRun",
-      "languages": [
-        "Rust"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
-      "provides": {
-        "mutation": [
-          "incremental",
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "cargo-mutants",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
@@ -4166,27 +3922,6 @@
         "."
       ],
       "tool": "unsafe_code forbidden",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "ToolRun",
-      "languages": [
-        "Rust"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
-      "provides": {
-        "mutation": [
-          "incremental",
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "cargo-mutants",
       "via": []
     },
     {
@@ -4427,10 +4162,9 @@
       "languages": [
         "Rust"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -4438,7 +4172,7 @@
       "scope": [
         "."
       ],
-      "tool": "cargo-mutants",
+      "tool": "cargo-fuzz",
       "via": []
     },
     {
@@ -4679,10 +4413,9 @@
       "languages": [
         "Rust"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -4690,7 +4423,7 @@
       "scope": [
         "."
       ],
-      "tool": "cargo-mutants",
+      "tool": "cargo-fuzz",
       "via": []
     },
     {
@@ -4926,27 +4659,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "ToolRun",
-      "languages": [
-        "Rust"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
-      "provides": {
-        "mutation": [
-          "incremental",
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "cargo-mutants",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
@@ -5174,27 +4886,6 @@
         "."
       ],
       "tool": "unsafe_code forbidden",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "ToolRun",
-      "languages": [
-        "Rust"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
-      "provides": {
-        "mutation": [
-          "incremental",
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "cargo-mutants",
       "via": []
     },
     {
@@ -5435,10 +5126,9 @@
       "languages": [
         "Rust"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -5446,7 +5136,7 @@
       "scope": [
         "."
       ],
-      "tool": "cargo-mutants",
+      "tool": "cargo-fuzz",
       "via": []
     },
     {
@@ -5687,10 +5377,9 @@
       "languages": [
         "Rust"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -5698,7 +5387,7 @@
       "scope": [
         "."
       ],
-      "tool": "cargo-mutants",
+      "tool": "cargo-fuzz",
       "via": []
     },
     {
@@ -5934,27 +5623,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[8]",
-      "kind": "ToolRun",
-      "languages": [
-        "Rust"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
-      "provides": {
-        "mutation": [
-          "incremental",
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "cargo-mutants",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ToolRun",
       "languages": [
@@ -6182,27 +5850,6 @@
         "."
       ],
       "tool": "unsafe_code forbidden",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[9]",
-      "kind": "ToolRun",
-      "languages": [
-        "Rust"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
-      "provides": {
-        "mutation": [
-          "incremental",
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "cargo-mutants",
       "via": []
     },
     {
@@ -6443,10 +6090,9 @@
       "languages": [
         "Rust"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -6454,7 +6100,7 @@
       "scope": [
         "."
       ],
-      "tool": "cargo-mutants",
+      "tool": "cargo-fuzz",
       "via": []
     },
     {
@@ -6695,10 +6341,9 @@
       "languages": [
         "Rust"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -6706,7 +6351,7 @@
       "scope": [
         "."
       ],
-      "tool": "cargo-mutants",
+      "tool": "cargo-fuzz",
       "via": []
     },
     {
@@ -7486,7 +7131,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "no dependencies are declared",
+      "message": "dependencies are declared in fuzz/Cargo.toml (Cargo) and locked in fuzz/Cargo.lock",
       "status": "PASS"
     },
     "dependency-updates": {
@@ -7499,6 +7144,11 @@
     "function-limits": {
       "details": [],
       "message": "function length is limited with lizard",
+      "status": "PASS"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "fuzz targets in 1 file(s), run by cargo-fuzz",
       "status": "PASS"
     },
     "hardening": {
@@ -7516,11 +7166,6 @@
         "LICENSE"
       ],
       "message": "the project is licensed under MIT",
-      "status": "PASS"
-    },
-    "mutation-testing": {
-      "details": [],
-      "message": "cargo-mutants (.cargo/mutants.toml) runs; on the pull request's changes only (bonus)",
       "status": "PASS"
     },
     "platform-matrix": {

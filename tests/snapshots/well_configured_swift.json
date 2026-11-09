@@ -335,6 +335,50 @@
         ]
       }
     ],
+    "fuzz-testing": [
+      {
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Swift",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "yes",
+              "defined": {
+                "libFuzzer": [
+                  "Sources/AppFuzz/main.swift"
+                ]
+              },
+              "known": {
+                "libFuzzer": {
+                  "can": {
+                    "runs": "a product built with -sanitize=fuzzer, run as .build/debug/<product> -max_total_time=30"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
+              "language": "Swift",
+              "level": "runs",
+              "runs": {
+                "libFuzzer": {
+                  "levels": [
+                    "runs"
+                  ],
+                  "read": []
+                }
+              },
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "hardening": [
       {
         "language": "Swift",
@@ -373,43 +417,6 @@
             "language": "Swift",
             "mismatches": [],
             "unit": "."
-          }
-        ]
-      }
-    ],
-    "mutation-testing": [
-      {
-        "language": "Swift",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {
-              "Muter": [
-                "muter.conf.yml"
-              ]
-            },
-            "known": {
-              "Muter": {
-                "can": {
-                  "runs": "muter"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
-            "language": "Swift",
-            "level": "runs",
-            "runs": {
-              "Muter": {
-                "levels": [
-                  "runs"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
           }
         ]
       }
@@ -722,6 +729,13 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Swift",
+      "origin": "Sources/AppFuzz/main.swift",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Swift",
       "origin": "Tests/AppCoreTests/CalculatorTests.swift",
       "role": "test"
     },
@@ -741,6 +755,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "libFuzzer fuzz targets (@_cdecl(\"LLVMFuzzerTestOneInput\"))",
+      "language": "Swift",
+      "origin": "Sources/AppFuzz/main.swift"
     },
     {
       "kind": "XCTestCase classes or Swift Testing @Test functions",
@@ -990,19 +1009,6 @@
       "via": []
     },
     {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1135,19 +1141,6 @@
       "via": []
     },
     {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1275,19 +1268,6 @@
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -1423,19 +1403,6 @@
       "via": []
     },
     {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1563,19 +1530,6 @@
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -1711,19 +1665,6 @@
       "via": []
     },
     {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1851,19 +1792,6 @@
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[6]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -1999,19 +1927,6 @@
       "via": []
     },
     {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[7]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -2139,19 +2054,6 @@
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[8]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -2287,19 +2189,6 @@
       "via": []
     },
     {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[9]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "via": []
-    },
-    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -2427,19 +2316,6 @@
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "muter"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[10]",
-      "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -2575,16 +2451,68 @@
       "via": []
     },
     {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:fuzz",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "fuzz",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "swift-version": "6.1"
+      },
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[1]",
+      "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
+    },
+    {
       "argv": [
-        "muter"
+        "swift",
+        "build",
+        "-Xswiftc",
+        "-sanitize=fuzzer",
+        "-Xswiftc",
+        "-parse-as-library",
+        "--product",
+        "AppFuzz"
       ],
       "condition": null,
       "directory": null,
       "env": {},
-      "job": ".github/workflows/ci.yml:test[11]",
+      "job": ".github/workflows/ci.yml:fuzz",
       "kind": "Command",
-      "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "line": "swift build -Xswiftc -sanitize=fuzzer -Xswiftc -parse-as-library --product AppFuzz",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        ".build/debug/AppFuzz",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "Command",
+      "line": ".build/debug/AppFuzz -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[3].run",
       "via": []
     },
     {
@@ -3194,6 +3122,33 @@
     },
     {
       "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Swift"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: fuzz",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Swift",
+          "version": "6.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
         "appleclang"
       ],
       "configurations": [],
@@ -3346,11 +3301,6 @@
       "origin": "Package.swift"
     },
     {
-      "kind": "ConfigurationFile",
-      "origin": "muter.conf.yml",
-      "reader": "Muter"
-    },
-    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -3653,26 +3603,6 @@
         "."
       ],
       "tool": "osv-scanner",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
       "via": []
     },
     {
@@ -3982,26 +3912,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
@@ -4303,26 +4213,6 @@
         "."
       ],
       "tool": "osv-scanner",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
       "via": []
     },
     {
@@ -4632,26 +4522,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
@@ -4953,26 +4823,6 @@
         "."
       ],
       "tool": "osv-scanner",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
       "via": []
     },
     {
@@ -5282,26 +5132,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ToolRun",
       "languages": [
@@ -5603,26 +5433,6 @@
         "."
       ],
       "tool": "osv-scanner",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[6]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
       "via": []
     },
     {
@@ -5932,26 +5742,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[7]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ToolRun",
       "languages": [
@@ -6253,26 +6043,6 @@
         "."
       ],
       "tool": "osv-scanner",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[8]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
       "via": []
     },
     {
@@ -6582,26 +6352,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[9]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ToolRun",
       "languages": [
@@ -6903,26 +6653,6 @@
         "."
       ],
       "tool": "osv-scanner",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[10]",
-      "kind": "ToolRun",
-      "languages": [
-        "Swift"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
-      "provides": {
-        "mutation": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "Muter",
       "via": []
     },
     {
@@ -7231,15 +6961,16 @@
       "via": []
     },
     {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[11]",
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:fuzz",
       "kind": "ToolRun",
       "languages": [
-        "Swift"
+        "C",
+        "C++"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[3].run",
       "provides": {
-        "mutation": [
+        "fuzz": [
           "runs"
         ]
       },
@@ -7247,7 +6978,27 @@
       "scope": [
         "."
       ],
-      "tool": "Muter",
+      "tool": "libFuzzer",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[3].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "libFuzzer",
       "via": []
     },
     {
@@ -7898,6 +7649,22 @@
         },
         {
           "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "Swift"
+          ],
+          "name": ".github/workflows/ci.yml: fuzz",
+          "os": "linux",
+          "toolchains": [
+            "Swift 6.1"
+          ]
+        },
+        {
+          "compilers": [
             "appleclang"
           ],
           "configurations": [],
@@ -8022,7 +7789,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "8 data files parse (YAML: 8)",
+      "message": "7 data files parse (YAML: 7)",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -8047,6 +7814,11 @@
       "message": "function length is limited with SwiftLint's function_body_length, lizard",
       "status": "PASS"
     },
+    "fuzz-testing": {
+      "details": [],
+      "message": "fuzz targets in 1 file(s), run by libFuzzer",
+      "status": "PASS"
+    },
     "hardening": {
       "details": [],
       "message": "release builds keep Swift's runtime safety checks (no -Ounchecked)",
@@ -8064,11 +7836,6 @@
       "message": "the project is licensed under MIT",
       "status": "PASS"
     },
-    "mutation-testing": {
-      "details": [],
-      "message": "Muter (muter.conf.yml) runs",
-      "status": "PASS"
-    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no Swift toolchain",
@@ -8084,6 +7851,7 @@
         ".github/workflows/ci.yml: test (windows-latest, 6.0, --sanitize=address): windows / 6.0",
         ".github/workflows/ci.yml: test (windows-latest, 6.1, ): windows / 6.1",
         ".github/workflows/ci.yml: test (windows-latest, 6.1, --sanitize=address): windows / 6.1",
+        ".github/workflows/ci.yml: fuzz: linux / 6.1",
         ".github/workflows/codeql.yml: analyze: macos / no Swift toolchain",
         ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Swift toolchain",
         ".github/workflows/function-limits.yml: function-limits: linux / no Swift toolchain"

@@ -324,6 +324,50 @@
         ]
       }
     ],
+    "fuzz-testing": [
+      {
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Go",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "yes",
+              "defined": {
+                "go test -fuzz": [
+                  "app_test.go"
+                ]
+              },
+              "known": {
+                "go test -fuzz": {
+                  "can": {
+                    "runs": "go test -fuzz=Fuzz -fuzztime=30s"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
+              "language": "Go",
+              "level": "runs",
+              "runs": {
+                "go test -fuzz": {
+                  "levels": [
+                    "runs"
+                  ],
+                  "read": []
+                }
+              },
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "hardening": [
       {
         "language": "Go",
@@ -363,48 +407,6 @@
             "language": "Go",
             "mismatches": [],
             "unit": "."
-          }
-        ]
-      }
-    ],
-    "mutation-testing": [
-      {
-        "language": "Go",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {},
-            "known": {
-              "go-mutesting": {
-                "can": {
-                  "runs": "go-mutesting ./..."
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "gremlins": {
-                "can": {
-                  "incremental": "gremlins unleash --diff <branch>",
-                  "runs": "gremlins unleash"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
-            "language": "Go",
-            "level": "runs",
-            "runs": {
-              "gremlins": {
-                "levels": [
-                  "incremental",
-                  "runs"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
           }
         ]
       }
@@ -697,6 +699,11 @@
     },
     {
       "kind": "Test functions in *_test.go files",
+      "language": "Go",
+      "origin": "app_test.go"
+    },
+    {
+      "kind": "Fuzz functions (func FuzzXxx(f *testing.F))",
       "language": "Go",
       "origin": "app_test.go"
     },
@@ -1057,38 +1064,19 @@
     {
       "argv": [
         "go",
-        "run",
-        "github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0",
-        "unleash",
-        "--diff",
-        "origin/main"
+        "test",
+        "-fuzz=Fuzz",
+        "-fuzztime=30s",
+        "."
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
+      "line": "go test -fuzz=Fuzz -fuzztime=30s .",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
-    },
-    {
-      "argv": [
-        "gremlins",
-        "unleash",
-        "--diff",
-        "origin/main"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
     },
     {
       "builds": true,
@@ -1335,38 +1323,19 @@
     {
       "argv": [
         "go",
-        "run",
-        "github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0",
-        "unleash",
-        "--diff",
-        "origin/main"
+        "test",
+        "-fuzz=Fuzz",
+        "-fuzztime=30s",
+        "."
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
+      "line": "go test -fuzz=Fuzz -fuzztime=30s .",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
-    },
-    {
-      "argv": [
-        "gremlins",
-        "unleash",
-        "--diff",
-        "origin/main"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
     },
     {
       "builds": true,
@@ -1613,38 +1582,19 @@
     {
       "argv": [
         "go",
-        "run",
-        "github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0",
-        "unleash",
-        "--diff",
-        "origin/main"
+        "test",
+        "-fuzz=Fuzz",
+        "-fuzztime=30s",
+        "."
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
+      "line": "go test -fuzz=Fuzz -fuzztime=30s .",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
-    },
-    {
-      "argv": [
-        "gremlins",
-        "unleash",
-        "--diff",
-        "origin/main"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
     },
     {
       "builds": true,
@@ -1891,38 +1841,19 @@
     {
       "argv": [
         "go",
-        "run",
-        "github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0",
-        "unleash",
-        "--diff",
-        "origin/main"
+        "test",
+        "-fuzz=Fuzz",
+        "-fuzztime=30s",
+        "."
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
+      "line": "go test -fuzz=Fuzz -fuzztime=30s .",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
-    },
-    {
-      "argv": [
-        "gremlins",
-        "unleash",
-        "--diff",
-        "origin/main"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
     },
     {
       "builds": true,
@@ -2169,38 +2100,19 @@
     {
       "argv": [
         "go",
-        "run",
-        "github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0",
-        "unleash",
-        "--diff",
-        "origin/main"
+        "test",
+        "-fuzz=Fuzz",
+        "-fuzztime=30s",
+        "."
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
+      "line": "go test -fuzz=Fuzz -fuzztime=30s .",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
-    },
-    {
-      "argv": [
-        "gremlins",
-        "unleash",
-        "--diff",
-        "origin/main"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
     },
     {
       "builds": true,
@@ -2447,38 +2359,19 @@
     {
       "argv": [
         "go",
-        "run",
-        "github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0",
-        "unleash",
-        "--diff",
-        "origin/main"
+        "test",
+        "-fuzz=Fuzz",
+        "-fuzztime=30s",
+        "."
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
+      "line": "go test -fuzz=Fuzz -fuzztime=30s .",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
-    },
-    {
-      "argv": [
-        "gremlins",
-        "unleash",
-        "--diff",
-        "origin/main"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "Command",
-      "line": "go run github.com/go-gremlins/gremlins/cmd/gremlins@v0.5.0 unleash --diff origin/main",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
     },
     {
       "kind": "StepReference",
@@ -3135,8 +3028,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -3144,10 +3036,28 @@
       "scope": [
         "."
       ],
-      "tool": "gremlins",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
+      "tool": "go test -fuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
+      "via": []
     },
     {
       "heuristic": false,
@@ -3307,8 +3217,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -3316,10 +3225,28 @@
       "scope": [
         "."
       ],
-      "tool": "gremlins",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
+      "tool": "go test -fuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
+      "via": []
     },
     {
       "heuristic": false,
@@ -3479,8 +3406,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -3488,10 +3414,28 @@
       "scope": [
         "."
       ],
-      "tool": "gremlins",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
+      "tool": "go test -fuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
+      "via": []
     },
     {
       "heuristic": false,
@@ -3651,8 +3595,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -3660,10 +3603,28 @@
       "scope": [
         "."
       ],
-      "tool": "gremlins",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
+      "tool": "go test -fuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
+      "via": []
     },
     {
       "heuristic": false,
@@ -3823,8 +3784,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -3832,10 +3792,28 @@
       "scope": [
         "."
       ],
-      "tool": "gremlins",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
+      "tool": "go test -fuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
+      "via": []
     },
     {
       "heuristic": false,
@@ -3995,8 +3973,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -4004,10 +3981,28 @@
       "scope": [
         "."
       ],
-      "tool": "gremlins",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[10].run"
-      ]
+      "tool": "go test -fuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go test",
+      "via": []
     },
     {
       "heuristic": false,
@@ -4681,6 +4676,11 @@
       "message": "function length is limited with lizard",
       "status": "PASS"
     },
+    "fuzz-testing": {
+      "details": [],
+      "message": "fuzz targets in 1 file(s), run by go test -fuzz",
+      "status": "PASS"
+    },
     "hardening": {
       "details": [],
       "message": "hardening options are enabled: -buildmode=pie",
@@ -4696,11 +4696,6 @@
         "LICENSE"
       ],
       "message": "the project is licensed under MIT",
-      "status": "PASS"
-    },
-    "mutation-testing": {
-      "details": [],
-      "message": "gremlins runs; on the pull request's changes only (bonus)",
       "status": "PASS"
     },
     "platform-matrix": {

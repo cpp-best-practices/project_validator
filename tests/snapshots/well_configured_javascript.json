@@ -750,6 +750,92 @@
         ]
       }
     ],
+    "fuzz-testing": [
+      {
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "JavaScript",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "yes",
+              "defined": {
+                "Jazzer.js": [
+                  "fuzz/add.fuzz.js"
+                ]
+              },
+              "known": {
+                "Jazzer.js": {
+                  "can": {
+                    "runs": "npx jazzer <target> -- -max_total_time=30 (or jest with JAZZER_FUZZ=1)"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
+              "language": "JavaScript",
+              "level": "runs",
+              "runs": {
+                "Jazzer.js": {
+                  "levels": [
+                    "runs"
+                  ],
+                  "read": []
+                }
+              },
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "TypeScript",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "yes",
+              "defined": {
+                "Jazzer.js": [
+                  "fuzz/add.fuzz.js"
+                ]
+              },
+              "known": {
+                "Jazzer.js": {
+                  "can": {
+                    "runs": "npx jazzer <target> -- -max_total_time=30 (or jest with JAZZER_FUZZ=1)"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
+              "language": "TypeScript",
+              "level": "runs",
+              "runs": {
+                "Jazzer.js": {
+                  "levels": [
+                    "runs"
+                  ],
+                  "read": []
+                }
+              },
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "hardening": [
       {
         "language": "JavaScript",
@@ -790,82 +876,6 @@
             "language": "TypeScript",
             "mismatches": [],
             "unit": "."
-          }
-        ]
-      }
-    ],
-    "mutation-testing": [
-      {
-        "language": "JavaScript",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {
-              "StrykerJS": [
-                "stryker.config.json"
-              ]
-            },
-            "known": {
-              "StrykerJS": {
-                "can": {
-                  "incremental": "stryker run --incremental",
-                  "runs": "stryker run"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
-            "language": "JavaScript",
-            "level": "runs",
-            "runs": {
-              "StrykerJS": {
-                "levels": [
-                  "incremental",
-                  "runs"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
-          }
-        ]
-      },
-      {
-        "language": "TypeScript",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {
-              "StrykerJS": [
-                "stryker.config.json"
-              ]
-            },
-            "known": {
-              "StrykerJS": {
-                "can": {
-                  "incremental": "stryker run --incremental",
-                  "runs": "stryker run"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
-            "language": "TypeScript",
-            "level": "runs",
-            "runs": {
-              "StrykerJS": {
-                "levels": [
-                  "incremental",
-                  "runs"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
           }
         ]
       }
@@ -1490,6 +1500,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "JavaScript",
+      "origin": "fuzz/add.fuzz.js",
+      "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "TypeScript",
       "origin": "src/add.test.ts",
       "role": "product"
@@ -1512,6 +1529,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "Jazzer.js fuzz targets (an exported fuzz function or .fuzz())",
+      "language": "JavaScript",
+      "origin": "fuzz/add.fuzz.js"
     },
     {
       "kind": "*.test.*, *.spec.* or __tests__/ files",
@@ -1818,31 +1840,33 @@
     {
       "argv": [
         "npx",
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
       "argv": [
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
@@ -2041,31 +2065,33 @@
     {
       "argv": [
         "npx",
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
       "argv": [
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
@@ -2264,31 +2290,33 @@
     {
       "argv": [
         "npx",
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
       "argv": [
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
@@ -2487,31 +2515,33 @@
     {
       "argv": [
         "npx",
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
       "argv": [
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
@@ -2710,31 +2740,33 @@
     {
       "argv": [
         "npx",
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
       "argv": [
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
@@ -2933,31 +2965,33 @@
     {
       "argv": [
         "npx",
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
       "argv": [
-        "stryker",
-        "run",
-        "--incremental"
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
-      "line": "npx stryker run --incremental",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
@@ -3411,11 +3445,6 @@
     },
     {
       "kind": "ConfigurationFile",
-      "origin": "stryker.config.json",
-      "reader": "StrykerJS"
-    },
-    {
-      "kind": "ConfigurationFile",
       "origin": "tsconfig.json",
       "reader": "TypeScript"
     },
@@ -3651,6 +3680,27 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "libFuzzer",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -3660,8 +3710,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -3669,7 +3718,30 @@
       "scope": [
         "."
       ],
-      "tool": "StrykerJS",
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
@@ -3864,6 +3936,27 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "libFuzzer",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -3873,8 +3966,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -3882,7 +3974,30 @@
       "scope": [
         "."
       ],
-      "tool": "StrykerJS",
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
@@ -4077,6 +4192,27 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "libFuzzer",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -4086,8 +4222,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -4095,7 +4230,30 @@
       "scope": [
         "."
       ],
-      "tool": "StrykerJS",
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
@@ -4290,6 +4448,27 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "libFuzzer",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -4299,8 +4478,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -4308,7 +4486,30 @@
       "scope": [
         "."
       ],
-      "tool": "StrykerJS",
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
@@ -4503,6 +4704,27 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "libFuzzer",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -4512,8 +4734,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -4521,7 +4742,30 @@
       "scope": [
         "."
       ],
-      "tool": "StrykerJS",
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
@@ -4716,6 +4960,27 @@
       "via": []
     },
     {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "libFuzzer",
+      "via": []
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -4725,8 +4990,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
-        "mutation": [
-          "incremental",
+        "fuzz": [
           "runs"
         ]
       },
@@ -4734,7 +4998,30 @@
       "scope": [
         "."
       ],
-      "tool": "StrykerJS",
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer",
       "via": [
         ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
@@ -5193,7 +5480,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "9 data files parse (JSON: 4, YAML: 5)",
+      "message": "8 data files parse (JSON: 3, YAML: 5)",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -5218,6 +5505,11 @@
       "message": "function length is limited with lizard",
       "status": "PASS"
     },
+    "fuzz-testing": {
+      "details": [],
+      "message": "fuzz targets in 1 file(s), run by Jazzer.js",
+      "status": "PASS"
+    },
     "hardening": {
       "details": [],
       "message": "not applicable to JavaScript, TypeScript",
@@ -5233,11 +5525,6 @@
         "LICENSE"
       ],
       "message": "the project is licensed under MIT",
-      "status": "PASS"
-    },
-    "mutation-testing": {
-      "details": [],
-      "message": "StrykerJS (stryker.config.json) runs; on the pull request's changes only (bonus)",
       "status": "PASS"
     },
     "platform-matrix": {

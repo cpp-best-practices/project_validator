@@ -327,6 +327,50 @@
         ]
       }
     ],
+    "fuzz-testing": [
+      {
+        "language": "Python",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Python",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "yes",
+              "defined": {
+                "atheris": [
+                  "tests/fuzz/fuzz_app.py"
+                ]
+              },
+              "known": {
+                "atheris": {
+                  "can": {
+                    "runs": "python <fuzz target>.py"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
+              "language": "Python",
+              "level": "runs",
+              "runs": {
+                "atheris": {
+                  "levels": [
+                    "runs"
+                  ],
+                  "read": []
+                }
+              },
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "hardening": [
       {
         "language": "Python",
@@ -347,58 +391,6 @@
             "language": "Python",
             "mismatches": [],
             "unit": "."
-          }
-        ]
-      }
-    ],
-    "mutation-testing": [
-      {
-        "language": "Python",
-        "units": [
-          {
-            "answer": "yes",
-            "defined": {
-              "mutmut": [
-                "pyproject.toml"
-              ]
-            },
-            "known": {
-              "cosmic-ray": {
-                "can": {
-                  "runs": "cosmic-ray exec"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "mutatest": {
-                "can": {
-                  "runs": "mutatest"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "mutmut": {
-                "can": {
-                  "incremental": "mutmut run <module>.* for the changed modules",
-                  "runs": "mutmut run"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
-            "language": "Python",
-            "level": "runs",
-            "runs": {
-              "mutmut": {
-                "levels": [
-                  "runs"
-                ],
-                "read": []
-              }
-            },
-            "unit": ".",
-            "unknown_definitions": [],
-            "unknowns": []
           }
         ]
       }
@@ -736,6 +728,13 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Python",
+      "origin": "tests/fuzz/fuzz_app.py",
+      "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Python",
       "origin": "tests/test_app.py",
       "role": "test"
     },
@@ -749,6 +748,11 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "kind": "atheris fuzz targets (atheris.Setup or atheris.Fuzz)",
+      "language": "Python",
+      "origin": "tests/fuzz/fuzz_app.py"
     },
     {
       "kind": "test_*.py or *_test.py files",
@@ -1082,15 +1086,16 @@
     },
     {
       "argv": [
-        "mutmut",
-        "run"
+        "python",
+        "tests/fuzz/fuzz_app.py",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
-      "line": "mutmut run",
+      "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
     },
@@ -1314,15 +1319,16 @@
     },
     {
       "argv": [
-        "mutmut",
-        "run"
+        "python",
+        "tests/fuzz/fuzz_app.py",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
-      "line": "mutmut run",
+      "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
     },
@@ -1546,15 +1552,16 @@
     },
     {
       "argv": [
-        "mutmut",
-        "run"
+        "python",
+        "tests/fuzz/fuzz_app.py",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
-      "line": "mutmut run",
+      "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
     },
@@ -1778,15 +1785,16 @@
     },
     {
       "argv": [
-        "mutmut",
-        "run"
+        "python",
+        "tests/fuzz/fuzz_app.py",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
-      "line": "mutmut run",
+      "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
     },
@@ -2010,15 +2018,16 @@
     },
     {
       "argv": [
-        "mutmut",
-        "run"
+        "python",
+        "tests/fuzz/fuzz_app.py",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
-      "line": "mutmut run",
+      "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
     },
@@ -2242,15 +2251,16 @@
     },
     {
       "argv": [
-        "mutmut",
-        "run"
+        "python",
+        "tests/fuzz/fuzz_app.py",
+        "-max_total_time=30"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
-      "line": "mutmut run",
+      "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "via": []
     },
@@ -2694,21 +2704,6 @@
     },
     {
       "kind": "ConfigurationFile",
-      "origin": "pyproject.toml",
-      "reader": "mutmut"
-    },
-    {
-      "heuristic": false,
-      "key": "source_paths",
-      "kind": "Setting",
-      "origin": "pyproject.toml:source_paths",
-      "tool": "mutmut",
-      "value": [
-        "src"
-      ]
-    },
-    {
-      "kind": "ConfigurationFile",
       "origin": "uv.lock",
       "reader": "Python packages lockfile"
     },
@@ -3111,7 +3106,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
+        "fuzz": [
           "runs"
         ]
       },
@@ -3119,7 +3114,7 @@
       "scope": [
         "."
       ],
-      "tool": "mutmut",
+      "tool": "atheris",
       "via": []
     },
     {
@@ -3516,7 +3511,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
+        "fuzz": [
           "runs"
         ]
       },
@@ -3524,7 +3519,7 @@
       "scope": [
         "."
       ],
-      "tool": "mutmut",
+      "tool": "atheris",
       "via": []
     },
     {
@@ -3921,7 +3916,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
+        "fuzz": [
           "runs"
         ]
       },
@@ -3929,7 +3924,7 @@
       "scope": [
         "."
       ],
-      "tool": "mutmut",
+      "tool": "atheris",
       "via": []
     },
     {
@@ -4326,7 +4321,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
+        "fuzz": [
           "runs"
         ]
       },
@@ -4334,7 +4329,7 @@
       "scope": [
         "."
       ],
-      "tool": "mutmut",
+      "tool": "atheris",
       "via": []
     },
     {
@@ -4731,7 +4726,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
+        "fuzz": [
           "runs"
         ]
       },
@@ -4739,7 +4734,7 @@
       "scope": [
         "."
       ],
-      "tool": "mutmut",
+      "tool": "atheris",
       "via": []
     },
     {
@@ -5136,7 +5131,7 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[10].run",
       "provides": {
-        "mutation": [
+        "fuzz": [
           "runs"
         ]
       },
@@ -5144,7 +5139,7 @@
       "scope": [
         "."
       ],
-      "tool": "mutmut",
+      "tool": "atheris",
       "via": []
     },
     {
@@ -5569,6 +5564,11 @@
       "message": "function length is limited with lizard",
       "status": "PASS"
     },
+    "fuzz-testing": {
+      "details": [],
+      "message": "fuzz targets in 1 file(s), run by atheris",
+      "status": "PASS"
+    },
     "hardening": {
       "details": [],
       "message": "not applicable to Python",
@@ -5584,13 +5584,6 @@
         "LICENSE"
       ],
       "message": "the project is licensed under MIT",
-      "status": "PASS"
-    },
-    "mutation-testing": {
-      "details": [
-        "consider running it on the pull request's changes only: mutmut run <module>.* for the changed modules"
-      ],
-      "message": "mutmut (pyproject.toml) runs",
       "status": "PASS"
     },
     "platform-matrix": {
