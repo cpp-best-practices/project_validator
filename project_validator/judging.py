@@ -13,8 +13,7 @@ from project_validator.ecosystems import Ecosystem, ecosystems_for, registered
 from project_validator.facts import Facts
 from project_validator.facts.tools import handling
 from project_validator.policy import Judge
-from project_validator.questions import LanguageAnswers, UnitAnswer
-from project_validator.questions.tooling import ToolAnswer
+from project_validator.questions import LanguageAnswers, RanTools, UnitAnswer
 
 
 def labelled(results: Mapping[str, Result]) -> Result:
@@ -97,6 +96,11 @@ def judged[A: UnitAnswer](
     return replace(folded, places=tuple(_placed(unit, results, found) for unit in units))
 
 
+def _tools_ran(answer: object) -> tuple[str, ...]:
+    """The tools CI ran for an answer, when it says (not every answer is about tools)."""
+    return answer.tools_ran() if isinstance(answer, RanTools) else ()
+
+
 def _placed[A: UnitAnswer](unit: str, results: Mapping[_Place, Result], found: list[A]) -> Placed:
     """One unit's result across the languages judged there, with the tools that ran for the practice in it."""
     here = {language: result for (language, where), result in results.items() if where == unit}
@@ -104,14 +108,7 @@ def _placed[A: UnitAnswer](unit: str, results: Mapping[_Place, Result], found: l
         ecosystem="",
         unit=unit,
         result=combined(here, label=lambda language, _: language, none=""),
-        tools=tuple(
-            dict.fromkeys(
-                ran.name
-                for answer in found
-                if answer.unit == unit and isinstance(answer, ToolAnswer)
-                for ran in answer.runs
-            )
-        ),
+        tools=tuple(dict.fromkeys(tool for answer in found if answer.unit == unit for tool in _tools_ran(answer))),
     )
 
 
