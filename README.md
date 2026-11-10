@@ -233,7 +233,7 @@ To run them locally:
 | `typing` | `mypy` |
 | `copy-paste-detection` | `npx --yes jscpd@4.3.0` (settings in `.jscpd.json`) |
 | `function-limits` | `lizard --length 30 --warnings_only project_validator tests` |
-| `mutation testing` | `mutmut run <module>.*` for the modules a pull request changes (settings in `[tool.mutmut]`); `mutmut results` lists survivors |
+| `mutation testing` | `mapfile -t p < <(python tests/changed_mutants.py origin/main...HEAD) && mutmut run "${p[@]}"`: the mutants of the functions a pull request changes (settings in `[tool.mutmut]`; with no patterns, `mutmut run` would mutate everything); `mutmut results` lists survivors. mutmut copies the tree into `mutants/`, which the self-referential tests need to be a git repository: `git -C mutants init && git -C mutants add -A` after a first run |
 | `fuzzing` | `python tests/fuzz/fuzz_<parser>.py tests/fuzz/corpus/<parser> -max_total_time=60` for each of the six parsers (atheris); locally, write new corpus entries to a temp directory first: `python tests/fuzz/fuzz_<parser>.py "$(mktemp -d)" tests/fuzz/corpus/<parser> -max_total_time=60` |
 
 Branch coverage is measured with [coverage.py](https://coverage.readthedocs.io/)

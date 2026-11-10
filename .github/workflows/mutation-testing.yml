@@ -1,6 +1,6 @@
 name: mutation testing
 
-# Pull requests only: it mutates the modules the pull request changes and reports the survivors without failing.
+# Pull requests only: it mutates the functions the pull request changes and reports the survivors without failing.
 on: pull_request
 
 concurrency:
@@ -14,7 +14,7 @@ jobs:
   mutmut:
     name: mutmut
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -28,25 +28,15 @@ jobs:
       - name: Install mutmut and the tests' dependencies
         run: python -m pip install --require-hashes -r .github/requirements/mutation.txt
 
-      - name: Mutate the modules this pull request changes
+      - name: Mutate the functions this pull request changes
         env:
           BASE: ${{ github.base_ref }}
         run: |
-          # Its own command, so that a failing diff fails the step instead of reading as "no modules changed".
-          git diff --name-only "origin/$BASE...HEAD" -- 'project_validator/*.py' 'project_validator/**/*.py' > changed.txt
-          mapfile -t files < changed.txt
-          patterns=()
-          for file in "${files[@]}"; do
-            [ -f "$file" ] || continue
-            # mutmut asserts when a filter matches no mutant, which is the case of a module with no function.
-            grep -qE '^\s*(async )?def ' "$file" || continue
-            module=${file%.py}; module=${module//\//.}; module=${module%.__init__}
-            # mutmut 3 names a mutant <module>.x_<function>__mutmut_N (or <module>.xǁClassǁmethod__mutmut_N), so
-            # ".x*" selects this module's own mutants; ".*" would also match every submodule, as * crosses dots.
-            patterns+=("$module.x*")
-          done
+          # Its own command, so that a failing diff fails the step instead of reading as "nothing changed".
+          python tests/changed_mutants.py "origin/$BASE...HEAD" > patterns.txt
+          mapfile -t patterns < patterns.txt
           if [ ${#patterns[@]} -eq 0 ]; then
-            echo "No mutable modules changed: nothing to mutate." >> "$GITHUB_STEP_SUMMARY"
+            echo "No function with mutants changed: nothing to mutate." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           # mutmut copies the tree into mutants/, which is not a git repository, so the tests that call
@@ -54,20 +44,31 @@ jobs:
           # first failures); make the copy a repository, then run for real. The priming run is expected to fail
           # fast in its stats pass, because the copy is not a git repository yet; if that pass ever succeeds, the
           # job runs the named mutants twice.
-          mutmut run "${patterns[@]}" || true
+          timeout --signal=INT 5m mutmut run "${patterns[@]}" || true
           git -C mutants init -q
           git -C mutants add -A
-          # A budget below the job's timeout: a pull request that changes many modules still gets a report
+          # A budget below the job's timeout: a pull request that changes many functions still gets a report
           # of the mutants checked so far, instead of a cancelled job and no report at all.
-          budget=ok
-          timeout --signal=INT 100m mutmut run "${patterns[@]}" || { [ $? -eq 124 ] && budget=exhausted; }
-          # The results also list every mutant not run (the other modules'), which would fill the summary.
+          status=0
+          timeout --signal=INT --kill-after=2m 30m mutmut run "${patterns[@]}" 2>&1 | tee run.log || status=$?
+          if grep -q 'Filtered for specific mutants, but nothing matches' run.log; then
+            # mutmut asserts when no pattern matches: the changed functions are ones it does not mutate.
+            echo "The changed functions have no mutants: nothing to mutate." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          [ "$status" -eq 0 ] || [ "$status" -eq 124 ] || exit "$status"
+          # The results also list every mutant not run (the other functions'), which would fill the summary.
           survivors=$(mktemp)
           mutmut results | grep -v ': not checked$' > "$survivors" || true
+          checked=$(mutmut results --all true | grep -vc ': not checked$' || true)
           {
-            echo '## Mutation testing of the changed modules'
-            if [ "$budget" = exhausted ]; then
-              echo 'Stopped after 100 minutes: the results below cover the mutants checked by then.'
+            echo '## Mutation testing of the changed functions'
+            echo
+            echo 'Mutants of: `'"${patterns[*]}"'`'
+            echo
+            if [ "$status" -eq 124 ]; then
+              echo "Stopped after 30 minutes with $checked mutants checked: the results below cover those."
+              echo
             fi
             if [ -s "$survivors" ]; then
               echo '```'
