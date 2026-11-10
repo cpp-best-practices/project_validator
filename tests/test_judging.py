@@ -3,22 +3,17 @@
 import unittest
 from collections.abc import Callable
 
-from project_validator.core import Check, Result, Status
-from project_validator.facts.tools import handling
-from project_validator.judging import answered_check, combined
-from project_validator.policy import skipped_or_unknown, unknown
-from project_validator.questions import Answer
-from project_validator.questions.tooling import ToolAnswer, aspect_answers
-from project_validator.core import Placed, Result, Status
+from project_validator.core import Check, Placed, Result, Status
 from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.facts import Facts
 from project_validator.facts.coverage import Granularity
-from project_validator.judging import by_ecosystem, combined, judged
+from project_validator.facts.tools import handling
+from project_validator.judging import answered_check, by_ecosystem, combined, judged
 from project_validator.policy import skipped_or_unknown, unknown
 from project_validator.questions import Answer, LanguageAnswers
 from project_validator.questions.coverage import CoverageAnswer, GranularityAnswer
-from project_validator.questions.tooling import Ran, ToolAnswer
+from project_validator.questions.tooling import Ran, ToolAnswer, aspect_answers
 from tests.support import make_context, temp_project
 
 
@@ -127,6 +122,8 @@ class AnsweredCheckTests(unittest.TestCase):
     def test_an_aspect_or_languages_is_required(self) -> None:
         with self.assertRaisesRegex(TypeError, "aspect or languages"):
             self._check()
+
+
 def _answer(language: str, unit: str, *tools: str) -> ToolAnswer:
     return ToolAnswer(
         aspect="format",

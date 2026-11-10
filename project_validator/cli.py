@@ -83,6 +83,8 @@ def _add_listing_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--list", action="store_true", help="list the checks (as JSON: with what each applies to)")
     for name, what in _DUMPS.items():
         parser.add_argument(f"--{name}", action="store_true", help=f"print {what} as JSON and exit")
+
+
 def _add_output_options(parser: argparse.ArgumentParser) -> None:
     """The options that choose how the results are printed."""
     parser.add_argument(
