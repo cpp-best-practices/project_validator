@@ -1,0 +1,65 @@
+name: pages
+
+# The documentation site: the README, docs/ and the generated support matrix, as HTML, built from main on every push
+# and published to GitHub Pages. Each page says which commit it was built from.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - .github/workflows/pages.yml
+      - .github/requirements/pages.txt
+      - tests/build_site.py
+  workflow_dispatch:
+
+# One deployment at a time, and never cancelled: a cancelled deployment leaves the site in an unknown state.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build the site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install the site's dependencies
+        run: python -m pip install --require-hashes -r .github/requirements/pages.txt
+
+      - name: Build the site
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+          REPOSITORY: ${{ github.repository }}
+          REF: ${{ github.ref_name }}
+          REVISION: ${{ github.sha }}
+        run: python tests/build_site.py _site --repository "$REPOSITORY" --ref "$REF" --revision "$REVISION"
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    name: deploy to GitHub Pages
+    # A pull request only checks that the site builds.
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

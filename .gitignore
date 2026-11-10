@@ -26,3 +26,6 @@ crash-*
 leak-*
 timeout-*
 oom-*
+
+# The documentation site
+_site/

@@ -1,2 +1,4 @@
 # The dependencies the tests run with.
 PyYAML==6.0.3
+# tests/build_site.py renders the documentation site.
+Markdown==3.11.3

@@ -116,6 +116,11 @@ A tool-based check records its aspect (`Check.aspect`), so the support matrix (`
 A folded result keeps the places it was folded from (`Result.places`: one ecosystem in one unit, with the tools that ran), so `--format markdown` can lay the results out as a grid without re-judging. CI appends that grid for this
 repository to the job summary of each [run](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml?query=branch%3Amain).
 
+The support matrix is not committed (a generated file would be, against `committed-artifacts`, and every new
+ecosystem changes it): the `pages` workflow renders it, the README and the pages under docs/ to HTML
+(`tests/build_site.py`) and publishes them to GitHub Pages from `main` on every push, each page saying which
+commit it was built from.
+
 ### Worked example: branch coverage in this repository
 
 1. The GitHub Actions extractor records the job `coverage` and its command

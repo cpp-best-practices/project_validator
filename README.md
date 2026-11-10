@@ -16,6 +16,9 @@ Checks that do not apply to any of the project's languages are reported as `SKIP
 is judged for each of them and gets the worst result. In a project of no recognised language, only the checks that
 apply to every project run.
 More ecosystems can be added with plugins (see [Adding an ecosystem](#adding-an-ecosystem)).
+This README, the pages under docs/ and the generated support matrix are also published as a site at
+[cpp-best-practices.github.io/project_validator](https://cpp-best-practices.github.io/project_validator/),
+built from `main` by CI on every push; each page says which commit it reflects.
 
 The validator itself is pure Python and has no build step; it only inspects
 (and, with `--build`, configures and builds) the project it is pointed at.
@@ -65,7 +68,7 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 
 ## Checks
 
-What each check accepts for a language is on that ecosystem's page in [docs/ecosystems](docs/ecosystems); `python -m project_validator --support-matrix` prints the grid of every check against every ecosystem, with the tools each recognises.
+What each check accepts for a language is on that ecosystem's page in [docs/ecosystems](docs/ecosystems); `python -m project_validator --support-matrix` prints the grid of every check against every ecosystem, with the tools each recognises (on the site as [the support matrix](https://cpp-best-practices.github.io/project_validator/docs/support-matrix.html)).
 
 | Check | Passes when |
 |---|---|
@@ -234,6 +237,7 @@ To run them locally:
 | `copy-paste-detection` | `npx --yes jscpd@4.3.0` (settings in `.jscpd.json`) |
 | `function-limits` | `lizard --length 30 --warnings_only project_validator tests` |
 | `mutation testing` | `mapfile -t p < <(python tests/changed_mutants.py origin/main...HEAD) && mutmut run "${p[@]}"`: the mutants of the functions a pull request changes (settings in `[tool.mutmut]`; with no patterns, `mutmut run` would mutate everything); `mutmut results` lists survivors. mutmut copies the tree into `mutants/`, which the self-referential tests need to be a git repository: `git -C mutants init && git -C mutants add -A` after a first run |
+| `pages` | `python tests/build_site.py _site` (needs `Markdown`): the documentation site, written to `_site/`; CI publishes it to GitHub Pages from `main` and only builds it on a pull request that changes the builder or its workflow |
 | `fuzzing` | `python tests/fuzz/fuzz_<parser>.py tests/fuzz/corpus/<parser> -max_total_time=60` for each of the six parsers (atheris); locally, write new corpus entries to a temp directory first: `python tests/fuzz/fuzz_<parser>.py "$(mktemp -d)" tests/fuzz/corpus/<parser> -max_total_time=60` |
 
 Branch coverage is measured with [coverage.py](https://coverage.readthedocs.io/)
