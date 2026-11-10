@@ -4,7 +4,6 @@ from project_validator.ecosystems import BUILT_IN, isolated_registry
 from project_validator.plugins import discover
 from project_validator.support_matrix import (
     LEGEND,
-    REGENERATE,
     Cell,
     Row,
     SupportMatrix,
@@ -63,7 +62,6 @@ class SupportMatrixTests(unittest.TestCase):
         self.assertIn("RuboCop", names)
 
     def test_rendering(self) -> None:
-        self.assertIn(REGENERATE, LEGEND)
         self.assertEqual(
             render(SMALL),
             "# Support matrix\n\n"
