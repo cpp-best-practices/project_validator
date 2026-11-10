@@ -276,28 +276,34 @@ _ASSIGNMENT = re.compile(r"([A-Za-z_]\w*)=(.*)", re.DOTALL)
 
 
 def launcher(
-    name: str, prefixes: Iterable[tuple[str, ...]], with_values: frozenset[str] = frozenset()
+    name: str, prefixes: Iterable[tuple[str, ...]], with_values: frozenset[str] = frozenset(), positionals: int = 0
 ) -> CommandExpander:
     """An expander of the launchers whose commands start with one of `prefixes` (`("bundle", "exec")`): each runs the
     command its first positional argument starts, with the variables assigned before it (`env CC=clang make`).
-    `with_values` are the launcher's options that take a value.
+    `with_values` are the launcher's options that take a value; `positionals` are the launcher's own positional
+    arguments before the command (the duration of `timeout 5m make`).
     """
     starts = tuple(prefixes)
 
     def expand(command: Command, _: Context) -> list[Expansion] | None:
         argv = resolved(command)
         prefix = starts_with(argv, *starts)
-        return None if prefix is None or len(argv) == len(prefix) else _launched(argv[len(prefix) :], with_values)
+        if prefix is None or len(argv) == len(prefix):
+            return None
+        return _launched(argv[len(prefix) :], with_values, positionals)
 
     return CommandExpander(name=name, expand=expand)
 
 
-def _launched(words: tuple[str, ...], with_values: frozenset[str]) -> list[Expansion]:
+def _launched(words: tuple[str, ...], with_values: frozenset[str], positionals: int) -> list[Expansion]:
     rest, env = iter(words), {}
     for word in rest:
         if (assignment := _ASSIGNMENT.fullmatch(word)) is not None:
             env[assignment[1]] = assignment[2]
         elif word == "--" or not word.startswith("-"):
+            if positionals and word != "--":
+                positionals -= 1
+                continue
             launched = (*(() if word == "--" else (word,)), *rest)
             return [Launched(argv=launched, env=env)] if launched else []
         elif word in with_values:
