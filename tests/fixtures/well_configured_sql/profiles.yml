@@ -1,0 +1,12 @@
+shop:
+  target: ci
+  outputs:
+    ci:
+      type: postgres
+      host: localhost
+      port: 5432
+      user: postgres
+      password: "{{ env_var('PGPASSWORD') }}"
+      dbname: shop
+      schema: public
+      threads: 4

@@ -2855,6 +2855,11 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "sqlfluff"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "uv.lock",
       "reader": "Python packages lockfile"
     },
