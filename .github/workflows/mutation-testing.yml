@@ -57,12 +57,18 @@ jobs:
           mutmut run "${patterns[@]}" || true
           git -C mutants init -q
           git -C mutants add -A
-          mutmut run "${patterns[@]}"
+          # A budget below the job's timeout: a pull request that changes many modules still gets a report
+          # of the mutants checked so far, instead of a cancelled job and no report at all.
+          budget=ok
+          timeout --signal=INT 100m mutmut run "${patterns[@]}" || { [ $? -eq 124 ] && budget=exhausted; }
           # The results also list every mutant not run (the other modules'), which would fill the summary.
           survivors=$(mktemp)
           mutmut results | grep -v ': not checked$' > "$survivors" || true
           {
             echo '## Mutation testing of the changed modules'
+            if [ "$budget" = exhausted ]; then
+              echo 'Stopped after 100 minutes: the results below cover the mutants checked by then.'
+            fi
             if [ -s "$survivors" ]; then
               echo '```'
               cat "$survivors"
