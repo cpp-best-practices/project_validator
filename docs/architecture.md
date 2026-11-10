@@ -111,7 +111,7 @@ only scans heuristically, or a matrix computed by an expression), not a finding 
 `ERROR`, which fails the run and names what was not read, unless the user passes `--allow-unknown`; then the answer
 is judged by what could be read, as a no.
 
-A tool-based check records its aspect (`Check.aspect`), so the support matrix (`--support-matrix`, committed as docs/support-matrix.md and kept current by a test) can name, for each check and ecosystem, the tools the registry knows; checks themselves still name no tool.
+A tool-based check records its aspect (`Check.aspect`), so the support matrix (`--support-matrix`) can name, for each check and ecosystem, the tools the registry knows; checks themselves still name no tool.
 
 A folded result keeps the places it was folded from (`Result.places`: one ecosystem in one unit, with the tools that ran), so `--format markdown` can lay the results out as a grid without re-judging. CI appends that grid for this
 repository to the job summary of each [run](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml?query=branch%3Amain).

@@ -1,6 +1,6 @@
 """The support matrix: what each check recognises for each ecosystem, generated from the registry.
 
-It is printed by `--support-matrix` and kept in docs/support-matrix.md.
+It is printed by `--support-matrix`.
 """
 
 from collections.abc import Sequence
@@ -13,12 +13,10 @@ from project_validator.facts.tools import tools_for
 
 type Cell = tuple[str, ...] | None  # tool names (maybe none) where the check applies; None where it does not
 
-REGENERATE = "UPDATE_SNAPSHOTS=1 python -m unittest tests.test_documentation"
-LEGEND = f"""\
-What project_validator checks for each ecosystem, and the tools it recognises for it. Generated: regenerate
-with `{REGENERATE}`
-(a test fails while this page is stale). A cell lists the tools the check recognises; `✓` means the check applies
-without naming tools; `—` means it does not apply.
+LEGEND = """\
+What project_validator checks for each ecosystem, and the tools it recognises for it, generated from the registry
+by `python -m project_validator --support-matrix`. A cell lists the tools the check recognises; `✓` means the check
+applies without naming tools; `—` means it does not apply.
 """
 
 
@@ -67,7 +65,7 @@ def _render_cell(cell: Cell) -> str:
 
 
 def render(matrix: SupportMatrix) -> str:
-    """The matrix as the Markdown page docs/support-matrix.md."""
+    """The matrix as a Markdown page."""
     lines = [
         "| Check | " + " | ".join(matrix.ecosystems) + " |",
         "|---|" + "---|" * len(matrix.ecosystems),
