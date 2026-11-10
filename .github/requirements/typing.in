@@ -3,3 +3,5 @@ mypy==2.4.1
 types-PyYAML==6.0.12.20261103
 PyYAML==6.0.3
 rich==15.0.0
+types-Markdown==3.11.3.20261108
+Markdown==3.11.3

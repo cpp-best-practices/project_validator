@@ -1,0 +1,2 @@
+# The documentation site: Python-Markdown renders the pages; the validator itself generates the support matrix.
+Markdown==3.11.3
