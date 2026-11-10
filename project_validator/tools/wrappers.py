@@ -1,5 +1,5 @@
 """Programs that run the command that follows them (`sudo make`, `emcmake cmake`, `xvfb-run npm test`,
-`find … | xargs clang-format`), shared by every language: each is a launcher (see
+`timeout 5m make check`, `find … | xargs clang-format`), shared by every language: each is a launcher (see
 `project_validator.facts.expansion.launcher`)."""
 
 from project_validator.facts.expansion import launcher
@@ -19,4 +19,8 @@ XARGS = launcher(
     with_values=frozenset(
         {"-n", "-P", "-I", "-L", "-d", "-E", "-s", "-a", "--max-args", "--max-procs", "--delimiter", "--arg-file"}
     ),
+)
+# timeout runs its command after a duration and its options (`timeout --signal=INT -k 2m 30m mutmut run`).
+TIMEOUT = launcher(
+    "timeout", (("timeout",),), with_values=frozenset({"-s", "--signal", "-k", "--kill-after"}), positionals=1
 )

@@ -62,6 +62,17 @@ class EngineTests(unittest.TestCase):
         launched = [command.argv for command in _facts(files).of(Command) if command.via]
         self.assertEqual(launched, [("clang-format", "--dry-run", "-Werror")])
 
+    def test_timeout_runs_the_command_after_its_duration(self) -> None:
+        files = github_job(
+            "ubuntu-latest",
+            "timeout 5m mutmut run",
+            "timeout --signal=INT --kill-after=2m 30m mutmut run 'pkg.x_f*'",
+            "timeout -s INT -k 2m -v 30m make check",
+            "timeout 30m",
+        )
+        launched = [command.argv for command in _facts(files).of(Command) if command.via]
+        self.assertEqual(launched, [("mutmut", "run"), ("mutmut", "run", "pkg.x_f*"), ("make", "check")])
+
     def test_cd_changes_where_the_rest_of_the_script_runs(self) -> None:
         files = {
             "web/ui/package.json": '{"scripts": {"lint": "eslint ."}}',

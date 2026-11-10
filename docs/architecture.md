@@ -219,7 +219,7 @@ except where a step deliberately changes results and says so.
      Coverage is spelled with `coverage_tool` and `measured` (`project_validator/facts/coverage.py`), which only
      fill in the `coverage` aspect.
    - **One way a command runs another.** Wrappers (`sudo`, `env CC=clang`, `nice`, `emcmake`, `xvfb-run`,
-     `ccache`; `project_validator/tools/wrappers.py`) are launchers like `bundle exec` and `npx`: the command they
+     `ccache`, `timeout 5m`; `project_validator/tools/wrappers.py`) are launchers like `bundle exec` and `npx`: the command they
      run is a `Launched` command of its own, with the variables they set. `resolved` only substitutes variables.
    - **One way to read a command line** (`project_validator/facts/arguments.py`): `program`, `option_values`,
      `has_option`, `short_flags`, `positional`.
