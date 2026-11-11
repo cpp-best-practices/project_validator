@@ -1,0 +1,2470 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "R",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "posit-dev/setup-air@482cb5912394878ab5a63b75db0f9d19cc6df5ba"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/function-limits.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "R",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "R",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "failing on lints (LINTR_ERROR_ON_LINT)": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "lintr": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "R",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "R",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "covr::package_coverage() (or covr::codecov())"
+              ],
+              "tools": [
+                "covr"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "R",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "R",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "air": {
+                "can": {
+                  "apply": "air format .",
+                  "check": "air format --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "styler": {
+                "can": {
+                  "apply": "styler::style_pkg(), with the job failing on git diff --exit-code"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "R",
+            "level": "check",
+            "runs": {
+              "air": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "R",
+            "level": "limits",
+            "runs": {
+              "lizard": {
+                "levels": [
+                  "limits",
+                  "measures"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "R",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "R",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "R",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "R",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "R",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "R version",
+            "language": "R",
+            "notes": [],
+            "platforms": [
+              {
+                "R version": "default",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "R version": "devel",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "R version": "oldrel-1",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "R version": "release",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "R version": "release",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "R version": "release",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "R",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "R",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "lintr": [
+                ".lintr"
+              ]
+            },
+            "known": {
+              "lintr": {
+                "can": {
+                  "checks": "lintr::lint_package()"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "R",
+            "level": "checks",
+            "runs": {
+              "lintr": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "R CMD check": [
+                "tests/testthat/test-shop.R"
+              ]
+            },
+            "known": {
+              "R CMD check": {
+                "can": {
+                  "runs": "R CMD check (or rcmdcheck::rcmdcheck(), r-lib/actions/check-r-package, devtools::test())"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "R",
+            "level": "runs",
+            "runs": {
+              "R CMD check": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "R",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "R",
+            "outputs": {
+              "R CMD check's directory": {
+                ".gitignore": "*.Rcheck/"
+              },
+              "RStudio's project state": {
+                ".gitignore": ".Rproj.user/"
+              },
+              "the .RData session file": {
+                ".gitignore": ".RData"
+              },
+              "the .Rhistory session file": {
+                ".gitignore": ".Rhistory"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "R",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "rcmdcheck error_on = \"warning\"": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "R",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "R package",
+      "kind": "BuildFile",
+      "languages": [
+        "R"
+      ],
+      "origin": "DESCRIPTION"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "R",
+      "origin": "R/shop.R",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "R",
+      "origin": "tests/testthat.R",
+      "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "R",
+      "origin": "tests/testthat/test-shop.R",
+      "role": "test"
+    },
+    {
+      "build_systems": [
+        "R package"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "R"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "testthat (tests/testthat/test-*.R) or tinytest (inst/tinytest/test_*.R) files",
+      "language": "R",
+      "origin": "tests/testthat/test-shop.R"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:R-CMD-check[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "config": "{\"os\": \"macos-latest\", \"r\": \"release\"}"
+      },
+      "name": "R-CMD-check ({\"os\": \"macos-latest\", \"r\": \"release\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "r-version": "release",
+        "use-public-rspm": "true"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[1]",
+      "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-packages": "any::rcmdcheck",
+        "needs": "check"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[2]",
+      "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "error-on": "\"warning\""
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "argv": [
+        "Rscript",
+        "-e",
+        "rcmdcheck::rcmdcheck(args = (c(\"--no-manual\", \"--as-cran\")), error_on = (\"warning\"))"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[0]",
+      "kind": "Command",
+      "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:R-CMD-check[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "config": "{\"os\": \"windows-latest\", \"r\": \"release\"}"
+      },
+      "name": "R-CMD-check ({\"os\": \"windows-latest\", \"r\": \"release\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "r-version": "release",
+        "use-public-rspm": "true"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[1]",
+      "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-packages": "any::rcmdcheck",
+        "needs": "check"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[2]",
+      "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "error-on": "\"warning\""
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "argv": [
+        "Rscript",
+        "-e",
+        "rcmdcheck::rcmdcheck(args = (c(\"--no-manual\", \"--as-cran\")), error_on = (\"warning\"))"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[1]",
+      "kind": "Command",
+      "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:R-CMD-check[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "config": "{\"os\": \"ubuntu-latest\", \"r\": \"devel\"}"
+      },
+      "name": "R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"devel\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "r-version": "devel",
+        "use-public-rspm": "true"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[1]",
+      "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-packages": "any::rcmdcheck",
+        "needs": "check"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[2]",
+      "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "error-on": "\"warning\""
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "argv": [
+        "Rscript",
+        "-e",
+        "rcmdcheck::rcmdcheck(args = (c(\"--no-manual\", \"--as-cran\")), error_on = (\"warning\"))"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[2]",
+      "kind": "Command",
+      "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:R-CMD-check[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "config": "{\"os\": \"ubuntu-latest\", \"r\": \"release\"}"
+      },
+      "name": "R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"release\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "r-version": "release",
+        "use-public-rspm": "true"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[1]",
+      "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-packages": "any::rcmdcheck",
+        "needs": "check"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[2]",
+      "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "error-on": "\"warning\""
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "argv": [
+        "Rscript",
+        "-e",
+        "rcmdcheck::rcmdcheck(args = (c(\"--no-manual\", \"--as-cran\")), error_on = (\"warning\"))"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[3]",
+      "kind": "Command",
+      "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:R-CMD-check[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "config": "{\"os\": \"ubuntu-latest\", \"r\": \"oldrel-1\"}"
+      },
+      "name": "R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"oldrel-1\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "r-version": "oldrel-1",
+        "use-public-rspm": "true"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[1]",
+      "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-packages": "any::rcmdcheck",
+        "needs": "check"
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[2]",
+      "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "error-on": "\"warning\""
+      },
+      "job": ".github/workflows/ci.yml:R-CMD-check[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "argv": [
+        "Rscript",
+        "-e",
+        "rcmdcheck::rcmdcheck(args = (c(\"--no-manual\", \"--as-cran\")), error_on = (\"warning\"))"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:R-CMD-check[4]",
+      "kind": "Command",
+      "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:coverage",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "coverage",
+      "origin": ".github/workflows/ci.yml:jobs.coverage",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "use-public-rspm": "true"
+      },
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[1]",
+      "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-packages": "any::covr",
+        "needs": "coverage"
+      },
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[2]",
+      "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "argv": [
+        "Rscript",
+        "cov <- covr::package_coverage(quiet = FALSE)\nprint(cov)\ncovr::codecov(coverage = cov)\n"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "Command",
+      "line": "cov <- covr::package_coverage(quiet = FALSE)\nprint(cov)\ncovr::codecov(coverage = cov)\n",
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "use-public-rspm": "true"
+      },
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[1]",
+      "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-packages": "any::lintr, local::.",
+        "needs": "lint"
+      },
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2]",
+      "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "argv": [
+        "Rscript",
+        "lintr::lint_package()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "LINTR_ERROR_ON_LINT": "true"
+      },
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "lintr::lint_package()",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4]",
+      "uses": "posit-dev/setup-air@482cb5912394878ab5a63b75db0f9d19cc6df5ba"
+    },
+    {
+      "argv": [
+        "air",
+        "format",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "air format --check .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "posit-dev/setup-air@482cb5912394878ab5a63b75db0f9d19cc6df5ba"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "R"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"macos-latest\", \"r\": \"release\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "R",
+          "version": "release"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "R"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"windows-latest\", \"r\": \"release\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "R",
+          "version": "release"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "R"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"devel\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "R",
+          "version": "devel"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "R"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"release\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "R",
+          "version": "release"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "R"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"oldrel-1\"})",
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "R",
+          "version": "oldrel-1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "R"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: coverage",
+      "origin": ".github/workflows/ci.yml:jobs.coverage",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "R",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "R"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "R",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".Rhistory",
+      "syntax": "glob",
+      "written": ".Rhistory"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".RData",
+      "syntax": "glob",
+      "written": ".RData"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".Rproj.user/",
+      "syntax": "glob",
+      "written": ".Rproj.user/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.Rcheck/",
+      "syntax": "glob",
+      "written": "*.Rcheck/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".lintr",
+      "reader": "lintr"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "R CMD check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "R CMD check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "R CMD check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "R CMD check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:R-CMD-check[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.R-CMD-check.steps[3]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "R CMD check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "covr",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lintr",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "air",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Erlang"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "R package"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "R"
+          ],
+          "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"macos-latest\", \"r\": \"release\"})",
+          "os": "macos",
+          "toolchains": [
+            "R release"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "R"
+          ],
+          "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"windows-latest\", \"r\": \"release\"})",
+          "os": "windows",
+          "toolchains": [
+            "R release"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "R"
+          ],
+          "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"devel\"})",
+          "os": "linux",
+          "toolchains": [
+            "R devel"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "R"
+          ],
+          "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"release\"})",
+          "os": "linux",
+          "toolchains": [
+            "R release"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "R"
+          ],
+          "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"oldrel-1\"})",
+          "os": "linux",
+          "toolchains": [
+            "R oldrel-1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "R"
+          ],
+          "name": ".github/workflows/ci.yml: coverage",
+          "os": "linux",
+          "toolchains": [
+            "R default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "R"
+          ],
+          "name": ".github/workflows/ci.yml: lint",
+          "os": "linux",
+          "toolchains": [
+            "R default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "R": [
+        "build file DESCRIPTION",
+        ".R files"
+      ]
+    },
+    "languages": [
+      "R"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "R package"
+        ],
+        "directory": ".",
+        "languages": [
+          "R"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 9 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "CI enforces the air style",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict R lints are enabled: lintr, failing on lints (LINTR_ERROR_ON_LINT)",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "line coverage is reported with covr",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "5 data files parse (YAML: 5)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with lizard",
+      "status": "PASS"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no R version",
+        ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"macos-latest\", \"r\": \"release\"}): macos / release",
+        ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"windows-latest\", \"r\": \"release\"}): windows / release",
+        ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"devel\"}): linux / devel",
+        ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"release\"}): linux / release",
+        ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"oldrel-1\"}): linux / oldrel-1",
+        ".github/workflows/ci.yml: coverage: linux / default",
+        ".github/workflows/ci.yml: lint: linux / default",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no R version",
+        ".github/workflows/function-limits.yml: function-limits: linux / no R version"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 4 R version(s) (default, devel, oldrel-1, release), 6 combination(s)",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "lintr (.lintr) runs",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores .Rhistory; .gitignore ignores .RData; .gitignore ignores .Rproj.user/; .gitignore ignores *.Rcheck/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with rcmdcheck error_on = \"warning\"",
+      "status": "PASS"
+    }
+  }
+}

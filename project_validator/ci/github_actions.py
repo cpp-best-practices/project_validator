@@ -3,12 +3,13 @@
 import itertools
 import json
 import re
+import shlex
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, replace
 
 from project_validator.ci import CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
-from project_validator.facts import ActionStep, CiJob, Fact, Origin, Unknown
+from project_validator.facts import ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.expansion import script_facts
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
@@ -43,6 +44,24 @@ def substitute_matrix(text: str, combination: Combination, missing: str | None =
 
 # An expression GitHub evaluates before the shell runs the step.
 EXPRESSION = re.compile(r"\$\{\{.*?\}\}")
+
+# The shells whose scripts are split into commands; another `shell:` names a program that runs the step's script as a
+# whole (`python {0}`, `Rscript {0}`).
+_SHELLS = frozenset({"bash", "sh", "pwsh", "powershell", "cmd"})
+
+
+def custom_shell(shell: str | None) -> tuple[str, ...] | None:
+    """The command line of a step's custom shell (`shell: Rscript {0}`, `julia --color=yes {0}`), with `{0}` where
+    GitHub puts the script's file; None for a shell GitHub knows (whose script is split into commands), or none."""
+    if shell is None:
+        return None
+    try:
+        words = shlex.split(shell)
+    except ValueError:
+        words = shell.split()
+    if not words or words[0] in _SHELLS:
+        return None
+    return tuple(words) if "{0}" in words else (*words, "{0}")
 
 
 def _is_subset(entry: Mapping[str, object], combination: Combination) -> bool:
@@ -244,17 +263,38 @@ class _Combination:
             if (local := _local_action(uses)) is not None:
                 yield from self.composite_facts(origin, local, inputs, known, (*via, origin))
         if isinstance(run := step.get("run"), str):
-            yield from script_facts(
-                self.substitute(run),
-                job=self.identity,
-                origin=Origin(path=origin.path, at=(*origin.at, "run")),
-                env={**known.env, **self.substituted(step.get("env"))},
-                directory=self.optional(step.get("working-directory")),
-                condition=condition,
-                opaque=EXPRESSION,
-                via=via,
-                powershell=self.powershell(step, known),
-            )
+            yield from self.run_facts(origin, step, self.substitute(run), known, condition, via)
+
+    def run_facts(
+        self,
+        origin: Origin,
+        step: Mapping[str, object],
+        script: str,
+        known: Known,
+        condition: str | None,
+        via: tuple[Origin, ...],
+    ) -> Iterator[Fact]:
+        """The commands of a step's script: split as its shell would, or, under a custom shell (`shell: Rscript {0}`),
+        the one command of that program given the script, with the script's text where its file would be."""
+        at = Origin(path=origin.path, at=(*origin.at, "run"))
+        env = {**known.env, **self.substituted(step.get("env"))}
+        directory = self.optional(step.get("working-directory"))
+        if (custom := custom_shell(self.optional(step.get("shell")) or self.shell)) is not None:
+            argv = tuple(script if word == "{0}" else word for word in custom)
+            command = Command(origin=at, job=self.identity, argv=argv, line=script, env=env, directory=directory)
+            yield replace(command, condition=condition, via=via)
+            return
+        yield from script_facts(
+            script,
+            job=self.identity,
+            origin=at,
+            env=env,
+            directory=directory,
+            condition=condition,
+            opaque=EXPRESSION,
+            via=via,
+            powershell=self.powershell(step, known),
+        )
 
     def powershell(self, step: Mapping[str, object], known: Known) -> bool:
         """Whether a step's script is PowerShell: its `shell`, the job's default, or the runner's (pwsh on Windows)."""

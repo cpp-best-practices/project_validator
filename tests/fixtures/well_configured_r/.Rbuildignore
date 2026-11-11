@@ -1,0 +1,5 @@
+^\.github$
+^\.lintr$
+^air\.toml$
+^LICENSE\.md$
+^SECURITY\.md$

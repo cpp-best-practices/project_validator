@@ -330,6 +330,29 @@ class GitLabFactTests(unittest.TestCase):
         self.assertEqual(facts.of(Unknown), ())
         self.assertIn(("cmake", "--build", "build", "--config", "Release"), [c.argv for c in facts.of(Command)])
 
+    def test_a_custom_shell_runs_the_script_as_one_command(self) -> None:
+        script = "cov <- covr::package_coverage(quiet = FALSE)\ncovr::to_cobertura(cov)\n"
+        job = {
+            "runs-on": "ubuntu-latest",
+            "defaults": {"run": {"shell": "julia --color=yes {0}"}},
+            "steps": [
+                {"run": script, "shell": "Rscript {0}", "env": {"R_KEEP_PKG_SOURCE": "yes"}},
+                {"run": "using Pkg; Pkg.test()"},
+                {"run": "echo hi", "shell": "bash"},
+                {"run": "print(1)", "shell": "python {0}"},
+                {"run": "x", "shell": "perl -e '{0}"},
+            ],
+        }
+        facts = _facts({GITHUB_WORKFLOW: json.dumps({"jobs": {"test": job}})})
+        self.assertEqual(facts.of(Unknown), ())
+        [r, julia, echo, python, perl] = facts.of(Command)
+        # A shell line shlex cannot split (an unbalanced quote) is split on whitespace, and runs the script last.
+        self.assertEqual(perl.argv, ("perl", "-e", "'{0}", "x"))
+        self.assertEqual((r.argv, r.line, r.env["R_KEEP_PKG_SOURCE"]), (("Rscript", script), script, "yes"))
+        self.assertEqual(julia.argv, ("julia", "--color=yes", "using Pkg; Pkg.test()"))
+        self.assertEqual(echo.argv, ("echo", "hi"))
+        self.assertEqual(python.argv, ("python", "print(1)"))
+
 
 class OtherProviderFactTests(unittest.TestCase):
     def test_unparsed_configuration_is_a_heuristic_job_with_unknown_commands(self) -> None:
