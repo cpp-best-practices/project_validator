@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -67,6 +71,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -106,6 +111,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -124,6 +130,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -140,6 +147,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -158,6 +166,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -176,6 +185,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -201,12 +211,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -221,6 +233,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -239,6 +252,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -254,6 +268,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -268,6 +283,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -286,6 +302,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -319,6 +336,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -345,6 +363,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -363,6 +382,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -380,6 +400,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Emacs Lisp",
         "units": [
           {
@@ -404,6 +425,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "Eask",
       "kind": "BuildFile",

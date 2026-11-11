@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -43,12 +46,14 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": []
       }
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -88,6 +93,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -106,6 +112,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -122,6 +129,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -148,6 +156,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -166,6 +175,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -191,12 +201,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -211,6 +223,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -229,6 +242,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -244,6 +258,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -258,6 +273,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -276,6 +292,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -294,6 +311,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -320,6 +338,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -338,6 +357,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": [
           {
@@ -353,12 +373,18 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Racket",
         "units": []
       }
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "raco pkg",
       "kind": "BuildFile",

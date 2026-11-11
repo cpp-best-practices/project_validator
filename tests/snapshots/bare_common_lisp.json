@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -66,6 +70,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -105,6 +110,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -123,6 +129,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -139,6 +146,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -157,6 +165,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -175,6 +184,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -200,12 +210,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -220,6 +232,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -238,6 +251,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -253,6 +267,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -267,6 +282,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -285,6 +301,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -311,6 +328,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -337,6 +355,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -355,6 +374,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -371,6 +391,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Common Lisp",
         "units": [
           {
@@ -394,6 +415,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "ASDF",
       "kind": "BuildFile",
