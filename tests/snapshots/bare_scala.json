@@ -1,0 +1,735 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Scala",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Scala",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "target/"
+            ],
+            "language": "Scala",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "-deprecation",
+                  "-feature",
+                  "-Xlint or -Wunused"
+                ]
+              }
+            ],
+            "language": "Scala",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)",
+                "sbt jacoco"
+              ],
+              "tools": []
+            },
+            "language": "Scala",
+            "line": {
+              "answer": "no",
+              "known": [
+                "sbt jacoco"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "no",
+              "known": [
+                "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)"
+              ],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "sbt-dependency-check": {
+                "can": {
+                  "runs": "sbt dependencyCheck (OWASP dependency-check)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Scala",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "scalafmt": {
+                "can": {
+                  "apply": "sbt scalafmtAll",
+                  "check": "sbt scalafmtCheckAll (or scalafmt --check, mill __.checkFormat, scala-cli fmt --check)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Scala",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Scala",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Scala",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Scala",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Scala",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "JDK or Scala version",
+            "language": "Scala",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Scala",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "scalafix": {
+                "can": {
+                  "checks": "sbt \"scalafixAll --check\" (or mill __.fix --check)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "mill __.test": {
+                "can": {
+                  "runs": "mill __.test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "sbt test": {
+                "can": {
+                  "runs": "sbt test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "scala-cli test": {
+                "can": {
+                  "runs": "scala-cli test ."
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Scala",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Scala",
+            "outputs": {
+              "the target directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "-Werror",
+                  "sbt-tpolecat's CI mode"
+                ]
+              }
+            ],
+            "language": "Scala",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "sbt",
+      "kind": "BuildFile",
+      "languages": [
+        "Scala"
+      ],
+      "origin": "build.sbt"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Scala",
+      "origin": "src/main/scala/shop/Shop.scala",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "build.sbt",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "sbt"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Scala"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "build.sbt",
+      "reader": "Scala compiler options"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "sbt"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Scala": [
+        "build file build.sbt",
+        ".scala files"
+      ]
+    },
+    "languages": [
+      "Scala"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "sbt"
+        ],
+        "directory": ".",
+        "languages": [
+          "Scala"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs sbt scalafmtCheckAll (or scalafmt --check, mill __.checkFormat, scala-cli fmt --check)"
+      ],
+      "message": "no scalafmt configuration found; formatting is not defined",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "target/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no scalac warning options found; enable at least -deprecation, -feature, -Xlint or -Wunused",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to report branch coverage: sbt coverage test coverageReport (or mill __.scoverage.xmlReport), sbt jacoco"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [
+        "consider running in CI: sbt dependencyCheck (OWASP dependency-check), GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml) or snyk test"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [
+        "consider running in CI: lizard --length 30"
+      ],
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider running in CI: GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running sbt \"scalafixAll --check\" (or mill __.fix --check) in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (munit, ScalaTest, specs2, utest or ZIO Test suites under src/test/scala (or Mill's test/src))",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "add -Werror to scalacOptions, or run sbt-tpolecat in its CI mode (SBT_TPOLECAT_CI=true)"
+      ],
+      "message": "warnings are not treated as errors in the build or CI configuration",
+      "status": "FAIL"
+    }
+  }
+}

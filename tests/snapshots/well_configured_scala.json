@@ -1,0 +1,3476 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Scala",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "sbt/setup-sbt@67d461eba2c4753196c230e02da850757ba4775e"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/function-limits.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Scala",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Scala",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-Xlint or -Wunused": [
+                    "build.sbt"
+                  ],
+                  "-deprecation": [
+                    "build.sbt"
+                  ],
+                  "-feature": [
+                    "build.sbt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Scala",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)",
+                "sbt jacoco"
+              ],
+              "tools": [
+                "scoverage"
+              ]
+            },
+            "language": "Scala",
+            "line": {
+              "answer": "no",
+              "known": [
+                "sbt jacoco"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "yes",
+              "known": [
+                "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)"
+              ],
+              "tools": [
+                "scoverage"
+              ]
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "sbt-dependency-check": {
+                "can": {
+                  "runs": "sbt dependencyCheck (OWASP dependency-check)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "runs",
+            "runs": {
+              "sbt-dependency-check": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Scala",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "scalafmt": [
+                ".scalafmt.conf"
+              ]
+            },
+            "known": {
+              "scalafmt": {
+                "can": {
+                  "apply": "sbt scalafmtAll",
+                  "check": "sbt scalafmtCheckAll (or scalafmt --check, mill __.checkFormat, scala-cli fmt --check)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "check",
+            "runs": {
+              "scalafmt": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "limits",
+            "runs": {
+              "lizard": {
+                "levels": [
+                  "limits",
+                  "measures"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Scala",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Scala",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Scala",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Scala",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Scala",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "JDK or Scala version",
+            "language": "Scala",
+            "notes": [],
+            "platforms": [
+              {
+                "JDK or Scala version": "JDK 17",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "JDK or Scala version": "JDK 21",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "JDK or Scala version": "JDK 17",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "JDK or Scala version": "JDK 21",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "JDK or Scala version": "JDK 17",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "JDK or Scala version": "JDK 21",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "Scala",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "scans",
+            "runs": {
+              "semgrep": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "scalafix": [
+                ".scalafix.conf"
+              ]
+            },
+            "known": {
+              "scalafix": {
+                "can": {
+                  "checks": "sbt \"scalafixAll --check\" (or mill __.fix --check)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "checks",
+            "runs": {
+              "scalafix": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "mill __.test": [
+                "src/test/scala/shop/ShopSuite.scala"
+              ],
+              "sbt test": [
+                "src/test/scala/shop/ShopSuite.scala"
+              ],
+              "scala-cli test": [
+                "src/test/scala/shop/ShopSuite.scala"
+              ]
+            },
+            "known": {
+              "mill __.test": {
+                "can": {
+                  "runs": "mill __.test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "sbt test": {
+                "can": {
+                  "runs": "sbt test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "scala-cli test": {
+                "can": {
+                  "runs": "scala-cli test ."
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Scala",
+            "level": "runs",
+            "runs": {
+              "sbt test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Scala",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Scala",
+            "outputs": {
+              "the target directory": {
+                ".gitignore": "target/"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-Werror": [
+                    "build.sbt"
+                  ]
+                },
+                "missing": [
+                  "sbt-tpolecat's CI mode"
+                ]
+              }
+            ],
+            "language": "Scala",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "sbt",
+      "kind": "BuildFile",
+      "languages": [
+        "Scala"
+      ],
+      "origin": "build.sbt"
+    },
+    {
+      "build_system": "sbt",
+      "kind": "BuildFile",
+      "languages": [
+        "Scala"
+      ],
+      "origin": "project/plugins.sbt"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Scala",
+      "origin": "src/main/scala/shop/Shop.scala",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Scala",
+      "origin": "src/test/scala/shop/ShopSuite.scala",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "build.sbt",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "project/plugins.sbt",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".properties"
+    },
+    {
+      "build_systems": [
+        "sbt"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "munit, ScalaTest, specs2, utest or ZIO Test suites under src/test/scala (or Mill's test/src)",
+      "language": "Scala",
+      "origin": "src/test/scala/shop/ShopSuite.scala"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "java": "17",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 17)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "distribution": "temurin",
+        "java-version": "17"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "sbt/setup-sbt@67d461eba2c4753196c230e02da850757ba4775e"
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafmtCheckAll",
+        "scalafmtSbtCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "sbt scalafmtCheckAll scalafmtSbtCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafixAll --check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "sbt \"scalafixAll --check\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "coverage",
+        "test",
+        "coverageReport"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "sbt coverage test coverageReport",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "dependencyCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "sbt dependencyCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "java": "21",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 21)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "distribution": "temurin",
+        "java-version": "21"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "sbt/setup-sbt@67d461eba2c4753196c230e02da850757ba4775e"
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafmtCheckAll",
+        "scalafmtSbtCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "sbt scalafmtCheckAll scalafmtSbtCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafixAll --check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "sbt \"scalafixAll --check\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "coverage",
+        "test",
+        "coverageReport"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "sbt coverage test coverageReport",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "dependencyCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "sbt dependencyCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "java": "17",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 17)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "distribution": "temurin",
+        "java-version": "17"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "sbt/setup-sbt@67d461eba2c4753196c230e02da850757ba4775e"
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafmtCheckAll",
+        "scalafmtSbtCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "sbt scalafmtCheckAll scalafmtSbtCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafixAll --check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "sbt \"scalafixAll --check\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "coverage",
+        "test",
+        "coverageReport"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "sbt coverage test coverageReport",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "dependencyCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "sbt dependencyCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "java": "21",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 21)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "distribution": "temurin",
+        "java-version": "21"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "sbt/setup-sbt@67d461eba2c4753196c230e02da850757ba4775e"
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafmtCheckAll",
+        "scalafmtSbtCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "sbt scalafmtCheckAll scalafmtSbtCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafixAll --check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "sbt \"scalafixAll --check\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "coverage",
+        "test",
+        "coverageReport"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "sbt coverage test coverageReport",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "dependencyCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "sbt dependencyCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "java": "17",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 17)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "distribution": "temurin",
+        "java-version": "17"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "sbt/setup-sbt@67d461eba2c4753196c230e02da850757ba4775e"
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafmtCheckAll",
+        "scalafmtSbtCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "sbt scalafmtCheckAll scalafmtSbtCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafixAll --check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "sbt \"scalafixAll --check\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "coverage",
+        "test",
+        "coverageReport"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "sbt coverage test coverageReport",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "dependencyCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "sbt dependencyCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "java": "21",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 21)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "distribution": "temurin",
+        "java-version": "21"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "sbt/setup-sbt@67d461eba2c4753196c230e02da850757ba4775e"
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafmtCheckAll",
+        "scalafmtSbtCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "sbt scalafmtCheckAll scalafmtSbtCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "scalafixAll --check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "sbt \"scalafixAll --check\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "coverage",
+        "test",
+        "coverageReport"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "sbt coverage test coverageReport",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sbt",
+        "dependencyCheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "sbt dependencyCheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:scan",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "scan",
+      "origin": ".github/workflows/ci.yml:jobs.scan",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "semgrep",
+        "scan",
+        "--config",
+        "p/scala",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config p/scala --error .",
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "semgrep",
+        "scan",
+        "--config",
+        "p/scala",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config p/scala --error .",
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "sbt/setup-sbt@67d461eba2c4753196c230e02da850757ba4775e"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JVM",
+        "Scala"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 17)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "JDK",
+          "version": "17"
+        },
+        {
+          "language": "Scala",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JVM",
+        "Scala"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 21)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "JDK",
+          "version": "21"
+        },
+        {
+          "language": "Scala",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JVM",
+        "Scala"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 17)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "JDK",
+          "version": "17"
+        },
+        {
+          "language": "Scala",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JVM",
+        "Scala"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 21)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "JDK",
+          "version": "21"
+        },
+        {
+          "language": "Scala",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JVM",
+        "Scala"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 17)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "JDK",
+          "version": "17"
+        },
+        {
+          "language": "Scala",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JVM",
+        "Scala"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 21)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "JDK",
+          "version": "21"
+        },
+        {
+          "language": "Scala",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: scan",
+      "origin": ".github/workflows/ci.yml:jobs.scan",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "target/",
+      "syntax": "glob",
+      "written": "target/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "out/",
+      "syntax": "glob",
+      "written": "out/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".scala-build/",
+      "syntax": "glob",
+      "written": ".scala-build/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".bsp/",
+      "syntax": "glob",
+      "written": ".bsp/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".bloop/",
+      "syntax": "glob",
+      "written": ".bloop/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".metals/",
+      "syntax": "glob",
+      "written": ".metals/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".scalafix.conf",
+      "reader": "scalafix"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".scalafmt.conf",
+      "reader": "scalafmt"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "build.sbt",
+      "reader": "Scala compiler options"
+    },
+    {
+      "heuristic": true,
+      "key": "-deprecation",
+      "kind": "Setting",
+      "origin": "build.sbt",
+      "tool": "Scala compiler options",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "-feature",
+      "kind": "Setting",
+      "origin": "build.sbt",
+      "tool": "Scala compiler options",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "-Xlint or -Wunused",
+      "kind": "Setting",
+      "origin": "build.sbt",
+      "tool": "Scala compiler options",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "-Werror",
+      "kind": "Setting",
+      "origin": "build.sbt",
+      "tool": "Scala compiler options",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "project/plugins.sbt",
+      "reader": "Scala compiler options"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafix",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scoverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt-dependency-check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafix",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scoverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt-dependency-check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafix",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scoverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt-dependency-check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafix",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scoverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt-dependency-check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafix",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scoverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt-dependency-check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scalafix",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "scoverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sbt-dependency-check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "Elixir"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Erlang"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "sbt"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JVM",
+            "Scala"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 17)",
+          "os": "linux",
+          "toolchains": [
+            "JDK 17",
+            "Scala default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JVM",
+            "Scala"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 21)",
+          "os": "linux",
+          "toolchains": [
+            "JDK 21",
+            "Scala default"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JVM",
+            "Scala"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 17)",
+          "os": "macos",
+          "toolchains": [
+            "JDK 17",
+            "Scala default"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JVM",
+            "Scala"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 21)",
+          "os": "macos",
+          "toolchains": [
+            "JDK 21",
+            "Scala default"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JVM",
+            "Scala"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 17)",
+          "os": "windows",
+          "toolchains": [
+            "JDK 17",
+            "Scala default"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JVM",
+            "Scala"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 21)",
+          "os": "windows",
+          "toolchains": [
+            "JDK 21",
+            "Scala default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci.yml: scan",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Scala": [
+        "build file build.sbt",
+        "build file plugins.sbt",
+        ".scala files"
+      ]
+    },
+    "languages": [
+      "Scala"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "sbt"
+        ],
+        "directory": ".",
+        "languages": [
+          "Scala"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".properties"
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 7 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": ".scalafmt.conf is defined and CI runs scalafmt",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict scalac warning options are enabled: -deprecation, -feature, -Xlint or -Wunused",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "branch coverage is reported with scoverage",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "5 data files parse (YAML: 5)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "CI audits the dependencies with sbt-dependency-check",
+      "status": "PASS"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with lizard",
+      "status": "PASS"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no JDK or Scala version",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 17): linux / JDK 17",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 21): linux / JDK 21",
+        ".github/workflows/ci.yml: test (macos-latest, 17): macos / JDK 17",
+        ".github/workflows/ci.yml: test (macos-latest, 21): macos / JDK 21",
+        ".github/workflows/ci.yml: test (windows-latest, 17): windows / JDK 17",
+        ".github/workflows/ci.yml: test (windows-latest, 21): windows / JDK 21",
+        ".github/workflows/ci.yml: scan: linux / no JDK or Scala version",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no JDK or Scala version",
+        ".github/workflows/function-limits.yml: function-limits: linux / no JDK or Scala version"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 2 JDK or Scala version(s) (JDK 17, JDK 21), 6 combination(s)",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "CI scans the code for security problems with semgrep",
+      "status": "PASS"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "scalafix (.scalafix.conf) runs",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores target/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with -Werror",
+      "status": "PASS"
+    }
+  }
+}
