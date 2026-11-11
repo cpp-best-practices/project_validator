@@ -165,10 +165,18 @@ def _format_json(reports: list[Report]) -> str:
                 "status": str(report.result.status),
                 "message": report.result.message,
                 "details": list(report.result.details),
-                "auxiliary": [
-                    {"ecosystem": place.ecosystem, "unit": place.unit, "named": list(place.auxiliary)}
+                # One result per ecosystem in each unit, as the markdown grid lays them out.
+                "places": [
+                    {
+                        "ecosystem": place.ecosystem,
+                        "unit": place.unit,
+                        "status": str(place.result.status),
+                        "message": place.result.message,
+                        "details": list(place.result.details),
+                        "tools": list(place.tools),
+                        "auxiliary": list(place.auxiliary),
+                    }
                     for place in report.result.places
-                    if place.auxiliary
                 ],
             }
             for report in reports

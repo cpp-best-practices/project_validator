@@ -16,7 +16,7 @@ from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
-from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
+from project_validator.facts.outputs import BuildOutput, directory_output, ignored_at_top_level
 from project_validator.facts.tools import Definition
 
 JAVA = "Java"
@@ -42,14 +42,9 @@ def _output_beside(name: str, build_files: tuple[str, ...]) -> Callable[[Path], 
 
 
 def _build_outputs(build_system: str, directory: str, *more: str) -> BuildOutput:
-    return BuildOutput(
-        name=f"the {directory} directory",
-        languages=JVM_LANGUAGES,
-        build_systems=frozenset({build_system}),
-        globs=ignored_at_top_level(directory),
-        paths=directories(directory),
-        hint=f"consider ignoring {' and '.join((f'{directory}/', *more))}",
-        artifacts=(f"{directory}/", *more, "*.class"),
+    languages, systems = JVM_LANGUAGES, frozenset({build_system})
+    return directory_output(
+        directory, languages=languages, build_systems=systems, also=more, artifacts=(*more, "*.class")
     )
 
 

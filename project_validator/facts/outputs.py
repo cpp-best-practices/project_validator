@@ -104,6 +104,28 @@ def directories(*names: str) -> tuple[str, ...]:
     return tuple(path for name in names for path in (name, f"{name}/"))
 
 
+def directory_output(
+    directory: str,
+    *,
+    languages: frozenset[str],
+    build_systems: frozenset[str] = frozenset(),
+    also: tuple[str, ...] = (),
+    artifacts: tuple[str, ...] = (),
+) -> BuildOutput:
+    """The commonest build output: a build system's `directory` at the top of the repository (`target`, `build`,
+    `.scala-build`), ignored as that directory, with `also` the other paths worth ignoring named in the hint, and
+    `artifacts` recognised among the tracked files besides the directory itself."""
+    return BuildOutput(
+        name=f"the {directory} directory",
+        languages=languages,
+        build_systems=build_systems,
+        globs=ignored_at_top_level(re.escape(directory)),
+        paths=directories(directory),
+        hint=f"consider ignoring {' and '.join((f'{directory}/', *also))}",
+        artifacts=(f"{directory}/", *artifacts),
+    )
+
+
 def known_build_outputs() -> tuple[BuildOutput, ...]:
     """Every build output defined by a module of the shared build systems, the shared tools or a profile."""
     return known(BuildOutput)
@@ -123,6 +145,7 @@ __all__ = [
     "IgnoreEntry",
     "Syntax",
     "directories",
+    "directory_output",
     "ignored_at_top_level",
     "known_build_outputs",
     "outputs_of",

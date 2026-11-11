@@ -45,9 +45,9 @@ OPENINGS = {
 }
 
 
-def _run(files: Mapping[str, str]) -> Result:
+def _run(files: Mapping[str, str], auxiliary: tuple[str, ...] = ()) -> Result:
     with temp_project(files) as root:
-        return license_.run(make_context(root))
+        return license_.run(make_context(root, auxiliary=auxiliary))
 
 
 class LicenseTests(unittest.TestCase):
@@ -157,10 +157,15 @@ class NearestLicenseTests(unittest.TestCase):
         result = _run({"LICENSE": MIT, self.MEMBER: '{"license": "Apache-2.0"}'})
         self.assertEqual(result.details, (f"{self.MEMBER} declares Apache-2.0, but the license files are MIT",))
 
-    def test_the_docs_examples_and_tests_declare_nothing_of_the_product(self) -> None:
-        for manifest in ("docs/package.json", "examples/app/package.json", "tests/fixtures/app/package.json"):
+    def test_every_manifest_is_compared_until_auxiliary_names_its_code(self) -> None:
+        for manifest, named in (("docs/package.json", "docs"), ("examples/app/package.json", "examples/")):
             with self.subTest(manifest):
-                self.assertEqual(_run({"LICENSE": MIT, manifest: '{"license": "GPL-3.0"}'}).status, Status.PASS)
+                files = {"LICENSE": MIT, manifest: '{"license": "GPL-3.0"}'}
+                self.assertEqual(_run(files).status, Status.WARN)
+                self.assertEqual(_run(files, auxiliary=(named,)).status, Status.PASS)
+        fixture = {"LICENSE": MIT, "tests/fixtures/app/package.json": '{"license": "GPL-3.0"}'}
+        self.assertEqual(_run(fixture, auxiliary=("test",)).status, Status.PASS)
+        self.assertEqual(_run({"LICENSE": MIT, "vendor/x/package.json": '{"license": "GPL-3.0"}'}).status, Status.PASS)
 
     def test_license_files_below_the_root_are_not_the_projects_own(self) -> None:
         self.assertEqual(_run({"packages/core/LICENSE": MIT}), Result.failed("no license file", HINT))

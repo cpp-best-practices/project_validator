@@ -40,8 +40,19 @@ def temp_project(files: Mapping[str, str]) -> Iterator[Path]:
         yield root
 
 
+_FIXTURE_CONTEXTS: dict[tuple[Path, Options, tuple[str, ...]], Context] = {}
+
+
 def make_context(root: Path, options: Options | None = None, *, auxiliary: tuple[str, ...] = ()) -> Context:
-    return Context(Project(root, auxiliary=auxiliary), discover().providers, options or Options())
+    """A context for the project at `root`. The fixtures never change while the tests run, so a fixture's context (and
+    the facts it extracts once) is shared by every test that asks for it the same way; a temporary project's is not."""
+    options = options or Options()
+    key = (root, options, auxiliary)
+    if not root.is_relative_to(FIXTURES):
+        return Context(Project(root, auxiliary=auxiliary), discover().providers, options)
+    if key not in _FIXTURE_CONTEXTS:
+        _FIXTURE_CONTEXTS[key] = Context(Project(root, auxiliary=auxiliary), discover().providers, options)
+    return _FIXTURE_CONTEXTS[key]
 
 
 def fixture_files(name: str) -> dict[str, str]:
