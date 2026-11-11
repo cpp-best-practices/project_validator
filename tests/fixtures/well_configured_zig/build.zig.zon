@@ -1,0 +1,12 @@
+.{
+    .name = .shop,
+    .version = "0.1.0",
+    .fingerprint = 0x8f3c2a1b9d4e6f70,
+    .minimum_zig_version = "0.14.0",
+    .dependencies = .{},
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}

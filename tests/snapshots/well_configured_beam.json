@@ -3551,6 +3551,29 @@
       "via": [
         ".github/workflows/ci.yml:jobs.erlang.steps[5].run"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:erlang",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.erlang.steps[5].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": [
+        ".github/workflows/ci.yml:jobs.erlang.steps[5].run"
+      ]
     }
   ],
   "map": {

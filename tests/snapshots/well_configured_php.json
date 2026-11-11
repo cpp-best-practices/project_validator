@@ -4196,6 +4196,27 @@
       ],
       "tool": "lizard",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
     }
   ],
   "map": {
