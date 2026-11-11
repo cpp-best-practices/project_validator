@@ -3,7 +3,7 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
 
-from project_validator.core import Check, Context, Result, Status
+from project_validator.core import Check, Context, ExtractionError, Result, Status
 
 
 class SelectionError(Exception):
@@ -42,10 +42,14 @@ def _skipped(selected: Check, context: Context) -> Result | None:
 
 
 def run_check(selected: Check, context: Context) -> Result:
+    """The check's result; an error when the check raises, or when the facts it needs could not be extracted (said
+    the same way by every check that needs them: the one cause is `Context.extraction_error`)."""
     try:
         if skipped := _skipped(selected, context):
             return skipped
         result = selected.run(context)
+    except ExtractionError as error:
+        return Result(status=Status.ERROR, message=f"not judged: {error}")
     except Exception as error:  # noqa: BLE001 - any failure inside a check is reported, never propagated
         return Result(status=Status.ERROR, message=f"check raised {type(error).__name__}: {error}")
     if not isinstance(result, Result):
