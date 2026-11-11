@@ -4837,7 +4837,7 @@
     },
     {
       "applies": {
-        "compilers": "all but flang, gcc, intel, msvc"
+        "compilers": "all but flang, gcc, ghc, intel, msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
@@ -4848,7 +4848,7 @@
     },
     {
       "applies": {
-        "compilers": "all but flang, gcc, intel, msvc"
+        "compilers": "all but flang, gcc, ghc, intel, msvc"
       },
       "build_system": "CMake",
       "kind": "CompilerOption",
