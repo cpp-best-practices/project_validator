@@ -1,0 +1,14 @@
+requires 'perl', '5.016';
+
+on test => sub {
+    requires 'Test::More', '0.98';
+    requires 'Test::Warnings', '0.030';
+};
+
+on develop => sub {
+    requires 'CPAN::Audit';
+    requires 'Devel::Cover';
+    requires 'Devel::Cover::Report::Codecov';
+    requires 'Perl::Critic';
+    requires 'Perl::Tidy';
+};
