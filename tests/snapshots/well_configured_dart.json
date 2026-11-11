@@ -2727,6 +2727,28 @@
       "job": ".github/workflows/ci.yml:audit",
       "kind": "ToolRun",
       "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
@@ -3010,6 +3032,27 @@
       "languages": [
         "Java",
         "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
       ],
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
       "provides": {

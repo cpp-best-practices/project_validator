@@ -1,0 +1,698 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Lua",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Lua",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "lua_modules/",
+              "luacov.stats.out"
+            ],
+            "language": "Lua",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "luacheck",
+                  "selene"
+                ]
+              }
+            ],
+            "language": "Lua",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Lua",
+            "line": {
+              "answer": "no",
+              "known": [
+                "busted --coverage (luacov)"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Lua",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Lua",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "StyLua": {
+                "can": {
+                  "apply": "stylua .",
+                  "check": "stylua --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Lua",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Lua",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Lua",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Lua",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Lua",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Lua",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Lua",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Lua version",
+            "language": "Lua",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Lua",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Lua",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "luacheck": {
+                "can": {
+                  "checks": "luacheck ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "selene": {
+                "can": {
+                  "checks": "selene ."
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Lua",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "busted": {
+                "can": {
+                  "runs": "busted (or luarocks test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Lua",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "lua-language-server": {
+                "can": {
+                  "checks": "lua-language-server --check . (with LuaCATS annotations)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "luau-analyze": {
+                "can": {
+                  "checks": "luau-analyze ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Lua",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Lua",
+            "outputs": {
+              "luacov's output": {},
+              "the local rocks tree": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Lua",
+        "units": []
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "LuaRocks",
+      "kind": "BuildFile",
+      "languages": [
+        "Lua"
+      ],
+      "origin": "shop-dev-1.rockspec"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Lua",
+      "origin": "src/shop.lua",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".out"
+    },
+    {
+      "build_systems": [
+        "LuaRocks"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Lua"
+      ],
+      "origin": "lua_modules/",
+      "output": "the local rocks tree"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Lua"
+      ],
+      "origin": "luacov.stats.out",
+      "output": "luacov's output"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "LuaRocks"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Lua": [
+        "build file shop-dev-1.rockspec",
+        ".lua files"
+      ]
+    },
+    "languages": [
+      "Lua"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "LuaRocks"
+        ],
+        "directory": ".",
+        "languages": [
+          "Lua"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".out"
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs stylua --check ."
+      ],
+      "message": "CI never runs StyLua; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "lua_modules/",
+        "luacov.stats.out",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "2 build outputs are committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Lua linters found; enable at least luacheck, selene",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to report line coverage: busted --coverage (luacov)"
+      ],
+      "message": "no line coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [
+        "consider running in CI: lizard --length 30"
+      ],
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider running in CI: semgrep ci"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running luacheck . or selene . in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (busted specs (spec/**/*_spec.lua))",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [
+        "consider running a type checker in CI: lua-language-server --check . (with LuaCATS annotations) or luau-analyze ."
+      ],
+      "message": "no type checker runs",
+      "status": "FAIL"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    }
+  }
+}
