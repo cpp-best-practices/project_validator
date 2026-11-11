@@ -4,11 +4,12 @@ import argparse
 import json
 import os
 import sys
+import traceback
 from collections.abc import Sequence
 from pathlib import Path, PurePosixPath
 
 from project_validator import pretty, yaml_support
-from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, Options, Project
+from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, ExtractionError, Options, Project
 from project_validator.ecosystems import applies_to
 from project_validator.facts.auxiliary import Selectors
 from project_validator.grid import render_grid
@@ -253,9 +254,28 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     project = Project(arguments.path.resolve(), frozenset(arguments.exclude), tuple(arguments.auxiliary))
     context = Context(project, plugins.providers, _options(arguments))
+    return _run(parser, arguments, context, selected)
+
+
+def _run(
+    parser: argparse.ArgumentParser, arguments: argparse.Namespace, context: Context, selected: list[Check]
+) -> int:
+    """Print what was asked (a dump, or the reports) and say how it went."""
     if arguments.facts or arguments.map or arguments.answers:
-        print(json.dumps(_dump(context, arguments), indent=2))
+        try:
+            print(json.dumps(_dump(context, arguments), indent=2))
+        except ExtractionError as failed:
+            return _extraction_failed(parser, failed)
         return EXIT_SUCCESS
     reports = run_checks(selected, context)
     _print_reports(reports, arguments)
+    if (cause := context.extraction_error) is not None:
+        return _extraction_failed(parser, cause)
     return EXIT_SUCCESS if succeeded(reports, strict=arguments.strict) else EXIT_FAILURE
+
+
+def _extraction_failed(parser: argparse.ArgumentParser, failed: ExtractionError) -> int:
+    """The one cause of every "not judged" result, with where it raised, once, on stderr."""
+    print(f"{parser.prog}: error: {failed}", file=sys.stderr)
+    traceback.print_exception(failed.error, file=sys.stderr)
+    return EXIT_FAILURE

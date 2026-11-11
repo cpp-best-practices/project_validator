@@ -15,31 +15,49 @@ A plugin adds components to a stage (an expander, a settings reader, a tool); it
 components of each stage are asked of its module (`tools.known_tools()`), so that a test may stand others in.
 """
 
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from project_validator import ci
+from project_validator.core import ExtractionError
 from project_validator.facts import Facts, expansion, outputs, repository, settings, structure, testing, tools
 
 if TYPE_CHECKING:
     from project_validator.core import Context
 
 
+def _stage[T](name: str, compute: Callable[[], T]) -> T:
+    """What a stage computes; an extractor that raises makes the whole extraction an `ExtractionError` naming it."""
+    try:
+        return compute()
+    except ExtractionError:
+        raise
+    except Exception as error:
+        raise ExtractionError(name, error) from error
+
+
 def extract_facts(context: Context) -> Facts:
-    """Every fact about the project `context` reads, in the stages above."""
+    """Every fact about the project `context` reads, in the stages above; an `ExtractionError` when a stage fails."""
     project = context.project
-    found = Facts(structure.structure_facts(project))
+    found = _stage("the project's structure", lambda: Facts(structure.structure_facts(project)))
     # Only the build outputs of the project's languages can be committed by it.
     languages = structure.project_languages(found)
     built = (out for out in outputs.known_build_outputs() if out.languages & languages)
-    found += repository.repository_facts(project, built)
-    found += testing.test_file_facts(project, found, testing.known_test_files())
+    found = _stage("the repository", lambda: found + repository.repository_facts(project, built))
+    found = _stage(
+        "the test files", lambda: found + testing.test_file_facts(project, found, testing.known_test_files())
+    )
     if context.options.build:
-        found += (fact for probe in testing.known_probes() for fact in probe.run(project, context.options))
-    jobs = ci.ci_facts(project, context.ci_files)
-    found += expansion.expanded(jobs, context, expansion.known_expanders(), expansion.known_actions())
-    found += ci.job_facts(found, project)
-    found += settings.settings_facts(context, settings.known_settings_readers(), found)
-    return found + tools.tool_runs(found, tools.known_tools())
+        probed = (fact for probe in testing.known_probes() for fact in probe.run(project, context.options))
+        found = _stage("the build probes", lambda: found + probed)
+    jobs = _stage("the CI configuration", lambda: ci.ci_facts(project, context.ci_files))
+    expanders, actions = expansion.known_expanders(), expansion.known_actions()
+    found = _stage("the CI commands", lambda: found + expansion.expanded(jobs, context, expanders, actions))
+    found = _stage("the CI jobs", lambda: found + ci.job_facts(found, project))
+    found = _stage(
+        "the settings", lambda: found + settings.settings_facts(context, settings.known_settings_readers(), found)
+    )
+    return _stage("the tool runs", lambda: found + tools.tool_runs(found, tools.known_tools()))
 
 
 __all__ = ["extract_facts"]

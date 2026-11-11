@@ -113,6 +113,10 @@ is judged by what could be read, as a no.
 
 A tool-based check records its aspect (`Check.aspect`), so the support matrix (`--support-matrix`) can name, for each check and ecosystem, the tools the registry knows; checks themselves still name no tool.
 
+An extractor that raises is the validator's failure, not the project's: the facts are extracted once
+(`Context.facts` keeps the failure), every check that needs them reports `not judged` with the one cause, the run fails,
+and the CLI prints the cause and its traceback once on stderr (`ExtractionError`, `Context.extraction_error`).
+
 A folded result keeps the places it was folded from (`Result.places`: one ecosystem in one unit, with the tools that ran), so `--format markdown` can lay the results out as a grid without re-judging. CI appends that grid for this
 repository to the job summary of each [run](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml?query=branch%3Amain).
 

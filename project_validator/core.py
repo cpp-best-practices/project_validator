@@ -186,6 +186,16 @@ class Project:
             yield from (str(PurePosixPath(relative, name)) for name in files)
 
 
+class ExtractionError(Exception):
+    """The facts could not be extracted: an extractor (`stage`) raised `error`. Nothing can be judged, and the cause
+    is the validator's (a file it cannot read, a bug), not the project's."""
+
+    def __init__(self, stage: str, error: Exception) -> None:
+        super().__init__(f"the facts could not be extracted: {stage} raised {type(error).__name__}: {error}")
+        self.stage = stage
+        self.error = error
+
+
 class Context:
     """Everything a check may inspect; CI discovery is computed once and shared between checks."""
 
@@ -194,6 +204,7 @@ class Context:
         self.providers = providers
         self.options = options
         self._shared: dict[str, object] = {}
+        self._extracted: Facts | ExtractionError | None = None
 
     def shared[T](self, key: str, compute: Callable[[], T]) -> T:
         """What `compute` returns, computed once: extractors that read the same files (CMake's, for its facts and its
@@ -215,12 +226,31 @@ class Context:
 
         return ci_analysis(self.facts)
 
-    @cached_property
+    @property
     def facts(self) -> Facts:
-        """The fact database (see `project_validator.facts`), built in stages by `project_validator.extraction`."""
+        """The fact database (see `project_validator.facts`), built once, in stages, by
+        `project_validator.extraction`. When an extractor fails, the failure is kept too: every later use raises the
+        same `ExtractionError` without extracting again."""
+        if self._extracted is None:
+            self._extracted = self._extract()
+        if isinstance(self._extracted, ExtractionError):
+            raise self._extracted
+        return self._extracted
+
+    def _extract(self) -> Facts | ExtractionError:
         from project_validator.extraction import extract_facts
 
-        return extract_facts(self)
+        try:
+            return extract_facts(self)
+        except ExtractionError as error:
+            return error
+        except Exception as error:  # noqa: BLE001 - any failure of an extractor is kept, to be reported once
+            return ExtractionError("an extractor", error)
+
+    @property
+    def extraction_error(self) -> ExtractionError | None:
+        """Why the facts could not be extracted, once that was tried; None before, and when they could."""
+        return self._extracted if isinstance(self._extracted, ExtractionError) else None
 
     @cached_property
     def structure(self) -> ProjectStructure:

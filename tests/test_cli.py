@@ -3,13 +3,16 @@ import io
 import json
 import tomllib
 import unittest
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 from unittest import mock
+from unittest.mock import patch
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
 from project_validator.ecosystems import C_FAMILY, applies_to
+from project_validator.facts import Fact
 from project_validator.plugins import discover
 from project_validator.support_matrix import render, support_matrix
 from tests.layouts.model import ProjectLayout
@@ -121,6 +124,24 @@ class CliTests(unittest.TestCase):
                 self.assertEqual(
                     run_cli("--skip", f"ci-present,license,status-badges,{COMPILER_CHECKS}", str(root))[0], EXIT_SUCCESS
                 )
+
+    def test_a_failing_extractor_is_one_error_on_stderr_and_fails_the_run(self) -> None:
+        def failing(project: object) -> Iterator[Fact]:
+            raise RuntimeError("boom")
+
+        with temp_project({"CMakeLists.txt": "project(x CXX)\n"}) as root:
+            with patch("project_validator.facts.structure.structure_facts", failing):
+                code, output, errors = run_cli(str(root))
+            self.assertEqual(code, EXIT_FAILURE)
+            self.assertIn("[ERROR] coverage: not judged: the facts could not be extracted", output)
+            cause = "error: the facts could not be extracted: the project's structure raised RuntimeError: boom"
+            self.assertEqual(errors.count(cause), 1)
+            self.assertEqual(errors.count("Traceback (most recent call last)"), 1)
+            self.assertIn("RuntimeError: boom", errors)
+            with patch("project_validator.facts.structure.structure_facts", failing):
+                code, output, errors = run_cli("--facts", str(root))
+            self.assertEqual((code, output), (EXIT_FAILURE, ""))
+            self.assertIn(cause, errors)
 
     def test_map_prints_the_project_structure(self) -> None:
         code, output, _ = run_cli("--map", str(FIXTURES / "well_configured_c_cpp"))
