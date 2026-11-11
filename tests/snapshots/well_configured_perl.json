@@ -1,0 +1,2720 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Perl",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/function-limits.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Perl",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Perl",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "perlcritic": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "use strict and use warnings in every module": [
+                    "1 module(s), every one"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Perl",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "cover -test"
+              ],
+              "tools": [
+                "Devel::Cover"
+              ]
+            },
+            "language": "Perl",
+            "line": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "path": {
+              "answer": "yes",
+              "known": [
+                "cover -test (condition coverage)"
+              ],
+              "tools": [
+                "Devel::Cover"
+              ]
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "yes",
+              "known": [
+                "cover -test"
+              ],
+              "tools": [
+                "Devel::Cover"
+              ]
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "cpan-audit": {
+                "can": {
+                  "runs": "cpan-audit deps . (CPAN::Audit)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "runs",
+            "runs": {
+              "cpan-audit": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Perl",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "perltidy": [
+                ".perltidyrc"
+              ]
+            },
+            "known": {
+              "perltidy": {
+                "can": {
+                  "apply": "perltidy -b",
+                  "check": "perltidy --assert-tidy (or tidyall --check-only)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "check",
+            "runs": {
+              "perltidy": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "limits",
+            "runs": {
+              "lizard": {
+                "levels": [
+                  "limits",
+                  "measures"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Perl",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Perl",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Perl",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Perl",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "Perl version",
+            "language": "Perl",
+            "notes": [],
+            "platforms": [
+              {
+                "Perl version": "5.38",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Perl version": "5.40",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Perl version": "5.38",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Perl version": "5.40",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Perl version": "5.38",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "Perl version": "5.40",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "Perl",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Perl",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "perlcritic": [
+                ".perlcriticrc"
+              ]
+            },
+            "known": {
+              "perlcritic": {
+                "can": {
+                  "checks": "perlcritic lib t"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "checks",
+            "runs": {
+              "perlcritic": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "prove": [
+                "t/shop.t"
+              ]
+            },
+            "known": {
+              "prove": {
+                "can": {
+                  "runs": "prove -l t (or make test, ./Build test, dzil test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "runs",
+            "runs": {
+              "prove": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Perl",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Perl",
+            "outputs": {
+              "Carton's local directory": {
+                ".gitignore": "local/"
+              },
+              "Devel::Cover's database": {
+                ".gitignore": "cover_db/"
+              },
+              "the MYMETA files": {
+                ".gitignore": "MYMETA.*"
+              },
+              "the blib build directory": {
+                ".gitignore": "blib/"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "Test::Warnings in the tests": [
+                    "t/shop.t"
+                  ]
+                },
+                "missing": [
+                  "use warnings FATAL => 'all'"
+                ]
+              }
+            ],
+            "language": "Perl",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "ExtUtils::MakeMaker",
+      "kind": "BuildFile",
+      "languages": [
+        "Perl"
+      ],
+      "origin": "Makefile.PL"
+    },
+    {
+      "build_system": "cpanfile",
+      "kind": "BuildFile",
+      "languages": [
+        "Perl"
+      ],
+      "origin": "cpanfile"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Perl",
+      "origin": "lib/Shop.pm",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "Makefile.PL",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "Perl",
+      "origin": "t/shop.t",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "ExtUtils::MakeMaker",
+        "cpanfile"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "Test::More or Test2 tests in t/*.t",
+      "language": "Perl",
+      "origin": "t/shop.t"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "perl": "5.38"
+      },
+      "name": "test (ubuntu-latest, 5.38)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "install-modules-args": "--with-develop --with-test",
+        "install-modules-with": "cpanm",
+        "perl-version": "5.38"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
+    },
+    {
+      "argv": [
+        "perl",
+        "Makefile.PL"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "perl Makefile.PL",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "cover",
+        "-test",
+        "-report",
+        "codecov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "cover -test -report codecov",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "perl": "5.40"
+      },
+      "name": "test (ubuntu-latest, 5.40)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "install-modules-args": "--with-develop --with-test",
+        "install-modules-with": "cpanm",
+        "perl-version": "5.40"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
+    },
+    {
+      "argv": [
+        "perl",
+        "Makefile.PL"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "perl Makefile.PL",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "cover",
+        "-test",
+        "-report",
+        "codecov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "cover -test -report codecov",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "perl": "5.38"
+      },
+      "name": "test (macos-latest, 5.38)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "install-modules-args": "--with-develop --with-test",
+        "install-modules-with": "cpanm",
+        "perl-version": "5.38"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
+    },
+    {
+      "argv": [
+        "perl",
+        "Makefile.PL"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "perl Makefile.PL",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "cover",
+        "-test",
+        "-report",
+        "codecov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "cover -test -report codecov",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "perl": "5.40"
+      },
+      "name": "test (macos-latest, 5.40)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "install-modules-args": "--with-develop --with-test",
+        "install-modules-with": "cpanm",
+        "perl-version": "5.40"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
+    },
+    {
+      "argv": [
+        "perl",
+        "Makefile.PL"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "perl Makefile.PL",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "cover",
+        "-test",
+        "-report",
+        "codecov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "cover -test -report codecov",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "perl": "5.38"
+      },
+      "name": "test (windows-latest, 5.38)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "install-modules-args": "--with-develop --with-test",
+        "install-modules-with": "cpanm",
+        "perl-version": "5.38"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
+    },
+    {
+      "argv": [
+        "perl",
+        "Makefile.PL"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "perl Makefile.PL",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "cover",
+        "-test",
+        "-report",
+        "codecov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "cover -test -report codecov",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "perl": "5.40"
+      },
+      "name": "test (windows-latest, 5.40)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "install-modules-args": "--with-develop --with-test",
+        "install-modules-with": "cpanm",
+        "perl-version": "5.40"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
+    },
+    {
+      "argv": [
+        "perl",
+        "Makefile.PL"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "perl Makefile.PL",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "cover",
+        "-test",
+        "-report",
+        "codecov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "cover -test -report codecov",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "install-modules-args": "--with-develop --with-test",
+        "install-modules-with": "cpanm",
+        "perl-version": "5.40"
+      },
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[1]",
+      "uses": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
+    },
+    {
+      "argv": [
+        "perlcritic",
+        "lib",
+        "t"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "perlcritic lib t",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "perltidy",
+        "--assert-tidy",
+        "-q",
+        "lib/Shop.pm",
+        "t/shop.t"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "perltidy --assert-tidy -q lib/Shop.pm t/shop.t",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "cpan-audit",
+        "deps",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "cpan-audit deps .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Perl"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.38)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Perl",
+          "version": "5.38"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Perl"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.40)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Perl",
+          "version": "5.40"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Perl"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 5.38)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Perl",
+          "version": "5.38"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Perl"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 5.40)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Perl",
+          "version": "5.40"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Perl"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 5.38)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Perl",
+          "version": "5.38"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Perl"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 5.40)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Perl",
+          "version": "5.40"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Perl"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Perl",
+          "version": "5.40"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "blib/",
+      "syntax": "glob",
+      "written": "blib/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "MYMETA.*",
+      "syntax": "glob",
+      "written": "MYMETA.*"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "cover_db/",
+      "syntax": "glob",
+      "written": "cover_db/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "local/",
+      "syntax": "glob",
+      "written": "local/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "Makefile",
+      "syntax": "glob",
+      "written": "Makefile"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "pm_to_blib",
+      "syntax": "glob",
+      "written": "pm_to_blib"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".perlcriticrc",
+      "reader": "perlcritic"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".perltidyrc",
+      "reader": "perltidy"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/Shop.pm",
+      "reader": "Perl modules"
+    },
+    {
+      "heuristic": false,
+      "key": "strict",
+      "kind": "Setting",
+      "origin": "lib/Shop.pm:strict",
+      "tool": "Perl modules",
+      "value": true
+    },
+    {
+      "heuristic": false,
+      "key": "warnings",
+      "kind": "Setting",
+      "origin": "lib/Shop.pm:warnings",
+      "tool": "Perl modules",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/Shop.pm",
+      "reader": "Perl pragmas"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "t/shop.t",
+      "reader": "Perl tests"
+    },
+    {
+      "heuristic": true,
+      "key": "Test::Warnings in the tests",
+      "kind": "Setting",
+      "origin": "t/shop.t",
+      "tool": "Perl tests",
+      "value": true
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prove",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "path",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Devel::Cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prove",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "path",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Devel::Cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prove",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "path",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Devel::Cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prove",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "path",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Devel::Cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prove",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "path",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Devel::Cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prove",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "path",
+          "statement"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Devel::Cover",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "perlcritic",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "perltidy",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cpan-audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Erlang"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "ExtUtils::MakeMaker",
+      "cpanfile"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Perl"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.38)",
+          "os": "linux",
+          "toolchains": [
+            "Perl 5.38"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Perl"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.40)",
+          "os": "linux",
+          "toolchains": [
+            "Perl 5.40"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Perl"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 5.38)",
+          "os": "macos",
+          "toolchains": [
+            "Perl 5.38"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Perl"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 5.40)",
+          "os": "macos",
+          "toolchains": [
+            "Perl 5.40"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Perl"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 5.38)",
+          "os": "windows",
+          "toolchains": [
+            "Perl 5.38"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Perl"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 5.40)",
+          "os": "windows",
+          "toolchains": [
+            "Perl 5.40"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Perl"
+          ],
+          "name": ".github/workflows/ci.yml: lint",
+          "os": "linux",
+          "toolchains": [
+            "Perl 5.40"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Perl": [
+        "build file Makefile.PL",
+        "build file cpanfile",
+        ".pm files",
+        ".t files"
+      ]
+    },
+    "languages": [
+      "Perl"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "ExtUtils::MakeMaker",
+          "cpanfile"
+        ],
+        "directory": ".",
+        "languages": [
+          "Perl"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 6 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": ".perltidyrc is defined and CI runs perltidy",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict Perl pragmas and lints are enabled: use strict and use warnings in every module, perlcritic",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "branch coverage is reported with Devel::Cover; path coverage bonus: Devel::Cover",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "5 data files parse (YAML: 5)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "CI audits the dependencies with cpan-audit",
+      "status": "PASS"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with lizard",
+      "status": "PASS"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no Perl version",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 5.38): linux / 5.38",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 5.40): linux / 5.40",
+        ".github/workflows/ci.yml: test (macos-latest, 5.38): macos / 5.38",
+        ".github/workflows/ci.yml: test (macos-latest, 5.40): macos / 5.40",
+        ".github/workflows/ci.yml: test (windows-latest, 5.38): windows / 5.38",
+        ".github/workflows/ci.yml: test (windows-latest, 5.40): windows / 5.40",
+        ".github/workflows/ci.yml: lint: linux / 5.40",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Perl version",
+        ".github/workflows/function-limits.yml: function-limits: linux / no Perl version"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Perl version(s) (5.38, 5.40), 6 combination(s)",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "perlcritic (.perlcriticrc) runs",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores blib/; .gitignore ignores MYMETA.*; .gitignore ignores local/; .gitignore ignores cover_db/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with Test::Warnings in the tests",
+      "status": "PASS"
+    }
+  }
+}

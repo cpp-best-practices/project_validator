@@ -1,0 +1,737 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Perl",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Perl",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "MYMETA.json"
+            ],
+            "language": "Perl",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "use strict and use warnings in every module",
+                  "perlcritic"
+                ]
+              }
+            ],
+            "language": "Perl",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "cover -test"
+              ],
+              "tools": []
+            },
+            "language": "Perl",
+            "line": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "path": {
+              "answer": "no",
+              "known": [
+                "cover -test (condition coverage)"
+              ],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "no",
+              "known": [
+                "cover -test"
+              ],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "cpan-audit": {
+                "can": {
+                  "runs": "cpan-audit deps . (CPAN::Audit)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Perl",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "perltidy": {
+                "can": {
+                  "apply": "perltidy -b",
+                  "check": "perltidy --assert-tidy (or tidyall --check-only)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Perl",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Perl",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Perl",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Perl",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Perl version",
+            "language": "Perl",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Perl",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Perl",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "perlcritic": {
+                "can": {
+                  "checks": "perlcritic lib t"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "prove": {
+                "can": {
+                  "runs": "prove -l t (or make test, ./Build test, dzil test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Perl",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Perl",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Perl",
+            "outputs": {
+              "Devel::Cover's database": {},
+              "the MYMETA files": {},
+              "the blib build directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "use warnings FATAL => 'all'",
+                  "Test::Warnings in the tests"
+                ]
+              }
+            ],
+            "language": "Perl",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "ExtUtils::MakeMaker",
+      "kind": "BuildFile",
+      "languages": [
+        "Perl"
+      ],
+      "origin": "Makefile.PL"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Perl",
+      "origin": "lib/Shop.pm",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "Makefile.PL",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "ExtUtils::MakeMaker"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Perl"
+      ],
+      "origin": "MYMETA.json",
+      "output": "the MYMETA files"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/Shop.pm",
+      "reader": "Perl modules"
+    },
+    {
+      "heuristic": false,
+      "key": "strict",
+      "kind": "Setting",
+      "origin": "lib/Shop.pm:strict",
+      "tool": "Perl modules",
+      "value": false
+    },
+    {
+      "heuristic": false,
+      "key": "warnings",
+      "kind": "Setting",
+      "origin": "lib/Shop.pm:warnings",
+      "tool": "Perl modules",
+      "value": false
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/Shop.pm",
+      "reader": "Perl pragmas"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "ExtUtils::MakeMaker"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Perl": [
+        "build file Makefile.PL",
+        ".pm files"
+      ]
+    },
+    "languages": [
+      "Perl"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "ExtUtils::MakeMaker"
+        ],
+        "directory": ".",
+        "languages": [
+          "Perl"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs perltidy --assert-tidy (or tidyall --check-only)"
+      ],
+      "message": "CI never runs perltidy; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "MYMETA.json",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Perl pragmas and lints found; enable at least use strict and use warnings in every module, perlcritic",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to report branch coverage: cover -test"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "1 data file parses (JSON: 1)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [
+        "consider running in CI: cpan-audit deps . (CPAN::Audit)"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [
+        "consider running in CI: lizard --length 30"
+      ],
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running perlcritic lib t in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (Test::More or Test2 tests in t/*.t)",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "use warnings FATAL => 'all' in the modules, or use Test::Warnings (or Test::NoWarnings) in the tests, which fail on a warning"
+      ],
+      "message": "warnings are not treated as errors in the modules and the tests",
+      "status": "FAIL"
+    }
+  }
+}
