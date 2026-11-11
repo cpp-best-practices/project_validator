@@ -682,6 +682,11 @@
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
       "reader": "mutmut"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "sqlfluff"
     }
   ],
   "map": {

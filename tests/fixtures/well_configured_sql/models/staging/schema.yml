@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: shop
+    schema: raw
+    tables:
+      - name: orders
+
+models:
+  - name: stg_orders
+    description: One row per order.
+    columns:
+      - name: id
+        data_tests:
+          - unique
+          - not_null
+      - name: amount
+        data_tests:
+          - not_null

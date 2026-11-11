@@ -1,0 +1,274 @@
+"""SQL: dbt projects, migrations and database tests, judged by the tools CI runs on the SQL: sqlfluff (and sqlfmt) for
+formatting and linting, squawk, sqlc and dbt's parser for analysis, dbt test and pgTAP for tests, dbt's packages for
+dependencies.
+
+Nearly every service has a schema.sql or a migrations directory, so `.sql` alone is no ecosystem: it counts once the
+project shows it works in SQL (`sql_project`): a dbt project, SQL tooling configured (sqlfluff, sqlfmt, sqlc), a
+migration tool (Flyway, Liquibase, Atlas, a migrations directory of .sql files) or SQL tests (pgTAP). A stray
+schema.sql in a Python project stays what it is.
+
+dbt is the one build system: its project is a unit, its target/, dbt_packages/ and logs/ are outputs, and its packages
+are dependencies locked by package-lock.yml. Database engine versions (the service containers CI runs) would be the
+platform axis, but the platform policy asks for several operating systems, which a database project has no use for;
+`platform-matrix` does not apply, and neither do the compiled-language checks.
+"""
+
+import re
+from collections.abc import Iterator, Mapping
+
+from project_validator import yaml_support
+from project_validator.core import Project
+from project_validator.ecosystems.model import BuildSystem, Ecosystem
+from project_validator.facts import Fact, Origin
+from project_validator.facts.analysis import analysed, analyzer
+from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
+from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings, unreadable
+from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested, tests_of
+from project_validator.facts.tools import combined, defined_by, either, starts, when
+
+SQL = "SQL"
+SQL_LANGUAGE = frozenset({SQL})
+
+# --- dbt
+
+DBT_PROJECT = "dbt_project.yml"
+DBT = BuildSystem(name="dbt", files=(DBT_PROJECT,), languages=SQL_LANGUAGE)
+
+
+def _dbt_output(name: str, what: str) -> BuildOutput:
+    return BuildOutput(
+        languages=SQL_LANGUAGE,
+        name=f"dbt's {name} directory",
+        build_systems=frozenset({DBT.name}),
+        globs=ignored_at_top_level(name),
+        paths=directories(name),
+        hint=f"ignore {name}/, {what}",
+        artifacts=(f"/{name}/",),
+    )
+
+
+DBT_OUTPUTS = (
+    _dbt_output("target", "where dbt compiles and writes its artifacts"),
+    _dbt_output("dbt_packages", "where dbt deps installs the packages"),
+    _dbt_output("logs", "where every dbt command logs"),
+)
+
+# --- sqlfluff: formats and lints, from one configuration
+
+SQLFLUFF = "sqlfluff"
+
+
+def _sqlfluff_section(section: str) -> str | None:
+    """`[sqlfluff]` holds the top-level settings, `[sqlfluff:rules:...]` the rules'; other sections are not its."""
+    if section == SQLFLUFF:
+        return ""
+    return section.removeprefix(f"{SQLFLUFF}:").replace(":", ".") + "." if section.startswith(f"{SQLFLUFF}:") else None
+
+
+def _read_sqlfluff(path: str, text: str) -> Iterator[Fact]:
+    if path.endswith("pyproject.toml"):
+        return toml_settings(SQLFLUFF, path, text, "tool", SQLFLUFF)
+    return ini_settings(SQLFLUFF, path, text, _sqlfluff_section)
+
+
+SQLFLUFF_SETTINGS = SettingsReader(
+    name=SQLFLUFF, files=(".sqlfluff", "pyproject.toml", "setup.cfg", "tox.ini"), read=_read_sqlfluff
+)
+# Where the project configures sqlfluff: its own file, or a `[tool.sqlfluff]` (`[sqlfluff]`) table in a shared one.
+_SQLFLUFF_CONFIGURATION = defined_by(named=(".sqlfluff",), settings=(SQLFLUFF,))
+
+# `sqlfluff lint` fails on what its rules, the layout rules included, would change; `fix` and `format` rewrite the
+# files. The pre-commit hooks are `sqlfluff-lint` and `sqlfluff-fix`.
+SQLFLUFF_TOOL = combined(
+    format_tool(
+        name=SQLFLUFF,
+        languages=SQL_LANGUAGE,
+        can={Enforcement.CHECK: "sqlfluff lint .", Enforcement.APPLY: "sqlfluff fix ."},
+        formats=either(
+            flagged(("sqlfluff", "lint"), ("sqlfluff-lint",), applies=()),
+            flagged(("sqlfluff", "fix"), ("sqlfluff", "format"), ("sqlfluff-fix",), checks=()),
+        ),
+        style=_SQLFLUFF_CONFIGURATION,
+        reads=(SQLFLUFF,),
+    ),
+    analyzer(
+        name=SQLFLUFF,
+        languages=SQL_LANGUAGE,
+        how="sqlfluff lint (dialect and rules in .sqlfluff or [tool.sqlfluff])",
+        analyses=when(starts(("sqlfluff", "lint"), ("sqlfluff-lint",)), analysed),
+        rules=_SQLFLUFF_CONFIGURATION,
+        reads=(SQLFLUFF,),
+    ),
+)
+# sqlfmt formats dbt-style SQL; `--check` (or `--diff`) fails on a file it would change.
+SQLFMT = format_tool(
+    name="sqlfmt",
+    languages=SQL_LANGUAGE,
+    can={Enforcement.CHECK: "sqlfmt --check .", Enforcement.APPLY: "sqlfmt ."},
+    formats=flagged(("sqlfmt",), checks=("--check", "--diff")),
+    style=defined_by(named=(".sqlfmt.toml",)),
+)
+
+# --- analysis
+
+ANALYZERS = (
+    # squawk lints Postgres migrations for locking and destructive changes.
+    analyzer(
+        name="squawk",
+        languages=SQL_LANGUAGE,
+        how="squawk migrations/*.sql",
+        analyses=when(starts(("squawk",)), analysed),
+    ),
+    analyzer(name="sqlc vet", languages=SQL_LANGUAGE, how="sqlc vet", analyses=when(starts(("sqlc", "vet")), analysed)),
+    analyzer(name="tsqllint", languages=SQL_LANGUAGE, how="tsqllint .", analyses=when(starts(("tsqllint",)), analysed)),
+    # dbt parse (and compile) resolve every ref, source and macro, and read the project's YAML.
+    analyzer(
+        name="dbt parse",
+        languages=SQL_LANGUAGE,
+        how="dbt parse",
+        analyses=when(starts(("dbt", "parse"), ("dbt", "compile")), analysed),
+    ),
+)
+
+# --- tests
+
+_DBT_TEST_KEYS = frozenset({"tests", "data_tests", "unit_tests"})
+DBT_SCHEMA_TESTS = "dbt schema tests (tests: in the models' YAML)"
+
+
+def _declares_tests(value: object) -> bool:
+    if isinstance(value, Mapping):
+        return any((key in _DBT_TEST_KEYS and found) or _declares_tests(found) for key, found in value.items())
+    return isinstance(value, list) and any(_declares_tests(item) for item in value)
+
+
+def _read_dbt_tests(path: str, text: str) -> Iterator[Fact]:
+    """A dbt YAML file that declares tests of its models, sources, seeds or snapshots is a test file."""
+    try:
+        document = yaml_support.load(text)
+    except yaml_support.YamlError as error:
+        yield unreadable("dbt", path, error)
+        return
+    if _declares_tests(document):
+        yield TestFile(origin=Origin(path=path), language=SQL, kind=DBT_SCHEMA_TESTS)
+
+
+DBT_SCHEMA_TEST_FILES = SettingsReader(
+    name="dbt schema tests",
+    files=tuple(
+        f"{directory}/*.{suffix}" for directory in ("models", "seeds", "snapshots") for suffix in ("yml", "yaml")
+    ),
+    read=_read_dbt_tests,
+)
+# A singular test is a query under tests/ selecting the rows that must not exist, written against refs or sources.
+DBT_SINGULAR_TESTS = TestFiles(
+    name="dbt singular tests (tests/*.sql)",
+    languages=SQL_LANGUAGE,
+    path=re.compile(r"(?:^|/)tests/(?:.*/)?[^/]+\.sql$"),
+    contains=re.compile(r"\{\{\s*(?:ref|source)\s*\("),
+)
+DBT_TEST = test_runner(
+    name="dbt test",
+    languages=SQL_LANGUAGE,
+    how="dbt test (dbt build runs the tests too)",
+    runs=when(starts(("dbt", "test"), ("dbt", "build")), tested),
+    tests=tests_of(DBT_SCHEMA_TESTS, DBT_SINGULAR_TESTS.name),
+    # A models' YAML file that does not parse may declare tests: the answer is unknown.
+    reads=("dbt",),
+)
+PGTAP_TESTS = TestFiles(
+    name="pgTAP tests (SELECT plan(...) in tests/*.sql)",
+    languages=SQL_LANGUAGE,
+    path=re.compile(r"(?:^|/)tests?/(?:.*/)?[^/]+\.sql$"),
+    contains=re.compile(r"\bSELECT\s+plan\s*\(", re.IGNORECASE),
+)
+PG_PROVE = test_runner(
+    name="pg_prove",
+    languages=SQL_LANGUAGE,
+    how="pg_prove tests/*.sql",
+    runs=when(starts(("pg_prove",)), tested),
+    tests=tests_of(PGTAP_TESTS.name),
+)
+
+# --- dependencies: dbt packages
+
+DBT_PACKAGES = "dbt packages"
+_DECLARES_PACKAGES = re.compile(r"^\s*packages\s*:", re.MULTILINE)
+DBT_PACKAGE_FILES = manifest_reader(
+    name="dbt package requirements",
+    manager=DBT_PACKAGES,
+    files=("packages.yml", "dependencies.yml"),
+    declares=lambda _path, text: bool(_DECLARES_PACKAGES.search(text)),
+)
+DBT_PACKAGE_LOCK = lockfile_reader(manager=DBT_PACKAGES, files=("package-lock.yml",))
+DBT_PACKAGES_MANAGER = PackageManager(
+    name=DBT_PACKAGES,
+    languages=SQL_LANGUAGE,
+    lock_hint="commit package-lock.yml, which dbt deps writes (dbt 1.7+) with the version of every package",
+)
+
+# --- recognition
+
+_TOOL_FILES = (
+    ".sqlfluff",
+    ".sqlfmt.toml",
+    "sqlc.yaml",
+    "sqlc.yml",
+    "sqlc.json",
+    "flyway.conf",
+    "flyway.toml",
+    "liquibase.properties",
+    "atlas.hcl",
+)
+# A `[tool.sqlfluff]` table in pyproject.toml, or a `[sqlfluff]` section in setup.cfg or tox.ini.
+_SHARED_CONFIGURATION = {"pyproject.toml": "[tool.sqlfluff", "setup.cfg": "[sqlfluff", "tox.ini": "[sqlfluff"}
+# Flyway's versioned, undo and repeatable migrations: V1__init.sql, V2_1__add_index.sql, R__view.sql.
+_FLYWAY_MIGRATION = re.compile(r"(?:^|/)(?:[VU]\d[\w.]*|R)__[^/]*\.sql$")
+_MIGRATIONS_DIRECTORY = re.compile(r"(?:^|/)(?:migrations|db/migrate|db/migrations)/[^/]+\.sql$")
+
+
+def _tooling_configured(project: Project) -> bool:
+    """A SQL tool's own configuration file, or its table in a shared one."""
+    if any(project.exists(name) for name in _TOOL_FILES):
+        return True
+    return any(
+        project.exists(path) and marker in project.read_text(path) for path, marker in _SHARED_CONFIGURATION.items()
+    )
+
+
+def _has_migrations(sql: list[str]) -> bool:
+    return any(_FLYWAY_MIGRATION.search(path) or _MIGRATIONS_DIRECTORY.search(path) for path in sql)
+
+
+def _has_pgtap_tests(project: Project, sql: list[str]) -> bool:
+    tests = (path for path in sql if PGTAP_TESTS.path.search(path))
+    return PGTAP_TESTS.contains is not None and any(
+        PGTAP_TESTS.contains.search(project.read_head(path)) for path in tests
+    )
+
+
+def sql_project(project: Project) -> frozenset[str]:
+    """Whether the project works in SQL: SQL tooling configured, a migration tool or a migrations directory, or SQL
+    tests. A dbt project is recognised by its build file before this is asked."""
+    if _tooling_configured(project):
+        return SQL_LANGUAGE
+    sql = [path for path in project.files() if path.endswith(".sql")]
+    return SQL_LANGUAGE if _has_migrations(sql) or _has_pgtap_tests(project, sql) else frozenset()
+
+
+# What shows a CI job works on the SQL.
+CI_USAGE = re.compile(
+    r"\bdbt\s+(?:build|test|run|compile|parse|deps|seed)\b|\bsqlfluff\b|\bsqlfmt\b|\bpg_prove\b|\bflyway\b"
+    r"|\bliquibase\b|\batlas\s+migrate\b|\bsqlc\b|\bsquawk\b|\btsqllint\b"
+)
+
+SQL_ECOSYSTEM = Ecosystem(
+    label=SQL,
+    languages=SQL_LANGUAGE,
+    build_systems=(DBT,),
+    ambiguous_suffixes={".sql": SQL},
+    detect=sql_project,
+    ci_usage=CI_USAGE,
+)

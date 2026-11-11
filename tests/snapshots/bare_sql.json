@@ -1,0 +1,663 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "SQL",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "SQL",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "target/"
+            ],
+            "language": "SQL",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "SQL",
+        "units": []
+      }
+    ],
+    "coverage": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "SQL",
+            "line": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "SQL",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "dbt packages",
+                "manifest": "packages.yml"
+              }
+            ],
+            "language": "SQL",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "sqlfluff": {
+                "can": {
+                  "apply": "sqlfluff fix .",
+                  "check": "sqlfluff lint ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "sqlfmt": {
+                "can": {
+                  "apply": "sqlfmt .",
+                  "check": "sqlfmt --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "SQL",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "SQL",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "SQL",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "SQL",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "SQL",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "SQL",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "SQL",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "SQL",
+        "units": []
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "SQL",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "SQL",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "dbt parse": {
+                "can": {
+                  "checks": "dbt parse"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "sqlc vet": {
+                "can": {
+                  "checks": "sqlc vet"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "sqlfluff": {
+                "can": {
+                  "checks": "sqlfluff lint (dialect and rules in .sqlfluff or [tool.sqlfluff])"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "squawk": {
+                "can": {
+                  "checks": "squawk migrations/*.sql"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "tsqllint": {
+                "can": {
+                  "checks": "tsqllint ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "SQL",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "dbt test": {
+                "can": {
+                  "runs": "dbt test (dbt build runs the tests too)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "pg_prove": {
+                "can": {
+                  "runs": "pg_prove tests/*.sql"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "SQL",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "SQL",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "SQL",
+            "outputs": {
+              "dbt's dbt_packages directory": {},
+              "dbt's logs directory": {},
+              "dbt's target directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "SQL",
+        "units": []
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "dbt",
+      "kind": "BuildFile",
+      "languages": [
+        "SQL"
+      ],
+      "origin": "dbt_project.yml"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "SQL",
+      "origin": "models/orders.sql",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "dbt"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "SQL"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "SQL"
+      ],
+      "origin": "target/",
+      "output": "dbt's target directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "packages.yml",
+      "reader": "dbt package requirements"
+    },
+    {
+      "kind": "Declared",
+      "manager": "dbt packages",
+      "origin": "packages.yml"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "dbt"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "SQL": [
+        "build file dbt_project.yml",
+        ".sql files"
+      ]
+    },
+    "languages": [
+      "SQL"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "dbt"
+        ],
+        "directory": ".",
+        "languages": [
+          "SQL"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs sqlfluff lint . (or sqlfmt --check .)"
+      ],
+      "message": "CI never runs sqlfluff or sqlfmt; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "target/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "3 data files parse (JSON: 1, YAML: 2)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [
+        "commit package-lock.yml, which dbt deps writes (dbt 1.7+) with the version of every package"
+      ],
+      "message": "dependencies are declared in packages.yml (dbt packages) but not locked",
+      "status": "WARN"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running sqlfluff lint (dialect and rules in .sqlfluff or [tool.sqlfluff]), squawk migrations/*.sql, sqlc vet, tsqllint . or dbt parse in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (dbt schema tests (tests: in the models' YAML) or dbt singular tests (tests/*.sql) or pgTAP tests (SELECT plan(...) in tests/*.sql))",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    }
+  }
+}
