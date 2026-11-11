@@ -1,0 +1,672 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Emacs Lisp",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Emacs Lisp",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "shop.elc"
+            ],
+            "language": "Emacs Lisp",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "package-lint",
+                  "checkdoc"
+                ]
+              }
+            ],
+            "language": "Emacs Lisp",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Emacs Lisp",
+            "line": {
+              "answer": "no",
+              "known": [
+                "(undercover \"*.el\") in the test files, run by eask test ert"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Emacs Lisp",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Emacs Lisp",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Emacs Lisp",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Emacs Lisp",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Emacs Lisp",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Emacs Lisp",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Emacs Lisp",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Emacs Lisp",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Emacs Lisp",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Emacs version",
+            "language": "Emacs Lisp",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Emacs Lisp",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Emacs Lisp",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "checkdoc": {
+                "can": {
+                  "checks": "eask lint checkdoc"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "package-lint": {
+                "can": {
+                  "checks": "eask lint package"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Emacs Lisp",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "ERT": {
+                "can": {
+                  "runs": "eask test ert test/*.el (or cask exec ert-runner, emacs -batch -l test/x.el -f ert-run-tests-batch-and-exit)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Emacs Lisp",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Emacs Lisp",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Emacs Lisp",
+            "outputs": {
+              "Eask's directory": {},
+              "the byte-compiled files (*.elc)": {},
+              "the generated autoloads (*-autoloads.el)": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "byte-compile-error-on-warn",
+                  "eask compile --strict"
+                ]
+              }
+            ],
+            "language": "Emacs Lisp",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "Eask",
+      "kind": "BuildFile",
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "origin": "Eask"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Emacs Lisp",
+      "origin": "shop.el",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "shop.elc",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Eask"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "origin": "shop.elc",
+      "output": "the byte-compiled files (*.elc)"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Eask",
+      "reader": "Emacs Lisp build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "shop.el",
+      "reader": "undercover"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "shop.el",
+      "reader": "Emacs Lisp build settings"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Eask"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Emacs Lisp": [
+        "build file Eask",
+        ".el files"
+      ]
+    },
+    "languages": [
+      "Emacs Lisp"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Eask"
+        ],
+        "directory": ".",
+        "languages": [
+          "Emacs Lisp"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "committed-artifacts": {
+      "details": [
+        "shop.elc",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Emacs Lisp lints found; enable at least package-lint, checkdoc",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to report line coverage: (undercover \"*.el\") in the test files, run by eask test ert"
+      ],
+      "message": "no line coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running eask lint package or eask lint checkdoc in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (ERT (ert-deftest) or Buttercup tests in test/*.el)",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "byte-compile with eask compile --strict, or (setq byte-compile-error-on-warn t) before batch-byte-compile"
+      ],
+      "message": "warnings are not treated as errors in CI configuration, the Eask or Cask file, the Makefile and the sources",
+      "status": "FAIL"
+    }
+  }
+}

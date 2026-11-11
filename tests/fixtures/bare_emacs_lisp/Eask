@@ -1,0 +1,2 @@
+(package "shop" "0.1.0" "Prices of the shop's items")
+(package-file "shop.el")

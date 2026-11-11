@@ -1,0 +1,21 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
+(package "shop"
+         "0.1.0"
+         "Prices of the shop's items")
+
+(website-url "https://github.com/example/shop")
+(keywords "convenience")
+
+(package-file "shop.el")
+
+(script "test" "echo \"Error: no test specified\" && exit 1")
+
+(source "gnu")
+(source "melpa")
+
+(depends-on "emacs" "27.1")
+
+(development
+ (depends-on "ert-runner")
+ (depends-on "undercover"))
