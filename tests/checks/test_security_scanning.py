@@ -55,8 +55,15 @@ class SecurityScanningTests(unittest.TestCase):
         )
 
     def test_passes_with_codeql_in_every_layout(self) -> None:
-        # CodeQL does not analyse PHP, Terraform's HCL, Elixir, Scala or Dart (nothing scans Erlang: skipped).
-        unread = {"PHP": "PHP", "Terraform": "Terraform", "Elixir": "BEAM", "Scala": "Scala", "Dart": "Dart"}
+        # CodeQL does not analyse PHP, Terraform's HCL, Elixir, Scala, Dart or Lua (nothing scans Erlang: skipped).
+        unread = {
+            "PHP": "PHP",
+            "Terraform": "Terraform",
+            "Elixir": "BEAM",
+            "Scala": "Scala",
+            "Dart": "Dart",
+            "Lua": "Lua",
+        }
         layouts = tuple(layout for layout in PROJECT_LAYOUTS if not layout.languages & unread.keys())
         self.assertEqual(run_in_every_layout(self, security_scanning, WELL_CONFIGURED, layouts), _found("CodeQL"))
         for language, label in unread.items():
