@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -69,6 +73,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -110,6 +115,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -136,6 +142,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -157,6 +164,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -199,6 +207,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -217,6 +226,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -242,12 +252,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -262,6 +274,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -280,6 +293,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -295,6 +309,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -309,6 +324,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -327,6 +343,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -367,6 +384,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -397,6 +415,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -415,6 +434,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -430,6 +450,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Haskell",
         "units": [
           {
@@ -453,6 +474,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "Cabal",
       "kind": "BuildFile",

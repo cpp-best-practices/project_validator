@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -66,6 +70,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -105,6 +110,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -123,6 +129,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -139,6 +146,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -166,6 +174,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -184,6 +193,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -209,12 +219,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -229,6 +241,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -247,6 +260,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -262,6 +276,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -276,6 +291,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -302,6 +318,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -320,6 +337,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -346,6 +364,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -364,6 +383,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -380,6 +400,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "OCaml",
         "units": [
           {
@@ -403,6 +424,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "dune",
       "kind": "BuildFile",
