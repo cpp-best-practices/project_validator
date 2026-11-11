@@ -19,7 +19,7 @@ def _profile_layouts() -> tuple[ProjectLayout, ...]:
 PROFILE_LAYOUTS = _profile_layouts()
 UNRECOGNISED = ProjectLayout(
     name="Unrecognised language",
-    files={"README.md": "", "src/main.zig": ""},
+    files={"README.md": "", "src/main.odin": ""},
     languages=frozenset(),
     build_systems=frozenset(),
 )

@@ -182,7 +182,7 @@ class LanguageApplicabilityTests(unittest.TestCase):
         self.assertEqual(run_check(_check("cpp", frozenset({"C++"})), context).status, Status.PASS)
 
     def test_only_language_agnostic_checks_run_when_no_language_is_recognised(self) -> None:
-        with temp_project({"README.md": "", "src/main.zig": ""}) as root:
+        with temp_project({"README.md": "", "src/main.odin": ""}) as root:
             context = make_context(root)
             self.assertEqual(run_check(_check("cpp", C_FAMILY), context).status, Status.SKIP)
             self.assertEqual(run_check(_check("generic"), context).status, Status.PASS)

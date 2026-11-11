@@ -76,12 +76,12 @@ class DiscoverTests(unittest.TestCase):
             discover([directory / "missing"])
 
 
-ZIG_PROJECT = {
-    "build.zig": "",
-    "src/main.zig": "",
+CRYSTAL_PROJECT = {
+    "shard.yml": "name: shop\nversion: 0.1.0\n",
+    "src/shop.cr": "",
     ".github/workflows/ci.yml": (
-        "jobs:\n  t:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: mlugg/setup-zig@v2\n"
-        "        with:\n          zig-version: '0.14.1'\n      - run: zig fmt --check . && zig build test\n"
+        "jobs:\n  t:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: crystal-lang/install-crystal@v1\n"
+        "        with:\n          crystal: '1.14.0'\n      - run: crystal tool format --check && crystal spec\n"
     ),
 }
 
@@ -92,43 +92,44 @@ class EcosystemPluginTests(unittest.TestCase):
         registry.__enter__()
         self.addCleanup(registry.__exit__, None, None, None)
 
-    def _discover_zig(self) -> Plugins:
-        with temp_project({"zig.py": ECOSYSTEM_PLUGIN}) as directory:
+    def _discover_crystal(self) -> Plugins:
+        with temp_project({"crystal.py": ECOSYSTEM_PLUGIN}) as directory:
             return discover([directory])
 
     def test_a_plugin_ecosystem_is_registered_and_practices_apply_to_it(self) -> None:
-        plugins = self._discover_zig()
+        plugins = self._discover_crystal()
         self.assertEqual(
             [ecosystem.label for ecosystem in registered()],
-            [*(ecosystem.label for ecosystem in BUILT_IN), "Zig"],
+            [*(ecosystem.label for ecosystem in BUILT_IN), "Crystal"],
         )
         formatting = next(found for found in plugins.checks if found.name == "code-formatting")
-        self.assertIn("Zig", formatting.languages)
-        self.assertIn("Zig", applies_to(formatting))
+        self.assertIn("Crystal", formatting.languages)
+        self.assertIn("Crystal", applies_to(formatting))
 
     def test_a_plugin_ecosystem_is_detected_and_judged(self) -> None:
-        plugins = self._discover_zig()
+        plugins = self._discover_crystal()
         checks = {found.name: found for found in plugins.checks}
-        with temp_project(ZIG_PROJECT) as root:
+        with temp_project(CRYSTAL_PROJECT) as root:
             context = make_context(root)
-            self.assertEqual(context.structure.languages, frozenset({"Zig"}))
-            self.assertEqual(context.structure.build_systems, frozenset({"Zig build"}))
+            self.assertEqual(context.structure.languages, frozenset({"Crystal"}))
+            self.assertEqual(context.structure.build_systems, frozenset({"Shards"}))
             self.assertEqual(
-                run_check(checks["code-formatting"], context), Result.passed("CI enforces the zig fmt style")
+                run_check(checks["code-formatting"], context),
+                Result.passed("CI enforces the crystal tool format style"),
             )
             self.assertEqual(run_check(checks["coverage"], context).status, Status.SKIP)
-            self.assertIn("0.14.1", run_check(checks["platform-matrix"], context).message)
+            self.assertIn("1.14.0", run_check(checks["platform-matrix"], context).message)
 
     def test_loading_a_plugin_again_replaces_its_ecosystem(self) -> None:
-        self._discover_zig()
-        self._discover_zig()
+        self._discover_crystal()
+        self._discover_crystal()
         self.assertEqual(
             [ecosystem.label for ecosystem in registered()],
-            [*(ecosystem.label for ecosystem in BUILT_IN), "Zig"],
+            [*(ecosystem.label for ecosystem in BUILT_IN), "Crystal"],
         )
 
     def test_rejects_an_ecosystem_with_a_built_in_label(self) -> None:
-        clash = ECOSYSTEM_PLUGIN.replace('label="Zig"', 'label="Python"')
+        clash = ECOSYSTEM_PLUGIN.replace('label="Crystal"', 'label="Python"')
         with (
             temp_project({"clash.py": clash}) as directory,
             self.assertRaisesRegex(PluginError, "Python is a built-in ecosystem"),
@@ -143,14 +144,14 @@ class EcosystemPluginTests(unittest.TestCase):
             discover([directory])
 
     def test_rejects_an_ecosystem_that_claims_another_ones_files(self) -> None:
-        clash = ECOSYSTEM_PLUGIN.replace('{".zig": "Zig"}', '{".zig": "Zig", ".rs": "Zig"}')
+        clash = ECOSYSTEM_PLUGIN.replace('{".cr": "Crystal"}', '{".cr": "Crystal", ".rs": "Crystal"}')
         with (
             temp_project({"clash.py": clash}) as directory,
-            self.assertRaisesRegex(PluginError, "Zig: source suffix .rs is already claimed by Rust"),
+            self.assertRaisesRegex(PluginError, "Crystal: source suffix .rs is already claimed by Rust"),
         ):
             discover([directory])
 
     def test_the_registry_is_restored_after_isolation(self) -> None:
         with isolated_registry():
-            self._discover_zig()
+            self._discover_crystal()
         self.assertEqual(registered(), BUILT_IN)

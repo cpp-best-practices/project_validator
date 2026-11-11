@@ -232,21 +232,23 @@ from project_validator.facts.axes import versions_axis
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.tools import defined_by
 
-ZIG = Ecosystem(
-    label="Zig",
-    languages=frozenset({"Zig"}),
-    build_systems=(BuildSystem(name="Zig build", files=("build.zig",), languages=frozenset({"Zig"})),),
-    source_suffixes={".zig": "Zig"},
+CRYSTAL = Ecosystem(
+    label="Crystal",
+    languages=frozenset({"Crystal"}),
+    build_systems=(BuildSystem(name="Shards", files=("shard.yml",), languages=frozenset({"Crystal"})),),
+    source_suffixes={".cr": "Crystal"},
     toolchain=ToolchainPatterns(
-        language="Zig", versions=(re.compile(r"\\bzig-version\\W+([\\d.x]+)"),), usage=re.compile(r"\\bzig\\s+build\\b")
+        language="Crystal",
+        versions=(re.compile(r"\\bcrystal:\\s*\\W?(\\d+\\.\\d+(?:\\.\\d+)?)"),),
+        usage=re.compile(r"\\bcrystal\\s+spec\\b|\\bshards\\b"),
     ),
 )
-ZIG_VERSIONS = versions_axis("Zig version", "Zig", frozenset({"Zig"}))
-ZIG_FMT = format_tool(
-    name="zig fmt",
-    languages=frozenset({"Zig"}),
-    can={Enforcement.CHECK: "zig fmt --check .", Enforcement.APPLY: "zig fmt ."},
-    formats=flagged(("zig", "fmt"), checks=("--check",)),
+CRYSTAL_VERSIONS = versions_axis("Crystal version", "Crystal", frozenset({"Crystal"}))
+CRYSTAL_FORMAT = format_tool(
+    name="crystal tool format",
+    languages=frozenset({"Crystal"}),
+    can={Enforcement.CHECK: "crystal tool format --check", Enforcement.APPLY: "crystal tool format"},
+    formats=flagged(("crystal", "tool", "format"), checks=("--check",)),
     style=defined_by(),
 )
 """

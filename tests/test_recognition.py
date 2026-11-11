@@ -110,8 +110,8 @@ class ContentProbeTests(unittest.TestCase):
 class UnrecognisedSuffixTests(unittest.TestCase):
     def test_suffixes_of_no_ecosystem_are_counted_most_common_first(self) -> None:
         files = {
-            "src/a.zig": "",
-            "src/b.zig": "",
+            "src/a.odin": "",
+            "src/b.odin": "",
             "tools/c.nim": "",
             "tools/d.awk": "",
             "README.md": "",
@@ -122,11 +122,11 @@ class UnrecognisedSuffixTests(unittest.TestCase):
             "meson.build": "project('app', 'c')\n",
         }
         with _structure(files) as structure:
-            self.assertEqual(structure.unrecognised_suffixes, ((".zig", 2), (".awk", 1), (".nim", 1)))
+            self.assertEqual(structure.unrecognised_suffixes, ((".odin", 2), (".awk", 1), (".nim", 1)))
             mapped = structure.as_dict()
         self.assertEqual(
             mapped["unrecognised_suffixes"],
-            [{"suffix": ".zig", "files": 2}, {"suffix": ".awk", "files": 1}, {"suffix": ".nim", "files": 1}],
+            [{"suffix": ".odin", "files": 2}, {"suffix": ".awk", "files": 1}, {"suffix": ".nim", "files": 1}],
         )
         self.assertEqual(mapped["ecosystems"], {"C/C++": ["build file meson.build"]})
 
