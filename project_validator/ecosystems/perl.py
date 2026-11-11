@@ -283,7 +283,9 @@ PERL_ECOSYSTEM = Ecosystem(
         inputs=("perl-version",),
         images=("perl",),
         more=(rf"\bperlbrew\s+(?:install|use|switch)\s+(?:perl-)?{_PERL_VERSION}",),
-        commands=r"\bperl\b|\bprove\b|\bcpanm\b|\bcpm\b|\bcarton\b|\bdzil\b|\bperltidy\b|\bperlcritic\b|\bcover\s+-",
+        # Devel::Cover's `cover` only as a command of its own: `raco cover` and `go tool cover` are other languages'.
+        commands=r"\bperl\b|\bprove\b|\bcpanm\b|\bcpm\b|\bcarton\b|\bdzil\b|\bperltidy\b|\bperlcritic\b"
+        r"|(?:^|[\n;&|]\s*)cover\s+-",
         setup=("perl",),
     ),
 )

@@ -68,10 +68,13 @@ class RecognitionTests(unittest.TestCase):
         self.assertEqual(_pragmas("package Shop;\n1;\n"), {"strict": False, "warnings": False})
 
     def test_ci_usage(self) -> None:
-        for text in ("prove -l t", "cpanm --installdeps .", "uses: shogo82148/actions-setup-perl@v1", "cover -test"):
+        used = ("prove -l t", "cpanm --installdeps .", "uses: shogo82148/actions-setup-perl@v1", "cover -test")
+        for text in (*used, "prove -l t && cover -report codecov", "make test\ncover -report"):
             with self.subTest(text=text):
                 self.assertTrue(PERL_ECOSYSTEM.used_by(text))
-        self.assertFalse(PERL_ECOSYSTEM.used_by("npm test"))
+        for text in ("npm test", "raco cover -f codecov .", "go tool cover -html=c.out"):
+            with self.subTest(text=text):
+                self.assertFalse(PERL_ECOSYSTEM.used_by(text))
 
 
 class PerlTests(unittest.TestCase):
