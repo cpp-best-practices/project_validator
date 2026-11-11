@@ -1,0 +1,673 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Common Lisp",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Common Lisp",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "src/shop.fasl"
+            ],
+            "language": "Common Lisp",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "sblint"
+                ]
+              }
+            ],
+            "language": "Common Lisp",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "(require :sb-cover) before the tests, with (sb-cover:report \"coverage/\") after"
+              ],
+              "tools": []
+            },
+            "language": "Common Lisp",
+            "line": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Common Lisp",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Common Lisp",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Common Lisp",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Common Lisp",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Common Lisp",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Common Lisp",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Common Lisp",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Common Lisp",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Common Lisp",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Lisp implementation",
+            "language": "Common Lisp",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Common Lisp",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Common Lisp",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "sblint": {
+                "can": {
+                  "checks": "sblint shop.asd"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Common Lisp",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "asdf:test-system": {
+                "can": {
+                  "runs": "sbcl --non-interactive --eval \"(asdf:test-system :shop)\" (or rove shop.asd, 40ants/run-tests)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Common Lisp",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Common Lisp",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Common Lisp",
+            "outputs": {
+              "Qlot's directory": {},
+              "the compiled files (*.fasl)": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "uiop:*compile-file-warnings-behaviour* :error"
+                ]
+              }
+            ],
+            "language": "Common Lisp",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "ASDF",
+      "kind": "BuildFile",
+      "languages": [
+        "Common Lisp"
+      ],
+      "origin": "shop.asd"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Common Lisp",
+      "origin": "src/shop.lisp",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "shop.asd",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".fasl"
+    },
+    {
+      "build_systems": [
+        "ASDF"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Common Lisp"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Common Lisp"
+      ],
+      "origin": "src/shop.fasl",
+      "output": "the compiled files (*.fasl)"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "shop.asd",
+      "reader": "Lisp build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/shop.lisp",
+      "reader": "sb-cover"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/shop.lisp",
+      "reader": "Lisp build settings"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "ASDF"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Common Lisp": [
+        "build file shop.asd",
+        ".lisp files"
+      ]
+    },
+    "languages": [
+      "Common Lisp"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "ASDF"
+        ],
+        "directory": ".",
+        "languages": [
+          "Common Lisp"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".fasl"
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "committed-artifacts": {
+      "details": [
+        "src/shop.fasl",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Lisp compiler lints found; enable at least sblint",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to report branch coverage: (require :sb-cover) before the tests, with (sb-cover:report \"coverage/\") after"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running sblint shop.asd in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (FiveAM, Parachute, Rove or Prove tests (tests/*.lisp))",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "(setf uiop:*compile-file-warnings-behaviour* :error) before building in CI, so that a compiler warning fails the build"
+      ],
+      "message": "warnings are not treated as errors in CI configuration, the system definitions and the Lisp sources",
+      "status": "FAIL"
+    }
+  }
+}
