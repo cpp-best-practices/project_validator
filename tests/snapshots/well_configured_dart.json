@@ -1,0 +1,3495 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Dart",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "google/osv-scanner-action/osv-scanner-action@b1d267aea5211fa648d9d442fa64b90dbdcbdd36"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/function-limits.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Dart",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Dart",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "a lint set in analysis_options.yaml": [
+                    "analysis_options.yaml"
+                  ],
+                  "dart analyze": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Dart",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "known": [
+                "dart test --coverage=coverage --branch-coverage (or flutter test --coverage --branch-coverage)"
+              ],
+              "tools": [
+                "dart test --coverage"
+              ]
+            },
+            "language": "Dart",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "dart test --coverage=coverage (or flutter test --coverage)"
+              ],
+              "tools": [
+                "dart test --coverage"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "runs",
+            "runs": {
+              "osv-scanner": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "pub",
+                "manifest": "pubspec.yaml"
+              }
+            ],
+            "language": "Dart",
+            "lock_required": true,
+            "locked": [
+              "pubspec.lock"
+            ],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "dart format": {
+                "can": {
+                  "apply": "dart format .",
+                  "check": "dart format --output=none --set-exit-if-changed ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "check",
+            "runs": {
+              "dart format": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "limits",
+            "runs": {
+              "lizard": {
+                "levels": [
+                  "limits",
+                  "measures"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Dart",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Dart",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Dart",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Dart",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Dart",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "Dart or Flutter SDK version",
+            "language": "Dart",
+            "notes": [],
+            "platforms": [
+              {
+                "Dart or Flutter SDK version": "Dart 3.5",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Dart or Flutter SDK version": "Dart stable",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Dart or Flutter SDK version": "Dart 3.5",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Dart or Flutter SDK version": "Dart stable",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Dart or Flutter SDK version": "Dart 3.5",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "Dart or Flutter SDK version": "Dart stable",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "Dart",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "scans",
+            "runs": {
+              "semgrep": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "dart analyze": [
+                "analysis_options.yaml"
+              ]
+            },
+            "known": {
+              "DCM": {
+                "can": {
+                  "checks": "dcm analyze lib"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "custom_lint": {
+                "can": {
+                  "checks": "dart run custom_lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dart analyze": {
+                "can": {
+                  "checks": "dart analyze (or flutter analyze)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "checks",
+            "runs": {
+              "dart analyze": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "dart test": [
+                "test/shop_test.dart"
+              ]
+            },
+            "known": {
+              "dart test": {
+                "can": {
+                  "runs": "dart test (or flutter test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "runs",
+            "runs": {
+              "dart test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Dart",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Dart",
+            "outputs": {
+              "the .dart_tool directory": {
+                ".gitignore": ".dart_tool/"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "--fatal-infos": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Dart",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "pub",
+      "kind": "BuildFile",
+      "languages": [
+        "Dart"
+      ],
+      "origin": "pubspec.yaml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Dart",
+      "origin": "bin/shop.dart",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Dart",
+      "origin": "lib/shop.dart",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Dart",
+      "origin": "test/shop_test.dart",
+      "role": "test"
+    },
+    {
+      "build_systems": [
+        "pub"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "test(), testWidgets() or group() calls in test/**/*_test.dart",
+      "language": "Dart",
+      "origin": "test/shop_test.dart"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "sdk": "3.5"
+      },
+      "name": "test (ubuntu-latest, 3.5)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "sdk": "3.5"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
+    },
+    {
+      "argv": [
+        "dart",
+        "pub",
+        "get",
+        "--enforce-lockfile"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dart pub get --enforce-lockfile",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "format",
+        "--output=none",
+        "--set-exit-if-changed",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dart format --output=none --set-exit-if-changed .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "analyze",
+        "--fatal-infos"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dart analyze --fatal-infos",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "test",
+        "--coverage=coverage",
+        "--branch-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dart test --coverage=coverage --branch-coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "sdk": "stable"
+      },
+      "name": "test (ubuntu-latest, stable)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "sdk": "stable"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
+    },
+    {
+      "argv": [
+        "dart",
+        "pub",
+        "get",
+        "--enforce-lockfile"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dart pub get --enforce-lockfile",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "format",
+        "--output=none",
+        "--set-exit-if-changed",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dart format --output=none --set-exit-if-changed .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "analyze",
+        "--fatal-infos"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dart analyze --fatal-infos",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "test",
+        "--coverage=coverage",
+        "--branch-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dart test --coverage=coverage --branch-coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "sdk": "3.5"
+      },
+      "name": "test (macos-latest, 3.5)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "sdk": "3.5"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
+    },
+    {
+      "argv": [
+        "dart",
+        "pub",
+        "get",
+        "--enforce-lockfile"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dart pub get --enforce-lockfile",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "format",
+        "--output=none",
+        "--set-exit-if-changed",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dart format --output=none --set-exit-if-changed .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "analyze",
+        "--fatal-infos"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dart analyze --fatal-infos",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "test",
+        "--coverage=coverage",
+        "--branch-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dart test --coverage=coverage --branch-coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "sdk": "stable"
+      },
+      "name": "test (macos-latest, stable)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "sdk": "stable"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
+    },
+    {
+      "argv": [
+        "dart",
+        "pub",
+        "get",
+        "--enforce-lockfile"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dart pub get --enforce-lockfile",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "format",
+        "--output=none",
+        "--set-exit-if-changed",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dart format --output=none --set-exit-if-changed .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "analyze",
+        "--fatal-infos"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dart analyze --fatal-infos",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "test",
+        "--coverage=coverage",
+        "--branch-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dart test --coverage=coverage --branch-coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "sdk": "3.5"
+      },
+      "name": "test (windows-latest, 3.5)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "sdk": "3.5"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
+    },
+    {
+      "argv": [
+        "dart",
+        "pub",
+        "get",
+        "--enforce-lockfile"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dart pub get --enforce-lockfile",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "format",
+        "--output=none",
+        "--set-exit-if-changed",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dart format --output=none --set-exit-if-changed .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "analyze",
+        "--fatal-infos"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dart analyze --fatal-infos",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "test",
+        "--coverage=coverage",
+        "--branch-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dart test --coverage=coverage --branch-coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "sdk": "stable"
+      },
+      "name": "test (windows-latest, stable)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "sdk": "stable"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
+    },
+    {
+      "argv": [
+        "dart",
+        "pub",
+        "get",
+        "--enforce-lockfile"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dart pub get --enforce-lockfile",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "format",
+        "--output=none",
+        "--set-exit-if-changed",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dart format --output=none --set-exit-if-changed .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "analyze",
+        "--fatal-infos"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dart analyze --fatal-infos",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dart",
+        "test",
+        "--coverage=coverage",
+        "--branch-coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dart test --coverage=coverage --branch-coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:audit",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "audit",
+      "origin": ".github/workflows/ci.yml:jobs.audit",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "scan-args": "-r ."
+      },
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "uses": "google/osv-scanner-action/osv-scanner-action@b1d267aea5211fa648d9d442fa64b90dbdcbdd36"
+    },
+    {
+      "argv": [
+        "osv-scanner",
+        "-r",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "Command",
+      "line": "uses: google/osv-scanner-action/osv-scanner-action@b1d267aea5211fa648d9d442fa64b90dbdcbdd36",
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "semgrep",
+        "scan",
+        "--config",
+        "p/dart",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config p/dart --error .",
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "semgrep",
+        "scan",
+        "--config",
+        "p/dart",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config p/dart --error .",
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "google/osv-scanner-action/osv-scanner-action@b1d267aea5211fa648d9d442fa64b90dbdcbdd36"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Dart"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 3.5)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Dart",
+          "version": "Dart 3.5"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Dart"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, stable)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Dart",
+          "version": "Dart stable"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Dart"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 3.5)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Dart",
+          "version": "Dart 3.5"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Dart"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, stable)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Dart",
+          "version": "Dart stable"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Dart"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 3.5)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Dart",
+          "version": "Dart 3.5"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Dart"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, stable)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Dart",
+          "version": "Dart stable"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: audit",
+      "origin": ".github/workflows/ci.yml:jobs.audit",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".dart_tool/",
+      "syntax": "glob",
+      "written": ".dart_tool/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "build/",
+      "syntax": "glob",
+      "written": "build/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "coverage/",
+      "syntax": "glob",
+      "written": "coverage/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "analysis_options.yaml",
+      "reader": "Dart analysis options"
+    },
+    {
+      "heuristic": true,
+      "key": "a lint set in analysis_options.yaml",
+      "kind": "Setting",
+      "origin": "analysis_options.yaml",
+      "tool": "Dart analysis options",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pubspec.lock",
+      "reader": "pub lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "pub",
+      "origin": "pubspec.lock"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pubspec.yaml",
+      "reader": "pubspec dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "pub",
+      "origin": "pubspec.yaml"
+    },
+    {
+      "kind": "Application",
+      "manager": "pub",
+      "origin": "pubspec.yaml"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart analyze",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test --coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart analyze",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test --coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart analyze",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test --coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart analyze",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test --coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart analyze",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test --coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart analyze",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dart test --coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Elixir",
+        "Erlang"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[1]",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "osv-scanner",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Elixir"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Erlang"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "pub"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Dart"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 3.5)",
+          "os": "linux",
+          "toolchains": [
+            "Dart Dart 3.5"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Dart"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, stable)",
+          "os": "linux",
+          "toolchains": [
+            "Dart Dart stable"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Dart"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 3.5)",
+          "os": "macos",
+          "toolchains": [
+            "Dart Dart 3.5"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Dart"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, stable)",
+          "os": "macos",
+          "toolchains": [
+            "Dart Dart stable"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Dart"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 3.5)",
+          "os": "windows",
+          "toolchains": [
+            "Dart Dart 3.5"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Dart"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, stable)",
+          "os": "windows",
+          "toolchains": [
+            "Dart Dart stable"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci.yml: audit",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Dart": [
+        "build file pubspec.yaml",
+        ".dart files"
+      ]
+    },
+    "languages": [
+      "Dart"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "pub"
+        ],
+        "directory": ".",
+        "languages": [
+          "Dart"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 7 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "CI enforces the dart format style",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict Dart analyzer settings are enabled: a lint set in analysis_options.yaml, dart analyze",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "branch coverage is reported with dart test --coverage",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "7 data files parse (YAML: 7)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "CI audits the dependencies with osv-scanner",
+      "status": "PASS"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "dependencies are declared in pubspec.yaml (pub) and locked in pubspec.lock",
+      "status": "PASS"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with lizard",
+      "status": "PASS"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no Dart or Flutter SDK version",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 3.5): linux / Dart 3.5",
+        ".github/workflows/ci.yml: test (ubuntu-latest, stable): linux / Dart stable",
+        ".github/workflows/ci.yml: test (macos-latest, 3.5): macos / Dart 3.5",
+        ".github/workflows/ci.yml: test (macos-latest, stable): macos / Dart stable",
+        ".github/workflows/ci.yml: test (windows-latest, 3.5): windows / Dart 3.5",
+        ".github/workflows/ci.yml: test (windows-latest, stable): windows / Dart stable",
+        ".github/workflows/ci.yml: audit: linux / no Dart or Flutter SDK version",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Dart or Flutter SDK version",
+        ".github/workflows/function-limits.yml: function-limits: linux / no Dart or Flutter SDK version"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Dart or Flutter SDK version(s) (Dart 3.5, Dart stable), 6 combination(s)",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "CI scans the code for security problems with semgrep",
+      "status": "PASS"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "dart analyze (analysis_options.yaml) runs",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores .dart_tool/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with --fatal-infos",
+      "status": "PASS"
+    }
+  }
+}
