@@ -1,0 +1,33 @@
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        racket-version: ["8.12", "stable"]
+        variant: [CS]
+        include:
+          - os: ubuntu-latest
+            racket-version: "8.12"
+            variant: BC
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144 # v1.16
+        with:
+          version: ${{ matrix.racket-version }}
+          variant: ${{ matrix.variant }}
+      - run: raco pkg install --auto --batch --skip-installed
+      - run: raco test -x -p shop
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144 # v1.16
+        with:
+          version: stable
+          packages: cover, cover-codecov, fmt
+      - run: raco pkg install --auto --batch --skip-installed
+      - run: raco cover -f codecov -d coverage .
+      - run: raco fmt -i $(git ls-files '*.rkt')
+      - run: git diff --exit-code
