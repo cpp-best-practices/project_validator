@@ -1,0 +1,3753 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Julia",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "julia-actions/julia-format@cde9661e440a6a214c9c0c2c63a3dbdaa5fabd2f"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Julia",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Julia",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "Aqua.test_all": [
+                    "test/runtests.jl"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Julia",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Julia",
+            "line": {
+              "answer": "yes",
+              "known": [
+                "julia --code-coverage (julia-actions/julia-runtest, then julia-processcoverage)"
+              ],
+              "tools": [
+                "julia --code-coverage"
+              ]
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Julia",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Julia",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "JuliaFormatter": [
+                ".JuliaFormatter.toml"
+              ]
+            },
+            "known": {
+              "JuliaFormatter": {
+                "can": {
+                  "apply": "julia -e 'using JuliaFormatter; format(\".\")'",
+                  "check": "julia -e 'using JuliaFormatter; format(\".\") || exit(1)' (julia-actions/julia-format)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Runic": {
+                "can": {
+                  "apply": "runic --inplace .",
+                  "check": "runic --check . (fredrikekre/runic-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Julia",
+            "level": "check",
+            "runs": {
+              "JuliaFormatter": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Julia",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Julia",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Julia",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Julia",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Julia",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "Julia version",
+            "language": "Julia",
+            "notes": [],
+            "platforms": [
+              {
+                "Julia version": "1",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Julia version": "lts",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Julia version": "pre",
+                "configurations": [],
+                "os": "linux"
+              },
+              {
+                "Julia version": "1",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Julia version": "lts",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Julia version": "pre",
+                "configurations": [],
+                "os": "macos"
+              },
+              {
+                "Julia version": "1",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "Julia version": "lts",
+                "configurations": [],
+                "os": "windows"
+              },
+              {
+                "Julia version": "pre",
+                "configurations": [],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "Julia",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Julia",
+            "level": "scans",
+            "runs": {
+              "semgrep": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Julia",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "Pkg.test": [
+                "test/runtests.jl"
+              ]
+            },
+            "known": {
+              "Pkg.test": {
+                "can": {
+                  "runs": "Pkg.test() (julia-actions/julia-runtest)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Julia",
+            "level": "runs",
+            "runs": {
+              "Pkg.test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "JET.jl": {
+                "can": {
+                  "checks": "JET.test_package(YourPackage) in test/runtests.jl"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Julia",
+            "level": "checks",
+            "runs": {
+              "JET.jl": {
+                "levels": [
+                  "checks"
+                ],
+                "read": [
+                  "test/runtests.jl"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Julia",
+            "outputs": {
+              "the allocation files (*.jl.mem)": {
+                ".gitignore": "*.jl.mem"
+              },
+              "the coverage files (*.jl.cov)": {
+                ".gitignore": "*.jl.cov"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "--depwarn=error": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Julia",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Pkg",
+      "kind": "BuildFile",
+      "languages": [
+        "Julia"
+      ],
+      "origin": "Project.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Julia",
+      "origin": "src/Shop.jl",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Julia",
+      "origin": "test/runtests.jl",
+      "role": "test"
+    },
+    {
+      "build_systems": [
+        "Pkg"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "@test and @testset in test/runtests.jl",
+      "language": "Julia",
+      "origin": "test/runtests.jl"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "version": "lts"
+      },
+      "name": "test (ubuntu-latest, lts)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "lts"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3]",
+      "uses": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "depwarn": "error"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "uses": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "argv": [
+        "julia",
+        "--color=yes",
+        "--depwarn=error",
+        "--code-coverage=user",
+        "-e",
+        "using Pkg; Pkg.test()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "uses": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using CoverageTools; process_folder()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "lcov.info"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6]",
+      "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "version": "1"
+      },
+      "name": "test (ubuntu-latest, 1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "1"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3]",
+      "uses": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "depwarn": "error"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "uses": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "argv": [
+        "julia",
+        "--color=yes",
+        "--depwarn=error",
+        "--code-coverage=user",
+        "-e",
+        "using Pkg; Pkg.test()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "uses": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using CoverageTools; process_folder()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "lcov.info"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6]",
+      "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "version": "pre"
+      },
+      "name": "test (ubuntu-latest, pre)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "pre"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3]",
+      "uses": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "depwarn": "error"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "uses": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "argv": [
+        "julia",
+        "--color=yes",
+        "--depwarn=error",
+        "--code-coverage=user",
+        "-e",
+        "using Pkg; Pkg.test()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "uses": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using CoverageTools; process_folder()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "lcov.info"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6]",
+      "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "version": "lts"
+      },
+      "name": "test (macos-latest, lts)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "lts"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3]",
+      "uses": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "depwarn": "error"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "uses": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "argv": [
+        "julia",
+        "--color=yes",
+        "--depwarn=error",
+        "--code-coverage=user",
+        "-e",
+        "using Pkg; Pkg.test()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "uses": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using CoverageTools; process_folder()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "lcov.info"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6]",
+      "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "version": "1"
+      },
+      "name": "test (macos-latest, 1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "1"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3]",
+      "uses": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "depwarn": "error"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "uses": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "argv": [
+        "julia",
+        "--color=yes",
+        "--depwarn=error",
+        "--code-coverage=user",
+        "-e",
+        "using Pkg; Pkg.test()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "uses": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using CoverageTools; process_folder()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "lcov.info"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6]",
+      "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "version": "pre"
+      },
+      "name": "test (macos-latest, pre)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "pre"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3]",
+      "uses": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "depwarn": "error"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "uses": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "argv": [
+        "julia",
+        "--color=yes",
+        "--depwarn=error",
+        "--code-coverage=user",
+        "-e",
+        "using Pkg; Pkg.test()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "uses": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using CoverageTools; process_folder()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "lcov.info"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6]",
+      "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[6]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "version": "lts"
+      },
+      "name": "test (windows-latest, lts)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "lts"
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3]",
+      "uses": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "depwarn": "error"
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "uses": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "argv": [
+        "julia",
+        "--color=yes",
+        "--depwarn=error",
+        "--code-coverage=user",
+        "-e",
+        "using Pkg; Pkg.test()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "uses": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using CoverageTools; process_folder()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "lcov.info"
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6]",
+      "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[7]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "version": "1"
+      },
+      "name": "test (windows-latest, 1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "1"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3]",
+      "uses": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "depwarn": "error"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "uses": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "argv": [
+        "julia",
+        "--color=yes",
+        "--depwarn=error",
+        "--code-coverage=user",
+        "-e",
+        "using Pkg; Pkg.test()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "uses": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using CoverageTools; process_folder()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "lcov.info"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6]",
+      "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[8]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "version": "pre"
+      },
+      "name": "test (windows-latest, pre)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "pre"
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3]",
+      "uses": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "depwarn": "error"
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "uses": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "argv": [
+        "julia",
+        "--color=yes",
+        "--depwarn=error",
+        "--code-coverage=user",
+        "-e",
+        "using Pkg; Pkg.test()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "uses": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using CoverageTools; process_folder()"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "lcov.info"
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6]",
+      "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:format",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "format",
+      "origin": ".github/workflows/ci.yml:jobs.format",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "1"
+      },
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[1]",
+      "uses": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[2]",
+      "uses": "julia-actions/julia-format@cde9661e440a6a214c9c0c2c63a3dbdaa5fabd2f"
+    },
+    {
+      "argv": [
+        "julia",
+        "-e",
+        "using JuliaFormatter; format(\".\") || exit(1)"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Command",
+      "line": "uses: julia-actions/julia-format@cde9661e440a6a214c9c0c2c63a3dbdaa5fabd2f",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[2]",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "semgrep",
+        "scan",
+        "--config",
+        "auto",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config auto --error .",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "semgrep",
+        "scan",
+        "--config",
+        "auto",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config auto --error .",
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "julia-actions/julia-buildpkg@e3eb439fad4f9aba7da2667e7510e4a46ebc46e1"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "julia-actions/julia-runtest@e89ac6c957d7c4d7e0cb3162f12d8290a008f9d1"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "julia-actions/julia-processcoverage@03114f09f119417c3242a9fb6e0b722676aedf38"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "julia-actions/julia-format@cde9661e440a6a214c9c0c2c63a3dbdaa5fabd2f"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, lts)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "lts"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, pre)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "pre"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, lts)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "lts"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, pre)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "pre"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, lts)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "lts"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, pre)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "pre"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Julia"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: format",
+      "origin": ".github/workflows/ci.yml:jobs.format",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Julia",
+          "version": "1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".JuliaFormatter.toml",
+      "reader": "JuliaFormatter"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.jl.cov",
+      "syntax": "glob",
+      "written": "*.jl.cov"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.jl.*.cov",
+      "syntax": "glob",
+      "written": "*.jl.*.cov"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.jl.mem",
+      "syntax": "glob",
+      "written": "*.jl.mem"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "test/runtests.jl",
+      "reader": "Julia tests"
+    },
+    {
+      "heuristic": true,
+      "key": "Aqua.test_all",
+      "kind": "Setting",
+      "origin": "test/runtests.jl",
+      "tool": "Julia tests",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "test/runtests.jl",
+      "reader": "JET"
+    },
+    {
+      "heuristic": true,
+      "key": "test_package",
+      "kind": "Setting",
+      "origin": "test/runtests.jl:test_package",
+      "tool": "JET",
+      "value": true
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Pkg.test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [
+        "test/runtests.jl"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JET.jl",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Pkg.test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [
+        "test/runtests.jl"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JET.jl",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Pkg.test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [
+        "test/runtests.jl"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JET.jl",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Pkg.test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [
+        "test/runtests.jl"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JET.jl",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Pkg.test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [
+        "test/runtests.jl"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JET.jl",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Pkg.test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [
+        "test/runtests.jl"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JET.jl",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Pkg.test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [
+        "test/runtests.jl"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JET.jl",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Pkg.test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [
+        "test/runtests.jl"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JET.jl",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Pkg.test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4]",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [
+        "test/runtests.jl"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "JET.jl",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5]",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "julia --code-coverage",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[2]",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "JuliaFormatter",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Elixir"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.format.steps[3].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.format.steps[3].run"
+      ]
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Pkg"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, lts)",
+          "os": "linux",
+          "toolchains": [
+            "Julia lts"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 1)",
+          "os": "linux",
+          "toolchains": [
+            "Julia 1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, pre)",
+          "os": "linux",
+          "toolchains": [
+            "Julia pre"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, lts)",
+          "os": "macos",
+          "toolchains": [
+            "Julia lts"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 1)",
+          "os": "macos",
+          "toolchains": [
+            "Julia 1"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, pre)",
+          "os": "macos",
+          "toolchains": [
+            "Julia pre"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, lts)",
+          "os": "windows",
+          "toolchains": [
+            "Julia lts"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 1)",
+          "os": "windows",
+          "toolchains": [
+            "Julia 1"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, pre)",
+          "os": "windows",
+          "toolchains": [
+            "Julia pre"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Julia"
+          ],
+          "name": ".github/workflows/ci.yml: format",
+          "os": "linux",
+          "toolchains": [
+            "Julia 1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Julia": [
+        "build file Project.toml",
+        ".jl files"
+      ]
+    },
+    "languages": [
+      "Julia"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Pkg"
+        ],
+        "directory": ".",
+        "languages": [
+          "Julia"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 11 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": ".JuliaFormatter.toml is defined and CI runs JuliaFormatter",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict Aqua.jl checks are enabled: Aqua.test_all",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "line coverage is reported with julia --code-coverage",
+      "status": "PASS"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "6 data files parse (TOML: 2, YAML: 4)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no Julia version",
+        ".github/workflows/ci.yml: test (ubuntu-latest, lts): linux / lts",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 1): linux / 1",
+        ".github/workflows/ci.yml: test (ubuntu-latest, pre): linux / pre",
+        ".github/workflows/ci.yml: test (macos-latest, lts): macos / lts",
+        ".github/workflows/ci.yml: test (macos-latest, 1): macos / 1",
+        ".github/workflows/ci.yml: test (macos-latest, pre): macos / pre",
+        ".github/workflows/ci.yml: test (windows-latest, lts): windows / lts",
+        ".github/workflows/ci.yml: test (windows-latest, 1): windows / 1",
+        ".github/workflows/ci.yml: test (windows-latest, pre): windows / pre",
+        ".github/workflows/ci.yml: format: linux / 1",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Julia version"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Julia version(s) (1, lts, pre), 9 combination(s)",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "CI scans the code for security problems with semgrep",
+      "status": "PASS"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [
+        "consider enabling strict mode: "
+      ],
+      "message": "JET.jl runs",
+      "status": "PASS"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores *.jl.cov; .gitignore ignores *.jl.mem",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with --depwarn=error",
+      "status": "PASS"
+    }
+  }
+}

@@ -2736,6 +2736,28 @@
       "job": ".github/workflows/ci.yml:scan",
       "kind": "ToolRun",
       "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.scan.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.scan.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:scan",
+      "kind": "ToolRun",
+      "languages": [
         "Java",
         "Kotlin"
       ],

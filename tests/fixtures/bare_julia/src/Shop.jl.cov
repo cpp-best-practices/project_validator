@@ -1,0 +1,3 @@
+        - module Shop
+        1 total(prices) = sum(prices)
+        - end
