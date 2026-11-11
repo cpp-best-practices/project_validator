@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -66,6 +70,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -109,6 +114,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -170,6 +176,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -191,6 +198,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -234,6 +242,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -267,6 +276,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -292,12 +302,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -312,6 +324,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -339,6 +352,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -354,6 +368,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -368,6 +383,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -415,6 +431,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -462,6 +479,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -488,6 +506,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -523,6 +542,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -538,6 +558,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "PHP",
         "units": [
           {
@@ -562,6 +583,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "Composer",
       "kind": "BuildFile",

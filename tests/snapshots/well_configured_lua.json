@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -56,6 +57,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -77,6 +79,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -90,6 +93,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -117,6 +121,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -158,6 +163,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -176,6 +182,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -192,6 +199,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -230,6 +238,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -264,6 +273,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -289,12 +299,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -313,6 +325,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -331,6 +344,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -392,6 +406,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -408,6 +423,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -441,6 +457,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -485,6 +502,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -522,6 +540,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -566,6 +585,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": [
           {
@@ -586,12 +606,18 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Lua",
         "units": []
       }
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "LuaRocks",
       "kind": "BuildFile",

@@ -142,8 +142,8 @@ def fuzzing(language: str, facts: Facts) -> LanguageAnswers[FuzzAnswer]:
     return per_unit(
         language,
         facts,
-        lambda unit: FuzzAnswer(
-            tools=tool_answer(FUZZ, RUNS, language, facts, tools, unit),
+        lambda unit, named: FuzzAnswer(
+            tools=tool_answer(FUZZ, RUNS, language, facts, tools, unit, auxiliary=named),
             property_files=_property_files(language, facts, unit),
             other_runs=_other_runs(facts, unit, language),
         ),

@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -67,6 +71,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -108,6 +113,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -162,6 +168,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -183,6 +190,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -226,6 +234,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -259,6 +268,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -284,12 +294,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -304,6 +316,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -331,6 +344,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -346,6 +360,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -360,6 +375,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -414,6 +430,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -454,6 +471,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -480,6 +498,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -515,6 +534,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": [
           {
@@ -530,12 +550,18 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Ruby",
         "units": []
       }
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "Bundler",
       "kind": "BuildFile",

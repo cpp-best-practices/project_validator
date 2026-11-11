@@ -8,7 +8,7 @@ from project_validator.build_configurations import BuildConfiguration
 from project_validator.facts import CiConfiguration, Facts, Unknown
 from project_validator.facts.axes import ToolchainAxis, axis_of
 from project_validator.facts.jobs import Job
-from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict
+from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, language_wide
 
 type Platform = tuple[str, str]
 _JOBS = "the jobs and commands"
@@ -71,8 +71,7 @@ def _described(job: Job, axis: ToolchainAxis) -> str:
 
 
 def platform_answers(language: str, facts: Facts) -> LanguageAnswers[PlatformAnswer]:
-    found = platform_answer(language, facts)
-    return LanguageAnswers(language=language, units=() if found is None else (found,))
+    return language_wide(language, facts, lambda: platform_answer(language, facts))
 
 
 PLATFORMS_QUESTION = Question(

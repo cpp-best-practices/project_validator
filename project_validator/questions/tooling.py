@@ -8,11 +8,12 @@ Coverage, whose levels are granularities with a ranking of their own, has its ow
 """
 
 from collections.abc import Callable, Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import PurePosixPath
 
 from project_validator.facts import Facts
-from project_validator.facts.roles import AUXILIARY, role
+from project_validator.facts.auxiliary import selectors
+from project_validator.facts.roles import role
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import Tool, known_tools, owner, within
 from project_validator.questions import Answer, LanguageAnswers, answer_dict, per_unit, runs_of, unknowns_for
@@ -47,13 +48,15 @@ class ToolAnswer:
 
     `runs`: the tools CI runs, with the levels each provides there. `defined`: the files that define how a known tool
     provides the aspect (tool -> files), CI running it or not. `known`: every known tool of the aspect for the
-    language."""
+    language. `auxiliary`: the roles of the code the answer is about when only auxiliary code of the unit (helper
+    scripts, docs, examples, benchmarks) is in the language; empty when it is about the unit's product code."""
 
     aspect: str
     language: str
     unit: str = "."
     level: str
     answer: Answer
+    auxiliary: tuple[str, ...] = ()
     runs: tuple[Ran, ...] = ()
     defined: tuple[tuple[str, tuple[str, ...]], ...] = ()
     known: tuple[KnownTool, ...] = ()
@@ -118,20 +121,22 @@ class ToolAnswer:
         )
 
 
-def _relevant(path: str, unit: str) -> bool:
+def _relevant(path: str, unit: str, facts: Facts, auxiliary: tuple[str, ...]) -> bool:
     """Whether a definition file applies to code in `unit`: tools look for theirs in a file's directory and the
     directories above it, so one at or above the unit applies to all of it, and one inside it to part of it, unless
-    that part is auxiliary (an example's or the docs' own configuration) or vendored."""
+    that part is vendored or auxiliary code (an example's own configuration, with `--auxiliary example`) the answer
+    is not about (`auxiliary`: what named the code it is about)."""
     directory = str(PurePosixPath(path).parent)
     if within(unit, directory):
         return True
-    return within(directory, unit) and role(path) not in AUXILIARY
+    named = selectors(facts).matching(path, None)
+    return within(directory, unit) and role(path) != "vendored" and (not named or named in auxiliary)
 
 
-def _runs(aspect: str, language: str, unit: str, facts: Facts) -> tuple[Ran, ...]:
+def _runs(aspect: str, language: str, unit: str, facts: Facts, auxiliary: tuple[str, ...]) -> tuple[Ran, ...]:
     levels: dict[str, set[str]] = {}
     read: dict[str, dict[str, None]] = {}
-    for run in runs_of(aspect, language, unit, facts):
+    for run in runs_of(aspect, language, unit, facts, auxiliary=auxiliary):
         levels.setdefault(run.tool, set()).update(run.provides[aspect])
         read.setdefault(run.tool, {}).update(dict.fromkeys(run.read))
     return tuple(Ran(name=name, levels=frozenset(found), read=tuple(read[name])) for name, found in levels.items())
@@ -156,37 +161,49 @@ def _test_unit_files(facts: Facts) -> Callable[[str], bool]:
     return lambda path: units.get(owner(path, units), "product") == "test"
 
 
-def _defined(aspect: str, known: tuple[Tool, ...], facts: Facts, unit: str) -> _Defined:
-    """Each known tool whose definition a file that applies to `unit` holds, with those files."""
+def _defined(aspect: str, known: tuple[Tool, ...], facts: Facts, unit: str, auxiliary: tuple[str, ...]) -> _Defined:
+    """Each known tool whose definition a file that applies to `unit` (or to the auxiliary code the answer is about)
+    holds, with those files."""
     in_test_unit = _test_unit_files(facts)
 
     def applies(tool: Tool, path: str) -> bool:
         definition = tool.definitions.get(aspect)
-        return _relevant(path, unit) or (definition is not None and definition.from_test_units and in_test_unit(path))
+        relevant = _relevant(path, unit, facts, auxiliary)
+        return relevant or (definition is not None and definition.from_test_units and in_test_unit(path))
 
     found = ((tool.name, tuple(path for path in tool.defined(aspect, facts) if applies(tool, path))) for tool in known)
     return tuple((name, paths) for name, paths in found if paths)
 
 
+def _verdict(level: str, runs: tuple[Ran, ...], unknowns: tuple[str, ...]) -> Answer:
+    return Answer.YES if any(level in ran.levels for ran in runs) else Answer.UNKNOWN if unknowns else Answer.NO
+
+
 def tool_answer(
-    aspect: str, level: str, language: str, facts: Facts, tools: Iterable[Tool], unit: str = "."
+    aspect: str,
+    level: str,
+    language: str,
+    facts: Facts,
+    tools: Iterable[Tool],
+    unit: str = ".",
+    *,
+    auxiliary: tuple[str, ...] = (),
 ) -> ToolAnswer:
-    """Whether CI provides `aspect` at `level` for `language` in `unit`, by the facts, and what the known `tools`
-    could."""
+    """Whether CI provides `aspect` at `level` for `language` in `unit` (for the auxiliary code `auxiliary` names,
+    when the answer is about that), by the facts, and what the known `tools` could."""
     known = tuple(tool for tool in tools if aspect in tool.can and language in tool.languages)
+    answer = ToolAnswer(
+        aspect=aspect, language=language, unit=unit, level=level, answer=Answer.IMPOSSIBLE, auxiliary=auxiliary
+    )
     if not known:
-        return ToolAnswer(aspect=aspect, language=language, unit=unit, level=level, answer=Answer.IMPOSSIBLE)
-    runs = _runs(aspect, language, unit, facts)
+        return answer
+    runs = _runs(aspect, language, unit, facts, auxiliary)
     unknowns = unknowns_for(known, facts)
-    provided = any(level in ran.levels for ran in runs)
-    return ToolAnswer(
-        aspect=aspect,
-        language=language,
-        unit=unit,
-        level=level,
-        answer=Answer.YES if provided else Answer.UNKNOWN if unknowns else Answer.NO,
+    return replace(
+        answer,
+        answer=_verdict(level, runs, unknowns),
         runs=runs,
-        defined=_defined(aspect, known, facts, unit),
+        defined=_defined(aspect, known, facts, unit, auxiliary),
         known=tuple(_known(tool, aspect) for tool in known),
         unknowns=unknowns,
         unknown_definitions=unknowns_for(known, facts, hiding=("settings",)),
@@ -197,11 +214,15 @@ type LanguageToolAnswers = LanguageAnswers[ToolAnswer]
 
 
 def aspect_answers(aspect: str, level: str) -> Callable[[str, Facts], LanguageToolAnswers]:
-    """For a language: whether CI provides `aspect` at `level` in each unit that has the language."""
+    """For a language: whether CI provides `aspect` at `level` in each unit that has the language (see `per_unit`)."""
 
     def answer(language: str, facts: Facts) -> LanguageToolAnswers:
         tools = known_tools()
-        return per_unit(language, facts, lambda unit: tool_answer(aspect, level, language, facts, tools, unit))
+        return per_unit(
+            language,
+            facts,
+            lambda unit, roles: tool_answer(aspect, level, language, facts, tools, unit, auxiliary=roles),
+        )
 
     return answer
 

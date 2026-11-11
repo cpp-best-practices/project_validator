@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -51,6 +52,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -72,6 +74,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -85,6 +88,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -133,6 +137,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -185,6 +190,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -203,6 +209,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -224,6 +231,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -258,6 +266,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -292,6 +301,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -317,6 +327,7 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -360,6 +371,7 @@
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -378,6 +390,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -396,6 +409,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -462,6 +476,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -478,6 +493,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -496,6 +512,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -529,6 +546,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -580,6 +598,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -598,6 +617,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -615,6 +635,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Fortran",
         "units": [
           {
@@ -649,6 +670,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "fpm",
       "kind": "BuildFile",

@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -61,6 +62,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -82,6 +84,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -95,6 +98,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -123,6 +127,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -168,6 +173,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -229,6 +235,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -245,6 +252,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -279,6 +287,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -326,6 +335,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -370,6 +380,7 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -395,6 +406,7 @@
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -413,6 +425,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -455,6 +468,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -501,6 +515,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -517,6 +532,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -584,6 +600,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -621,6 +638,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -658,6 +676,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -676,6 +695,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": [
           {
@@ -693,12 +713,18 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Go",
         "units": []
       }
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "Go modules",
       "kind": "BuildFile",

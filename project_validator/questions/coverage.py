@@ -70,10 +70,13 @@ def _answer(
     return GranularityAnswer(answer=Answer.UNKNOWN if unread else Answer.NO, known=able)
 
 
-def coverage_answer(language: str, facts: Facts, tools: Iterable[Tool], unit: str = ".") -> CoverageAnswer:
-    """What coverage CI reports for `language` in `unit`, by the facts, and what the known `tools` could report."""
+def coverage_answer(
+    language: str, facts: Facts, tools: Iterable[Tool], unit: str = ".", auxiliary: tuple[str, ...] = ()
+) -> CoverageAnswer:
+    """What coverage CI reports for `language` in `unit` (for the auxiliary code `auxiliary` names, when the answer
+    is about that), by the facts, and what the known `tools` could report."""
     known = tuple(tool for tool in tools if measures_coverage(tool) and language in tool.languages)
-    runs = runs_of(COVERAGE, language, unit, facts)
+    runs = runs_of(COVERAGE, language, unit, facts, auxiliary=auxiliary)
     unknowns = unknowns_for(known, facts)
     return CoverageAnswer(
         language=language,
@@ -85,7 +88,7 @@ def coverage_answer(language: str, facts: Facts, tools: Iterable[Tool], unit: st
 
 def language_coverage(language: str, facts: Facts) -> LanguageCoverage:
     tools = known_tools()
-    return per_unit(language, facts, lambda unit: coverage_answer(language, facts, tools, unit))
+    return per_unit(language, facts, lambda unit, roles: coverage_answer(language, facts, tools, unit, roles))
 
 
 COVERAGE_QUESTION = Question(

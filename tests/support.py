@@ -38,8 +38,8 @@ def temp_project(files: Mapping[str, str]) -> Iterator[Path]:
         yield root
 
 
-def make_context(root: Path, options: Options | None = None) -> Context:
-    return Context(Project(root), discover().providers, options or Options())
+def make_context(root: Path, options: Options | None = None, *, auxiliary: tuple[str, ...] = ()) -> Context:
+    return Context(Project(root, auxiliary=auxiliary), discover().providers, options or Options())
 
 
 def fixture_files(name: str) -> dict[str, str]:
@@ -114,6 +114,7 @@ def run_in_every_layout(
     files: Mapping[str, str],
     layouts: tuple[ProjectLayout, ...] | None = None,
     options: Options | None = None,
+    auxiliary: tuple[str, ...] = (),
 ) -> Result:
     """The result of `selected` in a project of each layout with `files` added, which must not depend on the layout.
 
@@ -124,7 +125,7 @@ def run_in_every_layout(
     results: dict[str, Result] = {}
     for layout in layouts:
         with temp_project({**layout.files, **files}) as root:
-            results[layout.name] = selected.run(make_context(root, options))
+            results[layout.name] = selected.run(make_context(root, options, auxiliary=auxiliary))
     expected = results[layouts[0].name]
     for name, result in results.items():
         with test.subTest(layout=name):
@@ -164,11 +165,12 @@ def run_as(
     files: dict[str, str],
     *ecosystems: Ecosystem,
     options: Options | None = None,
+    auxiliary: tuple[str, ...] = (),
 ) -> Result:
     """The result of `selected` in every layout it judges as exactly `ecosystems`; it must not depend on the layout."""
     layouts = layouts_checked_as(selected, *ecosystems)
     test.assertTrue(layouts, f"no layout is judged as {[ecosystem.label for ecosystem in ecosystems]}")
-    return run_in_every_layout(test, selected, files, layouts, options)
+    return run_in_every_layout(test, selected, files, layouts, options, auxiliary)
 
 
 def run_in_layout(test: unittest.TestCase, name: str, selected: Check, files: Mapping[str, str]) -> Result:

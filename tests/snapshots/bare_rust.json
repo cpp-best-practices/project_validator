@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -68,6 +72,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -118,6 +123,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -179,6 +185,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -200,6 +207,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -227,6 +235,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -253,6 +262,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -286,6 +296,7 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -309,6 +320,7 @@
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -323,6 +335,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -350,6 +363,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -365,6 +379,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -379,6 +394,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -426,6 +442,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -452,6 +469,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -478,6 +496,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -496,6 +515,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": [
           {
@@ -511,12 +531,18 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Rust",
         "units": []
       }
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "Cargo",
       "kind": "BuildFile",

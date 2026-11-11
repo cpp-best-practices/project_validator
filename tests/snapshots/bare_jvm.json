@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -66,6 +70,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -109,6 +114,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -163,6 +169,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -184,6 +191,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -227,6 +235,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -260,6 +269,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -293,12 +303,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -313,6 +325,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -340,6 +353,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -355,6 +369,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -369,6 +384,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -423,6 +439,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -470,6 +487,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -496,6 +514,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -514,6 +533,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -529,6 +549,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Java",
         "units": [
           {
@@ -553,6 +574,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "Maven",
       "kind": "BuildFile",

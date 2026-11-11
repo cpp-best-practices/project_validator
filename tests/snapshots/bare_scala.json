@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -68,6 +72,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -112,6 +117,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -152,6 +158,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -168,6 +175,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -195,6 +203,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -221,6 +230,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -246,12 +256,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -266,6 +278,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -284,6 +297,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -299,6 +313,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -313,6 +328,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -346,6 +362,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -372,6 +389,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -412,6 +430,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -430,6 +449,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -445,6 +465,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Scala",
         "units": [
           {
@@ -469,6 +490,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "sbt",
       "kind": "BuildFile",

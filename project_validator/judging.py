@@ -39,11 +39,29 @@ def combined[K](results: Mapping[K, Result], *, label: Callable[[K, tuple[K, ...
     return labelled({label(key, kept): result for key, result in results.items()})
 
 
+def _auxiliary_only(result: Result) -> tuple[str, ...]:
+    """What named the auxiliary code a result is about, when every place of it is auxiliary code; else nothing."""
+    if not result.places or not all(place.auxiliary for place in result.places):
+        return ()
+    return tuple(sorted({name for place in result.places for name in place.auxiliary}))
+
+
+def _ecosystem_label(ecosystem: Ecosystem, result: Result) -> str:
+    named = _auxiliary_only(result)
+    return f"{ecosystem.label} (auxiliary: {', '.join(named)})" if named else ecosystem.label
+
+
 def by_ecosystem(results: Mapping[Ecosystem, Result]) -> Result:
-    """One result for several ecosystems, labelled by ecosystem where they differ."""
+    """One result for several ecosystems, labelled by ecosystem where they differ; a result about an ecosystem's
+    auxiliary code alone is always labelled, with what named that code."""
     folded = combined(
-        results, label=lambda ecosystem, _: ecosystem.label, none="no recognised ecosystem in the project"
+        results,
+        label=lambda ecosystem, _: _ecosystem_label(ecosystem, results[ecosystem]),
+        none="no recognised ecosystem in the project",
     )
+    judged_ = [ecosystem for ecosystem, result in results.items() if result.status is not Status.SKIP]
+    if len(judged_) == 1 and _auxiliary_only(results[judged_[0]]) and folded.status is not Status.SKIP:
+        folded = labelled({_ecosystem_label(judged_[0], results[judged_[0]]): folded})
     places = tuple(
         replace(place, ecosystem=ecosystem.label)
         for ecosystem, result in results.items()
@@ -61,16 +79,38 @@ def check_each_ecosystem[Rules](
 
 
 type _Place = tuple[str, str]  # (language, unit)
+type _Auxiliary = Mapping[_Place, tuple[str, ...]]  # what named the auxiliary code a place's answer is about
+type _Found[A] = list[tuple[A, tuple[str, ...]]]  # each answer with what named its code (nothing: the product's)
+
+_ADVISORY = "a warning, not a failure: the {language} here is auxiliary code ({named})"
 
 
-def _label(place: _Place, places: tuple[_Place, ...]) -> str:
-    """How a result is named among the others: by language, by unit, or by both, as far as they differ."""
+def _label(place: _Place, places: tuple[_Place, ...], auxiliary: _Auxiliary) -> str:
+    """How a result is named among the others: by language, by unit, or by both, as far as they differ; and by what
+    named the auxiliary code it is about, when it is."""
     language, unit = place
     languages, units = {language for language, _ in places}, {unit for _, unit in places}
     where = "the root" if unit == "." else unit
-    if len(units) == 1:
-        return language
-    return where if len(languages) == 1 else f"{language} in {where}"
+    name = language if len(units) == 1 else where if len(languages) == 1 else f"{language} in {where}"
+    return f"{name} (auxiliary: {', '.join(named)})" if (named := auxiliary.get(place)) else name
+
+
+def _advisory(result: Result, language: str, named: tuple[str, ...]) -> Result:
+    """A failure of auxiliary code alone is a warning that says so, and what named the code (`--auxiliary ...`)."""
+    if result.status is not Status.FAIL:
+        return result
+    by = " ".join(f"--auxiliary {name}" for name in named)
+    return replace(result, status=Status.WARN, details=(*result.details, _ADVISORY.format(language=language, named=by)))
+
+
+def _found[A: UnitAnswer](
+    languages: frozenset[str], context: Context, answers: Callable[[str, Facts], LanguageAnswers[A]]
+) -> _Found[A]:
+    found: _Found[A] = []
+    for language in sorted(languages & context.structure.languages):
+        answered = answers(language, context.facts)
+        found += [(answer, answered.auxiliary.get(answer.unit, ())) for answer in answered.units]
+    return found
 
 
 def judged[A: UnitAnswer](
@@ -80,21 +120,20 @@ def judged[A: UnitAnswer](
     judge: Judge[A],
 ) -> Result:
     """The policy's judgement of each of `languages` the project uses, in each unit that has it; one result when they
-    agree. A language the practice does not apply to (C in a C++ project) says nothing beside those it does.
+    agree. A language the practice does not apply to (C in a C++ project) says nothing beside those it does. A result
+    about auxiliary code alone (what `--auxiliary` named) is advisory (`_advisory`), and labelled with what named the
+    code where results are labelled (`by_ecosystem` labels an ecosystem's result about auxiliary code alone always).
     Places are named by `by_ecosystem`; a result returned from here alone has unnamed places."""
-    found = [
-        answer
-        for language in sorted(languages & context.structure.languages)
-        for answer in answers(language, context.facts).units
-    ]
-    results = {
-        (answer.language, answer.unit): judge(answer, allow_unknown=context.options.allow_unknown) for answer in found
-    }
-    folded = combined(
-        results, label=_label, none="only the docs, tooling, examples or test fixtures use these languages"
-    )
+    found = _found(languages, context, answers)
+    auxiliary: _Auxiliary = {(answer.language, answer.unit): named for answer, named in found if named}
+    results: dict[_Place, Result] = {}
+    for answer, named in found:
+        result = judge(answer, allow_unknown=context.options.allow_unknown)
+        results[(answer.language, answer.unit)] = _advisory(result, answer.language, named) if named else result
+    none = "no unit of the project is written in these languages"
+    folded = combined(results, label=lambda place, kept: _label(place, kept, auxiliary), none=none)
     units = dict.fromkeys(unit for _, unit in results)
-    return replace(folded, places=tuple(_placed(unit, results, found) for unit in units))
+    return replace(folded, places=tuple(_placed(unit, results, found, auxiliary) for unit in units))
 
 
 def _tools_ran(answer: object) -> tuple[str, ...]:
@@ -102,14 +141,19 @@ def _tools_ran(answer: object) -> tuple[str, ...]:
     return answer.tools_ran() if isinstance(answer, RanTools) else ()
 
 
-def _placed[A: UnitAnswer](unit: str, results: Mapping[_Place, Result], found: list[A]) -> Placed:
-    """One unit's result across the languages judged there, with the tools that ran for the practice in it."""
+def _placed[A: UnitAnswer](
+    unit: str, results: Mapping[_Place, Result], found: _Found[A], auxiliary: _Auxiliary
+) -> Placed:
+    """One unit's result across the languages judged there, with the tools that ran for the practice in it, and what
+    named the auxiliary code the result is about, when it is."""
     here = {language: result for (language, where), result in results.items() if where == unit}
+    named = sorted({name for (_, where), found_ in auxiliary.items() if where == unit for name in found_})
     return Placed(
         ecosystem="",
         unit=unit,
         result=combined(here, label=lambda language, _: language, none=""),
-        tools=tuple(dict.fromkeys(tool for answer in found if answer.unit == unit for tool in _tools_ran(answer))),
+        tools=tuple(dict.fromkeys(tool for answer, _ in found if answer.unit == unit for tool in _tools_ran(answer))),
+        auxiliary=tuple(named),
     )
 
 

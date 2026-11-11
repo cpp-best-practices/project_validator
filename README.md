@@ -58,6 +58,7 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 | `--exclude DIR` | leave `DIR`, relative to the project, out of the validation (e.g. test fixtures); may be repeated |
 | `--build` | configure and build the project in a temporary directory and ask `ctest` for its tests; a build that cannot run makes whether there are tests unknown |
 | `--strict` | treat warnings as failures |
+| `--auxiliary WHAT` | judge this code as auxiliary, not the product's: by role (`tooling`, `docs`, `example`, `benchmark`, `test`), by language or ecosystem (`python`, `c/c++`), or by directory (`scripts/`); may be repeated. Every check still judges it in full, but its failures are warnings, labelled `(auxiliary: tooling)` and saying in a detail what named the code. Without it, every source outside vendored directories is the product's: a C++ project's `scripts/release.py` makes Python one of its languages, held to every check |
 | `--max-file-size MIB` | committed files larger than this belong in Git LFS or DVC (default: 5) |
 | `--allow-official-tags` | let the actions GitHub publishes (`actions/`, `github/`) be pinned to tags |
 | `--allow-unknown` | judge by what could be read when an answer depends on CI configuration that could not be (a provider scanned heuristically, a matrix computed by an expression, a reusable workflow in another repository). Without it, such an answer is an `ERROR`: a gap in the validator's tooling, not a finding about the project |
@@ -68,7 +69,7 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 
 ## Checks
 
-What each check accepts for a language is on that ecosystem's page in [docs/ecosystems](docs/ecosystems); `python -m project_validator --support-matrix` prints the grid of every check against every ecosystem, with the tools each recognises (on the site as [the support matrix](https://cpp-best-practices.github.io/project_validator/docs/support-matrix.html)).
+Every language is judged in each unit (build root or workspace member) of the project whose code is written in it, whatever directory that code is in: a C++ project's `scripts/release.py` or `docs/conf.py` makes Python one of its languages, held to every check as the product is. The dial is `--auxiliary`: code it names (by role, `--auxiliary tooling`; by language or ecosystem, `--auxiliary python`; or by directory, `--auxiliary scripts/`) is still judged in full, where it is, but its failures are warnings labelled `(auxiliary: tooling)`, with a detail saying what named the code. Vendored code (`third_party/`, `vendor/`, minified bundles) is not judged. What each check accepts for a language is on that ecosystem's page in [docs/ecosystems](docs/ecosystems); `python -m project_validator --support-matrix` prints the grid of every check against every ecosystem, with the tools each recognises (on the site as [the support matrix](https://cpp-best-practices.github.io/project_validator/docs/support-matrix.html)).
 
 | Check | Passes when |
 |---|---|

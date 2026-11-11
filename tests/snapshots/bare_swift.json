@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -43,6 +46,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -67,6 +71,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -110,6 +115,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -157,6 +163,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -178,6 +185,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -213,6 +221,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -246,6 +255,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -279,6 +289,7 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -306,6 +317,7 @@
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -320,6 +332,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -346,6 +359,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -361,6 +375,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -375,6 +390,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -415,6 +431,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -441,6 +458,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -467,6 +485,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -485,6 +504,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -500,6 +520,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Swift",
         "units": [
           {
@@ -523,6 +544,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "SwiftPM",
       "kind": "BuildFile",

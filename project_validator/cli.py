@@ -10,6 +10,7 @@ from pathlib import Path, PurePosixPath
 from project_validator import pretty, yaml_support
 from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, Options, Project
 from project_validator.ecosystems import applies_to
+from project_validator.facts.auxiliary import Selectors
 from project_validator.grid import render_grid
 from project_validator.plugins import PluginError, discover
 from project_validator.questions.answers import answers
@@ -57,14 +58,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--only", action="append", default=[], metavar="CHECKS", help="run only these checks")
     parser.add_argument("--skip", action="append", default=[], metavar="CHECKS", help="do not run these checks")
     _add_output_options(parser)
-    parser.add_argument(
-        "--exclude",
-        action="append",
-        default=[],
-        type=_relative_directory,
-        metavar="DIR",
-        help="leave DIR, relative to the project, out of the validation (e.g. test fixtures)",
-    )
+    _add_scope_options(parser)
     parser.add_argument("--strict", action="store_true", help="treat warnings as failures")
     parser.add_argument(
         "--plugin-dir", action="append", default=[], type=Path, metavar="DIR", help="load extra plugins from DIR/*.py"
@@ -83,6 +77,27 @@ def _add_listing_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--list", action="store_true", help="list the checks (as JSON: with what each applies to)")
     for name, what in _DUMPS.items():
         parser.add_argument(f"--{name}", action="store_true", help=f"print {what} as JSON and exit")
+
+
+def _add_scope_options(parser: argparse.ArgumentParser) -> None:
+    """The options that say which code is judged, and as what."""
+    parser.add_argument(
+        "--exclude",
+        action="append",
+        default=[],
+        type=_relative_directory,
+        metavar="DIR",
+        help="leave DIR, relative to the project, out of the validation (e.g. test fixtures)",
+    )
+    parser.add_argument(
+        "--auxiliary",
+        action="append",
+        default=[],
+        metavar="WHAT",
+        help="judge this code as auxiliary, not the product's: by role (tooling, docs, example, benchmark, test), "
+        "language or ecosystem (python, c/c++), or directory (scripts/); its failures are warnings, labelled; "
+        "may be repeated",
+    )
 
 
 def _add_output_options(parser: argparse.ArgumentParser) -> None:
@@ -147,6 +162,11 @@ def _format_json(reports: list[Report]) -> str:
                 "status": str(report.result.status),
                 "message": report.result.message,
                 "details": list(report.result.details),
+                "auxiliary": [
+                    {"ecosystem": place.ecosystem, "unit": place.unit, "named": list(place.auxiliary)}
+                    for place in report.result.places
+                    if place.auxiliary
+                ],
             }
             for report in reports
         ],
@@ -218,7 +238,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         plugins = discover(arguments.plugin_dir)
         selected = select(plugins.checks, _names(arguments.only), _names(arguments.skip))
-    except (PluginError, SelectionError) as error:
+        Selectors.parse(arguments.auxiliary)
+    except (PluginError, SelectionError, ValueError) as error:
         parser.print_usage(sys.stderr)
         return _usage_error(parser, str(error))
 
@@ -230,7 +251,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not arguments.path.is_dir():
         return _usage_error(parser, f"{arguments.path} is not a directory")
 
-    project = Project(arguments.path.resolve(), frozenset(arguments.exclude))
+    project = Project(arguments.path.resolve(), frozenset(arguments.exclude), tuple(arguments.auxiliary))
     context = Context(project, plugins.providers, _options(arguments))
     if arguments.facts or arguments.map or arguments.answers:
         print(json.dumps(_dump(context, arguments), indent=2))
