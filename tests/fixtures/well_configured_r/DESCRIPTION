@@ -1,0 +1,14 @@
+Package: shop
+Title: Prices of the Shop's Items
+Version: 0.1.0
+Authors@R: person("Example", "Maintainer", email = "maintainer@example.com", role = c("aut", "cre"))
+Description: Sums the prices of the shop's items and takes percentages off them.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests:
+    covr,
+    lintr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
