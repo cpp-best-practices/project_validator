@@ -70,6 +70,9 @@ class Placed:
     unit: str
     result: Result
     tools: tuple[str, ...] = ()
+    # What `--auxiliary` named the code the result is about by (a role, a language, a directory), when the result
+    # is about auxiliary code alone.
+    auxiliary: tuple[str, ...] = ()
 
 
 DEFAULT_MAX_FILE_SIZE = 5 * 1024 * 1024
@@ -101,6 +104,8 @@ class Project:
 
     root: Path
     excluded: frozenset[PurePosixPath] = frozenset()
+    # What `--auxiliary` named as not the product's code (see `project_validator.facts.auxiliary`), as given.
+    auxiliary: tuple[str, ...] = ()
     # The files listed so far, by what was asked: the tree is walked once, as it is when first asked.
     _listed: dict[object, list[str]] = field(default_factory=dict, repr=False, compare=False)
 

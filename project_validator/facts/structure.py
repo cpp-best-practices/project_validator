@@ -4,7 +4,7 @@ The project map (`--map`, `project_validator.project_map`) is a view over these 
 """
 
 from collections import Counter
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
@@ -12,7 +12,8 @@ from pathlib import PurePosixPath
 from project_validator.core import Project
 from project_validator.ecosystems import Ecosystem, build_systems, registered
 from project_validator.facts import Fact, Facts, Origin
-from project_validator.facts.roles import AUXILIARY, role
+from project_validator.facts.auxiliary import AuxiliaryCode, Selectors
+from project_validator.facts.roles import role
 from project_validator.facts.tools import owner, within
 
 # Suffixes of files that are not source code of any language: documents, styles, media, archives, binaries and plain
@@ -76,14 +77,14 @@ class Unit(Fact):
     A unit is the outermost directory with a build system's files (a CMake project's subdirectories, a Maven
     project's modules belong to it), or a member of a workspace a build file declares (npm workspaces, Cargo and uv
     workspaces, go.work). Sources outside every unit, and languages only content shows, belong to the root unit. A
-    unit's languages are those of its own code: sources with an auxiliary role (docs, tooling, examples, benchmarks)
-    count only in a unit with that role, and vendored code in none. A project with one unit is judged as before; a
+    unit's languages are those of its own code, whatever its role: vendored code adds none, and the code
+    `--auxiliary` names adds none (it is judged apart, as advisory). A project with one unit is judged as before; a
     monorepo or a mixed-language project is judged unit by unit.
     """
 
     build_systems: tuple[str, ...]
     languages: frozenset[str]
-    # What the unit is for, by its directory (see `role`): only `product` units are held to most practices.
+    # What the unit is for, by its directory (see `role`); a name, not a judgement.
     role: str = "product"
 
     @property
@@ -216,21 +217,25 @@ def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[s
     return roots, workspaces
 
 
-def _units(project: Project, facts: Facts) -> Iterator[Unit]:
+def _own(languages: Iterable[str], path: str, named: Selectors, *, directory: bool = False) -> set[str]:
+    """The languages of `languages` that the code at `path` (a file, or a `directory`) has as the product's: those
+    `--auxiliary` does not name it in."""
+    return {language for language in languages if not named.matching(path, language, directory=directory)}
+
+
+def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
     roots, workspaces = _unit_roots(project, facts.of(BuildFile))
-    languages: dict[str, set[str]] = {root: set() for root in roots}
+    languages: dict[str, set[str]] = {".": set(), **{root: set() for root in roots}}
     for source in facts.of(SourceFile):
-        unit = owner(source.path, roots)
-        # Auxiliary code (docs, tooling) counts only in a unit of that role; vendored code is in no unit of its own.
-        counts = source.role not in AUXILIARY or source.role == role(unit, directory=True)
-        if source.language is not None and counts:
-            languages.setdefault(unit, set()).add(source.language)
+        # Vendored code is in no unit of its own; the code `--auxiliary` names adds no language to its unit.
+        if source.language is not None and not source.vendored:
+            languages.setdefault(owner(source.path, roots), set()).update(_own([source.language], source.path, named))
     # What a build file builds counts for its unit too, unless the build file only declares a workspace.
     for build in facts.of(BuildFile):
         if (directory := _directory(build)) not in workspaces or languages.get(directory):
-            languages.setdefault(owner(directory, roots), set()).update(build.languages)
+            languages.setdefault(owner(directory, roots), set()).update(_own(build.languages, build.origin.path, named))
     for content in facts.of(ContentLanguages):
-        languages.setdefault(".", set()).update(content.languages)
+        languages["."].update(_own(content.languages, ".", named, directory=True))
     for directory in sorted(languages, key=lambda root: (root != ".", root)):
         if (purpose := role(directory, directory=True)) == "vendored":
             continue
@@ -246,6 +251,8 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     """The build files, the source files with their languages, what the content shows, the ambiguous sources of the
     ecosystems those show, and the unrecognised suffixes."""
     files = project.files()
+    named = Selectors.parse(project.auxiliary)
+    yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary))
     found = list(_build_files(project, files))
     plain = Facts((*(fact for fact, _ in found if fact is not None), *_sources(files), *_content(project)))
     yield from plain
@@ -254,7 +261,7 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     yield from ambiguous
     recognised = {PurePosixPath(source.path).suffix for source in (*plain.of(SourceFile), *ambiguous)}
     yield from _unrecognised(files, {path for _, path in found}, recognised)
-    yield from _units(project, Facts((*plain, *ambiguous)))
+    yield from _units(project, Facts((*plain, *ambiguous)), named)
 
 
 __all__ = [

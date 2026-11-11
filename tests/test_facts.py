@@ -5,10 +5,12 @@ import unittest
 
 from project_validator.ci.github_actions import EXPRESSION
 from project_validator.facts import ActionStep, CiConfiguration, CiJob, Command, Facts, Origin, Unknown, as_dict
+from project_validator.facts.auxiliary import AuxiliaryCode
 from project_validator.facts.build import Applies, CompilerOption
 from project_validator.facts.conditions import DIMENSIONS
 from project_validator.facts.jobs import Job
 from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
+from project_validator.facts.structure import Unit
 from project_validator.facts.tools import ToolRun
 from tests.support import GITHUB_WORKFLOW, make_context, temp_project
 
@@ -367,9 +369,10 @@ class OtherProviderFactTests(unittest.TestCase):
         workflow = "jobs:\n  odd: text\n  build:\n    runs-on: ubuntu-latest\n    steps: [text, {run: ctest}]\n"
         facts = _facts({GITHUB_WORKFLOW: workflow, ".github/workflows/list.yml": "- a\n", ".gitlab-ci.yml": "- a\n"})
         self.assertEqual(_argvs(facts), [("ctest",)])
-        # ctest is a test runner, so its command is a run too; the job builds, on Linux.
+        # ctest is a test runner, so its command is a run too; the job builds, on Linux. The structure facts every
+        # project has (what --auxiliary named, the root unit) come first.
         found = [type(fact) for fact in facts if not isinstance(fact, CiConfiguration)]
-        self.assertEqual(found, [CiJob, Command, Job, ToolRun])
+        self.assertEqual(found, [AuxiliaryCode, Unit, CiJob, Command, Job, ToolRun])
 
     def test_invalid_yaml_is_unknown(self) -> None:
         facts = _facts({GITHUB_WORKFLOW: "jobs: [\n"})

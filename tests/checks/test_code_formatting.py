@@ -328,12 +328,20 @@ class AnswerTests(unittest.TestCase):
         self.assertEqual(answer.answer, Answer.IMPOSSIBLE)
         self.assertEqual(judge_formatting(answer), Result(status=Status.SKIP, message="no known tool formats Lang"))
 
-    def test_a_language_only_auxiliary_code_uses_is_skipped(self) -> None:
+    def test_a_language_only_auxiliary_code_uses_is_judged_as_advisory(self) -> None:
         files = {"CMakeLists.txt": "project(app)\n", "src/a.cpp": "", "docs/conf.py": "", **CLANG_FORMAT}
         files |= github_job("ubuntu-latest", "clang-format -n -Werror src/a.cpp")
         with temp_project(files) as root:
-            context = make_context(root)
+            self.assertEqual(code_formatting.run(make_context(root)).status, Status.FAIL)
+            context = make_context(root, auxiliary=("docs",))
             self.assertIn("Python", context.structure.languages)
             result = code_formatting.run(context)
-        # Python's skip ("only the docs, tooling, examples or test fixtures use these languages") is not a finding.
-        self.assertEqual(result, Result.passed(".clang-format is defined and CI runs clang-format"))
+        self.assertEqual(result.status, Status.WARN)
+        self.assertIn(
+            "C/C++: .clang-format is defined and CI runs clang-format; Python (auxiliary: docs): CI never runs ",
+            result.message,
+        )
+        self.assertIn(
+            "Python (auxiliary: docs): a warning, not a failure: the Python here is auxiliary code (--auxiliary docs)",
+            result.details,
+        )

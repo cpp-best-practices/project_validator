@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -51,6 +52,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -72,6 +74,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -85,12 +88,14 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": []
       }
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -128,6 +133,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -146,6 +152,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -169,6 +176,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -203,6 +211,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -221,6 +230,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -246,12 +256,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -270,6 +282,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -288,6 +301,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -334,6 +348,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -350,6 +365,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -411,6 +427,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -502,6 +519,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -539,6 +557,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -557,6 +576,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": [
           {
@@ -577,12 +597,18 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Terraform",
         "units": []
       }
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "ambiguous": false,
       "kind": "SourceFile",

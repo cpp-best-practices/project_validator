@@ -1,6 +1,7 @@
 """Roles: what the code at a path is for (the product, its tests, examples, docs, tooling, benchmarks, or other
 projects' vendored code), told by the directories it is in. Shared by the structure facts and the settings readers,
-which skip vendored projects' configuration."""
+which skip vendored projects' configuration. A role names code (`--auxiliary tooling`), it judges none: every role
+but `vendored` is the product's until named."""
 
 import re
 from pathlib import PurePosixPath
@@ -30,8 +31,9 @@ _ROLES = {
     **dict.fromkeys(("tools", "tooling", "scripts"), "tooling"),
     **dict.fromkeys(("bench", "benches", "benchmark", "benchmarks"), "benchmark"),
 }
-# Roles whose code is not the product: it needs no coverage of its own, and adds no language to the unit it is in.
-AUXILIARY = frozenset({"vendored", "example", "docs", "tooling", "benchmark"})
+# The roles `--auxiliary` may name as not the product's (see `project_validator.facts.auxiliary`); vendored code is
+# never judged, named or not.
+AUXILIARY = frozenset({"test", "example", "docs", "tooling", "benchmark"})
 
 
 # Directories that hold a unit's sources: below them, directory names are the code's own (`com/example/App.java`).

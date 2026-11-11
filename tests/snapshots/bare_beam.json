@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -13,6 +14,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -26,6 +28,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -37,6 +40,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -50,6 +54,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -64,6 +69,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -80,6 +86,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -101,6 +108,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -125,6 +133,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -163,6 +172,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -204,6 +214,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -256,6 +267,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -310,6 +322,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -329,6 +342,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -345,6 +359,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -370,6 +385,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -397,6 +413,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -413,6 +430,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -439,6 +457,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -462,6 +481,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -487,16 +507,19 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": []
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -509,6 +532,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -523,6 +547,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -539,6 +564,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -557,6 +583,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -570,6 +597,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -585,6 +613,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -597,6 +626,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -611,6 +641,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -649,6 +680,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -667,6 +699,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -691,6 +724,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -724,6 +758,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -748,6 +783,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -781,6 +817,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -806,6 +843,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -840,6 +878,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -855,6 +894,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -871,6 +911,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Elixir",
         "units": [
           {
@@ -892,6 +933,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "Erlang",
         "units": [
           {
@@ -915,6 +957,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "Mix",
       "kind": "BuildFile",

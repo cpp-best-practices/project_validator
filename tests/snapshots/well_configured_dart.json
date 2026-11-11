@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -51,6 +52,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -72,6 +74,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -85,6 +88,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -113,6 +117,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -158,6 +163,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -198,6 +204,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -221,6 +228,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -255,6 +263,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -289,6 +298,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -314,12 +324,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -338,6 +350,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -356,6 +369,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -402,6 +416,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -418,6 +433,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -451,6 +467,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -502,6 +519,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -539,6 +557,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -557,6 +576,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -574,6 +594,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Dart",
         "units": [
           {
@@ -599,6 +620,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "pub",
       "kind": "BuildFile",

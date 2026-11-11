@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -56,6 +57,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -77,6 +79,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -90,6 +93,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -115,6 +119,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -162,6 +167,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -230,6 +236,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -253,6 +260,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -295,6 +303,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -329,6 +338,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -373,12 +383,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -397,6 +409,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -449,6 +462,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -495,6 +509,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -511,6 +526,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -578,6 +594,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -625,6 +642,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -682,6 +700,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -745,6 +764,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": [
           {
@@ -762,12 +782,18 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "Python",
         "units": []
       }
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "Python packaging",
       "kind": "BuildFile",

@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -41,6 +42,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -62,6 +64,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -75,12 +78,14 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": []
       }
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -118,6 +123,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -136,6 +142,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -159,6 +166,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -205,6 +213,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -223,6 +232,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -248,12 +258,14 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -272,6 +284,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -290,12 +303,14 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": []
       }
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -312,6 +327,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -330,6 +346,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -401,6 +418,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -446,6 +464,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -464,6 +483,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": [
           {
@@ -487,12 +507,18 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "SQL",
         "units": []
       }
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "dbt",
       "kind": "BuildFile",

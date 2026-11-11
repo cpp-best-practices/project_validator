@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -15,6 +16,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -28,6 +30,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -41,6 +44,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -68,6 +72,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -124,6 +129,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -142,6 +148,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -158,6 +165,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -185,6 +193,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -218,6 +227,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -258,6 +268,7 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -285,6 +296,7 @@
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -299,6 +311,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -332,6 +345,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -347,6 +361,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -361,6 +376,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -401,6 +417,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -434,6 +451,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -471,6 +489,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -489,6 +508,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -504,6 +524,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "C",
         "units": [
           {
@@ -527,6 +548,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "CMake",
       "kind": "BuildFile",

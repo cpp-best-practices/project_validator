@@ -50,7 +50,9 @@ def _cell(row: Report, column: _Column) -> str:
     found = by_place.get(column) or by_place.get(("", ecosystem))
     if found is None:
         return "—"
-    return f"{MARKS[found.result.status]} {', '.join(_md(tool) for tool in found.tools)}".rstrip()
+    tools = ", ".join(_md(tool) for tool in found.tools)
+    note = "(auxiliary)" if found.auxiliary else ""
+    return " ".join(part for part in (MARKS[found.result.status], tools, note) if part)
 
 
 def _table(headers: Sequence[str], rows: Sequence[Sequence[str]]) -> list[str]:

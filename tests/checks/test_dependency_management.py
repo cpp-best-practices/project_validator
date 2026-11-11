@@ -136,8 +136,8 @@ class CAndCxxTests(unittest.TestCase):
 class PythonTests(unittest.TestCase):
     HINT = PYTHON_PACKAGE_MANAGER.lock_hint
 
-    def _run(self, files: dict[str, str], options: Options | None = None) -> Result:
-        return run_as(self, dependency_management, files, PYTHON, options=options)
+    def _run(self, files: dict[str, str], options: Options | None = None, auxiliary: tuple[str, ...] = ()) -> Result:
+        return run_as(self, dependency_management, files, PYTHON, options=options, auxiliary=auxiliary)
 
     def test_warns_when_declared_dependencies_are_not_locked(self) -> None:
         cases = {
@@ -194,9 +194,11 @@ class PythonTests(unittest.TestCase):
             _declared("pyproject.toml", "Python packages", "uv.lock"),
         )
 
-    def test_the_docs_and_tooling_have_dependencies_of_their_own(self) -> None:
+    def test_the_docs_and_tooling_have_dependencies_of_their_own_once_named(self) -> None:
         files = {"docs/requirements.txt": "sphinx\n", "scripts/requirements.txt": "click\n"}
-        self.assertEqual(self._run(files), NO_DEPENDENCIES)
+        self.assertEqual(self._run(files).status, Status.WARN)  # the product's manifests, unlocked, until named
+        self.assertEqual(self._run(files, auxiliary=("docs", "tooling")), NO_DEPENDENCIES)
+        self.assertEqual(self._run(files, auxiliary=("docs/", "scripts/")), NO_DEPENDENCIES)
 
     def test_a_lockfile_locks_the_units_below_it(self) -> None:
         files = {

@@ -2,6 +2,7 @@
   "answers": {
     "action-pinning": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -44,6 +45,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -88,6 +90,7 @@
     ],
     "ci-lint": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -107,6 +110,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -128,6 +132,7 @@
     ],
     "committed-artifacts": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -139,6 +144,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -152,6 +158,7 @@
     ],
     "compiler-warnings": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -175,6 +182,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -200,6 +208,7 @@
     ],
     "coverage": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -254,6 +263,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -310,6 +320,7 @@
     ],
     "dependency-audit": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -397,6 +408,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -486,6 +498,7 @@
     ],
     "dependency-management": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -507,6 +520,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -530,6 +544,7 @@
     ],
     "formatting": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -594,6 +609,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -660,6 +676,7 @@
     ],
     "function-limits": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -705,6 +722,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -752,6 +770,7 @@
     ],
     "fuzz-testing": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -794,6 +813,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -838,16 +858,19 @@
     ],
     "hardening": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": []
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": []
       }
     ],
     "license": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -864,6 +887,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -882,6 +906,7 @@
     ],
     "mutation-testing": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -919,6 +944,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -958,6 +984,7 @@
     ],
     "platforms": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -1002,6 +1029,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -1048,6 +1076,7 @@
     ],
     "secret-scanning": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -1062,6 +1091,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -1078,6 +1108,7 @@
     ],
     "security-scanning": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -1133,6 +1164,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -1190,6 +1222,7 @@
     ],
     "static-analysis": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -1246,6 +1279,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -1304,6 +1338,7 @@
     ],
     "tests": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -1339,6 +1374,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -1376,6 +1412,7 @@
     ],
     "type-checking": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -1423,6 +1460,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -1472,6 +1510,7 @@
     ],
     "vcs-ignore": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -1487,6 +1526,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -1504,6 +1544,7 @@
     ],
     "warnings-as-errors": [
       {
+        "auxiliary": {},
         "language": "JavaScript",
         "units": [
           {
@@ -1530,6 +1571,7 @@
         ]
       },
       {
+        "auxiliary": {},
         "language": "TypeScript",
         "units": [
           {
@@ -1558,6 +1600,11 @@
     ]
   },
   "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
     {
       "build_system": "npm",
       "kind": "BuildFile",

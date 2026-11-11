@@ -237,9 +237,17 @@ except where a step deliberately changes results and says so.
    - **Roles.** Every source file and unit has a role, told by the directories it is in (above any source root
      such as `src` or `lib`, so `com/example/App.java` is product code): `product`, `test` (tests and test-fixture
      projects), `example`, `docs`, `tooling`, `benchmark`, or `vendored` (below a vendor directory anywhere, or a
-     minified bundle). Auxiliary code adds no language to the unit it is in, and only product units are held to
-     coverage: a C++ library's Python docs scripts do not need Python coverage, and a test-fixture project needs
-     none of its own.
+     minified bundle). A role names code; it judges none: every source outside vendored directories is the
+     product's, whatever its role, and adds its language to its unit (a C++ library's `scripts/release.py` makes
+     Python a language of the root unit, held to every practice). `--auxiliary` dials that back
+     (`project_validator.facts.auxiliary`): what it names, by role (`tooling`), by language or ecosystem (`python`,
+     `c/c++`) or by directory (`scripts/`), is recorded as a fact (`AuxiliaryCode`) and resolved once per project
+     (`selectors`). Code it names adds no language to its unit; a language only such code is written in is still
+     judged by every practice, in the units that code is in (`per_unit` and `language_wide` fall back to
+     `auxiliary_units_of`; `LanguageAnswers.auxiliary` says what named the code, by unit, and the answers count runs
+     and manifests in that code), but the judging layer makes its failures warnings that say so and name the dial
+     (`judging._advisory`), and labels them `(auxiliary: tooling)` (`Placed.auxiliary`, shown by the JSON report and
+     the markdown grid). The policies know nothing of it. Vendored code is never judged, named or not.
    - **Unknowns say what they may hide** (`Unknown.hides`): whole `jobs`, `commands` of a job, a job's `matrix`
      values, or `settings` of named tools. A question counts only the unknowns that may hide what it asks about:
      an unreadable matrix does not make coverage unknown, and a broken `phpunit.xml` does not make a Python
@@ -337,9 +345,9 @@ except where a step deliberately changes results and says so.
      hide jobs); PowerShell scripts (a step's `shell: pwsh`, or a Windows runner's default) split with PowerShell's
      escape character; and a GitHub job whose matrix is an expression runs its steps with the matrix values unknown
      (before, its steps were lost).
-   - **Auxiliary code does not speak for a unit**: a run only in an example's or the docs' directory (tsc in
-     `examples/app`) covers no unit of another role, and an auxiliary directory's configuration defines no tool of
-     the unit it is in. tsc reads the configuration it uses (`-p`, or `tsconfig.json` where it runs, and the local
+   - **Auxiliary code does not speak for the product**: with `--auxiliary example`, a run only in an example's
+     directory (tsc in `examples/app`) covers no product code, and the example's own configuration defines no tool of
+     the unit it is in; both count for the advisory answer about the examples. tsc reads the configuration it uses (`-p`, or `tsconfig.json` where it runs, and the local
      ones it extends). Findings list at most three files, and how many more.
 
    **4c. Tests** (`tests-run`; the `TestSuite` rule is deleted).

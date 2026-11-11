@@ -13,7 +13,7 @@ from project_validator.facts.practices import (
     met,
     practices_of,
 )
-from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, unknowns_for
+from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, language_wide, unknowns_for
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -103,8 +103,7 @@ def practice_answer(name: str, language: str, facts: Facts) -> PracticeAnswer | 
 
 def practice_answers(name: str) -> Callable[[str, Facts], LanguageAnswers[PracticeAnswer]]:
     def answers(language: str, facts: Facts) -> LanguageAnswers[PracticeAnswer]:
-        found = practice_answer(name, language, facts)
-        return LanguageAnswers(language=language, units=() if found is None else (found,))
+        return language_wide(language, facts, lambda: practice_answer(name, language, facts))
 
     return answers
 

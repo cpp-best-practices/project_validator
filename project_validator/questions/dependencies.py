@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 
 from project_validator.facts import Command, Facts, Unknown
+from project_validator.facts.auxiliary import selectors
 from project_validator.facts.dependencies import (
     Application,
     Declared,
@@ -21,7 +22,7 @@ from project_validator.facts.dependencies import (
     managers_of,
 )
 from project_validator.facts.repository import Untracked
-from project_validator.facts.roles import AUXILIARY, role
+from project_validator.facts.roles import role
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import owner, within
 from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, per_unit
@@ -65,16 +66,19 @@ class DependencyAnswer:
 class _Unit:
     """Where facts belong among the units of the project."""
 
-    def __init__(self, facts: Facts, unit: str) -> None:
-        units = {found.directory: found.role for found in facts.of(Unit)} or {".": "product"}
-        self.unit, self.units, self.role = unit, tuple(units), units.get(unit, "product")
+    def __init__(self, facts: Facts, unit: str, auxiliary: tuple[str, ...] = ()) -> None:
+        self.unit = unit
+        self.units = tuple(found.directory for found in facts.of(Unit)) or (".",)
+        self.concerns, self.named = frozenset(auxiliary), selectors(facts)
         self.untracked = {fact.origin.path for fact in facts.of(Untracked)}
 
     def owns(self, path: str) -> bool:
-        """Whether a manifest is the unit's own: in its directory, outside the units below it, and not auxiliary
-        code of a unit of another role."""
-        auxiliary = role(path) in AUXILIARY and self.role not in AUXILIARY
-        return owner(directory_of(path), self.units) == self.unit and not auxiliary
+        """Whether a manifest is the unit's own: in its directory, outside the units below it, and neither vendored
+        nor auxiliary code (what `--auxiliary` names) the answer is not about (`concerns`: what named the code it
+        is about)."""
+        by = self.named.matching(path, None)
+        apart = role(path) == "vendored" or (by != "" and by not in self.concerns)
+        return owner(directory_of(path), self.units) == self.unit and not apart
 
     def locked_by(self, path: str, *, nested: bool = True) -> bool:
         """Whether a committed lockfile locks the unit: it is in the unit's directory or above it, or (for a manager
@@ -138,13 +142,14 @@ def _answer(declared: bool, settled: bool, unknown: bool) -> Answer:
 
 
 def dependency_answer(
-    language: str, facts: Facts, managers: tuple[PackageManager, ...], unit: str = "."
+    language: str, facts: Facts, managers: tuple[PackageManager, ...], unit: str = ".", auxiliary: tuple[str, ...] = ()
 ) -> DependencyAnswer:
-    """Whether `language`'s dependencies in `unit` are managed and locked, by the facts and the known `managers`."""
+    """Whether `language`'s dependencies in `unit` (in the auxiliary code `auxiliary` names, when the answer is about
+    that) are managed and locked, by the facts and the known `managers`."""
     known = managers_of(language, managers)
     if not known:
         return DependencyAnswer(language=language, unit=unit, answer=Answer.IMPOSSIBLE)
-    place = _Unit(facts, unit)
+    place = _Unit(facts, unit, auxiliary)
     names = {manager.name for manager in known}
     declared = _declared(names, facts, place)
     declaring = tuple(manager for manager in known if manager.name in {name for name, _ in declared})
@@ -167,7 +172,7 @@ def dependency_answer(
 def dependency_management(language: str, facts: Facts) -> LanguageAnswers[DependencyAnswer]:
     """For a language: whether its dependencies are managed and locked in each unit that has it."""
     managers = known_package_managers()
-    return per_unit(language, facts, lambda unit: dependency_answer(language, facts, managers, unit))
+    return per_unit(language, facts, lambda unit, named: dependency_answer(language, facts, managers, unit, named))
 
 
 DEPENDENCY_MANAGEMENT_QUESTION = Question(
