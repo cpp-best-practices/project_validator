@@ -21,7 +21,7 @@ from project_validator.facts.axes import ToolchainAxis, toolchain_versions
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.jobs import Job
-from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
+from project_validator.facts.outputs import BuildOutput, directory_output
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.settings import file_reader
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -370,15 +370,7 @@ FUNCTION_LENGTH_LIMITERS = function_length_limiters(SCALA)
 
 
 def _output(build_system: BuildSystem, directory: str, *more: str) -> BuildOutput:
-    return BuildOutput(
-        name=f"the {directory} directory",
-        languages=SCALA,
-        build_systems=frozenset({build_system.name}),
-        globs=ignored_at_top_level(re.escape(directory)),
-        paths=directories(directory),
-        hint=f"consider ignoring {' and '.join((f'{directory}/', *more))}",
-        artifacts=(f"{directory}/",),
-    )
+    return directory_output(directory, languages=SCALA, build_systems=frozenset({build_system.name}), also=more)
 
 
 SBT_TARGET = _output(SBT, "target", ".bsp/", ".bloop/", ".metals/")

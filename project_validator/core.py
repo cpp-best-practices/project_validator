@@ -115,7 +115,14 @@ class Project:
         """Whether the file exists, with its name spelled exactly so (`makefile` is not `Makefile`, even where file
         names are compared without case, as on Windows and macOS)."""
         path = self.root / relative
-        return path.is_file() and path.name in os.listdir(path.parent)
+        return path.is_file() and path.name in self._entries(path.parent)
+
+    def _entries(self, directory: Path) -> frozenset[str]:
+        """The names in `directory`, listed once (`exists` is asked about many files of the same directory)."""
+        key = ("entries", str(directory))
+        if key not in self._listed:
+            self._listed[key] = sorted(os.listdir(directory))
+        return frozenset(self._listed[key])
 
     def read_text(self, relative: str) -> str:
         return (self.root / relative).read_text(encoding="utf-8", errors="replace")

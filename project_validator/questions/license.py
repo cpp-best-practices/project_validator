@@ -3,16 +3,19 @@ declare the license of the license files nearest to it?
 
 The project's own license files are those at its root, and REUSE's `LICENSES/`. A manifest is compared with the
 license files of its directory, or of the nearest directory above it that has any: a member of a monorepo may hold
-its own. Only the product's manifests count, not those of the docs, examples, tooling or tests.
+its own. Every manifest outside vendored code counts, until `--auxiliary` names its code (a test fixture's manifest
+declares the fixture's license, not the project's).
 """
 
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
 from project_validator.facts import Facts
+from project_validator.facts.auxiliary import selectors
 from project_validator.facts.licenses import DeclaredLicense, LicenseFile
 from project_validator.facts.roles import role
 from project_validator.facts.structure import Unit
@@ -89,14 +92,9 @@ def license_answer(facts: Facts, language: str | None = None) -> LicenseAnswer:
     """The answer for the project, comparing the manifests of `language` (every language's, by default)."""
     files = tuple(facts.of(LicenseFile))
     own = tuple((file.origin.path, file.licenses) for file in files if _directory(file) == ".")
-    declared = (
-        fact
-        for fact in facts.of(DeclaredLicense)
-        if (language is None or language in fact.languages) and role(fact.origin.path) == "product"
-    )
     mismatches = tuple(
         Mismatch(manifest=fact.origin.path, declared=fact.expression, licenses=licenses)
-        for fact in declared
+        for fact in _compared(facts, language)
         if (licenses := _nearest(fact.origin.path, files))
         and _comparable(identifiers_in(fact.expression)) != _comparable(licenses)
     )
@@ -110,13 +108,26 @@ def license_answer(facts: Facts, language: str | None = None) -> LicenseAnswer:
     )
 
 
+def _compared(facts: Facts, language: str | None) -> Iterator[DeclaredLicense]:
+    """The manifests (of `language`, or every language's) whose declared license is compared: those outside vendored
+    code and outside the code `--auxiliary` names."""
+    named = selectors(facts)
+    return (
+        fact
+        for fact in facts.of(DeclaredLicense)
+        if (language is None or language in fact.languages)
+        and role(fact.origin.path) != "vendored"
+        and not named.matching(fact.origin.path, None)
+    )
+
+
 def _packages(
     facts: Facts, files: tuple[LicenseFile, ...], own: tuple[tuple[str, frozenset[str]], ...]
 ) -> tuple[tuple[str, frozenset[str]], ...]:
     """Where there is no license file at the root (`own`), those of the project's units (a monorepo's packages)."""
     if own:
         return ()
-    units = {unit.directory for unit in facts.of(Unit) if unit.role == "product"} - {"."}
+    units = {unit.directory for unit in facts.of(Unit)} - {"."}
     return tuple((file.origin.path, file.licenses) for file in files if _directory(file) in units)
 
 

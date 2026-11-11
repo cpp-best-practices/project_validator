@@ -376,12 +376,18 @@ class AuxiliaryCodeTests(unittest.TestCase):
             code, output, _ = run_cli("--only", "static-analysis", "--format", "json", str(root))
             self.assertEqual(code, EXIT_FAILURE)
             [report] = json.loads(output)
-            self.assertEqual((report["status"], report["auxiliary"]), ("FAIL", []))
+            self.assertEqual(report["status"], "FAIL")
+            places = {(place["ecosystem"], place["unit"]): place for place in report["places"]}
+            self.assertEqual(set(places), {("C/C++", "."), ("Python", ".")})
+            python = places[("Python", ".")]
+            self.assertEqual((python["status"], python["auxiliary"], python["tools"]), ("FAIL", [], []))
+            self.assertEqual(python["message"], "no static analyzer runs")
             arguments = ("--only", "static-analysis", "--auxiliary", "tooling", str(root))
             code, output, _ = run_cli(*arguments, "--format", "json")
             self.assertEqual(code, EXIT_FAILURE)
             [report] = json.loads(output)
-            self.assertEqual(report["auxiliary"], [{"ecosystem": "Python", "unit": ".", "named": ["tooling"]}])
+            [python] = [place for place in report["places"] if place["ecosystem"] == "Python"]
+            self.assertEqual((python["status"], python["auxiliary"]), ("WARN", ["tooling"]))
             self.assertIn(f"Python (auxiliary: tooling): {ADVISORY}", report["details"])
             code, grid, _ = run_cli(*arguments, "--format", "markdown")
             self.assertIn(f"| {MARKS[Status.WARN]} (auxiliary) |", grid)
