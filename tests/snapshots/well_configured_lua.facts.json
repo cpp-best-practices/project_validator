@@ -1,0 +1,3365 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "LuaRocks",
+      "kind": "BuildFile",
+      "languages": [
+        "Lua"
+      ],
+      "origin": "shop-dev-1.rockspec"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Lua",
+      "origin": "spec/shop_spec.lua",
+      "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Lua",
+      "origin": "src/shop/init.lua",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "LuaRocks"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "busted specs (spec/**/*_spec.lua)",
+      "language": "Lua",
+      "origin": "spec/shop_spec.lua"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "lua": "5.1",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 5.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "luaVersion": "5.1"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "busted"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luacheck",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "luacheck .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "busted",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "busted --coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "lua": "5.4",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 5.4)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "luaVersion": "5.4"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "busted"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luacheck",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "luacheck .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "busted",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "busted --coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "lua": "luajit-2.1",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, luajit-2.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "luaVersion": "luajit-2.1"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "busted"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luacheck",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "luacheck .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "busted",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "busted --coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "lua": "5.1",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 5.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "luaVersion": "5.1"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "busted"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luacheck",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "luacheck .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "busted",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "busted --coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "lua": "5.4",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 5.4)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "luaVersion": "5.4"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "busted"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luacheck",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "luacheck .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "busted",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "busted --coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "lua": "luajit-2.1",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, luajit-2.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "luaVersion": "luajit-2.1"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "busted"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luacheck",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "luacheck .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "busted",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "busted --coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[6]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "lua": "5.1",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 5.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "luaVersion": "5.1"
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "busted"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luacheck",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "luacheck .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "busted",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "busted --coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[7]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "lua": "5.4",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 5.4)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "luaVersion": "5.4"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "busted"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luacheck",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "luacheck .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "busted",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "busted --coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[8]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "lua": "luajit-2.1",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, luajit-2.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "luaVersion": "luajit-2.1"
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "busted"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luarocks",
+        "install",
+        "luacheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "luarocks install busted && luarocks install luacov && luarocks install luacheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "luacheck",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "luacheck .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "busted",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "busted --coverage",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "args": "--check .",
+        "token": "${{ secrets.GITHUB_TOKEN }}"
+      },
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[1]",
+      "uses": "JohnnyMorganz/stylua-action@76fd70c03e6340ceaf673366712db9b20560b402"
+    },
+    {
+      "argv": [
+        "stylua",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "uses: JohnnyMorganz/stylua-action@76fd70c03e6340ceaf673366712db9b20560b402",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[1]",
+      "via": []
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "semgrep",
+        "scan",
+        "--config",
+        "p/lua",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config p/lua --error .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "semgrep",
+        "scan",
+        "--config",
+        "p/lua",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config p/lua --error .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
+        "curl",
+        "-sSL",
+        "https://github.com/LuaLS/lua-language-server/releases/latest/download/lua-language-server-linux-x64.tar.gz"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "curl -sSL https://github.com/LuaLS/lua-language-server/releases/latest/download/lua-language-server-linux-x64.tar.gz | tar xz -C /tmp",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tar",
+        "xz",
+        "-C",
+        "/tmp"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "curl -sSL https://github.com/LuaLS/lua-language-server/releases/latest/download/lua-language-server-linux-x64.tar.gz | tar xz -C /tmp",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "/tmp/bin/lua-language-server",
+        "--check",
+        "src"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "/tmp/bin/lua-language-server --check src",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "JohnnyMorganz/stylua-action@76fd70c03e6340ceaf673366712db9b20560b402"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Lua",
+          "version": "5.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.4)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Lua",
+          "version": "5.4"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, luajit-2.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Lua",
+          "version": "luajit-2.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 5.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Lua",
+          "version": "5.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 5.4)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Lua",
+          "version": "5.4"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, luajit-2.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Lua",
+          "version": "luajit-2.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 5.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Lua",
+          "version": "5.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 5.4)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Lua",
+          "version": "5.4"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, luajit-2.1)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Lua",
+          "version": "luajit-2.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Lua"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".busted",
+      "reader": "busted"
+    },
+    {
+      "heuristic": true,
+      "key": "coverage",
+      "kind": "Setting",
+      "origin": ".busted:coverage",
+      "tool": "busted",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "lua_modules/",
+      "syntax": "glob",
+      "written": "lua_modules/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".luarocks/",
+      "syntax": "glob",
+      "written": ".luarocks/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "luacov.*.out",
+      "syntax": "glob",
+      "written": "luacov.*.out"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".luacheckrc",
+      "reader": "luacheck"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".luarc.json",
+      "reader": "lua-language-server"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "stylua.toml",
+      "reader": "StyLua"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacheck",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "busted",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacheck",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "busted",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacheck",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "busted",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacheck",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "busted",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacheck",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "busted",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacheck",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "busted",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacheck",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "busted",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacheck",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "busted",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacheck",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "busted",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "luacov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[1]",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "StyLua",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Elixir"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "provides": {
+        "type-check": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lua-language-server",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Erlang"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "LuaRocks"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.1)",
+          "os": "linux",
+          "toolchains": [
+            "Lua 5.1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.4)",
+          "os": "linux",
+          "toolchains": [
+            "Lua 5.4"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, luajit-2.1)",
+          "os": "linux",
+          "toolchains": [
+            "Lua luajit-2.1"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 5.1)",
+          "os": "macos",
+          "toolchains": [
+            "Lua 5.1"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 5.4)",
+          "os": "macos",
+          "toolchains": [
+            "Lua 5.4"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, luajit-2.1)",
+          "os": "macos",
+          "toolchains": [
+            "Lua luajit-2.1"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 5.1)",
+          "os": "windows",
+          "toolchains": [
+            "Lua 5.1"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 5.4)",
+          "os": "windows",
+          "toolchains": [
+            "Lua 5.4"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, luajit-2.1)",
+          "os": "windows",
+          "toolchains": [
+            "Lua luajit-2.1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Lua"
+          ],
+          "name": ".github/workflows/ci.yml: lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Lua": [
+        "build file shop-dev-1.rockspec",
+        ".lua files"
+      ]
+    },
+    "languages": [
+      "Lua"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "LuaRocks"
+        ],
+        "directory": ".",
+        "languages": [
+          "Lua"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

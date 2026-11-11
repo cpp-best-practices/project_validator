@@ -1,0 +1,2516 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "dune",
+      "kind": "BuildFile",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": "dune-project"
+    },
+    {
+      "build_system": "dune",
+      "kind": "BuildFile",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": "lib/dune"
+    },
+    {
+      "build_system": "opam",
+      "kind": "BuildFile",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": "shop.opam"
+    },
+    {
+      "build_system": "dune",
+      "kind": "BuildFile",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": "test/dune"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "OCaml",
+      "origin": "lib/shop.ml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "OCaml",
+      "origin": "lib/shop.mli",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "OCaml",
+      "origin": "test/test_shop.ml",
+      "role": "test"
+    },
+    {
+      "build_systems": [
+        "dune",
+        "opam"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "ocaml-compiler": "4.14",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 4.14)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "ocaml-compiler": "4.14"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
+    },
+    {
+      "argv": [
+        "opam",
+        "install",
+        ".",
+        "--deps-only",
+        "--with-test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "opam install . --deps-only --with-test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "ocaml-compiler": "5.2",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 5.2)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "ocaml-compiler": "5.2"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
+    },
+    {
+      "argv": [
+        "opam",
+        "install",
+        ".",
+        "--deps-only",
+        "--with-test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "opam install . --deps-only --with-test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "ocaml-compiler": "4.14",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 4.14)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "ocaml-compiler": "4.14"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
+    },
+    {
+      "argv": [
+        "opam",
+        "install",
+        ".",
+        "--deps-only",
+        "--with-test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "opam install . --deps-only --with-test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "ocaml-compiler": "5.2",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 5.2)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "ocaml-compiler": "5.2"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
+    },
+    {
+      "argv": [
+        "opam",
+        "install",
+        ".",
+        "--deps-only",
+        "--with-test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "opam install . --deps-only --with-test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "ocaml-compiler": "4.14",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 4.14)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "ocaml-compiler": "4.14"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
+    },
+    {
+      "argv": [
+        "opam",
+        "install",
+        ".",
+        "--deps-only",
+        "--with-test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "opam install . --deps-only --with-test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "ocaml-compiler": "5.2",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 5.2)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "ocaml-compiler": "5.2"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
+    },
+    {
+      "argv": [
+        "opam",
+        "install",
+        ".",
+        "--deps-only",
+        "--with-test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "opam install . --deps-only --with-test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "build"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "opam exec -- dune build",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "test",
+        "--instrument-with",
+        "bisect_ppx",
+        "--force"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "bisect-ppx-report",
+        "summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "opam exec -- bisect-ppx-report summary",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "ocaml-compiler": "5.2"
+      },
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[1]",
+      "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
+    },
+    {
+      "argv": [
+        "opam",
+        "install",
+        "ocamlformat"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "opam install ocamlformat",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "opam",
+        "exec",
+        "--",
+        "dune",
+        "build",
+        "@fmt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "opam exec -- dune build @fmt",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dune",
+        "build",
+        "@fmt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "opam exec -- dune build @fmt",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "semgrep",
+        "scan",
+        "--config",
+        "auto",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config auto --error .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "semgrep",
+        "scan",
+        "--config",
+        "auto",
+        "--error",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "pipx run semgrep scan --config auto --error .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "OCaml"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 4.14)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "OCaml",
+          "version": "4.14"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "OCaml"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.2)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "OCaml",
+          "version": "5.2"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "OCaml"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 4.14)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "OCaml",
+          "version": "4.14"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "OCaml"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 5.2)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "OCaml",
+          "version": "5.2"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "OCaml"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 4.14)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "OCaml",
+          "version": "4.14"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "OCaml"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 5.2)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "OCaml",
+          "version": "5.2"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "OCaml"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "OCaml",
+          "version": "5.2"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "_build/",
+      "syntax": "glob",
+      "written": "_build/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "_opam/",
+      "syntax": "glob",
+      "written": "_opam/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".ocamlformat",
+      "reader": "ocamlformat"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "dune-project",
+      "reader": "dune"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/dune",
+      "reader": "dune tests"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/dune",
+      "reader": "dune"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "test/dune",
+      "reader": "dune tests"
+    },
+    {
+      "heuristic": true,
+      "key": "test",
+      "kind": "Setting",
+      "origin": "test/dune:test",
+      "tool": "dune tests",
+      "value": "test_shop"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "test/dune",
+      "reader": "dune"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dune test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dune test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dune test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dune test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dune test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dune test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "coverage": [
+          "branch"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "bisect_ppx",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ocamlformat",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Elixir"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "dune",
+      "opam"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "OCaml"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 4.14)",
+          "os": "linux",
+          "toolchains": [
+            "OCaml 4.14"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "OCaml"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 5.2)",
+          "os": "linux",
+          "toolchains": [
+            "OCaml 5.2"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "OCaml"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 4.14)",
+          "os": "macos",
+          "toolchains": [
+            "OCaml 4.14"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "OCaml"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 5.2)",
+          "os": "macos",
+          "toolchains": [
+            "OCaml 5.2"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "OCaml"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 4.14)",
+          "os": "windows",
+          "toolchains": [
+            "OCaml 4.14"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "OCaml"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 5.2)",
+          "os": "windows",
+          "toolchains": [
+            "OCaml 5.2"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "OCaml"
+          ],
+          "name": ".github/workflows/ci.yml: lint",
+          "os": "linux",
+          "toolchains": [
+            "OCaml 5.2"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "OCaml": [
+        "build file dune-project",
+        "build file dune",
+        "build file shop.opam",
+        ".ml files",
+        ".mli files"
+      ]
+    },
+    "languages": [
+      "OCaml"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "dune",
+          "opam"
+        ],
+        "directory": ".",
+        "languages": [
+          "OCaml"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

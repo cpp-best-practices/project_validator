@@ -1,0 +1,157 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Cargo",
+      "kind": "BuildFile",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "Cargo.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Rust",
+      "origin": "src/lib.rs",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Rust",
+      "origin": "src/main.rs",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Cargo"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Cargo.toml license"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Cargo dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Cargo",
+      "origin": "Cargo.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Rust lint settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Rust build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "Rust lints"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
+      "reader": "clippy"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/lib.rs",
+      "reader": "Rust lint settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/lib.rs",
+      "reader": "Rust build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/lib.rs",
+      "reader": "Rust lints"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/main.rs",
+      "reader": "Cargo binaries"
+    },
+    {
+      "kind": "Application",
+      "manager": "Cargo",
+      "origin": "src/main.rs"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/main.rs",
+      "reader": "Rust lint settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/main.rs",
+      "reader": "Rust build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/main.rs",
+      "reader": "Rust lints"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Cargo"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Rust": [
+        "build file Cargo.toml",
+        ".rs files"
+      ]
+    },
+    "languages": [
+      "Rust"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Cargo"
+        ],
+        "directory": ".",
+        "languages": [
+          "Rust"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

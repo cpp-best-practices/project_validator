@@ -1,0 +1,100 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Leiningen",
+      "kind": "BuildFile",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": "project.clj"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Clojure",
+      "origin": "project.clj",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Clojure",
+      "origin": "src/shop/core.clj",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Leiningen"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": ".nrepl-port",
+      "output": "the .nrepl-port file"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "project.clj",
+      "reader": "Clojure build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/shop/core.clj",
+      "reader": "Clojure build settings"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Leiningen"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Clojure": [
+        "build file project.clj",
+        ".clj files"
+      ]
+    },
+    "languages": [
+      "Clojure"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Leiningen"
+        ],
+        "directory": ".",
+        "languages": [
+          "Clojure"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

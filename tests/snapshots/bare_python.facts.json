@@ -1,0 +1,150 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Python packaging",
+      "kind": "BuildFile",
+      "languages": [
+        "Python"
+      ],
+      "origin": "pyproject.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Python",
+      "origin": "src/app/__init__.py",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Python packaging"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Python"
+      ],
+      "origin": "dist/",
+      "output": "Python bytecode"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "ruff"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "black"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "coverage.py"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pytest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "Python warning settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pyproject.toml license"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "Python dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Python packages",
+      "origin": "pyproject.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pylint"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "mypy"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pyright"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "pyrefly"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "ty"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "mutmut"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
+      "reader": "sqlfluff"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Python packaging"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Python": [
+        "build file pyproject.toml",
+        ".py files"
+      ]
+    },
+    "languages": [
+      "Python"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Python packaging"
+        ],
+        "directory": ".",
+        "languages": [
+          "Python"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

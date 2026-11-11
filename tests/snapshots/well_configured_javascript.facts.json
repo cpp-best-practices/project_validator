@@ -1,0 +1,4178 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "npm",
+      "kind": "BuildFile",
+      "languages": [
+        "JavaScript"
+      ],
+      "origin": "package.json"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JavaScript",
+      "origin": "eslint.config.js",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JavaScript",
+      "origin": "fuzz/add.fuzz.js",
+      "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TypeScript",
+      "origin": "src/add.test.ts",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TypeScript",
+      "origin": "src/add.ts",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "npm"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "Jazzer.js fuzz targets (an exported fuzz function or .fuzz())",
+      "language": "JavaScript",
+      "origin": "fuzz/add.fuzz.js"
+    },
+    {
+      "kind": "*.test.*, *.spec.* or __tests__/ files",
+      "language": "TypeScript",
+      "origin": "src/add.test.ts"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "node": "22",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 22)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "node-version": "22"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+    },
+    {
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npm ci",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "format:check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npm run format:check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npm run lint",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npm run typecheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npm test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=moderate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npm audit --audit-level=moderate",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npx",
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "node": "24",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 24)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "node-version": "24"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+    },
+    {
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npm ci",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "format:check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npm run format:check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npm run lint",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npm run typecheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npm test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=moderate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npm audit --audit-level=moderate",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npx",
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "node": "22",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 22)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "node-version": "22"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+    },
+    {
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npm ci",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "format:check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npm run format:check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npm run lint",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npm run typecheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npm test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=moderate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npm audit --audit-level=moderate",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npx",
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "node": "24",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 24)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "node-version": "24"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+    },
+    {
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npm ci",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "format:check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npm run format:check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npm run lint",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npm run typecheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npm test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=moderate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npm audit --audit-level=moderate",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npx",
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "node": "22",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 22)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "node-version": "22"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+    },
+    {
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npm ci",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "format:check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npm run format:check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npm run lint",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npm run typecheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npm test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=moderate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npm audit --audit-level=moderate",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npx",
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "node": "24",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 24)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "node-version": "24"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+    },
+    {
+      "argv": [
+        "npm",
+        "ci"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npm ci",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "format:check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npm run format:check",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "prettier --check .",
+      "origin": "package.json:scripts.format:check",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npm run lint",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "eslint",
+        "--max-warnings",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "eslint --max-warnings 0 .",
+      "origin": "package.json:scripts.lint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npm run typecheck",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tsc",
+        "--noEmit"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "tsc --noEmit",
+      "origin": "package.json:scripts.typecheck",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npm test",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "vitest",
+        "run",
+        "--coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "vitest run --coverage",
+      "origin": "package.json:scripts.test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "argv": [
+        "npm",
+        "audit",
+        "--audit-level=moderate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npm audit --audit-level=moderate",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npx",
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "stryker",
+        "run",
+        "--incremental"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npx stryker run --incremental",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jazzer",
+        "fuzz/add.fuzz.js",
+        "--",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JavaScript/TypeScript"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 22)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "JavaScript runtime",
+          "version": "22"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JavaScript/TypeScript"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 24)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "JavaScript runtime",
+          "version": "24"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JavaScript/TypeScript"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 22)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "JavaScript runtime",
+          "version": "22"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JavaScript/TypeScript"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 24)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "JavaScript runtime",
+          "version": "24"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JavaScript/TypeScript"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 22)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "JavaScript runtime",
+          "version": "22"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "JavaScript/TypeScript"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 24)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "JavaScript runtime",
+          "version": "24"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "node_modules/",
+      "syntax": "glob",
+      "written": "node_modules/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "coverage/",
+      "syntax": "glob",
+      "written": "coverage/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "dist/",
+      "syntax": "glob",
+      "written": "dist/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "eslint.config.js",
+      "reader": "eslint"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "eslint.config.js",
+      "reader": "eslint rules"
+    },
+    {
+      "heuristic": true,
+      "key": "security plugin",
+      "kind": "Setting",
+      "origin": "eslint.config.js:security plugin",
+      "tool": "eslint",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package-lock.json",
+      "reader": "npm packages lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "npm packages",
+      "origin": "package-lock.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json prettier"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "Jest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "npm packages",
+      "origin": "package.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json license"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "eslint rules"
+    },
+    {
+      "heuristic": true,
+      "key": "security plugin",
+      "kind": "Setting",
+      "origin": "package.json:security plugin",
+      "tool": "eslint",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "stryker.config.json",
+      "reader": "StrykerJS"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tsconfig.json",
+      "reader": "TypeScript"
+    },
+    {
+      "heuristic": false,
+      "key": "compilerOptions.target",
+      "kind": "Setting",
+      "origin": "tsconfig.json:compilerOptions.target",
+      "tool": "TypeScript",
+      "value": "es2022"
+    },
+    {
+      "heuristic": false,
+      "key": "compilerOptions.module",
+      "kind": "Setting",
+      "origin": "tsconfig.json:compilerOptions.module",
+      "tool": "TypeScript",
+      "value": "nodenext"
+    },
+    {
+      "heuristic": false,
+      "key": "compilerOptions.strict",
+      "kind": "Setting",
+      "origin": "tsconfig.json:compilerOptions.strict",
+      "tool": "TypeScript",
+      "value": true
+    },
+    {
+      "heuristic": false,
+      "key": "compilerOptions.outDir",
+      "kind": "Setting",
+      "origin": "tsconfig.json:compilerOptions.outDir",
+      "tool": "TypeScript",
+      "value": "dist"
+    },
+    {
+      "heuristic": false,
+      "key": "include",
+      "kind": "Setting",
+      "origin": "tsconfig.json:include",
+      "tool": "TypeScript",
+      "value": [
+        "src"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "function-length": [
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint's max-lines-per-function",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Vitest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "StrykerJS",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "function-length": [
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint's max-lines-per-function",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Vitest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "StrykerJS",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "function-length": [
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint's max-lines-per-function",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Vitest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "StrykerJS",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "function-length": [
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint's max-lines-per-function",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Vitest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "StrykerJS",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "function-length": [
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint's max-lines-per-function",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Vitest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "StrykerJS",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.format:check",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": true,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "eslint.config.js",
+        "package.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint-plugin-security",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.lint",
+      "provides": {
+        "function-length": [
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "eslint's max-lines-per-function",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.typecheck",
+      "provides": {
+        "type-check": [
+          "checks",
+          "strict"
+        ]
+      },
+      "read": [
+        "tsconfig.json"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "tsc",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "a JavaScript test runner",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "package.json:scripts.test",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Vitest",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "npm audit",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "StrykerJS",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Jazzer.js",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Erlang"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "npm"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 22)",
+          "os": "linux",
+          "toolchains": [
+            "JavaScript runtime 22"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 24)",
+          "os": "linux",
+          "toolchains": [
+            "JavaScript runtime 24"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 22)",
+          "os": "macos",
+          "toolchains": [
+            "JavaScript runtime 22"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 24)",
+          "os": "macos",
+          "toolchains": [
+            "JavaScript runtime 24"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 22)",
+          "os": "windows",
+          "toolchains": [
+            "JavaScript runtime 22"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "JavaScript/TypeScript"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 24)",
+          "os": "windows",
+          "toolchains": [
+            "JavaScript runtime 24"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "JavaScript/TypeScript": [
+        "build file package.json",
+        ".js files",
+        ".ts files"
+      ]
+    },
+    "languages": [
+      "JavaScript",
+      "TypeScript"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "npm"
+        ],
+        "directory": ".",
+        "languages": [
+          "JavaScript",
+          "TypeScript"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

@@ -1,0 +1,4244 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "MSBuild",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "Directory.Build.props"
+    },
+    {
+      "build_system": "MSBuild",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj"
+    },
+    {
+      "build_system": "MSBuild",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "src/App/App.csproj"
+    },
+    {
+      "build_system": "MSBuild",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "tests/App.Tests/App.Tests.csproj"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "C#",
+      "origin": "fuzz/App.Fuzz/Program.cs",
+      "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "C#",
+      "origin": "src/App/Calculator.cs",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "C#",
+      "origin": "tests/App.Tests/CalculatorTests.cs",
+      "role": "test"
+    },
+    {
+      "build_systems": [
+        "MSBuild"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "SharpFuzz fuzz targets (Fuzzer.Run, Fuzzer.LibFuzzer.Run)",
+      "language": "C#",
+      "origin": "fuzz/App.Fuzz/Program.cs"
+    },
+    {
+      "kind": "[Fact], [Test] or [TestMethod] methods in a test project (one referencing Microsoft.NET.Test.Sdk)",
+      "language": "C#",
+      "origin": "tests/App.Tests/CalculatorTests.cs"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "dotnet": "9.0.x",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 9.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "dotnet-version": "9.0.x"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9"
+    },
+    {
+      "argv": [
+        "dotnet",
+        "restore",
+        "--locked-mode"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dotnet restore --locked-mode",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "format",
+        "--verify-no-changes"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dotnet format --verify-no-changes",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "build",
+        "--no-restore"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dotnet build --no-restore",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "--no-build",
+        "--collect:XPlat Code Coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "stryker",
+        "--since"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "dotnet stryker --since",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "libfuzzer-dotnet",
+        "--target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "libfuzzer-dotnet --target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "dotnet": "10.0.x",
+        "os": "ubuntu-latest"
+      },
+      "name": "test (ubuntu-latest, 10.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "dotnet-version": "10.0.x"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9"
+    },
+    {
+      "argv": [
+        "dotnet",
+        "restore",
+        "--locked-mode"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dotnet restore --locked-mode",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "format",
+        "--verify-no-changes"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dotnet format --verify-no-changes",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "build",
+        "--no-restore"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dotnet build --no-restore",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "--no-build",
+        "--collect:XPlat Code Coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "stryker",
+        "--since"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dotnet stryker --since",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "libfuzzer-dotnet",
+        "--target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "libfuzzer-dotnet --target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "dotnet": "9.0.x",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 9.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "dotnet-version": "9.0.x"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9"
+    },
+    {
+      "argv": [
+        "dotnet",
+        "restore",
+        "--locked-mode"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dotnet restore --locked-mode",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "format",
+        "--verify-no-changes"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dotnet format --verify-no-changes",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "build",
+        "--no-restore"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dotnet build --no-restore",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "--no-build",
+        "--collect:XPlat Code Coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "stryker",
+        "--since"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "dotnet stryker --since",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "libfuzzer-dotnet",
+        "--target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "libfuzzer-dotnet --target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "dotnet": "10.0.x",
+        "os": "macos-latest"
+      },
+      "name": "test (macos-latest, 10.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "dotnet-version": "10.0.x"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9"
+    },
+    {
+      "argv": [
+        "dotnet",
+        "restore",
+        "--locked-mode"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dotnet restore --locked-mode",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "format",
+        "--verify-no-changes"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dotnet format --verify-no-changes",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "build",
+        "--no-restore"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dotnet build --no-restore",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "--no-build",
+        "--collect:XPlat Code Coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "stryker",
+        "--since"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "dotnet stryker --since",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "libfuzzer-dotnet",
+        "--target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "libfuzzer-dotnet --target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "dotnet": "9.0.x",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 9.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "dotnet-version": "9.0.x"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9"
+    },
+    {
+      "argv": [
+        "dotnet",
+        "restore",
+        "--locked-mode"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dotnet restore --locked-mode",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "format",
+        "--verify-no-changes"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dotnet format --verify-no-changes",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "build",
+        "--no-restore"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dotnet build --no-restore",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "--no-build",
+        "--collect:XPlat Code Coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "stryker",
+        "--since"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "dotnet stryker --since",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "libfuzzer-dotnet",
+        "--target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "libfuzzer-dotnet --target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "dotnet": "10.0.x",
+        "os": "windows-latest"
+      },
+      "name": "test (windows-latest, 10.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "dotnet-version": "10.0.x"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9"
+    },
+    {
+      "argv": [
+        "dotnet",
+        "restore",
+        "--locked-mode"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dotnet restore --locked-mode",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "format",
+        "--verify-no-changes"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dotnet format --verify-no-changes",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fantomas",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dotnet fantomas --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "fsharplint",
+        "lint",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dotnet fsharplint lint .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "build",
+        "--no-restore"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dotnet build --no-restore",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "--no-build",
+        "--collect:XPlat Code Coverage"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dotnet test --no-build --collect:\"XPlat Code Coverage\"",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dotnet",
+        "stryker",
+        "--since"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "dotnet stryker --since",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "libfuzzer-dotnet",
+        "--target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz",
+        "-max_total_time=30"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "libfuzzer-dotnet --target_path=fuzz/App.Fuzz/bin/Release/net9.0/App.Fuzz -max_total_time=30",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        ".NET"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 9.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": ".NET SDK",
+          "version": "9.0.x"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        ".NET"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 10.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": ".NET SDK",
+          "version": "10.0.x"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        ".NET"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 9.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": ".NET SDK",
+          "version": "9.0.x"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        ".NET"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 10.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": ".NET SDK",
+          "version": "10.0.x"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        ".NET"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 9.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": ".NET SDK",
+          "version": "9.0.x"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        ".NET"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 10.0.x)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": ".NET SDK",
+          "version": "10.0.x"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".editorconfig",
+      "reader": "EditorConfig"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".editorconfig",
+      "reader": "analyzer configuration"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "[Bb]in/",
+      "syntax": "glob",
+      "written": "[Bb]in/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "[Oo]bj/",
+      "syntax": "glob",
+      "written": "[Oo]bj/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "TestResults/",
+      "syntax": "glob",
+      "written": "TestResults/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "Declared",
+      "manager": "NuGet",
+      "origin": "Directory.Build.props"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "PackageLicenseExpression"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": "Directory.Build.props"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "MSBuild warning settings"
+    },
+    {
+      "heuristic": true,
+      "key": "AnalysisMode Recommended or All",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "EnforceCodeStyleInBuild",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "Nullable enable",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "F# --warnon",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "TreatWarningsAsErrors",
+      "kind": "Setting",
+      "origin": "Directory.Build.props",
+      "tool": "MSBuild warning settings",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Directory.Build.props",
+      "reader": "MSBuild"
+    },
+    {
+      "heuristic": false,
+      "key": "Nullable",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:Nullable",
+      "tool": "MSBuild",
+      "value": "enable"
+    },
+    {
+      "heuristic": false,
+      "key": "AnalysisMode",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:AnalysisMode",
+      "tool": "MSBuild",
+      "value": "All"
+    },
+    {
+      "heuristic": false,
+      "key": "AnalysisModeSecurity",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:AnalysisModeSecurity",
+      "tool": "MSBuild",
+      "value": "All"
+    },
+    {
+      "heuristic": false,
+      "key": "EnforceCodeStyleInBuild",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:EnforceCodeStyleInBuild",
+      "tool": "MSBuild",
+      "value": "true"
+    },
+    {
+      "heuristic": false,
+      "key": "TreatWarningsAsErrors",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:TreatWarningsAsErrors",
+      "tool": "MSBuild",
+      "value": "true"
+    },
+    {
+      "heuristic": false,
+      "key": "WarnOn",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:WarnOn",
+      "tool": "MSBuild",
+      "value": "3390"
+    },
+    {
+      "heuristic": false,
+      "key": "NuGetAuditMode",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:NuGetAuditMode",
+      "tool": "MSBuild",
+      "value": "all"
+    },
+    {
+      "heuristic": false,
+      "key": "RestorePackagesWithLockFile",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:RestorePackagesWithLockFile",
+      "tool": "MSBuild",
+      "value": "true"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageLicenseExpression",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:PackageLicenseExpression",
+      "tool": "MSBuild",
+      "value": "MIT"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "Directory.Build.props:PackageReference",
+      "tool": "MSBuild",
+      "value": "Roslynator.Analyzers"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "Declared",
+      "manager": "NuGet",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj",
+      "reader": "PackageLicenseExpression"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj",
+      "reader": "MSBuild warning settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj",
+      "reader": "MSBuild"
+    },
+    {
+      "heuristic": false,
+      "key": "OutputType",
+      "kind": "Setting",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj:OutputType",
+      "tool": "MSBuild",
+      "value": "Exe"
+    },
+    {
+      "heuristic": false,
+      "key": "TargetFramework",
+      "kind": "Setting",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj:TargetFramework",
+      "tool": "MSBuild",
+      "value": "net9.0"
+    },
+    {
+      "heuristic": false,
+      "key": "IsPackable",
+      "kind": "Setting",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj:IsPackable",
+      "tool": "MSBuild",
+      "value": "false"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "SharpFuzz"
+    },
+    {
+      "heuristic": false,
+      "key": "Sdk",
+      "kind": "Setting",
+      "origin": "fuzz/App.Fuzz/App.Fuzz.csproj:Sdk",
+      "tool": "MSBuild",
+      "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/App.Fuzz/packages.lock.json",
+      "reader": "NuGet lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "NuGet",
+      "origin": "fuzz/App.Fuzz/packages.lock.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "PackageLicenseExpression"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "MSBuild warning settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/App.csproj",
+      "reader": "MSBuild"
+    },
+    {
+      "heuristic": false,
+      "key": "TargetFramework",
+      "kind": "Setting",
+      "origin": "src/App/App.csproj:TargetFramework",
+      "tool": "MSBuild",
+      "value": "net10.0"
+    },
+    {
+      "heuristic": false,
+      "key": "Sdk",
+      "kind": "Setting",
+      "origin": "src/App/App.csproj:Sdk",
+      "tool": "MSBuild",
+      "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/App/packages.lock.json",
+      "reader": "NuGet lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "NuGet",
+      "origin": "src/App/packages.lock.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "stryker-config.json",
+      "reader": "Stryker.NET"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "NuGet package references"
+    },
+    {
+      "kind": "Declared",
+      "manager": "NuGet",
+      "origin": "tests/App.Tests/App.Tests.csproj"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "PackageLicenseExpression"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "MSBuild warning settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/App.Tests.csproj",
+      "reader": "MSBuild"
+    },
+    {
+      "heuristic": false,
+      "key": "TargetFramework",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:TargetFramework",
+      "tool": "MSBuild",
+      "value": "net10.0"
+    },
+    {
+      "heuristic": false,
+      "key": "IsPackable",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:IsPackable",
+      "tool": "MSBuild",
+      "value": "false"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "coverlet.collector"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "Microsoft.NET.Test.Sdk"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "xunit"
+    },
+    {
+      "heuristic": false,
+      "key": "PackageReference",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:PackageReference",
+      "tool": "MSBuild",
+      "value": "xunit.runner.visualstudio"
+    },
+    {
+      "heuristic": false,
+      "key": "Sdk",
+      "kind": "Setting",
+      "origin": "tests/App.Tests/App.Tests.csproj:Sdk",
+      "tool": "MSBuild",
+      "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "tests/App.Tests/packages.lock.json",
+      "reader": "NuGet lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "NuGet",
+      "origin": "tests/App.Tests/packages.lock.json"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Stryker.NET",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "SharpFuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Stryker.NET",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "SharpFuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Stryker.NET",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "SharpFuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Stryker.NET",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "SharpFuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Stryker.NET",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "SharpFuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet format",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Fantomas",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "FSharpLint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "Roslynator",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dotnet test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "coverage": [
+          "branch",
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "coverlet",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "audit": [
+          "runs"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": "NuGet audit of every package",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [
+        "Directory.Build.props"
+      ],
+      "scope": [
+        "."
+      ],
+      "tool": ".NET security analyzers",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "provides": {
+        "mutation": [
+          "incremental",
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Stryker.NET",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "SharpFuzz",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Erlang"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "MSBuild"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 9.0.x)",
+          "os": "linux",
+          "toolchains": [
+            ".NET SDK 9.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 10.0.x)",
+          "os": "linux",
+          "toolchains": [
+            ".NET SDK 10.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 9.0.x)",
+          "os": "macos",
+          "toolchains": [
+            ".NET SDK 9.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 10.0.x)",
+          "os": "macos",
+          "toolchains": [
+            ".NET SDK 10.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 9.0.x)",
+          "os": "windows",
+          "toolchains": [
+            ".NET SDK 9.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            ".NET"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 10.0.x)",
+          "os": "windows",
+          "toolchains": [
+            ".NET SDK 10.0.x"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      ".NET": [
+        ".cs files"
+      ]
+    },
+    "languages": [
+      "C#"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "MSBuild"
+        ],
+        "directory": ".",
+        "languages": [
+          "C#"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

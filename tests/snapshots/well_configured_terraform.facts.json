@@ -1,0 +1,1736 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Terraform",
+      "origin": "main.tf",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Terraform",
+      "origin": "outputs.tf",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Terraform",
+      "origin": "variables.tf",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "Terraform",
+      "origin": ".terraform.lock.hcl",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "Terraform",
+      "origin": ".tflint.hcl",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "Terraform",
+      "origin": "tests/name.tftest.hcl",
+      "role": "test"
+    },
+    {
+      "build_systems": [],
+      "kind": "Unit",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "Terraform test files (*.tftest.hcl, *.tofutest.hcl)",
+      "language": "Terraform",
+      "origin": "tests/name.tftest.hcl"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:validate[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "terraform": "1.9.8"
+      },
+      "name": "validate (ubuntu-latest, 1.9.8)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "terraform_version": "1.9.8"
+      },
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1]",
+      "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
+    },
+    {
+      "argv": [
+        "terraform",
+        "fmt",
+        "-check",
+        "-recursive"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "Command",
+      "line": "terraform fmt -check -recursive",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "init",
+        "-backend=false"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "Command",
+      "line": "terraform init -backend=false",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "validate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "Command",
+      "line": "terraform validate",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "Command",
+      "line": "terraform test",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:validate[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "terraform": "1.10.3"
+      },
+      "name": "validate (ubuntu-latest, 1.10.3)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "terraform_version": "1.10.3"
+      },
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1]",
+      "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
+    },
+    {
+      "argv": [
+        "terraform",
+        "fmt",
+        "-check",
+        "-recursive"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "Command",
+      "line": "terraform fmt -check -recursive",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "init",
+        "-backend=false"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "Command",
+      "line": "terraform init -backend=false",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "validate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "Command",
+      "line": "terraform validate",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "Command",
+      "line": "terraform test",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:validate[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "terraform": "1.9.8"
+      },
+      "name": "validate (macos-latest, 1.9.8)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "terraform_version": "1.9.8"
+      },
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1]",
+      "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
+    },
+    {
+      "argv": [
+        "terraform",
+        "fmt",
+        "-check",
+        "-recursive"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "Command",
+      "line": "terraform fmt -check -recursive",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "init",
+        "-backend=false"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "Command",
+      "line": "terraform init -backend=false",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "validate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "Command",
+      "line": "terraform validate",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "Command",
+      "line": "terraform test",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:validate[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "terraform": "1.10.3"
+      },
+      "name": "validate (macos-latest, 1.10.3)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "terraform_version": "1.10.3"
+      },
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1]",
+      "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
+    },
+    {
+      "argv": [
+        "terraform",
+        "fmt",
+        "-check",
+        "-recursive"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "Command",
+      "line": "terraform fmt -check -recursive",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "init",
+        "-backend=false"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "Command",
+      "line": "terraform init -backend=false",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "validate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "Command",
+      "line": "terraform validate",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "Command",
+      "line": "terraform test",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:validate[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "terraform": "1.9.8"
+      },
+      "name": "validate (windows-latest, 1.9.8)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "terraform_version": "1.9.8"
+      },
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1]",
+      "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
+    },
+    {
+      "argv": [
+        "terraform",
+        "fmt",
+        "-check",
+        "-recursive"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "Command",
+      "line": "terraform fmt -check -recursive",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "init",
+        "-backend=false"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "Command",
+      "line": "terraform init -backend=false",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "validate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "Command",
+      "line": "terraform validate",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "Command",
+      "line": "terraform test",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:validate[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "windows-latest",
+        "terraform": "1.10.3"
+      },
+      "name": "validate (windows-latest, 1.10.3)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "terraform_version": "1.10.3"
+      },
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1]",
+      "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
+    },
+    {
+      "argv": [
+        "terraform",
+        "fmt",
+        "-check",
+        "-recursive"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "Command",
+      "line": "terraform fmt -check -recursive",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "init",
+        "-backend=false"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "Command",
+      "line": "terraform init -backend=false",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "validate"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "Command",
+      "line": "terraform validate",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "terraform",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "Command",
+      "line": "terraform test",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[1]",
+      "uses": "terraform-linters/setup-tflint@6ffdbaa3be476b3431f7275c26966ef32ff60337"
+    },
+    {
+      "argv": [
+        "tflint",
+        "--init"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "tflint --init",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "tflint",
+        "--recursive"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "tflint --recursive",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "directory": "."
+      },
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4]",
+      "uses": "bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf"
+    },
+    {
+      "argv": [
+        "checkov",
+        "-d",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "uses: bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4]",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "terraform-linters/setup-tflint@6ffdbaa3be476b3431f7275c26966ef32ff60337"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Terraform"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: validate (ubuntu-latest, 1.9.8)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Terraform",
+          "version": "1.9.8"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Terraform"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: validate (ubuntu-latest, 1.10.3)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Terraform",
+          "version": "1.10.3"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Terraform"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: validate (macos-latest, 1.9.8)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Terraform",
+          "version": "1.9.8"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Terraform"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: validate (macos-latest, 1.10.3)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Terraform",
+          "version": "1.10.3"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Terraform"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: validate (windows-latest, 1.9.8)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Terraform",
+          "version": "1.9.8"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Terraform"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: validate (windows-latest, 1.10.3)",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Terraform",
+          "version": "1.10.3"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Terraform"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".terraform/",
+      "syntax": "glob",
+      "written": ".terraform/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.tfstate",
+      "syntax": "glob",
+      "written": "*.tfstate"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.tfstate.*",
+      "syntax": "glob",
+      "written": "*.tfstate.*"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.tfplan",
+      "syntax": "glob",
+      "written": "*.tfplan"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "crash.log",
+      "syntax": "glob",
+      "written": "crash.log"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "crash.*.log",
+      "syntax": "glob",
+      "written": "crash.*.log"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".terraform.lock.hcl",
+      "reader": "Terraform providers lockfile"
+    },
+    {
+      "kind": "Locked",
+      "manager": "Terraform providers",
+      "origin": ".terraform.lock.hcl"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".tflint.hcl",
+      "reader": "tflint"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "main.tf",
+      "reader": "Terraform provider requirements"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Terraform providers",
+      "origin": "main.tf"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "outputs.tf",
+      "reader": "Terraform provider requirements"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "variables.tf",
+      "reader": "Terraform provider requirements"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform validate",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform validate",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform validate",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform validate",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform validate",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform validate",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "terraform test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "tflint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "tflint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "checkov",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Terraform"
+          ],
+          "name": ".github/workflows/ci.yml: validate (ubuntu-latest, 1.9.8)",
+          "os": "linux",
+          "toolchains": [
+            "Terraform 1.9.8"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Terraform"
+          ],
+          "name": ".github/workflows/ci.yml: validate (ubuntu-latest, 1.10.3)",
+          "os": "linux",
+          "toolchains": [
+            "Terraform 1.10.3"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Terraform"
+          ],
+          "name": ".github/workflows/ci.yml: validate (macos-latest, 1.9.8)",
+          "os": "macos",
+          "toolchains": [
+            "Terraform 1.9.8"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Terraform"
+          ],
+          "name": ".github/workflows/ci.yml: validate (macos-latest, 1.10.3)",
+          "os": "macos",
+          "toolchains": [
+            "Terraform 1.10.3"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Terraform"
+          ],
+          "name": ".github/workflows/ci.yml: validate (windows-latest, 1.9.8)",
+          "os": "windows",
+          "toolchains": [
+            "Terraform 1.9.8"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Terraform"
+          ],
+          "name": ".github/workflows/ci.yml: validate (windows-latest, 1.10.3)",
+          "os": "windows",
+          "toolchains": [
+            "Terraform 1.10.3"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Terraform"
+          ],
+          "name": ".github/workflows/ci.yml: lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Terraform": [
+        ".tf files",
+        ".hcl files"
+      ]
+    },
+    "languages": [
+      "Terraform"
+    ],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "languages": [
+          "Terraform"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

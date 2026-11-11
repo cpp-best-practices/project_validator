@@ -149,7 +149,9 @@ Tests keep these from step 1 of the migration on:
 
 ## Migration
 
-Each step is one pull request with every gate green. The snapshots (`tests/snapshots`) must be reproduced exactly,
+Each step is one pull request with every gate green. The snapshots (`tests/snapshots`: for each fixture, its
+behaviour in `<fixture>.json`, the results and the answers, and what was learned in `<fixture>.facts.json`, the
+facts and the project map) must be reproduced exactly,
 except where a step deliberately changes results and says so.
 
 1. **Discovery and derived expectations.** Built-in profiles are discovered like checks; each profile's fixtures,

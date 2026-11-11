@@ -1,7 +1,11 @@
-"""The results and project map of every fixture, compared with recorded snapshots.
+"""Every fixture, compared with recorded snapshots: what the validator says about it (`<fixture>.json`: the results
+and the answers, the behaviour a change in policy or in a question shows in), and what it learned
+(`<fixture>.facts.json`: the facts and the project map, which a change in an extractor or in a fact type shows in).
 
-Refactorings must reproduce the snapshots; a deliberate change in behaviour is recorded with
-`UPDATE_SNAPSHOTS=1 python3 -m unittest tests.test_snapshots` and reviewed in the diff.
+Refactorings must reproduce both; a deliberate change is recorded with `UPDATE_SNAPSHOTS=1 python3 -m unittest
+tests.test_snapshots` and reviewed in the diff. The two are kept apart so that a change to how a fact is recorded is
+reviewed as that, with the behaviour visibly unchanged, and so that a profile's pull request touches its own fixtures'
+behaviour and only the facts the others share.
 """
 
 from __future__ import annotations
@@ -20,12 +24,12 @@ SNAPSHOTS = Path(__file__).parent / "snapshots"
 UPDATE = os.environ.get("UPDATE_SNAPSHOTS") == "1"
 
 
-def snapshot_of(fixture: Path) -> dict[str, object]:
+def snapshots_of(fixture: Path) -> dict[str, dict[str, object]]:
+    """The behaviour snapshot (`results`, `answers`) and the facts snapshot (`facts`, `map`) of a fixture, by the
+    suffix of the file each is kept in."""
     context = make_context(fixture)
     reports = run_checks(discover().checks, context)
-    return {
-        "map": context.structure.as_dict(),
-        "facts": context.facts.as_dicts(),
+    behaviour: dict[str, object] = {
         "answers": answers(context),
         "results": {
             report.check.name: {
@@ -36,6 +40,8 @@ def snapshot_of(fixture: Path) -> dict[str, object]:
             for report in reports
         },
     }
+    facts: dict[str, object] = {"facts": context.facts.as_dicts(), "map": context.structure.as_dict()}
+    return {".json": behaviour, ".facts.json": facts}
 
 
 def _render(snapshot: dict[str, object]) -> str:
@@ -43,13 +49,14 @@ def _render(snapshot: dict[str, object]) -> str:
 
 
 class SnapshotTests(unittest.TestCase):
-    def test_every_fixture_matches_its_snapshot(self) -> None:
+    def test_every_fixture_matches_its_snapshots(self) -> None:
         fixtures = sorted(path for path in FIXTURES.iterdir() if path.is_dir())
         self.assertTrue(fixtures)
         for fixture in fixtures:
-            with self.subTest(fixture=fixture.name):
-                path = SNAPSHOTS / f"{fixture.name}.json"
-                actual = _render(snapshot_of(fixture))
-                if UPDATE:
-                    path.write_text(actual, encoding="utf-8")
-                self.assertEqual(actual, path.read_text(encoding="utf-8"))
+            for suffix, snapshot in snapshots_of(fixture).items():
+                with self.subTest(fixture=fixture.name, snapshot=suffix):
+                    path = SNAPSHOTS / f"{fixture.name}{suffix}"
+                    actual = _render(snapshot)
+                    if UPDATE:
+                        path.write_text(actual, encoding="utf-8")
+                    self.assertEqual(actual, path.read_text(encoding="utf-8"))

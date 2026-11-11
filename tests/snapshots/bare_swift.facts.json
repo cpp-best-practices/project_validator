@@ -1,0 +1,120 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "SwiftPM",
+      "kind": "BuildFile",
+      "languages": [
+        "Swift"
+      ],
+      "origin": "Package.swift"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Swift",
+      "origin": "Package.swift",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Swift",
+      "origin": "Sources/App/main.swift",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "SwiftPM"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".build/",
+      "output": "the .build directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "Swift build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "Swift optimization settings"
+    },
+    {
+      "heuristic": true,
+      "key": "-Ounchecked",
+      "kind": "Setting",
+      "origin": "Package.swift",
+      "tool": "Swift optimization settings",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "SwiftLint plugin"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Package.swift",
+      "reader": "SwiftPM dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "SwiftPM",
+      "origin": "Package.swift"
+    },
+    {
+      "kind": "Application",
+      "manager": "SwiftPM",
+      "origin": "Package.swift"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "SwiftPM"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Swift": [
+        "build file Package.swift",
+        ".swift files"
+      ]
+    },
+    "languages": [
+      "Swift"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "SwiftPM"
+        ],
+        "directory": ".",
+        "languages": [
+          "Swift"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

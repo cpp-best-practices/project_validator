@@ -1,0 +1,108 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "ASDF",
+      "kind": "BuildFile",
+      "languages": [
+        "Common Lisp"
+      ],
+      "origin": "shop.asd"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Common Lisp",
+      "origin": "src/shop.lisp",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "shop.asd",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".fasl"
+    },
+    {
+      "build_systems": [
+        "ASDF"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Common Lisp"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Common Lisp"
+      ],
+      "origin": "src/shop.fasl",
+      "output": "the compiled files (*.fasl)"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "shop.asd",
+      "reader": "Lisp build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/shop.lisp",
+      "reader": "sb-cover"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/shop.lisp",
+      "reader": "Lisp build settings"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "ASDF"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Common Lisp": [
+        "build file shop.asd",
+        ".lisp files"
+      ]
+    },
+    "languages": [
+      "Common Lisp"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "ASDF"
+        ],
+        "directory": ".",
+        "languages": [
+          "Common Lisp"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".fasl"
+      }
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Eask",
+      "kind": "BuildFile",
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "origin": "Eask"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Emacs Lisp",
+      "origin": "shop.el",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "shop.elc",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Eask"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "origin": "shop.elc",
+      "output": "the byte-compiled files (*.elc)"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Eask",
+      "reader": "Emacs Lisp build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "shop.el",
+      "reader": "undercover"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "shop.el",
+      "reader": "Emacs Lisp build settings"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Eask"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Emacs Lisp": [
+        "build file Eask",
+        ".el files"
+      ]
+    },
+    "languages": [
+      "Emacs Lisp"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Eask"
+        ],
+        "directory": ".",
+        "languages": [
+          "Emacs Lisp"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}
