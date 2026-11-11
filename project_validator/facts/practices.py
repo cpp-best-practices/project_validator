@@ -9,6 +9,8 @@ C++, the `CompilerOption`s that apply to the compiler being judged. A practice j
 `compilers` CI builds with.
 """
 
+from __future__ import annotations
+
 import enum
 import re
 from collections.abc import Callable, Iterable, Iterator, Sequence

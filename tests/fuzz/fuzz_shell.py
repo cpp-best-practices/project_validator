@@ -1,5 +1,7 @@
 """Fuzz target: the shell and PowerShell script splitters never raise."""
 
+from __future__ import annotations
+
 import sys
 
 import atheris

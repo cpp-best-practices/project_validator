@@ -7,6 +7,8 @@ and each file it matches is a `TestFile` fact. A fuzzer's `Definition` is where 
 are ordinary `Tool`s; `fuzzer` and `fuzzed` only spell them.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass

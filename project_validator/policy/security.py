@@ -1,6 +1,8 @@
 """The code security scanning policy: CI scans the code, with a multi-language scanner or the language's own security
 lints. A scan passes; none warns."""
 
+from __future__ import annotations
+
 from project_validator.facts.security import SCANS
 from project_validator.policy.tooling import advised
 

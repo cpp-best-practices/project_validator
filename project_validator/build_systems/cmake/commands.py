@@ -1,6 +1,8 @@
 """What evaluated CMake commands set, as facts: compiler and linker options, build settings (variables and target
 properties), CTest tests, the dependencies CPM and FetchContent declare, and the commands of custom targets."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass, field

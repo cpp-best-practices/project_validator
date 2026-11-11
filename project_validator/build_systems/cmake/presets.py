@@ -1,6 +1,8 @@
 """CMake presets (`CMakePresets.json`, `CMakeUserPresets.json`): the cache variables each configure preset sets, with
 those it inherits, in the builds configured with it (and on the hosts its condition allows)."""
 
+from __future__ import annotations
+
 import json
 import posixpath
 from collections.abc import Iterator, Mapping

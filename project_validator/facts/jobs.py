@@ -2,6 +2,8 @@
 uses. The CI layer records these from the `CiJob` and `Command` facts; the platform questions and the profiles' axes
 read them."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from project_validator.build_configurations import BuildConfiguration

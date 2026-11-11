@@ -15,6 +15,8 @@ A plugin adds components to a stage (an expander, a settings reader, a tool); it
 components of each stage are asked of its module (`tools.known_tools()`), so that a test may stand others in.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 

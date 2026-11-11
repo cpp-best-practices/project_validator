@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from project_validator.core import Context, Result, check
 
 DEPENDENCY_UPDATERS = (

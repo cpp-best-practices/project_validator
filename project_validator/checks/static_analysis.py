@@ -1,5 +1,7 @@
 """Static analyzers (linters) are configured and run, so the bugs they find are found before review."""
 
+from __future__ import annotations
+
 from project_validator.facts.analysis import ANALYSIS
 from project_validator.judging import answered_check
 from project_validator.policy.analysis import judge_analysis

@@ -1,5 +1,7 @@
 """The BEAM profile's rules, judged by the generic checks in the Mix and rebar3 project layouts."""
 
+from __future__ import annotations
+
 import unittest
 from unittest import mock
 

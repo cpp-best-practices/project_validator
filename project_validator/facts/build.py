@@ -6,6 +6,8 @@ a compiler check). Each build system turns its conditions into a `Condition` (se
 facts hold one `Applies` each, a disjunct of it: an option set under a condition with two disjuncts is two facts.
 """
 
+from __future__ import annotations
+
 import dataclasses
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass

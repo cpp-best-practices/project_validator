@@ -1,5 +1,7 @@
 """Starting a built-in ecosystem with the scaffold."""
 
+from __future__ import annotations
+
 import contextlib
 import importlib.util
 import io

@@ -1,5 +1,7 @@
 """Compiler flags as practice requirements, shared by every compiled language."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.checks.compiler_warnings import compiler_warnings

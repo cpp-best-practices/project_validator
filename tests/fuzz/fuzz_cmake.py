@@ -1,5 +1,7 @@
 """Fuzz target: the CMake tokenizer raises only `CMakeSyntaxError`; the evaluator raises nothing on one file."""
 
+from __future__ import annotations
+
 import contextlib
 import pathlib
 import sys

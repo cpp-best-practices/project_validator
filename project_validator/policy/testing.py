@@ -1,5 +1,7 @@
 """The tests policy: the project has tests, and CI runs them."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.facts.testing import RUNS
 from project_validator.policy import either, unknown

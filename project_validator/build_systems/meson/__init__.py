@@ -4,6 +4,8 @@
 builds it applies to, and tests. `meson compile <target>` (or `ninja <target>`) runs a run target's command.
 """
 
+from __future__ import annotations
+
 import shlex
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field

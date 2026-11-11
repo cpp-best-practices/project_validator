@@ -1,5 +1,7 @@
 """Build configurations: the build types each build system reads from its commands, and sanitizers."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.build_configurations import BuildConfiguration, build_type_kinds

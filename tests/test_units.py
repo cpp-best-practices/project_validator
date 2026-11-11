@@ -1,5 +1,7 @@
 """Monorepos and mixed-language projects: the units of a project, and questions answered unit by unit."""
 
+from __future__ import annotations
+
 import json
 import unittest
 

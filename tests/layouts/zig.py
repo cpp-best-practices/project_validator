@@ -1,5 +1,7 @@
 """Kinds of Zig project, for tests that run a check in every layout."""
 
+from __future__ import annotations
+
 from tests.layouts.model import ProjectLayout
 
 MAIN = 'const std = @import("std");\n\npub fn main() void {\n    std.debug.print("shop\\n", .{});\n}\n'

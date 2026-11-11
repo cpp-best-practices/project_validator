@@ -3,6 +3,8 @@
 PHP projects run their tools through Composer scripts (`composer test`, `composer cs-check`), so the scripts CI runs
 count as CI configuration, as package scripts do for JavaScript."""
 
+from __future__ import annotations
+
 import json
 import re
 from collections.abc import Callable

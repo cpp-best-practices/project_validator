@@ -1,5 +1,7 @@
 """Kinds of C/C++ project, for tests that run a check in every layout."""
 
+from __future__ import annotations
+
 from project_validator.ecosystems import C_FAMILY
 from tests.layouts.model import ProjectLayout
 

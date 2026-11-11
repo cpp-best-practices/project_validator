@@ -7,6 +7,8 @@ fail on `git diff --exit-code`, or commit the changes back. Formatters are ordin
 `format` aspect; `format_tool` and `formatted` only spell them.
 """
 
+from __future__ import annotations
+
 import enum
 from collections.abc import Iterable, Mapping
 

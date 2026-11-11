@@ -4,6 +4,8 @@ and linker options and build settings, each for the builds it applies to, CTest 
 FetchContent declare. `cmake --build` runs the commands of the custom targets it builds.
 """
 
+from __future__ import annotations
+
 import shlex
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass

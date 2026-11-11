@@ -1,5 +1,7 @@
 """The Swift profile's rules, judged by the generic checks in the SwiftPM and Xcode project layouts."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.core import Result, Status

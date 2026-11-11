@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 
 from project_validator.text import JsonSyntaxError, check_json, matching_names, pattern

@@ -1,5 +1,7 @@
 """Go: built with Go modules, judged by the Go versions CI runs and the go tool's own test, vet and format commands."""
 
+from __future__ import annotations
+
 import re
 import shlex
 from collections.abc import Callable, Iterator

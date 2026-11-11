@@ -6,6 +6,8 @@ when it runs in its strict mode. Analyzers and type checkers are ordinary `Tool`
 `type_checker` and `type_checked` only spell them.
 """
 
+from __future__ import annotations
+
 import enum
 from collections.abc import Iterable, Mapping
 

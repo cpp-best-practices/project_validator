@@ -1,5 +1,7 @@
 """The coverage question, answered from facts, and the coverage policy that judges the answers."""
 
+from __future__ import annotations
+
 import unittest
 from unittest import mock
 

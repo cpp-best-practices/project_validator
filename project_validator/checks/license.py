@@ -1,5 +1,7 @@
 """The project says under which license it may be used: a license file of a known license, matching the manifests."""
 
+from __future__ import annotations
+
 from project_validator.core import Context, Result, check
 from project_validator.policy.license import judge_license
 from project_validator.questions.license import license_answer

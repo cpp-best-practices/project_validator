@@ -1,5 +1,7 @@
 """Command line interface: `python3 -m project_validator [options] [path]`."""
 
+from __future__ import annotations
+
 import argparse
 import json
 import os

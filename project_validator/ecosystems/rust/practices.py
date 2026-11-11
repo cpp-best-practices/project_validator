@@ -1,6 +1,8 @@
 """Rust's practices: the settings it asks for, and how they are worded (see
 `project_validator.facts.practices`)."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.ecosystems.rust import RUST_LANGUAGE

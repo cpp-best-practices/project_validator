@@ -8,6 +8,8 @@ the builds it is true in; `cc.get_id()` is a `Symbol` that comparing with a name
 that `flags += ['-Wall']` in a branch adds one element rather than doubling the choices.
 """
 
+from __future__ import annotations
+
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 

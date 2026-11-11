@@ -2,6 +2,8 @@
 expressions) over strings, numbers, booleans, arrays, dictionaries, function and method calls. Parsing evaluates
 nothing."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field

@@ -1,6 +1,8 @@
 """C/C++ compiler flags: the strict warning set and warnings as errors, for each compiler CI builds with, and security
 hardening."""
 
+from __future__ import annotations
+
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Facts
 from project_validator.facts.flags import errors_requirements, flag_requirements, warning_requirements

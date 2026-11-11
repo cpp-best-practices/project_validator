@@ -1,5 +1,7 @@
 """GitHub Actions expressions, evaluated as far as a checkout shows their values."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.ci.github_expressions import Known, evaluate, rendered

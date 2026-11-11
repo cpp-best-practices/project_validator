@@ -1,6 +1,8 @@
 """JavaScript and TypeScript's static analyzers (eslint, biome, oxlint, deno lint) and type checkers (tsc, deno
 check), with the configuration that defines their rules and strictness."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable
 from pathlib import PurePosixPath

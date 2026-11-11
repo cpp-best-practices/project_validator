@@ -1,5 +1,7 @@
 """The Terraform profile's rules, judged by the generic checks in a Terraform project."""
 
+from __future__ import annotations
+
 import json
 import unittest
 

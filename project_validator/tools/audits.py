@@ -1,6 +1,8 @@
 """Dependency auditors of many ecosystems at once: osv-scanner, trivy and snyk. Each profile makes them its own, for its
 languages (`multi_ecosystem_audits`), since they audit whatever lockfiles the project has."""
 
+from __future__ import annotations
+
 import shlex
 
 from project_validator.facts import Command, Facts, resolved

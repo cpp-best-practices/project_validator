@@ -1,5 +1,7 @@
 """The Julia profile's rules, judged by the generic checks in the Julia package and Julia sources layouts."""
 
+from __future__ import annotations
+
 import json
 import unittest
 

@@ -1,5 +1,7 @@
 """No build output is committed: what the ignore rules keep out (see `vcs-ignore`) did not slip in before them."""
 
+from __future__ import annotations
+
 from project_validator.facts.outputs import known_build_outputs
 from project_validator.judging import answered_check
 from project_validator.policy.outputs import judge_committed

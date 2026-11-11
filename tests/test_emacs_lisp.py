@@ -1,5 +1,7 @@
 """The Emacs Lisp profile's rules, judged by the generic checks in the Eask package and Emacs Lisp sources layouts."""
 
+from __future__ import annotations
+
 import unittest
 from pathlib import Path
 

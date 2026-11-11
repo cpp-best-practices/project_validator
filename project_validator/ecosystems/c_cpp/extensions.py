@@ -2,6 +2,8 @@
 CMake, `CMAKE_<LANG>_EXTENSIONS` off for the whole build (in the CMake files, a preset or on the command line) or a
 target's `<LANG>_EXTENSIONS` off; with Meson, a standard `cpp_std` (`c_std`)."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterator
 from pathlib import PurePosixPath

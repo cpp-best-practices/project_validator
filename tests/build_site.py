@@ -9,6 +9,8 @@ docs/ecosystems/ gets an index of the ecosystem pages; docs/support-matrix.html 
 repository points at it on GitHub at the built revision, so every link resolves.
 """
 
+from __future__ import annotations
+
 import argparse
 import html
 import posixpath

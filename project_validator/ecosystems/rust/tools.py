@@ -1,6 +1,8 @@
 """Rust's tools: what runs its tests, measures coverage, formats, analyses, scans and audits, and the
 settings each reads (see `project_validator.facts.tools`)."""
 
+from __future__ import annotations
+
 import re
 import shlex
 from collections.abc import Iterator

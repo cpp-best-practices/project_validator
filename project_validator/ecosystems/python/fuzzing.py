@@ -1,5 +1,7 @@
 """Python's fuzzing: atheris fuzz targets, run as scripts, and Hypothesis property tests."""
 
+from __future__ import annotations
+
 import re
 from pathlib import PurePosixPath
 

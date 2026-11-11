@@ -1,6 +1,8 @@
 """Meson as a build system: its build files, the languages a project() declares, the build types its commands build,
 and `meson test`, which runs the tests test() registers."""
 
+from __future__ import annotations
+
 from project_validator.build_systems.meson import declared_languages
 from project_validator.build_systems.meson.evaluation import LANGUAGES
 from project_validator.build_systems.model import BuildSystem

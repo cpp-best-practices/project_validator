@@ -1,5 +1,7 @@
 """The CMake language: syntax, values, `if()` conditions and generator expressions."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.build_systems.cmake.conditions import Operand, Variables, condition

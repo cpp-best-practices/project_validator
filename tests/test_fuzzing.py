@@ -1,5 +1,7 @@
 """The fuzz aspect: fuzz targets and property tests as kinds of test file, and the fuzzers defined by them."""
 
+from __future__ import annotations
+
 import re
 import unittest
 

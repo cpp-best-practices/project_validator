@@ -1,5 +1,7 @@
 """Whoever finds a vulnerability knows how to report it privately."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.core import Context, Result, check

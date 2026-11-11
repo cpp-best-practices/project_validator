@@ -1,6 +1,8 @@
 """Python's static analyzers (ruff check, pylint, flake8) and type checkers (mypy, pyright, pyrefly, ty), with the
 settings that configure them: a dedicated file, a `[tool.<name>]` table of pyproject.toml, or an INI section."""
 
+from __future__ import annotations
+
 from collections.abc import Callable, Iterable
 from pathlib import PurePosixPath
 

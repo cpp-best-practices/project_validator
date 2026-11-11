@@ -1,5 +1,7 @@
 """The JavaScript/TypeScript profile's rules, judged by the generic checks in every JavaScript project layout."""
 
+from __future__ import annotations
+
 import json
 import unittest
 

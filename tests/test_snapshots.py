@@ -4,6 +4,8 @@ Refactorings must reproduce the snapshots; a deliberate change in behaviour is r
 `UPDATE_SNAPSHOTS=1 python3 -m unittest tests.test_snapshots` and reviewed in the diff.
 """
 
+from __future__ import annotations
+
 import json
 import os
 import unittest

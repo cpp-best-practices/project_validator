@@ -2,6 +2,8 @@
 (`--ghc-options=-Werror`), by `ghc-options` wherever a project sets them (see `options`), or by Stack's
 `--pedantic`, which turns on -Wall and -Werror."""
 
+from __future__ import annotations
+
 from project_validator.ecosystems.haskell.options import HASKELL_LANGUAGE, READER
 from project_validator.facts.flags import flag_requirements
 from project_validator.facts.practices import Practice, PracticeName, Wording, always

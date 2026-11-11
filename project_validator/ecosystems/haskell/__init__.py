@@ -6,6 +6,8 @@ The profile's modules: `cabal` reads the Cabal file format, `options` GHC's opti
 linters, dependency managers and build outputs.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Mapping
 from pathlib import Path, PurePosixPath

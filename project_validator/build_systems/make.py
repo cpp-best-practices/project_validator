@@ -4,6 +4,8 @@ Rules are read as written: variables are not expanded (except `$(MAKE)`, which r
 conditionals and included makefiles are not followed.
 """
 
+from __future__ import annotations
+
 import posixpath
 import re
 from collections.abc import Iterator

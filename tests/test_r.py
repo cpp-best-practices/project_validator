@@ -1,5 +1,7 @@
 """The R profile's rules, judged by the generic checks in the R package and R scripts layouts."""
 
+from __future__ import annotations
+
 import json
 import unittest
 from pathlib import Path

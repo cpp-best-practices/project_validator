@@ -1,5 +1,7 @@
 """The Zig profile's rules, judged by the generic checks in the Zig build and Zig sources layouts."""
 
+from __future__ import annotations
+
 import unittest
 from pathlib import Path
 

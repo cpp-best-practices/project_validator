@@ -1,5 +1,7 @@
 """The results of one project as a grid of checks against the ecosystems in each of its units (`--format markdown`)."""
 
+from __future__ import annotations
+
 from collections.abc import Mapping, Sequence
 
 from project_validator.core import Status

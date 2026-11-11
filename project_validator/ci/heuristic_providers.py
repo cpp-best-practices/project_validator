@@ -1,5 +1,7 @@
 """CI providers that are detected by their configuration files and scanned heuristically."""
 
+from __future__ import annotations
+
 from project_validator.ci import CiProvider
 from project_validator.text import pattern
 

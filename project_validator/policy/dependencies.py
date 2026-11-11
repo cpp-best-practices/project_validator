@@ -1,6 +1,8 @@
 """The dependency management policy: dependencies are declared for a package manager and, where a lock is asked for,
 locked."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.policy import either, skipped_or_unknown
 from project_validator.policy import files as files_listed

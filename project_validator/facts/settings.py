@@ -6,6 +6,8 @@ run join their settings by querying the facts (`Facts.settings`), never by readi
 does not parse is recorded as unknown for its tool.
 """
 
+from __future__ import annotations
+
 import configparser
 import json
 import re

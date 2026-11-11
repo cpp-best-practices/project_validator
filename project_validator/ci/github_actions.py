@@ -1,5 +1,7 @@
 """GitHub Actions: workflows are parsed, and each job's matrix is expanded the way GitHub expands it."""
 
+from __future__ import annotations
+
 import itertools
 import json
 import re

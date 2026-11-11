@@ -8,6 +8,8 @@ in the same builds, and negating, joining and intersecting them stays cheap howe
 `disjuncts` writes a condition out as the `Applies` facts hold.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from itertools import groupby

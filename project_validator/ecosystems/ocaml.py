@@ -7,6 +7,8 @@ the dev profile, and that no dune file's `(flags …)` field drops `:standard`, 
 from, or turns the warnings off again (`-w -a`, `-warn-error -a`). The dune files are read for their forms, not parsed
 as a whole."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 from itertools import pairwise

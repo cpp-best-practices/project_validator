@@ -6,6 +6,8 @@ commands are facts like those CI runs directly, in the same job, with `via` nami
 Expansion repeats on what it finds, and stops where a definition would run itself again.
 """
 
+from __future__ import annotations
+
 import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping

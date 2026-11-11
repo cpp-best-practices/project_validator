@@ -1,6 +1,8 @@
 """The function length policy: CI runs a tool that fails when a function is longer than a limit, lizard told a limit
 or a linter whose rule is on."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.policy import either, skipped_or_unknown
 from project_validator.policy import files as files_listed

@@ -4,6 +4,8 @@ Adding an ecosystem means adding its profile and these two fixtures, named after
 needs to change.
 """
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.core import Status

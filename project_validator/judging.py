@@ -5,6 +5,8 @@ One result stands for several (`combined`): what was skipped is left out unless 
 said once when all agree, and otherwise each is labelled and the worst status wins.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable, Mapping
 from dataclasses import replace
 

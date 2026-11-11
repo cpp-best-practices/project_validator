@@ -1,5 +1,7 @@
 """The README documents every check, and each built-in ecosystem's page every check that applies to it."""
 
+from __future__ import annotations
+
 import re
 import unittest
 from pathlib import Path

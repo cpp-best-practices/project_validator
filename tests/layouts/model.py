@@ -1,5 +1,7 @@
 """What a project layout is: a minimal project of one kind, and what it is recognised as."""
 
+from __future__ import annotations
+
 from collections.abc import Mapping
 from dataclasses import dataclass
 

@@ -1,5 +1,7 @@
 """Discovery of checks and CI providers from the built-in packages and from extra plugin directories."""
 
+from __future__ import annotations
+
 import importlib
 import importlib.util
 import pkgutil

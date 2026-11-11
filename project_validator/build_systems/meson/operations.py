@@ -1,5 +1,7 @@
 """What Meson's operators and the methods of its values give, in the builds each result is in (see `values`)."""
 
+from __future__ import annotations
+
 from collections.abc import Callable, Iterator
 
 from project_validator.build_systems.meson import syntax

@@ -1,6 +1,8 @@
 """Build configurations: the build types a CI job builds (each build system reads its own commands), and whether
 sanitizers are on."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterable
 from dataclasses import dataclass

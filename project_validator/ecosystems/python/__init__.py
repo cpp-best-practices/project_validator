@@ -1,5 +1,7 @@
 """Python: packaged with pyproject.toml or setup.py, judged by the interpreter versions CI runs."""
 
+from __future__ import annotations
+
 import re
 import shlex
 import tomllib

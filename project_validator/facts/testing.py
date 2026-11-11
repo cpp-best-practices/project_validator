@@ -7,6 +7,8 @@ system reads (CTest's `add_test`, Meson's `test()`). Runners are ordinary `Tool`
 them.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass

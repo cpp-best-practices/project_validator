@@ -1,5 +1,7 @@
 """The repository's own atheris fuzz targets stay importable and total on garbage input."""
 
+from __future__ import annotations
+
 import contextlib
 import importlib.util
 import sys

@@ -1,6 +1,8 @@
 """The platform questions: for each language, which OSes and toolchains (compilers, or toolchain versions) its CI jobs
 run on, and which build configurations each of those builds."""
 
+from __future__ import annotations
+
 from collections import defaultdict
 from dataclasses import dataclass
 

@@ -1,6 +1,8 @@
 """The static analysis and type checking questions: for each language, in each unit of the project that has it, does
 CI run its static analyzers (with the checks the project defines) and type checkers (strictly, as a bonus)?"""
 
+from __future__ import annotations
+
 from project_validator.facts.analysis import ANALYSIS, CHECKS, TYPE_CHECK, Strictness
 from project_validator.questions import Question
 from project_validator.questions.tooling import aspect_answers

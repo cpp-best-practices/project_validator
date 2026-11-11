@@ -3,6 +3,8 @@ runs, by the optimize modes it builds (Debug, and a release mode; ReleaseSafe ke
 it runs: `zig build test`, kcov, `zig fmt` and lizard. Zig has no warnings (an unused variable is an error), so the
 warning practices have no rule."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 from pathlib import Path

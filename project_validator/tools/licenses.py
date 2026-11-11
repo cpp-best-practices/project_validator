@@ -1,6 +1,8 @@
 """License files, read as `LicenseFile` facts: `LICENSE`, `COPYING` and the like in any directory, and REUSE's
 `LICENSES/` directory, one file per license named by its SPDX identifier (reuse.software)."""
 
+from __future__ import annotations
+
 import itertools
 import re
 from collections.abc import Iterator

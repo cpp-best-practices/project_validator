@@ -1,5 +1,7 @@
 """CI runs on several operating systems with several compilers (or interpreter and toolchain versions)."""
 
+from __future__ import annotations
+
 from project_validator.facts.axes import handled
 from project_validator.judging import answered_check
 from project_validator.policy.platforms import judge_matrix

@@ -1,6 +1,8 @@
 """The formatting question: for each language, in each unit of the project that has it, does CI enforce the
 formatting (a formatter run that checks it), and where is it defined?"""
 
+from __future__ import annotations
+
 from project_validator.facts.formatting import FORMAT, Enforcement
 from project_validator.questions import Question
 from project_validator.questions.tooling import aspect_answers

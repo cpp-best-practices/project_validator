@@ -7,6 +7,8 @@ an `if` is followed, in the builds its condition holds in (see `values`): the co
 requirements, as written. A loop runs once per listed item; `break` and `continue` are not followed.
 """
 
+from __future__ import annotations
+
 import posixpath
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field, replace

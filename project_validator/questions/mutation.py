@@ -1,6 +1,8 @@
 """The mutation testing question: for each language, in each unit of the project that has it, does CI run a mutation
 testing tool (on the changes of a pull request only, as a bonus)?"""
 
+from __future__ import annotations
+
 from project_validator.facts.mutation import MUTATION, RUNS
 from project_validator.questions import Question
 from project_validator.questions.tooling import aspect_answers

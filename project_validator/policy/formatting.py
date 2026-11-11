@@ -1,5 +1,7 @@
 """The formatting policy: CI enforces the formatting with a tool whose style is defined, by a file or by default."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.facts.formatting import Enforcement
 from project_validator.policy import alternatives, either, skipped_or_unknown

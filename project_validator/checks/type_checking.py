@@ -1,5 +1,7 @@
 """Dynamically typed code is statically type checked, so type errors are found before the code runs."""
 
+from __future__ import annotations
+
 from project_validator.facts.analysis import TYPE_CHECK
 from project_validator.judging import answered_check
 from project_validator.policy.analysis import judge_type_checking

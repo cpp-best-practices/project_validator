@@ -4,6 +4,8 @@ Each runs directly, through a launcher or action, or within the build: a CMake c
 `CMAKE_<LANG>_CLANG_TIDY` or `CMAKE_<LANG>_CPPCHECK` (or the target property) runs it on every file it compiles.
 """
 
+from __future__ import annotations
+
 import re
 
 from project_validator.build_systems.cmake.build import cmake_configures

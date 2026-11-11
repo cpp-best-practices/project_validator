@@ -1,5 +1,7 @@
 """Reading Meson projects: syntax, values, evaluation, and run targets."""
 
+from __future__ import annotations
+
 import unittest
 from unittest import mock
 

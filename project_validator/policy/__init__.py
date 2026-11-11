@@ -5,6 +5,8 @@ An unknown answer is a gap in the validator's tooling (configuration it cannot r
 project, so it is an error unless the user allows unknowns; then it is judged by what could be read.
 """
 
+from __future__ import annotations
+
 from collections.abc import Iterable
 from typing import Protocol
 

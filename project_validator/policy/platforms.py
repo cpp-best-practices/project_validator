@@ -2,6 +2,8 @@
 language's CI builds each of its platforms in Debug and Release, each with and without sanitizers
 (`ci-build-types`)."""
 
+from __future__ import annotations
+
 from project_validator.build_configurations import BuildConfiguration
 from project_validator.core import Result
 from project_validator.questions import Answer

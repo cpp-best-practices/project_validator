@@ -1,5 +1,7 @@
 """Selecting and running checks; one misbehaving check never stops the others."""
 
+from __future__ import annotations
+
 from collections.abc import Iterable
 from dataclasses import dataclass
 

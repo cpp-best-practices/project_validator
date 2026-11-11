@@ -1,5 +1,7 @@
 """How a tool claims the commands that run it: by its program and subcommands, by its options, and by combinations."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.facts import Facts

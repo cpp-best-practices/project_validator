@@ -6,6 +6,8 @@ braces (`3.1{0-3}-tests`, `typing-{pyright,ty}`). A factor tox would take from a
 not known; the others still choose the lines. `tox` with no `-e` runs its `env_list`.
 """
 
+from __future__ import annotations
+
 import configparser
 import re
 import tomllib

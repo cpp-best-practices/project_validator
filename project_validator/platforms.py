@@ -1,5 +1,7 @@
 """Recognising operating systems, compilers and language toolchains in CI configuration text."""
 
+from __future__ import annotations
+
 from project_validator.ecosystems import ToolchainPatterns, registered
 from project_validator.facts.jobs import Toolchain
 from project_validator.text import matching_names, pattern

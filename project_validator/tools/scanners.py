@@ -1,6 +1,8 @@
 """Code security scanners of many languages at once: CodeQL, GitLab SAST and semgrep. Each profile makes them its own,
 for its languages (`multi_language_scanners`)."""
 
+from __future__ import annotations
+
 import re
 import shlex
 

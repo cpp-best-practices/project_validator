@@ -1,6 +1,8 @@
 """Racket: packages described by `info.rkt`, judged by the Racket versions and variants (CS, BC) CI runs and by the raco
 commands it runs: `raco test`, `raco cover` and `raco fmt`."""
 
+from __future__ import annotations
+
 import re
 from pathlib import Path
 

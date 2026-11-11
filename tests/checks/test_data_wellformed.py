@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 from collections.abc import Mapping
 from pathlib import PurePosixPath
@@ -57,9 +59,10 @@ class DataWellformedTests(unittest.TestCase):
 
     def test_reports_where_each_file_does_not_parse(self) -> None:
         self.assert_fails(
-            {"package.json": '{\n  "name": "app",\n}\n', "Cargo.toml": "[package\n"},
+            # A missing value: CPython words it alike in every version (a trailing comma, it does not).
+            {"package.json": '{\n  "name": \n}\n', "Cargo.toml": "[package\n"},
             "Cargo.toml:1:9: Expected ']' at the end of a table declaration",
-            "package.json:2:16: Illegal trailing comma before end of object",
+            "package.json:3:1: Expecting value",
         )
         self.assertEqual(_run({"a.json": "{", "b.json": "{}"}).message, "1 data file does not parse")
 

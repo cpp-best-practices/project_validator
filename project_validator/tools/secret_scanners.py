@@ -1,6 +1,8 @@
 """Secret scanners, which look through a repository of any language for committed credentials: how CI or a pre-commit
 hook runs each, and the configuration files that show one is meant to run."""
 
+from __future__ import annotations
+
 from project_validator.facts.settings import file_reader
 from project_validator.text import pattern
 

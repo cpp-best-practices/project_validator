@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 
 from project_validator.checks.copy_paste_detection import copy_paste_detection

@@ -2,6 +2,8 @@
 their own, so each is suggested to a project that declares no dependencies. CMake's (CPM, FetchContent) and Meson's
 (wraps) are the build systems' own (see `project_validator.build_systems`)."""
 
+from __future__ import annotations
+
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts.dependencies import Lock, PackageManager, manifest_reader
 

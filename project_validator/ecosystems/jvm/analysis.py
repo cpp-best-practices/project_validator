@@ -1,6 +1,8 @@
 """The JVM static analyzers: SpotBugs, PMD and Checkstyle (Java), detekt (Kotlin), run by their goals and tasks or by
 the plugins a build's verification brings in, and Error Prone, which the compiler runs on every build that compiles."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 

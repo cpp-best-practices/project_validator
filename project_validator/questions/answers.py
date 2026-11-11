@@ -1,5 +1,7 @@
 """Every question's answers about one project, as JSON-ready data (`--answers`)."""
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from project_validator.questions import known_questions

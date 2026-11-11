@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from project_validator.facts.coverage import COVERAGE
 from project_validator.judging import answered_check
 from project_validator.policy.coverage import judge_coverage

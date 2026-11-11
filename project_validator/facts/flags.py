@@ -6,6 +6,8 @@ A requirement only searches the commands that hold one of its hints: the literal
 spellings, unless the flag names its own, and those of the build system settings that set it (`--werror`).
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterable, Iterator
 

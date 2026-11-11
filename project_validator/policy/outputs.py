@@ -1,6 +1,8 @@
 """The build output policies: every version control system the project is set up for ignores the build outputs, and
 none is committed."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.questions import Answer
 from project_validator.questions.outputs import CommittedAnswer, IgnoreAnswer

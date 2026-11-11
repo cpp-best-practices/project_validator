@@ -1,5 +1,7 @@
 """The OCaml profile's rules, judged by the generic checks in the dune project and plain OCaml layouts."""
 
+from __future__ import annotations
+
 import unittest
 from pathlib import Path
 

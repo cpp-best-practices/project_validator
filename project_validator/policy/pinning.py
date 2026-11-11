@@ -1,6 +1,8 @@
 """The pinning policy: every reusable step is pinned to a full commit, so a moved tag or a pushed branch cannot change
 it; with `allow_official_tags`, GitHub's own actions may be pinned to tags."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.questions import Answer
 from project_validator.questions.pinning import BRANCH, TAG, UNPINNED, PinningAnswer

@@ -8,6 +8,8 @@ Leading `NAME=value` assignments are the command's environment. Compound command
 here-documents are not interpreted; their lines are split like any other.
 """
 
+from __future__ import annotations
+
 import re
 import shlex
 from collections.abc import Callable, Iterator

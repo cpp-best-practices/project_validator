@@ -4,6 +4,8 @@ A `.pre-commit-config.yaml` with a `ci:` section is configured for it. Its one j
 skipping the hooks `ci.skip` names (as pre-commit's SKIP variable does).
 """
 
+from __future__ import annotations
+
 from collections.abc import Iterator, Mapping
 
 from project_validator import yaml_support

@@ -14,6 +14,8 @@ arguments (or after its first calls),
 reaches is evaluated on its own, as if it were included; a function or macro nothing calls, as if it were called.
 """
 
+from __future__ import annotations
+
 import posixpath
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field, replace
