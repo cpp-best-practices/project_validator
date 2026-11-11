@@ -1,0 +1,706 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Julia",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Julia",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "src/Shop.jl.cov"
+            ],
+            "language": "Julia",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "Aqua.test_all"
+                ]
+              }
+            ],
+            "language": "Julia",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Julia",
+            "line": {
+              "answer": "no",
+              "known": [
+                "julia --code-coverage (julia-actions/julia-runtest, then julia-processcoverage)"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Julia",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Julia",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "JuliaFormatter": {
+                "can": {
+                  "apply": "julia -e 'using JuliaFormatter; format(\".\")'",
+                  "check": "julia -e 'using JuliaFormatter; format(\".\") || exit(1)' (julia-actions/julia-format)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Runic": {
+                "can": {
+                  "apply": "runic --inplace .",
+                  "check": "runic --check . (fredrikekre/runic-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Julia",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Julia",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Julia",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Julia",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Julia",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Julia",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Julia version",
+            "language": "Julia",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Julia",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Julia",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Julia",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "Pkg.test": {
+                "can": {
+                  "runs": "Pkg.test() (julia-actions/julia-runtest)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Julia",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "JET.jl": {
+                "can": {
+                  "checks": "JET.test_package(YourPackage) in test/runtests.jl"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Julia",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Julia",
+            "outputs": {
+              "the allocation files (*.jl.mem)": {},
+              "the coverage files (*.jl.cov)": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "--depwarn=error"
+                ]
+              }
+            ],
+            "language": "Julia",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Pkg",
+      "kind": "BuildFile",
+      "languages": [
+        "Julia"
+      ],
+      "origin": "Project.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Julia",
+      "origin": "src/Shop.jl",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".cov"
+    },
+    {
+      "build_systems": [
+        "Pkg"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Julia"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Julia"
+      ],
+      "origin": "src/Shop.jl.cov",
+      "output": "the coverage files (*.jl.cov)"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Pkg"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Julia": [
+        "build file Project.toml",
+        ".jl files"
+      ]
+    },
+    "languages": [
+      "Julia"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Pkg"
+        ],
+        "directory": ".",
+        "languages": [
+          "Julia"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".cov"
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs julia -e 'using JuliaFormatter; format(\".\") || exit(1)' (julia-actions/julia-format) (or runic --check . (fredrikekre/runic-action))"
+      ],
+      "message": "CI never runs JuliaFormatter or Runic; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "src/Shop.jl.cov",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Aqua.jl checks found; enable at least Aqua.test_all",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to report line coverage: julia --code-coverage (julia-actions/julia-runtest, then julia-processcoverage)"
+      ],
+      "message": "no line coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "1 data file parses (TOML: 1)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider running in CI: semgrep ci"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (@test and @testset in test/runtests.jl)",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [
+        "consider running a type checker in CI: JET.test_package(YourPackage) in test/runtests.jl"
+      ],
+      "message": "no type checker runs",
+      "status": "FAIL"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "run the tests with --depwarn=error (julia-actions/julia-runtest: depwarn: error)"
+      ],
+      "message": "warnings are not treated as errors in CI configuration",
+      "status": "FAIL"
+    }
+  }
+}
