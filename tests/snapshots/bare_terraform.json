@@ -1,0 +1,704 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Terraform",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Terraform",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "terraform.tfstate"
+            ],
+            "language": "Terraform",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Terraform",
+        "units": []
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Terraform",
+            "line": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Terraform",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "Terraform providers",
+                "manifest": "main.tf"
+              }
+            ],
+            "language": "Terraform",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "terraform fmt": {
+                "can": {
+                  "apply": "terraform fmt -recursive",
+                  "check": "terraform fmt -check -recursive"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Terraform",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Terraform",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Terraform",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Terraform",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Terraform",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Terraform",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Terraform",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Terraform version",
+            "language": "Terraform",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Terraform",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "KICS": {
+                "can": {
+                  "scans": "kics scan -p ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "checkov": {
+                "can": {
+                  "scans": "checkov -d ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "terrascan": {
+                "can": {
+                  "scans": "terrascan scan"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "tfsec": {
+                "can": {
+                  "scans": "tfsec . (now trivy)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "scans": "trivy config ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Terraform",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "KICS": {
+                "can": {
+                  "checks": "kics scan -p ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "checkov": {
+                "can": {
+                  "checks": "checkov -d ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "terraform validate": {
+                "can": {
+                  "checks": "terraform init -backend=false && terraform validate"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "terrascan": {
+                "can": {
+                  "checks": "terrascan scan"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "tflint": {
+                "can": {
+                  "checks": "tflint (rulesets in .tflint.hcl)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "tfsec": {
+                "can": {
+                  "checks": "tfsec . (now trivy)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "checks": "trivy config ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Terraform",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "terraform test": {
+                "can": {
+                  "runs": "terraform test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Terraform",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Terraform",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Terraform",
+            "outputs": {
+              "Terraform state, plans and crash logs": {},
+              "the .terraform directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Terraform",
+        "units": []
+      }
+    ]
+  },
+  "facts": [
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Terraform",
+      "origin": "main.tf",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".tfstate"
+    },
+    {
+      "build_systems": [],
+      "kind": "Unit",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": "terraform.tfstate",
+      "output": "Terraform state, plans and crash logs"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "main.tf",
+      "reader": "Terraform provider requirements"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Terraform providers",
+      "origin": "main.tf"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Terraform": [
+        ".tf files"
+      ]
+    },
+    "languages": [
+      "Terraform"
+    ],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "languages": [
+          "Terraform"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".tfstate"
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs terraform fmt -check -recursive"
+      ],
+      "message": "CI never runs terraform fmt; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "terraform.tfstate",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [
+        "commit .terraform.lock.hcl, which terraform init writes with the version and hashes of every provider"
+      ],
+      "message": "dependencies are declared in main.tf (Terraform providers) but not locked",
+      "status": "WARN"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider running in CI: checkov -d ., trivy config ., kics scan -p ., terrascan scan or tfsec . (now trivy)"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running terraform init -backend=false && terraform validate, tflint (rulesets in .tflint.hcl), checkov -d ., trivy config ., kics scan -p ., terrascan scan or tfsec . (now trivy) in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (Terraform test files (*.tftest.hcl, *.tofutest.hcl))",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    }
+  }
+}

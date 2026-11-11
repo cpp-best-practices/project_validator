@@ -55,11 +55,12 @@ class SecurityScanningTests(unittest.TestCase):
         )
 
     def test_passes_with_codeql_in_every_layout(self) -> None:
-        # CodeQL does not analyse PHP.
-        layouts = tuple(layout for layout in PROJECT_LAYOUTS if "PHP" not in layout.languages)
+        # CodeQL does not analyse PHP or Terraform's HCL.
+        layouts = tuple(layout for layout in PROJECT_LAYOUTS if not layout.languages & {"PHP", "Terraform"})
         self.assertEqual(run_in_every_layout(self, security_scanning, WELL_CONFIGURED, layouts), _found("CodeQL"))
-        php = run_in_every_layout(self, security_scanning, WELL_CONFIGURED, _layouts_of("PHP"))
-        self.assertIn("PHP: no code security scanning found in CI configuration", php.message)
+        for language in ("PHP", "Terraform"):
+            result = run_in_every_layout(self, security_scanning, WELL_CONFIGURED, _layouts_of(language))
+            self.assertIn(f"{language}: no code security scanning found in CI configuration", result.message)
 
     def test_multi_language_scanners(self) -> None:
         for files, tool in (
