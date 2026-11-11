@@ -1,0 +1,748 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Clojure",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Clojure",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              ".nrepl-port",
+              "target/"
+            ],
+            "language": "Clojure",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "clj-kondo",
+                  "*warn-on-reflection*"
+                ]
+              }
+            ],
+            "language": "Clojure",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Clojure",
+            "line": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "no",
+              "known": [
+                "lein cloverage (or clojure -M:coverage, an alias running cloverage): form coverage"
+              ],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "clj-watson": {
+                "can": {
+                  "runs": "clj-watson scan -p deps.edn"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "nvd-clojure": {
+                "can": {
+                  "runs": "clojure -M:nvd (or lein nvd check)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Clojure",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Clojure",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "cljfmt": {
+                "can": {
+                  "apply": "cljfmt fix",
+                  "check": "cljfmt check (or lein cljfmt check)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "cljstyle": {
+                "can": {
+                  "apply": "cljstyle fix",
+                  "check": "cljstyle check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "zprint": {
+                "can": {
+                  "apply": "zprint --write src/**/*.clj",
+                  "check": "zprint --check src/**/*.clj"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Clojure",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Clojure",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Clojure",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Clojure",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Clojure",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Clojure",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "JDK version",
+            "language": "Clojure",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Clojure",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Clojure",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "clj-kondo": {
+                "can": {
+                  "checks": "clj-kondo --lint src test"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Clojure",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "clojure.test": {
+                "can": {
+                  "runs": "clojure -M:test (or -X:test, lein test, kaocha, bb test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Clojure",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Clojure",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Clojure",
+            "outputs": {
+              "the .nrepl-port file": {},
+              "the target directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "clj-kondo failing on warnings"
+                ]
+              }
+            ],
+            "language": "Clojure",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Leiningen",
+      "kind": "BuildFile",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": "project.clj"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Clojure",
+      "origin": "project.clj",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Clojure",
+      "origin": "src/shop/core.clj",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Leiningen"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": ".nrepl-port",
+      "output": "the .nrepl-port file"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Clojure"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "project.clj",
+      "reader": "Clojure build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/shop/core.clj",
+      "reader": "Clojure build settings"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Leiningen"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Clojure": [
+        "build file project.clj",
+        ".clj files"
+      ]
+    },
+    "languages": [
+      "Clojure"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Leiningen"
+        ],
+        "directory": ".",
+        "languages": [
+          "Clojure"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs cljfmt check (or lein cljfmt check) (or cljstyle check or zprint --check src/**/*.clj)"
+      ],
+      "message": "CI never runs cljfmt, cljstyle or zprint; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        ".nrepl-port",
+        "target/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "2 build outputs are committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Clojure lints found; enable at least clj-kondo, *warn-on-reflection*",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to report statement coverage: lein cloverage (or clojure -M:coverage, an alias running cloverage): form coverage"
+      ],
+      "message": "no statement coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [
+        "consider running in CI: clojure -M:nvd (or lein nvd check) or clj-watson scan -p deps.edn"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider running in CI: semgrep ci"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running clj-kondo --lint src test in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (deftest (clojure.test) or describe (speclj) under test/)",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "run clj-kondo in CI without --fail-level error, so that a warning fails the job (its default)"
+      ],
+      "message": "warnings are not treated as errors in CI configuration",
+      "status": "FAIL"
+    }
+  }
+}

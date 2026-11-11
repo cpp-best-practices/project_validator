@@ -2640,6 +2640,28 @@
       "job": ".github/workflows/ci.yml:audit",
       "kind": "ToolRun",
       "languages": [
+        "Clojure"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "semgrep",
+      "via": [
+        ".github/workflows/ci.yml:jobs.audit.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:audit",
+      "kind": "ToolRun",
+      "languages": [
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:jobs.audit.steps[2].run",
