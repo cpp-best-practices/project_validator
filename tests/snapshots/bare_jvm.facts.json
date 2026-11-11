@@ -1,0 +1,121 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Maven",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "pom.xml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Java",
+      "origin": "src/main/java/com/example/App.java",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Maven"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Java"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": "target/classes/com/example/App.class",
+      "output": "the build directory"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": "target/classes/com/example/App.class",
+      "output": "compiled classes"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Maven dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Maven",
+      "origin": "pom.xml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Error Prone"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "JVM security rules"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "JVM warning settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pom.xml",
+      "reader": "Maven"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Maven"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "JVM": [
+        ".java files"
+      ]
+    },
+    "languages": [
+      "Java"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Maven"
+        ],
+        "directory": ".",
+        "languages": [
+          "Java"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

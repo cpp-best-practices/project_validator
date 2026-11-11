@@ -1,0 +1,168 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "fpm",
+      "kind": "BuildFile",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": "fpm.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Fortran",
+      "origin": "app/main.f90",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Fortran",
+      "origin": "src/app.f90",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Fortran",
+      "origin": "third_party/minpack/enorm.f",
+      "role": "vendored"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".mod"
+    },
+    {
+      "build_systems": [
+        "fpm"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": "app.mod",
+      "output": "the build directory and module files"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fpm.toml",
+      "reader": "fpm"
+    },
+    {
+      "heuristic": false,
+      "key": "name",
+      "kind": "Setting",
+      "origin": "fpm.toml:name",
+      "tool": "fpm",
+      "value": "app"
+    },
+    {
+      "heuristic": false,
+      "key": "version",
+      "kind": "Setting",
+      "origin": "fpm.toml:version",
+      "tool": "fpm",
+      "value": "0.1.0"
+    },
+    {
+      "heuristic": false,
+      "key": "dependencies.stdlib.git",
+      "kind": "Setting",
+      "origin": "fpm.toml:dependencies.stdlib.git",
+      "tool": "fpm",
+      "value": "https://github.com/fortran-lang/stdlib"
+    },
+    {
+      "heuristic": false,
+      "key": "dependencies.stdlib.branch",
+      "kind": "Setting",
+      "origin": "fpm.toml:dependencies.stdlib.branch",
+      "tool": "fpm",
+      "value": "stdlib-fpm"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fpm.toml",
+      "reader": "fpm dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "fpm",
+      "origin": "fpm.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fpm.toml",
+      "reader": "Fortran programs"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fpm.toml",
+      "reader": "fortitude"
+    },
+    {
+      "heuristic": false,
+      "key": "program",
+      "kind": "Setting",
+      "origin": "app/main.f90",
+      "tool": "Fortran programs",
+      "value": true
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "fpm"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Fortran": [
+        "build file fpm.toml",
+        ".f90 files"
+      ]
+    },
+    "languages": [
+      "Fortran"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "fpm"
+        ],
+        "directory": ".",
+        "languages": [
+          "Fortran"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".mod"
+      }
+    ],
+    "vendored": [
+      "third_party/minpack/enorm.f"
+    ]
+  }
+}

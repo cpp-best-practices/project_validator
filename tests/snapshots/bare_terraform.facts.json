@@ -1,0 +1,81 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Terraform",
+      "origin": "main.tf",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".tfstate"
+    },
+    {
+      "build_systems": [],
+      "kind": "Unit",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Terraform"
+      ],
+      "origin": "terraform.tfstate",
+      "output": "Terraform state, plans and crash logs"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "main.tf",
+      "reader": "Terraform provider requirements"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Terraform providers",
+      "origin": "main.tf"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Terraform": [
+        ".tf files"
+      ]
+    },
+    "languages": [
+      "Terraform"
+    ],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "languages": [
+          "Terraform"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".tfstate"
+      }
+    ]
+  }
+}

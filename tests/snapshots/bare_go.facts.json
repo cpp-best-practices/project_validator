@@ -1,0 +1,116 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Go modules",
+      "kind": "BuildFile",
+      "languages": [
+        "Go"
+      ],
+      "origin": "go.mod"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Go",
+      "origin": "app.go",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Go",
+      "origin": "cmd/app/main.go",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".out"
+    },
+    {
+      "build_systems": [
+        "Go modules"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Go"
+      ],
+      "origin": "coverage.out",
+      "output": "Go test binaries and coverage profiles"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "go.mod",
+      "reader": "Go programs"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "go.mod",
+      "reader": "Go module requirements"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Go modules",
+      "origin": "go.mod"
+    },
+    {
+      "heuristic": false,
+      "key": "main",
+      "kind": "Setting",
+      "origin": "cmd/app/main.go",
+      "tool": "Go programs",
+      "value": true
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Go modules"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Go": [
+        "build file go.mod",
+        ".go files"
+      ]
+    },
+    "languages": [
+      "Go"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Go modules"
+        ],
+        "directory": ".",
+        "languages": [
+          "Go"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".out"
+      }
+    ]
+  }
+}

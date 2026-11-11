@@ -1,0 +1,87 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "sbt",
+      "kind": "BuildFile",
+      "languages": [
+        "Scala"
+      ],
+      "origin": "build.sbt"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Scala",
+      "origin": "src/main/scala/shop/Shop.scala",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "build.sbt",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "sbt"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Scala"
+      ],
+      "origin": "target/",
+      "output": "the target directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "build.sbt",
+      "reader": "Scala compiler options"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "sbt"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Scala": [
+        "build file build.sbt",
+        ".scala files"
+      ]
+    },
+    "languages": [
+      "Scala"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "sbt"
+        ],
+        "directory": ".",
+        "languages": [
+          "Scala"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

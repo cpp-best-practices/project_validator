@@ -1,0 +1,90 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "pub",
+      "kind": "BuildFile",
+      "languages": [
+        "Dart"
+      ],
+      "origin": "pubspec.yaml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Dart",
+      "origin": "lib/shop.dart",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "pub"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".dart_tool/",
+      "output": "the .dart_tool directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pubspec.yaml",
+      "reader": "pubspec dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "pub",
+      "origin": "pubspec.yaml"
+    },
+    {
+      "kind": "Application",
+      "manager": "pub",
+      "origin": "pubspec.yaml"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "pub"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Dart": [
+        "build file pubspec.yaml",
+        ".dart files"
+      ]
+    },
+    "languages": [
+      "Dart"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "pub"
+        ],
+        "directory": ".",
+        "languages": [
+          "Dart"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

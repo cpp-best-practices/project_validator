@@ -1,0 +1,108 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "ExtUtils::MakeMaker",
+      "kind": "BuildFile",
+      "languages": [
+        "Perl"
+      ],
+      "origin": "Makefile.PL"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Perl",
+      "origin": "lib/Shop.pm",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "Makefile.PL",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "ExtUtils::MakeMaker"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Perl"
+      ],
+      "origin": "MYMETA.json",
+      "output": "the MYMETA files"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/Shop.pm",
+      "reader": "Perl modules"
+    },
+    {
+      "heuristic": false,
+      "key": "strict",
+      "kind": "Setting",
+      "origin": "lib/Shop.pm:strict",
+      "tool": "Perl modules",
+      "value": false
+    },
+    {
+      "heuristic": false,
+      "key": "warnings",
+      "kind": "Setting",
+      "origin": "lib/Shop.pm:warnings",
+      "tool": "Perl modules",
+      "value": false
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/Shop.pm",
+      "reader": "Perl pragmas"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "ExtUtils::MakeMaker"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Perl": [
+        "build file Makefile.PL",
+        ".pm files"
+      ]
+    },
+    "languages": [
+      "Perl"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "ExtUtils::MakeMaker"
+        ],
+        "directory": ".",
+        "languages": [
+          "Perl"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Composer",
+      "kind": "BuildFile",
+      "languages": [
+        "PHP"
+      ],
+      "origin": "composer.json"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "PHP",
+      "origin": "src/Calculator.php",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".cache"
+    },
+    {
+      "build_systems": [
+        "Composer"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".phpunit.result.cache",
+      "output": "vendor"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "Composer dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Composer",
+      "origin": "composer.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "composer.json license"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "composer.json",
+      "reader": "Composer"
+    },
+    {
+      "heuristic": false,
+      "key": "psr/log",
+      "kind": "Setting",
+      "origin": "composer.json:psr/log",
+      "tool": "Composer",
+      "value": "^3.0"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Composer"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "PHP": [
+        "build file composer.json",
+        ".php files"
+      ]
+    },
+    "languages": [
+      "PHP"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Composer"
+        ],
+        "directory": ".",
+        "languages": [
+          "PHP"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".cache"
+      }
+    ]
+  }
+}

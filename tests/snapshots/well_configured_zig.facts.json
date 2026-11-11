@@ -1,0 +1,5136 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Zig build",
+      "kind": "BuildFile",
+      "languages": [
+        "Zig"
+      ],
+      "origin": "build.zig"
+    },
+    {
+      "build_system": "Zig build",
+      "kind": "BuildFile",
+      "languages": [
+        "Zig"
+      ],
+      "origin": "build.zig.zon"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Zig",
+      "origin": "build.zig",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Zig",
+      "origin": "src/main.zig",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Zig",
+      "origin": "src/shop.zig",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": null,
+      "origin": "build.zig.zon",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Zig build"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "test blocks in .zig files",
+      "language": "Zig",
+      "origin": "src/shop.zig"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/function-limits.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "ubuntu-latest",
+        "sanitize": "",
+        "zig": "0.13.0"
+      },
+      "name": "test (ubuntu-latest, 0.13.0, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "ubuntu-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.13.0"
+      },
+      "name": "test (ubuntu-latest, 0.13.0, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "ubuntu-latest",
+        "sanitize": "",
+        "zig": "0.13.0"
+      },
+      "name": "test (ubuntu-latest, 0.13.0, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[3]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "ubuntu-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.13.0"
+      },
+      "name": "test (ubuntu-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[4]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "ubuntu-latest",
+        "sanitize": "",
+        "zig": "0.14.1"
+      },
+      "name": "test (ubuntu-latest, 0.14.1, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[5]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "ubuntu-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.14.1"
+      },
+      "name": "test (ubuntu-latest, 0.14.1, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[6]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "ubuntu-latest",
+        "sanitize": "",
+        "zig": "0.14.1"
+      },
+      "name": "test (ubuntu-latest, 0.14.1, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[7]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "ubuntu-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.14.1"
+      },
+      "name": "test (ubuntu-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[8]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "macos-latest",
+        "sanitize": "",
+        "zig": "0.13.0"
+      },
+      "name": "test (macos-latest, 0.13.0, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[9]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "macos-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.13.0"
+      },
+      "name": "test (macos-latest, 0.13.0, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[10]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "macos-latest",
+        "sanitize": "",
+        "zig": "0.13.0"
+      },
+      "name": "test (macos-latest, 0.13.0, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[11]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "macos-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.13.0"
+      },
+      "name": "test (macos-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[12]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "macos-latest",
+        "sanitize": "",
+        "zig": "0.14.1"
+      },
+      "name": "test (macos-latest, 0.14.1, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[13]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "macos-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.14.1"
+      },
+      "name": "test (macos-latest, 0.14.1, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[14]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "macos-latest",
+        "sanitize": "",
+        "zig": "0.14.1"
+      },
+      "name": "test (macos-latest, 0.14.1, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[15]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "macos-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.14.1"
+      },
+      "name": "test (macos-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[16]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "windows-latest",
+        "sanitize": "",
+        "zig": "0.13.0"
+      },
+      "name": "test (windows-latest, 0.13.0, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[17]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "windows-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.13.0"
+      },
+      "name": "test (windows-latest, 0.13.0, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[18]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "windows-latest",
+        "sanitize": "",
+        "zig": "0.13.0"
+      },
+      "name": "test (windows-latest, 0.13.0, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[19]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "windows-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.13.0"
+      },
+      "name": "test (windows-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.13.0"
+      },
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[20]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "windows-latest",
+        "sanitize": "",
+        "zig": "0.14.1"
+      },
+      "name": "test (windows-latest, 0.14.1, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[20]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[20]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[20]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[20]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[20]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[21]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "Debug",
+        "os": "windows-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.14.1"
+      },
+      "name": "test (windows-latest, 0.14.1, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[21]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[21]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[21]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=Debug",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[21]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=Debug --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "Debug",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[21]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O Debug -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[22]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "windows-latest",
+        "sanitize": "",
+        "zig": "0.14.1"
+      },
+      "name": "test (windows-latest, 0.14.1, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[22]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[22]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[22]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[22]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[22]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[23]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "optimize": "ReleaseSafe",
+        "os": "windows-latest",
+        "sanitize": "-fsanitize-c",
+        "zig": "0.14.1"
+      },
+      "name": "test (windows-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[23]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:test[23]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "zig",
+        "fmt",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[23]",
+      "kind": "Command",
+      "line": "zig fmt --check .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "-Doptimize=ReleaseSafe",
+        "--summary",
+        "all"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[23]",
+      "kind": "Command",
+      "line": "zig build -Doptimize=ReleaseSafe --summary all",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "-O",
+        "ReleaseSafe",
+        "-fsanitize-c"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[23]",
+      "kind": "Command",
+      "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:coverage",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "coverage",
+      "origin": ".github/workflows/ci.yml:jobs.coverage",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "sudo",
+        "apt-get",
+        "install",
+        "-y",
+        "kcov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "Command",
+      "line": "sudo apt-get install -y kcov",
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "apt-get",
+        "install",
+        "-y",
+        "kcov"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "Command",
+      "line": "sudo apt-get install -y kcov",
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.coverage.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
+        "zig",
+        "test",
+        "src/shop.zig",
+        "--test-cmd",
+        "kcov",
+        "--test-cmd",
+        "--include-pattern=src",
+        "--test-cmd",
+        "kcov-output",
+        "--test-cmd-bin"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "Command",
+      "line": "zig test src/shop.zig --test-cmd kcov --test-cmd --include-pattern=src --test-cmd kcov-output --test-cmd-bin",
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/function-limits.yml:function-limits",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "lizard"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "python -m pip install lizard",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "via": [
+        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "lizard",
+        "--length",
+        "30",
+        "--warnings_only",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Command",
+      "line": "lizard --length 30 --warnings_only .",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/function-limits.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.13.0"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[20]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, Debug, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[21]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, Debug, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[22]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, )",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "msvc"
+      ],
+      "configurations": [
+        {
+          "build_type": "release",
+          "sanitizers": true
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[23]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "windows",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": true,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: coverage",
+      "origin": ".github/workflows/ci.yml:jobs.coverage",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "Job",
+      "name": ".github/workflows/function-limits.yml: function-limits",
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": ".zig-cache/",
+      "syntax": "glob",
+      "written": ".zig-cache/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "zig-cache/",
+      "syntax": "glob",
+      "written": "zig-cache/"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "zig-out/",
+      "syntax": "glob",
+      "written": "zig-out/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "build.zig",
+      "reader": "Zig build settings"
+    },
+    {
+      "heuristic": true,
+      "key": "ReleaseSafe",
+      "kind": "Setting",
+      "origin": "build.zig",
+      "tool": "Zig build settings",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "build.zig",
+      "reader": "Zig programs"
+    },
+    {
+      "heuristic": false,
+      "key": "executable",
+      "kind": "Setting",
+      "origin": "build.zig",
+      "tool": "Zig programs",
+      "value": true
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[6]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[7]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[8]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[9]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[10]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[11]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[12]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[13]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[14]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[15]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[16]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[17]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[18]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[19]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[20]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[20]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[21]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[21]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[22]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[22]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[23]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[23]",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "provides": {
+        "coverage": [
+          "line"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "kcov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Erlang"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "C#"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Fortran"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Lua"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Perl"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "PHP"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Python"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "R"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Ruby"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Rust"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Scala"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Swift"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/function-limits.yml:function-limits",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "provides": {
+        "function-length": [
+          "limits",
+          "measures"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lizard",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Zig build"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml",
+        ".github/workflows/function-limits.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, Debug, )",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, Debug, -fsanitize-c)",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, ReleaseSafe, )",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, Debug, )",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, Debug, -fsanitize-c)",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, ReleaseSafe, )",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, Debug, )",
+          "os": "macos",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, Debug, -fsanitize-c)",
+          "os": "macos",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, ReleaseSafe, )",
+          "os": "macos",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
+          "os": "macos",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, Debug, )",
+          "os": "macos",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, Debug, -fsanitize-c)",
+          "os": "macos",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, ReleaseSafe, )",
+          "os": "macos",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
+          "os": "macos",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, Debug, )",
+          "os": "windows",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, Debug, -fsanitize-c)",
+          "os": "windows",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, ReleaseSafe, )",
+          "os": "windows",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
+          "os": "windows",
+          "toolchains": [
+            "Zig 0.13.0"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, Debug, )",
+          "os": "windows",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Debug + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, Debug, -fsanitize-c)",
+          "os": "windows",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Release"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, )",
+          "os": "windows",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "msvc"
+          ],
+          "configurations": [
+            "Release + sanitizers"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
+          "os": "windows",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [
+            "Debug"
+          ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: coverage",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python"
+          ],
+          "name": ".github/workflows/function-limits.yml: function-limits",
+          "os": "linux",
+          "toolchains": [
+            "Python default"
+          ]
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Zig": [
+        "build file build.zig",
+        "build file build.zig.zon",
+        ".zig files"
+      ]
+    },
+    "languages": [
+      "Zig"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Zig build"
+        ],
+        "directory": ".",
+        "languages": [
+          "Zig"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}
