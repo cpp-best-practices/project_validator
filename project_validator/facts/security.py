@@ -2,6 +2,8 @@
 in the project's code, a multi-language scanner (CodeQL) or a language's security lints (bandit, gosec). Scanners are
 ordinary `Tool`s; `scanner` and `scanned` only spell them."""
 
+from __future__ import annotations
+
 from collections.abc import Iterable
 
 from project_validator.facts import Setting

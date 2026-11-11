@@ -1,5 +1,7 @@
 """The fuzz-testing policy: the project has fuzz targets, and CI runs them."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.facts.fuzzing import RUNS
 from project_validator.policy import both, either, files, unknown

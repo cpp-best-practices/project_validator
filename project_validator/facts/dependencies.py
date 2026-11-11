@@ -7,6 +7,8 @@ dependencies, a lockfile (or a setting) that `Locked` them, and whether a packag
 which decides whether its lock is asked for. A `PackageManager` says how its facts are judged.
 """
 
+from __future__ import annotations
+
 import enum
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass

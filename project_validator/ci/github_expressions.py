@@ -6,6 +6,8 @@
 status functions are judged for a run in which every step succeeds.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
@@ -191,7 +193,7 @@ def _parsed(expression: str, known: Known) -> Maybe:
     parser = _Parser(tokens, known)
     try:
         value = parser.expression()
-    except IndexError, RecursionError:
+    except (IndexError, RecursionError):
         return _UNKNOWN
     return _UNKNOWN if parser.peek() is not None else value
 

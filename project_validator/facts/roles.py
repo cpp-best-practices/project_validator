@@ -3,6 +3,8 @@ projects' vendored code), told by the directories it is in. Shared by the struct
 which skip vendored projects' configuration. A role names code (`--auxiliary tooling`), it judges none: every role
 but `vendored` is the product's until named."""
 
+from __future__ import annotations
+
 import re
 from pathlib import PurePosixPath
 

@@ -1,5 +1,7 @@
 """Judging: how results are built, settled before a policy judges, and combined across what was judged."""
 
+from __future__ import annotations
+
 import unittest
 from collections.abc import Callable
 

@@ -1,6 +1,8 @@
 """The Haskell profile: the Cabal file format, GHC's options wherever they are set, and the Haskell tools, judged by
 the generic checks in every Haskell layout."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.checks.code_formatting import code_formatting

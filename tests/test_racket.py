@@ -1,5 +1,7 @@
 """The Racket profile's rules, judged by the generic checks in the Racket package and Racket sources layouts."""
 
+from __future__ import annotations
+
 import unittest
 from pathlib import Path
 

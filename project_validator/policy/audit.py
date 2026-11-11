@@ -1,6 +1,8 @@
 """The dependency audit policy: CI checks the dependencies against known vulnerabilities. An audit passes; none warns
 (dependencies change under a project, so this is advice more than a defect)."""
 
+from __future__ import annotations
+
 from project_validator.facts.audit import RUNS
 from project_validator.policy.tooling import advised
 

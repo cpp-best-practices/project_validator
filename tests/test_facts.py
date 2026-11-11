@@ -1,5 +1,7 @@
 """The fact database: the facts CI configuration yields, and how shell scripts are split into commands."""
 
+from __future__ import annotations
+
 import json
 import unittest
 

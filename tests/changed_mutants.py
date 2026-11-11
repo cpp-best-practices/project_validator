@@ -14,6 +14,8 @@ classes, deleted files, and the functions mutmut leaves alone: decorated ones (e
 `@classmethod`), `__getattribute__`, `__setattr__` and `__new__`, and an Enum's `__init__`.
 """
 
+from __future__ import annotations
+
 import ast
 import io
 import re

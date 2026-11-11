@@ -1,6 +1,8 @@
 """JVM fuzzing: Jazzer fuzz tests (JUnit `@FuzzTest` or `fuzzerTestOneInput`), and jqwik and junit-quickcheck property
 tests."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.ecosystems.jvm import JVM_LANGUAGES, build_steps

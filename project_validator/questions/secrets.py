@@ -1,6 +1,8 @@
 """The secret scanning question: does CI, or a pre-commit hook, run a scanner for committed secrets, and which
 scanners are configured? Answered for the project as a whole."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from project_validator.facts import ConfigurationFile, Facts

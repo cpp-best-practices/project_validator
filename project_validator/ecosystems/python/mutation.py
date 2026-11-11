@@ -1,5 +1,7 @@
 """Python's mutation testing tools (mutmut, cosmic-ray, mutatest), and the settings that configure mutmut."""
 
+from __future__ import annotations
+
 from collections.abc import Iterable
 
 from project_validator.ecosystems.python import PYTHON_ONLY

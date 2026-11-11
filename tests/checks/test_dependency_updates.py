@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 
 from project_validator.checks.dependency_updates import dependency_updates

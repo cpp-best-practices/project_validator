@@ -4,6 +4,8 @@ A script runs where the command that runs it does; its arguments (`$1`) are not 
 are not followed: their bodies are split like any other lines.
 """
 
+from __future__ import annotations
+
 from pathlib import PurePosixPath
 
 from project_validator.core import Context

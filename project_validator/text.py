@@ -1,5 +1,7 @@
 """Text-search helpers used by the checks and by heuristic CI parsing."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterable
 from dataclasses import dataclass

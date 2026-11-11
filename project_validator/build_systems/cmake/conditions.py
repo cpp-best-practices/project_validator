@@ -5,6 +5,8 @@ dimension (`if(MSVC)`, `CMAKE_CXX_COMPILER_ID MATCHES "Clang"`, `$<CONFIG:Debug>
 set itself (an option, a compiler check, `EXISTS`) is a requirement that is not understood, as written.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
@@ -182,7 +184,7 @@ def _compared(left: str, operator: str, right: str) -> bool | None:
             return {"EQUAL": difference == 0, "LESS": difference < 0, "GREATER": difference > 0}.get(
                 operator, difference <= 0 if operator == "LESS_EQUAL" else difference >= 0
             )
-    except ValueError, re.error:
+    except (ValueError, re.error):
         return None
     return None
 

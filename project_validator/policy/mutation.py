@@ -1,6 +1,8 @@
 """The mutation testing policy: CI runs a mutation testing tool; running it on a pull request's changes only is a
 bonus."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.facts.mutation import INCREMENTAL, RUNS
 from project_validator.policy import either, skipped_or_unknown, tools_ran

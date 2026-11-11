@@ -1,5 +1,7 @@
 """The PHP profile's rules, judged by the generic checks in the Composer project layout."""
 
+from __future__ import annotations
+
 import json
 import unittest
 

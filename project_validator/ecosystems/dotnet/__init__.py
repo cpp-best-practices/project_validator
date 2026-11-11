@@ -3,6 +3,8 @@
 A .NET build reads its settings (analyzers, warnings, coverage, auditing) from the project files and
 Directory.Build.props, so those count as CI configuration when CI builds the project."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 from fnmatch import fnmatchcase

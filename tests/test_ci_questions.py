@@ -1,6 +1,8 @@
 """The questions about CI itself (not about a language): are its reusable steps pinned, does it lint its own
 configuration, does it scan for secrets; each answered from facts, and judged by its policy."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.core import Result, Status

@@ -6,6 +6,8 @@ CI runs Julia code in three ways, which `julia_code` reads alike: `julia -e 'usi
 `shell: julia --color=yes {0}` runs its script (one `julia` command given the script), and the julia-actions, each an
 `Action` that runs the julia command it stands for."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator, Mapping
 

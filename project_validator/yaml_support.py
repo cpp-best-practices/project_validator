@@ -1,5 +1,7 @@
 """PyYAML support; it is required, but imported here so a missing install is reported cleanly instead of crashing."""
 
+from __future__ import annotations
+
 import importlib
 from dataclasses import dataclass
 from functools import cache

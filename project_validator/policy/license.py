@@ -1,5 +1,7 @@
 """The license policy: the project has license files of known licenses, and its manifests declare the same."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.questions.license import LicenseAnswer
 

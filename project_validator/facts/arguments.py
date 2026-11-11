@@ -1,5 +1,7 @@
 """Reading a command's arguments: its program, its options and their values, and its positional arguments."""
 
+from __future__ import annotations
+
 
 def program(argv: tuple[str, ...]) -> str:
     """The name of the program `argv` runs, without its directory or a Windows suffix (`./vendor/bin/phpunit`)."""

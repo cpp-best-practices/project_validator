@@ -1,6 +1,8 @@
 """CI scans the code for security problems: with a multi-language scanner (CodeQL, GitLab SAST, semgrep), or with
 each language's own security lints."""
 
+from __future__ import annotations
+
 from project_validator.facts.security import SECURITY
 from project_validator.judging import answered_check
 from project_validator.policy.security import judge_security

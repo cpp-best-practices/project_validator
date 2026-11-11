@@ -1,5 +1,7 @@
 """The JVM profile's rules, judged by the generic checks in the Maven and Gradle project layouts."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.core import Check, Result, Status

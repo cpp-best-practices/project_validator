@@ -13,6 +13,8 @@ platform axis, but the platform policy asks for several operating systems, which
 `platform-matrix` does not apply, and neither do the compiled-language checks.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator, Mapping
 

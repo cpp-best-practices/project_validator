@@ -4,6 +4,8 @@
 Everything the validator knows about one ecosystem lives in that ecosystem's profile module next to this one.
 """
 
+from __future__ import annotations
+
 import re
 import tomllib
 from collections.abc import Callable, Iterable, Mapping

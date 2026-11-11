@@ -1,6 +1,8 @@
 """The Fortran profile: recognition, fpm, and the Fortran compilers' flags, judged by the generic checks in every
 Fortran project layout; and the shared CMake and Meson facts, which scope options to Fortran."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.build_systems.cmake.build import cmake_declared_languages

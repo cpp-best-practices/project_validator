@@ -1,6 +1,8 @@
 """clang-tidy's settings (a `.clang-tidy`: the checks it enables and their options), and its readability-function-size
 check, which limits C/C++ function length when clang-tidy runs with a line or statement threshold."""
 
+from __future__ import annotations
+
 from collections.abc import Iterator, Mapping, Sequence
 from fnmatch import fnmatchcase
 

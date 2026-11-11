@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from project_validator.facts.formatting import FORMAT
 from project_validator.judging import answered_check
 from project_validator.policy.formatting import judge_formatting

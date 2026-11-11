@@ -1,5 +1,7 @@
 """Reading CMake projects: evaluation, what commands set, presets, and custom targets."""
 
+from __future__ import annotations
+
 import json
 import unittest
 from unittest import mock

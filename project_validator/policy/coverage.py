@@ -1,5 +1,7 @@
 """The coverage policy: branch coverage is required (or the finest a known tool measures), path coverage a bonus."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.facts.coverage import Granularity
 from project_validator.policy import unknown

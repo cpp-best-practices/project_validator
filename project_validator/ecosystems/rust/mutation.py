@@ -1,5 +1,7 @@
 """Rust's mutation testing tool: cargo-mutants, configured in `.cargo/mutants.toml`."""
 
+from __future__ import annotations
+
 from project_validator.ecosystems.rust import RUST_LANGUAGE
 from project_validator.facts.mutation import incremental_when, mutation_tool
 from project_validator.facts.settings import file_reader

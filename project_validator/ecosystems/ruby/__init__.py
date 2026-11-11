@@ -4,6 +4,8 @@ Ruby projects run their tools through Rake (`bundle exec rake`): the Rakefile de
 (`RSpec::Core::RakeTask`, `RuboCop::RakeTask`) and the default task that runs them. So the Rakefile counts as CI
 configuration when CI runs rake."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.ecosystems.model import VERSION, BuildSystem, Ecosystem, toolchain_patterns

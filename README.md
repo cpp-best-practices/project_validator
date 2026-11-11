@@ -25,14 +25,14 @@ The validator itself is pure Python and has no build step; it only inspects
 
 ## Requirements
 
-- Python 3.14+ (the system Python on Ubuntu 26.04 LTS; no installation step,
+- Python 3.12+ (the system Python on Ubuntu 24.04 LTS and later; no installation step,
   run with `python3 -m project_validator <path>`)
 - [PyYAML](https://pyyaml.org/) 6.0+ (`python3-yaml` on Ubuntu, or `python3 -m pip install PyYAML`)
 - Optionally [rich](https://github.com/Textualize/rich) 13.0+ for colored output
 - CMake / CTest, only for `--build` (already required by any CMake project being validated)
 
-On a machine without Python 3.14, `uv run` or a distro backport will work.
-In CI, use `actions/setup-python` with `python-version: "3.14"`.
+On a machine without Python 3.12, `uv run` or a distro backport will work.
+In CI, use `actions/setup-python` with `python-version: "3.x"` (or any version from 3.12).
 
 ## Usage
 

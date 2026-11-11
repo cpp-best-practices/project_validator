@@ -5,6 +5,8 @@ Build systems translate their own settings into these flags (CMake's `COMPILE_WA
 and `warning_level`), and the C/C++ practices ask for them per compiler.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Collection, Iterable
 from dataclasses import dataclass

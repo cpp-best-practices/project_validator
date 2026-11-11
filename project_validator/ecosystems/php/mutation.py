@@ -1,5 +1,7 @@
 """PHP's mutation testing tool: Infection, configured in `infection.json5` (or `infection.json`)."""
 
+from __future__ import annotations
+
 from project_validator.ecosystems.php import PHP_ONLY
 from project_validator.facts.mutation import incremental_when, mutation_tool
 from project_validator.facts.settings import file_reader

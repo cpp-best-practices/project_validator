@@ -1,6 +1,8 @@
 """The mutation aspect of tools: a mutation tool's run runs the project's code under mutation, and incrementally when it
 can."""
 
+from __future__ import annotations
+
 import unittest
 from collections.abc import Mapping
 

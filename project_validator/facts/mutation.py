@@ -2,6 +2,8 @@
 tests against the mutants, and incrementally when it can run only the code that changed. Mutation tools are ordinary
 `Tool`s; `mutation_tool` and `mutated` only spell them."""
 
+from __future__ import annotations
+
 from collections.abc import Iterable
 
 from project_validator.facts import NOTHING, Command, Facts, Setting, resolved

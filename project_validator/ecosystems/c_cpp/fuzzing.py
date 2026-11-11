@@ -1,6 +1,8 @@
 """C and C++ fuzzing: libFuzzer and AFL++ fuzz targets, run as binaries (or by CTest, see the fuzz-testing question),
 and RapidCheck property tests."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.ecosystems.c_cpp import C_AND_CXX

@@ -1,5 +1,7 @@
 """Which of the project's code a tool's run covers."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.facts.tools import ToolRun

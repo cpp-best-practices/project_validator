@@ -1,5 +1,7 @@
 """Fuzz target: the YAML loader and the multi-document checker raise only `YamlError`."""
 
+from __future__ import annotations
+
 import contextlib
 import sys
 

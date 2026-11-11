@@ -7,6 +7,8 @@ Coverage, whose levels are granularities with a ranking of their own, has its ow
 (`project_validator.questions.coverage`).
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, replace
 from pathlib import PurePosixPath

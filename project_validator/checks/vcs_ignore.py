@@ -1,5 +1,7 @@
 """A version control ignore file keeps the build outputs out of version control."""
 
+from __future__ import annotations
+
 from dataclasses import replace
 
 from project_validator.checks.committed_artifacts import output_languages

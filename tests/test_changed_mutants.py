@@ -1,5 +1,7 @@
 """Tests of tests/changed_mutants.py: the mutmut mutants of the functions a diff touches."""
 
+from __future__ import annotations
+
 import os
 import subprocess
 import sys

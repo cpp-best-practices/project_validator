@@ -4,6 +4,8 @@ Maven and Gradle projects wire their tools into the build: a Maven plugin binds 
 (`<goal>check</goal>` runs in `mvn verify`), and a Gradle plugin adds its task to `check`. So the build files count as
 CI configuration when CI runs the build far enough to run them."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass

@@ -5,6 +5,8 @@ Much of a JavaScript project's tooling runs through the scripts of its package.j
 CI runs count as CI configuration wherever a rule reads more than CI configuration.
 """
 
+from __future__ import annotations
+
 import json
 import re
 from collections.abc import Callable, Iterable, Iterator

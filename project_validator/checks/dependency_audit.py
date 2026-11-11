@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from project_validator.facts.audit import AUDIT
 from project_validator.judging import answered_check
 from project_validator.policy.audit import judge_audit

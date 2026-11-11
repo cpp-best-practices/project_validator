@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 
 from project_validator.checks.ci_present import ci_present

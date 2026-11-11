@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 
 from project_validator.ecosystems import BUILT_IN, isolated_registry

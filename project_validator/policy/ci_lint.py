@@ -1,6 +1,8 @@
 """The CI lint policy: each CI provider with a known configuration linter has it run; a provider none is known for is
 not judged."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.questions import Answer
 from project_validator.questions.ci_lint import CiLintAnswer

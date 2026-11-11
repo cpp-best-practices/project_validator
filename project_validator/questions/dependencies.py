@@ -5,6 +5,8 @@ A manifest belongs to the unit that owns its directory; a lockfile locks the uni
 workspace's lockfile at its root locks its members); a lockfile git does not track locks nothing.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 

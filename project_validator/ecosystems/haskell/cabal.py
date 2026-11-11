@@ -6,6 +6,8 @@ A component's fields include those of the `common` stanzas it imports, and those
 `else`), each with the conditions it needs. Nothing is evaluated: a condition is kept as written.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 from dataclasses import dataclass, field

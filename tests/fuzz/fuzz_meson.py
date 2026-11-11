@@ -1,5 +1,7 @@
 """Fuzz target: the Meson parser raises only `MesonSyntaxError`; the evaluator raises nothing on one file."""
 
+from __future__ import annotations
+
 import contextlib
 import pathlib
 import sys

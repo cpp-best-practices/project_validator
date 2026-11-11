@@ -11,6 +11,8 @@ The misconfiguration scanners (checkov, trivy, KICS, terrascan, tfsec) are both 
 scanning: their rules are what static analysis means for infrastructure code, so one of them in CI passes both checks.
 """
 
+from __future__ import annotations
+
 import re
 import shlex
 from collections.abc import Mapping

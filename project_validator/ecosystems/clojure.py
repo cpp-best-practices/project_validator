@@ -5,6 +5,8 @@ runners, cloverage, clj-kondo, cljfmt and its kin, and nvd-clojure.
 The Clojure CLI runs aliases: `clojure -M:test`, `clojure -X:test`, `clojure -T:build test`. A tool is known by its
 alias when it is the alias's name (`:test`, `:kaocha`, `:cloverage`), and by its program when CI runs it directly."""
 
+from __future__ import annotations
+
 import re
 from pathlib import Path
 

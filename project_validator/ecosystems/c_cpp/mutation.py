@@ -2,6 +2,8 @@
 
 Mull's compiler plugin only embeds the mutants, so a build with it alone is not a run."""
 
+from __future__ import annotations
+
 from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.facts.mutation import mutated, mutation_tool
 from project_validator.facts.settings import file_reader

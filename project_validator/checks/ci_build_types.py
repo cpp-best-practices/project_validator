@@ -1,6 +1,8 @@
 """CI builds each platform of a compiled language in Debug and Release, with and without sanitizers. Interpreted
 languages such as Python have no build types."""
 
+from __future__ import annotations
+
 from project_validator.facts.axes import handled
 from project_validator.judging import answered_check
 from project_validator.policy.platforms import judge_build_types

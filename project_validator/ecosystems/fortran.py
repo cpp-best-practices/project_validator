@@ -6,6 +6,8 @@ test runners ctest and `meson test`, gcov and the reports built on it, lizard. W
 fpm, and the Fortran compilers' flags for the practices.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 

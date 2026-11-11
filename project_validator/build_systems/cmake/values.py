@@ -6,6 +6,8 @@ it in; a variable the project never sets (an option, a cache variable, one the b
 `${NAME}`, for the conditions that read it to name.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass

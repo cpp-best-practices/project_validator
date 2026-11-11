@@ -1,5 +1,7 @@
 """The Lua profile's rules, judged by the generic checks in the LuaRocks package and plain Lua layouts."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.checks.code_formatting import code_formatting

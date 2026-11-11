@@ -1,5 +1,7 @@
 """The secret scanning policy: CI or a pre-commit hook runs a secret scanner; one configured but not run warns."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.questions import Answer
 from project_validator.questions.secrets import SecretScanningAnswer

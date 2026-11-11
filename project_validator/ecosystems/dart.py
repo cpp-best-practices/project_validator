@@ -2,6 +2,8 @@
 `dart` and `flutter` commands it runs. Flutter is Dart with a framework: `flutter test`, `flutter analyze` and the
 Flutter SDK count wherever their Dart counterparts do."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Mapping
 from pathlib import Path

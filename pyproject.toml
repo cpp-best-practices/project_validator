@@ -7,7 +7,7 @@ name = "project_validator"
 version = "0.1.0"
 description = "Validate a project's build, CI and tooling against best practices"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = ["PyYAML>=6.0"]
 
 [project.optional-dependencies]
@@ -22,13 +22,23 @@ include = ["project_validator*"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py314"
+target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "I", "B", "BLE", "C4", "PIE", "RET", "S", "SIM", "UP", "RUF"]
+select = ["E", "W", "F", "FA", "I", "B", "BLE", "C4", "PIE", "RET", "S", "SIM", "UP", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# The fixtures are other projects' code, written as their authors would.
+"tests/fixtures/**" = ["I002"]
+
+[tool.ruff.lint.isort]
+# Annotations are deferred everywhere (`from __future__ import annotations`), so forward references need no quotes
+# on 3.12 and 3.13, which evaluate annotations eagerly.
+required-imports = ["from __future__ import annotations"]
 
 [tool.mypy]
 strict = true
+python_version = "3.12"
 files = ["project_validator", "tests"]
 
 [[tool.mypy.overrides]]

@@ -3,6 +3,8 @@
 A Swift build reads its settings from Package.swift or the Xcode project, so those count as evidence of what CI builds.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 

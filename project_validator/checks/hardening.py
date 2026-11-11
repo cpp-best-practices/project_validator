@@ -6,6 +6,8 @@ It is not code security scanning (see `project_validator.facts.security`) nor de
 `project_validator.facts.audit`); a language that builds no binary asks for none.
 """
 
+from __future__ import annotations
+
 from project_validator.facts.practices import PracticeName, handled
 from project_validator.judging import answered_check
 from project_validator.policy.practices import judge_hardening

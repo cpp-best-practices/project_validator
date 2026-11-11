@@ -1,5 +1,7 @@
 """The structure that keeps ecosystems and practices apart: profiles hold ecosystem knowledge, checks stay generic."""
 
+from __future__ import annotations
+
 import ast
 import importlib
 import pkgutil

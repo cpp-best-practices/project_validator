@@ -6,6 +6,8 @@ tasks, so the tasks a command runs are read once (`sbt_tasks`, `mill_tasks`, `sc
 for its own. The JDK versions are the JVM profile's; a job that also names a Scala version (`sbt ++3.3.5 test`) runs
 that version on each JDK it names."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable
 from pathlib import Path

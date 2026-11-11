@@ -1,5 +1,7 @@
 """Large files are kept out of git's history: Git LFS or DVC stores them instead."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath

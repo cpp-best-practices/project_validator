@@ -6,6 +6,8 @@ license files of its directory, or of the nearest directory above it that has an
 its own. Only the product's manifests count, not those of the docs, examples, tooling or tests.
 """
 
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 from pathlib import PurePosixPath

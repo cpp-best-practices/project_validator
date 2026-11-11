@@ -1,5 +1,7 @@
 """Command expansion: the commands CI's commands run in turn, through Make targets and pre-commit hooks."""
 
+from __future__ import annotations
+
 import unittest
 from typing import ClassVar
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 
 from project_validator.checks.type_checking import type_checking

@@ -2,6 +2,8 @@
 toolchain (Python 3.13 and 3.14). A `ToolchainAxis`, a component of the profile, reads it from each `Job` fact. A
 compiled language's axis is `compiled`: its CI must build each platform in every build configuration."""
 
+from __future__ import annotations
+
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from typing import Protocol

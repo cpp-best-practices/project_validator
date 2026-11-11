@@ -2,6 +2,8 @@
 call, as `project_validator.build_systems.cmake` reads them), or, with `--build`, listed by ctest after a real build.
 ctest runs them."""
 
+from __future__ import annotations
+
 import json
 import subprocess
 import tempfile

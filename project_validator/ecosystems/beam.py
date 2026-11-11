@@ -6,6 +6,8 @@ credo --strict`; `rebar3 do eunit, ct, cover`; `rebar3 as test cover`). Every to
 the tasks a command runs are read once (`mix_tasks`, `rebar3_tasks`) and each tool asks for its own. A Mix alias
 (`aliases: [ci: ["format --check-formatted", "test"]]` in `mix.exs`) runs other tasks, as a package script does."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterator
 

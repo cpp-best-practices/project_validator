@@ -1,5 +1,7 @@
 """The foundations questions stand on: structure and setting facts, and the queries over the fact database."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.facts import ConfigurationFile, Facts, Origin, Setting, Unknown

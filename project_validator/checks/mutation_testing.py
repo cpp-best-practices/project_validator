@@ -1,5 +1,7 @@
 """CI runs mutation testing, so the tests are shown to catch the faults they should."""
 
+from __future__ import annotations
+
 from project_validator.facts.mutation import MUTATION
 from project_validator.judging import answered_check
 from project_validator.policy.mutation import judge_mutation

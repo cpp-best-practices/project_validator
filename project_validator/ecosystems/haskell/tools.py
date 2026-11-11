@@ -2,6 +2,8 @@
 coverage, the formatters (ormolu, fourmolu, stylish-haskell), the linters (hlint, weeder, stan), cabal-audit, the
 dependency managers (Cabal and Stack) and their lockfiles, the declared license, and the build outputs."""
 
+from __future__ import annotations
+
 import re
 import shlex
 from collections.abc import Callable, Iterator, Mapping

@@ -6,6 +6,8 @@ replaced, as GitLab merges them; a `!reference [.job, key]` is replaced by the v
 projects, URLs or templates are not read.
 """
 
+from __future__ import annotations
+
 import itertools
 import json
 import re

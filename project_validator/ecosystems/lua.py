@@ -1,6 +1,8 @@
 """Lua (and Luau): packaged with LuaRocks, judged by the Lua versions CI runs and by the tools it runs on the code:
 busted, luacov, StyLua, luacheck, selene and the Lua language server."""
 
+from __future__ import annotations
+
 import re
 import shlex
 from collections.abc import Iterator

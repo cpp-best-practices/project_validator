@@ -2,6 +2,8 @@
 for what Clang compiles (Swift's and Rust's coverage have their own tools, which know what their compilers measure);
 and the compilers' instrumentation for path coverage."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterable
 

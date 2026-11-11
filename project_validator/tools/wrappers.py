@@ -2,6 +2,8 @@
 `timeout 5m make check`, `find … | xargs clang-format`), shared by every language: each is a launcher (see
 `project_validator.facts.expansion.launcher`)."""
 
+from __future__ import annotations
+
 from project_validator.facts.expansion import launcher
 
 WRAPPERS = launcher(

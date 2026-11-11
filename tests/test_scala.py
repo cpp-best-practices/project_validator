@@ -1,5 +1,7 @@
 """The Scala profile's rules, judged by the generic checks in the sbt, Mill and scala-cli project layouts."""
 
+from __future__ import annotations
+
 import json
 import unittest
 

@@ -1,6 +1,8 @@
 """lizard, which measures the functions of many languages at once and fails when one is longer than the limit it is
 told. Each profile makes it its own, for the languages lizard measures (`function_length_limiters`)."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.facts import Command, Facts, resolved

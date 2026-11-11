@@ -1,5 +1,7 @@
 """The reusable CI steps a project runs are pinned to commits, so a moved tag or a pushed branch cannot change them."""
 
+from __future__ import annotations
+
 from project_validator.core import Context, Result, check
 from project_validator.policy.pinning import judge_pinning
 from project_validator.questions.pinning import pinning_answer

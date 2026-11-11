@@ -1,5 +1,7 @@
 """The README shows, at a glance, whether the build passes and how the code fares."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.core import Context, Result, check

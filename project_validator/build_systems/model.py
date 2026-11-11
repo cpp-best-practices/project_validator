@@ -2,6 +2,8 @@
 types its commands build and the workspace members it declares. A build system is defined once (with Make, CMake and
 Meson here; the others in the profile of the only language they build) and named by the ecosystems that use it."""
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path

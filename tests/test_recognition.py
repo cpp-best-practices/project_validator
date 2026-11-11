@@ -1,6 +1,8 @@
 """How a project is recognised as ecosystems: build files by name, pattern or directory, source suffixes, content
 probes and ambiguous suffixes, and the suffixes no ecosystem accounts for."""
 
+from __future__ import annotations
+
 import unittest
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager

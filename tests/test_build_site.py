@@ -1,5 +1,7 @@
 """Tests of tests/build_site.py: the documentation site CI publishes."""
 
+from __future__ import annotations
+
 import contextlib
 import io
 import os

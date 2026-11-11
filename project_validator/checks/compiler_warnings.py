@@ -1,6 +1,8 @@
 """A strict warning set is on: each language's compiler warnings (or the linters that report what other compilers
 warn about), for each compiler CI builds with where a language has several."""
 
+from __future__ import annotations
+
 from project_validator.facts.practices import PracticeName, handled
 from project_validator.judging import answered_check
 from project_validator.policy.practices import judge_warnings

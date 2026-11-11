@@ -1,5 +1,7 @@
 """Kinds of Perl project, for tests that run a check in every layout."""
 
+from __future__ import annotations
+
 from tests.layouts.model import ProjectLayout
 
 MODULE = "package Shop;\nuse strict;\nuse warnings;\n\nsub total { my $sum = 0; $sum += $_ for @_; $sum }\n\n1;\n"

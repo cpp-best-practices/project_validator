@@ -1,5 +1,7 @@
 """Rust fuzzing: cargo-fuzz (libFuzzer) and AFL.rs fuzz targets, and proptest and quickcheck property tests."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.ecosystems.rust import RUST_LANGUAGE

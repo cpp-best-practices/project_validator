@@ -1,6 +1,8 @@
 """Generator expressions (see cmake-generator-expressions(7)), which CMake evaluates per build: `$<$<CONFIG:Debug>:-O0>`
 is `-O0` in Debug builds and nothing in the others. Each value an argument takes is found with the builds it is in."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterator, Mapping
 

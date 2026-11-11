@@ -1,5 +1,7 @@
 """JavaScript and TypeScript fuzzing: Jazzer.js fuzz targets, and fast-check property tests."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.ecosystems.javascript import JS_LANGUAGES

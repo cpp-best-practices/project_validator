@@ -2,6 +2,8 @@
 provider's configuration? Answered for the project as a whole. The linters are searched for in the configuration
 text itself, so a provider read only heuristically hides nothing here."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from project_validator.ci import CiProvider

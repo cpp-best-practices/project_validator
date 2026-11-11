@@ -1,6 +1,8 @@
 """The coverage question: for each language, in each unit of the project that has it, what coverage does CI report,
 at each granularity?"""
 
+from __future__ import annotations
+
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 

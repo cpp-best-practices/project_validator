@@ -1,6 +1,8 @@
 """The settings questions: for each language, which of the settings a practice asks for (the strict warning set,
 warnings as errors) are met, and where; for each compiler CI builds with, where a practice is judged per compiler."""
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from dataclasses import dataclass
 

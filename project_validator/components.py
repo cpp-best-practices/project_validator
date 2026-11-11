@@ -6,6 +6,8 @@ tools (`project_validator.tools`), the questions (`project_validator.questions`)
 that uses it (see docs/architecture.md). A plugin's components live in its own module (see `add_plugin_modules`).
 """
 
+from __future__ import annotations
+
 import importlib
 import pkgutil
 from collections.abc import Iterable, Iterator

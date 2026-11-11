@@ -1,5 +1,7 @@
 """Kinds of .NET project, for tests that run a check in every layout."""
 
+from __future__ import annotations
+
 from tests.layouts.model import ProjectLayout
 
 LAYOUTS = (

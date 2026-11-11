@@ -1,5 +1,7 @@
 """The Clojure profile's rules, judged by the generic checks in the deps.edn, Leiningen and Clojure sources layouts."""
 
+from __future__ import annotations
+
 import unittest
 from pathlib import Path
 

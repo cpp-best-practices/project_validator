@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from project_validator.facts.testing import TEST
 from project_validator.judging import answered_check
 from project_validator.policy.testing import judge_tests

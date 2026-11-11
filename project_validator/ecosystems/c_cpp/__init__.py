@@ -4,6 +4,8 @@ Rules that depend on the build system are in the `cmake` and `meson` modules; a 
 CMake project.
 """
 
+from __future__ import annotations
+
 import re
 
 from project_validator.build_systems.cmake.build import CMAKE

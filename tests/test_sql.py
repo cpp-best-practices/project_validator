@@ -1,5 +1,7 @@
 """The SQL profile's rules, judged by the generic checks in the SQL project layouts."""
 
+from __future__ import annotations
+
 import unittest
 
 from project_validator.checks.code_formatting import code_formatting

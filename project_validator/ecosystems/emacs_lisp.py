@@ -2,6 +2,8 @@
 by what it runs on the code: ERT or Buttercup tests, undercover.el, package-lint and checkdoc, and byte-compilation
 with warnings as errors."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 from pathlib import Path

@@ -1,5 +1,7 @@
 """Practices: how requirements are matched in what CI runs."""
 
+from __future__ import annotations
+
 import re
 import unittest
 

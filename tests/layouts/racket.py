@@ -1,5 +1,7 @@
 """Kinds of Racket project, for tests that run a check in every layout."""
 
+from __future__ import annotations
+
 from tests.layouts.model import ProjectLayout
 
 SOURCE = "#lang racket/base\n(provide total)\n(define (total prices) (apply + prices))\n"

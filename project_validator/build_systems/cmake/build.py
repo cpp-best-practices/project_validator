@@ -1,5 +1,7 @@
 """CMake as a build system: its build files, its build trees, and the build types its commands build."""
 
+from __future__ import annotations
+
 import re
 from pathlib import Path
 

@@ -6,6 +6,8 @@ A linter limits function length only while its rule is on: some rules are on by 
 turn them off, others only once the settings turn them on. Limiters are ordinary `Tool`s; `limiter` only spells them.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 

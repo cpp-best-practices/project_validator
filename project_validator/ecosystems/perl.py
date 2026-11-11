@@ -2,6 +2,8 @@
 dependencies), judged by the Perl versions CI runs, by the pragmas every module starts with and by the tools CI runs on
 the code: prove, Devel::Cover, perltidy, perlcritic and cpan-audit."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 

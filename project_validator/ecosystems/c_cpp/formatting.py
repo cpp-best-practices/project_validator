@@ -1,5 +1,7 @@
 """clang-format: the C and C++ formatter, with no style but the one a `.clang-format` file defines."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.ecosystems.model import C_FAMILY

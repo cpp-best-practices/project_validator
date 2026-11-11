@@ -1,5 +1,7 @@
 """JavaScript's mutation testing tool: StrykerJS, configured in `stryker.config.*`."""
 
+from __future__ import annotations
+
 from project_validator.ecosystems.javascript import JS_LANGUAGES
 from project_validator.facts.mutation import incremental_when, mutation_tool
 from project_validator.facts.settings import file_reader

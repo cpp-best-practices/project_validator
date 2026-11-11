@@ -6,6 +6,8 @@ extractors (see docs/architecture.md). What every question needs (the units of a
 a unit, the unknowns that matter to some tools) is here, once.
 """
 
+from __future__ import annotations
+
 import enum
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field

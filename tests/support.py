@@ -1,5 +1,7 @@
 """Helpers for building throw-away projects and contexts in tests."""
 
+from __future__ import annotations
+
 import json
 import tempfile
 import textwrap

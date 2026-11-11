@@ -3,6 +3,8 @@ through Roswell or 40ants/setup-lisp) and by what it runs on the code: the syste
 the compiler's warnings made errors. Lisp code CI runs on a command line (`sbcl --eval "(asdf:test-system :shop)"`)
 is read as the words of the command."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator, Mapping
 from pathlib import Path

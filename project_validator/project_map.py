@@ -1,5 +1,7 @@
 """The map of a project (languages, build systems, CI) that checks are written against."""
 
+from __future__ import annotations
+
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
 from fnmatch import fnmatchcase

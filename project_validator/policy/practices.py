@@ -2,6 +2,8 @@
 warnings fail the build in at least one configuration. Each is worded as the practice says (`Wording`): what the
 settings are called, how to set them, and the sentences the profile replaces where the policy's do not fit."""
 
+from __future__ import annotations
+
 from collections.abc import Callable, Iterable
 
 from project_validator.core import Result

@@ -1,5 +1,7 @@
 """Core types shared by the validator, its checks and its CI providers."""
 
+from __future__ import annotations
+
 import enum
 import os
 import shutil

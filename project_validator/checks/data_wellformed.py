@@ -1,6 +1,9 @@
 """Every JSON, TOML, YAML and XML file parses: real validation, since a broken data file is a bug."""
 
+from __future__ import annotations
+
 import json
+import re
 import tomllib
 from collections import Counter
 from collections.abc import Callable, Mapping
@@ -52,11 +55,18 @@ def _check_deep_json(text: str) -> None:
         raise _ParseError(str(error), error.line, error.column) from error
 
 
+# Where a TOML error is, as tomllib writes it into the message; Python 3.14 also gives `lineno` and `colno`.
+_TOML_POSITION = re.compile(r" \(at line (\d+), column (\d+)\)$")
+
+
 def _parse_toml(data: bytes) -> None:
     try:
         tomllib.loads(_decoded(data))
     except tomllib.TOMLDecodeError as error:
-        raise _ParseError(error.msg, error.lineno, error.colno) from error
+        message, position = str(error), _TOML_POSITION.search(str(error))
+        if position is None:
+            raise _ParseError(message) from error
+        raise _ParseError(message[: position.start()], int(position[1]), int(position[2])) from error
 
 
 def _parse_yaml(data: bytes) -> None:

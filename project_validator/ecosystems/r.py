@@ -5,6 +5,8 @@ CI runs R code in three ways, which `r_code` reads alike: `Rscript -e "covr::cod
 `shell: Rscript {0}` runs its script (the GitHub Actions layer makes it one `Rscript` command given the script), and the
 r-lib/actions, whose `check-r-package` runs rcmdcheck with its inputs."""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Mapping
 from pathlib import Path

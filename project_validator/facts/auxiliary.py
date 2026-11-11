@@ -8,6 +8,8 @@ ecosystem (`python`, `c/c++`), or by a directory it is in (`scripts/`). What is 
 (`AuxiliaryCode`), so the questions can tell the code it names (`selectors`).
 """
 
+from __future__ import annotations
+
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 

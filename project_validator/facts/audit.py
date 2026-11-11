@@ -1,6 +1,8 @@
 """The dependency audit aspect of tools (see `project_validator.facts.tools`): a run checks the project's dependencies
 against known vulnerabilities. Auditors are ordinary `Tool`s; `auditor` and `audited` only spell them."""
 
+from __future__ import annotations
+
 from collections.abc import Iterable
 
 from project_validator.facts import Setting

@@ -3,6 +3,8 @@
 Every module of this package except `model` is a profile, defining one ecosystem; they are found, not listed.
 """
 
+from __future__ import annotations
+
 import importlib
 import pkgutil
 from collections.abc import Iterable, Iterator

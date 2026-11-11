@@ -7,6 +7,8 @@ that are build outputs are found once, when the repository is read (see `project
 `CommittedOutput` facts.
 """
 
+from __future__ import annotations
+
 import enum
 import re
 from collections.abc import Iterable

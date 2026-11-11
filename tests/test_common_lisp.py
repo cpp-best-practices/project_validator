@@ -1,5 +1,7 @@
 """The Common Lisp profile's rules, judged by the generic checks in the ASDF system and Lisp sources layouts."""
 
+from __future__ import annotations
+
 import json
 import unittest
 from pathlib import Path

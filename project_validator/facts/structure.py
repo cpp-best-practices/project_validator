@@ -3,6 +3,8 @@
 The project map (`--map`, `project_validator.project_map`) is a view over these facts.
 """
 
+from __future__ import annotations
+
 from collections import Counter
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass

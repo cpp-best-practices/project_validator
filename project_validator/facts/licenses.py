@@ -4,6 +4,8 @@ The license files are read by a shared reader (see `project_validator.tools.lice
 its manifests declare (`declared_license_reader`).
 """
 
+from __future__ import annotations
+
 import tomllib
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass

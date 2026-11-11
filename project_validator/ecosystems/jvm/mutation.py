@@ -1,5 +1,7 @@
 """The JVM's mutation testing tool: PIT, run by its Maven goal or Gradle task, or by a build wiring it in."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.ecosystems.jvm import JVM_LANGUAGES, Wiring, build_steps, plugin_definition, wired_run

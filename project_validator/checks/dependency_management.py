@@ -1,5 +1,7 @@
 """Dependencies come from a package manager and are locked, rather than copied into the repository."""
 
+from __future__ import annotations
+
 from dataclasses import replace
 
 from project_validator.core import Check, Context, Result, Status

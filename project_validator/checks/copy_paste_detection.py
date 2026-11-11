@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from project_validator.core import Context, Result, check
 from project_validator.facts.practices import named
 from project_validator.text import pattern

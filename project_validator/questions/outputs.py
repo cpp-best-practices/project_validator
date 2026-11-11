@@ -6,6 +6,8 @@ anywhere is committed. A language's build outputs are those of the build systems
 own (see `project_validator.facts.outputs.outputs_of`).
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from project_validator.facts import ConfigurationFile, Facts

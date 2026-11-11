@@ -4,6 +4,8 @@ Facts are immutable records. Extractors (CI providers first; build systems, tool
 questions query them (see docs/architecture.md). Nothing here judges a project.
 """
 
+from __future__ import annotations
+
 import dataclasses
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping

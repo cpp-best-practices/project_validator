@@ -7,6 +7,8 @@ aspects that run provides, joined with the settings it read (see `project_valida
 counts only when CI runs the tool that reads it. Questions read the runs of an aspect; none has its own tool type.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass

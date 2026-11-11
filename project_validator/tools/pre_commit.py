@@ -5,6 +5,8 @@ in that repository, which is not read; it is recorded by its id, which by conven
 `clang-format`), with its args.
 """
 
+from __future__ import annotations
+
 import shlex
 from collections.abc import Iterator, Mapping
 

@@ -3,6 +3,8 @@ hpack's `package.yaml`), a project file's `package` and `program-options` stanza
 `ghc-options` (`stack.yaml`), as `CompilerOption` facts for GHC and Haskell. The practices over them are in
 `practices`."""
 
+from __future__ import annotations
+
 import shlex
 from collections.abc import Iterator, Mapping
 from pathlib import PurePosixPath

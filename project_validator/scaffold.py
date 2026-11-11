@@ -15,6 +15,8 @@ the fixtures, a section of the page for each check that applies to it, and the s
 python -m unittest tests.test_snapshots`).
 """
 
+from __future__ import annotations
+
 import argparse
 import re
 import sys

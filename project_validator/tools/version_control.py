@@ -3,6 +3,8 @@
 Jujutsu reads .gitignore too; Subversion keeps its ignores in svn:ignore properties, which are not files.
 """
 
+from __future__ import annotations
+
 import re
 from collections.abc import Callable, Iterator
 

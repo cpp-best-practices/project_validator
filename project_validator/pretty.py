@@ -1,5 +1,7 @@
 """Optional colored terminal output with rich; the plain text output is used when it is missing."""
 
+from __future__ import annotations
+
 import importlib
 from collections import Counter
 from collections.abc import Sequence

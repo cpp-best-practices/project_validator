@@ -1,6 +1,8 @@
 """Policies over the shared tool model (see `project_validator.questions.tooling`) that only advise: a run of a tool
 of the aspect passes, and none warns, with how to add one."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.policy import Judge, either, skipped_or_unknown
 from project_validator.questions import Answer

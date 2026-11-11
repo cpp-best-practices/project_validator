@@ -1,6 +1,8 @@
 """The CMake language (see cmake-language(7)): a file is a sequence of command invocations, and the block commands
 (`if`, `foreach`, `while`, `function`, `macro`, `block`) nest them. Parsing evaluates nothing."""
 
+from __future__ import annotations
+
 import bisect
 import enum
 import re

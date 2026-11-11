@@ -1,6 +1,8 @@
 """The function length question: for each language, in each unit of the project that has it, does CI limit how long
 its functions may be?"""
 
+from __future__ import annotations
+
 from project_validator.facts.limits import FUNCTION_LENGTH, LIMITS
 from project_validator.questions import Question
 from project_validator.questions.tooling import aspect_answers

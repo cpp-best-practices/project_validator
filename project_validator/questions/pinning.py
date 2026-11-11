@@ -5,6 +5,8 @@ steps (`./.github/actions/x`) are the project's own and are not references. The 
 pinned to a full commit; what the policy allows besides (tags of GitHub's own actions) is the policy's.
 """
 
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 

@@ -4,6 +4,8 @@ Coverage tools are ordinary `Tool`s whose `can` holds a `coverage` aspect; their
 it. `coverage_tool` and `measured` only spell those for coverage.
 """
 
+from __future__ import annotations
+
 import enum
 from collections.abc import Iterable, Mapping
 

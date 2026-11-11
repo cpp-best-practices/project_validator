@@ -1,6 +1,8 @@
 """The static analysis and type checking policies: CI runs an analyzer (every required one, with its checks defined)
 and a type checker; strict type checking is a bonus."""
 
+from __future__ import annotations
+
 from project_validator.core import Result
 from project_validator.facts.analysis import CHECKS, Strictness
 from project_validator.policy import both, either, skipped_or_unknown, tools_ran

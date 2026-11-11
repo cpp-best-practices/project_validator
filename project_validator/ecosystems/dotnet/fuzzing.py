@@ -1,5 +1,7 @@
 """C# and F# fuzzing: SharpFuzz fuzz targets, and FsCheck property tests."""
 
+from __future__ import annotations
+
 import re
 
 from project_validator.ecosystems.dotnet import DOTNET_LANGUAGES

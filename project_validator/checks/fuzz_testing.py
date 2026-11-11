@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from project_validator.facts.fuzzing import FUZZ
 from project_validator.judging import answered_check
 from project_validator.policy.fuzzing import judge_fuzzing

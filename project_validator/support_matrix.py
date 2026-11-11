@@ -3,6 +3,8 @@
 It is printed by `--support-matrix`.
 """
 
+from __future__ import annotations
+
 from collections.abc import Sequence
 from dataclasses import dataclass
 

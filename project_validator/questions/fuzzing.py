@@ -1,6 +1,8 @@
 """The fuzz-testing question: for each language, in each unit of the project that has it, are there fuzz targets, and
 does CI run them?"""
 
+from __future__ import annotations
+
 import re
 from collections.abc import Iterator
 from dataclasses import dataclass

@@ -1,5 +1,7 @@
 """Rust: built with Cargo, judged by the Rust toolchains CI runs."""
 
+from __future__ import annotations
+
 import tomllib
 from pathlib import Path
 

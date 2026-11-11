@@ -1,6 +1,8 @@
 """What the repository holds: the project's files git does not track, and the tracked files that are build outputs.
 Read once, from git's list of tracked files."""
 
+from __future__ import annotations
+
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 

@@ -1,5 +1,7 @@
 """Pluggable CI providers: each one knows where its configuration lives and how to turn it into jobs."""
 
+from __future__ import annotations
+
 import json
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping

@@ -1,5 +1,7 @@
 """Fuzz target: `check_json` agrees with `json.loads` on whether a text is JSON."""
 
+from __future__ import annotations
+
 import json
 import sys
 
