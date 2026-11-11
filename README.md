@@ -184,24 +184,29 @@ from project_validator.facts.axes import versions_axis
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.tools import defined_by
 
-ZIG = Ecosystem(
-    label="Zig",
-    languages=frozenset({"Zig"}),
-    build_systems=(BuildSystem(name="Zig build", files=("build.zig",), languages=frozenset({"Zig"})),),
-    source_suffixes={".zig": "Zig"},
-    # How CI names the toolchain: `zig-version: 0.13.0` to a setup action, or `setup-zig` / `zig build` without one.
+CRYSTAL = Ecosystem(
+    label="Crystal",
+    languages=frozenset({"Crystal"}),
+    build_systems=(BuildSystem(name="Shards", files=("shard.yml",), languages=frozenset({"Crystal"})),),
+    source_suffixes={".cr": "Crystal"},
+    # How CI names the toolchain: `crystal: 1.14.0` to crystal-lang/install-crystal, or `crystal spec` without one.
     toolchain=toolchain_patterns(
-        "Zig", version=r"([\d.x]+)", inputs=("zig-version",), commands=r"\bzig\s+build\b", setup=("zig",)
+        "Crystal",
+        version=r"(\d+\.\d+(?:\.\d+)?|latest|nightly)",
+        inputs=("crystal",),
+        commands=r"\bcrystal\s+(?:spec|build|run)\b|\bshards\b",
+        setup=("crystal",),
     ),
 )
-# platform-matrix: OS x Zig version.
-ZIG_VERSIONS = versions_axis("Zig version", "Zig", frozenset({"Zig"}))
-# code-formatting: zig fmt has one style; `zig fmt --check` fails on unformatted files, `zig fmt` rewrites them.
-ZIG_FMT = format_tool(
-    name="zig fmt",
-    languages=frozenset({"Zig"}),
-    can={Enforcement.CHECK: "zig fmt --check .", Enforcement.APPLY: "zig fmt ."},
-    formats=flagged(("zig", "fmt"), checks=("--check",)),
+# platform-matrix: OS x Crystal version.
+CRYSTAL_VERSIONS = versions_axis("Crystal version", "Crystal", frozenset({"Crystal"}))
+# code-formatting: the formatter has one style; `crystal tool format --check` fails on unformatted files, without
+# `--check` it rewrites them.
+CRYSTAL_FORMAT = format_tool(
+    name="crystal tool format",
+    languages=frozenset({"Crystal"}),
+    can={Enforcement.CHECK: "crystal tool format --check", Enforcement.APPLY: "crystal tool format"},
+    formats=flagged(("crystal", "tool", "format"), checks=("--check",)),
     style=defined_by(),
 )
 ```

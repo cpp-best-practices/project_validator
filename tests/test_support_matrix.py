@@ -26,7 +26,7 @@ SMALL = SupportMatrix(
 class SupportMatrixTests(unittest.TestCase):
     def setUp(self) -> None:
         self.enterContext(isolated_registry())
-        with temp_project({"zig.py": ECOSYSTEM_PLUGIN}) as directory:
+        with temp_project({"crystal.py": ECOSYSTEM_PLUGIN}) as directory:
             plugins = discover([directory])
         self.matrix = support_matrix(plugins.checks)
 
@@ -37,10 +37,10 @@ class SupportMatrixTests(unittest.TestCase):
         return self._row(self.matrix, name).cells[self.matrix.ecosystems.index(ecosystem)]
 
     def test_columns_are_the_registered_ecosystems_built_in_first(self) -> None:
-        self.assertEqual(self.matrix.ecosystems, (*(e.label for e in BUILT_IN), "Zig"))
+        self.assertEqual(self.matrix.ecosystems, (*(e.label for e in BUILT_IN), "Crystal"))
 
     def test_a_cell_names_the_tools_of_the_check_aspect_for_the_ecosystem(self) -> None:
-        self.assertEqual(self._cell("code-formatting", "Zig"), ("zig fmt",))
+        self.assertEqual(self._cell("code-formatting", "Crystal"), ("crystal tool format",))
         self.assertEqual(self._cell("code-formatting", "Python"), ("ruff format", "black"))
 
     def test_a_check_without_an_aspect_applies_without_tools(self) -> None:

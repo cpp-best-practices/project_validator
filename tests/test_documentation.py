@@ -53,8 +53,8 @@ class ReadmeExampleTests(unittest.TestCase):
         section = text[text.index("### Adding an ecosystem") :]
         start = section.index("```python\n") + len("```python\n")
         example = section[start : section.index("\n```", start)]
-        with isolated_registry(), temp_project({"zig.py": example}) as directory:
+        with isolated_registry(), temp_project({"crystal.py": example}) as directory:
             plugins = discover([directory])
-            self.assertEqual(registered()[-1].label, "Zig")
+            self.assertEqual(registered()[-1].label, "Crystal")
             formatting = next(found for found in plugins.checks if found.name == "code-formatting")
-            self.assertIn("Zig", applies_to(formatting))
+            self.assertIn("Crystal", applies_to(formatting))
