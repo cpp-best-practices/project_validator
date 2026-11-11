@@ -1,0 +1,726 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Dart",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Dart",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              ".dart_tool/"
+            ],
+            "language": "Dart",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "a lint set in analysis_options.yaml",
+                  "dart analyze"
+                ]
+              }
+            ],
+            "language": "Dart",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "dart test --coverage=coverage --branch-coverage (or flutter test --coverage --branch-coverage)"
+              ],
+              "tools": []
+            },
+            "language": "Dart",
+            "line": {
+              "answer": "no",
+              "known": [
+                "dart test --coverage=coverage (or flutter test --coverage)"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "pub",
+                "manifest": "pubspec.yaml"
+              }
+            ],
+            "language": "Dart",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "dart format": {
+                "can": {
+                  "apply": "dart format .",
+                  "check": "dart format --output=none --set-exit-if-changed ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Dart",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Dart",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Dart",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Dart",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Dart",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Dart or Flutter SDK version",
+            "language": "Dart",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Dart",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "DCM": {
+                "can": {
+                  "checks": "dcm analyze lib"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "custom_lint": {
+                "can": {
+                  "checks": "dart run custom_lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dart analyze": {
+                "can": {
+                  "checks": "dart analyze (or flutter analyze)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "dart test": {
+                "can": {
+                  "runs": "dart test (or flutter test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Dart",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Dart",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Dart",
+            "outputs": {
+              "the .dart_tool directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "--fatal-infos"
+                ]
+              }
+            ],
+            "language": "Dart",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "pub",
+      "kind": "BuildFile",
+      "languages": [
+        "Dart"
+      ],
+      "origin": "pubspec.yaml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Dart",
+      "origin": "lib/shop.dart",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "pub"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Dart"
+      ],
+      "origin": ".dart_tool/",
+      "output": "the .dart_tool directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pubspec.yaml",
+      "reader": "pubspec dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "pub",
+      "origin": "pubspec.yaml"
+    },
+    {
+      "kind": "Application",
+      "manager": "pub",
+      "origin": "pubspec.yaml"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "pub"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Dart": [
+        "build file pubspec.yaml",
+        ".dart files"
+      ]
+    },
+    "languages": [
+      "Dart"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "pub"
+        ],
+        "directory": ".",
+        "languages": [
+          "Dart"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs dart format --output=none --set-exit-if-changed ."
+      ],
+      "message": "CI never runs dart format; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        ".dart_tool/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no Dart analyzer settings found; enable at least a lint set in analysis_options.yaml, dart analyze",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to report branch coverage: dart test --coverage=coverage --branch-coverage (or flutter test --coverage --branch-coverage)"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "1 data file parses (YAML: 1)",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [
+        "consider running in CI: osv-scanner or trivy fs"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    "dependency-management": {
+      "details": [
+        "commit pubspec.lock (an application, with publish_to: none; a package that may be published leaves it out)"
+      ],
+      "message": "dependencies are declared in pubspec.yaml (pub) but not locked",
+      "status": "WARN"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [
+        "consider running in CI: lizard --length 30"
+      ],
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider running in CI: semgrep ci"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running dart analyze (or flutter analyze), dart run custom_lint or dcm analyze lib in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (test(), testWidgets() or group() calls in test/**/*_test.dart)",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "run dart analyze --fatal-infos in CI"
+      ],
+      "message": "warnings are not treated as errors in CI configuration",
+      "status": "FAIL"
+    }
+  }
+}
