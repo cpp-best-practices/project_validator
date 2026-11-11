@@ -1,0 +1,5 @@
+*.fasl
+*.fas
+*.lx64fsl
+*.dx64fsl
+.qlot/
