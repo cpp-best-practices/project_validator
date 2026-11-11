@@ -268,6 +268,8 @@ _JDK = r"(\d+(?:\.\d+)*)"
 
 JDK_VERSIONS = (
     re.compile(rf"\bjava-version\W+{_JDK}"),
+    # coursier/setup-action installs the JDK its `jvm` input names: `jvm: 21`, `jvm: temurin:21`.
+    re.compile(rf"\bjvm:\s*(?:[\w-]+:)?{_JDK}\b"),
     re.compile(rf"\b(?:eclipse-temurin|openjdk|amazoncorretto|sapmachine|azul/zulu-openjdk\w*):{_JDK}"),
     re.compile(rf"\bmaven:[\d.]+-[a-z-]+?-{_JDK}\b"),
     re.compile(rf"\bgradle:[\w.-]*?jdk-?{_JDK}\b"),
