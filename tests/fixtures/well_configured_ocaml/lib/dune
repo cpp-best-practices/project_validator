@@ -1,0 +1,4 @@
+(library
+ (name shop)
+ (instrumentation
+  (backend bisect_ppx)))

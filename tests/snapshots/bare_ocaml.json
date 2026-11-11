@@ -1,0 +1,683 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "OCaml",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "OCaml",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "_build/"
+            ],
+            "language": "OCaml",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "dune's dev profile warning set (or -w +a)"
+                ]
+              }
+            ],
+            "language": "OCaml",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "known": [
+                "dune test --instrument-with bisect_ppx, then bisect-ppx-report"
+              ],
+              "tools": []
+            },
+            "language": "OCaml",
+            "line": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "OCaml",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "OCaml",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "ocamlformat": {
+                "can": {
+                  "apply": "dune fmt",
+                  "check": "dune build @fmt (or ocamlformat --check)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "OCaml",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "OCaml",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "OCaml",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "OCaml",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "OCaml",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "OCaml",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "OCaml",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "OCaml version",
+            "language": "OCaml",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "OCaml",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OCaml",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "OCaml",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "dune test": {
+                "can": {
+                  "runs": "dune test (or dune runtest, dune build @runtest)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "OCaml",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "OCaml",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "OCaml",
+            "outputs": {
+              "dune's build directory": {},
+              "the local opam switch": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "dune's dev profile (or -warn-error +a)"
+                ]
+              }
+            ],
+            "language": "OCaml",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "dune",
+      "kind": "BuildFile",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": "bin/dune"
+    },
+    {
+      "build_system": "dune",
+      "kind": "BuildFile",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": "dune-project"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "OCaml",
+      "origin": "bin/main.ml",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "dune"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "OCaml"
+      ],
+      "origin": "_build/",
+      "output": "dune's build directory"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "bin/dune",
+      "reader": "dune tests"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "bin/dune",
+      "reader": "dune"
+    },
+    {
+      "heuristic": true,
+      "key": "flags",
+      "kind": "Setting",
+      "origin": "bin/dune:flags",
+      "tool": "dune",
+      "value": "(-w -a)"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "dune-project",
+      "reader": "dune"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "dune"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "OCaml": [
+        "build file dune",
+        "build file dune-project",
+        ".ml files"
+      ]
+    },
+    "languages": [
+      "OCaml"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "dune"
+        ],
+        "directory": ".",
+        "languages": [
+          "OCaml"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs dune build @fmt (or ocamlformat --check)"
+      ],
+      "message": "no ocamlformat configuration found; formatting is not defined",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "_build/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no OCaml warning settings found; enable at least dune's dev profile warning set (or -w +a)",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to report branch coverage: dune test --instrument-with bisect_ppx, then bisect-ppx-report"
+      ],
+      "message": "no branch coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider running in CI: semgrep ci"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (test stanzas, inline_tests or cram tests in dune files)",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "build and test in dune's dev profile in CI, which makes its warnings errors (the release profile does not), and keep :standard in every (flags \u2026) field"
+      ],
+      "message": "warnings are not treated as errors in CI configuration and the dune files",
+      "status": "FAIL"
+    }
+  }
+}

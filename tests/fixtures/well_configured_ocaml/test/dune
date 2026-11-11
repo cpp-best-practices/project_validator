@@ -1,0 +1,5 @@
+(test
+ (name test_shop)
+ (libraries shop alcotest)
+ (instrumentation
+  (backend bisect_ppx)))

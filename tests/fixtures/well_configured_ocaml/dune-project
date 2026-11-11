@@ -1,0 +1,17 @@
+(lang dune 3.0)
+
+(name shop)
+
+(generate_opam_files true)
+
+(license MIT)
+
+(package
+ (name shop)
+ (synopsis "Prices of the shop's items")
+ (depends
+  (ocaml
+   (>= 4.14))
+  dune
+  (alcotest :with-test)
+  (bisect_ppx :with-test)))
