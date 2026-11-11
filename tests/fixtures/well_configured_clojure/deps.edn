@@ -1,0 +1,11 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.12.0"}}
+ :aliases
+ {:test {:extra-paths ["test"]
+         :extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
+         :main-opts ["-m" "kaocha.runner"]}
+  :coverage {:extra-paths ["test"]
+             :extra-deps {cloverage/cloverage {:mvn/version "1.2.4"}}
+             :main-opts ["-m" "cloverage.coverage" "-p" "src" "-s" "test" "--codecov"]}
+  :nvd {:deps {nvd-clojure/nvd-clojure {:mvn/version "5.0.0"}}
+        :main-opts ["-m" "nvd.task.check" "nvd-config.edn"]}}}
