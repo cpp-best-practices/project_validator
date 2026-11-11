@@ -1,0 +1,3 @@
+(executable
+ (name main)
+ (flags (-w -a)))
