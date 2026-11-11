@@ -5,10 +5,12 @@ import unittest
 from project_validator.facts import ConfigurationFile, Facts, Origin, Setting, Unknown
 from project_validator.facts.roles import role
 from project_validator.facts.settings import (
+    file_reader,
     ini_settings,
     json_settings,
     key_value_settings,
     known_settings_readers,
+    settings_facts,
     toml_settings,
 )
 from project_validator.facts.structure import SourceFile
@@ -141,6 +143,21 @@ class ReaderTests(unittest.TestCase):
         files = {"ci/cov.ini": "[run]\nbranch = on\n", **github_job("x", "coverage run --rcfile=ci/cov.ini -m x")}
         self.assertEqual(_settings("ci/cov.ini", files), [("coverage.py", "run.branch", "on")])
         self.assertEqual(_settings("ci/cov.ini", {"ci/cov.ini": "[run]\nbranch = on\n"}), [])
+
+    def test_a_reader_reads_files_by_name_by_glob_or_by_the_end_of_their_path(self) -> None:
+        readers = (
+            file_reader("ruff", ("ruff.toml",)),
+            file_reader("cmake", ("*.cmake",)),
+            file_reader("sorbet", ("sorbet/config",)),
+            file_reader("ruff too", ("ruff.toml", "*.toml")),  # a reader that matches a file twice reads it once
+        )
+        paths = ("ruff.toml", "lib/ruff.toml", "cmake/Deps.cmake", "sorbet/config", "svc/sorbet/config", "svc/config")
+        with temp_project(dict.fromkeys((*paths, "other.toml", "third_party/x/ruff.toml"), "")) as root:
+            found = settings_facts(make_context(root), readers, Facts())
+            read = [(fact.reader, fact.path) for fact in found if isinstance(fact, ConfigurationFile)]
+        expected = [("cmake", "cmake/Deps.cmake"), ("ruff", "lib/ruff.toml"), ("ruff too", "lib/ruff.toml")]
+        expected += [("ruff too", "other.toml"), ("ruff", "ruff.toml"), ("ruff too", "ruff.toml")]
+        self.assertEqual(read, [*expected, ("sorbet", "sorbet/config"), ("sorbet", "svc/sorbet/config")])
 
     def test_a_vendored_projects_configuration_is_not_read_unless_a_command_names_it(self) -> None:
         vendored = {"deps/lib/.coveragerc": "[run]\nbranch = on\n"}

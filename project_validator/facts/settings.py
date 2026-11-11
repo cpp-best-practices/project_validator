@@ -14,7 +14,6 @@ import xml.etree.ElementTree as ElementTree
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
-from pathlib import PurePosixPath
 
 from project_validator import yaml_support
 from project_validator.components import known
@@ -58,12 +57,44 @@ def known_settings_readers() -> tuple[SettingsReader, ...]:
     return known(SettingsReader)
 
 
-def _matches(path: str, pattern: str) -> bool:
-    """Whether `path` is a file `pattern` names: by its name (`ruff.toml`, `*.cmake`), or, for a pattern with a
-    directory (`sorbet/config`), by the end of its path."""
-    if "/" in pattern:
-        return fnmatchcase(path, pattern) or fnmatchcase(path, f"*/{pattern}")
-    return fnmatchcase(PurePosixPath(path).name, pattern)
+_GLOB_CHARACTERS = frozenset("*?[")
+
+
+class _Index:
+    """Which readers read a file, by the patterns of its `files`: most patterns are plain names (`ruff.toml`), looked
+    up at once; a glob (`*.cmake`) is matched against the file's name, and a pattern with a directory
+    (`sorbet/config`) against the end of its path. Readers are given in the order they were registered."""
+
+    def __init__(self, readers: Iterable[SettingsReader]) -> None:
+        self.readers = tuple(readers)
+        self.names: dict[str, list[SettingsReader]] = {}
+        self.globs: list[tuple[str, SettingsReader]] = []
+        self.ends: list[tuple[str, SettingsReader]] = []
+        for reader in self.readers:
+            for pattern in reader.files:
+                if "/" in pattern:
+                    self.ends.append((pattern, reader))
+                elif _GLOB_CHARACTERS & set(pattern):
+                    self.globs.append((pattern, reader))
+                else:
+                    self.names.setdefault(pattern, []).append(reader)
+
+    def reading(self, path: str) -> list[SettingsReader]:
+        """The readers that read `path`, each once, in registration order."""
+        name = path.rsplit("/", 1)[-1]
+        found = {
+            id(reader): reader
+            for reader in (
+                *self.names.get(name, ()),
+                *(reader for pattern, reader in self.globs if fnmatchcase(name, pattern)),
+                *(
+                    reader
+                    for pattern, reader in self.ends
+                    if fnmatchcase(path, pattern) or fnmatchcase(path, f"*/{pattern}")
+                ),
+            )
+        }
+        return [reader for reader in self.readers if id(reader) in found] if len(found) > 1 else list(found.values())
 
 
 def _hidden_directories(readers: Iterable[SettingsReader]) -> frozenset[str]:
@@ -79,9 +110,10 @@ def _hidden_directories(readers: Iterable[SettingsReader]) -> frozenset[str]:
 def _read_by_default(project: Project, readers: tuple[SettingsReader, ...]) -> Iterator[tuple[SettingsReader, str]]:
     """Each reader with each file it reads by default, outside vendored code: a vendored project's configuration is
     its own, not this project's."""
+    index = _Index(readers)
     own = (path for path in project.files(hidden=_hidden_directories(readers)) if role(path) != "vendored")
     for path in own:
-        yield from ((reader, path) for reader in readers if any(_matches(path, pattern) for pattern in reader.files))
+        yield from ((reader, path) for reader in index.reading(path))
 
 
 def _named(
