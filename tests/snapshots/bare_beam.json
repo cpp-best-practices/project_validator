@@ -1,0 +1,1249 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Elixir",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Erlang",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Elixir",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Erlang",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "_build/",
+              "erl_crash.dump"
+            ],
+            "language": "Elixir",
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "_build/",
+              "erl_crash.dump"
+            ],
+            "language": "Erlang",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "mix credo --strict"
+                ]
+              }
+            ],
+            "language": "Elixir",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "warn_* erl_opts",
+                  "elvis"
+                ]
+              }
+            ],
+            "language": "Erlang",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Elixir",
+            "line": {
+              "answer": "no",
+              "known": [
+                "mix test --cover",
+                "mix coveralls (excoveralls)"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "language": "Erlang",
+            "line": {
+              "answer": "no",
+              "known": [
+                "mix test --cover",
+                "mix coveralls (excoveralls)",
+                "rebar3 cover (after eunit or ct with --cover)"
+              ],
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "known": [],
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "mix_audit": {
+                "can": {
+                  "runs": "mix deps.audit (mix_audit)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Elixir",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "mix_audit": {
+                "can": {
+                  "runs": "mix deps.audit (mix_audit)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Erlang",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "Mix",
+                "manifest": "mix.exs"
+              }
+            ],
+            "language": "Elixir",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [],
+            "language": "Erlang",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "mix format": {
+                "can": {
+                  "apply": "mix format",
+                  "check": "mix format --check-formatted"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Elixir",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "erlfmt": {
+                "can": {
+                  "apply": "rebar3 fmt",
+                  "check": "rebar3 fmt --check (or erlfmt --check)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Erlang",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Elixir",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Erlang",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Elixir",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Elixir",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Erlang",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Erlang",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "language": "Erlang",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Elixir",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Erlang",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Elixir",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Erlang",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Erlang/OTP or Elixir version",
+            "language": "Elixir",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "Erlang/OTP or Elixir version",
+            "language": "Erlang",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Elixir",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Erlang",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "Sobelow": {
+                "can": {
+                  "scans": "mix sobelow --exit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Elixir",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Erlang",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "Credo": {
+                "can": {
+                  "checks": "mix credo"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Elixir",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "elvis": {
+                "can": {
+                  "checks": "rebar3 lint (elvis)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "rebar3 xref": {
+                "can": {
+                  "checks": "rebar3 xref"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Erlang",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "mix test": {
+                "can": {
+                  "runs": "mix test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Elixir",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "mix test": {
+                "can": {
+                  "runs": "mix test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "rebar3 eunit or rebar3 ct": {
+                "can": {
+                  "runs": "rebar3 eunit (or rebar3 ct)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Erlang",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "Dialyzer": {
+                "can": {
+                  "checks": "mix dialyzer (dialyxir) or rebar3 dialyzer",
+                  "strict": "Dialyzer's optional warnings (underspecs, unmatched_returns, ...) in mix.exs or rebar.config"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Elixir",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "Dialyzer": {
+                "can": {
+                  "checks": "mix dialyzer (dialyxir) or rebar3 dialyzer",
+                  "strict": "Dialyzer's optional warnings (underspecs, unmatched_returns, ...) in mix.exs or rebar.config"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "eqWAlizer": {
+                "can": {
+                  "checks": "elp eqwalize-all (eqWAlizer)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Erlang",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Elixir",
+            "outputs": {
+              "crash dumps": {},
+              "the _build directory": {},
+              "the deps directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Erlang",
+            "outputs": {
+              "crash dumps": {},
+              "the _build directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "--warnings-as-errors"
+                ]
+              }
+            ],
+            "language": "Elixir",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "warnings_as_errors"
+                ]
+              }
+            ],
+            "language": "Erlang",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ]
+  },
+  "facts": [
+    {
+      "build_system": "Mix",
+      "kind": "BuildFile",
+      "languages": [
+        "Elixir"
+      ],
+      "origin": "mix.exs"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Elixir",
+      "origin": "lib/shop.ex",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Elixir",
+      "origin": "mix.exs",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Erlang",
+      "origin": "src/shop_legacy.erl",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".beam"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".dump"
+    },
+    {
+      "build_systems": [
+        "Mix"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Elixir",
+        "Erlang"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Elixir",
+        "Erlang"
+      ],
+      "origin": "_build/",
+      "output": "the _build directory"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Elixir",
+        "Erlang"
+      ],
+      "origin": "erl_crash.dump",
+      "output": "crash dumps"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "mix.exs",
+      "reader": "BEAM compiler options"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "mix.exs",
+      "reader": "Dialyzer"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "mix.exs",
+      "reader": "Mix dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Mix",
+      "origin": "mix.exs"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Mix"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "BEAM": [
+        "build file mix.exs",
+        ".erl files",
+        ".ex files",
+        ".exs files"
+      ]
+    },
+    "languages": [
+      "Elixir",
+      "Erlang"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Mix"
+        ],
+        "directory": ".",
+        "languages": [
+          "Elixir",
+          "Erlang"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".beam"
+      },
+      {
+        "files": 1,
+        "suffix": ".dump"
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "Elixir: consider a CI job that runs mix format --check-formatted",
+        "Erlang: consider a CI job that runs rebar3 fmt --check (or erlfmt --check)"
+      ],
+      "message": "Elixir: CI never runs mix format; its formatting is not enforced; Erlang: CI never runs erlfmt; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "_build/",
+        "erl_crash.dump",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "2 build outputs are committed",
+      "status": "FAIL"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "Elixir: no Elixir linters found; enable at least mix credo --strict; Erlang: no Erlang warnings found; enable at least warn_* erl_opts, elvis",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "Elixir: known to report line coverage: mix test --cover, mix coveralls (excoveralls)",
+        "Erlang: known to report line coverage: mix test --cover, mix coveralls (excoveralls), rebar3 cover (after eunit or ct with --cover)"
+      ],
+      "message": "Elixir: no line coverage reporting found in what CI runs; Erlang: no line coverage reporting found in what CI runs",
+      "status": "FAIL"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "no JSON, TOML, YAML or XML files to parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [
+        "consider running in CI: mix deps.audit (mix_audit), GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    "dependency-management": {
+      "details": [
+        "Elixir: commit mix.lock, which mix deps.get writes with each package's hash"
+      ],
+      "message": "Elixir: dependencies are declared in mix.exs (Mix) but not locked; Erlang: no dependencies are declared",
+      "status": "WARN"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [
+        "consider running in CI: lizard --length 30"
+      ],
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider running in CI: mix sobelow --exit, GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [
+        "Elixir: consider running mix credo in CI",
+        "Erlang: consider running rebar3 lint (elvis) or rebar3 xref in CI"
+      ],
+      "message": "Elixir: no static analyzer runs; Erlang: no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "Elixir: no tests found (ExUnit tests (test/**/*_test.exs) or EUnit tests (*_test() functions) or Common Test suites (*_SUITE.erl)); Erlang: no tests found (ExUnit tests (test/**/*_test.exs) or EUnit tests (*_test() functions) or Common Test suites (*_SUITE.erl) or EUnit tests (*_test() functions) or Common Test suites (*_SUITE.erl))",
+      "status": "FAIL"
+    },
+    "type-checking": {
+      "details": [
+        "Elixir: consider running a type checker in CI: mix dialyzer (dialyxir) or rebar3 dialyzer",
+        "Erlang: consider running a type checker in CI: mix dialyzer (dialyxir) or rebar3 dialyzer or elp eqwalize-all (eqWAlizer)"
+      ],
+      "message": "Elixir: no type checker runs; Erlang: no type checker runs",
+      "status": "FAIL"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "Elixir: run mix compile --warnings-as-errors in CI, or set elixirc_options: [warnings_as_errors: true] in mix.exs",
+        "Erlang: add warnings_as_errors to erl_opts in rebar.config"
+      ],
+      "message": "Elixir: warnings are not treated as errors in CI configuration or mix.exs; Erlang: warnings are not treated as errors in CI configuration or rebar.config",
+      "status": "FAIL"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        elixir: ["1.17", "1.18"]
+        otp: ["27"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - run: mix deps.get
+      - run: mix format --check-formatted
+      - run: mix compile --warnings-as-errors
+      - run: mix credo --strict
+      - run: mix dialyzer
+      - run: mix sobelow --exit
+      - run: mix deps.audit
+      - run: mix test --cover
+  erlang:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
+        with:
+          otp-version: "27"
+          elixir-version: "1.18"
+      - run: mix escript.install hex erlfmt --force && mix escript.install hex elvis_core --force
+      - run: erlfmt --check 'src/**/*.erl'
+      - run: elvis rock
+      - run: pipx run lizard --length 30 --warnings_only src

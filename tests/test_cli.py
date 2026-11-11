@@ -271,7 +271,7 @@ class ListTests(unittest.TestCase):
     def test_support_matrix_as_json(self) -> None:
         code, output, _ = run_cli("--support-matrix", "--format", "json")
         self.assertEqual(code, EXIT_SUCCESS)
-        self.assertEqual(json.loads(output)["ecosystems"][0], "C/C++")
+        self.assertIn("C/C++", json.loads(output)["ecosystems"])
 
     def test_support_matrix_needs_no_yaml(self) -> None:
         with mock.patch.object(yaml_support, "available", return_value=False):
