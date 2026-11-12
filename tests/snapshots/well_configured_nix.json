@@ -1,0 +1,757 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Nix",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "cachix/install-nix-action@3dc140bfc76c49fbd4dd958429132e3746bcb086"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Nix",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Nix",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "deadnix": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "statix": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Nix",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "language": "Nix",
+            "line": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Nix",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Nix",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "alejandra": {
+                "can": {
+                  "apply": "alejandra .",
+                  "check": "alejandra --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "nix fmt": {
+                "can": {
+                  "apply": "nix fmt",
+                  "check": "nix fmt -- --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "nixfmt": {
+                "can": {
+                  "apply": "nixfmt .",
+                  "check": "nixfmt --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Nix",
+            "level": "check",
+            "runs": {
+              "nix fmt": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Nix",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Nix",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Nix",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Nix",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Nix",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "system",
+            "language": "Nix",
+            "notes": [],
+            "platforms": [
+              {
+                "configurations": [],
+                "os": "linux",
+                "system": "aarch64-linux"
+              },
+              {
+                "configurations": [],
+                "os": "linux",
+                "system": "x86_64-linux"
+              },
+              {
+                "configurations": [],
+                "os": "macos",
+                "system": "aarch64-darwin"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "Nix",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Nix",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "deadnix": {
+                "can": {
+                  "checks": "deadnix --fail ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "statix": {
+                "can": {
+                  "checks": "statix check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Nix",
+            "level": "checks",
+            "runs": {
+              "deadnix": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              },
+              "statix": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "nix flake check": [
+                "flake.nix"
+              ]
+            },
+            "known": {
+              "nix flake check": {
+                "can": {
+                  "runs": "nix flake check (or nix build .#checks.<system>.<check>)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Nix",
+            "level": "runs",
+            "runs": {
+              "nix flake check": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Nix",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Nix",
+            "outputs": {
+              "the result symlinks nix build leaves": {
+                ".gitignore": "result"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "deadnix --fail": [
+                    "CI (.github/workflows/ci.yml)"
+                  ],
+                  "statix check, which fails on any finding": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Nix",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/copy-paste-detection.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 7 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "CI enforces the nix fmt style",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict Nix lints are enabled: statix, deadnix",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "4 YAML files parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no system",
+        ".github/workflows/ci.yml: build (ubuntu-latest, x86_64-linux): linux / x86_64-linux",
+        ".github/workflows/ci.yml: build (ubuntu-latest, aarch64-linux): linux / aarch64-linux",
+        ".github/workflows/ci.yml: build (macos-latest, aarch64-darwin): macos / aarch64-darwin",
+        ".github/workflows/ci.yml: lint: linux / x86_64-linux (runner default)",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no system"
+      ],
+      "message": "CI covers 2 OS(es) (linux, macos), 3 system(s) (aarch64-darwin, aarch64-linux, x86_64-linux), 3 combination(s)",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "statix and deadnix run",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores result",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with statix check, which fails on any finding, deadnix --fail",
+      "status": "PASS"
+    }
+  }
+}
