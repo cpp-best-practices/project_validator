@@ -5,13 +5,14 @@ from typing import Any, cast
 from unittest import mock
 
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems import C_FAMILY
+from project_validator.ecosystems import C_FAMILY, isolated_registry, register
 from project_validator.plugins import discover
 from project_validator.runner import run_check
 from tests.support import (
     C_FAMILY_LAYOUTS,
     CI_FILES,
     FIXTURES,
+    FORMAT_ECOSYSTEM,
     OTHER_LANGUAGE_LAYOUTS,
     PROJECT_LAYOUTS,
     UNRECOGNISED_LAYOUTS,
@@ -182,6 +183,15 @@ class LanguageApplicabilityTests(unittest.TestCase):
     def test_matching_checks_run(self) -> None:
         context = make_context(FIXTURES / "well_configured_c_cpp")
         self.assertEqual(run_check(_check("cpp", frozenset({"C++"})), context).status, Status.PASS)
+
+    def test_a_check_of_a_format_runs_in_a_project_of_data_files_alone(self) -> None:
+        """A format's files are judged by the checks of the format; a language's checks skip, naming no format."""
+        with isolated_registry(), temp_project({"src/a.wdata": ""}) as root:
+            register(FORMAT_ECOSYSTEM)
+            context = make_context(root)
+            self.assertEqual(run_check(_check("w", frozenset({"WDATA"})), context).status, Status.PASS)
+            skipped = run_check(_check("warnings", C_FAMILY), context)
+            self.assertEqual(skipped, Result.skipped("not applicable to a project of no recognised language"))
 
     def test_only_language_agnostic_checks_run_when_no_language_is_recognised(self) -> None:
         with temp_project({"README.md": "", "src/main.odin": ""}) as root:

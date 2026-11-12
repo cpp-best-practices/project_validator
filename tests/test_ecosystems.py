@@ -42,6 +42,7 @@ class CheckEachEcosystemTests(unittest.TestCase):
         C_AND_CXX: Result.warned("c warned", "c detail"),
         PYTHON: Result.passed("python passed", "python detail"),
         RUST: Result.failed("rust failed"),
+        FORMAT_ECOSYSTEM: Result.passed("data passed"),
     }
 
     def _judge(self, files: dict[str, str]) -> Result:
@@ -63,6 +64,13 @@ class CheckEachEcosystemTests(unittest.TestCase):
             Result.warned("C/C++: c warned; Python: python passed", "C/C++: c detail", "Python: python detail"),
         )
         self.assertEqual(self._judge({"main.c": "", "Cargo.toml": "", "setup.py": ""}).status, Status.FAIL)
+
+    def test_a_format_ecosystem_is_judged_as_a_language_one_is(self) -> None:
+        with isolated_registry():
+            register(FORMAT_ECOSYSTEM)
+            self.assertEqual(self._judge({"a.wdata": ""}), self.RESULTS[FORMAT_ECOSYSTEM])
+            both = self._judge({"a.wdata": "", "Cargo.toml": ""})
+        self.assertEqual(both.message, "Rust: rust failed; Widget data: data passed")
 
 
 ALPHA = BuildSystem(name="Alpha", files=("alpha.txt",))

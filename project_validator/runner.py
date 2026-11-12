@@ -34,12 +34,12 @@ def select(available: Iterable[Check], only: Iterable[str] = (), skip: Iterable[
 def _skipped(selected: Check, context: Context) -> Result | None:
     if not selected.languages:
         return None
-    languages = context.structure.languages
-    if selected.applies_to(languages):
+    structure = context.structure
+    if selected.applies_to(structure.languages_and_formats):
         return None
-    # Only the project's own languages are named, so that adding a language changes no other project's results;
-    # `--list` shows what each check applies to.
-    found = ", ".join(sorted(languages)) or "a project of no recognised language"
+    # Only the project's own languages are named (not its formats: every project has data files), so that adding a
+    # language changes no other project's results; `--list` shows what each check applies to.
+    found = ", ".join(sorted(structure.languages)) or "a project of no recognised language"
     return Result.skipped(f"not applicable to {found}")
 
 

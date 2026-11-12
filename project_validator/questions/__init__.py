@@ -1,5 +1,6 @@
-"""Questions: queries over the fact database, each answering one thing about the project per language, in each unit
-of the project that has the language.
+"""Questions: queries over the fact database, each answering one thing about the project per language (or format: a
+format is asked what its tools can answer, and is a language to every question), in each unit of the project that
+has the language.
 
 Answers are the stable, machine-readable interface (`--answers`); checks judge them by a policy and never read
 extractors (see docs/architecture.md). What every question needs (the units of a language, the runs of an aspect in
@@ -68,11 +69,14 @@ class LanguageAnswers[A: UnitAnswer]:
 
 
 def units_of(language: str, facts: Facts) -> tuple[str, ...]:
-    """The units of the project whose own code has `language`: every unit but the vendored ones, whatever its role
-    (a `tools/` module is held to every practice as the product is), until `--auxiliary` names its code; none when
-    the language is only in code `--auxiliary` names. A project with no units is one, its root."""
+    """The units of the project whose own code has `language` (or whose own files are in that format): every unit
+    but the vendored ones, whatever its role (a `tools/` module is held to every practice as the product is), until
+    `--auxiliary` names its code; none when the language is only in code `--auxiliary` names. A project with no
+    units is one, its root."""
     units = facts.of(Unit)
-    return tuple(unit.directory for unit in units if language in unit.languages) if units else (".",)
+    if not units:
+        return (".",)
+    return tuple(unit.directory for unit in units if language in unit.languages or language in unit.formats)
 
 
 def auxiliary_units_of(language: str, facts: Facts) -> dict[str, tuple[str, ...]]:

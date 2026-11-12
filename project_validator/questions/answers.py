@@ -11,10 +11,10 @@ if TYPE_CHECKING:
 
 
 def answers(context: Context) -> dict[str, object]:
-    """For each question, its answer for each of the project's languages."""
-    languages = sorted(context.structure.languages)
+    """For each question, its answer for each of the project's languages and formats."""
+    names = sorted(context.structure.languages_and_formats)
     return {
-        question.name: [question.answer(language, context.facts).as_dict() for language in languages]
+        question.name: [question.answer(name, context.facts).as_dict() for name in names]
         for question in known_questions()
     }
 

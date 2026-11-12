@@ -3,18 +3,21 @@
 from __future__ import annotations
 
 import unittest
+from typing import cast
 from unittest import mock
 
 from project_validator.checks.coverage import coverage
 from project_validator.core import Result, Status
+from project_validator.ecosystems import isolated_registry, register
 from project_validator.facts import Command, Facts, Origin, Unknown
 from project_validator.facts.coverage import COVERAGE, Granularity, coverage_tool, measured
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import Run, Tool, ToolRun
 from project_validator.policy.coverage import judge_coverage, required_coverage
-from project_validator.questions import Answer, answer_dict, unknowns_for
+from project_validator.questions import Answer, answer_dict, units_of, unknowns_for
+from project_validator.questions.answers import answers
 from project_validator.questions.coverage import coverage_answer
-from tests.support import github_job, make_context, temp_project
+from tests.support import FORMAT_ECOSYSTEM, github_job, make_context, temp_project
 
 ORIGIN = Origin(path="ci.yml", at=("jobs", "test"))
 
@@ -158,6 +161,25 @@ class UnitTests(unittest.TestCase):
         inside = _measured("cov", BRANCH, scope=("packages/a/src",))
         self.assertEqual([inside.covers(unit, units) for unit in units], [False, True, False, False, False])
         self.assertTrue(_measured("cov", BRANCH, scope=("src",)).covers(".", units))
+
+    def test_a_format_is_answered_in_the_units_whose_files_are_in_it(self) -> None:
+        facts = Facts(
+            (
+                Unit(origin=Origin(path="."), build_systems=(), languages=frozenset(), formats=frozenset({"WDATA"})),
+                Unit(origin=Origin(path="b"), build_systems=("npm",), languages=frozenset({"Lang"})),
+            )
+        )
+        self.assertEqual((units_of("WDATA", facts), units_of("Lang", facts)), ((".",), ("b",)))
+
+    def test_every_question_is_asked_of_each_language_and_format(self) -> None:
+        with isolated_registry(), temp_project({"src/a.wdata": "", "setup.py": ""}) as root:
+            register(FORMAT_ECOSYSTEM)
+            found = answers(make_context(root))
+        for question, entries in found.items():
+            with self.subTest(question=question):
+                self.assertEqual(
+                    [entry["language"] for entry in cast("list[dict[str, object]]", entries)], ["Python", "WDATA"]
+                )
 
     def test_each_unit_of_a_language_is_answered(self) -> None:
         facts = Facts(
