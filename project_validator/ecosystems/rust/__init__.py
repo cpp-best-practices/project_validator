@@ -143,6 +143,6 @@ RUST = Ecosystem(
             rf"\bcargo\s+\+{_RUST_VERSION}",
             rf"\brustup\s+(?:default|toolchain\s+install|install)\s+{_RUST_VERSION}",
         ),
-        commands=r"\bcargo\b|\brustup\b|\brustc\b",
+        programs=("cargo", "rustup", "rustc"),
     ),
 )

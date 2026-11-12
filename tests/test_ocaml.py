@@ -17,7 +17,7 @@ from project_validator.core import Check, Result, Status
 from project_validator.ecosystems import is_build_tree
 from project_validator.ecosystems.ocaml import DUNE_TEST_STANZAS, OCAML_ECOSYSTEM, _without, dune_profile, forms
 from project_validator.facts import Setting
-from tests.support import GITHUB_WORKFLOW, command, github_job, github_steps, make_context, run_as, temp_project
+from tests.support import GITHUB_WORKFLOW, command, github_job, github_steps, make_context, run_as, temp_project, uses
 
 OCAML = frozenset({"OCaml"})
 TEST_STANZA = {"test/dune": "(test\n (name test_shop)\n (libraries shop alcotest))\n", "test/test_shop.ml": ""}
@@ -67,8 +67,8 @@ class RecognitionTests(unittest.TestCase):
     def test_ci_usage(self) -> None:
         for text in ("dune build", "opam install . --deps-only", "ocamlfind ocamlopt", "uses: ocaml/setup-ocaml@v3"):
             with self.subTest(text=text):
-                self.assertTrue(OCAML_ECOSYSTEM.used_by(text))
-        self.assertFalse(OCAML_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(OCAML_ECOSYSTEM, text))
+        self.assertFalse(uses(OCAML_ECOSYSTEM, "npm test"))
 
     def test_dune_profiles(self) -> None:
         for line, profile in (

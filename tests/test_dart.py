@@ -17,7 +17,7 @@ from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.dart import DART_ECOSYSTEM
-from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, temp_project
+from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, temp_project, uses
 
 TEST = {"test/shop_test.dart": "import 'package:test/test.dart';\n\nvoid main() {\n  test('adds', () {});\n}\n"}
 RECOMMENDED = {"analysis_options.yaml": "include: package:lints/recommended.yaml\n"}
@@ -73,8 +73,8 @@ class RecognitionTests(unittest.TestCase):
             "uses: subosito/flutter-action@v2",
         ):
             with self.subTest(text=text):
-                self.assertTrue(DART_ECOSYSTEM.used_by(text))
-        self.assertFalse(DART_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(DART_ECOSYSTEM, text))
+        self.assertFalse(uses(DART_ECOSYSTEM, "npm test"))
 
 
 class DartTests(unittest.TestCase):

@@ -13,7 +13,7 @@ from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.sql import SQL_ECOSYSTEM
 from project_validator.facts import Setting
-from tests.support import github_job, make_context, run_as, run_in_layout, temp_project
+from tests.support import github_job, make_context, run_as, run_in_layout, temp_project, uses
 
 SQL = frozenset({"SQL"})
 PYTHON_PROJECT = {
@@ -185,5 +185,5 @@ class SqlTests(unittest.TestCase):
     def test_ci_usage(self) -> None:
         for text in ("dbt build --profiles-dir .", "sqlfluff lint models", "pg_prove tests/*.sql", "flyway migrate"):
             with self.subTest(text=text):
-                self.assertTrue(SQL_ECOSYSTEM.used_by(text))
-        self.assertFalse(SQL_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(SQL_ECOSYSTEM, text))
+        self.assertFalse(uses(SQL_ECOSYSTEM, "npm test"))

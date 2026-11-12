@@ -26,6 +26,7 @@ from tests.support import (
     run_as,
     run_in_layout,
     temp_project,
+    uses,
 )
 
 ZIG = frozenset({"Zig"})
@@ -93,8 +94,8 @@ class RecognitionTests(unittest.TestCase):
     def test_ci_usage(self) -> None:
         for text in ("zig build test", "zig fmt --check .", "uses: mlugg/setup-zig@v2", "zigup 0.14.1"):
             with self.subTest(text=text):
-                self.assertTrue(ZIG_ECOSYSTEM.used_by(text))
-        self.assertFalse(ZIG_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(ZIG_ECOSYSTEM, text))
+        self.assertFalse(uses(ZIG_ECOSYSTEM, "npm test"))
 
 
 class ZigTests(unittest.TestCase):

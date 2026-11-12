@@ -16,7 +16,7 @@ from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.perl import PERL_ECOSYSTEM, PERL_MODULES
 from project_validator.facts import Setting
-from tests.support import GITHUB_WORKFLOW, github_job, make_context, run_as, run_in_layout, temp_project
+from tests.support import GITHUB_WORKFLOW, github_job, make_context, run_as, run_in_layout, temp_project, uses
 
 PERL = frozenset({"Perl"})
 TEST = {"t/shop.t": "use Test::More;\nok(1, 'works');\ndone_testing;\n"}
@@ -73,10 +73,10 @@ class RecognitionTests(unittest.TestCase):
         used = ("prove -l t", "cpanm --installdeps .", "uses: shogo82148/actions-setup-perl@v1", "cover -test")
         for text in (*used, "prove -l t && cover -report codecov", "make test\ncover -report"):
             with self.subTest(text=text):
-                self.assertTrue(PERL_ECOSYSTEM.used_by(text))
+                self.assertTrue(uses(PERL_ECOSYSTEM, text))
         for text in ("npm test", "raco cover -f codecov .", "go tool cover -html=c.out"):
             with self.subTest(text=text):
-                self.assertFalse(PERL_ECOSYSTEM.used_by(text))
+                self.assertFalse(uses(PERL_ECOSYSTEM, text))
 
 
 class PerlTests(unittest.TestCase):

@@ -454,7 +454,7 @@ PYTHON = Ecosystem(
         images=("python",),
         image_version=r"(\d+(?:\.\d+)*)",
         more=(r"\bpython(\d\.\d+)\b",),
-        commands=r"\bpython[\d.]*\s+(?:-|\S+\.py\b)|\bpip\d*\s+install\b|\bpytest\b|\btox\b|\bnox\b",
+        programs=("python", "python3", ("pip", "install"), ("pip3", "install"), "pytest", "tox", "nox"),
         setup=("python",),
     ),
 )

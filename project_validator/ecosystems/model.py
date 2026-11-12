@@ -14,6 +14,7 @@ from typing import Literal
 
 from project_validator.build_systems.model import C_FAMILY, BuildSystem
 from project_validator.core import Project
+from project_validator.facts.arguments import starts_with
 
 __all__ = [
     "C_FAMILY",
@@ -24,6 +25,8 @@ __all__ = [
     "ToolchainPatterns",
     "ecosystems_for",
     "languages_of",
+    "runs",
+    "subcommands",
     "toolchain_patterns",
 ]
 
@@ -45,14 +48,44 @@ def toml_members(*table: str) -> Callable[[str], tuple[str, ...]]:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ToolchainPatterns:
-    """How a CI job names the versions of a language toolchain, and how a job that names none shows it uses one.
-    `labelled` patterns name a toolchain by something other than its version, written with their label: a Stackage
-    snapshot pins a GHC (a resolver `lts-22` is "Stackage lts-22")."""
+    """How a CI job names the versions of a language toolchain, and how a job that names none shows it uses one: it
+    runs one of the toolchain's `programs` (each a program and the subcommands after it, matched against each command
+    the job runs: `raco cover` is Racket's, `cover` alone Perl's), or a program from one of its `directories`
+    (`vendor/bin/`), or its text matches `usage` (a setup action). `labelled` patterns name a toolchain by something
+    other than its version, written with their label: a Stackage snapshot pins a GHC (a resolver `lts-22` is
+    "Stackage lts-22")."""
 
     language: str
     versions: tuple[re.Pattern[str], ...]
-    usage: re.Pattern[str]
+    programs: tuple[tuple[str, ...], ...] = ()
+    directories: tuple[str, ...] = ()
+    usage: re.Pattern[str] | None = None
     labelled: tuple[tuple[re.Pattern[str], str], ...] = ()
+
+    def used_by(self, texts: Iterable[str], commands: Iterable[tuple[str, ...]]) -> bool:
+        """Whether a job with `texts` that runs `commands` (each its words) uses the toolchain, without naming it."""
+        return runs(commands, self.programs, self.directories) or (
+            self.usage is not None and any(self.usage.search(text) for text in texts)
+        )
+
+
+def runs(
+    commands: Iterable[tuple[str, ...]], programs: Iterable[tuple[str, ...]], directories: Iterable[str] = ()
+) -> bool:
+    """Whether one of `commands` (each its words) runs one of `programs` (a program by name, with the subcommands
+    after it: `("go", "test")`), or a program from one of `directories`."""
+    programs, directories = tuple(programs), tuple(directories)
+    return any(starts_with(argv, *programs) or _from(argv, directories) for argv in commands)
+
+
+def subcommands(program: str, *verbs: str) -> tuple[tuple[str, str], ...]:
+    """`program` run with each of `verbs` (`subcommands("go", "build", "test")`: `go build`, `go test`)."""
+    return tuple((program, verb) for verb in verbs)
+
+
+def _from(argv: tuple[str, ...], directories: tuple[str, ...]) -> bool:
+    path = "/" + argv[0].replace("\\", "/") if argv else ""
+    return any(f"/{directory.strip('/')}/" in path for directory in directories)
 
 
 VERSION = r"(\d+\.\d+(?:\.\d+)?)"
@@ -67,26 +100,38 @@ def toolchain_patterns(
     images: Iterable[str] = (),
     image_version: str | None = None,
     more: Iterable[str | re.Pattern[str]] = (),
-    commands: str,
+    programs: Iterable[str | tuple[str, ...]] = (),
+    directories: Iterable[str] = (),
+    actions: Iterable[str] = (),
     setup: Iterable[str] = (),
     labelled: Iterable[tuple[re.Pattern[str], str]] = (),
 ) -> ToolchainPatterns:
-    """How CI names a `language` toolchain, and shows it uses one. A version (`version`, a regular expression with one
-    group) is named by a setup action's `inputs` (`go-version: 1.22`), by a container's `images` tag (`golang:1.22`;
-    `image_version` where images are tagged otherwise) or by `more` patterns of the language's own; a job that names
-    none uses the toolchain when it runs its `commands` (a regular expression) or a `setup` action (`setup-go`)."""
+    """How CI names a `language` toolchain and shows it uses one. A version (`version`, a regular expression with one
+    group) is named by a setup action's `inputs` (`go-version: 1.22`), a container's `images` tag (`golang:1.22`;
+    `image_version` where tagged otherwise) or `more` patterns. A job that names none uses the toolchain when it runs
+    one of its `programs` (`"cargo"`, `("go", "test")`) or one from its `directories`, or uses `setup` or `actions`."""
     named = (
         *(rf"\b{re.escape(name)}\W+{version}" for name in inputs),
         *(rf"\b{re.escape(image)}:{image_version or version}" for image in images),
-        *more,
     )
-    usage = "|".join((commands, *(rf"\bsetup-{re.escape(name)}\b" for name in setup)))
     return ToolchainPatterns(
         language=language,
-        versions=tuple(re.compile(found) for found in named),
-        usage=re.compile(usage),
+        versions=tuple(re.compile(found) for found in (*named, *more)),
+        programs=tuple((found,) if isinstance(found, str) else found for found in programs),
+        directories=tuple(directories),
+        usage=_usage(setup, actions),
         labelled=tuple(labelled),
     )
+
+
+def _usage(setup: Iterable[str], actions: Iterable[str]) -> re.Pattern[str] | None:
+    """What in a job's text, besides a command, shows a toolchain is used: a `setup-<name>` action, an action of the
+    ecosystem's (after its owner: `leafo/gh-actions-lua`); None when the toolchain has neither."""
+    used = (
+        *(rf"\bsetup-{re.escape(name)}\b" for name in setup),
+        *(rf"(?<![\w-]){re.escape(action)}" for action in actions),
+    )
+    return re.compile("|".join(used)) if used else None
 
 
 type Kind = Literal["language", "format"]
@@ -120,7 +165,9 @@ class Ecosystem:
     ambiguous_suffixes: Mapping[str, str | None] | None = None
     detect: Callable[[Project], frozenset[str]] | None = None
     toolchain: ToolchainPatterns | None = None
-    # How a CI job shows it builds with the ecosystem, besides naming or using its toolchain.
+    # How a CI job shows it builds with the ecosystem, besides naming or using its toolchain: the programs it runs
+    # (`cmake`, `("dbt", "build")`), and a pattern for what else its text shows (a source suffix, a compiler it names).
+    ci_programs: tuple[tuple[str, ...], ...] = ()
     ci_usage: re.Pattern[str] | None = None
     default_build_system: BuildSystem | None = None
 
@@ -131,12 +178,17 @@ class Ecosystem:
     def __repr__(self) -> str:
         return f"Ecosystem({self.label})"
 
-    def used_by(self, text: str) -> bool:
-        """Whether CI configuration `text` builds with or runs the ecosystem's toolchain."""
+    def used_by(self, texts: Iterable[str], commands: Iterable[tuple[str, ...]]) -> bool:
+        """Whether a CI job with `texts` (its matrix values, its evidence) that runs `commands` (each its words)
+        builds with the ecosystem or runs its toolchain."""
+        texts, commands = tuple(texts), tuple(commands)
+        if runs(commands, self.ci_programs) or (self.ci_usage and any(map(self.ci_usage.search, texts))):
+            return True
         toolchain = self.toolchain
-        named = (toolchain.usage, *toolchain.versions, *(found for found, _ in toolchain.labelled)) if toolchain else ()
-        patterns = (self.ci_usage, *named)
-        return any(pattern.search(text) for pattern in patterns if pattern is not None)
+        if toolchain is None:
+            return False
+        named = (*toolchain.versions, *(found for found, _ in toolchain.labelled))
+        return toolchain.used_by(texts, commands) or any(pattern.search(text) for pattern in named for text in texts)
 
     def used_build_systems(self, build_systems: frozenset[str]) -> tuple[BuildSystem, ...]:
         """The ecosystem's build systems among `build_systems`, or its default build system when none is."""

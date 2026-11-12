@@ -394,7 +394,8 @@ SCALA_ECOSYSTEM = Ecosystem(
         version=_SCALA_VERSION,
         inputs=("scala-version",),
         more=(rf"\+\+{_SCALA_VERSION}", rf"--scala[=\s]+{_SCALA_VERSION}", rf"(?<![\w-])-S\s+{_SCALA_VERSION}"),
-        commands=r"\bsbtn?\b|\bmill\b|\bscala-cli\b|\bscalac\b|\bcoursier/setup-action\b",
+        programs=("sbt", "sbtn", "mill", "scala-cli", "scalac"),
+        actions=("coursier/setup-action",),
         setup=("sbt", "scala"),
     ),
 )

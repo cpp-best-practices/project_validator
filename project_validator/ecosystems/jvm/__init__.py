@@ -281,7 +281,7 @@ JVM = Ecosystem(
     # Kotlin and Groovy scripts are mostly Gradle builds and their helpers, which name no language.
     ambiguous_suffixes={".kts": None, ".gradle": None},
     toolchain=toolchain_patterns(
-        "JDK", more=JDK_VERSIONS, commands=rf"{MAVEN_COMMAND}|{GRADLE_COMMAND}|\bjavac\b", setup=("java",)
+        "JDK", more=JDK_VERSIONS, programs=("mvn", "mvnw", "gradle", "gradlew", "javac"), setup=("java",)
     ),
 )
 

@@ -10,7 +10,7 @@ from collections.abc import Iterator
 from pathlib import Path
 
 from project_validator.build_configurations import build_type_kinds
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.axes import versions_axis
@@ -203,7 +203,7 @@ ZIG_ECOSYSTEM = Ecosystem(
             rf"\"zig(?:-version)?\":\s*\"{_ZIG_VERSION}\"",
             rf"\bzigup\s+(?:fetch|run|default)\s+{_ZIG_VERSION}",
         ),
-        commands=r"\bzig\s+(?:build|test|fmt|run|cc|c\+\+|translate-c)\b|\bzigup\b",
+        programs=(*subcommands("zig", "build", "test", "fmt", "run", "cc", "c++", "translate-c"), "zigup"),
         setup=("zig",),
     ),
 )

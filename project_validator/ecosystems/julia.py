@@ -251,7 +251,8 @@ JULIA_ECOSYSTEM = Ecosystem(
             rf"\"julia(?:-version)?\":\s*\"{_JULIA_VERSION}\"",
             rf"\bjuliaup\s+(?:add|default)\s+{_JULIA_VERSION}\b",
         ),
-        commands=r"\bjulia\b|\bjuliaup\b|\bjulia-actions/",
+        programs=("julia", "juliaup"),
+        actions=("julia-actions/",),
         setup=("julia",),
     ),
 )

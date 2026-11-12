@@ -15,7 +15,7 @@ from project_validator.checks.type_checking import type_checking
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.lua import LUA_ECOSYSTEM
-from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, temp_project
+from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, temp_project, uses
 
 SPEC = {"spec/shop_spec.lua": 'describe("shop", function()\n  it("adds", function() end)\nend)\n'}
 PLENARY_SPEC = {"tests/shop_spec.lua": 'describe("shop", function()\n  it("adds", function() end)\nend)\n'}
@@ -53,8 +53,8 @@ class RecognitionTests(unittest.TestCase):
     def test_ci_usage(self) -> None:
         for text in ("busted --coverage", "luarocks test", "stylua --check .", "uses: leafo/gh-actions-lua@v11"):
             with self.subTest(text=text):
-                self.assertTrue(LUA_ECOSYSTEM.used_by(text))
-        self.assertFalse(LUA_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(LUA_ECOSYSTEM, text))
+        self.assertFalse(uses(LUA_ECOSYSTEM, "npm test"))
 
 
 class LuaTests(unittest.TestCase):

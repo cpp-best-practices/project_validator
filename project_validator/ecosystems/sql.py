@@ -20,7 +20,7 @@ from collections.abc import Iterator, Mapping
 
 from project_validator import yaml_support
 from project_validator.core import Project
-from project_validator.ecosystems.model import BuildSystem, Ecosystem
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands
 from project_validator.facts import Fact, Origin
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
@@ -261,9 +261,18 @@ def sql_project(project: Project) -> frozenset[str]:
 
 
 # What shows a CI job works on the SQL.
-CI_USAGE = re.compile(
-    r"\bdbt\s+(?:build|test|run|compile|parse|deps|seed)\b|\bsqlfluff\b|\bsqlfmt\b|\bpg_prove\b|\bflyway\b"
-    r"|\bliquibase\b|\batlas\s+migrate\b|\bsqlc\b|\bsquawk\b|\btsqllint\b"
+# The programs a CI job runs SQL with: dbt, the linters and formatters, the test runner, the migration tools.
+CI_PROGRAMS = (
+    *subcommands("dbt", "build", "test", "run", "compile", "parse", "deps", "seed"),
+    ("sqlfluff",),
+    ("sqlfmt",),
+    ("pg_prove",),
+    ("flyway",),
+    ("liquibase",),
+    ("atlas", "migrate"),
+    ("sqlc",),
+    ("squawk",),
+    ("tsqllint",),
 )
 
 SQL_ECOSYSTEM = Ecosystem(
@@ -272,5 +281,5 @@ SQL_ECOSYSTEM = Ecosystem(
     build_systems=(DBT,),
     ambiguous_suffixes={".sql": SQL},
     detect=sql_project,
-    ci_usage=CI_USAGE,
+    ci_programs=CI_PROGRAMS,
 )

@@ -6,7 +6,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
@@ -110,7 +110,10 @@ RACKET_ECOSYSTEM = Ecosystem(
             rf"{_SETUP_RACKET}version:\s*[\"']?{_RACKET_VERSION}\b",
             rf"\"racket(?:-version)?\":\s*\"{_RACKET_VERSION}\"",
         ),
-        commands=r"\braco\s+(?:test|pkg|setup|make|cover|fmt|exe|dist|check-requires)\b|\bracket\s+-|\bracket\b",
+        programs=(
+            *subcommands("raco", "test", "pkg", "setup", "make", "cover", "fmt", "exe", "dist", "check-requires"),
+            "racket",
+        ),
         setup=("racket",),
         labelled=_VARIANTS,
     ),

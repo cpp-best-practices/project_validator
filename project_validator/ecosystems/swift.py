@@ -9,7 +9,7 @@ import re
 from collections.abc import Iterator
 
 from project_validator.build_configurations import build_type_kinds
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, starts_with
@@ -440,7 +440,7 @@ SWIFT = Ecosystem(
         inputs=("swift-version",),
         images=("swift",),
         more=(r"\bxcode-version\W+(\d+(?:\.\d+)*|latest(?:-stable)?)", r"\bXcode_(\d+(?:\.\d+)*)\.app\b"),
-        commands=r"\bswift\s+(?:build|test|run|package)\b|\bxcodebuild\b",
+        programs=(*subcommands("swift", "build", "test", "run", "package"), "xcodebuild"),
         setup=("swift",),
     ),
 )

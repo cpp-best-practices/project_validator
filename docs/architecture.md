@@ -187,9 +187,11 @@ except where a step deliberately changes results and says so.
       combination yields no facts, and known expressions are evaluated (`project_validator/ci/github_expressions.py`).
       A job's evidence is what it runs: commands (with the variables its environment defines), image, environment,
       and action inputs whose values are known; step names and conditions are not evidence. Each build system reads
-      the build types from its own commands (`BuildSystem.build_types`). Compilers and toolchain versions are still
-      matched in that evidence, matrix values first (an action input that is switched off is not evidence);
-      reading them structurally is the toolchain step (5).
+      the build types from its own commands (`BuildSystem.build_types`). Whether a job uses a toolchain, or builds
+      with an ecosystem, is read from the commands it runs, by program and subcommand (`ToolchainPatterns.programs`,
+      `Ecosystem.ci_programs`: `raco cover` is Racket's, `cover` alone Perl's); compilers and toolchain versions
+      are still matched in that evidence as text, matrix values first (an action input that is switched off is not
+      evidence); reading them structurally is the toolchain step (5).
 3. **Coverage end to end.** Coverage extractors for every supported language, the coverage question and its policy;
    the `coverage` check moves to them and the `CoverageTools` rules are deleted.
    - A coverage tool records the languages it measures and each granularity it can measure (line, statement,

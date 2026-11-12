@@ -27,6 +27,7 @@ from tests.support import (
     run_as,
     run_in_layout,
     temp_project,
+    uses,
 )
 
 CLOJURE = frozenset({"Clojure"})
@@ -102,8 +103,8 @@ class RecognitionTests(unittest.TestCase):
             "clj-kondo --lint src",
         ):
             with self.subTest(text=text):
-                self.assertTrue(CLOJURE_ECOSYSTEM.used_by(text))
-        self.assertFalse(CLOJURE_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(CLOJURE_ECOSYSTEM, text))
+        self.assertFalse(uses(CLOJURE_ECOSYSTEM, "npm test"))
 
 
 class ClojureTests(unittest.TestCase):

@@ -201,7 +201,7 @@ CRYSTAL = Ecosystem(
         "Crystal",
         version=r"(\d+\.\d+(?:\.\d+)?|latest|nightly)",
         inputs=("crystal",),
-        commands=r"\bcrystal\s+(?:spec|build|run)\b|\bshards\b",
+        programs=(("crystal", "spec"), ("crystal", "build"), ("crystal", "run"), "shards"),
         setup=("crystal",),
     ),
 )

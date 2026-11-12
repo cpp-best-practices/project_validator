@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program, starts_with
@@ -286,8 +286,11 @@ CLOJURE_ECOSYSTEM = Ecosystem(
     ambiguous_suffixes={".edn": None, ".bb": "Clojure"},
     toolchain=toolchain_patterns(
         "Clojure",
-        commands=r"\bclojure\b|\bclj\s+-|\blein\b|\bbb\s+(?:test|run|tasks?)\b|\bkaocha\b|\bclj-kondo\b|\bcljfmt\b"
-        r"|\bcljstyle\b|\bzprint\b|\bshadow-cljs\b|\bclj-watson\b",
+        programs=(
+            *("clojure", "clj", "lein", "kaocha", "clj-kondo", "cljfmt", "cljstyle", "zprint", "shadow-cljs"),
+            "clj-watson",
+            *subcommands("bb", "test", "run", "tasks", "task"),
+        ),
         setup=("clojure",),
     ),
 )

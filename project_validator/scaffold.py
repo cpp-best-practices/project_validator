@@ -56,7 +56,7 @@ from project_validator.ecosystems.model import Ecosystem, toolchain_patterns
         "{label}",
         inputs=("{module}-version",),
         images=("{module}",),
-        commands=r"\\b{module}\\s+(?:build|test|run)\\b",
+        programs=(("{module}", "build"), ("{module}", "test"), ("{module}", "run")),
         setup=("{module}",),
     ),
 )

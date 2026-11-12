@@ -15,7 +15,7 @@ from project_validator import pretty
 from project_validator.core import Check, Context, Options, Project, Result
 from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for
 from project_validator.ecosystems.c_cpp import C_AND_CXX
-from project_validator.facts import Command, Origin
+from project_validator.facts import Command, Origin, resolved
 from project_validator.facts.expansion import script_facts
 from project_validator.facts.jobs import Job
 from project_validator.plugins import discover
@@ -206,6 +206,23 @@ def command(line: str, env: Mapping[str, str] = NO_FILES) -> Command:
         if isinstance(fact, Command)
     )
     return found
+
+
+def evidence(*lines: str) -> tuple[tuple[str, ...], tuple[tuple[str, ...], ...]]:
+    """What a CI job shows, as `platforms` reads it: `lines` as its texts, and the commands each line runs as a shell
+    script (a line that is not a script, `uses: setup-go@v5`, runs nothing a toolchain claims)."""
+    commands = tuple(
+        resolved(fact)
+        for line in lines
+        for fact in script_facts(line, job="job", origin=Origin(path="ci.yml"))
+        if isinstance(fact, Command)
+    )
+    return lines, commands
+
+
+def uses(ecosystem: Ecosystem, *lines: str) -> bool:
+    """Whether a CI job showing `lines` builds with `ecosystem` (see `Ecosystem.used_by`)."""
+    return ecosystem.used_by(*evidence(*lines))
 
 
 def ci_jobs(files: Mapping[str, str]) -> tuple[Job, ...]:

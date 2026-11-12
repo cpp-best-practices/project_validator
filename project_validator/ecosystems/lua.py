@@ -207,9 +207,10 @@ LUA_ECOSYSTEM = Ecosystem(
         inputs=("luaVersion", "lua-version"),
         images=("nickblah/lua",),
         # The tools that run on a Lua interpreter; StyLua, selene and the language server are binaries of their own.
-        commands=r"\bbusted\b|\bluarocks\b|\bluacheck\b|\bluacov\b|\bgh-actions-lua\b|\blua\s+\S+\.lua\b",
+        programs=("lua", "busted", "luarocks", "luacheck", "luacov"),
+        actions=("gh-actions-lua",),
     ),
-    ci_usage=re.compile(r"\bstylua\b|\bselene\b|\blua-language-server\b|\bluau-analyze\b"),
+    ci_programs=(("stylua",), ("selene",), ("lua-language-server",), ("luau-analyze",)),
 )
 
 LUA_VERSIONS = versions_axis("Lua version", "Lua", LUA)

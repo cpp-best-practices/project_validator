@@ -16,7 +16,7 @@ from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.julia import JULIA_ECOSYSTEM, julia_code
-from tests.support import GITHUB_WORKFLOW, command, github_job, github_steps, make_context, run_as, temp_project
+from tests.support import GITHUB_WORKFLOW, command, github_job, github_steps, make_context, run_as, temp_project, uses
 
 JULIA = frozenset({"Julia"})
 TESTS = {"test/runtests.jl": 'using Test\n@testset "Shop" begin\n    @test 1 + 1 == 2\nend\n'}
@@ -68,8 +68,8 @@ class RecognitionTests(unittest.TestCase):
     def test_ci_usage(self) -> None:
         for text in (PKG_TEST, "uses: julia-actions/julia-buildpkg@v1", "juliaup add 1.10"):
             with self.subTest(text=text):
-                self.assertTrue(JULIA_ECOSYSTEM.used_by(text))
-        self.assertFalse(JULIA_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(JULIA_ECOSYSTEM, text))
+        self.assertFalse(uses(JULIA_ECOSYSTEM, "npm test"))
 
 
 class JuliaTests(unittest.TestCase):
