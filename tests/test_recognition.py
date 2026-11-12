@@ -8,7 +8,7 @@ from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 
 from project_validator.build_systems.cmake.build import CMAKE
-from project_validator.core import Project
+from project_validator.core import Context, Project
 from project_validator.ecosystems import (
     BUILT_IN,
     C_FAMILY,
@@ -19,8 +19,9 @@ from project_validator.ecosystems import (
     isolated_registry,
     register,
 )
+from project_validator.facts.structure import SourceFile, Unit
 from project_validator.project_map import ProjectStructure
-from tests.support import make_context, temp_project
+from tests.support import FORMAT_ECOSYSTEM, make_context, temp_project
 
 WIDGET = frozenset({"Widget"})
 
@@ -43,11 +44,18 @@ WIDGET_ECOSYSTEM = Ecosystem(
 
 
 @contextmanager
-def _structure(files: Mapping[str, str]) -> Iterator[ProjectStructure]:
+def _context(files: Mapping[str, str]) -> Iterator[Context]:
     with isolated_registry():
         register(WIDGET_ECOSYSTEM)
+        register(FORMAT_ECOSYSTEM)
         with temp_project(files) as root:
-            yield make_context(root).structure
+            yield make_context(root)
+
+
+@contextmanager
+def _structure(files: Mapping[str, str]) -> Iterator[ProjectStructure]:
+    with _context(files) as context:
+        yield context.structure
 
 
 class BuildFileTests(unittest.TestCase):
@@ -164,3 +172,45 @@ class ClaimConflictTests(unittest.TestCase):
         )
         with isolated_registry():
             register(ecosystem)
+
+
+class FormatRecognitionTests(unittest.TestCase):
+    """A format's files are sources of the format, not of a language: they make no language the project's, they are
+    read in the hidden configuration directories too (where a language's files are not: configuration is data), and
+    a unit holds its formats beside its languages."""
+
+    def test_a_formats_files_make_it_the_projects_format_not_its_language(self) -> None:
+        with _structure({"src/a.wdata": "", "src/main.wdg": ""}) as structure:
+            self.assertEqual((structure.languages, structure.formats), (WIDGET, frozenset({"WDATA"})))
+            self.assertEqual(structure.languages_and_formats, WIDGET | {"WDATA"})
+            self.assertEqual(structure.recognised_by, {"Widget": (".wdg files",), "Widget data": (".wdata files",)})
+            [unit] = structure.units
+            self.assertEqual((unit.languages, unit.formats), (WIDGET, frozenset({"WDATA"})))
+            mapped = structure.as_dict()
+        self.assertEqual((mapped["languages"], mapped["formats"]), (["Widget"], ["WDATA"]))
+        self.assertEqual(
+            mapped["units"],
+            [{"directory": ".", "role": "product", "build_systems": [], "languages": ["Widget"], "formats": ["WDATA"]}],
+        )
+
+    def test_formats_are_read_in_the_configuration_directories_and_languages_are_not(self) -> None:
+        files = {".github/settings.wdata": "", ".github/scripts/run.wdg": "", ".hidden/a.wdata": "", "README.md": ""}
+        with _context(files) as context:
+            self.assertEqual((context.structure.languages, context.structure.formats), (frozenset(), {"WDATA"}))
+            [source] = context.facts.of(SourceFile)
+            self.assertEqual(
+                (source.path, source.language, source.role), (".github/settings.wdata", "WDATA", "product")
+            )
+            [unit] = context.facts.of(Unit)
+            self.assertEqual((unit.directory, unit.languages, unit.formats), (".", frozenset(), {"WDATA"}))
+
+    def test_vendored_data_adds_no_format(self) -> None:
+        with _structure({"third_party/lib/a.wdata": "", "src/b.wdata": ""}) as structure:
+            self.assertEqual(structure.formats, frozenset({"WDATA"}))
+            self.assertEqual(structure.vendored, ("third_party/lib/a.wdata",))
+        with _structure({"third_party/lib/a.wdata": ""}) as structure:
+            self.assertEqual((structure.formats, structure.unrecognised_suffixes), (frozenset(), ()))
+
+    def test_a_formats_suffix_is_never_unrecognised(self) -> None:
+        with _structure({"a.wdata": "", "b.odin": ""}) as structure:
+            self.assertEqual(structure.unrecognised_suffixes, ((".odin", 1),))
