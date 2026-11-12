@@ -1,0 +1,19 @@
+name: Shop total
+description: Sums the prices given.
+inputs:
+  prices:
+    description: The prices, separated by spaces.
+    required: true
+outputs:
+  total:
+    description: Their sum.
+    value: ${{ steps.sum.outputs.total }}
+runs:
+  using: composite
+  steps:
+    - id: sum
+      shell: bash
+      run: |
+        total=0
+        for price in ${{ inputs.prices }}; do total=$((total + price)); done
+        echo "total=$total" >> "$GITHUB_OUTPUT"
