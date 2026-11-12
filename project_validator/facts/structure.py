@@ -20,7 +20,8 @@ from project_validator.facts.roles import role
 from project_validator.facts.tools import owner, within
 
 # Suffixes of files that are not source code of any language: documents, styles, media, archives, binaries and plain
-# data or configuration. They, and editor backups (`main.cpp~`), are never reported as unrecognised.
+# data or configuration no format ecosystem claims. They, and editor backups (`main.cpp~`), are never reported as
+# unrecognised.
 NOT_SOURCE_SUFFIXES = frozenset(
     {
         *(".md", ".markdown", ".rst", ".txt", ".adoc", ".dox", ".pdf", ".html", ".htm"),
@@ -29,7 +30,7 @@ NOT_SOURCE_SUFFIXES = frozenset(
         *(".ttf", ".otf", ".woff", ".woff2"),
         *(".zip", ".gz", ".tgz", ".bz2", ".xz", ".7z", ".tar", ".whl", ".jar"),
         *(".exe", ".dll", ".so", ".dylib", ".a", ".o", ".obj", ".lib", ".pdb", ".class", ".pyc"),
-        *(".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf", ".xml", ".csv", ".tsv", ".lock", ".env"),
+        *(".ini", ".cfg", ".conf", ".csv", ".tsv", ".lock", ".env"),
         *(".log", ".diff", ".patch", ".orig", ".bak", ".swp"),
         # Templates (config.h.in, MANIFEST.in) can belong to any language.
         ".in",

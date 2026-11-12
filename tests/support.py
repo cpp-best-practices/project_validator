@@ -100,7 +100,7 @@ C_FAMILY_ONLY_LAYOUTS = tuple(layout for layout in C_FAMILY_LAYOUTS if layout.la
 OTHER_LANGUAGE_LAYOUTS = tuple(
     layout for layout in PROJECT_LAYOUTS if layout.languages and not layout.gets_c_family_checks
 )
-UNRECOGNISED_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if not layout.languages)
+UNRECOGNISED_LAYOUTS = tuple(layout for layout in PROJECT_LAYOUTS if not (layout.languages or layout.formats))
 NON_CMAKE_C_FAMILY_LAYOUTS = tuple(layout for layout in C_FAMILY_LAYOUTS if not layout.uses_cmake)
 
 

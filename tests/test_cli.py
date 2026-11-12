@@ -13,7 +13,7 @@ from unittest.mock import patch
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
-from project_validator.ecosystems import C_FAMILY, applies_to
+from project_validator.ecosystems import C_FAMILY, applies_to, formats
 from project_validator.facts import Fact
 from project_validator.plugins import discover
 from project_validator.support_matrix import render, support_matrix
@@ -34,7 +34,8 @@ from tests.support import (
     well_configured,
 )
 
-LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages)
+# The checks of languages; a format's check (data-wellformed) applies wherever there are data files, CI included.
+LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages - formats())
 COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
 NOT_APPLICABLE = {
@@ -215,7 +216,9 @@ class CliTests(unittest.TestCase):
         code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
-        applicable = [found for found in discover().checks if not found.languages or found.languages & C_FAMILY]
+        # The fixture's CI configuration is YAML, so the format's check applies too.
+        names = C_FAMILY | formats()
+        applicable = [found for found in discover().checks if not found.languages or found.languages & names]
         self.assertIn(f"{len(applicable)} passed", output)
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
@@ -268,10 +271,12 @@ class ListTests(unittest.TestCase):
         code, output, _ = run_cli("--format", "markdown", str(FIXTURES / "well_configured_python"))
         self.assertEqual(code, EXIT_SUCCESS)
         self.assertTrue(output.startswith("# project_validator results\n\n✅ pass"))
-        self.assertIn("| `coverage` | ✅ coverage.py |", output)
-        self.assertIn("| `code-formatting` | ✅ ruff format |", output)
-        self.assertIn("| `fuzz-testing` | ✅ atheris |", output)
-        self.assertIn("\n## Results by ecosystem\n\n| Check | Python |\n", output)
+        # The fixture's data files (its CI configuration, pyproject.toml) are a Data column beside Python's.
+        self.assertIn("| `coverage` | — | ✅ coverage.py |", output)
+        self.assertIn("| `code-formatting` | — | ✅ ruff format |", output)
+        self.assertIn("| `fuzz-testing` | — | ✅ atheris |", output)
+        self.assertIn("| `data-wellformed` | ✅ | — |", output)
+        self.assertIn("\n## Results by ecosystem\n\n| Check | Data | Python |\n", output)
         self.assertIn("\n## Whole project\n", output)
 
     def test_list_as_json_is_the_check_list(self) -> None:
