@@ -16,6 +16,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "Cargo.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Rust",
       "origin": "src/lib.rs",
       "role": "product"
@@ -31,12 +38,25 @@
       "build_systems": [
         "Cargo"
       ],
+      "formats": [
+        "TOML"
+      ],
       "kind": "Unit",
       "languages": [
         "Rust"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "Cargo.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -132,11 +152,17 @@
       "providers": []
     },
     "ecosystems": {
+      "Data": [
+        ".toml files"
+      ],
       "Rust": [
         "build file Cargo.toml",
         ".rs files"
       ]
     },
+    "formats": [
+      "TOML"
+    ],
     "languages": [
       "Rust"
     ],
@@ -146,6 +172,9 @@
           "Cargo"
         ],
         "directory": ".",
+        "formats": [
+          "TOML"
+        ],
         "languages": [
           "Rust"
         ],

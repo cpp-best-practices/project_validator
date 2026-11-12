@@ -23,6 +23,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "fpm.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Fortran",
       "origin": "src/app.f90",
       "role": "product"
@@ -44,12 +51,25 @@
       "build_systems": [
         "fpm"
       ],
+      "formats": [
+        "TOML"
+      ],
       "kind": "Unit",
       "languages": [
         "Fortran"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "fpm.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -135,11 +155,17 @@
       "providers": []
     },
     "ecosystems": {
+      "Data": [
+        ".toml files"
+      ],
       "Fortran": [
         "build file fpm.toml",
         ".f90 files"
       ]
     },
+    "formats": [
+      "TOML"
+    ],
     "languages": [
       "Fortran"
     ],
@@ -149,6 +175,9 @@
           "fpm"
         ],
         "directory": ".",
+        "formats": [
+          "TOML"
+        ],
         "languages": [
           "Fortran"
         ],

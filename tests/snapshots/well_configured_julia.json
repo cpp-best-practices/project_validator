@@ -599,6 +599,46 @@
           }
         ]
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "TOML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "TOML",
+            "parsed": [
+              ".JuliaFormatter.toml",
+              "Project.toml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/copy-paste-detection.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -658,7 +698,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "6 data files parse (TOML: 2, YAML: 4)",
+      "message": "TOML: 2 TOML files parse; YAML: 4 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {

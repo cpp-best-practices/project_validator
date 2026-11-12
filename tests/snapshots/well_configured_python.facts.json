@@ -16,6 +16,48 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/codeql.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "pyproject.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Python",
       "origin": "tests/fuzz/fuzz_app.py",
       "role": "test"
@@ -31,12 +73,76 @@
       "build_systems": [
         "Python packaging"
       ],
+      "formats": [
+        "TOML",
+        "YAML"
+      ],
       "kind": "Unit",
       "languages": [
         "Python"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/codeql.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "pyproject.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "atheris fuzz targets (atheris.Setup or atheris.Fuzz)",
@@ -5854,11 +5960,19 @@
       ]
     },
     "ecosystems": {
+      "Data": [
+        ".toml files",
+        ".yml files"
+      ],
       "Python": [
         "build file pyproject.toml",
         ".py files"
       ]
     },
+    "formats": [
+      "TOML",
+      "YAML"
+    ],
     "languages": [
       "Python"
     ],
@@ -5868,6 +5982,10 @@
           "Python packaging"
         ],
         "directory": ".",
+        "formats": [
+          "TOML",
+          "YAML"
+        ],
         "languages": [
           "Python"
         ],

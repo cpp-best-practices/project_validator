@@ -717,6 +717,31 @@
         "language": "Go",
         "units": []
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/codeql.yml",
+              ".github/workflows/copy-paste-detection.yml",
+              ".github/workflows/function-limits.yml",
+              ".golangci.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -778,7 +803,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "7 data files parse (YAML: 7)",
+      "message": "7 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {

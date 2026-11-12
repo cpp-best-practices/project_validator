@@ -37,6 +37,7 @@
       "build_systems": [
         "ASDF"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Common Lisp"
@@ -83,6 +84,7 @@
         ".lisp files"
       ]
     },
+    "formats": [],
     "languages": [
       "Common Lisp"
     ],
@@ -92,6 +94,7 @@
           "ASDF"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Common Lisp"
         ],

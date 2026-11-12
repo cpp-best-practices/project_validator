@@ -571,6 +571,25 @@
           }
         ]
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "XML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "XML",
+            "parsed": [
+              "pom.xml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -635,7 +654,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "1 data file parses (XML: 1)",
+      "message": "1 XML file parses",
       "status": "PASS"
     },
     "dependency-audit": {

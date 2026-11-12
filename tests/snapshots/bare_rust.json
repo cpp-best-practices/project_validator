@@ -535,6 +535,25 @@
         "language": "Rust",
         "units": []
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "TOML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "TOML",
+            "parsed": [
+              "Cargo.toml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -599,7 +618,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "1 data file parses (TOML: 1)",
+      "message": "1 TOML file parses",
       "status": "PASS"
     },
     "dependency-audit": {

@@ -16,6 +16,48 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "TOML",
+      "origin": ".JuliaFormatter.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "Project.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Julia",
       "origin": "src/Shop.jl",
       "role": "product"
@@ -31,12 +73,76 @@
       "build_systems": [
         "Pkg"
       ],
+      "formats": [
+        "TOML",
+        "YAML"
+      ],
       "kind": "Unit",
       "languages": [
         "Julia"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".JuliaFormatter.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "Project.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "@test and @testset in test/runtests.jl",
@@ -2973,11 +3079,19 @@
       ]
     },
     "ecosystems": {
+      "Data": [
+        ".toml files",
+        ".yml files"
+      ],
       "Julia": [
         "build file Project.toml",
         ".jl files"
       ]
     },
+    "formats": [
+      "TOML",
+      "YAML"
+    ],
     "languages": [
       "Julia"
     ],
@@ -2987,6 +3101,10 @@
           "Pkg"
         ],
         "directory": ".",
+        "formats": [
+          "TOML",
+          "YAML"
+        ],
         "languages": [
           "Julia"
         ],

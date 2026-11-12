@@ -745,6 +745,46 @@
           }
         ]
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "XML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "XML",
+            "parsed": [
+              "pom.xml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/copy-paste-detection.yml",
+              ".github/workflows/function-limits.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -805,7 +845,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "6 data files parse (XML: 1, YAML: 5)",
+      "message": "XML: 1 XML file parses; YAML: 5 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {

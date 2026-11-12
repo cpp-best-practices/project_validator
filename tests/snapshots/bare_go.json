@@ -539,7 +539,8 @@
         "language": "Go",
         "units": []
       }
-    ]
+    ],
+    "wellformed": []
   },
   "results": {
     "action-pinning": {
@@ -603,8 +604,8 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "no JSON, TOML, YAML or XML files to parse",
-      "status": "PASS"
+      "message": "not applicable to Go",
+      "status": "SKIP"
     },
     "dependency-audit": {
       "details": [

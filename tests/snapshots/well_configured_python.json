@@ -786,6 +786,46 @@
         "language": "Python",
         "units": []
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "TOML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "TOML",
+            "parsed": [
+              "pyproject.toml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/codeql.yml",
+              ".github/workflows/copy-paste-detection.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -846,7 +886,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "6 data files parse (TOML: 1, YAML: 5)",
+      "message": "TOML: 1 TOML file parses; YAML: 5 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {

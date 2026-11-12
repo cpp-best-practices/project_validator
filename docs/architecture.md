@@ -43,6 +43,7 @@ language, a build system, a tool or a CI provider means adding extractors, and n
 | Toolchain | compiler and interpreter settings | GCC, Clang, MSVC, gfortran, rustc, swiftc, CPython: warning, hardening, sanitizer and coverage instrumentation flags |
 | Tool | a tool's invocation and configuration | gcovr, coverage.py, eslint, clang-tidy, lizard, osv-scanner, SwiftLint: what it measures or enforces, and for which files |
 | Language | source files | which languages a project uses, by suffix and by content |
+| Format | data files | JSON, TOML, YAML, XML: which formats a project's data and configuration are in, and whether each file parses |
 | Repository | the files themselves | committed artifacts, ignore rules, licences, security policy, large files |
 
 Extractors run in stages, and each one declares the fact types it reads and writes: files and recognition, then build
@@ -77,6 +78,20 @@ command lines for a flag anywhere on the line.
 
 Facts are Python dataclasses held in memory (`project_validator.facts.Facts`), queried by kind and field, by tool
 setting and by the file a tool reads (see step 3½). They are exported as JSON by `--facts`.
+
+### Languages and formats
+
+An ecosystem is a **language** or a **format** (`Ecosystem.kind`). A format is a kind of file that is not a program:
+JSON, YAML, TOML, XML; later Markdown, Dockerfiles, Kubernetes manifests. It has no toolchain, tests, coverage or
+dependencies; what can be asked of it is hygiene: its files parse, validate against their schema, are formatted, are
+linted. The model change is small because everything downstream of recognition is keyed on a name: a format's
+`languages` hold its format names, so a tool that handles `"YAML"` makes its check apply to the format, and a question
+answers for a format in the units whose files are in it (`Unit.formats`, beside `Unit.languages`). What is kept
+apart is the project's languages: `--map` lists `formats` beside `languages`, a format never makes a C++ project a
+"YAML project", and skip messages name languages only. A format's files are recognised in the hidden configuration
+directories too (`.github`, `.vscode`), where a language's are not: configuration is data. The first format
+ecosystem is `data` (`project_validator/ecosystems/data.py`), whose parsers make a `DataFile` fact of every data file
+at extraction (`facts/wellformed.py`); `data-wellformed` is its question and policy.
 
 ### Questions
 
@@ -556,5 +571,12 @@ except where a step deliberately changes results and says so.
     CI-facing checks that read the configuration themselves (`action-pinning`, `secret-scanning`, `ci-lint`) are
     questions and policies over facts; the repository-hygiene checks (`large-files`, `security-policy`,
     `status-badges`, `data-wellformed`) read the files, which is what they are about.
+
+11. **Formats beside languages.** An ecosystem has a `kind`, language or format (see "Languages and formats");
+    the registry answers `formats()`; a unit holds its `formats` beside its `languages`; a check applies to a
+    project whose files are in one of its formats as to one written in one of its languages; `--answers` asks every
+    question of each format. The `data` profile is the first format ecosystem: a `Parser` per format, each of the
+    project's data files a `DataFile` fact parsed once at extraction, and `data-wellformed` a question and a policy
+    judged per format and per unit, like every other check. `NOT_SOURCE_SUFFIXES` loses what the format claims.
 
 `--facts` and `--answers` expose the database and the answers.

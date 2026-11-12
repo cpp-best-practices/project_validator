@@ -31,6 +31,7 @@
       "build_systems": [
         "Zig build"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Zig"
@@ -80,6 +81,7 @@
         ".zig files"
       ]
     },
+    "formats": [],
     "languages": [
       "Zig"
     ],
@@ -89,6 +91,7 @@
           "Zig build"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Zig"
         ],

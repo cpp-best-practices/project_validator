@@ -421,7 +421,8 @@
           }
         ]
       }
-    ]
+    ],
+    "wellformed": []
   },
   "results": {
     "action-pinning": {
@@ -485,8 +486,8 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "no JSON, TOML, YAML or XML files to parse",
-      "status": "PASS"
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
     },
     "dependency-audit": {
       "details": [],

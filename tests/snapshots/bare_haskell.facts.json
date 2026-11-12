@@ -37,6 +37,7 @@
       "build_systems": [
         "Cabal"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Haskell"
@@ -167,6 +168,7 @@
         ".hs files"
       ]
     },
+    "formats": [],
     "languages": [
       "Haskell"
     ],
@@ -176,6 +178,7 @@
           "Cabal"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Haskell"
         ],

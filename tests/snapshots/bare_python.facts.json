@@ -16,6 +16,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "pyproject.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Python",
       "origin": "src/app/__init__.py",
       "role": "product"
@@ -24,12 +31,25 @@
       "build_systems": [
         "Python packaging"
       ],
+      "formats": [
+        "TOML"
+      ],
       "kind": "Unit",
       "languages": [
         "Python"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "pyproject.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -125,11 +145,17 @@
       "providers": []
     },
     "ecosystems": {
+      "Data": [
+        ".toml files"
+      ],
       "Python": [
         "build file pyproject.toml",
         ".py files"
       ]
     },
+    "formats": [
+      "TOML"
+    ],
     "languages": [
       "Python"
     ],
@@ -139,6 +165,9 @@
           "Python packaging"
         ],
         "directory": ".",
+        "formats": [
+          "TOML"
+        ],
         "languages": [
           "Python"
         ],

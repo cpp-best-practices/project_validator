@@ -16,6 +16,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "composer.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "PHP",
       "origin": "src/Calculator.php",
       "role": "product"
@@ -30,12 +37,25 @@
       "build_systems": [
         "Composer"
       ],
+      "formats": [
+        "JSON"
+      ],
       "kind": "Unit",
       "languages": [
         "PHP"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "composer.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -84,11 +104,17 @@
       "providers": []
     },
     "ecosystems": {
+      "Data": [
+        ".json files"
+      ],
       "PHP": [
         "build file composer.json",
         ".php files"
       ]
     },
+    "formats": [
+      "JSON"
+    ],
     "languages": [
       "PHP"
     ],
@@ -98,6 +124,9 @@
           "Composer"
         ],
         "directory": ".",
+        "formats": [
+          "JSON"
+        ],
         "languages": [
           "PHP"
         ],

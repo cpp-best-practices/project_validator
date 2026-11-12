@@ -14,6 +14,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "XML",
+      "origin": "pom.xml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Java",
       "origin": "src/main/java/com/example/App.java",
       "role": "product"
@@ -22,12 +29,25 @@
       "build_systems": [
         "Maven"
       ],
+      "formats": [
+        "XML"
+      ],
       "kind": "Unit",
       "languages": [
         "Java"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "XML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "pom.xml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -97,10 +117,16 @@
       "providers": []
     },
     "ecosystems": {
+      "Data": [
+        ".xml files"
+      ],
       "JVM": [
         ".java files"
       ]
     },
+    "formats": [
+      "XML"
+    ],
     "languages": [
       "Java"
     ],
@@ -110,6 +136,9 @@
           "Maven"
         ],
         "directory": ".",
+        "formats": [
+          "XML"
+        ],
         "languages": [
           "Java"
         ],

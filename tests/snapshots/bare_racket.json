@@ -377,7 +377,8 @@
         "language": "Racket",
         "units": []
       }
-    ]
+    ],
+    "wellformed": []
   },
   "results": {
     "action-pinning": {
@@ -441,8 +442,8 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "no JSON, TOML, YAML or XML files to parse",
-      "status": "PASS"
+      "message": "not applicable to Racket",
+      "status": "SKIP"
     },
     "dependency-audit": {
       "details": [],

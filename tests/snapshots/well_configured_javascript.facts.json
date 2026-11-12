@@ -16,6 +16,41 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/function-limits.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "JavaScript",
       "origin": "eslint.config.js",
       "role": "product"
@@ -26,6 +61,20 @@
       "language": "JavaScript",
       "origin": "fuzz/add.fuzz.js",
       "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "package-lock.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "package.json",
+      "role": "product"
     },
     {
       "ambiguous": false,
@@ -42,8 +91,26 @@
       "role": "product"
     },
     {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "stryker.config.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "tsconfig.json",
+      "role": "product"
+    },
+    {
       "build_systems": [
         "npm"
+      ],
+      "formats": [
+        "JSON",
+        "YAML"
       ],
       "kind": "Unit",
       "languages": [
@@ -52,6 +119,96 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/function-limits.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "package-lock.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "package.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "stryker.config.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "tsconfig.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "Jazzer.js fuzz targets (an exported fuzz function or .fuzz())",
@@ -4150,12 +4307,20 @@
       ]
     },
     "ecosystems": {
+      "Data": [
+        ".json files",
+        ".yml files"
+      ],
       "JavaScript/TypeScript": [
         "build file package.json",
         ".js files",
         ".ts files"
       ]
     },
+    "formats": [
+      "JSON",
+      "YAML"
+    ],
     "languages": [
       "JavaScript",
       "TypeScript"
@@ -4166,6 +4331,10 @@
           "npm"
         ],
         "directory": ".",
+        "formats": [
+          "JSON",
+          "YAML"
+        ],
         "languages": [
           "JavaScript",
           "TypeScript"

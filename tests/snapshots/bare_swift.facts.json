@@ -31,6 +31,7 @@
       "build_systems": [
         "SwiftPM"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Swift"
@@ -100,6 +101,7 @@
         ".swift files"
       ]
     },
+    "formats": [],
     "languages": [
       "Swift"
     ],
@@ -109,6 +111,7 @@
           "SwiftPM"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Swift"
         ],

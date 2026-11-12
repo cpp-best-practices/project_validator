@@ -635,6 +635,25 @@
           }
         ]
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "JSON",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "JSON",
+            "parsed": [
+              "package.json"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -699,7 +718,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "1 data file parses (JSON: 1)",
+      "message": "1 JSON file parses",
       "status": "PASS"
     },
     "dependency-audit": {

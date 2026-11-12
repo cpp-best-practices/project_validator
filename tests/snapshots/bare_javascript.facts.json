@@ -16,6 +16,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "package.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "JavaScript",
       "origin": "src/index.js",
       "role": "product"
@@ -30,12 +37,25 @@
       "build_systems": [
         "npm"
       ],
+      "formats": [
+        "JSON"
+      ],
       "kind": "Unit",
       "languages": [
         "JavaScript"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "package.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -87,11 +107,17 @@
       "providers": []
     },
     "ecosystems": {
+      "Data": [
+        ".json files"
+      ],
       "JavaScript/TypeScript": [
         "build file package.json",
         ".js files"
       ]
     },
+    "formats": [
+      "JSON"
+    ],
     "languages": [
       "JavaScript"
     ],
@@ -101,6 +127,9 @@
           "npm"
         ],
         "directory": ".",
+        "formats": [
+          "JSON"
+        ],
         "languages": [
           "JavaScript"
         ],

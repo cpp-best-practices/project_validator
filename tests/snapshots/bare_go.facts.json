@@ -37,6 +37,7 @@
       "build_systems": [
         "Go modules"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Go"
@@ -91,6 +92,7 @@
         ".go files"
       ]
     },
+    "formats": [],
     "languages": [
       "Go"
     ],
@@ -100,6 +102,7 @@
           "Go modules"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Go"
         ],

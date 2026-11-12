@@ -31,6 +31,7 @@
       "build_systems": [
         "sbt"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Scala"
@@ -67,6 +68,7 @@
         ".scala files"
       ]
     },
+    "formats": [],
     "languages": [
       "Scala"
     ],
@@ -76,6 +78,7 @@
           "sbt"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Scala"
         ],
