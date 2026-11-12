@@ -15,6 +15,7 @@ from dataclasses import dataclass, field
 from typing import Protocol, runtime_checkable
 
 from project_validator.components import known
+from project_validator.ecosystems import Kind
 from project_validator.facts import Facts, Unknown
 from project_validator.facts.auxiliary import Selectors, selectors
 from project_validator.facts.structure import SourceFile, Unit
@@ -167,13 +168,19 @@ def answer_dict(answer: UnitAnswer, verdict: Answer | None = None, /, **fields: 
     return {**found, **fields}
 
 
+LANGUAGES: frozenset[Kind] = frozenset({"language"})
+FORMATS: frozenset[Kind] = frozenset({"format"})
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Question:
-    """A question about the project, answered per language from the facts. Questions are found, never listed."""
+    """A question about the project, answered per language from the facts, for the `kinds` of ecosystem it is about:
+    languages (the default), formats (what parses), or both (what is formatted). Questions are found, never listed."""
 
     name: str
     description: str
     answer: Callable[[str, Facts], Answered]
+    kinds: frozenset[Kind] = LANGUAGES
 
 
 def known_questions() -> tuple[Question, ...]:
@@ -182,6 +189,8 @@ def known_questions() -> tuple[Question, ...]:
 
 
 __all__ = [
+    "FORMATS",
+    "LANGUAGES",
     "Answer",
     "Answered",
     "LanguageAnswers",

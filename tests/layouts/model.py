@@ -10,12 +10,15 @@ from project_validator.ecosystems import C_FAMILY
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ProjectLayout:
-    """A kind of project: its build and source files, and the languages and build systems they map to."""
+    """A kind of project: its build and source files, and the languages, formats and build systems they map to. The
+    formats are those the layout is about: a layout's build files (`Cargo.toml`) and the CI a test adds are in
+    formats too, which the layout need not name."""
 
     name: str
     files: Mapping[str, str]
     languages: frozenset[str]
     build_systems: frozenset[str]
+    formats: frozenset[str] = frozenset()
     # Checks that apply to the layout's languages but that its profile cannot judge, which it reports as SKIP.
     skipped: frozenset[str] = frozenset()
     # The profile module the layout belongs to, which names its fixtures; set when the layouts are collected.

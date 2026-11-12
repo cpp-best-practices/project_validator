@@ -50,6 +50,7 @@ class ProjectStructureTests(unittest.TestCase):
                 with layout_project(self, layout, {path: "jobs: {}\n"}, ci=provider) as root:
                     structure = make_context(root).structure
                     self.assertEqual(structure.languages, layout.languages)
+                    self.assertLessEqual(layout.formats, structure.formats)
                     self.assertEqual(structure.build_systems, layout.build_systems)
                     self.assertEqual(structure.ci_providers, (provider,))
                     self.assertEqual(structure.ci_files, (path,))
@@ -59,6 +60,7 @@ class ProjectStructureTests(unittest.TestCase):
             with layout_project(self, layout) as root:
                 structure = make_context(root).structure
                 self.assertEqual(structure.languages, layout.languages)
+                self.assertLessEqual(layout.formats, structure.formats)
                 self.assertEqual((structure.ci_providers, structure.ci_files, structure.ci_jobs), ((), (), ()))
 
     def test_build_files_name_their_languages(self) -> None:
@@ -175,8 +177,9 @@ class LanguageApplicabilityTests(unittest.TestCase):
             with layout_project(self, layout, {".github/workflows/ci.yml": GITHUB_CI}) as root:
                 context = make_context(root)
                 for found in discover().checks:
+                    # A format's check applies wherever its files are: the CI file added here is YAML.
                     expected = found.languages
-                    outside = bool(expected) and not expected & layout.languages
+                    outside = bool(expected) and not expected & (layout.languages | context.structure.formats)
                     skipped = outside or found.name in layout.skipped
                     self.assertEqual(run_check(found, context).status == Status.SKIP, skipped, found.name)
 

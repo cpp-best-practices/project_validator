@@ -5,7 +5,7 @@ does not parse. Nothing here judges: the `wellformed` question counts, and its p
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from project_validator.components import known
 from project_validator.core import Project
@@ -67,17 +67,17 @@ def parsed_formats() -> frozenset[str]:
     return frozenset(parser.format for parser in known_parsers())
 
 
-def _parsed(project: Project, path: str, parser: Parser) -> dict[str, object]:
-    """How the file at `path` parses, as the fields of its `DataFile` that say so."""
-    if project.size(path) > MAX_SIZE:
-        return {"unread": f"larger than {MAX_SIZE >> 20} MiB"}
+def _parsed(project: Project, parser: Parser, found: DataFile) -> DataFile:
+    """`found`, the data file at its path, with how it parses."""
+    if project.size(found.path) > MAX_SIZE:
+        return replace(found, unread=f"larger than {MAX_SIZE >> 20} MiB")
     try:
-        parser.parse(path, project.read_bytes(path))
+        parser.parse(found.path, project.read_bytes(found.path))
     except ParseError as error:
-        return {"problem": error.message, "line": error.line, "column": error.column}
+        return replace(found, problem=error.message, line=error.line, column=error.column)
     except RecursionError:
-        return {"problem": NESTED_MESSAGE}
-    return {}
+        return replace(found, problem=NESTED_MESSAGE)
+    return found
 
 
 def data_file_facts(project: Project, facts: Facts, parsers: Iterable[Parser]) -> Iterator[DataFile]:
@@ -88,8 +88,7 @@ def data_file_facts(project: Project, facts: Facts, parsers: Iterable[Parser]) -
     for source in facts.of(SourceFile):
         parser = by_format.get(source.language or "")
         if parser is not None and not source.vendored:
-            fields = _parsed(project, source.path, parser)
-            yield DataFile(origin=source.origin, format=parser.format, role=source.role, **fields)  # type: ignore[arg-type]
+            yield _parsed(project, parser, DataFile(origin=source.origin, format=parser.format, role=source.role))
 
 
 __all__ = [

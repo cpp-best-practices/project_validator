@@ -1,0 +1,8 @@
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: pipx run yamllint --strict .
+      - run: pipx run check-jsonschema --schemafile schema/catalog.schema.json data/catalog.json

@@ -12,8 +12,9 @@ from project_validator.facts.build import Applies, CompilerOption
 from project_validator.facts.conditions import DIMENSIONS
 from project_validator.facts.jobs import Job
 from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
-from project_validator.facts.structure import Unit
+from project_validator.facts.structure import SourceFile, Unit
 from project_validator.facts.tools import ToolRun
+from project_validator.facts.wellformed import DataFile
 from tests.support import GITHUB_WORKFLOW, make_context, temp_project
 
 
@@ -372,9 +373,10 @@ class OtherProviderFactTests(unittest.TestCase):
         facts = _facts({GITHUB_WORKFLOW: workflow, ".github/workflows/list.yml": "- a\n", ".gitlab-ci.yml": "- a\n"})
         self.assertEqual(_argvs(facts), [("ctest",)])
         # ctest is a test runner, so its command is a run too; the job builds, on Linux. The structure facts every
-        # project has (what --auxiliary named, the root unit) come first.
+        # project has (what --auxiliary named, the three YAML files, the root unit) come first, then the data files.
         found = [type(fact) for fact in facts if not isinstance(fact, CiConfiguration)]
-        self.assertEqual(found, [AuxiliaryCode, Unit, CiJob, Command, Job, ToolRun])
+        yaml, data = [SourceFile] * 3, [DataFile] * 3
+        self.assertEqual(found, [AuxiliaryCode, *yaml, Unit, *data, CiJob, Command, Job, ToolRun])
 
     def test_invalid_yaml_is_unknown(self) -> None:
         facts = _facts({GITHUB_WORKFLOW: "jobs: [\n"})

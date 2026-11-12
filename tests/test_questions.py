@@ -14,7 +14,7 @@ from project_validator.facts.coverage import COVERAGE, Granularity, coverage_too
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import Run, Tool, ToolRun
 from project_validator.policy.coverage import judge_coverage, required_coverage
-from project_validator.questions import Answer, answer_dict, units_of, unknowns_for
+from project_validator.questions import FORMATS, LANGUAGES, Answer, answer_dict, known_questions, units_of, unknowns_for
 from project_validator.questions.answers import answers
 from project_validator.questions.coverage import coverage_answer
 from tests.support import FORMAT_ECOSYSTEM, github_job, make_context, temp_project
@@ -170,16 +170,19 @@ class UnitTests(unittest.TestCase):
             )
         )
         self.assertEqual((units_of("WDATA", facts), units_of("Lang", facts)), ((".",), ("b",)))
+        self.assertEqual(units_of("WDATA", Facts()), (".",))
 
-    def test_every_question_is_asked_of_each_language_and_format(self) -> None:
+    def test_every_question_is_asked_of_the_languages_or_formats_it_is_about(self) -> None:
         with isolated_registry(), temp_project({"src/a.wdata": "", "setup.py": ""}) as root:
             register(FORMAT_ECOSYSTEM)
             found = answers(make_context(root))
+        kinds = {question.name: question.kinds for question in known_questions()}
+        self.assertEqual((kinds["coverage"], kinds["wellformed"]), (LANGUAGES, FORMATS))
         for question, entries in found.items():
             with self.subTest(question=question):
-                self.assertEqual(
-                    [entry["language"] for entry in cast("list[dict[str, object]]", entries)], ["Python", "WDATA"]
-                )
+                expected = [*["Python"] * ("language" in kinds[question]), *["WDATA"] * ("format" in kinds[question])]
+                asked = [entry["language"] for entry in cast("list[dict[str, object]]", entries)]
+                self.assertEqual(asked, expected)
 
     def test_each_unit_of_a_language_is_answered(self) -> None:
         facts = Facts(

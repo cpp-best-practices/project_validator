@@ -101,14 +101,14 @@ class SuffixTests(unittest.TestCase):
 class ContentProbeTests(unittest.TestCase):
     def test_a_probe_recognises_what_file_names_cannot_show(self) -> None:
         with _structure({"manifest.toml": "[widget]\nname = 'app'\n"}) as structure:
-            # The probe's languages outside its ecosystem (Gadget) are ignored.
+            # The probe's languages outside its ecosystem (Gadget) are ignored. The manifest is TOML, a format.
             self.assertEqual(structure.languages, WIDGET)
-            self.assertEqual(structure.recognised_by, {"Widget": ("content",)})
+            self.assertEqual(structure.recognised_by, {"Data": (".toml files",), "Widget": ("content",)})
 
     def test_a_probe_that_finds_nothing_recognises_nothing(self) -> None:
         with _structure({"manifest.toml": "[package]\n"}) as structure:
             self.assertEqual(structure.languages, frozenset())
-            self.assertEqual(structure.recognised_by, {})
+            self.assertEqual(structure.recognised_by, {"Data": (".toml files",)})
 
     def test_a_probe_reads_only_the_head_of_a_file(self) -> None:
         with temp_project({"big.txt": "a" * 10_000 + "[widget]"}) as root:
