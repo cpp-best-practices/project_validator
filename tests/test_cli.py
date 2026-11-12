@@ -36,6 +36,11 @@ from tests.support import (
 
 # The checks of languages; a format's check (data-wellformed) applies wherever there are data files, CI included.
 LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages - formats())
+# The checks that apply to the C++ fixture: those of every project, of C or C++, and of the formats its CI
+# configuration is in (YAML); the fixture passes them all.
+PASSING_IN_C_CPP = [
+    found for found in discover().checks if not found.languages or found.languages & (C_FAMILY | formats())
+]
 COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
 NOT_APPLICABLE = {
@@ -216,16 +221,14 @@ class CliTests(unittest.TestCase):
         code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured_c_cpp"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
-        # The fixture's CI configuration is YAML, so the format's check applies too.
-        names = C_FAMILY | formats()
-        applicable = [found for found in discover().checks if not found.languages or found.languages & names]
-        self.assertIn(f"{len(applicable)} passed", output)
+        self.assertIn(f"{len(PASSING_IN_C_CPP)} passed", output)
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
         for choice in ("never", "auto"):
             _, output, _ = run_cli("--color", choice, str(FIXTURES / "well_configured_c_cpp"))
             self.assertNotIn("\x1b[", output)
             self.assertIn("[PASS] coverage:", output)
+            self.assertEqual(output.count("[PASS] "), len(PASSING_IN_C_CPP))
 
     def test_color_auto_is_used_for_a_terminal_unless_no_color_is_set(self) -> None:
         with mock.patch.object(pretty, "available", return_value=False):
