@@ -11,15 +11,18 @@ from project_validator.ecosystems import (
     Ecosystem,
     applies_to,
     ecosystems_for,
+    formats,
     isolated_registry,
+    languages_of,
     register,
     registered,
 )
 from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.model import toolchain_patterns
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 from project_validator.judging import by_ecosystem, check_each_ecosystem
-from tests.support import make_context, temp_project
+from tests.support import FORMAT_ECOSYSTEM, make_context, temp_project
 
 
 class EcosystemsForTests(unittest.TestCase):
@@ -104,3 +107,36 @@ class RegistryTests(unittest.TestCase):
             applies_to(Check(name="c", description="", run=run, languages_from=lambda: frozenset({"C"}))), ("C/C++",)
         )
         self.assertEqual(applies_to(Check(name="any", description="", run=run)), ())
+
+
+class FormatTests(unittest.TestCase):
+    """A format is a kind of file that is not a program: an ecosystem of `kind` format, whose `languages` are its
+    format names. It has no toolchain (nothing has a version to pin); it may have build systems (a documentation
+    site is built) and its files are judged for hygiene only."""
+
+    def test_a_format_has_no_toolchain(self) -> None:
+        with self.assertRaises(ValueError) as raised:
+            Ecosystem(
+                label="Widget data",
+                kind="format",
+                languages=frozenset({"WDATA"}),
+                toolchain=toolchain_patterns("WDATA", commands=r"\bwdata\b"),
+            )
+        self.assertEqual(str(raised.exception), "Widget data: a format has no toolchain")
+
+    def test_the_formats_are_the_names_of_the_format_ecosystems(self) -> None:
+        with isolated_registry():
+            register(FORMAT_ECOSYSTEM)
+            self.assertIn("WDATA", formats())
+            languages = languages_of(found for found in registered() if found.kind == "language")
+            self.assertFalse(formats() & languages)
+        self.assertNotIn("WDATA", formats())
+
+    def test_a_check_of_a_format_applies_to_the_formats_ecosystem(self) -> None:
+        def run(_: Context) -> Result:
+            return Result.passed("")
+
+        selected = Check(name="w", description="", run=run, languages_from=lambda: frozenset({"WDATA"}))
+        with isolated_registry():
+            register(FORMAT_ECOSYSTEM)
+            self.assertEqual(applies_to(selected), ("Widget data",))
