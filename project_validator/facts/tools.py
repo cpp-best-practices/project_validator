@@ -14,7 +14,7 @@ from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
-from project_validator.components import known
+from project_validator.components import component_cache, known
 from project_validator.facts import NOTHING, Command, ConfigurationFile, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import has_option, starts_with
 
@@ -168,9 +168,10 @@ def when(matches: Condition, run: Callable[[], Run]) -> Claim:
 
 def handling(aspect: str) -> Callable[[], frozenset[str]]:
     """The languages the tools now known handle for `aspect` (plugins add tools, so it is asked when needed)."""
-    return lambda: frozenset().union(*(tool.languages for tool in tools_for(aspect)))
+    return component_cache(lambda: frozenset().union(*(tool.languages for tool in tools_for(aspect))))
 
 
+@component_cache
 def tools_for(aspect: str) -> tuple[Tool, ...]:
     """The tools now known that can provide `aspect`."""
     return tuple(tool for tool in known_tools() if aspect in tool.can)

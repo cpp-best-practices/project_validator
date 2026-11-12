@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from dataclasses import replace
 
+from project_validator.components import component_cache
 from project_validator.core import Check, Context, Placed, Result, Status
 from project_validator.ecosystems import Ecosystem, ecosystems_for, registered
 from project_validator.facts import Facts
@@ -176,7 +177,7 @@ def answered_check[A: UnitAnswer](
         if aspect is None:
             raise TypeError("answered_check needs an aspect or languages")
         languages = handling(aspect)
-    handled = languages
+    handled = component_cache(languages)
 
     def run(context: Context) -> Result:
         now = handled()

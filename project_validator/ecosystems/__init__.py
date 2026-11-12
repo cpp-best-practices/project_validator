@@ -13,6 +13,7 @@ from fnmatch import fnmatchcase
 from pathlib import Path
 from types import ModuleType
 
+from project_validator.components import component_cache, forget, isolated_plugins
 from project_validator.core import Check
 from project_validator.ecosystems.model import (
     C_FAMILY,
@@ -121,25 +122,26 @@ def register(ecosystem: Ecosystem) -> None:
         _registered[replaced[0]] = ecosystem
     else:
         _registered.append(ecosystem)
+    forget()
 
 
 @contextmanager
 def isolated_registry() -> Iterator[None]:
     """Undo, on leaving, every registration made inside, and every plugin's components (for tests)."""
-    from project_validator.components import isolated_plugins
-
     saved = list(_registered)
     try:
         with isolated_plugins():
             yield
     finally:
         _registered[:] = saved
+        forget()
 
 
 def build_systems() -> tuple[BuildSystem, ...]:
     return tuple(system for ecosystem in _registered for system in ecosystem.build_systems)
 
 
+@component_cache
 def applies_to(selected: Check) -> tuple[str, ...]:
     """The labels of the ecosystems `selected` judges; none for a check that judges every project."""
     if selected.languages:
