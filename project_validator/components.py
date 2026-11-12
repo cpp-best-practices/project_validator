@@ -10,10 +10,12 @@ from __future__ import annotations
 
 import importlib
 import pkgutil
-from collections.abc import Iterable, Iterator
+import weakref
+from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
 from functools import cache
 from types import ModuleType
+from typing import Any, cast
 
 # The packages whose modules may define components, besides the profiles.
 _PACKAGES = (
@@ -41,10 +43,29 @@ def _built_in_modules() -> Iterator[ModuleType]:
             yield importlib.import_module(f"{profile.__name__}.{info.name}")
 
 
+# Every cache of what is computed from the known components, cleared together (see `component_cache`).
+_caches: weakref.WeakSet[Any] = weakref.WeakSet()
+
+
+def component_cache[**P, R](compute: Callable[P, R]) -> Callable[P, R]:
+    """`functools.cache` for what is computed from the known components or ecosystems (the tools of an aspect, the
+    languages a check judges, the ecosystems it applies to): computed once, until they change (a plugin is loaded,
+    an ecosystem is registered, a test isolates them), when `forget` clears every such cache."""
+    cached = cache(compute)
+    _caches.add(cached)
+    return cast("Callable[P, R]", cached)
+
+
+def forget() -> None:
+    """Forget everything computed from the known components and ecosystems: they have changed."""
+    for cached in _caches:
+        cached.cache_clear()
+
+
 def add_plugin_modules(modules: Iterable[ModuleType]) -> None:
     """Make the components the plugin `modules` define known, alongside the built-in ones."""
     _plugins.update((module.__name__, module) for module in modules)
-    known.cache_clear()
+    forget()
 
 
 @contextmanager
@@ -56,10 +77,10 @@ def isolated_plugins() -> Iterator[None]:
     finally:
         _plugins.clear()
         _plugins.update(saved)
-        known.cache_clear()
+        forget()
 
 
-@cache
+@component_cache
 def known[T](kind: type[T]) -> tuple[T, ...]:
     """Every component of type `kind` a built-in module or a plugin module defines."""
     modules = (*_built_in_modules(), *_plugins.values())
@@ -74,4 +95,4 @@ def known[T](kind: type[T]) -> tuple[T, ...]:
     return tuple({id(value): value for value in found if isinstance(value, kind)}.values())
 
 
-__all__ = ["add_plugin_modules", "isolated_plugins", "known"]
+__all__ = ["add_plugin_modules", "component_cache", "forget", "isolated_plugins", "known"]

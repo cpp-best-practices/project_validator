@@ -23,6 +23,7 @@ from project_validator.ecosystems.perl import PERL_ECOSYSTEM
 from project_validator.ecosystems.php import PHP
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
+from project_validator.facts.tools import tools_for
 from project_validator.judging import by_ecosystem, check_each_ecosystem
 from tests.support import FORMAT_ECOSYSTEM, evidence, make_context, temp_project, uses
 
@@ -163,6 +164,25 @@ class ToolchainUsageTests(unittest.TestCase):
         self.assertFalse(runs((("go", "tool", "cover"),), subcommands("go", "build", "test")))
         self.assertTrue(runs(((r"vendor\bin\phpunit",),), (), directories=("vendor/bin",)))
         self.assertFalse(runs(((),), (("go",),), directories=("vendor/bin",)))
+
+
+class ComponentCacheTests(unittest.TestCase):
+    """What is computed from the known components (the tools of an aspect, the languages a check judges, the
+    ecosystems it applies to) is computed once, until the known components or ecosystems change."""
+
+    def test_the_tools_of_an_aspect_are_computed_once(self) -> None:
+        self.assertIs(tools_for("coverage"), tools_for("coverage"))
+
+    def test_the_ecosystems_a_check_applies_to_are_computed_once_until_the_registry_changes(self) -> None:
+        def run(_: Context) -> Result:
+            return Result.passed("")
+
+        selected = Check(name="widgets", description="", run=run, languages_from=lambda: frozenset({"WDATA"}))
+        self.assertEqual(applies_to(selected), ())
+        with isolated_registry():
+            register(FORMAT_ECOSYSTEM)
+            self.assertEqual(applies_to(selected), ("Widget data",))
+        self.assertEqual(applies_to(selected), ())
 
 
 class FormatTests(unittest.TestCase):
