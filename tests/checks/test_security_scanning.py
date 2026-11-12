@@ -31,7 +31,12 @@ C_HINT = (
 
 
 def _layouts_of(*languages: str) -> tuple[ProjectLayout, ...]:
-    return tuple(layout for layout in PROJECT_LAYOUTS if layout.languages | layout.formats == frozenset(languages))
+    wanted = frozenset(languages)
+    return tuple(
+        layout
+        for layout in PROJECT_LAYOUTS
+        if layout.languages == wanted or (not layout.languages and wanted <= layout.formats)
+    )
 
 
 def _steps(*steps: Mapping[str, object]) -> dict[str, str]:
@@ -57,8 +62,8 @@ class SecurityScanningTests(unittest.TestCase):
         )
 
     def test_passes_with_codeql_in_every_layout(self) -> None:
-        # CodeQL does not analyse PHP, Terraform's HCL, Elixir, Scala, Dart, Lua, OCaml, Julia, Clojure or Dockerfiles
-        # (nothing scans Erlang or Haskell: skipped).
+        # CodeQL does not analyse PHP, Terraform's HCL, Elixir, Scala, Dart, Lua, OCaml, Julia, Clojure, Dockerfiles or
+        # Kubernetes manifests (nothing scans Erlang or Haskell: skipped).
         unread = {
             "PHP": "PHP",
             "Terraform": "Terraform",
@@ -70,6 +75,7 @@ class SecurityScanningTests(unittest.TestCase):
             "Julia": "Julia",
             "Clojure": "Clojure",
             "Dockerfile": "Docker",
+            "Kubernetes": "Kubernetes",
         }
         layouts = tuple(layout for layout in PROJECT_LAYOUTS if not (layout.languages | layout.formats) & unread.keys())
         self.assertEqual(run_in_every_layout(self, security_scanning, WELL_CONFIGURED, layouts), _found("CodeQL"))

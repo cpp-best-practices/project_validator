@@ -72,7 +72,8 @@ class BuildFile(Fact):
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ContentLanguages(Fact):
-    """Languages an ecosystem's probe found in the project's content, for intent that file names cannot show."""
+    """Languages (or formats) an ecosystem's probe found in the project's content, for intent that file names cannot
+    show."""
 
     ecosystem: str
     languages: frozenset[str]
@@ -185,15 +186,20 @@ def project_languages(facts: Facts) -> frozenset[str]:
         {
             *(language for build in facts.of(BuildFile) for language in build.languages),
             *(name for name in _own_sources(facts) if name not in known),
-            *(language for content in facts.of(ContentLanguages) for language in content.languages),
+            *(name for name in _content_names(facts) if name not in known),
         }
     )
 
 
+def _content_names(facts: Facts) -> Iterator[str]:
+    """The languages and formats the content probes found."""
+    return (name for content in facts.of(ContentLanguages) for name in content.languages)
+
+
 def project_formats(facts: Facts) -> frozenset[str]:
-    """The formats the project's own files are in."""
+    """The formats the project's own files are in, or that its content shows (a Kubernetes manifest is YAML)."""
     known = formats()
-    return frozenset(name for name in _own_sources(facts) if name in known)
+    return frozenset(name for name in (*_own_sources(facts), *_content_names(facts)) if name in known)
 
 
 def _configuration(path: str) -> bool:
@@ -301,8 +307,11 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
     for build in facts.of(BuildFile):
         if (directory := _directory(build)) not in workspaces or languages.get(directory):
             languages.setdefault(owner(directory, roots), set()).update(_own(build.languages, build.origin.path, named))
+    known = formats()
     for content in facts.of(ContentLanguages):
-        languages["."].update(_own(content.languages, ".", named, directory=True))
+        names = _own(content.languages, ".", named, directory=True)
+        languages["."].update(names - known)
+        formats_.setdefault(".", set()).update(names & known)
     for directory in sorted(languages, key=lambda root: (root != ".", root)):
         if (purpose := role(directory, directory=True)) == "vendored":
             continue

@@ -32,6 +32,9 @@ class TestFiles:
     languages: frozenset[str]
     path: re.Pattern[str]
     contains: re.Pattern[str] | None = None
+    # The languages (or formats) the test files are written in, when not `languages`: the tests of a format
+    # recognised by content are files of another format (a Helm chart's tests are YAML).
+    written_in: frozenset[str] = frozenset()
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -67,10 +70,11 @@ def test_file_facts(project: Project, facts: Facts, kinds: Iterable[TestFiles]) 
         if source.language is None or role(source.path) == "vendored":
             continue
         for kind in kinds:
-            if source.language not in kind.languages or not kind.path.search(source.path):
+            if source.language not in (kind.written_in or kind.languages) or not kind.path.search(source.path):
                 continue
             if kind.contains is None or kind.contains.search(project.read_text(source.path)):
-                yield TestFile(origin=source.origin, language=source.language, kind=kind.name)
+                language = source.language if source.language in kind.languages else min(kind.languages)
+                yield TestFile(origin=source.origin, language=language, kind=kind.name)
 
 
 def tests_of(*kinds: str) -> Definition:

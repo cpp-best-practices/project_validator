@@ -50,7 +50,8 @@ class Parser:
 @dataclass(frozen=True, slots=True, kw_only=True)
 class DataFile(Fact):
     """A file in a format with a parser, and whether it parses: `problem` says why it does not (None when it does),
-    at `line`:`column` when the parser says; `unread` says why it was not parsed (too large). `role` is the file's
+    at `line`:`column` when the parser says; `unread` says why it was not parsed (too large, a template). `role` is
+    the file's
     (see `project_validator.facts.roles`): a test suite's data may be malformed on purpose."""
 
     format: str
@@ -58,6 +59,7 @@ class DataFile(Fact):
     problem: str | None = None
     line: int | None = None
     column: int | None = None
+    # Why the file was not parsed: too large, or a template.
     unread: str | None = None
 
     @property
@@ -76,7 +78,10 @@ def parsed_formats() -> frozenset[str]:
 
 
 def _parsed(project: Project, parser: Parser, found: DataFile) -> DataFile:
-    """`found`, the data file at its path, with how it parses."""
+    """`found`, the data file at its path, with how it parses; a template is rendered before it is read, so it is
+    not parsed as it is."""
+    if found.role == "template":
+        return replace(found, unread="a template, rendered before it is read")
     if project.size(found.path) > MAX_SIZE:
         return replace(found, unread=f"larger than {MAX_SIZE >> 20} MiB")
     try:

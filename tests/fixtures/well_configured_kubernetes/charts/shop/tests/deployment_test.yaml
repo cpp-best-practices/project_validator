@@ -1,0 +1,16 @@
+suite: deployment
+templates:
+  - deployment.yaml
+tests:
+  - it: runs the configured replicas
+    set:
+      replicaCount: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+  - it: never runs as root
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true

@@ -1657,6 +1657,29 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
       "languages": [
+        "Kubernetes"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "checkov",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:jobs.lint.steps[4]",
