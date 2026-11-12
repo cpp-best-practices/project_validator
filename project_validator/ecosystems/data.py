@@ -15,7 +15,7 @@ from xml.parsers import expat
 
 from project_validator import yaml_support
 from project_validator.ecosystems.model import Ecosystem
-from project_validator.facts.wellformed import ParseError, Parser
+from project_validator.facts.wellformed import ParseError, Parser, decoded
 from project_validator.text import JsonSyntaxError, check_json, strip_json_comments
 
 JSON, TOML, XML, YAML = "JSON", "TOML", "XML", "YAML"
@@ -23,13 +23,6 @@ DATA_FORMATS = frozenset({JSON, TOML, XML, YAML})
 
 # JSON files that tools read with comments and trailing commas allowed.
 JSON_WITH_COMMENTS = ("*.jsonc", "tsconfig*.json", "jsconfig.json", "devcontainer.json", ".vscode/*.json")
-
-
-def _decoded(data: bytes) -> str:
-    try:
-        return data.decode("utf-8-sig")
-    except UnicodeDecodeError as error:
-        raise ParseError(f"not UTF-8 ({error.reason} at byte {error.start})") from error
 
 
 def _allows_comments(path: str) -> bool:
@@ -46,7 +39,7 @@ def _check_deep_json(text: str) -> None:
 
 
 def _parse_json(path: str, data: bytes) -> None:
-    text = _decoded(data)
+    text = decoded(data)
     text = strip_json_comments(text) if _allows_comments(path) else text
     try:
         json.loads(text)
@@ -62,7 +55,7 @@ _TOML_POSITION = re.compile(r" \(at line (\d+), column (\d+)\)$")
 
 def _parse_toml(_path: str, data: bytes) -> None:
     try:
-        tomllib.loads(_decoded(data))
+        tomllib.loads(decoded(data))
     except tomllib.TOMLDecodeError as error:
         message, position = str(error), _TOML_POSITION.search(str(error))
         if position is None:
@@ -72,7 +65,7 @@ def _parse_toml(_path: str, data: bytes) -> None:
 
 def _parse_yaml(_path: str, data: bytes) -> None:
     try:
-        yaml_support.check_documents(_decoded(data))
+        yaml_support.check_documents(decoded(data))
     except yaml_support.YamlError as error:
         raise ParseError(str(error), error.line, error.column) from error
 

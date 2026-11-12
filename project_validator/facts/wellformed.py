@@ -29,6 +29,14 @@ class ParseError(Exception):
 type Parse = Callable[[str, bytes], None]
 
 
+def decoded(data: bytes) -> str:
+    """A file's bytes as UTF-8 text (a byte order mark allowed); `ParseError` when they are not UTF-8."""
+    try:
+        return data.decode("utf-8-sig")
+    except UnicodeDecodeError as error:
+        raise ParseError(f"not UTF-8 ({error.reason} at byte {error.start})") from error
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Parser:
     """How the files of one format are read for well-formedness: `parse(path, data)` returns when `data`, the bytes of
@@ -99,6 +107,7 @@ __all__ = [
     "ParseError",
     "Parser",
     "data_file_facts",
+    "decoded",
     "known_parsers",
     "parsed_formats",
 ]

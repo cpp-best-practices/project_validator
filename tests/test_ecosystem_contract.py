@@ -48,15 +48,16 @@ class EcosystemContractTests(unittest.TestCase):
 
     def test_fixtures_are_recognised_as_their_ecosystem(self) -> None:
         """A language ecosystem's fixtures are written in its languages alone; a format ecosystem's are in its
-        formats, and in no language."""
+        formats (beside those of their CI configuration) and in no language."""
         for ecosystem, fixtures in FIXTURES_OF.items():
             for fixture in fixtures:
                 with self.subTest(fixture=fixture):
                     structure = make_context(FIXTURES / fixture).structure
-                    names = structure.languages if ecosystem.kind == "language" else structure.formats
-                    self.assertTrue(names)
-                    self.assertLessEqual(names, ecosystem.languages)
-                    if ecosystem.kind == "format":
+                    if ecosystem.kind == "language":
+                        self.assertTrue(structure.languages)
+                        self.assertLessEqual(structure.languages, ecosystem.languages)
+                    else:
+                        self.assertTrue(structure.formats & ecosystem.languages)
                         self.assertEqual(structure.languages, frozenset())
 
     def test_a_well_configured_project_passes_every_check_that_applies_to_it(self) -> None:

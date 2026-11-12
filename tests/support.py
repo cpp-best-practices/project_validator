@@ -73,9 +73,9 @@ PROJECT_LAYOUTS = (*layouts.PROFILE_LAYOUTS, layouts.UNRECOGNISED)
 
 
 def checked_ecosystems(selected: Check, layout: ProjectLayout) -> tuple[Ecosystem, ...]:
-    """The ecosystems `selected` judges in a project of `layout`."""
+    """The ecosystems `selected` judges in a project of `layout` (of its languages, and of its formats)."""
     supported = (ecosystem for ecosystem in BUILT_IN if ecosystem.languages <= selected.languages)
-    return ecosystems_for(layout.languages, supported)
+    return ecosystems_for(layout.languages | layout.formats, supported)
 
 
 def layouts_checked_as(selected: Check, *ecosystems: Ecosystem) -> tuple[ProjectLayout, ...]:

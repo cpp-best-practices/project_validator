@@ -1,0 +1,65 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Dockerfile",
+      "origin": "Dockerfile",
+      "role": "product"
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "Dockerfile"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": 1,
+      "format": "Dockerfile",
+      "kind": "DataFile",
+      "line": 1,
+      "origin": "Dockerfile",
+      "problem": "the first instruction is RUN, not FROM",
+      "role": "product",
+      "unread": null
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Docker": [
+        "Dockerfile files"
+      ]
+    },
+    "formats": [
+      "Dockerfile"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "Dockerfile"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

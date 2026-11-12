@@ -138,6 +138,30 @@ def _source_suffixes() -> dict[str, tuple[str, Kind]]:
     }
 
 
+def _source_names() -> tuple[tuple[str, str, Kind], ...]:
+    """(file name pattern, the language or format, which of the two) of the sources with no telling suffix."""
+    return tuple(
+        (pattern, name, ecosystem.kind)
+        for ecosystem in registered()
+        for pattern, name in (ecosystem.source_names or {}).items()
+    )
+
+
+def _by_name(path: str) -> tuple[str, str, Kind] | None:
+    """The name pattern that recognises the file at `path` as a source, with its language or format."""
+    name = PurePosixPath(path).name
+    return next((found for found in _source_names() if fnmatchcase(name, found[0])), None)
+
+
+def source_signal(path: str) -> str:
+    """What recognises the source at `path`: its suffix, or, for a source with no telling suffix, the name pattern
+    (`Dockerfile.*`)."""
+    suffix = PurePosixPath(path).suffix
+    if suffix in _source_suffixes() or (found := _by_name(path)) is None:
+        return suffix
+    return found[0]
+
+
 def _ambiguous(files: list[str], confirmed: list[Ecosystem]) -> Iterator[SourceFile]:
     for ecosystem in confirmed:
         for suffix, language in sorted((ecosystem.ambiguous_suffixes or {}).items()):
@@ -182,6 +206,8 @@ def _sources(project: Project) -> Iterator[SourceFile]:
     known = _source_suffixes()
     for path in project.files(hidden=CONFIGURATION_DIRECTORIES):
         found = known.get(PurePosixPath(path).suffix)
+        if found is None and (named := _by_name(path)) is not None:
+            found = named[1:]
         if found is not None and (found[1] == "format" or not _configuration(path)):
             yield SourceFile(origin=Origin(path=path), language=found[0], role=role(path))
 
@@ -301,8 +327,9 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     names = project_languages(plain) | project_formats(plain)
     ambiguous = list(_ambiguous(files, [ecosystem for ecosystem in registered() if ecosystem.languages & names]))
     yield from ambiguous
-    recognised = {PurePosixPath(source.path).suffix for source in (*plain.of(SourceFile), *ambiguous)}
-    yield from _unrecognised(files, {path for _, path in found}, recognised)
+    sources = (*plain.of(SourceFile), *ambiguous)
+    recognised = {signal for source in sources if (signal := source_signal(source.path)).startswith(".")}
+    yield from _unrecognised(files, {*(path for _, path in found), *(source.path for source in sources)}, recognised)
     yield from _units(project, Facts((*plain, *ambiguous)), named)
 
 
@@ -316,5 +343,6 @@ __all__ = [
     "UnrecognisedSuffix",
     "project_formats",
     "project_languages",
+    "source_signal",
     "structure_facts",
 ]
