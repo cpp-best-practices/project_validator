@@ -6,6 +6,7 @@ are not followed: their bodies are split like any other lines.
 
 from __future__ import annotations
 
+import re
 from pathlib import PurePosixPath
 
 from project_validator.core import Context
@@ -13,10 +14,17 @@ from project_validator.facts import Command, Origin, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 
-_SHELLS = frozenset({"sh", "bash", "zsh", "dash", "ksh"})
+SHELLS = frozenset({"sh", "bash", "zsh", "dash", "ksh"})
 # Shell options that take a value (`bash -o pipefail script.sh`).
 _SHELL_VALUES = frozenset({"-o", "+o", "-O", "+O"})
-_SHEBANG = ("#!/bin/sh", "#!/bin/bash", "#!/usr/bin/env bash", "#!/usr/bin/env sh", "#!/usr/bin/env zsh")
+# `#!/bin/bash`, `#!/usr/bin/env bash`, `#!/usr/bin/env -S bash -e`: the interpreter's name, wherever it is.
+_SHEBANG = re.compile(r"\A#!\s*(?:/usr/bin/env\s+(?:-S\s+)?)?(?:\S*/)?(?P<name>[\w.-]+)")
+
+
+def interpreter(text: str) -> str | None:
+    """The program a script's shebang names (`bash` for `#!/usr/bin/env bash`); None for a file without one."""
+    match = _SHEBANG.match(text)
+    return match["name"] if match else None
 
 
 def _script(command: Command) -> str | None:
@@ -25,14 +33,14 @@ def _script(command: Command) -> str | None:
     argv = resolved(command)
     if argv[:1] in ((".",), ("source",)):
         return argv[1] if len(argv) > 1 else None
-    if program(argv) in _SHELLS:
+    if program(argv) in SHELLS:
         words, _ = positional(argv, _SHELL_VALUES)
         return None if "-c" in argv[1:] or not words else words[0]
     return argv[0] if argv and ("/" in argv[0] or argv[0].endswith(".sh")) else None
 
 
 def _is_shell_script(text: str, path: str) -> bool:
-    return path.endswith(".sh") or text.startswith(_SHEBANG)
+    return path.endswith(".sh") or interpreter(text) in SHELLS
 
 
 def _shell_script(command: Command, context: Context) -> list[Expansion] | None:

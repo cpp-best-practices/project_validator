@@ -14,7 +14,6 @@ from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcomman
 from project_validator.facts import Command, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
@@ -22,6 +21,7 @@ from project_validator.facts.settings import SettingsReader
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import defined_by
 from project_validator.text import pattern
+from project_validator.tools.kcov import kcov_tool
 from project_validator.tools.limits import function_length_limiters
 
 ZIG = frozenset({"Zig"})
@@ -85,19 +85,13 @@ ZIG_TEST = test_runner(
 )
 
 
-def _kcov(command: Command) -> bool:
-    """kcov counts the lines a test binary runs: `zig test --test-cmd kcov …`, or kcov run on the binary."""
-    argv = resolved(command)
-    return starts_with(argv, ("kcov",)) is not None or (
-        "kcov" in option_values(argv, "--test-cmd") and _runs_tests(command)
-    )
+def _under_kcov(command: Command) -> bool:
+    """`zig test --test-cmd kcov …` runs the test binary under kcov (kcov run on the binary is kcov's own command)."""
+    return "kcov" in option_values(resolved(command), "--test-cmd") and _runs_tests(command)
 
 
-KCOV = coverage_tool(
-    name="kcov",
-    languages=ZIG,
-    can={Granularity.LINE: "zig test src/main.zig --test-cmd kcov --test-cmd kcov-output --test-cmd-bin"},
-    measures=lambda command, _facts: reported(Granularity.LINE) if _kcov(command) else None,
+KCOV = kcov_tool(
+    ZIG, how="zig test src/main.zig --test-cmd kcov --test-cmd kcov-output --test-cmd-bin", wrapped=_under_kcov
 )
 
 

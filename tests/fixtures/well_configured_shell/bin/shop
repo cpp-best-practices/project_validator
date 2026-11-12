@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Sums the prices given on the command line.
+set -euo pipefail
+
+# shellcheck source=src/shop.sh
+source "$(dirname "$0")/../src/shop.sh"
+
+total "$@"
