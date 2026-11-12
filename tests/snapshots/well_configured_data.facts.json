@@ -57,6 +57,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "XML",
+      "origin": "data/catalog.xml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "JSON",
       "origin": "schema/catalog.schema.json",
       "role": "product"
@@ -77,11 +84,20 @@
       "origin": "."
     },
     {
+      "ecosystem": "XML schemas",
+      "kind": "ContentLanguages",
+      "languages": [
+        "XML Schema"
+      ],
+      "origin": "."
+    },
+    {
       "build_systems": [],
       "formats": [
         "JSON Schema",
         "JSON",
         "TOML",
+        "XML Schema",
         "XML",
         "YAML"
       ],
@@ -156,6 +172,16 @@
       "kind": "DataFile",
       "line": null,
       "origin": "data/catalog.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "XML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "data/catalog.xml",
       "problem": null,
       "role": "product",
       "unread": null
@@ -388,26 +414,27 @@
     },
     {
       "argv": [
-        "npx",
-        "--yes",
-        "prettier",
-        "--check",
-        "schema",
-        "data",
-        "config"
+        "xmllint",
+        "--noout",
+        "--schema",
+        "schema/catalog.xsd",
+        "data/catalog.xml"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
-      "line": "npx --yes prettier --check schema data config",
+      "line": "xmllint --noout --schema schema/catalog.xsd data/catalog.xml",
       "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
       "via": []
     },
     {
       "argv": [
+        "npx",
+        "--yes",
         "prettier",
+        "--plugin=@prettier/plugin-xml",
         "--check",
         "schema",
         "data",
@@ -418,10 +445,28 @@
       "env": {},
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
-      "line": "npx --yes prettier --check schema data config",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "line": "npx --yes prettier --plugin=@prettier/plugin-xml --check schema data config",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--plugin=@prettier/plugin-xml",
+        "--check",
+        "schema",
+        "data",
+        "config"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes prettier --plugin=@prettier/plugin-xml --check schema data config",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+        ".github/workflows/ci.yml:jobs.validate.steps[4].run"
       ]
     },
     {
@@ -513,7 +558,8 @@
       "configurations": [],
       "default_compiler": true,
       "ecosystems": [
-        "JSON Schema"
+        "JSON Schema",
+        "XML schemas"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate",
@@ -631,10 +677,30 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
       "languages": [
+        "XML Schema"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "provides": {
+        "schema": [
+          "validates"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "xmllint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
       "provides": {
         "format": [
           "check"
@@ -646,7 +712,7 @@
       ],
       "tool": "prettier",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+        ".github/workflows/ci.yml:jobs.validate.steps[4].run"
       ]
     },
     {
@@ -656,7 +722,7 @@
       "languages": [
         "JSON Schema"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
       "provides": {
         "format": [
           "check"
@@ -668,7 +734,30 @@
       ],
       "tool": "prettier",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+        ".github/workflows/ci.yml:jobs.validate.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "XML Schema",
+        "XSLT"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[4].run"
       ]
     }
   ],
@@ -697,7 +786,8 @@
           ],
           "configurations": [],
           "ecosystems": [
-            "JSON Schema"
+            "JSON Schema",
+            "XML schemas"
           ],
           "name": ".github/workflows/ci.yml: validate",
           "os": "linux",
@@ -722,11 +812,15 @@
       "Data": [
         ".json files",
         ".toml files",
+        ".xml files",
         ".xsd files",
         ".yaml files",
         ".yml files"
       ],
       "JSON Schema": [
+        "content"
+      ],
+      "XML schemas": [
         "content"
       ]
     },
@@ -735,6 +829,7 @@
       "JSON Schema",
       "TOML",
       "XML",
+      "XML Schema",
       "YAML"
     ],
     "languages": [],
@@ -747,6 +842,7 @@
           "JSON Schema",
           "TOML",
           "XML",
+          "XML Schema",
           "YAML"
         ],
         "languages": [],

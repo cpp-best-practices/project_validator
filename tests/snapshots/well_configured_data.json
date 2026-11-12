@@ -81,8 +81,24 @@
             "answer": "yes",
             "language": "XML",
             "parsed": [
+              "data/catalog.xml",
               "schema/catalog.xsd"
             ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "XML Schema",
+            "parsed": [],
             "problems": [],
             "test_problems": [],
             "unit": ".",
@@ -170,7 +186,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "JSON: 2 JSON files parse; TOML: 1 TOML file parses; XML: 1 XML file parses; YAML: 5 YAML files parse",
+      "message": "JSON: 2 JSON files parse; TOML: 1 TOML file parses; XML: 2 XML files parse; YAML: 5 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -229,7 +245,7 @@
     },
     "schema-validation": {
       "details": [],
-      "message": "CI validates the documents against their schemas with check-jsonschema",
+      "message": "JSON Schema: CI validates the documents against their schemas with check-jsonschema; XML schemas: CI validates the documents against their schemas with xmllint",
       "status": "PASS"
     },
     "secret-scanning": {

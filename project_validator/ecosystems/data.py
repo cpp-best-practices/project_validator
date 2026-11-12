@@ -99,5 +99,8 @@ DATA = Ecosystem(
         ".xsd": XML,
         ".xsl": XML,
         ".xslt": XML,
+        ".rng": XML,
+        ".sch": XML,
+        ".xspec": XML,
     },
 )

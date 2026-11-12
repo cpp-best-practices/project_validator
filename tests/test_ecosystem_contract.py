@@ -9,7 +9,7 @@ from __future__ import annotations
 import unittest
 
 from project_validator.core import Status
-from project_validator.ecosystems import PROFILES, Ecosystem, applies_to, ecosystems_for, registered
+from project_validator.ecosystems import PROFILES, Ecosystem, applies_to
 from project_validator.plugins import discover
 from project_validator.runner import run_checks
 from tests.support import FIXTURES, make_context
@@ -33,11 +33,11 @@ def _judges(ecosystem: Ecosystem) -> dict[str, bool]:
 
 
 def _applying(fixture: str) -> set[str]:
-    """The checks that apply to the fixture: those of every project, and those of an ecosystem the fixture uses (its
-    own, and the formats its data files are in: every project has some)."""
-    structure = make_context(FIXTURES / fixture).structure
-    used = {ecosystem.label for ecosystem in ecosystems_for(structure.languages_and_formats, registered())}
-    return {check.name for check in discover().checks if not applies_to(check) or set(applies_to(check)) & used}
+    """The checks that apply to the fixture: those of every project, and those of a language or format the fixture
+    uses (its own, and the formats its data files are in: every project has some). A check of one format of an
+    ecosystem (XSpec runs XSLT, not XSD) does not apply to a fixture in the other."""
+    names = make_context(FIXTURES / fixture).structure.languages_and_formats
+    return {check.name for check in discover().checks if not check.languages or check.languages & names}
 
 
 class EcosystemContractTests(unittest.TestCase):

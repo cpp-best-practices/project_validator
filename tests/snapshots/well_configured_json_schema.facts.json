@@ -572,6 +572,29 @@
       "via": [
         ".github/workflows/ci.yml:jobs.validate.steps[2].run"
       ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "XML Schema",
+        "XSLT"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+      ]
     }
   ],
   "map": {
