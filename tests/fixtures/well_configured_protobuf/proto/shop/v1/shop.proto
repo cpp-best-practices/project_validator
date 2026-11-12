@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package shop.v1;
+
+// A price list and its total.
+service ShopService {
+  rpc Total(TotalRequest) returns (TotalResponse);
+}
+
+message TotalRequest {
+  repeated int32 prices = 1;
+}
+
+message TotalResponse {
+  int32 total = 1;
+}
