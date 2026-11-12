@@ -1,0 +1,712 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".markdownlint.yaml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": "mkdocs.yml",
+      "role": "product"
+    },
+    {
+      "ecosystem": "Documentation site",
+      "kind": "ContentLanguages",
+      "languages": [
+        "MkDocs"
+      ],
+      "origin": "."
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "MkDocs",
+        "YAML"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".markdownlint.yaml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "mkdocs.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "the MkDocs site's configuration",
+      "language": "MkDocs",
+      "origin": "mkdocs.yml"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:build",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "build",
+      "origin": ".github/workflows/ci.yml:jobs.build",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:build",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "python-version": "3.13"
+      },
+      "job": ".github/workflows/ci.yml:build",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[1]",
+      "uses": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "mkdocs-material"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:build",
+      "kind": "Command",
+      "line": "pip install mkdocs-material",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "mkdocs",
+        "build",
+        "--strict"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:build",
+      "kind": "Command",
+      "line": "mkdocs build --strict",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[3].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:prose",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "prose",
+      "origin": ".github/workflows/ci.yml:jobs.prose",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:prose",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.prose.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "globs": "docs/**/*.md"
+      },
+      "job": ".github/workflows/ci.yml:prose",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.prose.steps[1]",
+      "uses": "DavidAnson/markdownlint-cli2-action@696eb3f2509270d7b882d2aa68347bc676e7af34"
+    },
+    {
+      "argv": [
+        "markdownlint-cli2",
+        "docs/**/*.md"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:prose",
+      "kind": "Command",
+      "line": "uses: DavidAnson/markdownlint-cli2-action@696eb3f2509270d7b882d2aa68347bc676e7af34",
+      "origin": ".github/workflows/ci.yml:jobs.prose.steps[1]",
+      "via": []
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "files": "docs"
+      },
+      "job": ".github/workflows/ci.yml:prose",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.prose.steps[2]",
+      "uses": "errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff"
+    },
+    {
+      "argv": [
+        "vale",
+        "docs"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:prose",
+      "kind": "Command",
+      "line": "uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff",
+      "origin": ".github/workflows/ci.yml:jobs.prose.steps[2]",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "DavidAnson/markdownlint-cli2-action@696eb3f2509270d7b882d2aa68347bc676e7af34"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Documentation site",
+        "Python"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:build",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: build",
+      "origin": ".github/workflows/ci.yml:jobs.build",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "3.13"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Documentation site"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:prose",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: prose",
+      "origin": ".github/workflows/ci.yml:jobs.prose",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "site/",
+      "syntax": "glob",
+      "written": "site/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".markdownlint.yaml",
+      "reader": "markdownlint"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".vale.ini",
+      "reader": "vale"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:build",
+      "kind": "ToolRun",
+      "languages": [
+        "MkDocs"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[3].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "MkDocs build",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:prose",
+      "kind": "ToolRun",
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.prose.steps[1]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "markdownlint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:prose",
+      "kind": "ToolRun",
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.prose.steps[2]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "vale",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Documentation site",
+            "Python"
+          ],
+          "name": ".github/workflows/ci.yml: build",
+          "os": "linux",
+          "toolchains": [
+            "Python 3.13"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Documentation site"
+          ],
+          "name": ".github/workflows/ci.yml: prose",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Data": [
+        ".yaml files",
+        ".yml files"
+      ],
+      "Documentation site": [
+        "content"
+      ]
+    },
+    "formats": [
+      "MkDocs",
+      "YAML"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "MkDocs",
+          "YAML"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

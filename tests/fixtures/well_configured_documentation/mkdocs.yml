@@ -1,0 +1,9 @@
+site_name: Shop
+site_description: Prices of the shop.
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Prices: prices.md
+markdown_extensions:
+  - admonition

@@ -56,9 +56,10 @@ def extract_facts(context: Context) -> Facts:
     found = _stage(
         "the data files", lambda: found + wellformed.data_file_facts(project, found, wellformed.known_parsers())
     )
-    # Only the build outputs of the project's languages can be committed by it.
-    languages = structure.project_languages(found)
-    built = (out for out in outputs.known_build_outputs() if out.languages & languages)
+    # Only the build outputs of the project's languages, and of its formats (a documentation site's), can be
+    # committed by it.
+    names = structure.project_languages(found) | structure.project_formats(found)
+    built = (out for out in outputs.known_build_outputs() if out.languages & names)
     found = _stage("the repository", lambda: found + repository.repository_facts(project, built))
     found = _stage(
         "the test files", lambda: found + testing.test_file_facts(project, found, testing.known_test_files())

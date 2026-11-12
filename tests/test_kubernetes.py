@@ -3,7 +3,6 @@ scanners."""
 
 from __future__ import annotations
 
-import json
 import unittest
 
 from project_validator.checks.data_wellformed import data_wellformed
@@ -15,7 +14,7 @@ from project_validator.ecosystems.kubernetes import KUBERNETES_ECOSYSTEM
 from project_validator.facts.roles import role
 from project_validator.facts.structure import Unit
 from tests.layouts.kubernetes import MANIFEST
-from tests.support import GITHUB_WORKFLOW, github_job, make_context, run_in_layout, temp_project, uses
+from tests.support import github_action, github_job, make_context, run_in_layout, temp_project, uses
 
 LAYOUT = "Kubernetes manifests"
 CHART = {"charts/shop/Chart.yaml": "apiVersion: v2\nname: shop\nversion: 0.1.0\n"}
@@ -34,11 +33,6 @@ TEMPLATE = {
 
 def _ci(*steps: str) -> dict[str, str]:
     return github_job("ubuntu-latest", *steps)
-
-
-def _action(uses: str, **inputs: str) -> dict[str, str]:
-    steps = [{"uses": uses, "with": inputs}]
-    return {GITHUB_WORKFLOW: json.dumps({"jobs": {"build": {"runs-on": "ubuntu-latest", "steps": steps}}})}
 
 
 class RecognitionTests(unittest.TestCase):
@@ -117,7 +111,7 @@ class KubernetesTests(unittest.TestCase):
                 self.assertIn(self._run(security_scanning, _ci(line)).status, (Status.WARN, Status.FAIL))
         for files, tool in (
             (_ci("kube-linter lint k8s"), "kube-linter"),
-            (_action("stackrox/kube-linter-action@v1", directory="k8s"), "kube-linter"),
+            (github_action("stackrox/kube-linter-action@v1", directory="k8s"), "kube-linter"),
             (_ci("polaris audit --audit-path k8s"), "polaris"),
             (_ci("kyverno apply policies --resource k8s/deployment.yaml"), "kyverno"),
             (_ci("kube-score score k8s/*.yaml"), "kube-score"),
