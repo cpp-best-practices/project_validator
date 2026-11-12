@@ -17,6 +17,7 @@ from project_validator.facts.structure import (
     SourceFile,
     Unit,
     UnrecognisedSuffix,
+    project_formats,
     project_languages,
 )
 
@@ -27,6 +28,8 @@ if TYPE_CHECKING:
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ProjectStructure:
     languages: frozenset[str]
+    # The formats (JSON, YAML) the project's own files are in: data, not programs, judged for hygiene only.
+    formats: frozenset[str]
     build_systems: frozenset[str]
     # Ecosystem label -> the signals that recognised it.
     recognised_by: Mapping[str, tuple[str, ...]]
@@ -40,9 +43,15 @@ class ProjectStructure:
     ci_files: tuple[str, ...]
     ci_jobs: tuple[Job, ...]
 
+    @property
+    def languages_and_formats(self) -> frozenset[str]:
+        """Every name a check may apply to: what the project's own files are written in, programs or data."""
+        return self.languages | self.formats
+
     def as_dict(self) -> dict[str, object]:
         return {
             "languages": sorted(self.languages),
+            "formats": sorted(self.formats),
             "build_systems": sorted(self.build_systems),
             "ecosystems": {label: list(signals) for label, signals in self.recognised_by.items()},
             "unrecognised_suffixes": [
@@ -55,6 +64,7 @@ class ProjectStructure:
                     "role": unit.role,
                     "build_systems": list(unit.build_systems),
                     "languages": sorted(unit.languages),
+                    "formats": sorted(unit.formats),
                 }
                 for unit in self.units
             ],
@@ -144,6 +154,7 @@ def map_project(facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis
     vendored = [source.path for source in facts.of(SourceFile) if source.vendored]
     return ProjectStructure(
         languages=project_languages(facts),
+        formats=project_formats(facts),
         build_systems=frozenset(build.build_system for build in facts.of(BuildFile)),
         recognised_by=_signals(facts),
         unrecognised_suffixes=tuple((found.suffix, found.files) for found in facts.of(UnrecognisedSuffix)),

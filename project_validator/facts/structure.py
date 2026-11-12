@@ -1,4 +1,5 @@
-"""Structure facts: the project's source files and their languages, its build files, and what its content shows.
+"""Structure facts: the project's source files and their languages (or formats), its build files, and what its
+content shows.
 
 The project map (`--map`, `project_validator.project_map`) is a view over these facts.
 """
@@ -12,7 +13,7 @@ from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator.core import Project
-from project_validator.ecosystems import Ecosystem, build_systems, registered
+from project_validator.ecosystems import Ecosystem, Kind, build_systems, formats, registered
 from project_validator.facts import Fact, Facts, Origin
 from project_validator.facts.auxiliary import AuxiliaryCode, Selectors
 from project_validator.facts.roles import role
@@ -34,13 +35,18 @@ NOT_SOURCE_SUFFIXES = frozenset(
         ".in",
     }
 )
+# Hidden top-level directories that hold configuration. A format's files are read there too (CI workflows and
+# editor settings are data); a language's are not (a helper script in `.github/scripts` makes no language the
+# project's).
+CONFIGURATION_DIRECTORIES = frozenset({".github", ".gitlab", ".circleci", ".buildkite", ".devcontainer", ".vscode"})
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class SourceFile(Fact):
-    """A source file, its language (None for a file of an ecosystem that adds no language, such as a `.h` file of a
-    C++ project) and its `role` (see `role`). `ambiguous` files count once their ecosystem is recognised another
-    way; vendored files (other projects' code, minified bundles) are recorded but make no language the project's."""
+    """A source file, its language or format (None for a file of an ecosystem that adds no language, such as a `.h`
+    file of a C++ project) and its `role` (see `role`). `ambiguous` files count once their ecosystem is recognised
+    another way; vendored files (other projects' code, minified bundles) are recorded but make no language the
+    project's."""
 
     language: str | None
     ambiguous: bool = False
@@ -74,7 +80,7 @@ class ContentLanguages(Fact):
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Unit(Fact):
     """A unit of the project: a directory ("." for the root) that is built on its own, with its build systems and
-    the languages of the sources in it (outside the units below it).
+    the languages, and the formats, of the sources in it (outside the units below it).
 
     A unit is the outermost directory with a build system's files (a CMake project's subdirectories, a Maven
     project's modules belong to it), or a member of a workspace a build file declares (npm workspaces, Cargo and uv
@@ -86,6 +92,7 @@ class Unit(Fact):
 
     build_systems: tuple[str, ...]
     languages: frozenset[str]
+    formats: frozenset[str] = frozenset()
     # What the unit is for, by its directory (see `role`); a name, not a judgement.
     role: str = "product"
 
@@ -121,9 +128,12 @@ def _build_files(project: Project, files: list[str]) -> Iterator[tuple[BuildFile
             yield BuildFile(origin=Origin(path=build_file), build_system=system.name, languages=languages), path
 
 
-def _source_suffixes() -> dict[str, str]:
+def _source_suffixes() -> dict[str, tuple[str, Kind]]:
+    """Suffix -> the language or format its files are sources of, and which of the two it is."""
     return {
-        suffix: language for ecosystem in registered() for suffix, language in (ecosystem.source_suffixes or {}).items()
+        suffix: (name, ecosystem.kind)
+        for ecosystem in registered()
+        for suffix, name in (ecosystem.source_suffixes or {}).items()
     }
 
 
@@ -136,27 +146,43 @@ def _ambiguous(files: list[str], confirmed: list[Ecosystem]) -> Iterator[SourceF
                     yield SourceFile(origin=origin, language=language, ambiguous=True, role=role(path))
 
 
+def _own_sources(facts: Facts) -> Iterator[str]:
+    """The language or format of each of the project's own sources. Vendored code (other projects' code, minified
+    bundles) adds none."""
+    return (source.language for source in facts.of(SourceFile) if source.language is not None and not source.vendored)
+
+
 def project_languages(facts: Facts) -> frozenset[str]:
     """The languages the project uses: those its build files build, its own sources are written in, or its content
-    shows. Vendored code (other projects' code, minified bundles) adds none."""
+    shows; not its formats."""
+    known = formats()
     return frozenset(
         {
             *(language for build in facts.of(BuildFile) for language in build.languages),
-            *(
-                source.language
-                for source in facts.of(SourceFile)
-                if source.language is not None and not source.vendored
-            ),
+            *(name for name in _own_sources(facts) if name not in known),
             *(language for content in facts.of(ContentLanguages) for language in content.languages),
         }
     )
 
 
-def _sources(files: list[str]) -> Iterator[SourceFile]:
+def project_formats(facts: Facts) -> frozenset[str]:
+    """The formats the project's own files are in."""
+    known = formats()
+    return frozenset(name for name in _own_sources(facts) if name in known)
+
+
+def _configuration(path: str) -> bool:
+    return PurePosixPath(path).parts[0] in CONFIGURATION_DIRECTORIES
+
+
+def _sources(project: Project) -> Iterator[SourceFile]:
+    """The sources of each language among the project's files, and of each format among those and the configuration
+    directories' files."""
     known = _source_suffixes()
-    for path in files:
-        if (suffix := PurePosixPath(path).suffix) in known:
-            yield SourceFile(origin=Origin(path=path), language=known[suffix], role=role(path))
+    for path in project.files(hidden=CONFIGURATION_DIRECTORIES):
+        found = known.get(PurePosixPath(path).suffix)
+        if found is not None and (found[1] == "format" or not _configuration(path)):
+            yield SourceFile(origin=Origin(path=path), language=found[0], role=role(path))
 
 
 def _content(project: Project) -> Iterator[ContentLanguages]:
@@ -225,13 +251,25 @@ def _own(languages: Iterable[str], path: str, named: Selectors, *, directory: bo
     return {language for language in languages if not named.matching(path, language, directory=directory)}
 
 
+type _ByUnit = dict[str, set[str]]
+
+
+def _sources_by_unit(facts: Facts, roots: Iterable[str], named: Selectors) -> tuple[_ByUnit, _ByUnit]:
+    """Unit -> the languages, and unit -> the formats, of the sources in it (outside the units below it). Vendored
+    code is in no unit of its own; the code `--auxiliary` names adds no language (or format) to its unit."""
+    known, roots = formats(), tuple(roots)
+    languages: _ByUnit = {".": set(), **{root: set() for root in roots}}
+    formats_: _ByUnit = {}
+    for source in facts.of(SourceFile):
+        if source.language is not None and not source.vendored:
+            found = formats_ if source.language in known else languages
+            found.setdefault(owner(source.path, roots), set()).update(_own([source.language], source.path, named))
+    return languages, formats_
+
+
 def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
     roots, workspaces = _unit_roots(project, facts.of(BuildFile))
-    languages: dict[str, set[str]] = {".": set(), **{root: set() for root in roots}}
-    for source in facts.of(SourceFile):
-        # Vendored code is in no unit of its own; the code `--auxiliary` names adds no language to its unit.
-        if source.language is not None and not source.vendored:
-            languages.setdefault(owner(source.path, roots), set()).update(_own([source.language], source.path, named))
+    languages, formats_ = _sources_by_unit(facts, roots, named)
     # What a build file builds counts for its unit too, unless the build file only declares a workspace.
     for build in facts.of(BuildFile):
         if (directory := _directory(build)) not in workspaces or languages.get(directory):
@@ -246,6 +284,7 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
             origin=Origin(path=directory),
             build_systems=tuple(roots.get(directory, ())),
             languages=frozenset(languages[directory]),
+            formats=frozenset(formats_.get(directory, ())),
         )
 
 
@@ -256,10 +295,10 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     named = Selectors.parse(project.auxiliary)
     yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary))
     found = list(_build_files(project, files))
-    plain = Facts((*(fact for fact, _ in found if fact is not None), *_sources(files), *_content(project)))
+    plain = Facts((*(fact for fact, _ in found if fact is not None), *_sources(project), *_content(project)))
     yield from plain
-    languages = project_languages(plain)
-    ambiguous = list(_ambiguous(files, [ecosystem for ecosystem in registered() if ecosystem.languages & languages]))
+    names = project_languages(plain) | project_formats(plain)
+    ambiguous = list(_ambiguous(files, [ecosystem for ecosystem in registered() if ecosystem.languages & names]))
     yield from ambiguous
     recognised = {PurePosixPath(source.path).suffix for source in (*plain.of(SourceFile), *ambiguous)}
     yield from _unrecognised(files, {path for _, path in found}, recognised)
@@ -267,12 +306,14 @@ def structure_facts(project: Project) -> Iterator[Fact]:
 
 
 __all__ = [
+    "CONFIGURATION_DIRECTORIES",
     "NOT_SOURCE_SUFFIXES",
     "BuildFile",
     "ContentLanguages",
     "SourceFile",
     "Unit",
     "UnrecognisedSuffix",
+    "project_formats",
     "project_languages",
     "structure_facts",
 ]
