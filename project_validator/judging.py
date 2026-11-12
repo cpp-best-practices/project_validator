@@ -1,5 +1,5 @@
-"""Checks made of a question and its policy: each language the project uses is judged in each unit that has it, and
-the results are named by language, by unit, or by both, as far as they differ.
+"""Checks made of a question and its policy: each language (or format) the project uses is judged in each unit that
+has it, and the results are named by language, by unit, or by both, as far as they differ.
 
 One result stands for several (`combined`): what was skipped is left out unless everything was, one result is
 said once when all agree, and otherwise each is labelled and the worst status wins.
@@ -76,7 +76,7 @@ def check_each_ecosystem[Rules](
     context: Context, rules: Mapping[Ecosystem, Rules], judge: Callable[[Rules, Context], Result]
 ) -> Result:
     """Judge each ecosystem the project uses by its rules: the worst result wins, and findings are labelled."""
-    used = ecosystems_for(context.structure.languages, rules)
+    used = ecosystems_for(context.structure.languages_and_formats, rules)
     return by_ecosystem({ecosystem: judge(rules[ecosystem], context) for ecosystem in used})
 
 
@@ -109,7 +109,7 @@ def _found[A: UnitAnswer](
     languages: frozenset[str], context: Context, answers: Callable[[str, Facts], LanguageAnswers[A]]
 ) -> _Found[A]:
     found: _Found[A] = []
-    for language in sorted(languages & context.structure.languages):
+    for language in sorted(languages & context.structure.languages_and_formats):
         answered = answers(language, context.facts)
         found += [(answer, answered.auxiliary.get(answer.unit, ())) for answer in answered.units]
     return found
