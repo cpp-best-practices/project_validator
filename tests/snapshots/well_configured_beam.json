@@ -207,33 +207,50 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Elixir",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "mix test --cover",
                 "mix coveralls (excoveralls)"
               ],
+              "reported": [
+                "mix test --cover"
+              ],
+              "rung": "reported",
               "tools": [
                 "mix test --cover"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -248,34 +265,51 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Erlang",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "mix test --cover",
                 "mix coveralls (excoveralls)",
                 "rebar3 cover (after eunit or ct with --cover)"
               ],
+              "reported": [
+                "mix test --cover"
+              ],
+              "rung": "reported",
               "tools": [
                 "mix test --cover"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -1274,7 +1308,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when line coverage falls below a threshold"
+      ],
       "message": "line coverage is reported with mix test --cover",
       "status": "PASS"
     },

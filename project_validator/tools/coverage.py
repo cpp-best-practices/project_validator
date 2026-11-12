@@ -11,7 +11,7 @@ from project_validator.build_systems.cmake.build import cmake_configures
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program, short_flags
 from project_validator.facts.build import CompilerOption
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
 from project_validator.facts.expansion import joined
 from project_validator.facts.settings import SettingsReader, key_value_settings
 from project_validator.facts.tools import Run, Tool
@@ -88,7 +88,16 @@ def _gcovr(command: Command, facts: Facts) -> Run | None:
         or "branch" in option_values(words, "--txt-metric")
         or bool(short_flags(argv) & {"b", "s", "x"})
     )
-    return measured(LINE, BRANCH if branch else None, read=read)
+    return reported(LINE, BRANCH if branch else None, gated=_gates(words, _GCOVR_GATES), read=read)
+
+
+# The options that fail a run under a threshold, by the granularity each one gates on.
+_GCOVR_GATES = {"--fail-under-line": LINE, "--fail-under-branch": BRANCH, "--fail-under-decision": PATH}
+_LCOV_GATES = {"--fail-under-lines": LINE, "--fail-under-branches": BRANCH}
+
+
+def _gates(words: tuple[str, ...], gates: dict[str, Granularity]) -> tuple[Granularity, ...]:
+    return tuple(granularity for option, granularity in gates.items() if has_option(words, option))
 
 
 def _rc_enabled(settings: list[str], *names: str) -> bool:
@@ -103,14 +112,18 @@ def _lcov(command: Command, facts: Facts) -> Run | None:
     settings = [*option_values(argv, "--rc"), *(f"{setting.key}={setting.value}" for setting in read)]
     branch = has_option(argv, "--branch-coverage") or _rc_enabled(settings, "branch_coverage")
     path = has_option(argv, "--mcdc-coverage") or _rc_enabled(settings, "mcdc_coverage")
-    return measured(LINE, BRANCH if branch else None, PATH if path else None, read=read)
+    found = (LINE, BRANCH if branch else None, PATH if path else None)
+    # `lcov --capture` collects into a tracefile; genhtml, `lcov --list` and `lcov --summary` show the numbers.
+    if program(argv) == "genhtml" or has_option(argv, "--list", "-l", "--summary"):
+        return reported(*found, gated=_gates(argv, _LCOV_GATES), read=read)
+    return measured(*found, gated=_gates(argv, _LCOV_GATES), read=read)
 
 
 def _gcov_options(argv: tuple[str, ...]) -> Run:
     letters = short_flags(argv)
     branch = bool(letters & {"b", "c"}) or has_option(argv, "--branch-probabilities", "--branch-counts")
     path = "g" in letters or has_option(argv, "--conditions") or any(word.startswith("--prime-paths") for word in argv)
-    return measured(LINE, BRANCH if branch else None, PATH if path else None)
+    return reported(LINE, BRANCH if branch else None, PATH if path else None)
 
 
 def _gcov(command: Command, _: Facts) -> Run | None:
@@ -138,7 +151,7 @@ def _llvm_cov(command: Command, _: Facts) -> Run | None:
     branch = (subcommand != "show" and not hidden) or shown
     path = has_option(options, "-show-mcdc", "--show-mcdc", "-show-mcdc-summary", "--show-mcdc-summary")
     # Clang's source-based coverage counts regions too.
-    return measured(LINE, REGION, BRANCH if branch else None, PATH if path else None)
+    return reported(LINE, REGION, BRANCH if branch else None, PATH if path else None)
 
 
 def _instrumentation(flag: str) -> Tool:

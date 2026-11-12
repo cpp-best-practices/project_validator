@@ -214,6 +214,7 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "c8",
                 "nyc",
@@ -222,6 +223,10 @@
                 "deno test --coverage",
                 "node --test --experimental-test-coverage"
               ],
+              "reported": [
+                "Vitest"
+              ],
+              "rung": "reported",
               "tools": [
                 "Vitest"
               ]
@@ -229,6 +234,7 @@
             "language": "JavaScript",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "c8",
                 "nyc",
@@ -238,23 +244,36 @@
                 "node --test --experimental-test-coverage",
                 "bun test --coverage"
               ],
+              "reported": [
+                "Vitest"
+              ],
+              "rung": "reported",
               "tools": [
                 "Vitest"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -269,6 +288,7 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "c8",
                 "nyc",
@@ -277,6 +297,10 @@
                 "deno test --coverage",
                 "node --test --experimental-test-coverage"
               ],
+              "reported": [
+                "Vitest"
+              ],
+              "rung": "reported",
               "tools": [
                 "Vitest"
               ]
@@ -284,6 +308,7 @@
             "language": "TypeScript",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "c8",
                 "nyc",
@@ -293,23 +318,36 @@
                 "node --test --experimental-test-coverage",
                 "bun test --coverage"
               ],
+              "reported": [
+                "Vitest"
+              ],
+              "rung": "reported",
               "tools": [
                 "Vitest"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -1689,7 +1727,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
       "message": "branch coverage is reported with Vitest",
       "status": "PASS"
     },

@@ -134,9 +134,14 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "cabal test --enable-coverage"
               ],
+              "reported": [
+                "HPC"
+              ],
+              "rung": "reported",
               "tools": [
                 "HPC"
               ]
@@ -144,26 +149,40 @@
             "language": "Haskell",
             "line": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "cabal test --enable-coverage"
               ],
+              "reported": [
+                "HPC"
+              ],
+              "rung": "reported",
               "tools": [
                 "HPC"
               ]
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -672,7 +691,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
       "message": "branch coverage is reported with HPC",
       "status": "PASS"
     },

@@ -15,7 +15,7 @@ from project_validator.facts import Command, Fact, Facts, Origin, Setting, resol
 from project_validator.facts.arguments import has_option, option_values, program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
 from project_validator.facts.dependencies import Declared, Locked, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
@@ -135,31 +135,49 @@ PYTEST_SETTINGS = SettingsReader(
 )
 
 
-def _coverage_settings(command: Command, facts: Facts, named: str | None) -> Setting | None:
-    """coverage.py's `run.branch` setting in the file it reads: the one it is given, else .coveragerc, else the first
-    of setup.cfg, tox.ini and pyproject.toml with coverage settings."""
+def _coverage_settings(command: Command, facts: Facts, named: str | None, key: str = "run.branch") -> Setting | None:
+    """coverage.py's `key` setting in the file it reads: the one it is given, else .coveragerc, else the first of
+    setup.cfg, tox.ini and pyproject.toml with coverage settings."""
     candidates = [named] if named else [joined(command.directory, name) for name in COVERAGE_FILES]
     configuration = facts.configured("coverage.py", candidates)
-    return facts.setting("coverage.py", "run.branch", paths=[configuration]) if configuration else None
+    return facts.setting("coverage.py", key, paths=[configuration]) if configuration else None
 
 
 def _branches(setting: Setting | None) -> bool:
     return setting is not None and (setting.value is True or str(setting.value).strip().lower() in _TRUE)
 
 
-def _measured_lines_and(branch: bool, *read: Setting | None) -> Run:
-    return measured(
-        Granularity.LINE, Granularity.BRANCH if branch else None, read=[found for found in read if found is not None]
-    )
+def _lines_and(branch: bool, *read: Setting | None, reports: bool, gates: bool = False) -> Run:
+    """Line coverage, and branch coverage when `branch`: measured, reported when `reports`, gated when `gates` (on
+    the one figure coverage.py blends them into)."""
+    found = (Granularity.LINE, Granularity.BRANCH if branch else None)
+    settings = [setting for setting in read if setting is not None]
+    if reports:
+        return reported(*found, gated=found if gates else (), read=settings)
+    return measured(*found, read=settings)
 
 
 def _coverage_py(command: Command, facts: Facts) -> Run | None:
+    """`coverage run` measures; `coverage report` (`xml`, `json`, `html`, `lcov`) reports what the job's runs
+    measured, and gates on it with `--fail-under` or the `fail_under` setting."""
     argv = resolved(command)
-    if not starts_with(argv, ("coverage", "run")):
+    if starts_with(argv, ("coverage", "run")):
+        branch = has_option(argv, "--branch") or _branches(_coverage_setting(command, facts, "run.branch"))
+        return _lines_and(branch, _coverage_setting(command, facts, "run.branch"), reports=False)
+    if not starts_with(argv, *(("coverage", report) for report in ("report", "xml", "json", "html", "lcov"))):
         return None
+    branch = _branches(_coverage_setting(command, facts, "run.branch")) or any(
+        starts_with(resolved(run), ("coverage", "run")) and has_option(resolved(run), "--branch")
+        for run in facts.where(Command, job=command.job)
+    )
+    threshold = _coverage_setting(command, facts, "report.fail_under")
+    gates = has_option(argv, "--fail-under") or threshold is not None
+    return _lines_and(branch, _coverage_setting(command, facts, "run.branch"), threshold, reports=True, gates=gates)
+
+
+def _coverage_setting(command: Command, facts: Facts, key: str) -> Setting | None:
     named = _named_rcfile(command)
-    setting = _coverage_settings(command, facts, named[0] if named else None)
-    return _measured_lines_and(has_option(argv, "--branch") or _branches(setting), setting)
+    return _coverage_settings(command, facts, named[0] if named else None, key)
 
 
 def _pytest_cov(command: Command, facts: Facts) -> Run | None:
@@ -175,7 +193,10 @@ def _pytest_cov(command: Command, facts: Facts) -> Run | None:
         return None
     named = [joined(command.directory, path) for path in option_values(tuple(words), "--cov-config")]
     setting = _coverage_settings(command, facts, named[0] if named else None)
-    return _measured_lines_and(has_option(words, "--cov-branch") or _branches(setting), setting, addopts)
+    threshold = _coverage_settings(command, facts, named[0] if named else None, "report.fail_under")
+    gates = has_option(words, "--cov-fail-under") or threshold is not None
+    branch = has_option(words, "--cov-branch") or _branches(setting)
+    return _lines_and(branch, setting, addopts, threshold, reports=True, gates=gates)
 
 
 COVERAGE_PY = coverage_tool(

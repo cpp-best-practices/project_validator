@@ -7,7 +7,8 @@ from project_validator.questions.coverage import language_coverage
 
 coverage = answered_check(
     name="coverage",
-    description="CI reports branch coverage (or the finest the language's tools measure; path coverage is a bonus)",
+    description="CI measures branch coverage (or the finest the language's tools measure), reports it where it can be "
+    "seen and fails under a threshold; path coverage is a bonus",
     aspect=COVERAGE,
     answers=language_coverage,
     judge=judge_coverage,

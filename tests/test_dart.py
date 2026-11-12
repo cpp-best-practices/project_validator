@@ -99,7 +99,15 @@ class DartTests(unittest.TestCase):
         ):
             with self.subTest(command=command):
                 result = self._run(coverage, _ci(command))
-                self.assertEqual(result, Result.passed("branch coverage is reported with dart test --coverage"))
+                self.assertEqual(
+                    result,
+                    Result.passed(
+                        "branch coverage is measured with dart test --coverage",
+                        "consider reporting branch coverage where it can be seen (a report CI publishes, a coverage "
+                        "service)",
+                        "consider failing CI when branch coverage falls below a threshold",
+                    ),
+                )
         for command in ("dart test --coverage=coverage", "flutter test --coverage", "very_good test --coverage"):
             with self.subTest(command=command):
                 self.assertEqual(self._run(coverage, _ci(command)).status, Status.FAIL)

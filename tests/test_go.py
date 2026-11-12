@@ -81,7 +81,13 @@ class GoTests(unittest.TestCase):
     def test_coverage_needs_a_cover_flag(self) -> None:
         self.assertEqual(self._run(coverage, _ci("go test ./...")).status, Status.FAIL)
         result = self._run(coverage, _ci("go test -covermode=atomic ./..."))
-        self.assertEqual(result, Result.passed("statement coverage is reported with go test -cover"))
+        self.assertEqual(
+            result,
+            Result.passed(
+                "statement coverage is reported with go test -cover",
+                "consider failing CI when statement coverage falls below a threshold",
+            ),
+        )
 
     def test_tests_are_test_functions_in_test_files(self) -> None:
         self.assertEqual(self._run(tests_run, {"app_test.go": "package app\n"}).status, Status.FAIL)

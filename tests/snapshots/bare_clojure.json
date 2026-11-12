@@ -78,30 +78,45 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Clojure",
             "line": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "lein cloverage (or clojure -M:coverage, an alias running cloverage): form coverage"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -516,9 +531,9 @@
     },
     "coverage": {
       "details": [
-        "known to report statement coverage: lein cloverage (or clojure -M:coverage, an alias running cloverage): form coverage"
+        "known to measure statement coverage: lein cloverage (or clojure -M:coverage, an alias running cloverage): form coverage"
       ],
-      "message": "no statement coverage reporting found in what CI runs",
+      "message": "no statement coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

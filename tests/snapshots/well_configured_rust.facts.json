@@ -3509,9 +3509,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -3761,9 +3765,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -4013,9 +4021,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -4285,9 +4297,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -4557,9 +4573,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -4809,9 +4829,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -5061,9 +5085,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -5333,9 +5361,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -5605,9 +5637,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -5857,9 +5893,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -6109,9 +6149,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },
@@ -6381,9 +6425,13 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line",
+          "path reported",
           "path",
+          "region reported",
           "region"
         ]
       },

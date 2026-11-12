@@ -10,7 +10,7 @@ from project_validator.checks.coverage import coverage
 from project_validator.core import Result, Status
 from project_validator.ecosystems import isolated_registry, register
 from project_validator.facts import Command, Facts, Origin, Unknown
-from project_validator.facts.coverage import COVERAGE, Granularity, coverage_tool, measured
+from project_validator.facts.coverage import COVERAGE, Granularity, Rung, coverage_tool, measured, reported, rung_of
 from project_validator.facts.structure import Unit
 from project_validator.facts.tools import Run, Tool, ToolRun
 from project_validator.policy.coverage import judge_coverage, required_coverage
@@ -55,21 +55,64 @@ def _tool(name: str, languages: set[str], *granularities: Granularity) -> Tool:
 
 
 def _measured(tool: str, *granularities: Granularity, scope: tuple[str, ...] = (".",)) -> ToolRun:
+    return _run(tool, measured(*granularities), scope=scope)
+
+
+def _run(tool: str, run: Run, scope: tuple[str, ...] = (".",)) -> ToolRun:
     return ToolRun(
-        origin=ORIGIN,
-        job="test",
-        tool=tool,
-        languages=frozenset({"Lang"}),
-        provides={COVERAGE: frozenset(granularities)},
-        scope=scope,
+        origin=ORIGIN, job="test", tool=tool, languages=frozenset({"Lang"}), provides=run.provides, scope=scope
     )
 
 
 LINE, STATEMENT, BRANCH, PATH = Granularity.LINE, Granularity.STATEMENT, Granularity.BRANCH, Granularity.PATH
+REPORT_HINT = "consider reporting branch coverage where it can be seen (a report CI publishes, a coverage service)"
+GATE_HINT = "consider failing CI when branch coverage falls below a threshold"
 TOOLS = (_tool("cov", {"Lang"}, LINE, BRANCH), _tool("paths", {"Lang"}, PATH), _tool("other", {"Other"}, BRANCH))
 
 
+class CoverageRungTests(unittest.TestCase):
+    """A run measures a granularity, reports it (a person or a service sees the numbers) or gates on it (CI fails
+    under a threshold): three rungs, each including the ones below, kept as levels of the coverage aspect."""
+
+    def test_the_rungs_are_levels_of_the_coverage_aspect(self) -> None:
+        self.assertEqual(measured(LINE, BRANCH).provides, {COVERAGE: frozenset({"line", "branch"})})
+        self.assertEqual(
+            reported(LINE, BRANCH, gated=(BRANCH,)).provides,
+            {COVERAGE: frozenset({"line", "branch", "line reported", "branch reported", "branch gated"})},
+        )
+        self.assertEqual(
+            measured(LINE, reported=(BRANCH,)).provides,
+            {COVERAGE: frozenset({"line", "branch", "branch reported"})},
+        )
+        self.assertEqual(measured(None, gated=(None,)).provides, {COVERAGE: frozenset()})
+
+    def test_the_rung_a_run_reaches_for_a_granularity(self) -> None:
+        levels = reported(LINE, gated=(BRANCH,)).provides[COVERAGE]
+        self.assertEqual(rung_of(levels, LINE), Rung.REPORTED)
+        self.assertEqual(rung_of(levels, BRANCH), Rung.GATED)
+        self.assertIsNone(rung_of(levels, PATH))
+        self.assertEqual(rung_of(measured(PATH).provides[COVERAGE], PATH), Rung.MEASURED)
+        self.assertLess(Rung.MEASURED.rank, Rung.REPORTED.rank)
+        self.assertLess(Rung.REPORTED.rank, Rung.GATED.rank)
+
+
 class CoverageAnswerTests(unittest.TestCase):
+    def test_the_answer_says_the_highest_rung_reached_and_the_tools_at_each(self) -> None:
+        runs = (
+            _run("cov", measured(BRANCH)),
+            _run("report", reported(BRANCH)),
+            _run("gate", reported(LINE, gated=(LINE,))),
+        )
+        answer = coverage_answer("Lang", Facts(runs), TOOLS)
+        self.assertEqual((answer[BRANCH].rung, answer[BRANCH].tools), (Rung.REPORTED, ("cov", "report")))
+        self.assertEqual((answer[BRANCH].reported, answer[BRANCH].gated), (("report",), ()))
+        self.assertEqual(
+            (answer[LINE].rung, answer[LINE].reported, answer[LINE].gated), (Rung.GATED, ("gate",), ("gate",))
+        )
+        self.assertEqual((answer[PATH].rung, answer[PATH].answer), (None, Answer.NO))
+        as_dict = cast("dict[str, dict[str, object]]", answer.as_dict())
+        self.assertEqual((as_dict["line"]["rung"], as_dict["path"]["rung"]), ("gated", None))
+
     def test_yes_no_and_impossible_by_what_the_known_tools_measure(self) -> None:
         answer = coverage_answer("Lang", Facts((_measured("cov", LINE),)), TOOLS)
         self.assertEqual(
@@ -93,7 +136,17 @@ class CoverageAnswerTests(unittest.TestCase):
 
     def test_answers_are_json_ready(self) -> None:
         found = coverage_answer("Lang", Facts((_measured("cov", BRANCH),)), TOOLS).as_dict()
-        self.assertEqual(found["branch"], {"answer": "yes", "tools": ["cov"], "known": ["cov --branch"]})
+        self.assertEqual(
+            found["branch"],
+            {
+                "answer": "yes",
+                "rung": "measured",
+                "tools": ["cov"],
+                "reported": [],
+                "gated": [],
+                "known": ["cov --branch"],
+            },
+        )
         self.assertEqual(found["language"], "Lang")
 
 
@@ -109,16 +162,42 @@ class CoveragePolicyTests(unittest.TestCase):
             Result(status=Status.SKIP, message="no known tool measures the coverage of Zig"),
         )
 
-    def test_path_coverage_is_a_bonus(self) -> None:
-        judged = judge_coverage(coverage_answer("Lang", Facts((_measured("cov", BRANCH),)), TOOLS))
-        self.assertEqual(
-            judged,
-            Result.passed("branch coverage is reported with cov", "consider adding path coverage (e.g. paths --path)"),
+    def test_the_message_says_the_rung_reached_and_suggests_the_next(self) -> None:
+        cases = (
+            (measured(BRANCH), "branch coverage is measured with cov", (REPORT_HINT, GATE_HINT)),
+            (reported(BRANCH), "branch coverage is reported with cov", (GATE_HINT,)),
+            (reported(BRANCH, gated=(BRANCH,)), "branch coverage is gated with cov", ()),
         )
+        for run, message, hints in cases:
+            with self.subTest(run=run):
+                judged = judge_coverage(coverage_answer("Lang", Facts((_run("cov", run),)), TOOLS))
+                self.assertEqual(
+                    judged, Result.passed(message, *hints, "consider adding path coverage (e.g. paths --path)")
+                )
+        mixed = Facts((_run("cov", measured(BRANCH)), _run("gate", reported(BRANCH, gated=(BRANCH,)))))
+        self.assertEqual(
+            judge_coverage(coverage_answer("Lang", mixed, TOOLS)).message, "branch coverage is gated with gate"
+        )
+
+    def test_the_path_coverage_bonus_says_its_rung(self) -> None:
+        cases = (
+            (measured(PATH), "path coverage bonus: measured with paths (not reported)"),
+            (reported(PATH), "path coverage bonus: reported with paths"),
+            (reported(PATH, gated=(PATH,)), "path coverage bonus: gated with paths"),
+        )
+        for run, bonus in cases:
+            with self.subTest(run=run):
+                facts = Facts((_run("cov", reported(BRANCH, gated=(BRANCH,))), _run("paths", run)))
+                self.assertEqual(
+                    judge_coverage(coverage_answer("Lang", facts, TOOLS)).message,
+                    f"branch coverage is gated with cov; {bonus}",
+                )
+
+    def test_path_coverage_is_a_bonus(self) -> None:
         both = Facts((_measured("cov", BRANCH), _measured("paths", PATH)))
         self.assertEqual(
             judge_coverage(coverage_answer("Lang", both, TOOLS)).message,
-            "branch coverage is reported with cov; path coverage bonus: paths",
+            "branch coverage is measured with cov; path coverage bonus: measured with paths (not reported)",
         )
 
 
@@ -139,7 +218,7 @@ class LanguagesOfOneEcosystemTests(unittest.TestCase):
             result = coverage.run(make_context(root))
         self.assertEqual(
             result.message,
-            "C: branch coverage is reported with ccov; C++: line coverage is reported with xxcov",
+            "C: branch coverage is measured with ccov; C++: line coverage is measured with xxcov",
         )
         # A language no known tool handles is not judged by the check at all.
         with (
@@ -147,7 +226,7 @@ class LanguagesOfOneEcosystemTests(unittest.TestCase):
             mock.patch("project_validator.facts.tools.known_tools", return_value=(c_only,)),
             temp_project(files) as root,
         ):
-            self.assertEqual(coverage.run(make_context(root)).message, "branch coverage is reported with ccov")
+            self.assertEqual(coverage.run(make_context(root)).message, "branch coverage is measured with ccov")
 
 
 class UnitTests(unittest.TestCase):

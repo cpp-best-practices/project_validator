@@ -76,34 +76,49 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "coverage run --branch",
                 "pytest --cov --cov-branch"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Python",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "coverage run",
                 "pytest --cov"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -668,9 +683,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: coverage run --branch, pytest --cov --cov-branch"
+        "known to measure branch coverage: coverage run --branch, pytest --cov --cov-branch"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

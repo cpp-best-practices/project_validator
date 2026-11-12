@@ -77,32 +77,47 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "dart test --coverage=coverage --branch-coverage (or flutter test --coverage --branch-coverage)"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Dart",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "dart test --coverage=coverage (or flutter test --coverage)"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -544,9 +559,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: dart test --coverage=coverage --branch-coverage (or flutter test --coverage --branch-coverage)"
+        "known to measure branch coverage: dart test --coverage=coverage --branch-coverage (or flutter test --coverage --branch-coverage)"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

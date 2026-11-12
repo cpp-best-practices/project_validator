@@ -129,7 +129,10 @@ class ClojureTests(unittest.TestCase):
         self.assertEqual(self._run(tests_run, _ci("clojure -M:test")).status, Status.FAIL)
 
     def test_cloverage_counts_forms(self) -> None:
-        passed = Result.passed("statement coverage is reported with cloverage")
+        passed = Result.passed(
+            "statement coverage is reported with cloverage",
+            "consider failing CI when statement coverage falls below a threshold",
+        )
         for line in (
             "lein cloverage --codecov",
             "clojure -M:coverage",

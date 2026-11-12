@@ -97,7 +97,10 @@ class EmacsLispTests(unittest.TestCase):
         self.assertEqual(self._run(tests_run, _ci("eask test ert test/*.el")).status, Status.FAIL)
 
     def test_undercover_counts_lines_when_the_tests_set_it_up(self) -> None:
-        passed = Result.passed("line coverage is reported with undercover.el")
+        passed = Result.passed(
+            "line coverage is reported with undercover.el",
+            "consider failing CI when line coverage falls below a threshold",
+        )
         configured = {
             "test/shop-test.el": '(when (require \'undercover nil t)\n  (undercover "*.el"))\n(ert-deftest t ())\n'
         }

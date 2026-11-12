@@ -18,7 +18,7 @@ from project_validator.facts.analysis import Strictness, analysed, analyzer, typ
 from project_validator.facts.arguments import program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
@@ -254,20 +254,20 @@ MIX_COVER = coverage_tool(
     name="mix test --cover",
     languages=BEAM_LANGUAGES,
     can={Granularity.LINE: "mix test --cover"},
-    measures=when(mix("test", options=("--cover",)), lambda: measured(Granularity.LINE)),
+    measures=when(mix("test", options=("--cover",)), lambda: reported(Granularity.LINE)),
 )
 EXCOVERALLS = coverage_tool(
     name="excoveralls",
     languages=BEAM_LANGUAGES,
     can={Granularity.LINE: "mix coveralls (excoveralls)"},
-    measures=when(mix(*_COVERALLS_TASKS), lambda: measured(Granularity.LINE)),
+    measures=when(mix(*_COVERALLS_TASKS), lambda: reported(Granularity.LINE)),
 )
 REBAR3_COVER = coverage_tool(
     name="rebar3 cover",
     languages=ERLANG_ONLY,
     can={Granularity.LINE: "rebar3 cover (after eunit or ct with --cover)"},
     measures=when(
-        any_of(rebar3("cover"), rebar3("eunit", "ct", options=("--cover", "-c"))), lambda: measured(Granularity.LINE)
+        any_of(rebar3("cover"), rebar3("eunit", "ct", options=("--cover", "-c"))), lambda: reported(Granularity.LINE)
     ),
 )
 

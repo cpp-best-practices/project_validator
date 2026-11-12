@@ -78,41 +78,56 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "cargo llvm-cov --branch",
                 "cargo tarpaulin --branch",
                 "grcov --branch"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Rust",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "cargo llvm-cov",
                 "cargo tarpaulin",
                 "grcov"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "cargo llvm-cov --mcdc",
                 "RUSTFLAGS=-Zcoverage-options=mcdc"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "cargo llvm-cov"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -606,9 +621,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: cargo llvm-cov --branch, cargo tarpaulin --branch, grcov --branch"
+        "known to measure branch coverage: cargo llvm-cov --branch, cargo tarpaulin --branch, grcov --branch"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

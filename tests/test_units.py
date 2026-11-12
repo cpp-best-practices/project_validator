@@ -96,24 +96,30 @@ class MonorepoCoverageTests(unittest.TestCase):
         self.assertEqual(
             result.message,
             "packages/a: branch coverage is reported with c8; "
-            "packages/b: no branch coverage reporting found in what CI runs",
+            "packages/b: no branch coverage measurement found in what CI runs",
         )
 
     def test_a_run_outside_the_project_covers_none_of_it(self) -> None:
         result = _coverage({**MIXED, **_workflow(("cd /tmp/other && gcovr --xml x", None))})
-        self.assertIn("C/C++: no branch coverage reporting found in what CI runs", result.message)
+        self.assertIn("C/C++: no branch coverage measurement found in what CI runs", result.message)
 
     def test_a_run_from_the_root_covers_every_unit(self) -> None:
         result = _coverage({**WORKSPACES, **_workflow(("npx c8 node --test", None))})
-        self.assertEqual(result, Result.passed("branch coverage is reported with c8"))
+        self.assertEqual(
+            result,
+            Result.passed(
+                "branch coverage is reported with c8",
+                "consider failing CI when branch coverage falls below a threshold",
+            ),
+        )
 
     def test_each_language_of_a_mixed_project_is_judged_where_it_is(self) -> None:
         both = _workflow(("gcovr --xml cov.xml", None), ("coverage run --branch -m pytest", "python"))
         result = _coverage({**MIXED, **both})
         self.assertEqual(result.status, Status.PASS)
-        self.assertIn("Python: branch coverage is reported with coverage.py", result.message)
+        self.assertIn("Python: branch coverage is measured with coverage.py", result.message)
         only_cpp = _coverage({**MIXED, **_workflow(("gcovr --xml cov.xml", None))})
-        self.assertIn("Python: no branch coverage reporting found in what CI runs", only_cpp.message)
+        self.assertIn("Python: no branch coverage measurement found in what CI runs", only_cpp.message)
 
 
 def _scripts(files: dict[str, str]) -> list[tuple[tuple[str, ...], str | None]]:

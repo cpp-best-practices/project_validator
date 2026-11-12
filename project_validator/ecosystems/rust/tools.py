@@ -13,7 +13,7 @@ from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, starts_with
 from project_validator.facts.audit import audited, auditor
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.security import scanned, scanner
@@ -62,20 +62,24 @@ def _cargo_llvm_cov(command: Command, _: Facts) -> Run | None:
     if (argv := _cargo(command, "llvm-cov")) is None:
         return None
     branch = has_option(argv, "--branch")
-    return measured(LINE, REGION, BRANCH if branch else None, PATH if has_option(argv, "--mcdc") else None)
+    gated = (
+        LINE if has_option(argv, "--fail-under-lines") else None,
+        REGION if has_option(argv, "--fail-under-regions") else None,
+    )
+    return reported(LINE, REGION, BRANCH if branch else None, PATH if has_option(argv, "--mcdc") else None, gated=gated)
 
 
 def _cargo_tarpaulin(command: Command, _: Facts) -> Run | None:
     if (argv := _cargo(command, "tarpaulin")) is None:
         return None
-    return measured(LINE, BRANCH if has_option(argv, "--branch", "-b") else None)
+    return reported(LINE, BRANCH if has_option(argv, "--branch", "-b") else None)
 
 
 def _grcov(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
     if not starts_with(argv, ("grcov",)):
         return None
-    return measured(LINE, BRANCH if has_option(argv, "--branch") else None)
+    return reported(LINE, BRANCH if has_option(argv, "--branch") else None)
 
 
 _MCDC = re.compile(r"-Z\s*coverage-options=\S*mcdc")

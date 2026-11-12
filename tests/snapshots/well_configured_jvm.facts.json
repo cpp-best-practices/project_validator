@@ -1297,7 +1297,9 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -1499,7 +1501,9 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -1701,7 +1705,9 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -1903,7 +1909,9 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -2105,7 +2113,9 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -2307,7 +2317,9 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },

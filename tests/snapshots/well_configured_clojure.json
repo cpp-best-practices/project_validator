@@ -118,30 +118,47 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Clojure",
             "line": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "lein cloverage (or clojure -M:coverage, an alias running cloverage): form coverage"
               ],
+              "reported": [
+                "cloverage"
+              ],
+              "rung": "reported",
               "tools": [
                 "cloverage"
               ]
@@ -667,7 +684,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when statement coverage falls below a threshold"
+      ],
       "message": "statement coverage is reported with cloverage",
       "status": "PASS"
     },

@@ -133,34 +133,53 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Go",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "go test -cover"
               ],
+              "reported": [
+                "go test -cover"
+              ],
+              "rung": "reported",
               "tools": [
                 "go test -cover"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "go test -cover"
               ],
+              "reported": [
+                "go test -cover"
+              ],
+              "rung": "reported",
               "tools": [
                 "go test -cover"
               ]
@@ -792,7 +811,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when statement coverage falls below a threshold"
+      ],
       "message": "statement coverage is reported with go test -cover",
       "status": "PASS"
     },

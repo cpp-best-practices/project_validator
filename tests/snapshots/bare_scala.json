@@ -78,35 +78,50 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)",
                 "sbt jacoco"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Scala",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "sbt jacoco"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -540,9 +555,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: sbt coverage test coverageReport (or mill __.scoverage.xmlReport), sbt jacoco"
+        "known to measure branch coverage: sbt coverage test coverageReport (or mill __.scoverage.xmlReport), sbt jacoco"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

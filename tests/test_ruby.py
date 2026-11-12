@@ -84,7 +84,13 @@ class SettingTests(unittest.TestCase):
         for command in ("bundle exec rake", "bin/rails test", "bundle exec rspec spec/models"):
             with self.subTest(command=command):
                 result = run_as(self, COVERAGE, {**branch, **_ci(command)}, RUBY)
-                self.assertEqual(result, Result.passed("branch coverage is reported with SimpleCov"))
+                self.assertEqual(
+                    result,
+                    Result.passed(
+                        "branch coverage is reported with SimpleCov",
+                        "consider failing CI when branch coverage falls below a threshold",
+                    ),
+                )
         # SimpleCov starts when the tests run, and counts lines unless told to count branches too.
         lines = {"spec/spec_helper.rb": 'require "simplecov"\nSimpleCov.start\n', **_ci("bundle exec rspec")}
         for files in (branch, {**branch, **_ci("bundle exec rubocop")}, lines):

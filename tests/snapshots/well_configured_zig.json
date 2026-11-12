@@ -96,32 +96,49 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Zig",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "zig test src/main.zig --test-cmd kcov --test-cmd kcov-output --test-cmd-bin"
               ],
+              "reported": [
+                "kcov"
+              ],
+              "rung": "reported",
               "tools": [
                 "kcov"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -615,7 +632,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when line coverage falls below a threshold"
+      ],
       "message": "line coverage is reported with kcov",
       "status": "PASS"
     },

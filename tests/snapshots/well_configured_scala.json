@@ -126,10 +126,15 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)",
                 "sbt jacoco"
               ],
+              "reported": [
+                "scoverage"
+              ],
+              "rung": "reported",
               "tools": [
                 "scoverage"
               ]
@@ -137,26 +142,40 @@
             "language": "Scala",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "sbt jacoco"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)"
               ],
+              "reported": [
+                "scoverage"
+              ],
+              "rung": "reported",
               "tools": [
                 "scoverage"
               ]
@@ -714,7 +733,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
       "message": "branch coverage is reported with scoverage",
       "status": "PASS"
     },

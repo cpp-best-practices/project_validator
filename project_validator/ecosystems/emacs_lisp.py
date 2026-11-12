@@ -13,7 +13,7 @@ from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program, starts_with
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.settings import SettingsReader, matched_settings
@@ -85,9 +85,9 @@ def _undercover(command: Command, facts: Facts) -> Run | None:
     if not _runs_tests(command):
         return None
     if _UNDERCOVER.search(_text(command)) or "UNDERCOVER_FORCE" in command.env:
-        return measured(Granularity.LINE)
+        return reported(Granularity.LINE)
     configured = facts.where(Setting, tool=UNDERCOVER)
-    return measured(Granularity.LINE, read=configured) if configured else None
+    return reported(Granularity.LINE, read=configured) if configured else None
 
 
 UNDERCOVER_TOOL = coverage_tool(

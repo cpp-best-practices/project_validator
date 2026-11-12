@@ -91,30 +91,47 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Racket",
             "line": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "raco cover . (expression coverage; -f codecov or coveralls to upload)"
               ],
+              "reported": [
+                "raco cover"
+              ],
+              "rung": "reported",
               "tools": [
                 "raco cover"
               ]
@@ -548,7 +565,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when statement coverage falls below a threshold"
+      ],
       "message": "statement coverage is reported with raco cover",
       "status": "PASS"
     },

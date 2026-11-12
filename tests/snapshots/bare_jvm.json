@@ -76,34 +76,49 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "jacoco:report or jacocoTestReport",
                 "koverXmlReport"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Java",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "jacoco:report or jacocoTestReport",
                 "koverXmlReport"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -642,9 +657,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: jacoco:report or jacocoTestReport, koverXmlReport"
+        "known to measure branch coverage: jacoco:report or jacocoTestReport, koverXmlReport"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

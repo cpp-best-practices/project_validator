@@ -18,7 +18,7 @@ from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.expansion import launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
@@ -153,12 +153,12 @@ def _bisect(command: Command, _facts: Facts) -> Run | None:
     `BISECT_ENABLE`, the older way), or `bisect-ppx-report`, which writes the report."""
     argv = resolved(command)
     if program(argv) == "bisect-ppx-report":
-        return measured(Granularity.BRANCH)
+        return reported(Granularity.BRANCH)
     if dune_subcommand(command) not in _DUNE_BUILDS:
         return None
     backends = {backend for value in option_values(argv, "--instrument-with") for backend in value.split(",")}
     enabled = command.env.get("BISECT_ENABLE", "").lower() in ("yes", "true", "1")
-    return measured(Granularity.BRANCH) if "bisect_ppx" in backends or enabled else None
+    return reported(Granularity.BRANCH) if "bisect_ppx" in backends or enabled else None
 
 
 BISECT_PPX = coverage_tool(

@@ -76,30 +76,45 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "dune test --instrument-with bisect_ppx, then bisect-ppx-report"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "OCaml",
             "line": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -474,9 +489,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: dune test --instrument-with bisect_ppx, then bisect-ppx-report"
+        "known to measure branch coverage: dune test --instrument-with bisect_ppx, then bisect-ppx-report"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

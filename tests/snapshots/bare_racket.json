@@ -59,30 +59,45 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Racket",
             "line": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "raco cover . (expression coverage; -f codecov or coveralls to upload)"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -430,9 +445,9 @@
     },
     "coverage": {
       "details": [
-        "known to report statement coverage: raco cover . (expression coverage; -f codecov or coveralls to upload)"
+        "known to measure statement coverage: raco cover . (expression coverage; -f codecov or coveralls to upload)"
       ],
-      "message": "no statement coverage reporting found in what CI runs",
+      "message": "no statement coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

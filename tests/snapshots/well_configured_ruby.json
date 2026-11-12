@@ -118,9 +118,14 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "SimpleCov enable_coverage :branch"
               ],
+              "reported": [
+                "SimpleCov"
+              ],
+              "rung": "reported",
               "tools": [
                 "SimpleCov"
               ]
@@ -128,26 +133,40 @@
             "language": "Ruby",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "SimpleCov"
               ],
+              "reported": [
+                "SimpleCov"
+              ],
+              "rung": "reported",
               "tools": [
                 "SimpleCov"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -810,7 +829,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
       "message": "branch coverage is reported with SimpleCov",
       "status": "PASS"
     },

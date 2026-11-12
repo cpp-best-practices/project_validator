@@ -78,30 +78,45 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Lua",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "busted --coverage (luacov)"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -498,9 +513,9 @@
     },
     "coverage": {
       "details": [
-        "known to report line coverage: busted --coverage (luacov)"
+        "known to measure line coverage: busted --coverage (luacov)"
       ],
-      "message": "no line coverage reporting found in what CI runs",
+      "message": "no line coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

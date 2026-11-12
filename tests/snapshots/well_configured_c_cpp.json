@@ -165,12 +165,19 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [
+                "gcovr"
+              ],
               "known": [
                 "gcovr --xml",
                 "lcov --rc branch_coverage=1",
                 "gcov --branch-counts",
                 "llvm-cov report"
               ],
+              "reported": [
+                "gcovr"
+              ],
+              "rung": "gated",
               "tools": [
                 "gcovr"
               ]
@@ -178,18 +185,24 @@
             "language": "C++",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "gcovr",
                 "lcov",
                 "gcov",
                 "llvm-cov report"
               ],
+              "reported": [
+                "gcovr"
+              ],
+              "rung": "reported",
               "tools": [
                 "gcovr"
               ]
             },
             "path": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "lcov --mcdc-coverage",
                 "gcov --conditions",
@@ -198,20 +211,28 @@
                 "gcc -fpath-coverage",
                 "clang -fcoverage-mcdc"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "gcc -fcondition-coverage"
               ]
             },
             "region": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "llvm-cov report"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -917,7 +938,7 @@
     },
     "coverage": {
       "details": [],
-      "message": "branch coverage is reported with gcovr; path coverage bonus: gcc -fcondition-coverage",
+      "message": "branch coverage is gated with gcovr; path coverage bonus: measured with gcc -fcondition-coverage (not reported)",
       "status": "PASS"
     },
     "cxx-extensions": {

@@ -77,30 +77,45 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "R",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "covr::package_coverage() (or covr::codecov())"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -492,9 +507,9 @@
     },
     "coverage": {
       "details": [
-        "known to report line coverage: covr::package_coverage() (or covr::codecov())"
+        "known to measure line coverage: covr::package_coverage() (or covr::codecov())"
       ],
-      "message": "no line coverage reporting found in what CI runs",
+      "message": "no line coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

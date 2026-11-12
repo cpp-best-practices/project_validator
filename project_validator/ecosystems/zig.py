@@ -14,7 +14,7 @@ from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcomman
 from project_validator.facts import Command, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
@@ -97,7 +97,7 @@ KCOV = coverage_tool(
     name="kcov",
     languages=ZIG,
     can={Granularity.LINE: "zig test src/main.zig --test-cmd kcov --test-cmd kcov-output --test-cmd-bin"},
-    measures=lambda command, _facts: measured(Granularity.LINE) if _kcov(command) else None,
+    measures=lambda command, _facts: reported(Granularity.LINE) if _kcov(command) else None,
 )
 
 

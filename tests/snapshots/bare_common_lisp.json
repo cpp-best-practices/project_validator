@@ -76,30 +76,45 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "(require :sb-cover) before the tests, with (sb-cover:report \"coverage/\") after"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Common Lisp",
             "line": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -463,9 +478,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: (require :sb-cover) before the tests, with (sb-cover:report \"coverage/\") after"
+        "known to measure branch coverage: (require :sb-cover) before the tests, with (sb-cover:report \"coverage/\") after"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

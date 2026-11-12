@@ -123,9 +123,12 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "dart test --coverage=coverage --branch-coverage (or flutter test --coverage --branch-coverage)"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "dart test --coverage"
               ]
@@ -133,26 +136,38 @@
             "language": "Dart",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "dart test --coverage=coverage (or flutter test --coverage)"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "dart test --coverage"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -691,8 +706,11 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "branch coverage is reported with dart test --coverage",
+      "details": [
+        "consider reporting branch coverage where it can be seen (a report CI publishes, a coverage service)",
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
+      "message": "branch coverage is measured with dart test --coverage",
       "status": "PASS"
     },
     "cxx-extensions": {

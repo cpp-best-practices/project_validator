@@ -187,7 +187,11 @@ class HaskellTests(unittest.TestCase):
         for command in ("cabal test --enable-coverage", "stack test --coverage", "hpc-codecov cabal:spec"):
             with self.subTest(command=command):
                 self.assertEqual(
-                    self._run(coverage, _ci(command)), Result.passed("branch coverage is reported with HPC")
+                    self._run(coverage, _ci(command)),
+                    Result.passed(
+                        "branch coverage is reported with HPC",
+                        "consider failing CI when branch coverage falls below a threshold",
+                    ),
                 )
         self.assertEqual(self._run(coverage, _ci("cabal test")).status, Status.FAIL)
 

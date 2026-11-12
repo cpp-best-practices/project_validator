@@ -13,7 +13,7 @@ from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import (
@@ -81,7 +81,7 @@ def _devel_cover(command: Command, _facts: Facts) -> Run | None:
     argv = resolved(command)
     instrumented = _WITH_DEVEL_COVER.search(command.env.get("HARNESS_PERL_SWITCHES", "")) and _runs_tests(command)
     if program(argv) == "cover" or instrumented:
-        return measured(Granularity.STATEMENT, Granularity.BRANCH, Granularity.PATH)
+        return reported(Granularity.STATEMENT, Granularity.BRANCH, Granularity.PATH)
     return None
 
 

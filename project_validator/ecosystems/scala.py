@@ -18,7 +18,7 @@ from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directory_output
@@ -222,7 +222,7 @@ SCOVERAGE = coverage_tool(
             sbt("coverageReport", "coverageAggregate"),
             mill("xmlReport", "htmlReport", "consoleReport", "xmlCoberturaReport", within="scoverage"),
         ),
-        lambda: measured(Granularity.STATEMENT, Granularity.BRANCH),
+        lambda: reported(Granularity.STATEMENT, Granularity.BRANCH),
     ),
 )
 SBT_JACOCO = coverage_tool(
@@ -230,7 +230,7 @@ SBT_JACOCO = coverage_tool(
     languages=SCALA,
     can={Granularity.LINE: "sbt jacoco", Granularity.BRANCH: "sbt jacoco"},
     measures=when(
-        sbt("jacoco", "jacocoReport", "jacocoAggregate"), lambda: measured(Granularity.LINE, Granularity.BRANCH)
+        sbt("jacoco", "jacocoReport", "jacocoAggregate"), lambda: reported(Granularity.LINE, Granularity.BRANCH)
     ),
 )
 

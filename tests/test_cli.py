@@ -99,7 +99,7 @@ class CliTests(unittest.TestCase):
             with layout_project(self, layout, {**WELL_CONFIGURED, **python}) as root:
                 code, output, _ = run_cli("--only", judged_per_language, str(root))
                 self.assertEqual(code, EXIT_SUCCESS, output)
-                self.assertIn("[PASS] coverage: C/C++: branch coverage is reported with gcovr", output)
+                self.assertIn("[PASS] coverage: C/C++: branch coverage is gated with gcovr", output)
 
     def test_bare_project_fails(self) -> None:
         for layout in PROJECT_LAYOUTS:
@@ -121,10 +121,10 @@ class CliTests(unittest.TestCase):
         with temp_project(files) as root:
             code, output, _ = run_cli("--only", "coverage", str(root))
             self.assertEqual(code, EXIT_FAILURE)
-            self.assertIn("[ERROR] coverage: whether CI reports branch coverage is unknown", output)
+            self.assertIn("[ERROR] coverage: whether CI measures branch coverage is unknown", output)
             code, output, _ = run_cli("--only", "coverage", "--allow-unknown", str(root))
             self.assertEqual(code, EXIT_FAILURE)
-            self.assertIn("[FAIL] coverage: no branch coverage reporting found in what CI runs", output)
+            self.assertIn("[FAIL] coverage: no branch coverage measurement found in what CI runs", output)
 
     def test_skipping_every_failure_succeeds(self) -> None:
         for layout in PROJECT_LAYOUTS:

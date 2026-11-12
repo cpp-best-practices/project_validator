@@ -76,34 +76,49 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "phpunit --path-coverage"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "PHP",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "phpunit --coverage-clover"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "phpunit --path-coverage"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -651,9 +666,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: phpunit --path-coverage"
+        "known to measure branch coverage: phpunit --path-coverage"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

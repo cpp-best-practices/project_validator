@@ -19,10 +19,10 @@ from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.evidence import json_value
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
-from project_validator.facts.arguments import option_values, positional, program, starts_with
+from project_validator.facts.arguments import has_option, option_values, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
@@ -401,33 +401,42 @@ def _test_runner(name: str, tool: str, flags: tuple[str, ...], files: tuple[str,
         if program(argv) != name:
             return None
         if _asks_for_coverage(argv, *flags):
-            return measured(*BOTH)
+            return reported(*BOTH)
         candidates = _named_config(name)(command) or [joined(command.directory, file) for file in files]
         configuration = facts.first_file(tool, candidates) or joined(command.directory, PACKAGE_JSON)
         setting = facts.setting(tool, key, paths=[configuration])
-        return measured(*BOTH, read=[setting]) if setting is not None and setting.value is True else None
+        return reported(*BOTH, read=[setting]) if setting is not None and setting.value is True else None
 
     return measures
 
 
 def _instrumenter(name: str) -> Claim:
-    """c8 or nyc, which run a command and report its coverage."""
+    """c8 or nyc, which run a command and report its coverage; `--check-coverage` fails under the thresholds given
+    (`--lines`, `--branches`; lines by default)."""
 
     def measures(command: Command, _: Facts) -> Run | None:
-        return measured(*BOTH) if program(resolved(command)) == name else None
+        argv = resolved(command)
+        if program(argv) != name:
+            return None
+        if not has_option(argv, "--check-coverage"):
+            return reported(*BOTH)
+        branches = has_option(argv, "--branches")
+        lines = has_option(argv, "--lines") or not branches
+        return reported(*BOTH, gated=(Granularity.LINE if lines else None, Granularity.BRANCH if branches else None))
 
     return measures
 
 
 def _deno(command: Command, _: Facts) -> Run | None:
+    """`deno test --coverage` collects; `deno coverage` reports the collection."""
     argv = resolved(command)
     asked = any(word.partition("=")[0] == "--coverage" for word in argv)
     return measured(*BOTH) if starts_with(argv, ("deno", "test")) and asked else None
 
 
-_node = when(all_of(starts(("node",)), with_option("--experimental-test-coverage")), lambda: measured(*BOTH))
+_node = when(all_of(starts(("node",)), with_option("--experimental-test-coverage")), lambda: reported(*BOTH))
 # Bun's test runner counts lines (and functions), not branches.
-_bun = when(all_of(starts(("bun", "test")), with_option("--coverage")), lambda: measured(Granularity.LINE))
+_bun = when(all_of(starts(("bun", "test")), with_option("--coverage")), lambda: reported(Granularity.LINE))
 
 
 def _reports_branches(name: str, how: str, measures: Claim, reads: tuple[str, ...] = ()) -> Tool:

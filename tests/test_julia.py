@@ -92,7 +92,11 @@ class JuliaTests(unittest.TestCase):
         self.assertEqual(self._run(tests_run, _ci(PKG_TEST)).status, Status.FAIL)
 
     def test_code_coverage_counts_lines(self) -> None:
-        passed = Result.passed("line coverage is reported with julia --code-coverage")
+        passed = Result.passed(
+            "line coverage is measured with julia --code-coverage",
+            "consider reporting line coverage where it can be seen (a report CI publishes, a coverage service)",
+            "consider failing CI when line coverage falls below a threshold",
+        )
         for files in (
             _ci("julia --code-coverage=user --project -e 'using Pkg; Pkg.test()'"),
             _ci("julia --project -e 'using Pkg; Pkg.test(coverage=true)'"),

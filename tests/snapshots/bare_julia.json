@@ -76,30 +76,45 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Julia",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "julia --code-coverage (julia-actions/julia-runtest, then julia-processcoverage)"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -508,9 +523,9 @@
     },
     "coverage": {
       "details": [
-        "known to report line coverage: julia --code-coverage (julia-actions/julia-runtest, then julia-processcoverage)"
+        "known to measure line coverage: julia --code-coverage (julia-actions/julia-runtest, then julia-processcoverage)"
       ],
-      "message": "no line coverage reporting found in what CI runs",
+      "message": "no line coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

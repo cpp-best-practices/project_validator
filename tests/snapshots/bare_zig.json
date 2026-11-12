@@ -59,30 +59,45 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Zig",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "zig test src/main.zig --test-cmd kcov --test-cmd kcov-output --test-cmd-bin"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -457,9 +472,9 @@
     },
     "coverage": {
       "details": [
-        "known to report line coverage: zig test src/main.zig --test-cmd kcov --test-cmd kcov-output --test-cmd-bin"
+        "known to measure line coverage: zig test src/main.zig --test-cmd kcov --test-cmd kcov-output --test-cmd-bin"
       ],
-      "message": "no line coverage reporting found in what CI runs",
+      "message": "no line coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

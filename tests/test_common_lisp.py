@@ -90,7 +90,10 @@ class CommonLispTests(unittest.TestCase):
         self.assertEqual(self._run(tests_run, _ci(TEST_SYSTEM)).status, Status.FAIL)
 
     def test_sb_cover_counts_branches(self) -> None:
-        passed = Result.passed("branch coverage is reported with sb-cover")
+        passed = Result.passed(
+            "branch coverage is reported with sb-cover",
+            "consider failing CI when branch coverage falls below a threshold",
+        )
         on_the_line = _ci("sbcl --eval '(require :sb-cover)' --eval '(asdf:test-system :shop)'")
         self.assertEqual(self._run(coverage, on_the_line), passed)
         scripted = {"ci/coverage.lisp": "(require :sb-cover)\n(asdf:test-system :shop)\n", **_ci(TEST_SYSTEM)}

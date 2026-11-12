@@ -155,7 +155,13 @@ class ElixirTests(unittest.TestCase):
     def test_coverage_is_lines_from_cover_or_excoveralls(self) -> None:
         self.assertEqual(self._run(coverage, _ci("mix test")).status, Status.FAIL)
         result = self._run(coverage, _ci("mix test --cover"))
-        self.assertEqual(result, Result.passed("line coverage is reported with mix test --cover"))
+        self.assertEqual(
+            result,
+            Result.passed(
+                "line coverage is reported with mix test --cover",
+                "consider failing CI when line coverage falls below a threshold",
+            ),
+        )
         for task in ("mix coveralls", "mix coveralls.json", "mix coveralls.github"):
             with self.subTest(task=task):
                 self.assertEqual(self._run(coverage, _ci(task)).status, Status.PASS)
@@ -266,7 +272,11 @@ class ErlangTests(unittest.TestCase):
         for command in ("rebar3 cover", "rebar3 do eunit --cover, cover", "rebar3 ct -c", "rebar3 as test cover"):
             with self.subTest(command=command):
                 self.assertEqual(
-                    self._run(coverage, _ci(command)), Result.passed("line coverage is reported with rebar3 cover")
+                    self._run(coverage, _ci(command)),
+                    Result.passed(
+                        "line coverage is reported with rebar3 cover",
+                        "consider failing CI when line coverage falls below a threshold",
+                    ),
                 )
         self.assertEqual(self._run(coverage, _ci("rebar3 eunit")).status, Status.FAIL)
 

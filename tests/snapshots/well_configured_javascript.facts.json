@@ -2528,7 +2528,9 @@
       "origin": "package.json:scripts.test",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -2764,7 +2766,9 @@
       "origin": "package.json:scripts.test",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -3000,7 +3004,9 @@
       "origin": "package.json:scripts.test",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -3236,7 +3242,9 @@
       "origin": "package.json:scripts.test",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -3472,7 +3480,9 @@
       "origin": "package.json:scripts.test",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -3708,7 +3718,9 @@
       "origin": "package.json:scripts.test",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },

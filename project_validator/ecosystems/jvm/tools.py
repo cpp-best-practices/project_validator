@@ -20,7 +20,7 @@ from project_validator.ecosystems.jvm import (
 )
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unknown
 from project_validator.facts.audit import audited, auditor
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.dependencies import Locked
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
@@ -109,7 +109,7 @@ GRADLE_SETTINGS = SettingsReader(name="Gradle", files=("*.gradle", "*.gradle.kts
 def _jvm_coverage(wiring: Wiring) -> Claim:
     def measures(command: Command, facts: Facts) -> Run | None:
         read = wired_run(wiring, command, facts)
-        return None if read is None else measured(Granularity.LINE, Granularity.BRANCH, read=read)
+        return None if read is None else reported(Granularity.LINE, Granularity.BRANCH, read=read)
 
     return measures
 

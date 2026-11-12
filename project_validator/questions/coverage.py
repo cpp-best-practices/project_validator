@@ -7,18 +7,26 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from project_validator.facts import Facts
-from project_validator.facts.coverage import COVERAGE, Granularity
+from project_validator.facts.coverage import COVERAGE, Granularity, Rung, level, rung_of
 from project_validator.facts.tools import Tool, ToolRun, known_tools
 from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, per_unit, runs_of, unknowns_for
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class GranularityAnswer:
-    """`tools`: those CI runs that report it (for yes). `known`: how the known tools report it."""
+    """`tools`: those CI runs that measure it (for yes), `reported` and `gated` those that take it to that rung, and
+    `rung` the highest reached. `known`: how the known tools measure it."""
 
     answer: Answer
+    rung: Rung | None = None
     tools: tuple[str, ...] = ()
+    reported: tuple[str, ...] = ()
+    gated: tuple[str, ...] = ()
     known: tuple[str, ...] = ()
+
+    def at(self, rung: Rung) -> tuple[str, ...]:
+        """The tools that take the granularity to `rung`."""
+        return {Rung.MEASURED: self.tools, Rung.REPORTED: self.reported, Rung.GATED: self.gated}[rung]
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -46,7 +54,14 @@ class CoverageAnswer:
         return answer_dict(
             self,
             **{
-                str(granularity): {"answer": str(found.answer), "tools": list(found.tools), "known": list(found.known)}
+                str(granularity): {
+                    "answer": str(found.answer),
+                    "rung": str(found.rung) if found.rung else None,
+                    "tools": list(found.tools),
+                    "reported": list(found.reported),
+                    "gated": list(found.gated),
+                    "known": list(found.known),
+                }
                 for granularity, found in self.granularities.items()
             },
             unknowns=list(self.unknowns),
@@ -63,12 +78,26 @@ def measures_coverage(tool: Tool) -> bool:
 def _answer(
     granularity: Granularity, runs: tuple[ToolRun, ...], known: tuple[Tool, ...], unread: bool
 ) -> GranularityAnswer:
-    level = str(granularity)
-    able = tuple(dict.fromkeys(tool.can[COVERAGE][level] for tool in known if level in tool.can[COVERAGE]))
+    name = str(granularity)
+    able = tuple(dict.fromkeys(tool.can[COVERAGE][name] for tool in known if name in tool.can[COVERAGE]))
     if not able:
         return GranularityAnswer(answer=Answer.IMPOSSIBLE)
-    if tools := tuple(dict.fromkeys(run.tool for run in runs if level in run.provides[COVERAGE])):
-        return GranularityAnswer(answer=Answer.YES, tools=tools, known=able)
+    at = {
+        rung: tuple(dict.fromkeys(run.tool for run in runs if level(granularity, rung) in run.provides[COVERAGE]))
+        for rung in Rung
+    }
+    if at[Rung.MEASURED]:
+        reached = max(
+            (rung_of(run.provides[COVERAGE], granularity) or Rung.MEASURED for run in runs), key=lambda rung: rung.rank
+        )
+        return GranularityAnswer(
+            answer=Answer.YES,
+            rung=reached,
+            tools=at[Rung.MEASURED],
+            reported=at[Rung.REPORTED],
+            gated=at[Rung.GATED],
+            known=able,
+        )
     return GranularityAnswer(answer=Answer.UNKNOWN if unread else Answer.NO, known=able)
 
 
