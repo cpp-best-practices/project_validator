@@ -17,6 +17,7 @@
       "build_systems": [
         "CMake"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "C"
@@ -78,6 +79,7 @@
         "build file CMakeLists.txt"
       ]
     },
+    "formats": [],
     "languages": [
       "C"
     ],
@@ -87,6 +89,7 @@
           "CMake"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "C"
         ],

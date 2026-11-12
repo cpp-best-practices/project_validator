@@ -24,6 +24,41 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".hlint.yaml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Haskell",
       "origin": "app/Main.hs",
       "role": "product"
@@ -52,12 +87,65 @@
       "build_systems": [
         "Cabal"
       ],
+      "formats": [
+        "YAML"
+      ],
       "kind": "Unit",
       "languages": [
         "Haskell"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".hlint.yaml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CiConfiguration",
@@ -2182,12 +2270,19 @@
       ]
     },
     "ecosystems": {
+      "Data": [
+        ".yaml files",
+        ".yml files"
+      ],
       "Haskell": [
         "build file app.cabal",
         "build file cabal.project",
         ".hs files"
       ]
     },
+    "formats": [
+      "YAML"
+    ],
     "languages": [
       "Haskell"
     ],
@@ -2197,6 +2292,9 @@
           "Cabal"
         ],
         "directory": ".",
+        "formats": [
+          "YAML"
+        ],
         "languages": [
           "Haskell"
         ],

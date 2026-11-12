@@ -14,6 +14,48 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/function-limits.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "XML",
+      "origin": "pom.xml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Java",
       "origin": "src/main/java/com/example/App.java",
       "role": "product"
@@ -36,12 +78,76 @@
       "build_systems": [
         "Maven"
       ],
+      "formats": [
+        "XML",
+        "YAML"
+      ],
       "kind": "Unit",
       "languages": [
         "Java"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/function-limits.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "XML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "pom.xml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "Jazzer fuzz tests (@FuzzTest or fuzzerTestOneInput)",
@@ -2820,10 +2926,18 @@
       ]
     },
     "ecosystems": {
+      "Data": [
+        ".xml files",
+        ".yml files"
+      ],
       "JVM": [
         ".java files"
       ]
     },
+    "formats": [
+      "XML",
+      "YAML"
+    ],
     "languages": [
       "Java"
     ],
@@ -2833,6 +2947,10 @@
           "Maven"
         ],
         "directory": ".",
+        "formats": [
+          "XML",
+          "YAML"
+        ],
         "languages": [
           "Java"
         ],

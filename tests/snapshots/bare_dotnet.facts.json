@@ -20,6 +20,7 @@
     },
     {
       "build_systems": [],
+      "formats": [],
       "kind": "Unit",
       "languages": [],
       "origin": ".",
@@ -29,6 +30,7 @@
       "build_systems": [
         "MSBuild"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "C#"
@@ -109,6 +111,7 @@
         ".cs files"
       ]
     },
+    "formats": [],
     "languages": [
       "C#"
     ],
@@ -116,6 +119,7 @@
       {
         "build_systems": [],
         "directory": ".",
+        "formats": [],
         "languages": [],
         "role": "product"
       },
@@ -124,6 +128,7 @@
           "MSBuild"
         ],
         "directory": "src/App",
+        "formats": [],
         "languages": [
           "C#"
         ],

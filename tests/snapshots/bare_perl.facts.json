@@ -16,6 +16,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "MYMETA.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Perl",
       "origin": "lib/Shop.pm",
       "role": "product"
@@ -31,12 +38,25 @@
       "build_systems": [
         "ExtUtils::MakeMaker"
       ],
+      "formats": [
+        "JSON"
+      ],
       "kind": "Unit",
       "languages": [
         "Perl"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "MYMETA.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -83,11 +103,17 @@
       "providers": []
     },
     "ecosystems": {
+      "Data": [
+        ".json files"
+      ],
       "Perl": [
         "build file Makefile.PL",
         ".pm files"
       ]
     },
+    "formats": [
+      "JSON"
+    ],
     "languages": [
       "Perl"
     ],
@@ -97,6 +123,9 @@
           "ExtUtils::MakeMaker"
         ],
         "directory": ".",
+        "formats": [
+          "JSON"
+        ],
         "languages": [
           "Perl"
         ],

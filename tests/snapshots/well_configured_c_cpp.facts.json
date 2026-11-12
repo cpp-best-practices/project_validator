@@ -28,6 +28,41 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/codeql-analysis.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "C++",
       "origin": "fuzz_test/fuzz_tester.cpp",
       "role": "test"
@@ -43,12 +78,65 @@
       "build_systems": [
         "CMake"
       ],
+      "formats": [
+        "YAML"
+      ],
       "kind": "Unit",
       "languages": [
         "C++"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/codeql-analysis.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "libFuzzer or AFL++ fuzz targets (LLVMFuzzerTestOneInput, __AFL_LOOP)",
@@ -7837,8 +7925,14 @@
       "C/C++": [
         "build file CMakeLists.txt",
         ".cpp files"
+      ],
+      "Data": [
+        ".yml files"
       ]
     },
+    "formats": [
+      "YAML"
+    ],
     "languages": [
       "C++"
     ],
@@ -7848,6 +7942,9 @@
           "CMake"
         ],
         "directory": ".",
+        "formats": [
+          "YAML"
+        ],
         "languages": [
           "C++"
         ],

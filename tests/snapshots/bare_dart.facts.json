@@ -21,8 +21,18 @@
       "role": "product"
     },
     {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": "pubspec.yaml",
+      "role": "product"
+    },
+    {
       "build_systems": [
         "pub"
+      ],
+      "formats": [
+        "YAML"
       ],
       "kind": "Unit",
       "languages": [
@@ -30,6 +40,16 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "pubspec.yaml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -68,8 +88,14 @@
       "Dart": [
         "build file pubspec.yaml",
         ".dart files"
+      ],
+      "Data": [
+        ".yaml files"
       ]
     },
+    "formats": [
+      "YAML"
+    ],
     "languages": [
       "Dart"
     ],
@@ -79,6 +105,9 @@
           "pub"
         ],
         "directory": ".",
+        "formats": [
+          "YAML"
+        ],
         "languages": [
           "Dart"
         ],

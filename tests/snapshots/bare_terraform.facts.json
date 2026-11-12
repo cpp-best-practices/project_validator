@@ -20,6 +20,7 @@
     },
     {
       "build_systems": [],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Terraform"
@@ -58,6 +59,7 @@
         ".tf files"
       ]
     },
+    "formats": [],
     "languages": [
       "Terraform"
     ],
@@ -65,6 +67,7 @@
       {
         "build_systems": [],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Terraform"
         ],

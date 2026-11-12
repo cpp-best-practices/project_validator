@@ -473,6 +473,25 @@
           }
         ]
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              "pubspec.yaml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -537,7 +556,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "1 data file parses (YAML: 1)",
+      "message": "1 YAML file parses",
       "status": "PASS"
     },
     "dependency-audit": {

@@ -30,6 +30,7 @@
       "build_systems": [
         "Bundler"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Ruby"
@@ -76,6 +77,7 @@
         ".rb files"
       ]
     },
+    "formats": [],
     "languages": [
       "Ruby"
     ],
@@ -85,6 +87,7 @@
           "Bundler"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Ruby"
         ],

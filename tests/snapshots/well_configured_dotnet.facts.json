@@ -32,8 +32,50 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/function-limits.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "C#",
       "origin": "fuzz/App.Fuzz/Program.cs",
+      "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "fuzz/App.Fuzz/packages.lock.json",
       "role": "test"
     },
     {
@@ -46,13 +88,38 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "src/App/packages.lock.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "stryker-config.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "C#",
       "origin": "tests/App.Tests/CalculatorTests.cs",
       "role": "test"
     },
     {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "tests/App.Tests/packages.lock.json",
+      "role": "test"
+    },
+    {
       "build_systems": [
         "MSBuild"
+      ],
+      "formats": [
+        "JSON",
+        "YAML"
       ],
       "kind": "Unit",
       "languages": [
@@ -60,6 +127,96 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/function-limits.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "fuzz/App.Fuzz/packages.lock.json",
+      "problem": null,
+      "role": "test",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "src/App/packages.lock.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "stryker-config.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "tests/App.Tests/packages.lock.json",
+      "problem": null,
+      "role": "test",
+      "unread": null
     },
     {
       "kind": "SharpFuzz fuzz targets (Fuzzer.Run, Fuzzer.LibFuzzer.Run)",
@@ -4222,8 +4379,16 @@
     "ecosystems": {
       ".NET": [
         ".cs files"
+      ],
+      "Data": [
+        ".json files",
+        ".yml files"
       ]
     },
+    "formats": [
+      "JSON",
+      "YAML"
+    ],
     "languages": [
       "C#"
     ],
@@ -4233,6 +4398,10 @@
           "MSBuild"
         ],
         "directory": ".",
+        "formats": [
+          "JSON",
+          "YAML"
+        ],
         "languages": [
           "C#"
         ],

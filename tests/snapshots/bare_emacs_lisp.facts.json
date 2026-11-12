@@ -31,6 +31,7 @@
       "build_systems": [
         "Eask"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Emacs Lisp"
@@ -77,6 +78,7 @@
         ".el files"
       ]
     },
+    "formats": [],
     "languages": [
       "Emacs Lisp"
     ],
@@ -86,6 +88,7 @@
           "Eask"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Emacs Lisp"
         ],

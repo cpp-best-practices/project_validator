@@ -31,6 +31,7 @@
       "build_systems": [
         "Leiningen"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Clojure"
@@ -80,6 +81,7 @@
         ".clj files"
       ]
     },
+    "formats": [],
     "languages": [
       "Clojure"
     ],
@@ -89,6 +91,7 @@
           "Leiningen"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Clojure"
         ],

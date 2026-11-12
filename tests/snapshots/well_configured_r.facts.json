@@ -16,6 +16,41 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/function-limits.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "R",
       "origin": "R/shop.R",
       "role": "product"
@@ -38,12 +73,65 @@
       "build_systems": [
         "R package"
       ],
+      "formats": [
+        "YAML"
+      ],
       "kind": "Unit",
       "languages": [
         "R"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/function-limits.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "testthat (tests/testthat/test-*.R) or tinytest (inst/tinytest/test_*.R) files",
@@ -1757,11 +1845,17 @@
       ]
     },
     "ecosystems": {
+      "Data": [
+        ".yml files"
+      ],
       "R": [
         "build file DESCRIPTION",
         ".R files"
       ]
     },
+    "formats": [
+      "YAML"
+    ],
     "languages": [
       "R"
     ],
@@ -1771,6 +1865,9 @@
           "R package"
         ],
         "directory": ".",
+        "formats": [
+          "YAML"
+        ],
         "languages": [
           "R"
         ],

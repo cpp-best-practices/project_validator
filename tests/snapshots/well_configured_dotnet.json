@@ -741,6 +741,47 @@
           }
         ]
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "JSON",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "JSON",
+            "parsed": [
+              "src/App/packages.lock.json",
+              "stryker-config.json"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/copy-paste-detection.yml",
+              ".github/workflows/function-limits.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -801,7 +842,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "7 data files parse (JSON: 2, YAML: 5)",
+      "message": "JSON: 2 JSON files parse; YAML: 5 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {

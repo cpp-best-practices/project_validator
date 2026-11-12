@@ -24,6 +24,41 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/function-limits.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Scala",
       "origin": "src/main/scala/shop/Shop.scala",
       "role": "product"
@@ -59,12 +94,65 @@
       "build_systems": [
         "sbt"
       ],
+      "formats": [
+        "YAML"
+      ],
       "kind": "Unit",
       "languages": [
         "Scala"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/function-limits.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "munit, ScalaTest, specs2, utest or ZIO Test suites under src/test/scala (or Mill's test/src)",
@@ -2869,12 +2957,18 @@
       ]
     },
     "ecosystems": {
+      "Data": [
+        ".yml files"
+      ],
       "Scala": [
         "build file build.sbt",
         "build file plugins.sbt",
         ".scala files"
       ]
     },
+    "formats": [
+      "YAML"
+    ],
     "languages": [
       "Scala"
     ],
@@ -2884,6 +2978,9 @@
           "sbt"
         ],
         "directory": ".",
+        "formats": [
+          "YAML"
+        ],
         "languages": [
           "Scala"
         ],

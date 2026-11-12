@@ -24,6 +24,62 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/codeql.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/function-limits.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "Cargo.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "fuzz/Cargo.toml",
+      "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Rust",
       "origin": "fuzz/fuzz_targets/parse.rs",
       "role": "test"
@@ -39,12 +95,96 @@
       "build_systems": [
         "Cargo"
       ],
+      "formats": [
+        "TOML",
+        "YAML"
+      ],
       "kind": "Unit",
       "languages": [
         "Rust"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/codeql.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/function-limits.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "Cargo.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "fuzz/Cargo.toml",
+      "problem": null,
+      "role": "test",
+      "unread": null
     },
     {
       "kind": "cargo-fuzz or AFL.rs fuzz targets (fuzz_target! or afl::fuzz!)",
@@ -7170,11 +7310,19 @@
       ]
     },
     "ecosystems": {
+      "Data": [
+        ".toml files",
+        ".yml files"
+      ],
       "Rust": [
         "build file Cargo.toml",
         ".rs files"
       ]
     },
+    "formats": [
+      "TOML",
+      "YAML"
+    ],
     "languages": [
       "Rust"
     ],
@@ -7184,6 +7332,10 @@
           "Cargo"
         ],
         "directory": ".",
+        "formats": [
+          "TOML",
+          "YAML"
+        ],
         "languages": [
           "Rust"
         ],

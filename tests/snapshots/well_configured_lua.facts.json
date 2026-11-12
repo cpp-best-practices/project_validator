@@ -16,6 +16,48 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/function-limits.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": ".luarc.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Lua",
       "origin": "spec/shop_spec.lua",
       "role": "test"
@@ -28,8 +70,20 @@
       "role": "product"
     },
     {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "stylua.toml",
+      "role": "product"
+    },
+    {
       "build_systems": [
         "LuaRocks"
+      ],
+      "formats": [
+        "JSON",
+        "TOML",
+        "YAML"
       ],
       "kind": "Unit",
       "languages": [
@@ -37,6 +91,76 @@
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/function-limits.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".luarc.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "stylua.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "busted specs (spec/**/*_spec.lua)",
@@ -3340,11 +3464,21 @@
       ]
     },
     "ecosystems": {
+      "Data": [
+        ".json files",
+        ".toml files",
+        ".yml files"
+      ],
       "Lua": [
         "build file shop-dev-1.rockspec",
         ".lua files"
       ]
     },
+    "formats": [
+      "JSON",
+      "TOML",
+      "YAML"
+    ],
     "languages": [
       "Lua"
     ],
@@ -3354,6 +3488,11 @@
           "LuaRocks"
         ],
         "directory": ".",
+        "formats": [
+          "JSON",
+          "TOML",
+          "YAML"
+        ],
         "languages": [
           "Lua"
         ],

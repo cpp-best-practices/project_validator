@@ -425,6 +425,43 @@
         "language": "SQL",
         "units": []
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "JSON",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "JSON",
+            "parsed": [
+              "target/manifest.json"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              "dbt_project.yml",
+              "packages.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -487,7 +524,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "3 data files parse (JSON: 1, YAML: 2)",
+      "message": "JSON: 1 JSON file parses; YAML: 2 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {

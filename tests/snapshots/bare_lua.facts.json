@@ -30,6 +30,7 @@
       "build_systems": [
         "LuaRocks"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Lua"
@@ -69,6 +70,7 @@
         ".lua files"
       ]
     },
+    "formats": [],
     "languages": [
       "Lua"
     ],
@@ -78,6 +80,7 @@
           "LuaRocks"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Lua"
         ],

@@ -31,6 +31,7 @@
       "build_systems": [
         "raco pkg"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Racket"
@@ -62,6 +63,7 @@
         ".rkt files"
       ]
     },
+    "formats": [],
     "languages": [
       "Racket"
     ],
@@ -71,6 +73,7 @@
           "raco pkg"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Racket"
         ],

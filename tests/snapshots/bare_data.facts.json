@@ -1,0 +1,119 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": "config.yaml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "data.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "settings.toml",
+      "role": "product"
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "JSON",
+        "TOML",
+        "YAML"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": 1,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": 2,
+      "origin": "config.yaml",
+      "problem": "expected ',' or ']', but got '<stream end>'",
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "data.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "settings.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "Untracked",
+      "origin": "config.yaml"
+    },
+    {
+      "kind": "Untracked",
+      "origin": "data.json"
+    },
+    {
+      "kind": "Untracked",
+      "origin": "settings.toml"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Data": [
+        ".json files",
+        ".toml files",
+        ".yaml files"
+      ]
+    },
+    "formats": [
+      "JSON",
+      "TOML",
+      "YAML"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "JSON",
+          "TOML",
+          "YAML"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

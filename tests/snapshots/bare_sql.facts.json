@@ -14,6 +14,27 @@
       "origin": "dbt_project.yml"
     },
     {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": "dbt_project.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": "packages.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "target/manifest.json",
+      "role": "product"
+    },
+    {
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
@@ -24,12 +45,46 @@
       "build_systems": [
         "dbt"
       ],
+      "formats": [
+        "JSON",
+        "YAML"
+      ],
       "kind": "Unit",
       "languages": [
         "SQL"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "dbt_project.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "packages.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "target/manifest.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -60,11 +115,19 @@
       "providers": []
     },
     "ecosystems": {
+      "Data": [
+        ".json files",
+        ".yml files"
+      ],
       "SQL": [
         "build file dbt_project.yml",
         ".sql files"
       ]
     },
+    "formats": [
+      "JSON",
+      "YAML"
+    ],
     "languages": [
       "SQL"
     ],
@@ -74,6 +137,10 @@
           "dbt"
         ],
         "directory": ".",
+        "formats": [
+          "JSON",
+          "YAML"
+        ],
         "languages": [
           "SQL"
         ],

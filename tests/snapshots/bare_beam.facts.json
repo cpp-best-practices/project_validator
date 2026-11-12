@@ -50,6 +50,7 @@
       "build_systems": [
         "Mix"
       ],
+      "formats": [],
       "kind": "Unit",
       "languages": [
         "Elixir",
@@ -114,6 +115,7 @@
         ".exs files"
       ]
     },
+    "formats": [],
     "languages": [
       "Elixir",
       "Erlang"
@@ -124,6 +126,7 @@
           "Mix"
         ],
         "directory": ".",
+        "formats": [],
         "languages": [
           "Elixir",
           "Erlang"

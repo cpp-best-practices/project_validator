@@ -511,6 +511,33 @@
         "language": "SQL",
         "units": []
       }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/copy-paste-detection.yml",
+              "dbt_project.yml",
+              "models/staging/schema.yml",
+              "package-lock.yml",
+              "packages.yml",
+              "profiles.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
     ]
   },
   "results": {
@@ -570,7 +597,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "9 data files parse (YAML: 9)",
+      "message": "9 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {

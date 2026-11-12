@@ -16,6 +16,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "Project.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Julia",
       "origin": "src/Shop.jl",
       "role": "product"
@@ -30,12 +37,25 @@
       "build_systems": [
         "Pkg"
       ],
+      "formats": [
+        "TOML"
+      ],
       "kind": "Unit",
       "languages": [
         "Julia"
       ],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "Project.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "kind": "CommittedOutput",
@@ -56,11 +76,17 @@
       "providers": []
     },
     "ecosystems": {
+      "Data": [
+        ".toml files"
+      ],
       "Julia": [
         "build file Project.toml",
         ".jl files"
       ]
     },
+    "formats": [
+      "TOML"
+    ],
     "languages": [
       "Julia"
     ],
@@ -70,6 +96,9 @@
           "Pkg"
         ],
         "directory": ".",
+        "formats": [
+          "TOML"
+        ],
         "languages": [
           "Julia"
         ],
