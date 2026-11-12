@@ -1,0 +1,79 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "schema/catalog.schema.json",
+      "role": "product"
+    },
+    {
+      "ecosystem": "JSON Schema",
+      "kind": "ContentLanguages",
+      "languages": [
+        "JSON Schema"
+      ],
+      "origin": "."
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "JSON Schema",
+        "JSON"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "schema/catalog.schema.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Data": [
+        ".json files"
+      ],
+      "JSON Schema": [
+        "content"
+      ]
+    },
+    "formats": [
+      "JSON",
+      "JSON Schema"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "JSON",
+          "JSON Schema"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

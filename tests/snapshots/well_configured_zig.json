@@ -421,6 +421,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Zig",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Zig",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -730,6 +749,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Zig version(s) (0.13.0, 0.14.1), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Zig",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [],

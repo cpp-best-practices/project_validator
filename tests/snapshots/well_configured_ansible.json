@@ -14,6 +14,7 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-validation": [],
     "secret-scanning": [],
     "security-scanning": [],
     "static-analysis": [],
@@ -178,6 +179,11 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-validation": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"

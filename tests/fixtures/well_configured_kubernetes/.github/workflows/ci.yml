@@ -6,6 +6,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: azure/setup-helm@2f5e7bc67f1f9972ab16657bb795f36d8f04de0e # v5.1.0
       - run: helm lint charts/shop
+      - run: helm template charts/shop | kubeconform -strict -summary
       - run: helm plugin install https://github.com/helm-unittest/helm-unittest.git
       - run: helm unittest charts/shop
       - uses: stackrox/kube-linter-action@87802a2f4e01abebb3ee3c67a3002fea71f6eae5 # v1.0.7

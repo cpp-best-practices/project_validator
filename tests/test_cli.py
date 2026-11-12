@@ -13,8 +13,9 @@ from unittest.mock import patch
 
 from project_validator import pretty, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
-from project_validator.ecosystems import applies_to, formats
+from project_validator.ecosystems import applies_to
 from project_validator.facts import Fact
+from project_validator.facts.wellformed import parsed_formats
 from project_validator.plugins import discover
 from project_validator.support_matrix import render, support_matrix
 from tests.layouts.model import ProjectLayout
@@ -36,7 +37,8 @@ from tests.support import (
 )
 
 # The checks of languages; a format's check (data-wellformed) applies wherever there are data files, CI included.
-LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages - formats())
+# The checks of some languages (or formats a tool validates), not of every project nor of every data file's format.
+LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages - parsed_formats())
 # The checks that apply to the C++ fixture: those of every project, and of its languages and the formats its CI
 # configuration is in (YAML); the fixture passes them all.
 _C_CPP_FIXTURE_NAMES = make_context(FIXTURES / "well_configured_c_cpp").structure.languages_and_formats

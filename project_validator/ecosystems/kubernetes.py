@@ -5,9 +5,9 @@ lint`, chart-testing and kube-linter lint it (`static-analysis`); the policy sca
 config`, KICS, polaris, kyverno, kube-score) scan it (`security-scanning`); and its tests run (`tests-run`):
 helm-unittest's, or the chart's test hooks `helm test` (and `ct install`) runs.
 
-Left for the checks they belong to: schema validation (kubeconform, kubeval, `helm lint --strict`) for the schema
-practices (#85), Kubernetes versions as a platform axis (a format has no toolchain), and `Chart.lock` as a dependency
-rule (#24).
+kubeconform, kubeval and `helm lint --strict` validate the manifests, and a chart's values, against their schemas
+(`schema-validation`). Left for the checks they belong to: Kubernetes versions as a platform axis (a format has no
+toolchain), and `Chart.lock` as a dependency rule (#24).
 """
 
 from __future__ import annotations
@@ -20,10 +20,11 @@ from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.expansion import Action
+from project_validator.facts.schema import validated, validator
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import file_reader
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import combined, defined_by, starts, when
+from project_validator.facts.tools import all_of, combined, defined_by, starts, when, with_option
 from project_validator.tools.misconfiguration import misconfiguration_scanner, misconfiguration_scanners
 
 KUBERNETES = "Kubernetes"
@@ -139,6 +140,29 @@ HELM_TEST = test_runner(
     how="helm test <release> (or ct install, which installs the chart and runs its test hooks)",
     runs=when(starts(("helm", "test"), ("ct", "install"), ("ct", "lint-and-install")), tested),
     tests=tests_of(HELM_TEST_HOOKS.name),
+)
+
+
+# --- Schema validation ----------------------------------------------------------------------------------------------
+
+KUBECONFORM = validator(
+    name="kubeconform",
+    languages=KUBERNETES_ONLY,
+    how="kubeconform -strict <manifests> (helm template <chart> | kubeconform -strict)",
+    validates=when(starts(("kubeconform",)), validated),
+)
+KUBEVAL = validator(
+    name="kubeval",
+    languages=KUBERNETES_ONLY,
+    how="kubeval <manifests>",
+    validates=when(starts(("kubeval",)), validated),
+)
+# `helm lint --strict` validates the chart's values against its values.schema.json, failing on a warning.
+HELM_LINT_STRICT = validator(
+    name="helm lint --strict",
+    languages=KUBERNETES_ONLY,
+    how="helm lint --strict <chart>",
+    validates=when(all_of(starts(("helm", "lint")), with_option("--strict")), validated),
 )
 
 

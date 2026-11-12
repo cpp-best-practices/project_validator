@@ -373,6 +373,36 @@
     {
       "argv": [
         "helm",
+        "template",
+        "charts/shop"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "helm template charts/shop | kubeconform -strict -summary",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "kubeconform",
+        "-strict",
+        "-summary"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "helm template charts/shop | kubeconform -strict -summary",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "helm",
         "plugin",
         "install",
         "https://github.com/helm-unittest/helm-unittest.git"
@@ -383,7 +413,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "Command",
       "line": "helm plugin install https://github.com/helm-unittest/helm-unittest.git",
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
       "via": []
     },
     {
@@ -398,7 +428,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "Command",
       "line": "helm unittest charts/shop",
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5].run",
       "via": []
     },
     {
@@ -409,7 +439,7 @@
       },
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5]",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[6]",
       "uses": "stackrox/kube-linter-action@87802a2f4e01abebb3ee3c67a3002fea71f6eae5"
     },
     {
@@ -426,7 +456,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "Command",
       "line": "uses: stackrox/kube-linter-action@87802a2f4e01abebb3ee3c67a3002fea71f6eae5",
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5]",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[6]",
       "via": []
     },
     {
@@ -723,7 +753,27 @@
       "languages": [
         "Kubernetes"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "provides": {
+        "schema": [
+          "validates"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "kubeconform",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Kubernetes"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5].run",
       "provides": {
         "test": [
           "runs"
@@ -743,7 +793,7 @@
       "languages": [
         "Kubernetes"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5]",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[6]",
       "provides": {
         "analysis": [
           "checks"

@@ -563,6 +563,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Swift",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -930,6 +949,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Swift toolchain(s) (6.0, 6.1), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [],

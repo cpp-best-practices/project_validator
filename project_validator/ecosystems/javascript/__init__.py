@@ -43,6 +43,7 @@ from project_validator.facts.testing import TestFiles, test_runner, tested, test
 from project_validator.facts.tools import Claim, Run, Tool, all_of, defined_by, starts, when, with_option
 from project_validator.text import pattern, strip_json_comments
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.prettier import prettier_tool
 
 JAVASCRIPT = "JavaScript"
 TYPESCRIPT = "TypeScript"
@@ -275,14 +276,7 @@ DPRINT_FILES = file_reader("dprint", ("dprint.json", ".dprint.json"))
 OXFMT_FILES = file_reader("oxfmt", (".oxfmtrc.json", ".oxfmtrc.jsonc"))
 
 # Every one of them has a default style, so a configuration file is not needed.
-PRETTIER = format_tool(
-    name="prettier",
-    languages=JS_LANGUAGES,
-    can={Enforcement.CHECK: "prettier --check .", Enforcement.APPLY: "prettier --write ."},
-    formats=flagged(("prettier",), checks=("--check", "-c", "--list-different", "-l"), applies=("--write", "-w")),
-    style=defined_by(files=("prettier",), settings=("prettier",)),
-    reads=("prettier", "package.json prettier"),
-)
+PRETTIER = prettier_tool(JS_LANGUAGES)
 DENO_FMT = format_tool(
     name="deno fmt",
     languages=JS_LANGUAGES,

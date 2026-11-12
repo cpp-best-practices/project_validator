@@ -69,8 +69,17 @@
       "role": "product"
     },
     {
+      "ecosystem": "JSON Schema",
+      "kind": "ContentLanguages",
+      "languages": [
+        "JSON Schema"
+      ],
+      "origin": "."
+    },
+    {
       "build_systems": [],
       "formats": [
+        "JSON Schema",
         "JSON",
         "TOML",
         "XML",
@@ -378,6 +387,44 @@
       ]
     },
     {
+      "argv": [
+        "npx",
+        "--yes",
+        "prettier",
+        "--check",
+        "schema",
+        "data",
+        "config"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes prettier --check schema data config",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "schema",
+        "data",
+        "config"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes prettier --check schema data config",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+      ]
+    },
+    {
       "kind": "StepReference",
       "origin": ".github/workflows/ci.yml",
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
@@ -465,7 +512,9 @@
       ],
       "configurations": [],
       "default_compiler": true,
-      "ecosystems": [],
+      "ecosystems": [
+        "JSON Schema"
+      ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Job",
@@ -554,6 +603,73 @@
       ],
       "tool": "actionlint",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "JSON Schema"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "provides": {
+        "schema": [
+          "validates"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "check-jsonschema",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "JSON Schema"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+      ]
     }
   ],
   "map": {
@@ -580,7 +696,9 @@
             "gcc"
           ],
           "configurations": [],
-          "ecosystems": [],
+          "ecosystems": [
+            "JSON Schema"
+          ],
           "name": ".github/workflows/ci.yml: validate",
           "os": "linux",
           "toolchains": []
@@ -607,10 +725,14 @@
         ".xsd files",
         ".yaml files",
         ".yml files"
+      ],
+      "JSON Schema": [
+        "content"
       ]
     },
     "formats": [
       "JSON",
+      "JSON Schema",
       "TOML",
       "XML",
       "YAML"
@@ -622,6 +744,7 @@
         "directory": ".",
         "formats": [
           "JSON",
+          "JSON Schema",
           "TOML",
           "XML",
           "YAML"

@@ -28,9 +28,13 @@ A policy scanner of the manifests: kube-linter, checkov (`bridgecrewio/checkov-a
 (`aquasecurity/trivy-action` with `scan-type: config`), KICS (`checkmarx/kics-github-action`), polaris, kyverno,
 kube-score.
 
+## `schema-validation`
+
+kubeconform (`kubeconform -strict`, on the manifests or on what `helm template` renders), kubeval, or `helm lint
+--strict`, which validates a chart's values against its `values.schema.json`.
+
 ## Not judged
 
-Schema validation (kubeconform, kubeval, `helm lint --strict`) is the schema practices' (#85), not yet built.
 `platform-matrix` needs an axis besides the OS, and a format has no toolchain to carry Kubernetes versions on.
 `Chart.lock` beside a `Chart.yaml` with dependencies is a dependency rule (#24). The other checks have no tool for
 manifests and are skipped.

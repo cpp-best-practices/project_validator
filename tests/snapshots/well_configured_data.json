@@ -14,6 +14,7 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-validation": [],
     "secret-scanning": [],
     "security-scanning": [],
     "static-analysis": [],
@@ -33,6 +34,21 @@
               "data/catalog.json",
               "schema/catalog.schema.json"
             ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "JSON Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "JSON Schema",
+            "parsed": [],
             "problems": [],
             "test_problems": [],
             "unit": ".",
@@ -124,8 +140,8 @@
     },
     "code-formatting": {
       "details": [],
-      "message": "not applicable to a project of no recognised language",
-      "status": "SKIP"
+      "message": "CI enforces the prettier style",
+      "status": "PASS"
     },
     "committed-artifacts": {
       "details": [],
@@ -210,6 +226,11 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "CI validates the documents against their schemas with check-jsonschema",
+      "status": "PASS"
     },
     "secret-scanning": {
       "details": [],
