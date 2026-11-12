@@ -115,9 +115,14 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "phpunit --path-coverage"
               ],
+              "reported": [
+                "PHPUnit"
+              ],
+              "rung": "reported",
               "tools": [
                 "PHPUnit"
               ]
@@ -125,30 +130,46 @@
             "language": "PHP",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "phpunit --coverage-clover"
               ],
+              "reported": [
+                "PHPUnit"
+              ],
+              "rung": "reported",
               "tools": [
                 "PHPUnit"
               ]
             },
             "path": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "phpunit --path-coverage"
               ],
+              "reported": [
+                "PHPUnit"
+              ],
+              "rung": "reported",
               "tools": [
                 "PHPUnit"
               ]
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -849,8 +870,10 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "branch coverage is reported with PHPUnit; path coverage bonus: PHPUnit",
+      "details": [
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
+      "message": "branch coverage is reported with PHPUnit; path coverage bonus: reported with PHPUnit",
       "status": "PASS"
     },
     "cxx-extensions": {

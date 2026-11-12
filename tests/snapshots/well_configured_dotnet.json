@@ -121,10 +121,13 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "dotnet test --collect \"XPlat Code Coverage\"",
                 "dotnet-coverage collect"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "coverlet"
               ]
@@ -132,27 +135,39 @@
             "language": "C#",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "dotnet test --collect \"XPlat Code Coverage\"",
                 "dotnet-coverage collect"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "coverlet"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -831,8 +846,11 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "branch coverage is reported with coverlet",
+      "details": [
+        "consider reporting branch coverage where it can be seen (a report CI publishes, a coverage service)",
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
+      "message": "branch coverage is measured with coverlet",
       "status": "PASS"
     },
     "cxx-extensions": {

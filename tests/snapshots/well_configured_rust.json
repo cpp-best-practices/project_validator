@@ -136,11 +136,16 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "cargo llvm-cov --branch",
                 "cargo tarpaulin --branch",
                 "grcov --branch"
               ],
+              "reported": [
+                "cargo-llvm-cov"
+              ],
+              "rung": "reported",
               "tools": [
                 "cargo-llvm-cov"
               ]
@@ -148,37 +153,55 @@
             "language": "Rust",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "cargo llvm-cov",
                 "cargo tarpaulin",
                 "grcov"
               ],
+              "reported": [
+                "cargo-llvm-cov"
+              ],
+              "rung": "reported",
               "tools": [
                 "cargo-llvm-cov"
               ]
             },
             "path": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "cargo llvm-cov --mcdc",
                 "RUSTFLAGS=-Zcoverage-options=mcdc"
               ],
+              "reported": [
+                "cargo-llvm-cov"
+              ],
+              "rung": "reported",
               "tools": [
                 "cargo-llvm-cov"
               ]
             },
             "region": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "cargo llvm-cov"
               ],
+              "reported": [
+                "cargo-llvm-cov"
+              ],
+              "rung": "reported",
               "tools": [
                 "cargo-llvm-cov"
               ]
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -847,8 +870,10 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "branch coverage is reported with cargo-llvm-cov; path coverage bonus: cargo-llvm-cov",
+      "details": [
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
+      "message": "branch coverage is reported with cargo-llvm-cov; path coverage bonus: reported with cargo-llvm-cov",
       "status": "PASS"
     },
     "cxx-extensions": {

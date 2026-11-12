@@ -79,7 +79,13 @@ class RacketTests(unittest.TestCase):
         for line in ("raco cover .", "raco cover -f codecov -d coverage ."):
             with self.subTest(line=line):
                 result = self._run(coverage, _ci(line))
-                self.assertEqual(result, Result.passed("statement coverage is reported with raco cover"))
+                self.assertEqual(
+                    result,
+                    Result.passed(
+                        "statement coverage is reported with raco cover",
+                        "consider failing CI when statement coverage falls below a threshold",
+                    ),
+                )
         self.assertEqual(self._run(coverage, _ci("raco test .")).status, Status.FAIL)
 
     def test_raco_fmt_rewrites_and_the_diff_enforces(self) -> None:

@@ -1263,6 +1263,7 @@
       "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
       "provides": {
         "coverage": [
+          "line reported",
           "line"
         ]
       },

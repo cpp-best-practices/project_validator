@@ -133,32 +133,49 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "R",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "covr::package_coverage() (or covr::codecov())"
               ],
+              "reported": [
+                "covr"
+              ],
+              "rung": "reported",
               "tools": [
                 "covr"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -653,7 +670,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when line coverage falls below a threshold"
+      ],
       "message": "line coverage is reported with covr",
       "status": "PASS"
     },

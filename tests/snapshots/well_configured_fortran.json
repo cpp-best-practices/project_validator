@@ -143,11 +143,18 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [
+                "gcovr"
+              ],
               "known": [
                 "gcovr --xml",
                 "lcov --rc branch_coverage=1",
                 "gcov --branch-counts"
               ],
+              "reported": [
+                "gcovr"
+              ],
+              "rung": "gated",
               "tools": [
                 "gcovr"
               ]
@@ -155,31 +162,45 @@
             "language": "Fortran",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "gcovr",
                 "lcov",
                 "gcov"
               ],
+              "reported": [
+                "gcovr"
+              ],
+              "rung": "reported",
               "tools": [
                 "gcovr"
               ]
             },
             "path": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "lcov --mcdc-coverage",
                 "gcov --conditions"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -759,7 +780,7 @@
       "details": [
         "consider adding path coverage (e.g. lcov --mcdc-coverage, gcov --conditions)"
       ],
-      "message": "branch coverage is reported with gcovr",
+      "message": "branch coverage is gated with gcovr",
       "status": "PASS"
     },
     "cxx-extensions": {

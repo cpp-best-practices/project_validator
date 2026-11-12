@@ -97,7 +97,10 @@ class TestAndCoverageTests(unittest.TestCase):
         )
 
     def test_branch_coverage_needs_path_coverage_which_is_also_the_bonus(self) -> None:
-        expected = Result.passed("branch coverage is reported with PHPUnit; path coverage bonus: PHPUnit")
+        expected = Result.passed(
+            "branch coverage is reported with PHPUnit; path coverage bonus: reported with PHPUnit",
+            "consider failing CI when branch coverage falls below a threshold",
+        )
         configured = {
             "phpunit.xml.dist": '<phpunit><coverage pathCoverage="true"><report><clover/></report></coverage></phpunit>'
         }

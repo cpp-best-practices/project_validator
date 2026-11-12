@@ -211,6 +211,17 @@ jobs:
         run: |
           coverage report --fail-under=0 --format=markdown >> "$GITHUB_STEP_SUMMARY"
           coverage xml --fail-under=0
+          coverage json --fail-under=0 -q
+
+      # Codecov blends partial branches into its line figure; the branch figure alone is worth seeing.
+      - name: Report branch coverage alone
+        run: |
+          python - >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          import json
+          totals = json.load(open("coverage.json"))["totals"]
+          covered, total = totals["covered_branches"], totals["num_branches"]
+          print(f"\nBranch coverage alone: {covered} of {total} branches, {100 * covered / total:.2f}%")
+          EOF
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1

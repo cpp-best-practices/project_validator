@@ -110,7 +110,9 @@ class ZigTests(unittest.TestCase):
         self.assertEqual(self._run(tests_run, _ci("zig build test")).status, Status.FAIL)
 
     def test_kcov_counts_lines(self) -> None:
-        passed = Result.passed("line coverage is reported with kcov")
+        passed = Result.passed(
+            "line coverage is reported with kcov", "consider failing CI when line coverage falls below a threshold"
+        )
         self.assertEqual(
             self._run(coverage, _ci("zig test src/shop.zig --test-cmd kcov --test-cmd out --test-cmd-bin")), passed
         )

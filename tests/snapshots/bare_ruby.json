@@ -77,32 +77,47 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "SimpleCov enable_coverage :branch"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Ruby",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "SimpleCov"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -607,9 +622,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: SimpleCov enable_coverage :branch"
+        "known to measure branch coverage: SimpleCov enable_coverage :branch"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

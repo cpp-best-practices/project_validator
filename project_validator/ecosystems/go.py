@@ -13,7 +13,7 @@ from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, positional, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
@@ -134,7 +134,7 @@ def _go_cover(command: Command, _: Facts) -> Run | None:
     argv = resolved(command)
     if not starts_with(argv, ("go", "test"), ("go", "build")) or not has_option(argv, *_COVER):
         return None
-    return measured(Granularity.LINE, Granularity.STATEMENT)
+    return reported(Granularity.LINE, Granularity.STATEMENT)
 
 
 GO_COVER = coverage_tool(

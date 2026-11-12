@@ -13,7 +13,7 @@ from project_validator.facts import Command, Fact, Facts, Origin, Setting, Unkno
 from project_validator.facts.analysis import analyzer
 from project_validator.facts.arguments import has_option, option_values, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.limits import Rule, limiter
@@ -196,7 +196,7 @@ def _phpunit(command: Command, facts: Facts) -> Run | None:
         return None
     configured = any(setting.key == "coverage.pathCoverage" and setting.value == "true" for setting in read)
     path = has_option(argv, "--path-coverage") or configured
-    return measured(Granularity.LINE, *((Granularity.BRANCH, Granularity.PATH) if path else ()), read=read)
+    return reported(Granularity.LINE, *((Granularity.BRANCH, Granularity.PATH) if path else ()), read=read)
 
 
 PHPUNIT = coverage_tool(

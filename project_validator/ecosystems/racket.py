@@ -8,7 +8,7 @@ from pathlib import Path
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
@@ -51,7 +51,7 @@ RACO_COVER = coverage_tool(
     name="raco cover",
     languages=RACKET,
     can={Granularity.STATEMENT: "raco cover . (expression coverage; -f codecov or coveralls to upload)"},
-    measures=when(starts(("raco", "cover")), lambda: measured(Granularity.STATEMENT)),
+    measures=when(starts(("raco", "cover")), lambda: reported(Granularity.STATEMENT)),
 )
 
 

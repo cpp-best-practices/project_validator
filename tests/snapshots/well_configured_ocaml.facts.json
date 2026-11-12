@@ -1657,6 +1657,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1679,6 +1680,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1723,6 +1725,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1745,6 +1748,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1789,6 +1793,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1811,6 +1816,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1855,6 +1861,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1877,6 +1884,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1921,6 +1929,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1943,6 +1952,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -1987,6 +1997,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },
@@ -2009,6 +2020,7 @@
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "provides": {
         "coverage": [
+          "branch reported",
           "branch"
         ]
       },

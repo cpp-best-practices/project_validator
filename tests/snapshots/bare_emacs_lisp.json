@@ -77,30 +77,45 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Emacs Lisp",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "(undercover \"*.el\") in the test files, run by eask test ert"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -473,9 +488,9 @@
     },
     "coverage": {
       "details": [
-        "known to report line coverage: (undercover \"*.el\") in the test files, run by eask test ert"
+        "known to measure line coverage: (undercover \"*.el\") in the test files, run by eask test ert"
       ],
-      "message": "no line coverage reporting found in what CI runs",
+      "message": "no line coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

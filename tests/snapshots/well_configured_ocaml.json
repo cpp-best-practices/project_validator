@@ -110,9 +110,14 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "dune test --instrument-with bisect_ppx, then bisect-ppx-report"
               ],
+              "reported": [
+                "bisect_ppx"
+              ],
+              "rung": "reported",
               "tools": [
                 "bisect_ppx"
               ]
@@ -120,22 +125,34 @@
             "language": "OCaml",
             "line": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -599,7 +616,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
       "message": "branch coverage is reported with bisect_ppx",
       "status": "PASS"
     },

@@ -3766,7 +3766,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -3853,7 +3856,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -3940,7 +3946,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -4027,7 +4036,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -4114,7 +4126,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -4201,7 +4216,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -4288,7 +4306,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -4375,7 +4396,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -4462,7 +4486,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -4549,7 +4576,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -4636,7 +4666,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },
@@ -4723,7 +4756,10 @@
       "origin": ".github/workflows/ci.yml:jobs.gfortran.steps[7].run",
       "provides": {
         "coverage": [
+          "branch gated",
+          "branch reported",
           "branch",
+          "line reported",
           "line"
         ]
       },

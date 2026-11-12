@@ -19,7 +19,7 @@ from project_validator.facts import Command, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.audit import audited, auditor
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
 from project_validator.facts.expansion import joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.security import scanned, scanner
@@ -171,14 +171,14 @@ def _coverlet(command: Command, facts: Facts) -> Run | None:
     """coverlet: its data collector (`--collect "XPlat Code Coverage"`, or a .runsettings that adds it), its MSBuild
     integration (`CollectCoverage=true` on the command line or in the project settings), or its console tool."""
     if starts_with(resolved(command), ("coverlet",)):
-        return measured(Granularity.LINE, Granularity.BRANCH)
+        return reported(Granularity.LINE, Granularity.BRANCH)
     if (argv := _dotnet_test(command)) is None:
         return None
     collectors = [*option_values(argv, "--collect"), *(word[10:] for word in argv if word.startswith("--collect:"))]
     if any(collector.strip("\"'").lower() == "xplat code coverage" for collector in collectors):
         return measured(Granularity.LINE, Granularity.BRANCH)
     if _COLLECT_COVERAGE.search(" ".join(argv)):
-        return measured(Granularity.LINE, Granularity.BRANCH)
+        return reported(Granularity.LINE, Granularity.BRANCH)
     read = [
         setting
         for setting in facts.where(Setting, tool="MSBuild", key="CollectCoverage")

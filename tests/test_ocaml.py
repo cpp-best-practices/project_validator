@@ -122,7 +122,13 @@ class OCamlTests(unittest.TestCase):
         ):
             with self.subTest(line=line):
                 result = self._run(coverage, _ci(line))
-                self.assertEqual(result, Result.passed("branch coverage is reported with bisect_ppx"))
+                self.assertEqual(
+                    result,
+                    Result.passed(
+                        "branch coverage is reported with bisect_ppx",
+                        "consider failing CI when branch coverage falls below a threshold",
+                    ),
+                )
         legacy = github_job("ubuntu-latest", "BISECT_ENABLE=yes dune runtest")
         self.assertEqual(self._run(coverage, legacy).status, Status.PASS)
         self.assertEqual(self._run(coverage, _ci("dune test")).status, Status.FAIL)

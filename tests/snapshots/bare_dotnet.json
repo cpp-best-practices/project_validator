@@ -78,34 +78,49 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "dotnet test --collect \"XPlat Code Coverage\"",
                 "dotnet-coverage collect"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "C#",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "dotnet test --collect \"XPlat Code Coverage\"",
                 "dotnet-coverage collect"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": "src/App",
@@ -610,9 +625,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: dotnet test --collect \"XPlat Code Coverage\", dotnet-coverage collect"
+        "known to measure branch coverage: dotnet test --collect \"XPlat Code Coverage\", dotnet-coverage collect"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

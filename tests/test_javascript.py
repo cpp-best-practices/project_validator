@@ -32,6 +32,8 @@ from tests.support import (
     temp_project,
 )
 
+_GATE_HINT = "consider failing CI when branch coverage falls below a threshold"
+_REPORT_HINT = "consider reporting branch coverage where it can be seen (a report CI publishes, a coverage service)"
 TYPE_HINT = (
     "consider running a type checker in CI: tsc --noEmit (JavaScript is checked with checkJs in a "
     "jsconfig.json) or deno check"
@@ -142,7 +144,13 @@ class JavaScriptTests(unittest.TestCase):
         )
         for tool, files in cases:
             with self.subTest(tool=tool):
-                self.assertEqual(self._run(coverage, files), Result.passed(f"branch coverage is reported with {tool}"))
+                expected = (
+                    Result.passed("branch coverage is measured with deno test", _REPORT_HINT, _GATE_HINT)
+                    if tool == "deno test"
+                    else Result.passed(f"branch coverage is reported with {tool}", _GATE_HINT)
+                )
+                self.assertEqual(self._run(coverage, files), expected)
+
         # A runner's settings count only where CI runs it; Bun counts lines.
         for files in (
             jest,
@@ -152,6 +160,18 @@ class JavaScriptTests(unittest.TestCase):
         ):
             with self.subTest(files=files):
                 self.assertEqual(self._run(coverage, files).status, Status.FAIL)
+
+    def test_c8_and_nyc_gate_on_the_thresholds_check_coverage_is_given(self) -> None:
+        gated = {
+            "npx c8 --check-coverage --branches 80 node --test": "branch coverage is gated with c8",
+            "npx nyc --check-coverage --lines 90 --branches 80 mocha": "branch coverage is gated with nyc",
+        }
+        for line, message in gated.items():
+            with self.subTest(line=line):
+                self.assertEqual(self._run(coverage, _ci(line)), Result.passed(message))
+        # Without `--branches`, `--check-coverage` fails on lines alone (nyc's default threshold).
+        lines = self._run(coverage, _ci("npx c8 --check-coverage node --test"))
+        self.assertEqual(lines, Result.passed("branch coverage is reported with c8", _GATE_HINT))
 
     def test_one_linter_is_enough(self) -> None:
         for command, linter in (("npx eslint .", "eslint"), ("biome ci", "biome lint"), ("deno lint", "deno lint")):

@@ -74,10 +74,20 @@ class LuaTests(unittest.TestCase):
         for command in ("busted --coverage", "busted -c", "luarocks test -- --coverage", "busted && luacov"):
             with self.subTest(command=command):
                 self.assertEqual(
-                    self._run(coverage, _ci(command)), Result.passed("line coverage is reported with luacov")
+                    self._run(coverage, _ci(command)),
+                    Result.passed(
+                        "line coverage is reported with luacov",
+                        "consider failing CI when line coverage falls below a threshold",
+                    ),
                 )
         configured = {".busted": "return {\n  default = {\n    coverage = true,\n  },\n}\n", **_ci("busted")}
-        self.assertEqual(self._run(coverage, configured), Result.passed("line coverage is reported with luacov"))
+        self.assertEqual(
+            self._run(coverage, configured),
+            Result.passed(
+                "line coverage is reported with luacov",
+                "consider failing CI when line coverage falls below a threshold",
+            ),
+        )
         self.assertEqual(self._run(coverage, _ci("busted")).status, Status.FAIL)
 
     def test_stylua_enforces_when_it_checks(self) -> None:

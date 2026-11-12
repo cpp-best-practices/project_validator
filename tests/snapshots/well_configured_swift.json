@@ -133,38 +133,53 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Swift",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "swift test --enable-code-coverage",
                 "xcodebuild test -enableCodeCoverage YES"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "swift test"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "swift test --enable-code-coverage",
                 "xcodebuild test -enableCodeCoverage YES"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "swift test"
               ]
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -827,8 +842,11 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "region coverage is reported with swift test",
+      "details": [
+        "consider reporting region coverage where it can be seen (a report CI publishes, a coverage service)",
+        "consider failing CI when region coverage falls below a threshold"
+      ],
+      "message": "region coverage is measured with swift test",
       "status": "PASS"
     },
     "cxx-extensions": {

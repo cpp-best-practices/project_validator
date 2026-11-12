@@ -12,7 +12,7 @@ from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, starts_with
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
@@ -75,13 +75,13 @@ def _luacov(command: Command, facts: Facts) -> Run | None:
     --coverage`, or `luacov` itself, which writes the report."""
     argv = resolved(command)
     if starts_with(argv, ("luacov",)) is not None:
-        return measured(Granularity.LINE)
+        return reported(Granularity.LINE)
     if not _runs_busted(command):
         return None
     if has_option(argv, "--coverage", "-c"):
-        return measured(Granularity.LINE)
+        return reported(Granularity.LINE)
     configured = facts.where(Setting, tool="busted", key="coverage")
-    return measured(Granularity.LINE, read=configured) if configured else None
+    return reported(Granularity.LINE, read=configured) if configured else None
 
 
 LUACOV = coverage_tool(

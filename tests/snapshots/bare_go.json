@@ -77,32 +77,47 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Go",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "go test -cover"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "go test -cover"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -592,9 +607,9 @@
     },
     "coverage": {
       "details": [
-        "known to report statement coverage: go test -cover"
+        "known to measure statement coverage: go test -cover"
       ],
-      "message": "no statement coverage reporting found in what CI runs",
+      "message": "no statement coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

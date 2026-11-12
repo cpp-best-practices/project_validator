@@ -14,7 +14,7 @@ from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.expansion import Action, launcher
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
@@ -102,9 +102,9 @@ def _sb_cover(command: Command, facts: Facts) -> Run | None:
     if not _runs_tests(command):
         return None
     if _SB_COVER.search(_code(command)):
-        return measured(Granularity.BRANCH)
+        return reported(Granularity.BRANCH)
     scripted = facts.where(Setting, tool=SB_COVER)
-    return measured(Granularity.BRANCH, read=scripted) if scripted else None
+    return reported(Granularity.BRANCH, read=scripted) if scripted else None
 
 
 SB_COVER_TOOL = coverage_tool(

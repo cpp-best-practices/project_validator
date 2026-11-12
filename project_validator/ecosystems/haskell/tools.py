@@ -15,7 +15,7 @@ from project_validator.facts import Command, Fact, Facts, Origin, Setting, resol
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, program
 from project_validator.facts.audit import audited, auditor
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
@@ -94,7 +94,7 @@ def _hpc(command: Command, _facts: Facts) -> Run | None:
     instrumented = (_builds(argv, "test", "build", "run") and has_option(argv, "--enable-coverage", "--coverage")) or (
         "-fhpc" in " ".join(argv)
     )
-    return measured(REGION, BRANCH) if instrumented or program(argv) in _HPC_PROGRAMS else None
+    return reported(REGION, BRANCH) if instrumented or program(argv) in _HPC_PROGRAMS else None
 
 
 HPC = coverage_tool(

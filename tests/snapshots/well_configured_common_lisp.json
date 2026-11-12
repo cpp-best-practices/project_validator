@@ -115,9 +115,14 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "(require :sb-cover) before the tests, with (sb-cover:report \"coverage/\") after"
               ],
+              "reported": [
+                "sb-cover"
+              ],
+              "rung": "reported",
               "tools": [
                 "sb-cover"
               ]
@@ -125,22 +130,34 @@
             "language": "Common Lisp",
             "line": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -584,7 +601,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
       "message": "branch coverage is reported with sb-cover",
       "status": "PASS"
     },

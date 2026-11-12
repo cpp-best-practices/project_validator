@@ -115,10 +115,15 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "jacoco:report or jacocoTestReport",
                 "koverXmlReport"
               ],
+              "reported": [
+                "JaCoCo"
+              ],
+              "rung": "reported",
               "tools": [
                 "JaCoCo"
               ]
@@ -126,27 +131,41 @@
             "language": "Java",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "jacoco:report or jacocoTestReport",
                 "koverXmlReport"
               ],
+              "reported": [
+                "JaCoCo"
+              ],
+              "rung": "reported",
               "tools": [
                 "JaCoCo"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -834,7 +853,9 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
+      "details": [
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
       "message": "branch coverage is reported with JaCoCo",
       "status": "PASS"
     },

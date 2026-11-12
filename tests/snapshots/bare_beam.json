@@ -139,31 +139,46 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Elixir",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "mix test --cover",
                 "mix coveralls (excoveralls)"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -178,32 +193,47 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Erlang",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "mix test --cover",
                 "mix coveralls (excoveralls)",
                 "rebar3 cover (after eunit or ct with --cover)"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -1009,10 +1039,10 @@
     },
     "coverage": {
       "details": [
-        "Elixir: known to report line coverage: mix test --cover, mix coveralls (excoveralls)",
-        "Erlang: known to report line coverage: mix test --cover, mix coveralls (excoveralls), rebar3 cover (after eunit or ct with --cover)"
+        "Elixir: known to measure line coverage: mix test --cover, mix coveralls (excoveralls)",
+        "Erlang: known to measure line coverage: mix test --cover, mix coveralls (excoveralls), rebar3 cover (after eunit or ct with --cover)"
       ],
-      "message": "Elixir: no line coverage reporting found in what CI runs; Erlang: no line coverage reporting found in what CI runs",
+      "message": "Elixir: no line coverage measurement found in what CI runs; Erlang: no line coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {

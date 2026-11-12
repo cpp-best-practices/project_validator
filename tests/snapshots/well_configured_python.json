@@ -125,10 +125,13 @@
           {
             "branch": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "coverage run --branch",
                 "pytest --cov --cov-branch"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "coverage.py"
               ]
@@ -136,27 +139,39 @@
             "language": "Python",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "coverage run",
                 "pytest --cov"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "coverage.py"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -875,8 +890,11 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "branch coverage is reported with coverage.py",
+      "details": [
+        "consider reporting branch coverage where it can be seen (a report CI publishes, a coverage service)",
+        "consider failing CI when branch coverage falls below a threshold"
+      ],
+      "message": "branch coverage is measured with coverage.py",
       "status": "PASS"
     },
     "cxx-extensions": {

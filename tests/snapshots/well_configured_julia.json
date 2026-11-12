@@ -140,32 +140,47 @@
           {
             "branch": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "Julia",
             "line": {
               "answer": "yes",
+              "gated": [],
               "known": [
                 "julia --code-coverage (julia-actions/julia-runtest, then julia-processcoverage)"
               ],
+              "reported": [],
+              "rung": "measured",
               "tools": [
                 "julia --code-coverage"
               ]
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -687,8 +702,11 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "line coverage is reported with julia --code-coverage",
+      "details": [
+        "consider reporting line coverage where it can be seen (a report CI publishes, a coverage service)",
+        "consider failing CI when line coverage falls below a threshold"
+      ],
+      "message": "line coverage is measured with julia --code-coverage",
       "status": "PASS"
     },
     "cxx-extensions": {

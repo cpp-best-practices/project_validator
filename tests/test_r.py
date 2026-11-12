@@ -119,7 +119,9 @@ class RTests(unittest.TestCase):
         self.assertEqual(self._run(tests_run, _ci("R CMD check .")).status, Status.FAIL)
 
     def test_covr_counts_lines(self) -> None:
-        passed = Result.passed("line coverage is reported with covr")
+        passed = Result.passed(
+            "line coverage is reported with covr", "consider failing CI when line coverage falls below a threshold"
+        )
         self.assertEqual(self._run(coverage, _ci("Rscript -e 'covr::codecov()'")), passed)
         script = "cov <- covr::package_coverage(quiet = FALSE)\nprint(cov)\ncovr::to_cobertura(cov)\n"
         self.assertEqual(self._run(coverage, _rscript_step(script)), passed)

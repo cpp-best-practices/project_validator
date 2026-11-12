@@ -16,7 +16,7 @@ from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, program, starts_with
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
@@ -112,7 +112,7 @@ COVR = coverage_tool(
     name="covr",
     languages=R,
     can={Granularity.LINE: "covr::package_coverage() (or covr::codecov())"},
-    measures=lambda command, _facts: measured(Granularity.LINE) if _COVR.search(r_code(command)) else None,
+    measures=lambda command, _facts: reported(Granularity.LINE) if _COVR.search(r_code(command)) else None,
 )
 
 

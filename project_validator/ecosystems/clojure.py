@@ -16,7 +16,7 @@ from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
@@ -108,7 +108,7 @@ def _cloverage(command: Command, _facts: Facts) -> Run | None:
     """cloverage counts the forms (and lines) the tests run: `lein cloverage`, or the CLI alias that runs it."""
     argv = resolved(command)
     if "cloverage" in argv or _alias_matches(command, _CLOVERAGE_ALIAS):
-        return measured(Granularity.STATEMENT)
+        return reported(Granularity.STATEMENT)
     return None
 
 

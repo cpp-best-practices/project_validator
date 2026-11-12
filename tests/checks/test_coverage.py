@@ -22,6 +22,8 @@ from tests.support import (
 )
 
 ALLOW_UNKNOWN = Options(allow_unknown=True)
+REPORT_HINT = "consider reporting branch coverage where it can be seen (a report CI publishes, a coverage service)"
+GATE_HINT = "consider failing CI when branch coverage falls below a threshold"
 C_PATH_HINT = (
     "consider adding path coverage (e.g. lcov --mcdc-coverage, gcov --conditions, llvm-cov show -show-mcdc, "
     "gcc -fcondition-coverage, gcc -fpath-coverage, clang -fcoverage-mcdc)"
@@ -50,24 +52,62 @@ class CoverageTests(unittest.TestCase):
                 self.assertEqual(result.status, Status.ERROR)
                 self.assertEqual(
                     result.message,
-                    "whether CI reports branch coverage is unknown: some of what it runs could not be read",
+                    "whether CI measures branch coverage is unknown: some of what it runs could not be read",
                 )
                 self.assertTrue(result.details[0].startswith("not read: the jobs and commands:"), result.details)
                 self.assertEqual(result.details[-1], "--allow-unknown judges only what could be read")
                 allowed = self._run(ci_running(provider, "gcovr"), ALLOW_UNKNOWN)
-                self.assertEqual(allowed.message, "no branch coverage reporting found in what CI runs")
+                self.assertEqual(allowed.message, "no branch coverage measurement found in what CI runs")
 
     def test_branch_coverage_without_path_coverage_suggests_it(self) -> None:
         for provider in CI_FILES:
             with self.subTest(ci=provider):
                 result = self._run(ci_running(provider, "lcov --rc branch_coverage=1 --capture"))
-                self.assertEqual(result, Result.passed("branch coverage is reported with lcov", C_PATH_HINT))
+                expected = Result.passed("branch coverage is measured with lcov", REPORT_HINT, GATE_HINT, C_PATH_HINT)
+                self.assertEqual(result, expected)
 
     def test_path_coverage_is_reported_as_a_bonus(self) -> None:
         result = self._run(WELL_CONFIGURED)
         self.assertEqual(
-            result.message, "branch coverage is reported with gcovr; path coverage bonus: gcc -fcondition-coverage"
+            result.message,
+            "branch coverage is gated with gcovr; path coverage bonus: measured with gcc -fcondition-coverage "
+            "(not reported)",
         )
+
+    def test_measured_reported_and_gated_are_told_apart(self) -> None:
+        """A run measures a granularity (the counters are collected), reports it (a report shows the numbers) or
+        gates on it (CI fails under a threshold); each rung includes the ones below (#170)."""
+        cases = {
+            "lcov --rc branch_coverage=1 --capture -o cov.info": ("measured with lcov", (REPORT_HINT, GATE_HINT)),
+            "genhtml --branch-coverage cov.info": ("reported with lcov", (GATE_HINT,)),
+            "lcov --list cov.info --rc branch_coverage=1 --fail-under-branches 80": ("gated with lcov", ()),
+            "gcovr --xml x": ("reported with gcovr", (GATE_HINT,)),
+            "gcovr --xml x --fail-under-branch 90": ("gated with gcovr", ()),
+            "gcovr --xml x --fail-under-line 90": ("reported with gcovr", (GATE_HINT,)),
+        }
+        for line, (reached, hints) in cases.items():
+            with self.subTest(line=line):
+                result = self._run(github_job("ubuntu-latest", line))
+                self.assertEqual(result, Result.passed(f"branch coverage is {reached}", *hints, C_PATH_HINT))
+        capture = "lcov --rc branch_coverage=1 --capture -o c.info"
+        both = github_job("ubuntu-latest", capture, "genhtml --branch-coverage c.info")
+        self.assertEqual(self._run(both).message, "branch coverage is reported with lcov")
+        # genhtml shows branches only when asked to.
+        lines_only = github_job("ubuntu-latest", capture, "genhtml c.info")
+        self.assertEqual(self._run(lines_only).message, "branch coverage is measured with lcov")
+
+    def test_the_path_coverage_bonus_says_its_rung(self) -> None:
+        cases = {
+            "gcovr --xml x --fail-under-branch 90": "measured with gcc -fcondition-coverage (not reported)",
+            "gcovr --xml x --fail-under-branch 90 --fail-under-decision 50": "gated with gcovr",
+            "gcovr --xml x --fail-under-branch 90 && llvm-cov show ./t -show-mcdc": "reported with llvm-cov",
+        }
+        for line, bonus in cases.items():
+            with self.subTest(line=line):
+                files = github_job("ubuntu-latest", "cmake -S . -B b -DCMAKE_CXX_FLAGS=-fcondition-coverage", line)
+                self.assertEqual(
+                    self._run(files).message, f"branch coverage is gated with gcovr; path coverage bonus: {bonus}"
+                )
 
     def test_every_gcovr_report_but_the_default_text_counts_branches(self) -> None:
         for options in ("--xml coverage.xml", "--html-details out.html", "--txt-metric branch", "-b", "--sonarqube x"):
@@ -85,9 +125,12 @@ class CoverageTests(unittest.TestCase):
             ("llvm-cov-18 report ./test -instr-profile=x.profdata", "branch coverage is reported with llvm-cov"),
             (
                 "llvm-cov show ./test -show-branches=count -show-mcdc",
-                "branch coverage is reported with llvm-cov; path coverage bonus: llvm-cov",
+                "branch coverage is reported with llvm-cov; path coverage bonus: reported with llvm-cov",
             ),
-            ("gcov -b --conditions main.gcda", "branch coverage is reported with gcov; path coverage bonus: gcov"),
+            (
+                "gcov -b --conditions main.gcda",
+                "branch coverage is reported with gcov; path coverage bonus: reported with gcov",
+            ),
         ):
             with self.subTest(line=line):
                 self.assertEqual(self._run(github_job("ubuntu-latest", line)).message, expected)
@@ -104,12 +147,15 @@ class CoverageTests(unittest.TestCase):
         flags = github_job("ubuntu-latest", "cmake -S . -B b -DCMAKE_CXX_FLAGS='-fcoverage-mcdc'", "llvm-cov report")
         self.assertEqual(
             self._run(flags).message,
-            "branch coverage is reported with llvm-cov; path coverage bonus: clang -fcoverage-mcdc",
+            "branch coverage is reported with llvm-cov; path coverage bonus: measured with clang -fcoverage-mcdc "
+            "(not reported)",
         )
         cmake = {"CMakeLists.txt": "add_compile_options(-fpath-coverage)\n"}
         configured = self._run({**cmake, **github_job("ubuntu-latest", "cmake -S . -B b", "gcovr --xml x")})
         self.assertEqual(
-            configured.message, "branch coverage is reported with gcovr; path coverage bonus: gcc -fpath-coverage"
+            configured.message,
+            "branch coverage is reported with gcovr; path coverage bonus: measured with gcc -fpath-coverage "
+            "(not reported)",
         )
         # Building does not read the CMake files, and a comment sets nothing.
         commented = {"CMakeLists.txt": "# add_compile_options(-fpath-coverage)\n"}
@@ -118,7 +164,8 @@ class CoverageTests(unittest.TestCase):
             {**commented, **github_job("ubuntu-latest", "cmake -S . -B b", "gcovr --xml x")},
         ):
             with self.subTest(files=files):
-                self.assertEqual(self._run(files), Result.passed("branch coverage is reported with gcovr", C_PATH_HINT))
+                expected = Result.passed("branch coverage is reported with gcovr", GATE_HINT, C_PATH_HINT)
+                self.assertEqual(self._run(files), expected)
 
     def test_launchers_run_the_tool(self) -> None:
         for line in ("uvx gcovr --xml x", "pipx run --spec gcovr gcovr --xml x", "python3 -m gcovr --xml x"):
@@ -141,11 +188,38 @@ class PythonCoverageTests(unittest.TestCase):
         for provider in CI_FILES:
             with self.subTest(ci=provider):
                 result = self._run(ci_running(provider, "python -m coverage run --branch -m pytest"))
-                self.assertEqual(result, Result.passed("branch coverage is reported with coverage.py"))
+                self.assertEqual(
+                    result, Result.passed("branch coverage is measured with coverage.py", REPORT_HINT, GATE_HINT)
+                )
+
+    def test_coverage_py_reports_what_the_job_measured_and_gates_with_fail_under(self) -> None:
+        """`coverage run` only measures; `coverage report` (or `xml`, `json`, `html`) reports the branches the job's
+        run measured, and `--fail-under` or the `fail_under` setting gates on the figure they are blended into."""
+        run = "coverage run --branch -m pytest"
+        cases = {
+            ("coverage report",): ("reported", (GATE_HINT,)),
+            ("coverage xml -o cov.xml",): ("reported", (GATE_HINT,)),
+            ("coverage report --fail-under=90",): ("gated", ()),
+        }
+        for reports, (reached, hints) in cases.items():
+            with self.subTest(reports=reports):
+                result = self._run(github_job("ubuntu-latest", run, *reports))
+                self.assertEqual(result, Result.passed(f"branch coverage is {reached} with coverage.py", *hints))
+        setting = {"pyproject.toml": "[tool.coverage.report]\nfail_under = 99\n"}
+        gated = self._run({**setting, **github_job("ubuntu-latest", run, "coverage report")})
+        self.assertEqual(gated, Result.passed("branch coverage is gated with coverage.py"))
+        # A report in another job reports nothing of this job's branches.
+        other = {
+            **github_job("ubuntu-latest", run),
+            ".github/workflows/r.yml": github_job("x", "coverage report")[GITHUB_WORKFLOW],
+        }
+        self.assertEqual(self._run(other).message, "branch coverage is measured with coverage.py")
 
     def test_pytest_cov_branch_passes(self) -> None:
         result = self._run(github_job("ubuntu-latest", "pytest --cov=app --cov-branch"))
-        self.assertEqual(result.message, "branch coverage is reported with pytest-cov")
+        self.assertEqual(result, Result.passed("branch coverage is reported with pytest-cov", GATE_HINT))
+        gated = self._run(github_job("ubuntu-latest", "pytest --cov=app --cov-branch --cov-fail-under=95"))
+        self.assertEqual(gated, Result.passed("branch coverage is gated with pytest-cov"))
 
     def test_the_branch_setting_counts_where_coverage_py_reads_it(self) -> None:
         sections = {
@@ -177,7 +251,7 @@ class PythonCoverageTests(unittest.TestCase):
         ):
             with self.subTest(files=files):
                 result = self._run({**files, **github_job("ubuntu-latest", "uv run --with pytest-cov pytest")})
-                self.assertEqual(result, Result.passed("branch coverage is reported with pytest-cov"))
+                self.assertEqual(result, Result.passed("branch coverage is reported with pytest-cov", GATE_HINT))
 
     def test_python_runs_a_module_as_its_command(self) -> None:
         for line in (
@@ -206,9 +280,9 @@ class PythonCoverageTests(unittest.TestCase):
         self.assertEqual(
             result,
             Result.failed(
-                "no branch coverage reporting found in what CI runs",
-                "line coverage is reported with coverage.py",
-                "known to report branch coverage: coverage run --branch, pytest --cov --cov-branch",
+                "no branch coverage measurement found in what CI runs",
+                "line coverage is measured with coverage.py",
+                "known to measure branch coverage: coverage run --branch, pytest --cov --cov-branch",
             ),
         )
 
@@ -236,25 +310,32 @@ class RustCoverageTests(unittest.TestCase):
             for tool, command in tools.items():
                 with self.subTest(ci=provider, tool=tool):
                     result = self._run(ci_running(provider, command))
-                    self.assertEqual(result, Result.passed(f"branch coverage is reported with {tool}", RUST_PATH_HINT))
+                    expected = Result.passed(f"branch coverage is reported with {tool}", GATE_HINT, RUST_PATH_HINT)
+                    self.assertEqual(result, expected)
 
     def test_mcdc_coverage_is_reported_as_a_bonus(self) -> None:
         self.assertEqual(
             self._run(dict(WELL_CONFIGURED_RUST)),
-            Result.passed("branch coverage is reported with cargo-llvm-cov; path coverage bonus: cargo-llvm-cov"),
+            Result.passed(
+                "branch coverage is reported with cargo-llvm-cov; path coverage bonus: reported with cargo-llvm-cov",
+                GATE_HINT,
+            ),
         )
+        gated = github_job("ubuntu-latest", "cargo llvm-cov --branch --fail-under-lines 90")
+        self.assertEqual(self._run(gated).message, "branch coverage is reported with cargo-llvm-cov")
+        self.assertEqual(self._run(gated).details, (GATE_HINT, RUST_PATH_HINT))
         flags = github_job("ubuntu-latest", 'RUSTFLAGS="-Zcoverage-options=mcdc" cargo +nightly llvm-cov --branch')
-        self.assertEqual(self._run(flags).message.rsplit(": ", 1)[1], "rustc MC/DC")
+        self.assertEqual(self._run(flags).message.rsplit(": ", 1)[1], "measured with rustc MC/DC (not reported)")
 
     def test_line_coverage_fails(self) -> None:
         result = self._run(github_job("ubuntu-latest", "cargo llvm-cov --lcov"))
         self.assertEqual(
             result,
             Result.failed(
-                "no branch coverage reporting found in what CI runs",
+                "no branch coverage measurement found in what CI runs",
                 "line coverage is reported with cargo-llvm-cov",
                 "region coverage is reported with cargo-llvm-cov",
-                "known to report branch coverage: cargo llvm-cov --branch, cargo tarpaulin --branch, grcov --branch",
+                "known to measure branch coverage: cargo llvm-cov --branch, cargo tarpaulin --branch, grcov --branch",
             ),
         )
 
@@ -265,8 +346,8 @@ class MixedLanguageCoverageTests(unittest.TestCase):
         self.assertEqual(result.status, Status.FAIL)
         self.assertEqual(
             result.message,
-            "C/C++: branch coverage is reported with gcovr; path coverage bonus: gcc -fcondition-coverage; "
-            "Python: no branch coverage reporting found in what CI runs",
+            "C/C++: branch coverage is gated with gcovr; path coverage bonus: measured with gcc -fcondition-coverage "
+            "(not reported); Python: no branch coverage measurement found in what CI runs",
         )
 
     def test_passes_when_every_language_reports_branch_coverage(self) -> None:

@@ -154,11 +154,19 @@ class ScalaTests(unittest.TestCase):
         ):
             with self.subTest(command=command):
                 self.assertEqual(
-                    self._run(coverage, _ci(command)), Result.passed("branch coverage is reported with scoverage")
+                    self._run(coverage, _ci(command)),
+                    Result.passed(
+                        "branch coverage is reported with scoverage",
+                        "consider failing CI when branch coverage falls below a threshold",
+                    ),
                 )
         self.assertEqual(self._run(coverage, _ci("sbt coverage test")).status, Status.FAIL)
         self.assertEqual(
-            self._run(coverage, _ci("sbt jacoco")), Result.passed("branch coverage is reported with sbt-jacoco")
+            self._run(coverage, _ci("sbt jacoco")),
+            Result.passed(
+                "branch coverage is reported with sbt-jacoco",
+                "consider failing CI when branch coverage falls below a threshold",
+            ),
         )
 
     def test_scalafmt_needs_its_configuration_and_a_checking_run(self) -> None:

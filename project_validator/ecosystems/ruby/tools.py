@@ -12,7 +12,7 @@ from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
-from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
@@ -230,7 +230,7 @@ def _simplecov(command: Command, facts: Facts) -> Run | None:
     if not any(setting.key == "start" for setting in read):
         return None
     branch = any(setting.key == "enable_coverage" for setting in read)
-    return measured(Granularity.LINE, Granularity.BRANCH if branch else None, read=read)
+    return reported(Granularity.LINE, Granularity.BRANCH if branch else None, read=read)
 
 
 SIMPLECOV = coverage_tool(

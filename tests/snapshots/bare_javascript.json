@@ -76,6 +76,7 @@
           {
             "branch": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "c8",
                 "nyc",
@@ -84,11 +85,14 @@
                 "deno test --coverage",
                 "node --test --experimental-test-coverage"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "language": "JavaScript",
             "line": {
               "answer": "no",
+              "gated": [],
               "known": [
                 "c8",
                 "nyc",
@@ -98,21 +102,32 @@
                 "node --test --experimental-test-coverage",
                 "bun test --coverage"
               ],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "path": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "region": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "statement": {
               "answer": "impossible",
+              "gated": [],
               "known": [],
+              "reported": [],
+              "rung": null,
               "tools": []
             },
             "unit": ".",
@@ -706,9 +721,9 @@
     },
     "coverage": {
       "details": [
-        "known to report branch coverage: c8, nyc, jest --coverage, vitest --coverage, deno test --coverage, node --test --experimental-test-coverage"
+        "known to measure branch coverage: c8, nyc, jest --coverage, vitest --coverage, deno test --coverage, node --test --experimental-test-coverage"
       ],
-      "message": "no branch coverage reporting found in what CI runs",
+      "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
     },
     "cxx-extensions": {
