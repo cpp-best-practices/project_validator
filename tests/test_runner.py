@@ -73,6 +73,20 @@ class ExtractionFailureTests(unittest.TestCase):
         self.assertIn("ci-present", judged)  # reads no facts
         self.assertGreater(len(reports) - len(judged), 20)
 
+    def test_whatever_else_extraction_raises_is_kept_as_the_one_error(self) -> None:
+        with (
+            temp_project({"CMakeLists.txt": ""}) as root,
+            patch("project_validator.extraction.extract_facts", side_effect=RuntimeError("boom")),
+        ):
+            context = make_context(root)
+            with self.assertRaises(ExtractionError):
+                context.facts  # noqa: B018 - the property is what raises
+            with self.assertRaises(ExtractionError):
+                context.facts  # noqa: B018 - and raises again, without extracting again
+        self.assertEqual(
+            str(context.extraction_error), "the facts could not be extracted: an extractor raised RuntimeError: boom"
+        )
+
     def test_an_extractor_that_raises_an_extraction_error_names_its_own_stage(self) -> None:
         def failing(project: object) -> Iterator[Fact]:
             raise ExtractionError("a CMake file", ValueError("unreadable"))

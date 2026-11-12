@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import tomllib
 import unittest
 from collections.abc import Mapping
 from pathlib import PurePosixPath
@@ -65,6 +66,13 @@ class DataWellformedTests(unittest.TestCase):
             "package.json:3:1: Expecting value",
         )
         self.assertEqual(_run({"a.json": "{", "b.json": "{}"}).message, "1 data file does not parse")
+
+    def test_a_toml_error_without_a_position_is_reported_as_it_is(self) -> None:
+        # tomllib always writes the position into its message; a parser that did not would still be reported.
+        error = tomllib.TOMLDecodeError.__new__(tomllib.TOMLDecodeError)
+        error.args = ("unreadable",)
+        with mock.patch("project_validator.checks.data_wellformed.tomllib.loads", side_effect=error):
+            self.assert_fails({"a.toml": "x = 1\n"}, "a.toml: unreadable")
 
     def test_every_yaml_document_must_parse(self) -> None:
         self.assert_fails(
