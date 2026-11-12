@@ -14,7 +14,7 @@ jobs:
   mutmut:
     name: mutmut
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -48,9 +48,15 @@ jobs:
           git -C mutants init -q
           git -C mutants add -A
           # A budget below the job's timeout: a pull request that changes many functions still gets a report
-          # of the mutants checked so far, instead of a cancelled job and no report at all.
+          # of the mutants checked so far, instead of a cancelled job and no report at all. The budget covers
+          # the whole run: the stats pass that maps tests to functions (the full suite, 8 to 14 minutes), the
+          # clean run of the tests covering the changed functions (up to the full suite again for a change to
+          # a central function), then the mutants at about two seconds each. A pull request that changes a few
+          # functions finishes well inside it; one that changes central ones gets the mutants of the fastest
+          # tests first.
+          budget_minutes=20
           status=0
-          timeout --signal=INT --kill-after=2m 30m mutmut run "${patterns[@]}" 2>&1 | tee run.log || status=$?
+          timeout --signal=INT --kill-after=2m "${budget_minutes}m" mutmut run "${patterns[@]}" 2>&1 | tee run.log || status=$?
           if grep -q 'Filtered for specific mutants, but nothing matches' run.log; then
             # mutmut asserts when no pattern matches: the changed functions are ones it does not mutate.
             echo "The changed functions have no mutants: nothing to mutate." >> "$GITHUB_STEP_SUMMARY"
@@ -67,7 +73,7 @@ jobs:
             echo 'Mutants of: `'"${patterns[*]}"'`'
             echo
             if [ "$status" -eq 124 ]; then
-              echo "Stopped after 30 minutes with $checked mutants checked: the results below cover those."
+              echo "Stopped after $budget_minutes minutes with $checked mutants checked: the results below cover those."
               echo
             fi
             if [ -s "$survivors" ]; then
