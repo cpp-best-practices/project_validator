@@ -172,42 +172,6 @@
       "unread": null
     },
     {
-      "kind": "Untracked",
-      "origin": ".gitignore"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "LICENSE"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "README.md"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "SECURITY.md"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "config/app.toml"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "config/settings.yaml"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "data/catalog.json"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "schema/catalog.schema.json"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "schema/catalog.xsd"
-    },
-    {
       "kind": "CiConfiguration",
       "origin": ".github/workflows/ci-lint.yml",
       "provider": "GitHub Actions"

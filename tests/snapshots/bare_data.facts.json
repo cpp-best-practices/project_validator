@@ -67,18 +67,6 @@
       "problem": null,
       "role": "product",
       "unread": null
-    },
-    {
-      "kind": "Untracked",
-      "origin": "config.yaml"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "data.json"
-    },
-    {
-      "kind": "Untracked",
-      "origin": "settings.toml"
     }
   ],
   "map": {
