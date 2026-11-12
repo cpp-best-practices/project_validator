@@ -266,7 +266,9 @@ ci-lint, wellformed).
 
 A policy (`project_validator/policy`, one module per practice) maps answers to statuses. For coverage: branch
 coverage is required (or the finest granularity possible for the language, when branch coverage is impossible), and
-path or MC/DC coverage is a bonus. Checks are thin (`project_validator/checks`): a check names its question and its
+path or MC/DC coverage is a bonus; a run takes a granularity to one of three rungs (`Rung`: measured, reported where
+the numbers can be seen, gated by a threshold CI fails under), measuring it passes and the next rung is suggested.
+Checks are thin (`project_validator/checks`): a check names its question and its
 policy (`answered_check`), and `--strict` and `--warnings-as-errors` adjust the policy, not the questions. The policy
 is built in; it is a separate layer so that it can be made configurable later without touching extraction. Hints
 come from the tools (`can`), not from profiles.
