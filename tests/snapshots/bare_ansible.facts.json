@@ -1,0 +1,79 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": "playbooks/site.yml",
+      "role": "product"
+    },
+    {
+      "ecosystem": "Ansible",
+      "kind": "ContentLanguages",
+      "languages": [
+        "Ansible"
+      ],
+      "origin": "."
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "Ansible",
+        "YAML"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "playbooks/site.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Ansible": [
+        "content"
+      ],
+      "Data": [
+        ".yml files"
+      ]
+    },
+    "formats": [
+      "Ansible",
+      "YAML"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "Ansible",
+          "YAML"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}
