@@ -222,8 +222,8 @@ CRYSTAL_FORMAT = format_tool(
 
 ## Development
 
-[docs/architecture.md](docs/architecture.md) describes how the validator is put together, and what each step of its
-rearchitecture changed.
+[docs/architecture.md](docs/architecture.md) describes how the validator is put together;
+[docs/history.md](docs/history.md) what each step of its rearchitecture changed.
 
 ```sh
 python3 -W error -m unittest

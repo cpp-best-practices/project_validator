@@ -31,6 +31,7 @@ EXTENSIONS = ("tables", "fenced_code", "toc")  # toc gives headings the ids GitH
 NAVIGATION = (
     ("index.html", "Overview"),
     ("docs/architecture.html", "Architecture"),
+    ("docs/history.html", "History"),
     ("docs/ecosystems/index.html", "Ecosystems"),
     ("docs/support-matrix.html", "Support matrix"),
 )
