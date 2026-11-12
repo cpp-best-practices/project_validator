@@ -1,4 +1,4 @@
-"""The registry of language ecosystems (one profile module each, plus plugins' ones).
+"""The registry of ecosystems, of languages and of formats (one profile module each, plus plugins' ones).
 
 Every module of this package except `model` is a profile, defining one ecosystem; they are found, not listed.
 """
@@ -18,6 +18,7 @@ from project_validator.ecosystems.model import (
     C_FAMILY,
     BuildSystem,
     Ecosystem,
+    Kind,
     ToolchainPatterns,
     ecosystems_for,
     languages_of,
@@ -50,6 +51,11 @@ class RegistryError(Exception):
 def registered() -> tuple[Ecosystem, ...]:
     """Every known ecosystem: the built-in ones, then those registered by plugins, in registration order."""
     return tuple(_registered)
+
+
+def formats() -> frozenset[str]:
+    """The names of every known format: what the format ecosystems' `languages` hold."""
+    return languages_of(ecosystem for ecosystem in _registered if ecosystem.kind == "format")
 
 
 def _build_file_claims(ecosystems: Iterable[Ecosystem]) -> Iterator[tuple[str, BuildSystem, Ecosystem]]:
@@ -152,12 +158,14 @@ __all__ = [
     "PROFILES",
     "BuildSystem",
     "Ecosystem",
+    "Kind",
     "RegistryError",
     "ToolchainPatterns",
     "applies_to",
     "build_systems",
     "claim_conflicts",
     "ecosystems_for",
+    "formats",
     "is_build_tree",
     "isolated_registry",
     "languages_of",

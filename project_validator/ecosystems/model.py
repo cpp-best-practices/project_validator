@@ -10,6 +10,7 @@ import re
 import tomllib
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
+from typing import Literal
 
 from project_validator.build_systems.model import C_FAMILY, BuildSystem
 from project_validator.core import Project
@@ -19,6 +20,7 @@ __all__ = [
     "VERSION",
     "BuildSystem",
     "Ecosystem",
+    "Kind",
     "ToolchainPatterns",
     "ecosystems_for",
     "languages_of",
@@ -87,11 +89,19 @@ def toolchain_patterns(
     )
 
 
+type Kind = Literal["language", "format"]
+
+
 # Ecosystems are registry singletons: they compare and hash by identity.
 @dataclass(frozen=True, slots=True, kw_only=True, eq=False)
 class Ecosystem:
-    """A language ecosystem: how it is recognised. What it is judged by are components of its profile (tools,
-    practices, questions' declarations), found rather than listed.
+    """An ecosystem: how it is recognised. What it is judged by are components of its profile (tools, practices,
+    questions' declarations), found rather than listed.
+
+    Its `kind` is `language` (its files are programs: it has toolchains, tests, coverage) or `format` (its files
+    are data, not programs: JSON, YAML, a Dockerfile; what is asked of them is hygiene: they parse, validate, are
+    formatted and linted). `languages` holds the names of its languages, or of its formats: the one key every tool,
+    question and policy uses. A format has no toolchain.
 
     It is recognised by its build systems' files, its `source_suffixes`, and `detect`, a probe that reads the project
     (with `Project.read_head`) and returns the ecosystem's languages it finds, for intent that file names cannot
@@ -104,6 +114,7 @@ class Ecosystem:
 
     label: str
     languages: frozenset[str]
+    kind: Kind = "language"
     build_systems: tuple[BuildSystem, ...] = ()
     source_suffixes: Mapping[str, str] | None = None
     ambiguous_suffixes: Mapping[str, str | None] | None = None
@@ -112,6 +123,10 @@ class Ecosystem:
     # How a CI job shows it builds with the ecosystem, besides naming or using its toolchain.
     ci_usage: re.Pattern[str] | None = None
     default_build_system: BuildSystem | None = None
+
+    def __post_init__(self) -> None:
+        if self.kind == "format" and self.toolchain is not None:
+            raise ValueError(f"{self.label}: a format has no toolchain")
 
     def __repr__(self) -> str:
         return f"Ecosystem({self.label})"

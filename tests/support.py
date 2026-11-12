@@ -24,6 +24,11 @@ from tests.layouts.model import ProjectLayout
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
+# A format ecosystem that is not built in, for tests of the model: its files are data, not programs.
+FORMAT_ECOSYSTEM = Ecosystem(
+    label="Widget data", kind="format", languages=frozenset({"WDATA"}), source_suffixes={".wdata": "WDATA"}
+)
+
 requires_rich = unittest.skipUnless(pretty.available(), "rich is not installed")
 
 NO_FILES: Mapping[str, str] = MappingProxyType({})
