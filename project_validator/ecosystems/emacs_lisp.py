@@ -229,7 +229,7 @@ ELISP_ECOSYSTEM = Ecosystem(
             rf"\buses: [\w-]+/setup-emacs@[^\n]*\n(?:(?!uses:)[^\n]*\n)*?version:\s*[\"']?{_EMACS_VERSION}\b",
             rf"\"emacs(?:-version)?\":\s*\"{_EMACS_VERSION}\"",
         ),
-        commands=r"\bemacs\b|\beask\b|\bcask\b|\bmakem\.sh\b|\bert-runner\b|\bbuttercup\b|\bmelpazoid\b",
+        programs=("emacs", "eask", "cask", "makem.sh", "ert-runner", "buttercup", "melpazoid"),
         setup=("emacs",),
     ),
 )

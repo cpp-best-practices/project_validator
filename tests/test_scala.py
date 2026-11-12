@@ -17,7 +17,16 @@ from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.scala import SCALA_ECOSYSTEM, mill_tasks, sbt_tasks, scala_cli_command
-from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, run_in_layout, temp_project
+from tests.support import (
+    GITHUB_WORKFLOW,
+    github_job,
+    github_steps,
+    make_context,
+    run_as,
+    run_in_layout,
+    temp_project,
+    uses,
+)
 
 SCALAFMT = {".scalafmt.conf": "version = 3.8.6\nrunner.dialect = scala3\n"}
 SCALAFIX = {".scalafix.conf": "rules = [DisableSyntax]\n"}
@@ -111,8 +120,8 @@ class RecognitionTests(unittest.TestCase):
             "uses: coursier/setup-action@v1",
         ):
             with self.subTest(text=text):
-                self.assertTrue(SCALA_ECOSYSTEM.used_by(text))
-        self.assertFalse(SCALA_ECOSYSTEM.used_by("mvn verify"))
+                self.assertTrue(uses(SCALA_ECOSYSTEM, text))
+        self.assertFalse(uses(SCALA_ECOSYSTEM, "mvn verify"))
 
 
 class ScalaTests(unittest.TestCase):

@@ -9,7 +9,7 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from project_validator import yaml_support
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, program, starts_with
@@ -258,8 +258,12 @@ DART_ECOSYSTEM = Ecosystem(
     source_suffixes={".dart": "Dart"},
     toolchain=toolchain_patterns(
         "Dart",
-        commands=r"\bdart\s+(?:test|analyze|format|pub|run|compile|fix|doc)\b"
-        r"|\bflutter\s+(?:test|analyze|pub|build|run|doc|gen-l10n)\b|\bflutter-action\b|\bvery_good\s+test\b",
+        programs=(
+            *subcommands("dart", "test", "analyze", "format", "pub", "run", "compile", "fix", "doc"),
+            *subcommands("flutter", "test", "analyze", "pub", "build", "run", "doc", "gen-l10n"),
+            ("very_good", "test"),
+        ),
+        actions=("flutter-action",),
         setup=("dart",),
         labelled=_SDK_VERSIONS,
     ),

@@ -16,7 +16,7 @@ from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems import is_build_tree
 from project_validator.ecosystems.common_lisp import LISP_ECOSYSTEM
-from tests.support import GITHUB_WORKFLOW, github_job, make_context, run_as, temp_project
+from tests.support import GITHUB_WORKFLOW, github_job, make_context, run_as, temp_project, uses
 
 LISP = frozenset({"Common Lisp"})
 TESTS = {"tests/main.lisp": "(def-suite shop-suite)\n(test total (is (= 6 (shop:total '(1 2 3)))))\n"}
@@ -68,8 +68,8 @@ class RecognitionTests(unittest.TestCase):
     def test_ci_usage(self) -> None:
         for text in (TEST_SYSTEM, "ros install sbcl-bin", "qlot exec rove shop.asd", "uses: 40ants/setup-lisp@v4"):
             with self.subTest(text=text):
-                self.assertTrue(LISP_ECOSYSTEM.used_by(text))
-        self.assertFalse(LISP_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(LISP_ECOSYSTEM, text))
+        self.assertFalse(uses(LISP_ECOSYSTEM, "npm test"))
 
 
 class CommonLispTests(unittest.TestCase):

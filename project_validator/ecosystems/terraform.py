@@ -17,7 +17,7 @@ import re
 import shlex
 from collections.abc import Mapping
 
-from project_validator.ecosystems.model import Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, starts_with
@@ -192,7 +192,9 @@ STATE_AND_PLANS = BuildOutput(
 # --- recognition
 
 # What shows a CI job works on the configuration, besides running terraform or tofu.
-CI_USAGE = re.compile(r"\btflint\b|\bcheckov\b|\btfsec\b|\bterrascan\b|\bkics\b|\btrivy\s+config\b")
+# The linters and scanners that read Terraform without running it.
+CI_PROGRAMS = (("tflint",), ("checkov",), ("tfsec",), ("terrascan",), ("kics",), ("trivy", "config"))
+_VERBS = ("init", "validate", "plan", "apply", "fmt", "test")
 
 TERRAFORM_ECOSYSTEM = Ecosystem(
     label=TERRAFORM,
@@ -200,14 +202,14 @@ TERRAFORM_ECOSYSTEM = Ecosystem(
     source_suffixes={".tf": TERRAFORM, ".tofu": TERRAFORM, ".tfvars": TERRAFORM},
     # HCL is also Packer's and Nomad's; in a Terraform project, `.hcl` files are its tests and its lockfile.
     ambiguous_suffixes={".hcl": TERRAFORM},
-    ci_usage=CI_USAGE,
+    ci_programs=CI_PROGRAMS,
     # `hashicorp/setup-terraform` takes `terraform_version`, `opentofu/setup-opentofu` `tofu_version`; the images are
     # `hashicorp/terraform:1.9.8` and `ghcr.io/opentofu/opentofu:1.8.0`.
     toolchain=toolchain_patterns(
         TERRAFORM,
         inputs=("terraform_version", "tofu_version"),
         images=("hashicorp/terraform", "ghcr.io/opentofu/opentofu"),
-        commands=r"\b(?:terraform|tofu)\s+(?:init|validate|plan|apply|fmt|test)\b",
+        programs=(*subcommands("terraform", *_VERBS), *subcommands("tofu", *_VERBS)),
         setup=("terraform", "opentofu"),
     ),
 )

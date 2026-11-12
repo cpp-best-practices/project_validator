@@ -18,11 +18,13 @@ from project_validator.ecosystems import (
     registered,
 )
 from project_validator.ecosystems.c_cpp import C_AND_CXX
-from project_validator.ecosystems.model import toolchain_patterns
+from project_validator.ecosystems.model import runs, subcommands, toolchain_patterns
+from project_validator.ecosystems.perl import PERL_ECOSYSTEM
+from project_validator.ecosystems.php import PHP
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 from project_validator.judging import by_ecosystem, check_each_ecosystem
-from tests.support import FORMAT_ECOSYSTEM, make_context, temp_project
+from tests.support import FORMAT_ECOSYSTEM, evidence, make_context, temp_project, uses
 
 
 class EcosystemsForTests(unittest.TestCase):
@@ -117,6 +119,52 @@ class RegistryTests(unittest.TestCase):
         self.assertEqual(applies_to(Check(name="any", description="", run=run)), ())
 
 
+class ToolchainUsageTests(unittest.TestCase):
+    """A job uses a toolchain when one of the commands it runs is one of the toolchain's programs: a program by
+    name, with the subcommands after it. Text is matched only for what is not a command: a setup action, an action
+    of the ecosystem's, a version."""
+
+    def test_a_program_is_matched_by_name_wherever_it_is_run_from(self) -> None:
+        lines = ("cargo test", "/usr/local/bin/cargo build", "cargo.exe build", "CARGO_TERM_COLOR=always cargo test")
+        for line in lines:
+            with self.subTest(line=line):
+                self.assertTrue(uses(RUST, line))
+
+    def test_a_subcommand_of_another_program_is_that_programs(self) -> None:
+        self.assertTrue(uses(PERL_ECOSYSTEM, "cover -test"))
+        self.assertTrue(uses(PERL_ECOSYSTEM, "prove -l t && cover -report codecov"))
+        for line in ("raco cover -f codecov .", "go tool cover -html=c.out", "npx cover"):
+            with self.subTest(line=line):
+                self.assertFalse(uses(PERL_ECOSYSTEM, line))
+
+    def test_a_word_in_text_is_not_a_program(self) -> None:
+        for line in ("echo cargo", "languages: python, rust", "name: cargo-audit", "# cargo build is slow"):
+            with self.subTest(line=line):
+                self.assertFalse(uses(RUST, line))
+                self.assertFalse(uses(PYTHON, line))
+
+    def test_a_program_run_from_the_toolchains_directory_uses_it(self) -> None:
+        for line in ("vendor/bin/phpunit", "./vendor/bin/pest --coverage", "php -d memory_limit=-1 vendor/bin/psalm"):
+            with self.subTest(line=line):
+                self.assertTrue(uses(PHP, line))
+        self.assertFalse(uses(PHP, "node_modules/.bin/jest"))
+
+    def test_an_action_is_matched_after_its_owner(self) -> None:
+        patterns = toolchain_patterns("Widget", actions=("widget-actions/",), setup=("widget",))
+        for line in ("uses: acme/widget-actions/setup@v1", "uses: acme/setup-widget@v2"):
+            with self.subTest(line=line):
+                self.assertTrue(patterns.used_by(*evidence(line)))
+        self.assertFalse(patterns.used_by(*evidence("uses: acme/my-widget-actions/setup@v1")))
+        self.assertIsNone(toolchain_patterns("Widget", programs=("widget",)).usage)
+
+    def test_runs_and_subcommands(self) -> None:
+        self.assertEqual(subcommands("go", "build", "test"), (("go", "build"), ("go", "test")))
+        self.assertTrue(runs((("go", "test", "./..."),), subcommands("go", "build", "test")))
+        self.assertFalse(runs((("go", "tool", "cover"),), subcommands("go", "build", "test")))
+        self.assertTrue(runs(((r"vendor\bin\phpunit",),), (), directories=("vendor/bin",)))
+        self.assertFalse(runs(((),), (("go",),), directories=("vendor/bin",)))
+
+
 class FormatTests(unittest.TestCase):
     """A format is a kind of file that is not a program: an ecosystem of `kind` format, whose `languages` are its
     format names. It has no toolchain (nothing has a version to pin); it may have build systems (a documentation
@@ -128,7 +176,7 @@ class FormatTests(unittest.TestCase):
                 label="Widget data",
                 kind="format",
                 languages=frozenset({"WDATA"}),
-                toolchain=toolchain_patterns("WDATA", commands=r"\bwdata\b"),
+                toolchain=toolchain_patterns("WDATA", programs=("wdata",)),
             )
         self.assertEqual(str(raised.exception), "Widget data: a format has no toolchain")
 

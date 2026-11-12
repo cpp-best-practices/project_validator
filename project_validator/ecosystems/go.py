@@ -7,7 +7,7 @@ import shlex
 from collections.abc import Callable, Iterator
 
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, positional, starts_with
@@ -395,7 +395,7 @@ GO = Ecosystem(
         inputs=("go-version",),
         images=("golang",),
         image_version=r"(\d+\.\d+)",
-        commands=r"\bgo\s+(?:build|test|vet|run|mod|install|generate)\b",
+        programs=subcommands("go", "build", "test", "vet", "run", "mod", "install", "generate"),
         setup=("go",),
     ),
 )

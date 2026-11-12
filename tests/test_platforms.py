@@ -12,6 +12,7 @@ from project_validator.platforms import (
     detect_operating_systems,
     detect_toolchains,
 )
+from tests.support import evidence
 
 
 def _toolchains(language: str, *versions: str) -> frozenset[Toolchain]:
@@ -40,32 +41,36 @@ class PlatformDetectionTests(unittest.TestCase):
 
 class ToolchainDetectionTests(unittest.TestCase):
     def test_python_versions(self) -> None:
-        self.assertEqual(detect_toolchains('{"python-version": "3.14"}'), _toolchains("Python", "3.14"))
-        self.assertEqual(detect_toolchains("python-version: 3.x"), _toolchains("Python", "3.x"))
-        self.assertEqual(detect_toolchains("python-version: pypy3.10"), _toolchains("Python", "pypy3.10"))
-        self.assertEqual(detect_toolchains("image: python:3.12-slim"), _toolchains("Python", "3.12"))
-        self.assertEqual(detect_toolchains("python3.13 -m pytest"), _toolchains("Python", "3.13"))
+        self.assertEqual(detect_toolchains(*evidence('{"python-version": "3.14"}')), _toolchains("Python", "3.14"))
+        self.assertEqual(detect_toolchains(*evidence("python-version: 3.x")), _toolchains("Python", "3.x"))
+        self.assertEqual(detect_toolchains(*evidence("python-version: pypy3.10")), _toolchains("Python", "pypy3.10"))
+        self.assertEqual(detect_toolchains(*evidence("image: python:3.12-slim")), _toolchains("Python", "3.12"))
+        self.assertEqual(detect_toolchains(*evidence("python3.13 -m pytest")), _toolchains("Python", "3.13"))
 
     def test_rust_toolchains(self) -> None:
-        self.assertEqual(detect_toolchains("uses: dtolnay/rust-toolchain@1.85"), _toolchains("Rust", "1.85"))
-        self.assertEqual(detect_toolchains('{"toolchain": "nightly-2026-01-01"}'), _toolchains("Rust", "nightly"))
-        self.assertEqual(detect_toolchains("cargo +beta test"), _toolchains("Rust", "beta"))
-        self.assertEqual(detect_toolchains("rustup toolchain install stable"), _toolchains("Rust", "stable"))
-        self.assertEqual(detect_toolchains("image: rust:1.80.1"), _toolchains("Rust", "1.80.1"))
+        self.assertEqual(detect_toolchains(*evidence("uses: dtolnay/rust-toolchain@1.85")), _toolchains("Rust", "1.85"))
+        self.assertEqual(
+            detect_toolchains(*evidence('{"toolchain": "nightly-2026-01-01"}')), _toolchains("Rust", "nightly")
+        )
+        self.assertEqual(detect_toolchains(*evidence("cargo +beta test")), _toolchains("Rust", "beta"))
+        self.assertEqual(detect_toolchains(*evidence("rustup toolchain install stable")), _toolchains("Rust", "stable"))
+        self.assertEqual(detect_toolchains(*evidence("image: rust:1.80.1")), _toolchains("Rust", "1.80.1"))
 
     def test_the_first_text_naming_a_version_wins(self) -> None:
-        found = detect_toolchains('{"python": "3.13"}', "python-version: 3.13 # was python-version: 3.11")
+        found = detect_toolchains(*evidence('{"python": "3.13"}', "python-version: 3.13 # was python-version: 3.11"))
         self.assertEqual(found, _toolchains("Python", "3.13", "3.11"))
-        found = detect_toolchains("python-version: 3.13", "python-version: 3.11")
+        found = detect_toolchains(*evidence("python-version: 3.13", "python-version: 3.11"))
         self.assertEqual(found, _toolchains("Python", "3.13"))
 
     def test_using_a_language_without_a_version_is_the_runner_default(self) -> None:
-        self.assertEqual(detect_toolchains("pip install tox && tox"), _toolchains("Python", "default"))
-        self.assertEqual(detect_toolchains("cargo build"), _toolchains("Rust", "default"))
+        self.assertEqual(detect_toolchains(*evidence("pip install tox && tox")), _toolchains("Python", "default"))
+        self.assertEqual(detect_toolchains(*evidence("cargo build")), _toolchains("Rust", "default"))
 
     def test_mentioning_a_language_is_not_using_it(self) -> None:
-        self.assertEqual(detect_toolchains("languages: python, rust\nname: python-docs\ncmake --version"), frozenset())
-        self.assertEqual(detect_toolchains('{"python-version": "${{ matrix.python }}"}'), frozenset())
+        self.assertEqual(
+            detect_toolchains(*evidence("languages: python, rust\nname: python-docs\ncmake --version")), frozenset()
+        )
+        self.assertEqual(detect_toolchains(*evidence('{"python-version": "${{ matrix.python }}"}')), frozenset())
 
 
 class ToolchainPatternsTests(unittest.TestCase):
@@ -77,7 +82,7 @@ class ToolchainPatternsTests(unittest.TestCase):
             images=("ziglang/zig",),
             image_version=r"(\d+\.\d+\.\d+)",
             more=(r"\bzig-(\d+\.\d+)\.tar",),
-            commands=r"\bzig\s+(?:build|test)\b",
+            programs=(("zig", "build"), ("zig", "test")),
             setup=("zig",),
         )
         texts = {
@@ -88,11 +93,11 @@ class ToolchainPatternsTests(unittest.TestCase):
         }
         for text, version in texts.items():
             with self.subTest(text=text):
-                self.assertEqual(_language_toolchains("Zig", patterns, (text,)), _toolchains("Zig", version))
-        for used in ("uses: goto-bus-stop/setup-zig@v2", "run: zig build test"):
+                self.assertEqual(_language_toolchains("Zig", patterns, *evidence(text)), _toolchains("Zig", version))
+        for used in ("uses: goto-bus-stop/setup-zig@v2", "zig build test"):
             with self.subTest(text=used):
-                self.assertEqual(_language_toolchains("Zig", patterns, (used,)), _toolchains("Zig", "default"))
-        self.assertEqual(_language_toolchains("Zig", patterns, ("echo zig",)), frozenset())
+                self.assertEqual(_language_toolchains("Zig", patterns, *evidence(used)), _toolchains("Zig", "default"))
+        self.assertEqual(_language_toolchains("Zig", patterns, *evidence("echo zig")), frozenset())
 
 
 class LabelledToolchainTests(unittest.TestCase):
@@ -100,8 +105,8 @@ class LabelledToolchainTests(unittest.TestCase):
         patterns = ToolchainPatterns(
             language="GHC",
             versions=(re.compile(r"\bghc-version\W+(\d+\.\d+)"),),
-            usage=re.compile(r"\bstack\b"),
+            programs=(("stack",),),
             labelled=((re.compile(r"--resolver[=\s]+(lts-[\d.]+)"), "Stackage {}"),),
         )
-        found = _language_toolchains("GHC", patterns, ("stack test --resolver lts-22 && ghc-version: 9.8",))
+        found = _language_toolchains("GHC", patterns, *evidence("stack test --resolver lts-22 && ghc-version: 9.8"))
         self.assertEqual({str(toolchain) for toolchain in found}, {"GHC 9.8", "GHC Stackage lts-22"})

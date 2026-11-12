@@ -12,7 +12,7 @@ import re
 from collections.abc import Callable, Iterator
 
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import program
@@ -486,9 +486,12 @@ CRASH_DUMPS = BuildOutput(
 # --- Recognition and toolchains -----------------------------------------------------------------------------------
 
 # Mix's own tasks (an alias, `mix ci`, is known by the setup action or version the job also names).
-_MIX_TASK = (
-    r"do|test|compile|format|credo|dialyzer|sobelow|xref|docs|release|run|new|clean|cmd|coveralls(?:\.\w+)?"
-    r"|(?:deps|hex|escript|local|archive|phx|ecto)\.\w+"
+# The mix tasks CI runs; `mix` alone is Laravel Mix as well (`npx mix --production`).
+_MIX_TASKS = (
+    *("do", "test", "compile", "format", "credo", "dialyzer", "sobelow", "xref", "docs", "release", "run", "new"),
+    *("clean", "cmd", "coveralls", "coveralls.github", "coveralls.json", "coveralls.html", "coveralls.lcov"),
+    *("deps.get", "deps.compile", "deps.unlock", "deps.audit", "hex.audit", "hex.outdated", "hex.build"),
+    *("escript.build", "local.hex", "local.rebar", "archive.install", "phx.server", "ecto.create", "ecto.migrate"),
 )
 
 _OTP = r"(\d+(?:\.\d+)*)"
@@ -511,7 +514,7 @@ BEAM = Ecosystem(
     source_suffixes={".ex": ELIXIR, ".exs": ELIXIR, ".erl": ERLANG, ".hrl": ERLANG},
     toolchain=toolchain_patterns(
         "BEAM",
-        commands=rf"\bmix\s+(?:{_MIX_TASK})\b|\brebar3\b|\berlc\b|\belixir\s+-",
+        programs=(*subcommands("mix", *_MIX_TASKS), "rebar3", "erlc", "elixir"),
         setup=("beam",),
         labelled=_BEAM_VERSIONS,
     ),

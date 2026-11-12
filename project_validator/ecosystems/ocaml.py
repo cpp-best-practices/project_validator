@@ -323,7 +323,10 @@ OCAML_ECOSYSTEM = Ecosystem(
             rf"\bocaml-(?:base-compiler|variants|system)\.{_OCAML_VERSION}",
             rf"\bopam\s+switch\s+create\s+(?:\S+\s+)?(?:--packages=)?(?:ocaml\.)?{_OCAML_VERSION}(?!\S)",
         ),
-        commands=r"\bdune\b|\bopam\b|\bocaml(?:c|opt|find|lex|dep|build)?\b|\bocamlformat\b|\bmenhir\b",
+        programs=(
+            *("dune", "opam", "ocaml", "ocamlc", "ocamlopt", "ocamlfind", "ocamllex", "ocamldep", "ocamlbuild"),
+            *("ocamlformat", "menhir"),
+        ),
         setup=("ocaml",),
     ),
 )

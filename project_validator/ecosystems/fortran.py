@@ -125,8 +125,11 @@ FPM_MANAGER = PackageManager(name="fpm", languages=FORTRAN_LANGUAGE, lock=Lock.N
 # The compilers that compile Fortran, by the family CI and the build systems name them by.
 FORTRAN_COMPILERS = frozenset({"gcc", "intel", "flang"})
 # What shows a CI job builds Fortran.
+# A job builds Fortran when it runs fpm, or names a compiler (in its environment as much as in a command), the setup
+# action or a source file.
+CI_PROGRAMS = (("fpm",),)
 CI_USAGE = re.compile(
-    r"\bgfortran\b|\bifx\b|\bifort\b|\b(?:llvm-)?flang(?:-new)?\b|\blfortran\b|\bfpm\b|\bsetup-fortran\b"
+    r"\bgfortran\b|\bifx\b|\bifort\b|\b(?:llvm-)?flang(?:-new)?\b|\blfortran\b|\bsetup-fortran\b"
     r"|\.[fF](?:90|95|03|08)\b"
 )
 
@@ -377,6 +380,7 @@ FORTRAN_ECOSYSTEM = Ecosystem(
     languages=FORTRAN_LANGUAGE,
     build_systems=(CMAKE, MESON, FPM),
     default_build_system=FPM,
+    ci_programs=CI_PROGRAMS,
     ci_usage=CI_USAGE,
     source_suffixes=dict.fromkeys(FORTRAN_SUFFIXES, FORTRAN),
     # pFUnit's test files are Fortran with directives, once the project is known to be Fortran.

@@ -166,14 +166,15 @@ def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project) 
     evidence = _evidence(job, facts)
     texts = (project.read_text(job.origin.path),) if job.heuristic else (_matrix_text(job.matrix), evidence)
     compilers = next((found for text in texts if (found := detect_compilers(text))), [])
+    run = tuple(resolved(command) for command in commands)
     return _job_with_compilers(
         job,
         f"{job.origin.path}: {job.name}" if not job.heuristic else job.origin.path,
         job.os,
         compilers,
         _configurations(commands, evidence),
-        detect_toolchains(*texts),
-        detect_ecosystems(*texts),
+        detect_toolchains(texts, run),
+        detect_ecosystems(texts, run),
         heuristic=job.heuristic,
     )
 

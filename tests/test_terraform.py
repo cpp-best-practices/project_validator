@@ -15,7 +15,7 @@ from project_validator.checks.tests_run import tests_run
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.terraform import TERRAFORM_ECOSYSTEM
-from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, temp_project
+from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, temp_project, uses
 
 PROVIDERS = {
     "main.tf": 'terraform {\n  required_providers {\n    random = { source = "hashicorp/random" }\n  }\n}\n',
@@ -160,6 +160,6 @@ class TerraformTests(unittest.TestCase):
         for text in ("tofu_version: 1.8.0", "image: hashicorp/terraform:1.9.8", "ghcr.io/opentofu/opentofu:1.8.1"):
             with self.subTest(text=text):
                 self.assertTrue(any(found.search(text) for found in versions))
-        self.assertTrue(TERRAFORM_ECOSYSTEM.used_by(job[GITHUB_WORKFLOW]))
-        self.assertTrue(TERRAFORM_ECOSYSTEM.used_by("checkov -d ."))
-        self.assertFalse(TERRAFORM_ECOSYSTEM.used_by("npm test"))
+        self.assertTrue(uses(TERRAFORM_ECOSYSTEM, job[GITHUB_WORKFLOW]))
+        self.assertTrue(uses(TERRAFORM_ECOSYSTEM, "checkov -d ."))
+        self.assertFalse(uses(TERRAFORM_ECOSYSTEM, "npm test"))

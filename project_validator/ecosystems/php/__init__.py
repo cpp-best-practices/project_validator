@@ -9,7 +9,7 @@ import json
 import re
 from collections.abc import Callable
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import option_values, program
@@ -174,7 +174,8 @@ PHP = Ecosystem(
         version=_PHP_VERSION,
         inputs=("php-version",),
         images=("php",),
-        commands=r"\bcomposer\s+(?:install|update|test|run|audit)\b|\bvendor/bin/|\bphp\s+-",
+        programs=(*subcommands("composer", "install", "update", "test", "run", "audit"), "php"),
+        directories=("vendor/bin",),
         setup=("php",),
     ),
 )

@@ -198,8 +198,8 @@ LISP_ECOSYSTEM = Ecosystem(
             rf"\bros\s+(?:install|use)\s+{_IMPLEMENTATION}\b",
             r"\bclfoundation/((?:sbcl|ccl|ecl|abcl)(?::[\w.-]+)?)",
         ),
-        commands=r"\bros\s+(?:run|install|use|exec|-[-\w]+)|\bsbcl\b|\bccl64?\b|\becl\b|\babcl\b|\bqlot\b|\brove\b"
-        r"|\bsblint\b|\b40ants/",
+        programs=("ros", "sbcl", "ccl", "ccl64", "ecl", "abcl", "qlot", "rove", "sblint"),
+        actions=("40ants/",),
         setup=("lisp",),
     ),
 )

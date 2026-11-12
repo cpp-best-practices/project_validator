@@ -16,7 +16,7 @@ from pathlib import PurePosixPath
 
 from project_validator import yaml_support
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.evidence import json_value
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
 from project_validator.facts.arguments import option_values, positional, program, starts_with
@@ -640,8 +640,12 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
         "JavaScript runtime",
         more=RUNTIME_VERSIONS,
         # Not npx alone: other ecosystems' CI runs tools such as jscpd with it.
-        commands=r"\bnpm\s+(?:ci|install|i|test|t|run)\b|\b(?:pnpm|yarn)\s+\w|\bnode\s+(?:-\S|[\w./-]+\.[mc]?[jt]s\b)"
-        r"|\bdeno\s+(?:test|task|run|check|lint|fmt)\b|\bbun\s+(?:install|test|run)\b",
+        programs=(
+            *subcommands("npm", "ci", "install", "i", "test", "t", "run"),
+            *("pnpm", "yarn", "node"),
+            *subcommands("deno", "test", "task", "run", "check", "lint", "fmt"),
+            *subcommands("bun", "install", "test", "run"),
+        ),
         setup=("deno", "bun"),
     ),
 )

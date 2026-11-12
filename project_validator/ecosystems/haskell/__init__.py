@@ -15,7 +15,7 @@ from pathlib import Path, PurePosixPath
 from project_validator import yaml_support
 from project_validator.ecosystems.haskell.cabal import CabalSyntaxError, parse, top_level
 from project_validator.ecosystems.haskell.options import HASKELL_LANGUAGE
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts.axes import versions_axis
 
 
@@ -79,6 +79,8 @@ HPACK = BuildSystem(
 _GHC_VERSION = r"(\d+\.\d+(?:\.\d+)*|latest|recommended|head)"
 GHC_VERSIONS = versions_axis("GHC version", "GHC", HASKELL_LANGUAGE)
 
+_CABAL_VERBS = ("build", "test", "run", "install")
+
 HASKELL = Ecosystem(
     label="Haskell",
     languages=HASKELL_LANGUAGE,
@@ -99,9 +101,13 @@ HASKELL = Ecosystem(
             rf"\bghcup\s+install\s+ghc\s+(?:--set\s+)?{_GHC_VERSION}",
             r"\bghc-(\d+\.\d+(?:\.\d+)*)\b",
         ),
-        commands=r"\bcabal\s+(?:v2-)?(?:build|test|run|install)\b|\bstack\s+(?:build|test)\b|\bghc\b",
+        programs=(
+            *subcommands("cabal", *_CABAL_VERBS, *(f"v2-{verb}" for verb in _CABAL_VERBS)),
+            *subcommands("stack", "build", "test"),
+            "ghc",
+        ),
+        actions=("haskell-actions/setup", "haskell/actions/setup", "haskell-ci"),
         # A Stackage snapshot pins a GHC: it names a toolchain, not a version.
         labelled=((re.compile(r"--resolver[=\s]+((?:lts|nightly)[-\w.]*)"), "Stackage {}"),),
     ),
-    ci_usage=re.compile(r"\bhaskell-actions/setup\b|\bhaskell/actions/setup\b|\bhaskell-ci\b"),
 )

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
+
 from project_validator.ecosystems import ToolchainPatterns, registered
 from project_validator.facts.jobs import Toolchain
 from project_validator.text import matching_names, pattern
@@ -47,22 +49,32 @@ def _named_versions(patterns: ToolchainPatterns, text: str) -> set[str]:
     return versions | {label.format(match[1]) for regex, label in patterns.labelled for match in regex.finditer(text)}
 
 
-def _language_toolchains(language: str, patterns: ToolchainPatterns, texts: tuple[str, ...]) -> set[Toolchain]:
+def _language_toolchains(
+    language: str, patterns: ToolchainPatterns, texts: tuple[str, ...], commands: Commands
+) -> set[Toolchain]:
     """The versions named by the first text that names any, or the runner's default when the language is only used."""
     versions = next((found for text in texts if (found := _named_versions(patterns, text))), set())
-    if not versions and any(patterns.usage.search(text) for text in texts):
+    if not versions and patterns.used_by(texts, commands):
         versions = {DEFAULT_VERSION}
     return {Toolchain(language=language, version=version) for version in versions}
 
 
-def detect_ecosystems(*texts: str) -> frozenset[str]:
-    """The labels of the registered ecosystems a CI job with `texts` builds with or runs."""
-    return frozenset(ecosystem.label for ecosystem in registered() if any(map(ecosystem.used_by, texts)))
+# The commands a job runs, each its words.
+type Commands = tuple[tuple[str, ...], ...]
 
 
-def detect_toolchains(*texts: str) -> frozenset[Toolchain]:
+def detect_ecosystems(texts: Iterable[str], commands: Commands) -> frozenset[str]:
+    """The labels of the registered ecosystems a CI job with `texts` (its matrix values, its evidence) that runs
+    `commands` builds with or runs."""
+    texts = tuple(texts)
+    return frozenset(ecosystem.label for ecosystem in registered() if ecosystem.used_by(texts, commands))
+
+
+def detect_toolchains(texts: Iterable[str], commands: Commands) -> frozenset[Toolchain]:
+    """The toolchains a CI job with `texts` that runs `commands` names, or uses without naming a version."""
+    texts = tuple(texts)
     return frozenset(
         toolchain
         for language, patterns in toolchains().items()
-        for toolchain in _language_toolchains(language, patterns, texts)
+        for toolchain in _language_toolchains(language, patterns, texts, commands)
     )

@@ -15,7 +15,16 @@ from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems import is_build_tree
 from project_validator.ecosystems.emacs_lisp import ELISP_ECOSYSTEM
-from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, run_in_layout, temp_project
+from tests.support import (
+    GITHUB_WORKFLOW,
+    github_job,
+    github_steps,
+    make_context,
+    run_as,
+    run_in_layout,
+    temp_project,
+    uses,
+)
 
 ELISP = frozenset({"Emacs Lisp"})
 TESTS = {"test/shop-test.el": "(require 'ert)\n(ert-deftest shop-total () (should (= 3 (shop-total '(1 2)))))\n"}
@@ -62,8 +71,8 @@ class RecognitionTests(unittest.TestCase):
             "uses: purcell/setup-emacs@v8.0",
         ):
             with self.subTest(text=text):
-                self.assertTrue(ELISP_ECOSYSTEM.used_by(text))
-        self.assertFalse(ELISP_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(ELISP_ECOSYSTEM, text))
+        self.assertFalse(uses(ELISP_ECOSYSTEM, "npm test"))
 
 
 class EmacsLispTests(unittest.TestCase):

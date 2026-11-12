@@ -245,7 +245,8 @@ R_ECOSYSTEM = Ecosystem(
         version=_R_VERSION,
         inputs=("r-version",),
         images=("rocker/r-ver", "rocker/tidyverse", "rocker/verse", "rocker/rstudio", "r-base"),
-        commands=r"\bRscript\b|\bR\s+(?:CMD|-e|-q|--vanilla)\b|\br-lib/actions\b",
+        programs=("Rscript", ("R", "CMD"), ("R", "-e"), ("R", "-q"), ("R", "--vanilla")),
+        actions=("r-lib/actions",),
         setup=("r",),
     ),
 )

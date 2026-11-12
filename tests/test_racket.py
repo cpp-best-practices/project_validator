@@ -13,7 +13,7 @@ from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems import is_build_tree
 from project_validator.ecosystems.racket import RACKET_ECOSYSTEM
-from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, temp_project
+from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, temp_project, uses
 
 RACKET = frozenset({"Racket"})
 TESTS = {"shop.rkt": "#lang racket/base\n(module+ test\n  (require rackunit)\n  (check-equal? 1 1))\n"}
@@ -58,8 +58,8 @@ class RecognitionTests(unittest.TestCase):
     def test_ci_usage(self) -> None:
         for text in ("raco test .", "raco pkg install --auto", "uses: Bogdanp/setup-racket@v1.16", "racket main.rkt"):
             with self.subTest(text=text):
-                self.assertTrue(RACKET_ECOSYSTEM.used_by(text))
-        self.assertFalse(RACKET_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(RACKET_ECOSYSTEM, text))
+        self.assertFalse(uses(RACKET_ECOSYSTEM, "npm test"))
 
 
 class RacketTests(unittest.TestCase):

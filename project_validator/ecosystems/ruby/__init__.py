@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 
-from project_validator.ecosystems.model import VERSION, BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import VERSION, BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.licenses import declared_license_reader
@@ -110,7 +110,7 @@ RUBY = Ecosystem(
         inputs=("ruby-version",),
         images=("ruby",),
         image_version=VERSION,
-        commands=r"\bbundle\s+(?:exec|install)\b|(?<![\w-])(?:rake|rspec)\b",
+        programs=(*subcommands("bundle", "exec", "install"), "rake", "rspec"),
         setup=("ruby",),
     ),
 )

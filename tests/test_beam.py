@@ -20,7 +20,7 @@ from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.beam import BEAM, mix_aliases, mix_tasks, rebar3_tasks
-from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_in_layout, temp_project
+from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_in_layout, temp_project, uses
 
 MIX = "Mix Elixir"
 REBAR3 = "rebar3 Erlang"
@@ -112,10 +112,10 @@ class RecognitionTests(unittest.TestCase):
     def test_ci_usage(self) -> None:
         for text in ("mix test --cover", "rebar3 as test ct", "erlc -Werror src/*.erl", "uses: erlef/setup-beam@v1"):
             with self.subTest(text=text):
-                self.assertTrue(BEAM.used_by(text))
+                self.assertTrue(uses(BEAM, text))
         for text in ("npm run mix", "a mix of things", "npx mix --production"):
             with self.subTest(text=text):
-                self.assertFalse(BEAM.used_by(text))
+                self.assertFalse(uses(BEAM, text))
 
 
 class ElixirTests(unittest.TestCase):

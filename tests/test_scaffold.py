@@ -12,6 +12,7 @@ from pathlib import Path
 
 from project_validator.ecosystems import Ecosystem
 from project_validator.scaffold import main, scaffold
+from tests.support import uses
 
 ROOT = Path(__file__).parent.parent
 
@@ -57,11 +58,11 @@ class ScaffoldTests(unittest.TestCase):
         )
         module = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
         spec.loader.exec_module(module)  # type: ignore[union-attr]
-        self.assertTrue(module.NIM.used_by("uses: jiro4989/setup-nim-action@v2\nwith:\n  nim-version: 2.0.8"))
+        self.assertTrue(uses(module.NIM, "uses: jiro4989/setup-nim-action@v2\nwith:\n  nim-version: 2.0.8"))
         [named] = (found for found in module.NIM.toolchain.versions if found.search("nim-version: 2.0.8"))
         self.assertEqual(named.search("nim-version: 2.0.8")[1], "2.0.8")
-        self.assertTrue(module.NIM.used_by("image: nim:2.0"))
-        self.assertFalse(module.NIM.used_by("echo nim"))
+        self.assertTrue(uses(module.NIM, "image: nim:2.0"))
+        self.assertFalse(uses(module.NIM, "echo nim"))
         self.assertTrue((self.root / "docs/ecosystems/nim.md").read_text(encoding="utf-8").startswith("# Nim\n"))
 
     def test_nothing_is_overwritten_and_names_are_checked(self) -> None:

@@ -18,7 +18,7 @@ from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems import is_build_tree
 from project_validator.ecosystems.r import R_ECOSYSTEM, r_code
-from tests.support import GITHUB_WORKFLOW, command, github_job, github_steps, make_context, run_as, temp_project
+from tests.support import GITHUB_WORKFLOW, command, github_job, github_steps, make_context, run_as, temp_project, uses
 
 R = frozenset({"R"})
 TESTS = {"tests/testthat/test-shop.R": 'test_that("total sums", {\n  expect_equal(total(c(1, 2)), 3)\n})\n'}
@@ -90,8 +90,8 @@ class RecognitionTests(unittest.TestCase):
     def test_ci_usage(self) -> None:
         for text in ("Rscript -e 'covr::codecov()'", "R CMD check .", "uses: r-lib/actions/setup-r@v2"):
             with self.subTest(text=text):
-                self.assertTrue(R_ECOSYSTEM.used_by(text))
-        self.assertFalse(R_ECOSYSTEM.used_by("npm test"))
+                self.assertTrue(uses(R_ECOSYSTEM, text))
+        self.assertFalse(uses(R_ECOSYSTEM, "npm test"))
 
 
 class RTests(unittest.TestCase):
