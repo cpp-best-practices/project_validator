@@ -14,6 +14,47 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "oasdiff": {
+                "can": {
+                  "breaking": "oasdiff breaking <main branch's description> <description> (or oasdiff/oasdiff-action/breaking)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "openapi-diff": {
+                "can": {
+                  "breaking": "openapi-diff <main branch's description> <description> --fail-on-incompatible"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OpenAPI",
+            "level": "breaking",
+            "runs": {
+              "oasdiff": {
+                "levels": [
+                  "breaking"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [
       {
         "auxiliary": {},
@@ -30,6 +71,68 @@
             "test_problems": [],
             "unit": ".",
             "what": "version (openapi) and info.version"
+          }
+        ]
+      }
+    ],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "dredd": {
+                "can": {
+                  "checked": "dredd <description> <base url>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "redocly": {
+                "can": {
+                  "checked": "redocly lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "schemathesis": {
+                "can": {
+                  "checked": "schemathesis run <description> --url <base url> (or st run)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "spectral": {
+                "can": {
+                  "checked": "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "vacuum": {
+                "can": {
+                  "checked": "vacuum lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OpenAPI",
+            "level": "checked",
+            "runs": {
+              "spectral": {
+                "levels": [
+                  "checked"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
           }
         ]
       }
@@ -211,7 +314,7 @@
   "results": {
     "action-pinning": {
       "details": [],
-      "message": "all 5 actions are pinned to a commit",
+      "message": "all 6 actions are pinned to a commit",
       "status": "PASS"
     },
     "ci-build-types": {
@@ -322,9 +425,19 @@
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
     },
+    "schema-compatibility": {
+      "details": [],
+      "message": "CI checks the schemas for breaking changes with oasdiff",
+      "status": "PASS"
+    },
     "schema-declared": {
       "details": [],
       "message": "1 OpenAPI file declares its version (openapi) and info.version",
+      "status": "PASS"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "CI checks the schemas' examples with spectral",
       "status": "PASS"
     },
     "schema-validation": {

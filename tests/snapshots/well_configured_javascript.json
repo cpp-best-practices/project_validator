@@ -1112,7 +1112,79 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "JavaScript",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "TypeScript",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "JavaScript",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "TypeScript",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -1844,7 +1916,17 @@
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 runtime version(s) (22, 24), 6 combination(s)",
       "status": "PASS"
     },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript",
+      "status": "SKIP"
+    },
     "schema-declared": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript",
+      "status": "SKIP"
+    },
+    "schema-examples": {
       "details": [],
       "message": "not applicable to JavaScript, TypeScript",
       "status": "SKIP"

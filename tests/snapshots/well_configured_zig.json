@@ -421,7 +421,45 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Zig",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Zig",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "Zig",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Zig",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -751,7 +789,17 @@
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Zig version(s) (0.13.0, 0.14.1), 6 combination(s)",
       "status": "PASS"
     },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to Zig",
+      "status": "SKIP"
+    },
     "schema-declared": {
+      "details": [],
+      "message": "not applicable to Zig",
+      "status": "SKIP"
+    },
+    "schema-examples": {
       "details": [],
       "message": "not applicable to Zig",
       "status": "SKIP"

@@ -429,7 +429,45 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Dart",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Dart",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -808,7 +846,17 @@
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Dart or Flutter SDK version(s) (Dart 3.5, Dart stable), 6 combination(s)",
       "status": "PASS"
     },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
     "schema-declared": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "schema-examples": {
       "details": [],
       "message": "not applicable to Dart",
       "status": "SKIP"

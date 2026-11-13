@@ -278,7 +278,45 @@
         "units": []
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "LaTeX",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "LaTeX",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -560,7 +598,17 @@
       "message": "not applicable to LaTeX",
       "status": "SKIP"
     },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
+    },
     "schema-declared": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
+    },
+    "schema-examples": {
       "details": [],
       "message": "not applicable to LaTeX",
       "status": "SKIP"

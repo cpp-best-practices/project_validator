@@ -333,7 +333,45 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Fortran",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Fortran",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -661,7 +699,17 @@
       "message": "no CI configuration found",
       "status": "FAIL"
     },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
     "schema-declared": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
+    "schema-examples": {
       "details": [],
       "message": "not applicable to Fortran",
       "status": "SKIP"

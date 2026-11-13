@@ -48,6 +48,40 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Protobuf",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "buf breaking": {
+                "can": {
+                  "breaking": "buf breaking --against .git#branch=main (or bufbuild/buf-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Protobuf",
+            "level": "breaking",
+            "runs": {
+              "buf breaking": {
+                "levels": [
+                  "breaking"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [
       {
         "auxiliary": {},
@@ -68,6 +102,7 @@
         ]
       }
     ],
+    "schema-examples": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -306,10 +341,20 @@
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
     },
+    "schema-compatibility": {
+      "details": [],
+      "message": "CI checks the schemas for breaking changes with buf breaking",
+      "status": "PASS"
+    },
     "schema-declared": {
       "details": [],
       "message": "1 Protobuf file declares its syntax (or edition) and package",
       "status": "PASS"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

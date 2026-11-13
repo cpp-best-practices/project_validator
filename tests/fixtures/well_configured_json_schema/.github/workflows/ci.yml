@@ -5,4 +5,8 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - run: pipx run check-jsonschema --schemafile schema/catalog.schema.json data/catalog.json
+      - run: npx --yes ajv-cli test -s schema/catalog.schema.json -d "examples/valid/*.json" --valid
+      - run: npx --yes ajv-cli test -s schema/catalog.schema.json -d "examples/invalid/*.json" --invalid
+      - run: git fetch --depth=1 origin main && git show origin/main:schema/catalog.schema.json > /tmp/base.schema.json
+      - run: npx --yes json-schema-diff /tmp/base.schema.json schema/catalog.schema.json
       - run: npx --yes prettier --check .
