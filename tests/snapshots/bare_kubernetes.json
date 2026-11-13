@@ -14,11 +14,234 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
-    "schema-validation": [],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Kubernetes",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "helm lint --strict": {
+                "can": {
+                  "validates": "helm lint --strict <chart>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "kubeconform": {
+                "can": {
+                  "validates": "kubeconform -strict <manifests> (helm template <chart> | kubeconform -strict)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "kubeval": {
+                "can": {
+                  "validates": "kubeval <manifests>"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Kubernetes",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [],
-    "security-scanning": [],
-    "static-analysis": [],
-    "tests": [],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Kubernetes",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "KICS": {
+                "can": {
+                  "scans": "kics scan -p ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "checkov": {
+                "can": {
+                  "scans": "checkov -d ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "kube-linter": {
+                "can": {
+                  "scans": "kube-linter lint <manifests>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "kube-score": {
+                "can": {
+                  "scans": "kube-score score <manifests>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "kyverno": {
+                "can": {
+                  "scans": "kyverno apply <policies> --resource <manifests>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "polaris": {
+                "can": {
+                  "scans": "polaris audit --audit-path <manifests>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "scans": "trivy config ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Kubernetes",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Kubernetes",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "KICS": {
+                "can": {
+                  "checks": "kics scan -p ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "chart-testing": {
+                "can": {
+                  "checks": "ct lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "checkov": {
+                "can": {
+                  "checks": "checkov -d ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "helm lint": {
+                "can": {
+                  "checks": "helm lint <chart>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "kube-linter": {
+                "can": {
+                  "checks": "kube-linter lint <manifests> (or stackrox/kube-linter-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "kube-score": {
+                "can": {
+                  "checks": "kube-score score <manifests>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "kyverno": {
+                "can": {
+                  "checks": "kyverno apply <policies> --resource <manifests>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "polaris": {
+                "can": {
+                  "checks": "polaris audit --audit-path <manifests>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "checks": "trivy config ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Kubernetes",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Kubernetes",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "helm test": {
+                "can": {
+                  "runs": "helm test <release> (or ct install, which installs the chart and runs its test hooks)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "helm-unittest": {
+                "can": {
+                  "runs": "helm unittest <chart>"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Kubernetes",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [],
     "vcs-ignore": [],
     "warnings-as-errors": [],

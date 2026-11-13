@@ -16,9 +16,124 @@
     "platforms": [],
     "schema-validation": [],
     "secret-scanning": [],
-    "security-scanning": [],
-    "static-analysis": [],
-    "tests": [],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "GitHub Action",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "zizmor": {
+                "can": {
+                  "scans": "zizmor . (or zizmorcore/zizmor-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "GitHub Action",
+            "level": "scans",
+            "runs": {
+              "zizmor": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": [
+              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
+              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
+              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])"
+            ]
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "GitHub Action",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "actionlint": {
+                "can": {
+                  "checks": "actionlint (or rhysd/actionlint)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "GitHub Action",
+            "level": "checks",
+            "runs": {
+              "actionlint": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": [
+              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
+              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
+              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])"
+            ]
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "GitHub Action",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "the action's own workflow": [
+                ".github/workflows/ci.yml"
+              ]
+            },
+            "known": {
+              "the action's own workflow": {
+                "can": {
+                  "runs": "a workflow step `uses: ./`, which runs the action from the checkout"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "GitHub Action",
+            "level": "runs",
+            "runs": {
+              "the action's own workflow": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": [
+              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
+              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
+              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])"
+            ]
+          }
+        ]
+      }
+    ],
     "type-checking": [],
     "vcs-ignore": [],
     "warnings-as-errors": [],

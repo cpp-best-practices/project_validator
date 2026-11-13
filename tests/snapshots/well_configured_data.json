@@ -7,14 +7,189 @@
     "coverage": [],
     "dependency-audit": [],
     "dependency-management": [],
-    "formatting": [],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "JSON Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "biome": {
+                "can": {
+                  "apply": "biome format --write .",
+                  "check": "biome format . (or biome ci .)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "prettier": {
+                "can": {
+                  "apply": "prettier --write .",
+                  "check": "prettier --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JSON Schema",
+            "level": "check",
+            "runs": {
+              "prettier": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "prettier": {
+                "can": {
+                  "apply": "prettier --write .",
+                  "check": "prettier --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "XML Schema",
+            "level": "check",
+            "runs": {
+              "prettier": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "function-limits": [],
     "fuzz-testing": [],
     "hardening": [],
     "license": [],
     "mutation-testing": [],
     "platforms": [],
-    "schema-validation": [],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "JSON Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "ajv": {
+                "can": {
+                  "validates": "ajv validate -s <schema> -d <documents> (ajv-cli)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "check-jsonschema": {
+                "can": {
+                  "validates": "check-jsonschema --schemafile <schema> <documents>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "jsonschema": {
+                "can": {
+                  "validates": "jsonschema -i <document> <schema>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "jv": {
+                "can": {
+                  "validates": "jv <schema> <documents>"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JSON Schema",
+            "level": "validates",
+            "runs": {
+              "check-jsonschema": {
+                "levels": [
+                  "validates"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "SchXslt": {
+                "can": {
+                  "validates": "schxslt -s <schema.sch> -d <document>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "jing": {
+                "can": {
+                  "validates": "jing <schema> <documents> (RELAX NG, or an XSD with -c)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "xmllint": {
+                "can": {
+                  "validates": "xmllint --noout --schema <schema> <documents> (or --relaxng, --schematron)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "XML Schema",
+            "level": "validates",
+            "runs": {
+              "xmllint": {
+                "levels": [
+                  "validates"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [],
     "security-scanning": [],
     "static-analysis": [],

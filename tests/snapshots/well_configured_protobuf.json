@@ -7,17 +7,128 @@
     "coverage": [],
     "dependency-audit": [],
     "dependency-management": [],
-    "formatting": [],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Protobuf",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "buf format": {
+                "can": {
+                  "apply": "buf format -w",
+                  "check": "buf format --diff --exit-code"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Protobuf",
+            "level": "check",
+            "runs": {
+              "buf format": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "function-limits": [],
     "fuzz-testing": [],
     "hardening": [],
     "license": [],
     "mutation-testing": [],
     "platforms": [],
-    "schema-validation": [],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Protobuf",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "buf build": {
+                "can": {
+                  "validates": "buf build (or bufbuild/buf-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "protoc": {
+                "can": {
+                  "validates": "protoc --proto_path=proto proto/**/*.proto"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Protobuf",
+            "level": "validates",
+            "runs": {
+              "buf build": {
+                "levels": [
+                  "validates"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [],
     "security-scanning": [],
-    "static-analysis": [],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Protobuf",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "buf lint": [
+                "buf.yaml"
+              ]
+            },
+            "known": {
+              "buf lint": {
+                "can": {
+                  "checks": "buf lint"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Protobuf",
+            "level": "checks",
+            "runs": {
+              "buf lint": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "tests": [],
     "type-checking": [],
     "vcs-ignore": [],

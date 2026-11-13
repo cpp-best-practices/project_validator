@@ -5,7 +5,54 @@
     "committed-artifacts": [],
     "compiler-warnings": [],
     "coverage": [],
-    "dependency-audit": [],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "Dockerfile",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "Docker Scout": {
+                "can": {
+                  "runs": "docker scout cves <image> (or docker/scout-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "grype": {
+                "can": {
+                  "runs": "grype <image> (or anchore/scan-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy image <image> (or aquasecurity/trivy-action, which scans an image unless told otherwise)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dockerfile",
+            "level": "runs",
+            "runs": {
+              "trivy": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "dependency-management": [],
     "formatting": [],
     "function-limits": [],
@@ -16,8 +63,132 @@
     "platforms": [],
     "schema-validation": [],
     "secret-scanning": [],
-    "security-scanning": [],
-    "static-analysis": [],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Dockerfile",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "KICS": {
+                "can": {
+                  "scans": "kics scan -p ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "checkov": {
+                "can": {
+                  "scans": "checkov -d ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "hadolint": {
+                "can": {
+                  "scans": "hadolint Dockerfile (its security rules: a non-root USER, pinned versions)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "scans": "trivy config ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dockerfile",
+            "level": "scans",
+            "runs": {
+              "hadolint": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              },
+              "trivy": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Dockerfile",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "hadolint": [
+                ".hadolint.yaml"
+              ]
+            },
+            "known": {
+              "KICS": {
+                "can": {
+                  "checks": "kics scan -p ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "checkov": {
+                "can": {
+                  "checks": "checkov -d ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "hadolint": {
+                "can": {
+                  "checks": "hadolint Dockerfile (or hadolint/hadolint-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "checks": "trivy config ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Dockerfile",
+            "level": "checks",
+            "runs": {
+              "hadolint": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              },
+              "trivy": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "tests": [],
     "type-checking": [],
     "vcs-ignore": [],

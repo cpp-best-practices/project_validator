@@ -53,6 +53,9 @@ class Definition:
     default: bool = True
     # What defines it, for findings (`Test functions in *_test.go files`).
     describe: str = ""
+    # The kinds of file that define it, when `describe` joins several (a runner's test kinds), so that what several
+    # tools share is said once.
+    kinds: tuple[str, ...] = ()
     # Whether what a unit of tests (a separate test project, `tests/App.Tests`) defines counts for every unit.
     from_test_units: bool = False
 

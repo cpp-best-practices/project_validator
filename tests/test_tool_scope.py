@@ -30,3 +30,13 @@ class ToolScopeTests(unittest.TestCase):
         for command in commands:
             with self.subTest(command=command):
                 self.assertEqual(self._scopes(command), {(".",)})
+
+
+class ToolsAskedTests(unittest.TestCase):
+    def test_only_the_tools_of_the_projects_languages_and_formats_record_runs(self) -> None:
+        """A shared tool serves many languages; its run is recorded for the project's, not for every one it serves."""
+        ci = github_job("ubuntu-latest", "cargo test", "ruff format --check src", "kcov coverage bats tests")
+        with temp_project({**PROJECT, **ci}) as root:
+            runs = make_context(root).facts.of(ToolRun)
+        self.assertEqual({run.tool for run in runs}, {"ruff format"})
+        self.assertTrue(all("Python" in run.languages for run in runs))

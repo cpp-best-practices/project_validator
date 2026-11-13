@@ -16,9 +16,163 @@
     "platforms": [],
     "schema-validation": [],
     "secret-scanning": [],
-    "security-scanning": [],
-    "static-analysis": [],
-    "tests": [],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Ansible",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "KICS": {
+                "can": {
+                  "scans": "kics scan -p ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ansible-lint": {
+                "can": {
+                  "scans": "ansible-lint (its risky-* and no-log rules)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "checkov": {
+                "can": {
+                  "scans": "checkov -d . --framework ansible"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ansible",
+            "level": "scans",
+            "runs": {
+              "ansible-lint": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              },
+              "checkov": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Ansible",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "ansible-lint": [
+                ".ansible-lint"
+              ]
+            },
+            "known": {
+              "KICS": {
+                "can": {
+                  "checks": "kics scan -p ."
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ansible-lint": {
+                "can": {
+                  "checks": "ansible-lint (or ansible/ansible-lint)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "checkov": {
+                "can": {
+                  "checks": "checkov -d . --framework ansible"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Ansible",
+            "level": "checks",
+            "runs": {
+              "ansible-lint": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              },
+              "checkov": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Ansible",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "molecule": [
+                "molecule/default/molecule.yml"
+              ]
+            },
+            "known": {
+              "ansible-test": {
+                "can": {
+                  "runs": "ansible-test integration (in a collection)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "molecule": {
+                "can": {
+                  "runs": "molecule test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Ansible",
+            "level": "runs",
+            "runs": {
+              "molecule": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [],
     "vcs-ignore": [],
     "warnings-as-errors": [],

@@ -170,12 +170,15 @@ def answer_dict(answer: UnitAnswer, verdict: Answer | None = None, /, **fields: 
 
 LANGUAGES: frozenset[Kind] = frozenset({"language"})
 FORMATS: frozenset[Kind] = frozenset({"format"})
+EVERY_KIND: frozenset[Kind] = LANGUAGES | FORMATS
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Question:
     """A question about the project, answered per language from the facts, for the `kinds` of ecosystem it is about:
-    languages (the default), formats (what parses), or both (what is formatted). Questions are found, never listed."""
+    languages (the default), formats (what parses), or both (what is formatted, linted, scanned, tested, built and
+    validated: a format's hygiene, listed for a format only where some tool could provide it). Questions are found,
+    never listed."""
 
     name: str
     description: str
@@ -189,6 +192,7 @@ def known_questions() -> tuple[Question, ...]:
 
 
 __all__ = [
+    "EVERY_KIND",
     "FORMATS",
     "LANGUAGES",
     "Answer",

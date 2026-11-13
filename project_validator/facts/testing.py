@@ -85,7 +85,7 @@ def tests_of(*kinds: str) -> Definition:
     def found(facts: Facts) -> Iterator[str]:
         return (test.origin.path for test in facts.of(TestFile) if test.kind in names)
 
-    return Definition(found=found, default=False, describe=" or ".join(kinds), from_test_units=True)
+    return Definition(found=found, default=False, describe=" or ".join(kinds), kinds=tuple(kinds), from_test_units=True)
 
 
 def test_runner(

@@ -30,6 +30,7 @@ from tests.support import (
     make_context,
     run_as,
     run_in_every_layout,
+    run_in_layout,
     temp_project,
 )
 
@@ -227,3 +228,13 @@ class MixedLanguageTestsRunTests(unittest.TestCase):
             result,
             Result.failed("C/C++: tests found in 2 file(s); Python: no tests found (test_*.py or *_test.py files)"),
         )
+
+
+class TestKindsTests(unittest.TestCase):
+    def test_the_kinds_several_runners_share_are_said_once(self) -> None:
+        """rebar3 eunit, rebar3 ct and mix test share Erlang's test kinds; the message lists each kind once."""
+        result = run_in_layout(self, "rebar3 Erlang", tests_run, {})
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertEqual(result.message.count("EUnit tests (*_test() functions)"), 1)
+        self.assertEqual(result.message.count("Common Test suites (*_SUITE.erl)"), 1)
+        self.assertIn(" or ", result.message)

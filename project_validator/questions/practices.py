@@ -15,7 +15,15 @@ from project_validator.facts.practices import (
     met,
     practices_of,
 )
-from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, language_wide, unknowns_for
+from project_validator.questions import (
+    EVERY_KIND,
+    Answer,
+    LanguageAnswers,
+    Question,
+    answer_dict,
+    language_wide,
+    unknowns_for,
+)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -128,6 +136,7 @@ WARNINGS_AS_ERRORS_QUESTION = Question(
     name=PracticeName.WARNINGS_AS_ERRORS,
     description="Do warnings fail the build for each language?",
     answer=error_answers,
+    kinds=EVERY_KIND,
 )
 
 __all__ = [

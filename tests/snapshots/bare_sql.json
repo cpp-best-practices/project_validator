@@ -658,7 +658,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (dbt schema tests (tests: in the models' YAML) or dbt singular tests (tests/*.sql) or pgTAP tests (SELECT plan(...) in tests/*.sql))",
+      "message": "no tests found (dbt schema tests (tests: in the models' YAML), dbt singular tests (tests/*.sql) or pgTAP tests (SELECT plan(...) in tests/*.sql))",
       "status": "FAIL"
     },
     "type-checking": {

@@ -177,12 +177,13 @@ A project is recognised as an ecosystem by any of:
 - `BuildSystem.files`: exact names (`build.zig`), file name patterns (`*.csproj`) or directory patterns
   ending in `/` (`*.xcodeproj/`), matched anywhere in the project;
 - `source_suffixes`: suffixes only this ecosystem uses;
-- `detect`: a probe that reads the project (e.g. `project.read_head(path)`) and returns the languages it found,
-  for ecosystems that file names cannot show;
+- `source_names`: file names, or name patterns, of sources with no telling suffix (`Dockerfile`, `Dockerfile.*`);
+- `detect`: a probe that reads the project (e.g. `project.read_head(path)`) and returns the languages, or formats,
+  it found, for ecosystems that file names cannot show (a Kubernetes manifest is YAML with `apiVersion` and `kind`);
 - `ambiguous_suffixes`: suffixes other ecosystems may share (`.h`, `.pl`), counted only once the ecosystem
   was recognised another way. A suffix mapped to `None` is accounted for without adding a language.
 
-Registering an ecosystem that claims another one's build file or source suffix is an error.
+Registering an ecosystem that claims another one's build file, source suffix or source name is an error.
 `--map` lists the suffixes no ecosystem recognises, so the gaps are visible.
 
 

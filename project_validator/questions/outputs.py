@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from project_validator.facts import ConfigurationFile, Facts
 from project_validator.facts.outputs import BuildOutput, CommittedOutput, IgnoreEntry, known_build_outputs, outputs_of
 from project_validator.facts.structure import BuildFile
-from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict
+from project_validator.questions import EVERY_KIND, Answer, LanguageAnswers, Question, answer_dict
 from project_validator.tools.version_control import IGNORE_FILES
 
 
@@ -109,11 +109,13 @@ VCS_IGNORE_QUESTION = Question(
     name="vcs-ignore",
     description="Do the project's ignore files keep each language's build outputs out of version control?",
     answer=ignored_outputs,
+    kinds=EVERY_KIND,
 )
 COMMITTED_ARTIFACTS_QUESTION = Question(
     name="committed-artifacts",
     description="Is no build output of each language committed?",
     answer=committed_outputs,
+    kinds=EVERY_KIND,
 )
 
 __all__ = [

@@ -2,7 +2,22 @@
   "answers": {
     "action-pinning": [],
     "ci-lint": [],
-    "committed-artifacts": [],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "MkDocs",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "site/"
+            ],
+            "language": "MkDocs",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "compiler-warnings": [],
     "coverage": [],
     "dependency-audit": [],
@@ -17,11 +32,112 @@
     "schema-validation": [],
     "secret-scanning": [],
     "security-scanning": [],
-    "static-analysis": [],
-    "tests": [],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "MkDocs",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "markdownlint": {
+                "can": {
+                  "checks": "markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "vale": {
+                "can": {
+                  "checks": "vale docs (or errata-ai/vale-action)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "MkDocs",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "MkDocs",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {
+              "MkDocs build": [
+                "mkdocs.yml"
+              ]
+            },
+            "known": {
+              "MkDocs build": {
+                "can": {
+                  "runs": "mkdocs build --strict"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "MkDocs",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [],
-    "vcs-ignore": [],
-    "warnings-as-errors": [],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "MkDocs",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "MkDocs",
+            "outputs": {
+              "the MkDocs site site/": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "MkDocs",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "mkdocs build --strict"
+                ]
+              }
+            ],
+            "language": "MkDocs",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "wellformed": [
       {
         "auxiliary": {},

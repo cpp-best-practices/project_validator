@@ -128,14 +128,17 @@ project's facts.
 ### Structure: languages, formats, units and roles
 
 The structure stage (`project_validator/facts/structure.py`) records every source file with its language
-(`SourceFile`), every build file with the languages it builds (`BuildFile`), what content probes found, the
-suffixes no ecosystem accounts for, and the project's units. The project map (`--map`, `project_validator/project_map.py`)
+(`SourceFile`: by suffix, or by name where the suffix tells nothing, `Ecosystem.source_names`), every build file with
+the languages it builds (`BuildFile`), what content probes found (`ContentLanguages`: a language, or a format whose
+files are another format's, like the YAML of a Kubernetes manifest or an Ansible playbook, which goes to the project's
+and the root unit's formats), the suffixes no ecosystem accounts for, and the project's units. The project map (`--map`, `project_validator/project_map.py`)
 is a view over these facts.
 
 An ecosystem is a **language** or a **format** (`Ecosystem.kind`, `project_validator/ecosystems/model.py`). A format
-is a kind of file that is not a program: JSON, YAML, TOML, XML; later Markdown, Dockerfiles, Kubernetes manifests.
-It has no toolchain, tests, coverage or dependencies; what can be asked of it is hygiene: its files parse, validate
-against their schema, are formatted, are linted. Everything downstream of recognition is keyed on a name: a format's
+is a kind of file that is not a program: JSON, YAML, TOML, XML, a Dockerfile, a Kubernetes manifest, a notebook, a
+schema, a documentation site's configuration. It has no toolchain, coverage or dependencies; what can be asked of it
+is hygiene: its files parse, validate against their schema (`schema-validation`), are formatted, are linted, are
+scanned, are built or run where a tool does (a chart's tests, a notebook's execution, a site's build). Everything downstream of recognition is keyed on a name: a format's
 `languages` hold its format names, so a tool that handles `"YAML"` makes its check apply to the format, and a
 question answers for a format in the units whose files are in it (`Unit.formats`, beside `Unit.languages`). What is
 kept apart is the project's languages: `--map` lists `formats` beside `languages`, a format never makes a C++ project
@@ -152,7 +155,8 @@ belong to the root unit.
 
 Every source file and unit has a **role** (`project_validator/facts/roles.py`), told by the directories it is in
 (above any source root such as `src` or `lib`, so `com/example/App.java` is product code): `product`, `test`,
-`example`, `docs`, `tooling`, `benchmark`, or `vendored` (below a vendor directory anywhere, or a minified bundle).
+`example`, `docs`, `tooling`, `benchmark`, `template` (below a `templates` directory: rendered before it is read, so a
+data file there is noted, not parsed), or `vendored` (below a vendor directory anywhere, or a minified bundle).
 A role names code; it judges none: every source outside vendored directories is the product's, whatever its role,
 and adds its language to its unit. `--auxiliary` dials that back (`project_validator/facts/auxiliary.py`): what it
 names, by role (`tooling`), by language or ecosystem (`python`, `c/c++`) or by directory (`scripts/`), is recorded as
@@ -196,7 +200,9 @@ per *aspect* it can provide (`coverage`, `format`, `analysis`, `type-check`, `te
 `function-length`, `fuzz`, `mutation`), the levels it can provide and how to ask for each (`can`). It claims commands
 (`claims(command, facts)`: `starts`, `when`, `flagged`, `with_option`, `all_of`, `any_of` spell the common claims)
 and reads only facts. A claimed command is a `ToolRun`: job, tool, languages, the aspects and levels that run
-provides, the settings files it read, and its scope (its working directory). A tool that serves several practices
+provides, the settings files it read, and its scope (its working directory); only the tools of the project's own
+languages and formats are asked, so a shared tool's run is recorded for the project, not for every language the tool
+serves. A tool that serves several practices
 (ruff formats and lints) is one tool with several aspects (`combined`); each tool handles only its own languages
 (ktlint formats Kotlin, not Java). `Tool.required` marks an analyzer that must run alongside the others.
 
@@ -238,7 +244,8 @@ project, per language (or format), in each unit of the project that has the lang
 for Python?", "are warnings errors for C++?", "which OS/toolchain/configuration combinations does CI build?"
 Questions are the stable, machine-readable interface (`--answers`); checks and other consumers depend on them, never
 on extractors. A question says which kinds of ecosystem it is about (`Question.kinds`), so a format is not asked
-about coverage.
+about coverage; where a format is asked (tests, formatting, analysis, security, audit, outputs, schema validation),
+`--answers` lists its answer only where some tool could give one, so the YAML every project holds adds no lines.
 
 An answer is one of:
 

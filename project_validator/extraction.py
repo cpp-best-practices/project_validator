@@ -74,7 +74,10 @@ def extract_facts(context: Context) -> Facts:
     found = _stage(
         "the settings", lambda: found + settings.settings_facts(context, settings.known_settings_readers(), found)
     )
-    return _stage("the tool runs", lambda: found + tools.tool_runs(found, tools.known_tools()))
+    # Only the tools of the project's languages and formats can run on it: a run of another language's tool answers
+    # nothing a question asks, and would only grow the facts with every profile that shares the tool.
+    used = tuple(tool for tool in tools.known_tools() if tool.languages & names)
+    return _stage("the tool runs", lambda: found + tools.tool_runs(found, used))
 
 
 __all__ = ["extract_facts"]

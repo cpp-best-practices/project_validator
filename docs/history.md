@@ -423,4 +423,15 @@ except where a step deliberately changes results and says so.
     project's data files a `DataFile` fact parsed once at extraction, and `data-wellformed` a question and a policy
     judged per format and per unit, like every other check. `NOT_SOURCE_SUFFIXES` loses what the format claims.
 
+12. **The ecosystem roadmap** (upstream #176, a stack of thirteen changes). Fourteen more ecosystems, most of them
+    formats, which the design took without a new concept: sources recognised by name (`Ecosystem.source_names`, a
+    Dockerfile); formats recognised by content (a probe may return formats, which go to the root unit); a `template`
+    role, so a Helm chart's manifests are noted rather than parsed; test files written in another format
+    (`TestFiles.written_in`, a chart's YAML tests); the formats' build outputs among what can be committed; a new
+    aspect, `schema`, with the `schema-validation` check over it; `policy/tooling.required` beside `advised`. Shared
+    at their second user: kcov, EditorConfig, the misconfiguration scanners, prettier. The tool runs recorded are
+    the project's own languages' and formats', so a shared tool no longer grows every fixture's facts with each
+    profile that adopts it; `--answers` lists a format's answers to the questions it is asked where a tool could give
+    one.
+
 `--facts` and `--answers` expose the database and the answers.

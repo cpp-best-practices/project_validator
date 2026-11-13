@@ -18,7 +18,8 @@ def judge_tests(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
     if not files and answer.unknown_definitions and not allow_unknown:
         return unknown("whether there are tests", answer.unknown_definitions)
     if not files:
-        kinds = dict.fromkeys(tool.describe for tool in answer.known if tool.describe)
+        # The kinds, not the runners' descriptions: two runners of the same kinds say them once.
+        kinds = dict.fromkeys(kind for tool in answer.known for kind in (tool.kinds or (tool.describe,)) if kind)
         return Result.failed(f"no tests found ({either(kinds)})" if kinds else "no tests found")
     found = f"tests found in {len(files)} file(s)"
     if answer.answer is Answer.YES:

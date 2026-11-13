@@ -4,7 +4,7 @@ CI run its static analyzers (with the checks the project defines) and type check
 from __future__ import annotations
 
 from project_validator.facts.analysis import ANALYSIS, CHECKS, TYPE_CHECK, Strictness
-from project_validator.questions import Question
+from project_validator.questions import EVERY_KIND, Question
 from project_validator.questions.tooling import aspect_answers
 
 static_analysis = aspect_answers(ANALYSIS, CHECKS)
@@ -14,6 +14,7 @@ STATIC_ANALYSIS_QUESTION = Question(
     name="static-analysis",
     description="Does CI run static analyzers on each language in each unit, and where are their checks defined?",
     answer=static_analysis,
+    kinds=EVERY_KIND,
 )
 TYPE_CHECKING_QUESTION = Question(
     name="type-checking",
