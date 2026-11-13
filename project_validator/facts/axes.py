@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from project_validator.components import known
+from project_validator.facts import Facts
 from project_validator.facts.jobs import Job
 
 
@@ -38,9 +39,16 @@ class ToolchainAxis:
     of_job: Callable[[Job], frozenset[str]]
     runner_default: Callable[[Job], bool] = _never
     compiled: bool = False
+    # Reads the job's toolchains with the project's facts too (what its build file names), where a job alone does not
+    # tell: an sbt cross-build runs every `crossScalaVersions` of the build.
+    of_job_in: Callable[[Job, Facts], frozenset[str]] | None = None
 
     def plural(self) -> str:
         return f"{self.noun}s"
+
+    def toolchains(self, job: Job, facts: Facts) -> frozenset[str]:
+        """The job's toolchains: from the job, and from the project's facts where the axis reads them."""
+        return self.of_job_in(job, facts) if self.of_job_in is not None else self.of_job(job)
 
 
 def versions_axis(noun: str, toolchain: str, languages: frozenset[str], *, compiled: bool = False) -> ToolchainAxis:

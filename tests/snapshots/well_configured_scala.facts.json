@@ -1443,8 +1443,18 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "build.sbt",
+      "reader": "Scala build"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "project/plugins.sbt",
       "reader": "Scala compiler options"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "project/plugins.sbt",
+      "reader": "Scala build"
     },
     {
       "heuristic": false,
