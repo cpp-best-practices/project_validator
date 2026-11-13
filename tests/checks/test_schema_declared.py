@@ -16,7 +16,7 @@ from tests.layouts.json_schema import SCHEMA
 from tests.layouts.openapi import ASYNCAPI, OPENAPI
 from tests.layouts.protobuf import PROTO
 from tests.layouts.tabular_data import DATAPACKAGE
-from tests.layouts.xml_schemas import XSD
+from tests.layouts.xml_schemas import CATALOG, XSD
 from tests.support import make_context, temp_project
 
 DRAFT_07 = SCHEMA.replace("https://json-schema.org/draft/2020-12/schema", "http://json-schema.org/draft-07/schema#")
@@ -84,6 +84,59 @@ class SchemaDeclaredTests(unittest.TestCase):
                 self.assertRegex(result.message, r"^1 \w[\w ]* file does not declare its ")
         result = _run({"a.schema.json": "{}\n", "b.schema.json": "{}\n", "c.schema.json": SCHEMA})
         self.assertEqual(result.message, "2 JSON Schema files do not declare their dialect ($schema) and $id")
+
+    def test_a_document_of_a_schema_names_the_schemas_location(self) -> None:
+        schema = {"schema/catalog.xsd": XSD}
+        both = "2 XML Schema files declare their targetNamespace or schema location"
+        # `xsi:schemaLocation` on the root element, in the schema's namespace.
+        self.assertEqual(_run({**schema, "data/catalog.xml": CATALOG}), Result.passed(both))
+        # An `xml-model` processing instruction before it.
+        model = CATALOG.replace("?>\n<catalog", '?>\n<?xml-model href="../schema/catalog.xsd"?>\n<catalog', 1)
+        unnamed = model.split("<?xml-model")[0] + '<catalog xmlns="urn:example:catalog"/>\n'
+        self.assertEqual(_run({**schema, "data/catalog.xml": model}), Result.passed(both))
+        self.assertEqual(
+            _run({**schema, "data/catalog.xml": unnamed}),
+            Result.failed(
+                "1 XML Schema file does not declare its targetNamespace or schema location",
+                "data/catalog.xml: no schema location",
+            ),
+        )
+        # A schema with no namespace describes the documents whose root is one of its global elements.
+        without = '<catalog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" {}/>\n'
+        bare = {"schema/catalog.xsd": BARE_XSD}
+        located = without.format('xsi:noNamespaceSchemaLocation="../schema/catalog.xsd"')
+        result = _run({**bare, "data/catalog.xml": located})
+        self.assertEqual((result.status, result.details), (Status.FAIL, ("schema/catalog.xsd: no targetNamespace",)))
+        result = _run({**bare, "data/catalog.xml": without.format("")})
+        self.assertEqual(
+            result.details, ("schema/catalog.xsd: no targetNamespace", "data/catalog.xml: no schema location")
+        )
+
+    def test_xml_of_other_schemas_is_not_a_document_of_the_projects(self) -> None:
+        # A build file in its own namespace, a settings file of no namespace and another root, files that do not
+        # parse (`data-wellformed` says so; a schema among them describes nothing) and a test suite's document,
+        # which is reported, not judged.
+        files = {
+            "schema/catalog.xsd": XSD,
+            "schema/broken.xsd": "<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'",
+            "empty.xml": "",
+            "pom.xml": '<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion></project>\n',
+            "settings.xml": "<settings><item/></settings>\n",
+            "broken.xml": "<catalog xmlns='urn:example:catalog'>\n",
+            "tests/data/catalog.xml": '<catalog xmlns="urn:example:catalog"/>\n',
+        }
+        self.assertEqual(
+            _run(files),
+            Result.passed(
+                DECLARED.format("1 XML Schema file", "targetNamespace or schema location"),
+                "test data, not judged: tests/data/catalog.xml: no schema location",
+            ),
+        )
+        # Without a schema that describes them, no document is asked anything.
+        self.assertEqual(
+            _run({"schema/catalog.xsd": "<not-a-schema/>\n", "data/catalog.xml": CATALOG}),
+            Result.passed("no XML Schema file to judge"),
+        )
 
     def test_a_superseded_dialect_warns(self) -> None:
         result = _run({"schema/catalog.schema.json": DRAFT_07})

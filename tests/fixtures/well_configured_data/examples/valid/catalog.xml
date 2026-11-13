@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<catalog xmlns="urn:example:catalog">
+<catalog xmlns="urn:example:catalog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="urn:example:catalog ../../schema/catalog.xsd">
   <item name="apple" price="1"/>
   <item name="pear" price="2"/>
 </catalog>

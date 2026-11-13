@@ -98,14 +98,16 @@
           {
             "answer": "yes",
             "declared": [
-              "schema/catalog.xsd"
+              "schema/catalog.xsd",
+              "data/catalog.xml",
+              "examples/valid/catalog.xml"
             ],
             "language": "XML Schema",
             "outdated": [],
             "problems": [],
             "test_problems": [],
             "unit": ".",
-            "what": "targetNamespace"
+            "what": "targetNamespace or schema location"
           }
         ]
       }
@@ -437,7 +439,7 @@
     },
     "schema-declared": {
       "details": [],
-      "message": "1 XML Schema file declares its targetNamespace",
+      "message": "3 XML Schema files declare their targetNamespace or schema location",
       "status": "PASS"
     },
     "schema-examples": {

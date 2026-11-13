@@ -16,7 +16,8 @@ from project_validator.questions import FORMATS, Answer, LanguageAnswers, Questi
 @dataclass(frozen=True, slots=True, kw_only=True)
 class DeclarationAnswer:
     """Whether the schemas of one format in one unit ("." for the project's root unit) declare themselves: `what` is
-    asked of each; `declared`, the judged schemas that declare it all; `problems`, what each judged schema leaves out
+    asked of each (joined with "or" when a format's schemas and their documents are asked different things);
+    `declared`, the judged schemas that declare it all; `problems`, what each judged schema leaves out
     (`path: no $id`); `outdated`, which declare a superseded dialect and why; `test_problems`, the problems of a test
     suite's schemas, which may be undeclared on purpose. `possible` is false for a format no schema of which declares
     anything."""
@@ -70,7 +71,7 @@ def declaration_answer(format_: str, facts: Facts, unit: str = ".") -> Declarati
     return DeclarationAnswer(
         language=format_,
         unit=unit,
-        what=next((schema.what for schema in schemas), ""),
+        what=" or ".join(dict.fromkeys(schema.what for schema in schemas)),
         declared=tuple(schema.path for schema in judged if not schema.missing),
         problems=_problems(judged),
         outdated=tuple(f"{schema.path}: {schema.outdated}" for schema in judged if schema.outdated),

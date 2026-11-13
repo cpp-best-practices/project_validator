@@ -24,8 +24,13 @@ the JavaScript profile reads it.
 
 ## `schema-declared`
 
-Every XSD declares its `targetNamespace`. RELAX NG and Schematron schemas name no namespace of their own and are not
-asked.
+Every XSD declares its `targetNamespace`, and every document of one of the project's XSDs names the schema's location,
+so that an editor or a validator finds it without being told: `xsi:schemaLocation` (or `xsi:noNamespaceSchemaLocation`,
+for a schema with no namespace) on the root element, or an `<?xml-model href="…"?>` processing instruction before it.
+A document is one of a schema's when its root element is in the schema's `targetNamespace`, or is a global element of
+a schema that has none; other XML (a build file, a stylesheet, a document of another schema) is not asked. A document
+under a test directory is reported, not judged. RELAX NG and Schematron schemas name no namespace of their own and are
+not asked.
 
 ## `schema-examples`
 
@@ -34,5 +39,6 @@ examples. Warns when CI checks none.
 
 ## Not judged
 
-The other schema practices of #86 are not yet built: a schema's `elementFormDefault`, a document naming its schema (`xsi:schemaLocation`, `<?xml-model?>`), and valid and invalid example documents. The
-other checks have no tool for schemas or stylesheets and are skipped.
+A schema's `elementFormDefault` is a choice (whether local elements are qualified) with a defined default, not a
+declaration a schema can leave out, so it is not asked. The other checks have no tool for schemas or stylesheets and
+are skipped.

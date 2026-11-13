@@ -23,10 +23,14 @@ XSD = """\
   </xs:element>
 </xs:schema>
 """
-CATALOG = (
-    '<?xml version="1.0" encoding="UTF-8"?>\n<catalog xmlns="urn:example:catalog">\n  <item name="apple" price="1"/>\n'
-    '  <item name="pear" price="2"/>\n</catalog>\n'
-)
+CATALOG = """\
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:example:catalog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="urn:example:catalog ../schema/catalog.xsd">
+  <item name="apple" price="1"/>
+  <item name="pear" price="2"/>
+</catalog>
+"""
 XSL = """\
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="3.0"

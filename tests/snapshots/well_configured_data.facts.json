@@ -283,6 +283,30 @@
       "what": "targetNamespace"
     },
     {
+      "declared": {
+        "schema location": "urn:example:catalog ../schema/catalog.xsd"
+      },
+      "format": "XML Schema",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "data/catalog.xml",
+      "outdated": null,
+      "role": "product",
+      "what": "schema location"
+    },
+    {
+      "declared": {
+        "schema location": "urn:example:catalog ../../schema/catalog.xsd"
+      },
+      "format": "XML Schema",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "examples/valid/catalog.xml",
+      "outdated": null,
+      "role": "example",
+      "what": "schema location"
+    },
+    {
       "kind": "CiConfiguration",
       "origin": ".github/workflows/ci-lint.yml",
       "provider": "GitHub Actions"
