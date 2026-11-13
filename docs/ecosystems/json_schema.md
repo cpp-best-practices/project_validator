@@ -23,7 +23,14 @@ their configuration where the JavaScript profile reads it (`.prettierrc`, `biome
 Every schema names its dialect (`$schema`) and itself (`$id`; `id` in draft-04 and before). A dialect older than
 2019-09 (draft-07 and before) warns. A schema under a test directory is reported, not judged.
 
+## `schema-examples`
+
+CI checks the examples that come with the schemas: `ajv test -s <schema> -d 'examples/valid/*.json' --valid` (and
+`--invalid` on the invalid ones), which asserts what each example is for; or a validator (check-jsonschema, `ajv
+validate`, the `jsonschema` CLI, jv) run on an `examples` (or `samples`, `valid`, `invalid`) directory. Warns when
+CI checks none.
+
 ## Not judged
 
-Whether the schemas come with valid and invalid examples CI checks (`schema-examples`) and are diffed for breaking
-changes (`schema-compatibility`) are the other schema practices of #85, not yet built. The language practices (coverage, platform matrix, …) have no tool for a schema and are skipped.
+Whether the schemas are diffed for breaking changes (`schema-compatibility`) is the last schema practice of #85, not
+yet built. The language practices (coverage, platform matrix, …) have no tool for a schema and are skipped.

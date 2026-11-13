@@ -6,5 +6,8 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - run: pipx run yamllint --strict .
       - run: pipx run check-jsonschema --schemafile schema/catalog.schema.json data/catalog.json
+      - run: npx --yes ajv-cli test -s schema/catalog.schema.json -d "examples/valid/*.json" --valid
+      - run: npx --yes ajv-cli test -s schema/catalog.schema.json -d "examples/invalid/*.json" --invalid
       - run: xmllint --noout --schema schema/catalog.xsd data/catalog.xml
+      - run: xmllint --noout --schema schema/catalog.xsd examples/valid/*.xml
       - run: npx --yes prettier --plugin=@prettier/plugin-xml --check schema data config

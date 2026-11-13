@@ -36,6 +36,61 @@
         ]
       }
     ],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "dredd": {
+                "can": {
+                  "checked": "dredd <description> <base url>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "redocly": {
+                "can": {
+                  "checked": "redocly lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "schemathesis": {
+                "can": {
+                  "checked": "schemathesis run <description> --url <base url> (or st run)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "spectral": {
+                "can": {
+                  "checked": "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "vacuum": {
+                "can": {
+                  "checked": "vacuum lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OpenAPI",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -304,6 +359,13 @@
         "openapi.yaml: Swagger 2.0 is superseded by OpenAPI 3.0"
       ],
       "message": "1 OpenAPI file declares a superseded version",
+      "status": "WARN"
+    },
+    "schema-examples": {
+      "details": [
+        "consider running in CI: spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action), redocly lint <description>, vacuum lint <description>, schemathesis run <description> --url <base url> (or st run) or dredd <description> <base url>"
+      ],
+      "message": "no check of the schemas' examples found in CI configuration",
       "status": "WARN"
     },
     "schema-validation": {

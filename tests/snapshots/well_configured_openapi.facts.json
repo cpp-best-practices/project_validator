@@ -483,6 +483,9 @@
         "analysis": [
           "checks"
         ],
+        "examples": [
+          "checked"
+        ],
         "schema": [
           "validates"
         ]

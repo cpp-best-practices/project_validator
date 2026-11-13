@@ -2,9 +2,10 @@
 they describe, a format recognised by intent, never by plain `.json` files. The schemas are JSON, the Data format's,
 so `data-wellformed` already covers one that does not parse. What is asked is that CI validates the documents against
 the schemas (`schema-validation`: check-jsonschema, ajv, the `jsonschema` CLI, jv), that the schemas are formatted
-(`code-formatting`: prettier, biome) and that each names its dialect and `$id` (`schema-declared`; a dialect older
-than 2019-09 warns). Whether the schemas come with examples CI checks and are diffed for breaking changes are the
-other schema practices of #85, not yet built."""
+(`code-formatting`: prettier, biome), that each names its dialect and `$id` (`schema-declared`; a dialect older than
+2019-09 warns) and that CI checks the examples that come with the schemas (`schema-examples`: `ajv test` with
+`--valid` and `--invalid`, or a validator run on an `examples` directory). Whether the schemas are diffed for breaking
+changes is the last schema practice of #85, not yet built."""
 
 from __future__ import annotations
 
@@ -17,8 +18,8 @@ from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
-from project_validator.facts.schema import validated, validator
-from project_validator.facts.tools import defined_by, starts, when
+from project_validator.facts.schema import example_checker, examples_checked, names_examples, validated, validator
+from project_validator.facts.tools import Condition, Tool, all_of, any_of, combined, defined_by, starts, when
 from project_validator.tools.prettier import prettier_tool
 
 JSON_SCHEMA = "JSON Schema"
@@ -84,33 +85,48 @@ JSON_SCHEMA_DECLARES = Declares(
 
 # --- Validation -----------------------------------------------------------------------------------------------------
 
-CHECK_JSONSCHEMA = validator(
-    name="check-jsonschema",
-    languages=JSON_SCHEMA_ONLY,
-    how="check-jsonschema --schemafile <schema> <documents>",
-    validates=when(starts(("check-jsonschema",)), validated),
+
+def _validator(name: str, how: str, validates: Condition, how_examples: str, checks: Condition) -> Tool:
+    """A validator of the documents against the schemas, which checks the schemas' examples when run on them."""
+    return combined(
+        validator(name=name, languages=JSON_SCHEMA_ONLY, how=how, validates=when(validates, validated)),
+        example_checker(name=name, languages=JSON_SCHEMA_ONLY, how=how_examples, checks=when(checks, examples_checked)),
+    )
+
+
+# A validator run on an `examples` directory checks the examples; `ajv test` asserts that each file is valid
+# (`--valid`) or invalid (`--invalid`), which is what an example is for.
+CHECK_JSONSCHEMA = _validator(
+    "check-jsonschema",
+    "check-jsonschema --schemafile <schema> <documents>",
+    starts(("check-jsonschema",)),
+    "check-jsonschema --schemafile <schema> examples/valid/*.json",
+    all_of(starts(("check-jsonschema",)), names_examples),
 )
 # `ajv validate` and `ajv test` check documents; `ajv compile` only compiles the schema. npx runs the package as
 # ajv-cli.
-AJV = validator(
-    name="ajv",
-    languages=JSON_SCHEMA_ONLY,
-    how="ajv validate -s <schema> -d <documents> (ajv-cli)",
-    validates=when(
-        starts(("ajv", "validate"), ("ajv", "test"), ("ajv-cli", "validate"), ("ajv-cli", "test")), validated
-    ),
+_AJV_TEST = starts(("ajv", "test"), ("ajv-cli", "test"))
+_AJV_VALIDATE = starts(("ajv", "validate"), ("ajv-cli", "validate"))
+AJV = _validator(
+    "ajv",
+    "ajv validate -s <schema> -d <documents> (ajv-cli)",
+    any_of(_AJV_VALIDATE, _AJV_TEST),
+    "ajv test -s <schema> -d 'examples/valid/*.json' --valid (and -d 'examples/invalid/*.json' --invalid)",
+    any_of(_AJV_TEST, all_of(_AJV_VALIDATE, names_examples)),
 )
-JSONSCHEMA_CLI = validator(
-    name="jsonschema",
-    languages=JSON_SCHEMA_ONLY,
-    how="jsonschema -i <document> <schema>",
-    validates=when(starts(("jsonschema",)), validated),
+JSONSCHEMA_CLI = _validator(
+    "jsonschema",
+    "jsonschema -i <document> <schema>",
+    starts(("jsonschema",)),
+    "jsonschema -i examples/valid/<document> <schema>",
+    all_of(starts(("jsonschema",)), names_examples),
 )
-JV = validator(
-    name="jv",
-    languages=JSON_SCHEMA_ONLY,
-    how="jv <schema> <documents>",
-    validates=when(starts(("jv",)), validated),
+JV = _validator(
+    "jv",
+    "jv <schema> <documents>",
+    starts(("jv",)),
+    "jv <schema> examples/valid/*.json",
+    all_of(starts(("jv",)), names_examples),
 )
 
 

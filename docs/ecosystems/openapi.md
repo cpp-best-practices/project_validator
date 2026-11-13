@@ -21,7 +21,14 @@ The same linters: a lint of an API description is its validation and its analysi
 Every description declares its specification version (`openapi`, or `asyncapi`) and its own (`info.version`). A
 Swagger 2.0 description (`swagger: "2.0"`) warns: OpenAPI 3.0 superseded it.
 
+## `schema-examples`
+
+The description's examples are checked against their schemas by spectral (`oas3-valid-media-example`,
+`oas3-valid-schema-example`, in `spectral:oas`; the AsyncAPI ruleset's example rules), redocly
+(`no-invalid-media-type-examples`) or vacuum, or for real by contract tests: `schemathesis run` (or `st run`), dredd.
+Warns when CI checks none.
+
 ## Not judged
 
-The other schema practices of #85 are not yet built: the examples checked (spectral's `oas3-valid-*-example` rules) or contract-tested (schemathesis, dredd), and breaking
-changes (`oasdiff breaking`, openapi-diff). The other checks have no tool for a description and are skipped.
+The last schema practice of #85 is not yet built: breaking changes (`oasdiff breaking`, openapi-diff). The other
+checks have no tool for a description and are skipped.

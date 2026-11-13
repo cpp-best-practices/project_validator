@@ -68,6 +68,7 @@
         ]
       }
     ],
+    "schema-examples": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -310,6 +311,11 @@
       "details": [],
       "message": "1 Protobuf file declares its syntax (or edition) and package",
       "status": "PASS"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

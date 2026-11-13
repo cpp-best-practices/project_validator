@@ -34,6 +34,68 @@
         ]
       }
     ],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "dredd": {
+                "can": {
+                  "checked": "dredd <description> <base url>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "redocly": {
+                "can": {
+                  "checked": "redocly lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "schemathesis": {
+                "can": {
+                  "checked": "schemathesis run <description> --url <base url> (or st run)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "spectral": {
+                "can": {
+                  "checked": "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "vacuum": {
+                "can": {
+                  "checked": "vacuum lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OpenAPI",
+            "level": "checked",
+            "runs": {
+              "spectral": {
+                "levels": [
+                  "checked"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -325,6 +387,11 @@
     "schema-declared": {
       "details": [],
       "message": "1 OpenAPI file declares its version (openapi) and info.version",
+      "status": "PASS"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "CI checks the schemas' examples with spectral",
       "status": "PASS"
     },
     "schema-validation": {

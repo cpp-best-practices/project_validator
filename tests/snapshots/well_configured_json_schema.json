@@ -80,6 +80,61 @@
         ]
       }
     ],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "JSON Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "ajv": {
+                "can": {
+                  "checked": "ajv test -s <schema> -d 'examples/valid/*.json' --valid (and -d 'examples/invalid/*.json' --invalid)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "check-jsonschema": {
+                "can": {
+                  "checked": "check-jsonschema --schemafile <schema> examples/valid/*.json"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "jsonschema": {
+                "can": {
+                  "checked": "jsonschema -i examples/valid/<document> <schema>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "jv": {
+                "can": {
+                  "checked": "jv <schema> examples/valid/*.json"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JSON Schema",
+            "level": "checked",
+            "runs": {
+              "ajv": {
+                "levels": [
+                  "checked"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -121,6 +176,12 @@
             "language": "JSON Schema",
             "level": "validates",
             "runs": {
+              "ajv": {
+                "levels": [
+                  "validates"
+                ],
+                "read": []
+              },
               "check-jsonschema": {
                 "levels": [
                   "validates"
@@ -152,6 +213,8 @@
             "language": "JSON",
             "parsed": [
               "data/catalog.json",
+              "examples/invalid/negative-price.json",
+              "examples/valid/catalog.json",
               "schema/catalog.schema.json"
             ],
             "problems": [],
@@ -255,7 +318,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "JSON: 2 JSON files parse; YAML: 4 YAML files parse",
+      "message": "JSON: 4 JSON files parse; YAML: 4 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -317,9 +380,14 @@
       "message": "1 JSON Schema file declares its dialect ($schema) and $id",
       "status": "PASS"
     },
+    "schema-examples": {
+      "details": [],
+      "message": "CI checks the schemas' examples with ajv",
+      "status": "PASS"
+    },
     "schema-validation": {
       "details": [],
-      "message": "CI validates the documents against their schemas with check-jsonschema",
+      "message": "CI validates the documents against their schemas with check-jsonschema, ajv",
       "status": "PASS"
     },
     "secret-scanning": {

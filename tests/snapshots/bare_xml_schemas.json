@@ -87,6 +87,40 @@
         ]
       }
     ],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "jing": {
+                "can": {
+                  "checked": "jing <schema> examples/valid/*.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "xmllint": {
+                "can": {
+                  "checked": "xmllint --noout --schema <schema> examples/valid/*.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "XML Schema",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -332,6 +366,13 @@
       ],
       "message": "1 XML Schema file does not declare its targetNamespace",
       "status": "FAIL"
+    },
+    "schema-examples": {
+      "details": [
+        "consider running in CI: xmllint --noout --schema <schema> examples/valid/*.xml or jing <schema> examples/valid/*.xml"
+      ],
+      "message": "no check of the schemas' examples found in CI configuration",
+      "status": "WARN"
     },
     "schema-validation": {
       "details": [

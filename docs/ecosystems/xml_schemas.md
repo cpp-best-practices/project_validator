@@ -27,6 +27,11 @@ the JavaScript profile reads it.
 Every XSD declares its `targetNamespace`. RELAX NG and Schematron schemas name no namespace of their own and are not
 asked.
 
+## `schema-examples`
+
+xmllint (with a schema) or jing run on an `examples` (or `samples`, `valid`, `invalid`) directory checks the schemas'
+examples. Warns when CI checks none.
+
 ## Not judged
 
 The other schema practices of #86 are not yet built: a schema's `elementFormDefault`, a document naming its schema (`xsi:schemaLocation`, `<?xml-model?>`), and valid and invalid example documents. The

@@ -44,6 +44,20 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "origin": "examples/invalid/negative-price.json",
+      "role": "example"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "examples/valid/catalog.json",
+      "role": "example"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
       "origin": "schema/catalog.schema.json",
       "role": "product"
     },
@@ -115,6 +129,26 @@
       "origin": "data/catalog.json",
       "problem": null,
       "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "examples/invalid/negative-price.json",
+      "problem": null,
+      "role": "example",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "examples/valid/catalog.json",
+      "problem": null,
+      "role": "example",
       "unread": null
     },
     {
@@ -316,6 +350,90 @@
       "argv": [
         "npx",
         "--yes",
+        "ajv-cli",
+        "test",
+        "-s",
+        "schema/catalog.schema.json",
+        "-d",
+        "examples/valid/*.json",
+        "--valid"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes ajv-cli test -s schema/catalog.schema.json -d \"examples/valid/*.json\" --valid",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "ajv-cli",
+        "test",
+        "-s",
+        "schema/catalog.schema.json",
+        "-d",
+        "examples/valid/*.json",
+        "--valid"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes ajv-cli test -s schema/catalog.schema.json -d \"examples/valid/*.json\" --valid",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "ajv-cli",
+        "test",
+        "-s",
+        "schema/catalog.schema.json",
+        "-d",
+        "examples/invalid/*.json",
+        "--invalid"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes ajv-cli test -s schema/catalog.schema.json -d \"examples/invalid/*.json\" --invalid",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "ajv-cli",
+        "test",
+        "-s",
+        "schema/catalog.schema.json",
+        "-d",
+        "examples/invalid/*.json",
+        "--invalid"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes ajv-cli test -s schema/catalog.schema.json -d \"examples/invalid/*.json\" --invalid",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
         "prettier",
         "--check",
         "."
@@ -326,7 +444,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes prettier --check .",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
       "via": []
     },
     {
@@ -341,9 +459,9 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes prettier --check .",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+        ".github/workflows/ci.yml:jobs.validate.steps[4].run"
       ]
     },
     {
@@ -508,6 +626,56 @@
       ],
       "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
       "provides": {
+        "examples": [
+          "checked"
+        ],
+        "schema": [
+          "validates"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ajv",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "JSON Schema"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "provides": {
+        "examples": [
+          "checked"
+        ],
+        "schema": [
+          "validates"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "ajv",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "JSON Schema"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "provides": {
         "format": [
           "check"
         ]
@@ -518,7 +686,7 @@
       ],
       "tool": "prettier",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+        ".github/workflows/ci.yml:jobs.validate.steps[4].run"
       ]
     }
   ],

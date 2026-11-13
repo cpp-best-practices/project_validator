@@ -62,6 +62,7 @@
     "mutation-testing": [],
     "platforms": [],
     "schema-declared": [],
+    "schema-examples": [],
     "schema-validation": [],
     "secret-scanning": [],
     "security-scanning": [
@@ -350,6 +351,11 @@
       "status": "SKIP"
     },
     "schema-declared": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-examples": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"

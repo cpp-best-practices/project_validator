@@ -71,6 +71,54 @@
         ]
       }
     ],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "JSON Schema",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "ajv": {
+                "can": {
+                  "checked": "ajv test -s <schema> -d 'examples/valid/*.json' --valid (and -d 'examples/invalid/*.json' --invalid)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "check-jsonschema": {
+                "can": {
+                  "checked": "check-jsonschema --schemafile <schema> examples/valid/*.json"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "jsonschema": {
+                "can": {
+                  "checked": "jsonschema -i examples/valid/<document> <schema>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "jv": {
+                "can": {
+                  "checked": "jv <schema> examples/valid/*.json"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JSON Schema",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -282,6 +330,13 @@
       ],
       "message": "1 JSON Schema file does not declare its dialect ($schema) and $id",
       "status": "FAIL"
+    },
+    "schema-examples": {
+      "details": [
+        "consider running in CI: check-jsonschema --schemafile <schema> examples/valid/*.json, ajv test -s <schema> -d 'examples/valid/*.json' --valid (and -d 'examples/invalid/*.json' --invalid), jsonschema -i examples/valid/<document> <schema> or jv <schema> examples/valid/*.json"
+      ],
+      "message": "no check of the schemas' examples found in CI configuration",
+      "status": "WARN"
     },
     "schema-validation": {
       "details": [

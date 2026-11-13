@@ -61,6 +61,7 @@
         ]
       }
     ],
+    "schema-examples": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -266,6 +267,11 @@
       ],
       "message": "1 Protobuf file does not declare its syntax (or edition) and package",
       "status": "FAIL"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [

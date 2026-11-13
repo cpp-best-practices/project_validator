@@ -34,6 +34,7 @@
         ]
       }
     ],
+    "schema-examples": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -262,6 +263,11 @@
       "details": [],
       "message": "1 Data Package file declares its profile ($schema) and name",
       "status": "PASS"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

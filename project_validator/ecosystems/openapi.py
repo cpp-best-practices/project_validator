@@ -2,9 +2,10 @@
 `openapi` (or `swagger`, the 2.0 name) or `asyncapi`. The files stay YAML or JSON, the Data format's. What is asked is
 that CI lints the description against its specification (`schema-validation`, and `static-analysis` for the same
 run: spectral with a ruleset, redocly, vacuum, swagger-cli, openapi-generator's validate; the AsyncAPI CLI), and that
-each description declares its version and `info.version` (`schema-declared`; Swagger 2.0 warns). The other schema
-practices of #85 (the examples checked or contract-tested with schemathesis or dredd, breaking changes with oasdiff)
-are not yet built."""
+each description declares its version and `info.version` (`schema-declared`; Swagger 2.0 warns), and that the
+description's examples are checked (`schema-examples`: spectral's, redocly's and vacuum's rules validate them; or
+contract tests with schemathesis or dredd). Breaking changes (oasdiff) are the last schema practice of #85, not yet
+built."""
 
 from __future__ import annotations
 
@@ -18,7 +19,7 @@ from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.expansion import Action
-from project_validator.facts.schema import validated, validator
+from project_validator.facts.schema import example_checker, examples_checked, validated, validator
 from project_validator.facts.settings import file_reader
 from project_validator.facts.tools import Condition, Definition, Tool, combined, defined_by, starts, when
 
@@ -104,12 +105,24 @@ ASYNCAPI_DECLARES = Declares(
 # --- Linting --------------------------------------------------------------------------------------------------------
 
 
-def _linter(name: str, languages: frozenset[str], how: str, runs: Condition, rules: Definition | None = None) -> Tool:
-    """A linter of API descriptions, which validates them against the specification and lints them at once."""
-    return combined(
+def _linter(
+    name: str,
+    languages: frozenset[str],
+    how: str,
+    runs: Condition,
+    rules: Definition | None = None,
+    *,
+    examples: bool = False,
+) -> Tool:
+    """A linter of API descriptions, which validates them against the specification and lints them at once; one
+    whose rules validate the description's `examples` against their schemas checks those too."""
+    tools = [
         validator(name=name, languages=languages, how=how, validates=when(runs, validated)),
         analyzer(name=name, languages=languages, how=how, analyses=when(runs, analysed), rules=rules),
-    )
+    ]
+    if examples:
+        tools.append(example_checker(name=name, languages=languages, how=how, checks=when(runs, examples_checked)))
+    return combined(*tools)
 
 
 SPECTRAL_SETTINGS = file_reader(
@@ -122,6 +135,7 @@ SPECTRAL = _linter(
     "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)",
     starts(("spectral", "lint"), ("spectral-cli", "lint")),
     defined_by(files=(SPECTRAL_SETTINGS.name,), default=False),
+    examples=True,
 )
 REDOCLY_SETTINGS = file_reader("redocly", ("redocly.yaml", ".redocly.yaml", "redocly.yml", ".redocly.yml"))
 REDOCLY = _linter(
@@ -130,8 +144,9 @@ REDOCLY = _linter(
     "redocly lint <description>",
     starts(("redocly", "lint"), ("openapi", "lint")),
     defined_by(files=(REDOCLY_SETTINGS.name,)),
+    examples=True,
 )
-VACUUM = _linter("vacuum", OPENAPI_ONLY, "vacuum lint <description>", starts(("vacuum", "lint")))
+VACUUM = _linter("vacuum", OPENAPI_ONLY, "vacuum lint <description>", starts(("vacuum", "lint")), examples=True)
 SWAGGER_CLI = _linter(
     "swagger-cli", OPENAPI_ONLY, "swagger-cli validate <description>", starts(("swagger-cli", "validate"))
 )
@@ -142,6 +157,20 @@ OPENAPI_GENERATOR = _linter(
     starts(("openapi-generator", "validate"), ("openapi-generator-cli", "validate")),
 )
 ASYNCAPI_CLI = _linter("asyncapi", ASYNCAPI_ONLY, "asyncapi validate <description>", starts(("asyncapi", "validate")))
+
+# Contract tests run the described API against its description: every example, and more, is checked for real.
+SCHEMATHESIS = example_checker(
+    name="schemathesis",
+    languages=OPENAPI_ONLY,
+    how="schemathesis run <description> --url <base url> (or st run)",
+    checks=when(starts(("schemathesis", "run"), ("st", "run")), examples_checked),
+)
+DREDD = example_checker(
+    name="dredd",
+    languages=OPENAPI_ONLY,
+    how="dredd <description> <base url>",
+    checks=when(starts(("dredd",)), examples_checked),
+)
 
 SPECTRAL_ACTION = Action(
     name="stoplightio/spectral-action",
