@@ -267,6 +267,57 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {
+              "atlas migrate lint": [
+                "migrations/V1__orders.sql"
+              ],
+              "liquibase checks": [
+                "migrations/V1__orders.sql"
+              ],
+              "squawk": [
+                "migrations/V1__orders.sql"
+              ]
+            },
+            "known": {
+              "atlas migrate lint": {
+                "can": {
+                  "linted": "atlas migrate lint --dir file://migrations --dev-url <dev database> (or ariga/atlas-action/migrate/lint)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "liquibase checks": {
+                "can": {
+                  "linted": "liquibase checks run --changelog-file <changelog>"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "squawk": {
+                "can": {
+                  "linted": "squawk migrations/*.sql (or sbdchd/squawk-action with fail-on-violations: true)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "SQL",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -669,6 +720,13 @@
       "details": [],
       "message": "not applicable to SQL",
       "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [
+        "consider running squawk migrations/*.sql (or sbdchd/squawk-action with fail-on-violations: true), atlas migrate lint --dir file://migrations --dev-url <dev database> (or ariga/atlas-action/migrate/lint) or liquibase checks run --changelog-file <changelog>"
+      ],
+      "message": "1 migration file, but no CI configuration checks them for unsafe changes",
+      "status": "WARN"
     },
     "mutation-testing": {
       "details": [],

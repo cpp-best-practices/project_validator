@@ -108,6 +108,7 @@
         ]
       }
     ],
+    "migration-safety": [],
     "mutation-testing": [],
     "platforms": [],
     "schema-compatibility": [],
@@ -401,6 +402,11 @@
       "details": [],
       "message": "CI checks the documentation's links with lychee",
       "status": "PASS"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

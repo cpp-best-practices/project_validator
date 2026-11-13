@@ -47,6 +47,7 @@
     "hardening": [],
     "license": [],
     "link-check": [],
+    "migration-safety": [],
     "mutation-testing": [],
     "platforms": [],
     "schema-compatibility": [
@@ -333,6 +334,11 @@
       "status": "PASS"
     },
     "link-check": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "migration-safety": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"

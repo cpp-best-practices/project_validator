@@ -1,6 +1,7 @@
 """SQL: dbt projects, migrations and database tests, judged by the tools CI runs on the SQL: sqlfluff (and sqlfmt) for
 formatting and linting, squawk, sqlc and dbt's parser for analysis, dbt test and pgTAP for tests, dbt's packages for
-dependencies.
+dependencies, and squawk, `atlas migrate lint` or `liquibase checks run` for the safety of the migrations
+(`migration-safety`: a lock held on a busy table, a column dropped), asked of a project that has migrations.
 
 Nearly every service has a schema.sql or a migrations directory, so `.sql` alone is no ecosystem: it counts once the
 project shows it works in SQL (`sql_project`): a dbt project, SQL tooling configured (sqlfluff, sqlfmt, sqlc), a
@@ -24,7 +25,9 @@ from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcomman
 from project_validator.facts import Fact, Origin
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.migrations import is_migration, migration_linter, migrations_linted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings, unreadable
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested, tests_of
@@ -115,14 +118,50 @@ SQLFMT = format_tool(
 
 # --- analysis
 
-ANALYZERS = (
-    # squawk lints Postgres migrations for locking and destructive changes.
-    analyzer(
+# squawk lints Postgres migrations for locking and destructive changes: an analysis of the SQL, and the check of the
+# migrations' safety. npm's package is squawk-cli.
+_SQUAWK = starts(("squawk",), ("squawk-cli",))
+SQUAWK = combined(
+    analyzer(name="squawk", languages=SQL_LANGUAGE, how="squawk migrations/*.sql", analyses=when(_SQUAWK, analysed)),
+    migration_linter(
         name="squawk",
         languages=SQL_LANGUAGE,
-        how="squawk migrations/*.sql",
-        analyses=when(starts(("squawk",)), analysed),
+        how="squawk migrations/*.sql (or sbdchd/squawk-action with fail-on-violations: true)",
+        checks=when(_SQUAWK, migrations_linted),
     ),
+)
+# atlas migrate lint analyses the migrations a change adds against a dev database; liquibase checks run runs the
+# policy checks of a changelog.
+ATLAS_LINT = migration_linter(
+    name="atlas migrate lint",
+    languages=SQL_LANGUAGE,
+    how="atlas migrate lint --dir file://migrations --dev-url <dev database> (or ariga/atlas-action/migrate/lint)",
+    checks=when(starts(("atlas", "migrate", "lint")), migrations_linted),
+)
+LIQUIBASE_CHECKS = migration_linter(
+    name="liquibase checks",
+    languages=SQL_LANGUAGE,
+    how="liquibase checks run --changelog-file <changelog>",
+    checks=when(starts(("liquibase", "checks", "run")), migrations_linted),
+)
+
+
+def _squawk_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
+    """`sbdchd/squawk-action` runs squawk on the files its `pattern` (or `files`) names, and fails the job only when
+    `fail-on-violations` is true: by default it comments on the pull request."""
+    if inputs.get("fail-on-violations", "false").strip().lower() != "true":
+        return ()
+    targets = inputs.get("files", "").split() or [inputs.get("pattern", "migrations/*.sql")]
+    return (("squawk", *targets),)
+
+
+SQUAWK_ACTION = Action(name="sbdchd/squawk-action", runs=_squawk_action)
+ATLAS_LINT_ACTION = Action(
+    name="ariga/atlas-action/migrate/lint",
+    runs=lambda inputs: (("atlas", "migrate", "lint", "--dir", inputs.get("dir", "file://migrations")),),
+)
+
+ANALYZERS = (
     analyzer(name="sqlc vet", languages=SQL_LANGUAGE, how="sqlc vet", analyses=when(starts(("sqlc", "vet")), analysed)),
     analyzer(name="tsqllint", languages=SQL_LANGUAGE, how="tsqllint .", analyses=when(starts(("tsqllint",)), analysed)),
     # dbt parse (and compile) resolve every ref, source and macro, and read the project's YAML.
@@ -226,9 +265,6 @@ _TOOL_FILES = (
 )
 # A `[tool.sqlfluff]` table in pyproject.toml, or a `[sqlfluff]` section in setup.cfg or tox.ini.
 _SHARED_CONFIGURATION = {"pyproject.toml": "[tool.sqlfluff", "setup.cfg": "[sqlfluff", "tox.ini": "[sqlfluff"}
-# Flyway's versioned, undo and repeatable migrations: V1__init.sql, V2_1__add_index.sql, R__view.sql.
-_FLYWAY_MIGRATION = re.compile(r"(?:^|/)(?:[VU]\d[\w.]*|R)__[^/]*\.sql$")
-_MIGRATIONS_DIRECTORY = re.compile(r"(?:^|/)(?:migrations|db/migrate|db/migrations)/[^/]+\.sql$")
 
 
 def _tooling_configured(project: Project) -> bool:
@@ -241,7 +277,7 @@ def _tooling_configured(project: Project) -> bool:
 
 
 def _has_migrations(sql: list[str]) -> bool:
-    return any(_FLYWAY_MIGRATION.search(path) or _MIGRATIONS_DIRECTORY.search(path) for path in sql)
+    return any(is_migration(path) for path in sql)
 
 
 def _has_pgtap_tests(project: Project, sql: list[str]) -> bool:
@@ -272,6 +308,7 @@ CI_PROGRAMS = (
     ("atlas", "migrate"),
     ("sqlc",),
     ("squawk",),
+    ("squawk-cli",),
     ("tsqllint",),
 )
 
@@ -282,4 +319,5 @@ SQL_ECOSYSTEM = Ecosystem(
     ambiguous_suffixes={".sql": SQL},
     detect=sql_project,
     ci_programs=CI_PROGRAMS,
+    ci_usage=re.compile(r"(?<![\w-])(?:sbdchd/squawk-action|ariga/atlas-action)\b"),
 )

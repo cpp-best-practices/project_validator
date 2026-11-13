@@ -316,6 +316,64 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "atlas migrate lint": [
+                "migrations/V1__orders.sql"
+              ],
+              "liquibase checks": [
+                "migrations/V1__orders.sql"
+              ],
+              "squawk": [
+                "migrations/V1__orders.sql"
+              ]
+            },
+            "known": {
+              "atlas migrate lint": {
+                "can": {
+                  "linted": "atlas migrate lint --dir file://migrations --dev-url <dev database> (or ariga/atlas-action/migrate/lint)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "liquibase checks": {
+                "can": {
+                  "linted": "liquibase checks run --changelog-file <changelog>"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "squawk": {
+                "can": {
+                  "linted": "squawk migrations/*.sql (or sbdchd/squawk-action with fail-on-violations: true)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "SQL",
+            "level": "linted",
+            "runs": {
+              "squawk": {
+                "levels": [
+                  "linted"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -495,6 +553,12 @@
                 "read": []
               },
               "sqlfluff": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              },
+              "squawk": {
                 "levels": [
                   "checks"
                 ],
@@ -741,6 +805,11 @@
       "message": "not applicable to SQL",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "CI checks the 1 migration file for unsafe changes with squawk",
+      "status": "PASS"
+    },
     "mutation-testing": {
       "details": [],
       "message": "not applicable to SQL",
@@ -788,7 +857,7 @@
     },
     "static-analysis": {
       "details": [],
-      "message": "sqlfluff (.sqlfluff) and dbt parse run",
+      "message": "sqlfluff (.sqlfluff), squawk and dbt parse run",
       "status": "PASS"
     },
     "status-badges": {

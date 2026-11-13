@@ -364,6 +364,25 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Swift",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -756,6 +775,11 @@
       "status": "FAIL"
     },
     "link-check": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
+    },
+    "migration-safety": {
       "details": [],
       "message": "not applicable to Swift",
       "status": "SKIP"

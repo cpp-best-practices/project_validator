@@ -19,7 +19,7 @@ Both have a default style, so running one is enough.
 ## `static-analysis`
 
 `sqlfluff lint`, with its dialect and rules in `.sqlfluff` or `[tool.sqlfluff]` (`[sqlfluff]` in `setup.cfg` or
-`tox.ini`); squawk, which lints Postgres migrations for locking and destructive changes; `sqlc vet`; tsqllint; or
+`tox.ini`); squawk, which lints Postgres migrations for locking and destructive changes (and is `migration-safety`'s check); `sqlc vet`; tsqllint; or
 `dbt parse` (or `dbt compile`), which resolves every ref, source and macro.
 
 ## `tests-run`
@@ -28,6 +28,15 @@ Both have a default style, so running one is enough.
 `unit_tests:` in the YAML under `models/`, `seeds/` or `snapshots/`) or singular tests (`tests/*.sql` selecting from a
 `ref()` or `source()`). pgTAP tests (`tests/*.sql` with `SELECT plan(...)`) run by `pg_prove`. A test needs a database,
 which CI provides as a service container or an installation; that is not checked for.
+
+## `migration-safety`
+
+A project with migrations (Flyway-named files, or `.sql` files under `migrations/`, `db/migrate/` or `db/migrations/`)
+has CI check them for changes that are unsafe to apply to a live database: squawk (`squawk migrations/*.sql`, npm's
+`squawk-cli`; or `sbdchd/squawk-action`, which fails the job only with `fail-on-violations: true`, as by default it
+comments on the pull request), `atlas migrate lint` (or `ariga/atlas-action/migrate/lint`), or `liquibase checks run`.
+Warns when CI checks nothing. A dbt project or plain SQL without migrations has nothing to judge, and the check is
+skipped. squawk is an analysis of the SQL too (`static-analysis`).
 
 ## `dependency-management`
 

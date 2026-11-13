@@ -88,6 +88,13 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
+      "origin": "migrations/V1__orders.sql",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "SQL",
       "origin": "models/staging/stg_orders.sql",
       "role": "product"
     },
@@ -433,6 +440,42 @@
     },
     {
       "argv": [
+        "npx",
+        "--yes",
+        "squawk-cli",
+        "migrations/*.sql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "Command",
+      "line": "npx --yes squawk-cli migrations/*.sql",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "squawk-cli",
+        "migrations/*.sql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "Command",
+      "line": "npx --yes squawk-cli migrations/*.sql",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "argv": [
         "dbt",
         "parse"
       ],
@@ -444,7 +487,7 @@
       "job": ".github/workflows/ci.yml:test",
       "kind": "Command",
       "line": "dbt parse",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -462,7 +505,7 @@
       "job": ".github/workflows/ci.yml:test",
       "kind": "Command",
       "line": "dbt build --profiles-dir .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
@@ -729,6 +772,31 @@
       "provides": {
         "analysis": [
           "checks"
+        ],
+        "migrations": [
+          "linted"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "squawk",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "ToolRun",
+      "languages": [
+        "SQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
         ]
       },
       "read": [],
@@ -745,7 +813,7 @@
       "languages": [
         "SQL"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "test": [
           "runs"

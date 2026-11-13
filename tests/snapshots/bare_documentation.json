@@ -103,6 +103,7 @@
         ]
       }
     ],
+    "migration-safety": [],
     "mutation-testing": [],
     "platforms": [],
     "schema-compatibility": [],
@@ -363,6 +364,11 @@
       ],
       "message": "no link check found in CI configuration",
       "status": "WARN"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],
