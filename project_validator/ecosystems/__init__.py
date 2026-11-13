@@ -67,15 +67,17 @@ def _build_file_claims(ecosystems: Iterable[Ecosystem]) -> Iterator[tuple[str, B
 
 
 def _suffix_claims(ecosystems: Iterable[Ecosystem]) -> Iterator[tuple[str, bool, Ecosystem]]:
-    """(suffix, whether it is unambiguous, the ecosystem claiming it)."""
+    """(suffix or source name, whether it is unambiguous, the ecosystem claiming it)."""
     for ecosystem in ecosystems:
         yield from ((suffix, True, ecosystem) for suffix in ecosystem.source_suffixes or {})
+        yield from ((name, True, ecosystem) for name in ecosystem.source_names or {})
         yield from ((suffix, False, ecosystem) for suffix in ecosystem.ambiguous_suffixes or {})
 
 
 def claim_conflicts(ecosystems: Iterable[Ecosystem]) -> list[str]:
     """Where `ecosystems` claim the same files: a build file of two build systems (sharing one build system is
-    fine), or a source suffix one claims outright and another claims too (two may share an ambiguous suffix)."""
+    fine), or a source suffix (or source name) one claims outright and another claims too (two may share an
+    ambiguous suffix)."""
     ecosystems = tuple(ecosystems)
     conflicts = []
     build_files: dict[str, BuildSystem] = {}
@@ -94,7 +96,8 @@ def claim_conflicts(ecosystems: Iterable[Ecosystem]) -> list[str]:
     for suffix, outright, ecosystem in _suffix_claims(ecosystems):
         known_outright, claimant = claimed.setdefault(suffix, (outright, ecosystem))
         if claimant is not ecosystem and (outright or known_outright):
-            conflicts.append(f"{ecosystem.label}: source suffix {suffix} is already claimed by {claimant.label}")
+            kind = "source suffix" if suffix.startswith(".") else "source name"
+            conflicts.append(f"{ecosystem.label}: {kind} {suffix} is already claimed by {claimant.label}")
     return conflicts
 
 

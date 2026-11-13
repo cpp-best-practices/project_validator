@@ -1,0 +1,12 @@
+- name: Install the shop
+  ansible.builtin.apt:
+    name: shop
+    state: present
+    update_cache: true
+
+- name: Configure the shop
+  ansible.builtin.template:
+    src: shop.conf.j2
+    dest: /etc/shop.conf
+    mode: "0644"
+  notify: Restart the shop

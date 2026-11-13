@@ -289,6 +289,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "OCaml",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -557,6 +576,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [

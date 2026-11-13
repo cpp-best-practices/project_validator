@@ -1,0 +1,4 @@
+- name: Restart the shop
+  ansible.builtin.service:
+    name: shop
+    state: restarted

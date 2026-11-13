@@ -64,12 +64,19 @@ def _protected(line: str, escape: str = "\\") -> str:
     return "".join(out)
 
 
+# A `#` begins a comment at the start of a word only (`.#checks` is one word); shlex would end the word there.
+_HASH_IN_WORD = re.compile(r"(?<=\S)#")
+_HASH_STAND_IN = chr(0xE000 + len(_OPERATOR_CHARACTERS))
+
+
 def _words(line: str, escape: str = "\\") -> list[str]:
-    lexer = shlex.shlex(_protected(line, escape), posix=True, punctuation_chars=_OPERATOR_CHARACTERS)
+    protected = _HASH_IN_WORD.sub(_HASH_STAND_IN, _protected(line, escape))
+    lexer = shlex.shlex(protected, posix=True, punctuation_chars=_OPERATOR_CHARACTERS)
     lexer.escape = escape
     lexer.whitespace_split = True
     lexer.commenters = "#"
-    return list(lexer)  # quoted operator characters stay stand-ins until the commands are split (see `_command`)
+    # Quoted operator characters stay stand-ins until the commands are split (see `_command`).
+    return [word.replace(_HASH_STAND_IN, "#") for word in lexer]
 
 
 def _without_redirections(words: list[str]) -> list[str]:

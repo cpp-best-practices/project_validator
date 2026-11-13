@@ -148,9 +148,10 @@ class Ecosystem:
     formatted and linted). `languages` holds the names of its languages, or of its formats: the one key every tool,
     question and policy uses. A format has no toolchain.
 
-    It is recognised by its build systems' files, its `source_suffixes`, and `detect`, a probe that reads the project
-    (with `Project.read_head`) and returns the ecosystem's languages it finds, for intent that file names cannot
-    show. `ambiguous_suffixes` count only once the ecosystem is recognised one of those ways, because another
+    It is recognised by its build systems' files, its `source_suffixes`, its `source_names` (the names, or name
+    patterns, of sources with no telling suffix: `Dockerfile`, `Dockerfile.*`), and `detect`, a probe that reads the
+    project (with `Project.read_head`) and returns the ecosystem's languages it finds, for intent that file names
+    cannot show. `ambiguous_suffixes` count only once the ecosystem is recognised one of those ways, because another
     ecosystem uses them too (`.pl`: Perl or Prolog) or they do not tell its languages apart (`.h`: C or C++); each
     maps to the language it adds, or to None for a file of the ecosystem that adds no language.
 
@@ -162,6 +163,7 @@ class Ecosystem:
     kind: Kind = "language"
     build_systems: tuple[BuildSystem, ...] = ()
     source_suffixes: Mapping[str, str] | None = None
+    source_names: Mapping[str, str] | None = None
     ambiguous_suffixes: Mapping[str, str | None] | None = None
     detect: Callable[[Project], frozenset[str]] | None = None
     toolchain: ToolchainPatterns | None = None

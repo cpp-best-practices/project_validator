@@ -280,6 +280,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Common Lisp",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -546,6 +565,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [

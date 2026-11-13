@@ -1,0 +1,92 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": "mkdocs.yml",
+      "role": "product"
+    },
+    {
+      "ecosystem": "Documentation site",
+      "kind": "ContentLanguages",
+      "languages": [
+        "MkDocs"
+      ],
+      "origin": "."
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "MkDocs",
+        "YAML"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "mkdocs.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "MkDocs"
+      ],
+      "origin": "site/",
+      "output": "the MkDocs site site/"
+    },
+    {
+      "kind": "the MkDocs site's configuration",
+      "language": "MkDocs",
+      "origin": "mkdocs.yml"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Data": [
+        ".yml files"
+      ],
+      "Documentation site": [
+        "content"
+      ]
+    },
+    "formats": [
+      "MkDocs",
+      "YAML"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "MkDocs",
+          "YAML"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

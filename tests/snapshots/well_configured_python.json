@@ -522,6 +522,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Python",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -972,6 +991,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Python version(s) (3.13, 3.14), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [],

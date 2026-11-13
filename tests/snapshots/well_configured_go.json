@@ -532,6 +532,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Go",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -891,6 +910,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Go version(s) (1.22, 1.23), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [],

@@ -281,6 +281,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Emacs Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Emacs Lisp",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -556,6 +575,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [

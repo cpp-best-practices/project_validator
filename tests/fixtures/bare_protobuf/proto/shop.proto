@@ -1,0 +1,2 @@
+syntax = "proto3";
+message Total { int32 total = 1; }

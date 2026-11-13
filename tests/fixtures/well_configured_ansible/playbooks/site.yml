@@ -1,0 +1,5 @@
+- name: Deploy the shop
+  hosts: all
+  become: true
+  roles:
+    - shop

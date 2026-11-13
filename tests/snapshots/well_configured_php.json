@@ -503,6 +503,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "PHP",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -949,6 +968,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 PHP version(s) (8.3, 8.4), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [],

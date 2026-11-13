@@ -4,6 +4,7 @@ languages (`multi_ecosystem_audits`), since they audit whatever lockfiles the pr
 from __future__ import annotations
 
 import shlex
+from collections.abc import Mapping
 
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.arguments import starts_with
@@ -47,11 +48,30 @@ OSV_SCANNER_ACTION = Action(
     name="google/osv-scanner-action/osv-scanner-action",
     runs=lambda inputs: (("osv-scanner", *shlex.split(inputs.get("scan-args", "-r ./"))),),
 )
-# trivy's action scans an image unless told to scan the file system.
-TRIVY_ACTION = Action(
-    name="aquasecurity/trivy-action",
-    runs=lambda inputs: (("trivy", inputs.get("scan-type", "image"), inputs.get("scan-ref", ".")),),
-)
+_TRIVY_SCAN_TYPES = {
+    "image": ("image",),
+    "config": ("config",),
+    "fs": ("fs",),
+    "filesystem": ("fs",),
+    "repo": ("repo",),
+    "repository": ("repo",),
+    "rootfs": ("rootfs",),
+    "sbom": ("sbom",),
+}
+
+
+def _trivy_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
+    """`aquasecurity/trivy-action`: `trivy <scan-type> [--scanners …] <ref>`, an image scan (of `image-ref`) unless
+    told the scan type, which scans `scan-ref`."""
+    words = _TRIVY_SCAN_TYPES.get(inputs.get("scan-type", "image"))
+    if words is None:
+        return ()
+    scanners = ("--scanners", inputs["scanners"]) if inputs.get("scanners") else ()
+    reference = inputs.get("image-ref", ".") if words == ("image",) else inputs.get("scan-ref", ".")
+    return (("trivy", *words, *scanners, reference),)
+
+
+TRIVY_ACTION = Action(name="aquasecurity/trivy-action", runs=_trivy_action)
 SNYK_ACTIONS = tuple(
     Action(name=f"snyk/actions/{flavour}", runs=lambda inputs: (("snyk", *shlex.split(inputs.get("command", "test"))),))
     for flavour in ("node", "python", "golang", "gradle", "maven", "php", "ruby", "dotnet", "swift", "cocoapods")

@@ -361,6 +361,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Terraform",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -763,6 +782,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Terraform version(s) (1.10.3, 1.9.8), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [],

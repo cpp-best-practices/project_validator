@@ -1,0 +1,79 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": "openapi.yaml",
+      "role": "product"
+    },
+    {
+      "ecosystem": "OpenAPI/AsyncAPI",
+      "kind": "ContentLanguages",
+      "languages": [
+        "OpenAPI"
+      ],
+      "origin": "."
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "OpenAPI",
+        "YAML"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "openapi.yaml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Data": [
+        ".yaml files"
+      ],
+      "OpenAPI/AsyncAPI": [
+        "content"
+      ]
+    },
+    "formats": [
+      "OpenAPI",
+      "YAML"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "OpenAPI",
+          "YAML"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

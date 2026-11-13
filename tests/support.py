@@ -73,9 +73,9 @@ PROJECT_LAYOUTS = (*layouts.PROFILE_LAYOUTS, layouts.UNRECOGNISED)
 
 
 def checked_ecosystems(selected: Check, layout: ProjectLayout) -> tuple[Ecosystem, ...]:
-    """The ecosystems `selected` judges in a project of `layout`."""
+    """The ecosystems `selected` judges in a project of `layout` (of its languages, and of its formats)."""
     supported = (ecosystem for ecosystem in BUILT_IN if ecosystem.languages <= selected.languages)
-    return ecosystems_for(layout.languages, supported)
+    return ecosystems_for(layout.languages | layout.formats, supported)
 
 
 def layouts_checked_as(selected: Check, *ecosystems: Ecosystem) -> tuple[ProjectLayout, ...]:
@@ -242,6 +242,12 @@ def github_job(runs_on: str, *steps: str, matrix: Mapping[str, object] | None = 
     if matrix is not None:
         job["strategy"] = {"matrix": matrix}
     return {GITHUB_WORKFLOW: json.dumps({"jobs": {"build": job}})}
+
+
+def github_action(uses: str, **inputs: str) -> dict[str, str]:
+    """A GitHub workflow whose one job uses the action `uses` with `inputs`."""
+    steps = [{"uses": uses, "with": inputs}]
+    return {GITHUB_WORKFLOW: json.dumps({"jobs": {"build": {"runs-on": "ubuntu-latest", "steps": steps}}})}
 
 
 def github_steps(*steps: str) -> dict[str, str]:

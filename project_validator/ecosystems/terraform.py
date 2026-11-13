@@ -14,22 +14,18 @@ scanning: their rules are what static analysis means for infrastructure code, so
 from __future__ import annotations
 
 import re
-import shlex
-from collections.abc import Mapping
 
 from project_validator.ecosystems.model import Ecosystem, subcommands, toolchain_patterns
-from project_validator.facts import Command, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import file_reader
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Condition, Tool, combined, defined_by, either, starts, when
+from project_validator.facts.tools import defined_by, either, starts, when
+from project_validator.tools.misconfiguration import misconfiguration_scanner, misconfiguration_scanners
 
 TERRAFORM = "Terraform"
 TERRAFORM_LANGUAGE = frozenset({TERRAFORM})
@@ -78,57 +74,15 @@ TFLINT = analyzer(
     rules=defined_by(files=(TFLINT_SETTINGS.name,)),
 )
 
-# --- misconfiguration scanners: static analysis and security scanning at once
-
-_TRIVY_FILESYSTEM = (("trivy", "fs"), ("trivy", "filesystem"), ("trivy", "repo"), ("trivy", "repository"))
-
-
-def _trivy_misconfiguration(command: Command) -> bool:
-    """`trivy config`, or a filesystem scan whose `--scanners` include misconfigurations (the pre-commit-terraform
-    hook `terraform_trivy` runs one)."""
-    argv = resolved(command)
-    if starts_with(argv, ("trivy", "config"), ("terraform_trivy",)) is not None:
-        return True
-    if starts_with(argv, *_TRIVY_FILESYSTEM) is None:
-        return False
-    return any("misconfig" in value for value in option_values(argv, "--scanners"))
-
-
-def _scanner(name: str, how: str, runs: Condition) -> Tool:
-    """A misconfiguration scanner, which analyses the configuration and scans it for security problems."""
-    return combined(
-        analyzer(name=name, languages=TERRAFORM_LANGUAGE, how=how, analyses=when(runs, analysed)),
-        scanner(name=name, languages=TERRAFORM_LANGUAGE, how=how, scans=when(runs, scanned)),
-    )
-
+# --- misconfiguration scanners: static analysis and security scanning at once (see
+# `project_validator.tools.misconfiguration`), with the pre-commit-terraform hooks that run them
 
 MISCONFIGURATION_SCANNERS = (
-    _scanner("checkov", "checkov -d .", starts(("checkov",), ("terraform_checkov",))),
-    _scanner("trivy", "trivy config .", _trivy_misconfiguration),
-    _scanner("KICS", "kics scan -p .", starts(("kics", "scan"))),
-    _scanner("terrascan", "terrascan scan", starts(("terrascan", "scan"))),
-    _scanner("tfsec", "tfsec . (now trivy)", starts(("tfsec",), ("terraform_tfsec",))),
-)
-
-CHECKOV_ACTION = Action(
-    name="bridgecrewio/checkov-action", runs=lambda inputs: (("checkov", "-d", inputs.get("directory", ".")),)
-)
-_TRIVY_SCAN_TYPES = {"config": ("config",), "fs": ("fs",), "filesystem": ("fs",), "repo": ("repo",)}
-
-
-def _trivy_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
-    """`aquasecurity/trivy-action`: `trivy <scan-type> [--scanners ...] <scan-ref>` (an image scan by default)."""
-    words = _TRIVY_SCAN_TYPES.get(inputs.get("scan-type", "image"))
-    if words is None:
-        return ()
-    scanners = (("--scanners", inputs["scanners"]),) if inputs.get("scanners") else ()
-    return (("trivy", *words, *(word for pair in scanners for word in pair), inputs.get("scan-ref", ".")),)
-
-
-TRIVY_ACTION = Action(name="aquasecurity/trivy-action", runs=_trivy_action)
-KICS_ACTION = Action(
-    name="checkmarx/kics-github-action",
-    runs=lambda inputs: (("kics", "scan", "-p", *shlex.split(inputs.get("path", "."))),),
+    *misconfiguration_scanners(TERRAFORM_LANGUAGE, checkov=(("terraform_checkov",),), trivy=(("terraform_trivy",),)),
+    misconfiguration_scanner("terrascan", TERRAFORM_LANGUAGE, "terrascan scan", starts(("terrascan", "scan"))),
+    misconfiguration_scanner(
+        "tfsec", TERRAFORM_LANGUAGE, "tfsec . (now trivy)", starts(("tfsec",), ("terraform_tfsec",))
+    ),
 )
 TERRASCAN_ACTION = Action(name="tenable/terrascan-action", runs=lambda _inputs: (("terrascan", "scan"),))
 TFSEC_ACTION = Action(

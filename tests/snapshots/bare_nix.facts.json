@@ -1,0 +1,85 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Nix",
+      "kind": "BuildFile",
+      "languages": [
+        "Nix"
+      ],
+      "origin": "default.nix"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Nix",
+      "origin": "default.nix",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Nix",
+      "origin": "shop.nix",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Nix"
+      ],
+      "formats": [],
+      "kind": "Unit",
+      "languages": [
+        "Nix"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Nix"
+      ],
+      "origin": "result",
+      "output": "the result symlinks nix build leaves"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Nix"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Nix": [
+        "build file default.nix",
+        ".nix files"
+      ]
+    },
+    "formats": [],
+    "languages": [
+      "Nix"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Nix"
+        ],
+        "directory": ".",
+        "formats": [],
+        "languages": [
+          "Nix"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

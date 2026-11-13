@@ -1,0 +1,79 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": "k8s/deployment.yaml",
+      "role": "product"
+    },
+    {
+      "ecosystem": "Kubernetes",
+      "kind": "ContentLanguages",
+      "languages": [
+        "Kubernetes"
+      ],
+      "origin": "."
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "Kubernetes",
+        "YAML"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "k8s/deployment.yaml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Data": [
+        ".yaml files"
+      ],
+      "Kubernetes": [
+        "content"
+      ]
+    },
+    "formats": [
+      "Kubernetes",
+      "YAML"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "Kubernetes",
+          "YAML"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

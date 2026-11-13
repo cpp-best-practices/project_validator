@@ -51,6 +51,17 @@ class ShellTests(unittest.TestCase):
         )
         self.assertEqual(self._split(script), [("gcovr", "--gcov-executable", "llvm-cov gcov", "-DX=a b"), ("make",)])
 
+    def test_a_hash_inside_a_word_is_not_a_comment(self) -> None:
+        script = 'nix build .#checks.x86_64-linux.default\nnix run nixpkgs#statix -- check . # lint\necho a#b "c #d"\n'
+        self.assertEqual(
+            self._split(script),
+            [
+                ("nix", "build", ".#checks.x86_64-linux.default"),
+                ("nix", "run", "nixpkgs#statix", "--", "check", "."),
+                ("echo", "a#b", "c #d"),
+            ],
+        )
+
     def test_assignments_are_the_commands_environment(self) -> None:
         [found] = split_script("CC=gcc-14 CXX=g++-14 cmake -S .")
         self.assertEqual(
