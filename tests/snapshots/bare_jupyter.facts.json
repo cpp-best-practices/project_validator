@@ -1,0 +1,78 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Jupyter",
+      "origin": "notebooks/prices.ipynb",
+      "role": "product"
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "Jupyter"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "Jupyter",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "notebooks/prices.ipynb",
+      "problem": "not a notebook: no cells",
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Jupyter"
+      ],
+      "origin": "notebooks/.ipynb_checkpoints/",
+      "output": "Jupyter's checkpoints (.ipynb_checkpoints/)"
+    },
+    {
+      "kind": "notebooks (*.ipynb)",
+      "language": "Jupyter",
+      "origin": "notebooks/prices.ipynb"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Jupyter": [
+        ".ipynb files"
+      ]
+    },
+    "formats": [
+      "Jupyter"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "Jupyter"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}
