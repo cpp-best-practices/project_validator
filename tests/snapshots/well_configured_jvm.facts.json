@@ -1053,6 +1053,13 @@
       "written": ".gradle/"
     },
     {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "*.class",
+      "syntax": "glob",
+      "written": "*.class"
+    },
+    {
       "kind": "ConfigurationFile",
       "origin": "LICENSE",
       "reader": "license files"

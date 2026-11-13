@@ -300,11 +300,13 @@ class DependencyAndOutputTests(unittest.TestCase):
         self.assertEqual(unverified.details, (GRADLE_PACKAGES.lock_hint,))
         self.assertEqual(_gradle_kotlin(self, DEPENDENCY_MANAGEMENT, {}).message, "no dependencies are declared")
 
-    def test_each_build_system_ignores_its_own_output(self) -> None:
-        self.assertEqual(_maven(self, VCS_IGNORE, {".gitignore": "target/\n"}).status, Status.PASS)
-        self.assertEqual(_maven(self, VCS_IGNORE, {".gitignore": "build/\n"}).status, Status.WARN)
-        self.assertEqual(_gradle_kotlin(self, VCS_IGNORE, {".gitignore": "/build\n"}).status, Status.PASS)
-        self.assertEqual(_gradle_kotlin(self, VCS_IGNORE, {".gitignore": "target/\n"}).status, Status.WARN)
+    def test_each_build_system_ignores_its_own_output_and_the_class_files(self) -> None:
+        self.assertEqual(_maven(self, VCS_IGNORE, {".gitignore": "target/\n*.class\n"}).status, Status.PASS)
+        self.assertEqual(_maven(self, VCS_IGNORE, {".gitignore": "build/\n*.class\n"}).status, Status.WARN)
+        self.assertEqual(_gradle_kotlin(self, VCS_IGNORE, {".gitignore": "/build\n*.class\n"}).status, Status.PASS)
+        self.assertEqual(_gradle_kotlin(self, VCS_IGNORE, {".gitignore": "target/\n*.class\n"}).status, Status.WARN)
+        # The class files are the language's output, whatever builds them.
+        self.assertEqual(_maven(self, VCS_IGNORE, {".gitignore": "target/\n"}).status, Status.WARN)
 
     def test_class_files_are_outputs_without_a_build_system(self) -> None:
         with temp_project({"src/App.java": "", "src/App.class": ""}) as root:
