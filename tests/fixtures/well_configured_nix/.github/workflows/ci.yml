@@ -1,0 +1,28 @@
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - { os: ubuntu-latest, system: x86_64-linux }
+          - { os: ubuntu-latest, system: aarch64-linux }
+          - { os: macos-latest, system: aarch64-darwin }
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+        if: matrix.system == 'aarch64-linux'
+      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
+        with:
+          extra-conf: extra-platforms = aarch64-linux
+      - run: nix build .#packages.${{ matrix.system }}.default
+      - run: nix build .#checks.${{ matrix.system }}.default
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: cachix/install-nix-action@3dc140bfc76c49fbd4dd958429132e3746bcb086 # v31.11.5
+      - run: nix flake check
+      - run: nix fmt -- --check .
+      - run: nix run nixpkgs#statix -- check .
+      - run: nix run nixpkgs#deadnix -- --fail .

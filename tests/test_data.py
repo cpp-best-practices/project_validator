@@ -21,9 +21,10 @@ class DataFormatTests(unittest.TestCase):
         files = {"a.json": "{}", "b.toml": "", "c.yml": "", "d.xml": "<a/>", "e.xsd": "<a/>", "f.jsonc": "{}"}
         with temp_project(files) as root:
             structure = make_context(root).structure
-        self.assertEqual((structure.languages, structure.formats), (frozenset(), DATA.languages))
+        # The XSD makes it an XML Schema project too; the Data formats are all there.
+        self.assertEqual((structure.languages, structure.formats & DATA.languages), (frozenset(), DATA.languages))
         signals = (".json files", ".jsonc files", ".toml files", ".xml files", ".xsd files", ".yml files")
-        self.assertEqual(structure.recognised_by, {"Data": signals})
+        self.assertEqual(structure.recognised_by["Data"], signals)
         self.assertEqual(structure.unrecognised_suffixes, ())
         self.assertFalse(set(DATA.source_suffixes or {}) & NOT_SOURCE_SUFFIXES)
 

@@ -506,6 +506,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Ruby",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -908,6 +927,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Ruby version(s) (3.3, 3.4), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [],

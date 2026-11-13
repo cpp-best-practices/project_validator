@@ -1,7 +1,7 @@
-"""Roles: what the code at a path is for (the product, its tests, examples, docs, tooling, benchmarks, or other
-projects' vendored code), told by the directories it is in. Shared by the structure facts and the settings readers,
-which skip vendored projects' configuration. A role names code (`--auxiliary tooling`), it judges none: every role
-but `vendored` is the product's until named."""
+"""Roles: what the code at a path is for (the product, its tests, examples, docs, tooling, benchmarks, templates,
+or other projects' vendored code), told by the directories it is in. Shared by the structure facts and the settings
+readers, which skip vendored projects' configuration. A role names code (`--auxiliary tooling`), it judges none:
+every role but `vendored` is the product's until named."""
 
 from __future__ import annotations
 
@@ -32,6 +32,8 @@ _ROLES = {
     **dict.fromkeys(("doc", "docs", "documentation", "website"), "docs"),
     **dict.fromkeys(("tools", "tooling", "scripts"), "tooling"),
     **dict.fromkeys(("bench", "benches", "benchmark", "benchmarks"), "benchmark"),
+    # Files rendered before they are read (a Helm chart's manifests, Jinja pages): not well formed as they are.
+    **dict.fromkeys(("template", "templates"), "template"),
 }
 # The roles `--auxiliary` may name as not the product's (see `project_validator.facts.auxiliary`); vendored code is
 # never judged, named or not.
@@ -59,8 +61,8 @@ def _vendored(posix: PurePosixPath, parts: list[str], directory: bool) -> bool:
 def role(path: str, *, directory: bool = False) -> str:
     """What the code at `path` is for: `vendored` code of other projects (below a vendor directory anywhere, or a
     minified bundle), else by the outermost directory that tells, above any source root (`src`, `lib`): the
-    `product`, its `test`s (test fixtures, fuzz and stress tests too), an `example`, `docs`, `tooling` or a
-    `benchmark`. A directory's own name tells first, below a source root too (`internal/tools`)."""
+    `product`, its `test`s (test fixtures, fuzz and stress tests too), an `example`, `docs`, `tooling`, a
+    `benchmark` or a `template`. A directory's own name tells first, below a source root too (`internal/tools`)."""
     posix = PurePosixPath(path)
     parts = [part.lower() for part in (posix.parts if directory else posix.parts[:-1])]
     if _vendored(posix, parts, directory):

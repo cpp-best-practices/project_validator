@@ -436,6 +436,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Haskell",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Haskell",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -770,6 +789,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 GHC version(s) (9.10, 9.8), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Haskell",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [],

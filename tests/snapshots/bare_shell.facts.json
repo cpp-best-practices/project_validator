@@ -1,0 +1,71 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "PowerShell",
+      "origin": "src/Shop.ps1",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Shell",
+      "origin": "src/shop.sh",
+      "role": "product"
+    },
+    {
+      "build_systems": [],
+      "formats": [],
+      "kind": "Unit",
+      "languages": [
+        "PowerShell",
+        "Shell"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "src/Shop.ps1",
+      "reader": "Pester"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Shell": [
+        ".ps1 files",
+        ".sh files"
+      ]
+    },
+    "formats": [],
+    "languages": [
+      "PowerShell",
+      "Shell"
+    ],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [],
+        "languages": [
+          "PowerShell",
+          "Shell"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "XML",
+      "origin": "schema/catalog.xsd",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "XML",
+      "origin": "xslt/total.xsl",
+      "role": "product"
+    },
+    {
+      "ecosystem": "XML schemas",
+      "kind": "ContentLanguages",
+      "languages": [
+        "XML Schema",
+        "XSLT"
+      ],
+      "origin": "."
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "XML Schema",
+        "XML",
+        "XSLT"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "XML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "schema/catalog.xsd",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "XML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "xslt/total.xsl",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Data": [
+        ".xsd files",
+        ".xsl files"
+      ],
+      "XML schemas": [
+        "content"
+      ]
+    },
+    "formats": [
+      "XML",
+      "XML Schema",
+      "XSLT"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "XML",
+          "XML Schema",
+          "XSLT"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

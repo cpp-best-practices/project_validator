@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "https://shop.example.com/catalog.schema.json",
+  "title": "Catalog",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["name", "price"],
+    "properties": {
+      "name": { "type": "string" },
+      "price": { "type": "integer", "minimum": 0 }
+    }
+  }
+}

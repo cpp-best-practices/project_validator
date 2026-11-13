@@ -1,0 +1,13 @@
+on: [push, pull_request]
+jobs:
+  notebooks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.13"
+      - run: pip install nbmake pytest ruff ipykernel
+      - run: ruff format --check notebooks
+      - run: ruff check notebooks
+      - run: pytest --nbmake notebooks

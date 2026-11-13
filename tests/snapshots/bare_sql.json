@@ -274,6 +274,25 @@
         "units": []
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "SQL",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -594,6 +613,11 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "schema-validation": {
       "details": [],
       "message": "not applicable to SQL",
       "status": "SKIP"

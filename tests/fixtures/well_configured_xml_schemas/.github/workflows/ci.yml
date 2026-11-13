@@ -1,0 +1,15 @@
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: sudo apt-get install -y libxml2-utils
+      - run: xmllint --noout --schema schema/catalog.xsd data/catalog.xml
+      - run: npx --yes prettier --plugin=@prettier/plugin-xml --check schema xslt tests data
+  xspec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: git clone --depth 1 https://github.com/xspec/xspec.git /tmp/xspec
+      - run: /tmp/xspec/bin/xspec.sh -t tests/total.xspec

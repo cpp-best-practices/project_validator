@@ -19,6 +19,7 @@ from project_validator.facts.structure import (
     UnrecognisedSuffix,
     project_formats,
     project_languages,
+    source_signal,
 )
 
 if TYPE_CHECKING:
@@ -129,7 +130,7 @@ def _found_signals(facts: Facts) -> Iterator[tuple[frozenset[str], str]]:
         yield build.languages, f"{kind} {PurePosixPath(build.origin.path).name}"
     # (suffix, language, ambiguous) of the project's own sources, in the order they were found.
     sources = dict.fromkeys(
-        (PurePosixPath(source.path).suffix, source.language, source.ambiguous)
+        (source_signal(source.path), source.language, source.ambiguous)
         for source in facts.of(SourceFile)
         if source.language is not None and not source.vendored
     )

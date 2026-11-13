@@ -27,11 +27,9 @@ from project_validator.facts.settings import SettingsReader, file_reader, matche
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested
 from project_validator.facts.tools import Definition, Run, defined_by, starts
 from project_validator.tools.audits import multi_ecosystem_audits
+from project_validator.tools.editorconfig import EDITORCONFIG
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
-
-EDITORCONFIG_FILES = file_reader("EditorConfig", (".editorconfig",))
-
 
 CSHARPIER_FILES = file_reader("CSharpier", (".csharpierrc", ".csharpierrc.json", ".csharpierrc.yaml"))
 
@@ -42,7 +40,7 @@ DOTNET_FORMAT = format_tool(
     languages=frozenset({CSHARP}),
     can={Enforcement.CHECK: "dotnet format --verify-no-changes", Enforcement.APPLY: "dotnet format"},
     formats=flagged(("dotnet", "format"), checks=("--verify-no-changes",)),
-    style=defined_by(files=("EditorConfig",)),
+    style=defined_by(files=(EDITORCONFIG.name,)),
 )
 
 
@@ -60,7 +58,7 @@ FANTOMAS = format_tool(
     languages=frozenset({FSHARP}),
     can={Enforcement.CHECK: "fantomas --check .", Enforcement.APPLY: "fantomas ."},
     formats=flagged(("fantomas",), ("dotnet", "fantomas"), checks=("--check",)),
-    style=defined_by(files=("EditorConfig",)),
+    style=defined_by(files=(EDITORCONFIG.name,)),
 )
 
 

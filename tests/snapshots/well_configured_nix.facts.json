@@ -1,0 +1,1105 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "Nix flake",
+      "kind": "BuildFile",
+      "languages": [
+        "Nix"
+      ],
+      "origin": "flake.nix"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Nix",
+      "origin": "flake.nix",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Nix",
+      "origin": "shop.nix",
+      "role": "product"
+    },
+    {
+      "build_systems": [
+        "Nix flake"
+      ],
+      "formats": [
+        "YAML"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Nix"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "flake checks (a checks output in flake.nix)",
+      "language": "Nix",
+      "origin": "flake.nix"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "actionlint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "via": []
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:build[0]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "system": "x86_64-linux"
+      },
+      "name": "build (ubuntu-latest, x86_64-linux)",
+      "origin": ".github/workflows/ci.yml:jobs.build",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:build[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-conf": "extra-platforms = aarch64-linux"
+      },
+      "job": ".github/workflows/ci.yml:build[0]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[2]",
+      "uses": "DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa"
+    },
+    {
+      "argv": [
+        "nix",
+        "build",
+        ".#packages.x86_64-linux.default"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:build[0]",
+      "kind": "Command",
+      "line": "nix build .#packages.x86_64-linux.default",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "nix",
+        "build",
+        ".#checks.x86_64-linux.default"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:build[0]",
+      "kind": "Command",
+      "line": "nix build .#checks.x86_64-linux.default",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:build[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "ubuntu-latest",
+        "system": "aarch64-linux"
+      },
+      "name": "build (ubuntu-latest, aarch64-linux)",
+      "origin": ".github/workflows/ci.yml:jobs.build",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:build[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:build[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[1]",
+      "uses": "docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-conf": "extra-platforms = aarch64-linux"
+      },
+      "job": ".github/workflows/ci.yml:build[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[2]",
+      "uses": "DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa"
+    },
+    {
+      "argv": [
+        "nix",
+        "build",
+        ".#packages.aarch64-linux.default"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:build[1]",
+      "kind": "Command",
+      "line": "nix build .#packages.aarch64-linux.default",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "nix",
+        "build",
+        ".#checks.aarch64-linux.default"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:build[1]",
+      "kind": "Command",
+      "line": "nix build .#checks.aarch64-linux.default",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:build[2]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "os": "macos-latest",
+        "system": "aarch64-darwin"
+      },
+      "name": "build (macos-latest, aarch64-darwin)",
+      "origin": ".github/workflows/ci.yml:jobs.build",
+      "os": "macos",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:build[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "extra-conf": "extra-platforms = aarch64-linux"
+      },
+      "job": ".github/workflows/ci.yml:build[2]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[2]",
+      "uses": "DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa"
+    },
+    {
+      "argv": [
+        "nix",
+        "build",
+        ".#packages.aarch64-darwin.default"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:build[2]",
+      "kind": "Command",
+      "line": "nix build .#packages.aarch64-darwin.default",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "nix",
+        "build",
+        ".#checks.aarch64-darwin.default"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:build[2]",
+      "kind": "Command",
+      "line": "nix build .#checks.aarch64-darwin.default",
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[4].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[1]",
+      "uses": "cachix/install-nix-action@3dc140bfc76c49fbd4dd958429132e3746bcb086"
+    },
+    {
+      "argv": [
+        "nix",
+        "flake",
+        "check"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "nix flake check",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "nix",
+        "fmt",
+        "--",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "nix fmt -- --check .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "nix",
+        "run",
+        "nixpkgs#statix",
+        "--",
+        "check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "nix run nixpkgs#statix -- check .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "statix",
+        "check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "nix run nixpkgs#statix -- check .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "argv": [
+        "nix",
+        "run",
+        "nixpkgs#deadnix",
+        "--",
+        "--fail",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "nix run nixpkgs#deadnix -- --fail .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "deadnix",
+        "--fail",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "nix run nixpkgs#deadnix -- --fail .",
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[5].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "cachix/install-nix-action@3dc140bfc76c49fbd4dd958429132e3746bcb086"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Nix"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:build[0]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: build (ubuntu-latest, x86_64-linux)",
+      "origin": ".github/workflows/ci.yml:jobs.build",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Nix",
+          "version": "x86_64-linux"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Nix"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:build[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: build (ubuntu-latest, aarch64-linux)",
+      "origin": ".github/workflows/ci.yml:jobs.build",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Nix",
+          "version": "aarch64-linux"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "appleclang"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Nix"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:build[2]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: build (macos-latest, aarch64-darwin)",
+      "origin": ".github/workflows/ci.yml:jobs.build",
+      "os": "macos",
+      "toolchains": [
+        {
+          "language": "Nix",
+          "version": "aarch64-darwin"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Nix"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: lint",
+      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "os": "linux",
+      "toolchains": [
+        {
+          "language": "Nix",
+          "version": "default"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "result",
+      "syntax": "glob",
+      "written": "result"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "result-*",
+      "syntax": "glob",
+      "written": "result-*"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ToolRun",
+      "languages": [
+        "GitHub Action"
+      ],
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "provides": {
+        "security": [
+          "scans"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zizmor",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ToolRun",
+      "languages": [
+        "GitHub Action"
+      ],
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "actionlint",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:build[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Nix"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "nix flake check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:build[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Nix"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "nix flake check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:build[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Nix"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.build.steps[4].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "nix flake check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Nix"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "nix flake check",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Nix"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "nix fmt",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Nix"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "statix",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[4].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "Nix"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "deadnix",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[5].run"
+      ]
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Nix flake"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Nix"
+          ],
+          "name": ".github/workflows/ci.yml: build (ubuntu-latest, x86_64-linux)",
+          "os": "linux",
+          "toolchains": [
+            "Nix x86_64-linux"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Nix"
+          ],
+          "name": ".github/workflows/ci.yml: build (ubuntu-latest, aarch64-linux)",
+          "os": "linux",
+          "toolchains": [
+            "Nix aarch64-linux"
+          ]
+        },
+        {
+          "compilers": [
+            "appleclang"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Nix"
+          ],
+          "name": ".github/workflows/ci.yml: build (macos-latest, aarch64-darwin)",
+          "os": "macos",
+          "toolchains": [
+            "Nix aarch64-darwin"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Nix"
+          ],
+          "name": ".github/workflows/ci.yml: lint",
+          "os": "linux",
+          "toolchains": [
+            "Nix default"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Data": [
+        ".yml files"
+      ],
+      "Nix": [
+        "build file flake.nix",
+        ".nix files"
+      ]
+    },
+    "formats": [
+      "YAML"
+    ],
+    "languages": [
+      "Nix"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "Nix flake"
+        ],
+        "directory": ".",
+        "formats": [
+          "YAML"
+        ],
+        "languages": [
+          "Nix"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

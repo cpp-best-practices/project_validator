@@ -424,6 +424,25 @@
         ]
       }
     ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Julia",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [
       {
         "auxiliary": {},
@@ -785,6 +804,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Julia version(s) (1, lts, pre), 9 combination(s)",
       "status": "PASS"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
     },
     "secret-scanning": {
       "details": [],

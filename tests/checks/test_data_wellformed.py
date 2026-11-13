@@ -35,7 +35,7 @@ class DataWellformedTests(unittest.TestCase):
         self.assertEqual(result.details, problems)
 
     def test_applies_to_the_formats_with_a_parser(self) -> None:
-        self.assertEqual(data_wellformed.languages, frozenset({"JSON", "TOML", "XML", "YAML"}))
+        self.assertEqual(data_wellformed.languages, frozenset({"Dockerfile", "JSON", "Jupyter", "TOML", "XML", "YAML"}))
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
         result = data_wellformed.run(make_context(FIXTURES / "well_configured_c_cpp", Options()))

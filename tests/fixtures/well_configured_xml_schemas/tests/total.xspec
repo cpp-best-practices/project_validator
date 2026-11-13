@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="../xslt/total.xsl">
+  <x:scenario label="sums the prices">
+    <x:context>
+      <catalog>
+        <item name="apple" price="1"/>
+        <item name="pear" price="2"/>
+      </catalog>
+    </x:context>
+    <x:expect label="three">3</x:expect>
+  </x:scenario>
+</x:description>

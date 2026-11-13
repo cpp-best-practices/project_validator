@@ -1,0 +1,23 @@
+openapi: 3.1.0
+info:
+  title: Shop
+  version: 1.0.0
+paths:
+  /total:
+    post:
+      operationId: total
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+      responses:
+        "200":
+          description: The sum of the prices.
+          content:
+            application/json:
+              schema:
+                type: integer

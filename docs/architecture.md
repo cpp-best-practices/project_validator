@@ -192,7 +192,7 @@ and compilers are matched in the evidence as text, matrix values first (`project
 ### Tools
 
 There is one tool model (`Tool`, `project_validator/facts/tools.py`). A tool records the languages it handles and,
-per *aspect* it can provide (`coverage`, `format`, `analysis`, `type-check`, `test`, `audit`, `security`,
+per *aspect* it can provide (`coverage`, `format`, `analysis`, `type-check`, `test`, `audit`, `security`, `schema`,
 `function-length`, `fuzz`, `mutation`), the levels it can provide and how to ask for each (`can`). It claims commands
 (`claims(command, facts)`: `starts`, `when`, `flagged`, `with_option`, `all_of`, `any_of` spell the common claims)
 and reads only facts. A claimed command is a `ToolRun`: job, tool, languages, the aspects and levels that run

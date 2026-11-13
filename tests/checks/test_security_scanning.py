@@ -31,7 +31,12 @@ C_HINT = (
 
 
 def _layouts_of(*languages: str) -> tuple[ProjectLayout, ...]:
-    return tuple(layout for layout in PROJECT_LAYOUTS if layout.languages == frozenset(languages))
+    wanted = frozenset(languages)
+    return tuple(
+        layout
+        for layout in PROJECT_LAYOUTS
+        if layout.languages == wanted or (not layout.languages and wanted <= layout.formats)
+    )
 
 
 def _steps(*steps: Mapping[str, object]) -> dict[str, str]:
@@ -57,8 +62,9 @@ class SecurityScanningTests(unittest.TestCase):
         )
 
     def test_passes_with_codeql_in_every_layout(self) -> None:
-        # CodeQL does not analyse PHP, Terraform's HCL, Elixir, Scala, Dart, Lua, OCaml, Julia or Clojure (nothing scans
-        # Erlang or Haskell: skipped).
+        # CodeQL does not analyse PHP, Terraform's HCL, Elixir, Scala, Dart, Lua, OCaml, Julia, Clojure, Dockerfiles,
+        # Kubernetes manifests or Ansible (nothing scans Erlang or Haskell: skipped); zizmor, in the well-configured
+        # fixture's ci-lint workflow, scans an action repository, so that layout is judged apart.
         unread = {
             "PHP": "PHP",
             "Terraform": "Terraform",
@@ -69,8 +75,12 @@ class SecurityScanningTests(unittest.TestCase):
             "OCaml": "OCaml",
             "Julia": "Julia",
             "Clojure": "Clojure",
+            "Dockerfile": "Docker",
+            "Kubernetes": "Kubernetes",
+            "Ansible": "Ansible",
         }
-        layouts = tuple(layout for layout in PROJECT_LAYOUTS if not layout.languages & unread.keys())
+        apart = {*unread, "GitHub Action"}
+        layouts = tuple(layout for layout in PROJECT_LAYOUTS if not (layout.languages | layout.formats) & apart)
         self.assertEqual(run_in_every_layout(self, security_scanning, WELL_CONFIGURED, layouts), _found("CodeQL"))
         for language, label in unread.items():
             result = run_in_every_layout(self, security_scanning, WELL_CONFIGURED, _layouts_of(language))

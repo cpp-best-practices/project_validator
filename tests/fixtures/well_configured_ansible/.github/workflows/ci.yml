@@ -1,0 +1,14 @@
+on: [push, pull_request]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: pipx run ansible-lint --profile production
+      - run: pipx run checkov -d . --framework ansible
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: pip install ansible-core 'molecule-plugins[docker]'
+      - run: molecule test
