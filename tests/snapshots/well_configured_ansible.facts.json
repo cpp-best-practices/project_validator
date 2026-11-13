@@ -673,48 +673,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci-lint.yml:ci-lint",
-      "kind": "ToolRun",
-      "languages": [
-        "GitHub Action"
-      ],
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "zizmor",
-      "via": [
-        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci-lint.yml:ci-lint",
-      "kind": "ToolRun",
-      "languages": [
-        "GitHub Action"
-      ],
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "actionlint",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
       "languages": [
@@ -744,81 +702,6 @@
       "kind": "ToolRun",
       "languages": [
         "Ansible"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ],
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "checkov",
-      "via": [
-        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:lint",
-      "kind": "ToolRun",
-      "languages": [
-        "Dockerfile"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ],
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "checkov",
-      "via": [
-        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:lint",
-      "kind": "ToolRun",
-      "languages": [
-        "Kubernetes"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ],
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "checkov",
-      "via": [
-        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:lint",
-      "kind": "ToolRun",
-      "languages": [
-        "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
       "provides": {

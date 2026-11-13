@@ -7,18 +7,137 @@
     "coverage": [],
     "dependency-audit": [],
     "dependency-management": [],
-    "formatting": [],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "prettier": {
+                "can": {
+                  "apply": "prettier --write .",
+                  "check": "prettier --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "XML Schema",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "XSLT",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "prettier": {
+                "can": {
+                  "apply": "prettier --write .",
+                  "check": "prettier --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "XSLT",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "function-limits": [],
     "fuzz-testing": [],
     "hardening": [],
     "license": [],
     "mutation-testing": [],
     "platforms": [],
-    "schema-validation": [],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "SchXslt": {
+                "can": {
+                  "validates": "schxslt -s <schema.sch> -d <document>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "jing": {
+                "can": {
+                  "validates": "jing <schema> <documents> (RELAX NG, or an XSD with -c)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "xmllint": {
+                "can": {
+                  "validates": "xmllint --noout --schema <schema> <documents> (or --relaxng, --schematron)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "XML Schema",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [],
     "security-scanning": [],
     "static-analysis": [],
-    "tests": [],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "XSLT",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "XSpec": {
+                "can": {
+                  "runs": "xspec.sh -t tests/*.xspec (or the XSpec Maven or Ant targets)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "XSLT",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [],
     "vcs-ignore": [],
     "warnings-as-errors": [],

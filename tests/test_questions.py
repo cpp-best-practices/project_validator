@@ -257,11 +257,16 @@ class UnitTests(unittest.TestCase):
             found = answers(make_context(root))
         kinds = {question.name: question.kinds for question in known_questions()}
         self.assertEqual((kinds["coverage"], kinds["wellformed"]), (LANGUAGES, FORMATS))
+        self.assertEqual(kinds["static-analysis"], LANGUAGES | FORMATS)
         for question, entries in found.items():
             with self.subTest(question=question):
-                expected = [*["Python"] * ("language" in kinds[question]), *["WDATA"] * ("format" in kinds[question])]
                 asked = [entry["language"] for entry in cast("list[dict[str, object]]", entries)]
-                self.assertEqual(asked, expected)
+                # A language is listed whatever the answer; a format only where a tool could answer (no analyzer
+                # handles WDATA, so static-analysis lists Python alone), and always for what parses.
+                self.assertEqual("Python" in asked, "language" in kinds[question])
+                self.assertLessEqual(set(asked) - {"Python"}, {"WDATA"} if "format" in kinds[question] else set())
+                if question == "wellformed":
+                    self.assertEqual(asked, ["WDATA"])
 
     def test_each_unit_of_a_language_is_answered(self) -> None:
         facts = Facts(

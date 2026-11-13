@@ -2,12 +2,71 @@
   "answers": {
     "action-pinning": [],
     "ci-lint": [],
-    "committed-artifacts": [],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "Jupyter",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "Jupyter",
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "compiler-warnings": [],
     "coverage": [],
     "dependency-audit": [],
     "dependency-management": [],
-    "formatting": [],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Jupyter",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "ruff format": [
+                "ruff.toml"
+              ]
+            },
+            "known": {
+              "nbqa black": {
+                "can": {
+                  "apply": "nbqa black notebooks",
+                  "check": "nbqa black --check notebooks"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "ruff format": {
+                "can": {
+                  "apply": "ruff format notebooks",
+                  "check": "ruff format --check notebooks"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Jupyter",
+            "level": "check",
+            "runs": {
+              "ruff format": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "function-limits": [],
     "fuzz-testing": [],
     "hardening": [],
@@ -17,10 +76,101 @@
     "schema-validation": [],
     "secret-scanning": [],
     "security-scanning": [],
-    "static-analysis": [],
-    "tests": [],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Jupyter",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "ruff check": [
+                "ruff.toml"
+              ]
+            },
+            "known": {
+              "ruff check": {
+                "can": {
+                  "checks": "ruff check notebooks (or nbqa ruff, nbqa flake8, nbqa pylint)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Jupyter",
+            "level": "checks",
+            "runs": {
+              "ruff check": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Jupyter",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "notebook execution": [
+                "notebooks/prices.ipynb"
+              ]
+            },
+            "known": {
+              "notebook execution": {
+                "can": {
+                  "runs": "pytest --nbmake notebooks (or --nbval, jupyter nbconvert --execute, papermill)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Jupyter",
+            "level": "runs",
+            "runs": {
+              "notebook execution": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [],
-    "vcs-ignore": [],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "Jupyter",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Jupyter",
+            "outputs": {
+              "Jupyter's checkpoints (.ipynb_checkpoints/)": {
+                ".gitignore": ".ipynb_checkpoints/"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
     "warnings-as-errors": [],
     "wellformed": [
       {

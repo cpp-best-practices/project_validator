@@ -14,10 +14,136 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
-    "schema-validation": [],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "openapi-generator": {
+                "can": {
+                  "validates": "openapi-generator-cli validate -i <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "redocly": {
+                "can": {
+                  "validates": "redocly lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "spectral": {
+                "can": {
+                  "validates": "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "swagger-cli": {
+                "can": {
+                  "validates": "swagger-cli validate <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "vacuum": {
+                "can": {
+                  "validates": "vacuum lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OpenAPI",
+            "level": "validates",
+            "runs": {
+              "spectral": {
+                "levels": [
+                  "validates"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "secret-scanning": [],
     "security-scanning": [],
-    "static-analysis": [],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "spectral": [
+                ".spectral.yaml"
+              ]
+            },
+            "known": {
+              "openapi-generator": {
+                "can": {
+                  "checks": "openapi-generator-cli validate -i <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "redocly": {
+                "can": {
+                  "checks": "redocly lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "spectral": {
+                "can": {
+                  "checks": "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "swagger-cli": {
+                "can": {
+                  "checks": "swagger-cli validate <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "vacuum": {
+                "can": {
+                  "checks": "vacuum lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OpenAPI",
+            "level": "checks",
+            "runs": {
+              "spectral": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "tests": [],
     "type-checking": [],
     "vcs-ignore": [],

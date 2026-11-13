@@ -16,9 +16,87 @@
     "platforms": [],
     "schema-validation": [],
     "secret-scanning": [],
-    "security-scanning": [],
-    "static-analysis": [],
-    "tests": [],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "GitHub Action",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "zizmor": {
+                "can": {
+                  "scans": "zizmor . (or zizmorcore/zizmor-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "GitHub Action",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "GitHub Action",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "actionlint": {
+                "can": {
+                  "checks": "actionlint (or rhysd/actionlint)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "GitHub Action",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "GitHub Action",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "the action's own workflow": {
+                "can": {
+                  "runs": "a workflow step `uses: ./`, which runs the action from the checkout"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "GitHub Action",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [],
     "vcs-ignore": [],
     "warnings-as-errors": [],

@@ -509,48 +509,6 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci-lint.yml:ci-lint",
-      "kind": "ToolRun",
-      "languages": [
-        "GitHub Action"
-      ],
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "zizmor",
-      "via": [
-        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci-lint.yml:ci-lint",
-      "kind": "ToolRun",
-      "languages": [
-        "GitHub Action"
-      ],
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "actionlint",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:notebooks",
       "kind": "ToolRun",
       "languages": [
@@ -574,47 +532,7 @@
       "job": ".github/workflows/ci.yml:notebooks",
       "kind": "ToolRun",
       "languages": [
-        "Python"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.notebooks.steps[3].run",
-      "provides": {
-        "format": [
-          "check"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "ruff format",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:notebooks",
-      "kind": "ToolRun",
-      "languages": [
         "Jupyter"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.notebooks.steps[4].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "ruff check",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:notebooks",
-      "kind": "ToolRun",
-      "languages": [
-        "Python"
       ],
       "origin": ".github/workflows/ci.yml:jobs.notebooks.steps[4].run",
       "provides": {
@@ -647,26 +565,6 @@
         "."
       ],
       "tool": "notebook execution",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:notebooks",
-      "kind": "ToolRun",
-      "languages": [
-        "Python"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.notebooks.steps[5].run",
-      "provides": {
-        "test": [
-          "runs"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "pytest",
       "via": []
     }
   ],

@@ -168,7 +168,9 @@ class GoMutationTests(unittest.TestCase):
         self.assertEqual(provided(GREMLINS.claims(command("gremlins unleash"), Facts())), {MUTATION: frozenset({RUNS})})
         self.assertIsNone(GREMLINS.claims(command("gremlins run"), Facts()))
         line = "go run github.com/go-gremlins/gremlins/cmd/gremlins@latest unleash"
-        self.assertIn("gremlins", {run.tool for run in ci_tool_runs(github_job("ubuntu-latest", line))})
+        self.assertIn(
+            "gremlins", {run.tool for run in ci_tool_runs({**github_job("ubuntu-latest", line), "main.go": ""})}
+        )
 
     def test_gremlins_diff_is_incremental(self) -> None:
         run = GREMLINS.claims(command("gremlins unleash --diff origin/main"), Facts())
@@ -194,7 +196,7 @@ RUN_INCREMENTALLY = {MUTATION: frozenset({RUNS, INCREMENTAL})}
 class JavaScriptMutationTests(unittest.TestCase):
     def test_stryker_run_is_a_run(self) -> None:
         self.assertEqual(provided(STRYKER_JS.claims(command("stryker run"), Facts())), RUN_ONLY)
-        runs = ci_tool_runs(github_job("ubuntu-latest", "npx stryker run"))
+        runs = ci_tool_runs({**github_job("ubuntu-latest", "npx stryker run"), "index.js": ""})
         self.assertIn("StrykerJS", {run.tool for run in runs})
         self.assertIsNone(STRYKER_JS.claims(command("stryker init"), Facts()))
 
@@ -272,7 +274,7 @@ class RubyMutationTests(unittest.TestCase):
     def test_mutant_run_is_a_run(self) -> None:
         for line in ("mutant run", "mutant run -- 'App*'"):
             self.assertEqual(provided(MUTANT.claims(command(line), Facts())), RUN_ONLY, line)
-        runs = ci_tool_runs(github_job("ubuntu-latest", "bundle exec mutant run"))
+        runs = ci_tool_runs({**github_job("ubuntu-latest", "bundle exec mutant run"), "lib/app.rb": ""})
         self.assertIn("mutant", {run.tool for run in runs})
         self.assertIsNone(MUTANT.claims(command("mutant environment show"), Facts()))
 

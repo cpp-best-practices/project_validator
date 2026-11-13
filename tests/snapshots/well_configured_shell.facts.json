@@ -875,73 +875,10 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci-lint.yml:ci-lint",
-      "kind": "ToolRun",
-      "languages": [
-        "GitHub Action"
-      ],
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "zizmor",
-      "via": [
-        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci-lint.yml:ci-lint",
-      "kind": "ToolRun",
-      "languages": [
-        "GitHub Action"
-      ],
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "actionlint",
-      "via": []
-    },
-    {
-      "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
         "Shell"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
-      "provides": {
-        "coverage": [
-          "line reported",
-          "line"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "kcov",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "ToolRun",
-      "languages": [
-        "Zig"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {
@@ -985,27 +922,6 @@
       "kind": "ToolRun",
       "languages": [
         "Shell"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
-      "provides": {
-        "coverage": [
-          "line reported",
-          "line"
-        ]
-      },
-      "read": [],
-      "scope": [
-        "."
-      ],
-      "tool": "kcov",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "ToolRun",
-      "languages": [
-        "Zig"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
       "provides": {

@@ -109,7 +109,7 @@ class CodeFormattingTests(unittest.TestCase):
             ),
         }
         self.assertEqual(self._run(files).status, Status.PASS)
-        with temp_project(files) as root:
+        with temp_project({**files, "src/main.c": "int main(void) { return 0; }\n"}) as root:
             [run] = [run for run in make_context(root).facts.of(ToolRun) if run.tool == "clang-format"]
         self.assertTrue(run.heuristic)
 

@@ -1195,7 +1195,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "Elixir: no tests found (ExUnit tests (test/**/*_test.exs) or EUnit tests (*_test() functions) or Common Test suites (*_SUITE.erl)); Erlang: no tests found (ExUnit tests (test/**/*_test.exs) or EUnit tests (*_test() functions) or Common Test suites (*_SUITE.erl) or EUnit tests (*_test() functions) or Common Test suites (*_SUITE.erl))",
+      "message": "no tests found (ExUnit tests (test/**/*_test.exs), EUnit tests (*_test() functions) or Common Test suites (*_SUITE.erl))",
       "status": "FAIL"
     },
     "type-checking": {

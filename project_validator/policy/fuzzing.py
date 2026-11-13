@@ -13,7 +13,7 @@ def _no_targets(answer: FuzzAnswer) -> Result:
     """The result when no fuzz target is defined: a fuzzer CI runs without any recognised, property-based tests alone,
     or nothing."""
     hint = f"consider adding {either(answer.tools.how(RUNS))}"
-    kinds = dict.fromkeys(tool.describe for tool in answer.tools.known if tool.describe)
+    kinds = dict.fromkeys(kind for tool in answer.tools.known for kind in (tool.kinds or (tool.describe,)) if kind)
     ran = (*answer.tools.providing(), *answer.other_runs)
     if ran:
         return Result.warned(

@@ -31,8 +31,9 @@ class KnownTool:
     can: Mapping[str, str]
     needs_definition: bool = False
     required: bool = False
-    # What defines how it provides the aspect (`Test functions in *_test.go files`).
+    # What defines how it provides the aspect (`Test functions in *_test.go files`), and the kinds it joins.
     describe: str = ""
+    kinds: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -145,12 +146,14 @@ def _runs(aspect: str, language: str, unit: str, facts: Facts, auxiliary: tuple[
 
 
 def _known(tool: Tool, aspect: str) -> KnownTool:
+    definition = tool.definitions.get(aspect)
     return KnownTool(
         name=tool.name,
         can=tool.can[aspect],
         needs_definition=tool.needs_definition(aspect),
         required=aspect in tool.required,
-        describe=definition.describe if (definition := tool.definitions.get(aspect)) is not None else "",
+        describe=definition.describe if definition is not None else "",
+        kinds=definition.kinds if definition is not None else (),
     )
 
 
