@@ -166,6 +166,18 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -710,6 +722,18 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -1073,6 +1097,18 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -1243,6 +1279,11 @@
       "message": "not applicable to PowerShell, Shell",
       "status": "SKIP"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "PowerShell: strict PowerShell lints are enabled: PSScriptAnalyzer; Shell: strict shell lints are enabled: shellcheck",
@@ -1330,6 +1371,11 @@
       "message": "not applicable to PowerShell, Shell",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "not applicable to PowerShell, Shell",
@@ -1389,6 +1435,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

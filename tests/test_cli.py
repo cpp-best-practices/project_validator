@@ -198,7 +198,8 @@ class CliTests(unittest.TestCase):
                 self.assertEqual(code, EXIT_FAILURE, output)
                 for found in LANGUAGE_SPECIFIC_CHECKS:
                     skipped = f"[SKIP] {found.name}:" in output
-                    self.assertEqual(skipped, not found.languages & layout.languages, found.name)
+                    expected = not found.languages & layout.languages or found.name in layout.skipped
+                    self.assertEqual(skipped, expected, found.name)
 
     def test_excluded_directories_are_left_out_of_the_map(self) -> None:
         excluded = {"tests/fixtures/cmake/CMakeLists.txt": "", "tests/fixtures/cmake/main.cpp": ""}

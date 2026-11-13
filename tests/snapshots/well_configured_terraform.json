@@ -86,6 +86,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -357,6 +364,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
       }
     ],
     "platforms": [
@@ -680,6 +694,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -785,6 +806,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to Terraform",
@@ -869,6 +895,11 @@
       "message": "not applicable to Terraform",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no Terraform version",
@@ -938,6 +969,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

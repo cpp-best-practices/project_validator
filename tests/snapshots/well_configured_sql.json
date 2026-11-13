@@ -76,6 +76,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -400,6 +407,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -632,6 +646,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -745,6 +766,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to SQL",
@@ -829,6 +855,11 @@
       "message": "not applicable to SQL",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "not applicable to SQL",
@@ -888,6 +919,11 @@
       "details": [],
       "message": "tests found in 2 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

@@ -81,6 +81,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Zig",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -389,6 +396,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Zig",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -624,6 +638,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Zig",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -731,6 +752,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Zig",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to Zig",
@@ -813,6 +839,11 @@
       "status": "SKIP"
     },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Zig",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Zig",
       "status": "SKIP"
@@ -905,6 +936,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Zig",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

@@ -282,6 +282,11 @@ class Evaluation:
             self.run(block.branches[0][1], replace(frame, scope=Scope(frame.scope)))
 
     def _if(self, block: Block, frame: Frame) -> None:
+        # Each condition as written, for the observer: what the project guards on is a fact of its own, whether or
+        # not the branch is reached in some build.
+        for opening, _ in block.branches:
+            if opening.name != "else":
+                self.observer.invoked(frame, opening, [Value(argument.text) for argument in opening.arguments])
         remaining = frame.condition
         for opening, body in block.branches:
             holds = ALWAYS if opening.name == "else" else self.condition(opening.arguments, frame)

@@ -3,6 +3,7 @@
     "action-pinning": [],
     "ci-lint": [],
     "committed-artifacts": [],
+    "compile-commands": [],
     "compiler-warnings": [],
     "coverage": [],
     "cxx-extensions": [],
@@ -43,6 +44,7 @@
     "link-check": [],
     "migration-safety": [],
     "mutation-testing": [],
+    "out-of-source-build": [],
     "platforms": [],
     "sanitizers": [],
     "schema-compatibility": [
@@ -157,6 +159,7 @@
       }
     ],
     "tests": [],
+    "top-level-guard": [],
     "type-checking": [],
     "vcs-ignore": [],
     "warnings-as-errors": [],
@@ -207,6 +210,11 @@
       "status": "FAIL"
     },
     "committed-artifacts": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "compile-commands": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
@@ -297,6 +305,11 @@
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
@@ -368,6 +381,11 @@
       "status": "FAIL"
     },
     "tests-run": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "top-level-guard": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"

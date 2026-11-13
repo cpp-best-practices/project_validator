@@ -86,6 +86,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -427,6 +434,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -680,6 +694,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -805,6 +826,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Dart analyzer settings are enabled: a lint set in analysis_options.yaml, dart analyze",
@@ -892,6 +918,11 @@
       "message": "not applicable to Dart",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no Dart or Flutter SDK version",
@@ -962,6 +993,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

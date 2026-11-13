@@ -84,6 +84,18 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -695,6 +707,18 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -1050,6 +1074,18 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -1230,6 +1266,11 @@
       "message": "2 build outputs are committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "Elixir: no Elixir linters found; enable at least mix credo --strict; Erlang: no Erlang warnings found; enable at least warn_* erl_opts, elvis",
@@ -1325,6 +1366,11 @@
       "message": "not applicable to Elixir, Erlang",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
@@ -1396,6 +1442,11 @@
       "details": [],
       "message": "no tests found (ExUnit tests (test/**/*_test.exs), EUnit tests (*_test() functions) or Common Test suites (*_SUITE.erl))",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [

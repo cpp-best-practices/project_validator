@@ -81,6 +81,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "C#",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -519,6 +526,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "C#",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -804,6 +818,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "C#",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -945,6 +966,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to C#",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict .NET analyzer settings are enabled: AnalysisMode Recommended or All, EnforceCodeStyleInBuild, Nullable enable",
@@ -1032,6 +1058,11 @@
       "message": "Stryker.NET (stryker-config.json) runs; on the pull request's changes only (bonus)",
       "status": "PASS"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to C#",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no .NET SDK version",
@@ -1101,6 +1132,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to C#",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

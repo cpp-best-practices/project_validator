@@ -42,6 +42,33 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "set(CMAKE_EXPORT_COMPILE_COMMANDS ON)",
+                  "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                  "CMAKE_EXPORT_COMPILE_COMMANDS ON in a preset",
+                  "Meson, which writes it"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "compile-commands",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -424,6 +451,33 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "a check that the source and binary directories differ",
+                  "CMAKE_DISABLE_IN_SOURCE_BUILD",
+                  "CMAKE_DISABLE_SOURCE_CHANGES",
+                  "Meson, which builds out of source"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "out-of-source-build",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -651,6 +705,32 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "PROJECT_IS_TOP_LEVEL",
+                  "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR",
+                  "meson.is_subproject()"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "top-level-guard",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -744,6 +824,13 @@
       "details": [],
       "message": "no build outputs are committed",
       "status": "PASS"
+    },
+    "compile-commands": {
+      "details": [
+        "set(CMAKE_EXPORT_COMPILE_COMMANDS ON), so clang-tidy, clangd and IDEs can read the build"
+      ],
+      "message": "compile_commands.json is not exported",
+      "status": "WARN"
     },
     "compiler-warnings": {
       "details": [],
@@ -845,6 +932,13 @@
       "message": "no mutation testing runs",
       "status": "WARN"
     },
+    "out-of-source-build": {
+      "details": [
+        "compare CMAKE_SOURCE_DIR with CMAKE_BINARY_DIR and message(FATAL_ERROR) when they are equal (cmake_template's PreventInSourceBuilds.cmake)"
+      ],
+      "message": "in-source builds are not prevented",
+      "status": "WARN"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
@@ -916,6 +1010,13 @@
     "tests-run": {
       "details": [],
       "message": "tests found in 1 file(s), but no CI configuration runs ctest or meson test",
+      "status": "WARN"
+    },
+    "top-level-guard": {
+      "details": [
+        "condition the tests and developer-only options on PROJECT_IS_TOP_LEVEL (Meson: meson.is_subproject()), so that the project works as a subproject through FetchContent, CPM or add_subdirectory"
+      ],
+      "message": "nothing is guarded for use as a subproject",
       "status": "WARN"
     },
     "type-checking": {

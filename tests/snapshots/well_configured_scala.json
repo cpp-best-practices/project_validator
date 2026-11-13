@@ -86,6 +86,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -441,6 +448,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -707,6 +721,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -832,6 +853,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict scalac warning options are enabled: -deprecation, -feature, -Xlint or -Wunused",
@@ -918,6 +944,11 @@
       "message": "not applicable to Scala",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no JDK or Scala version",
@@ -988,6 +1019,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

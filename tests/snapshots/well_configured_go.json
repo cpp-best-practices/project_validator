@@ -96,6 +96,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -530,6 +537,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -825,6 +839,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -932,6 +953,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Go linters are enabled: go vet, staticcheck",
@@ -1018,6 +1044,11 @@
       "message": "gremlins runs; on the pull request's changes only (bonus)",
       "status": "PASS"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no Go version",
@@ -1088,6 +1119,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

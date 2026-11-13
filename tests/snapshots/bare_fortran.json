@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -380,6 +387,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -563,6 +577,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -678,6 +699,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Fortran compiler warning flags found; enable at least -Wall -Wextra -Wpedantic -Wimplicit-interface",
@@ -774,6 +800,11 @@
       "message": "not applicable to Fortran",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
@@ -842,6 +873,11 @@
       "details": [],
       "message": "no tests found (tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call), tests registered with Meson's test() in meson.build or Fortran test programs in test/)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

@@ -96,6 +96,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -548,6 +555,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -867,6 +881,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -990,6 +1011,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Rust lint settings are enabled: cargo clippy -D warnings clippy::pedantic",
@@ -1076,6 +1102,11 @@
       "message": "cargo-mutants (.cargo/mutants.toml) runs; on the pull request's changes only (bonus)",
       "status": "PASS"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no Rust toolchain",
@@ -1152,6 +1183,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

@@ -31,6 +31,9 @@ class PracticeName(enum.StrEnum):
     HARDENING = "hardening"
     EXTENSIONS = "cxx-extensions"
     SANITIZERS = "sanitizers"
+    OUT_OF_SOURCE = "out-of-source-build"
+    COMPILE_COMMANDS = "compile-commands"
+    TOP_LEVEL_GUARD = "top-level-guard"
 
 
 @dataclass(frozen=True, slots=True)
@@ -121,7 +124,8 @@ class Wording:
     `hint` says how to meet them, and `searched` where they are looked for. The rest replaces a policy sentence where
     it would not fit the practice: `passed` (with `{found}`, the requirements met) and `failed` (met in nothing),
     `question` (what an unknown answer leaves open), and the `preferred` requirements of a practice met by any one,
-    with the `preference` advice when only others are met."""
+    with the `preference` advice when only others are met. A practice that `warns` when not met is advice, not a
+    requirement."""
 
     kind: str
     hint: str = ""
@@ -132,6 +136,7 @@ class Wording:
     question: str = ""
     preferred: tuple[str, ...] = ()
     preference: str = ""
+    warns: bool = False
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

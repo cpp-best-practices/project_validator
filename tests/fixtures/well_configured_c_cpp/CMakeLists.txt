@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.21)
 project(well_configured LANGUAGES CXX)
 
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR "In-source builds are not allowed; use cmake -S . -B build")
+endif()
+
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(MSVC)
   add_compile_options(/W4 /permissive- /sdl /guard:cf)
@@ -34,9 +39,10 @@ if(WARNINGS_AS_ERRORS)
   add_compile_options(-Werror)
 endif()
 
-include(CTest)
-add_subdirectory(test)
-
-if(NOT MSVC)
-  add_subdirectory(fuzz_test)
+if(PROJECT_IS_TOP_LEVEL)
+  include(CTest)
+  add_subdirectory(test)
+  if(NOT MSVC)
+    add_subdirectory(fuzz_test)
+  endif()
 endif()

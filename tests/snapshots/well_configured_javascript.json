@@ -156,6 +156,18 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -1104,6 +1116,18 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -1653,6 +1677,18 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -1921,6 +1957,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict JavaScript linters are enabled: eslint",
@@ -2007,6 +2048,11 @@
       "message": "StrykerJS (stryker.config.json) runs; on the pull request's changes only (bonus)",
       "status": "PASS"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no runtime version",
@@ -2076,6 +2122,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],
