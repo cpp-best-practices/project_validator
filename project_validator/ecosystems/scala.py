@@ -349,7 +349,7 @@ SCALAFIX = analyzer(
 )
 
 # CodeQL does not analyse Scala; semgrep and GitLab SAST do.
-SECURITY_SCANNERS = tuple(tool for tool in multi_language_scanners(SCALA) if tool.name != "CodeQL")
+SECURITY_SCANNERS = multi_language_scanners(SCALA)
 
 # osv-scanner and trivy read no sbt build; snyk and GitLab Dependency Scanning do.
 SBT_DEPENDENCY_CHECK = auditor(
@@ -360,7 +360,7 @@ SBT_DEPENDENCY_CHECK = auditor(
 )
 AUDITORS = (
     SBT_DEPENDENCY_CHECK,
-    *(tool for tool in multi_ecosystem_audits(SCALA) if tool.name in ("snyk", "GitLab Dependency Scanning")),
+    *multi_ecosystem_audits(SCALA),
 )
 
 FUNCTION_LENGTH_LIMITERS = function_length_limiters(SCALA)

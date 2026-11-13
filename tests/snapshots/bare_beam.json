@@ -275,13 +275,6 @@
             "answer": "no",
             "defined": {},
             "known": {
-              "GitLab Dependency Scanning": {
-                "can": {
-                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
               "mix_audit": {
                 "can": {
                   "runs": "mix deps.audit (mix_audit)"
@@ -325,45 +318,9 @@
         "language": "Erlang",
         "units": [
           {
-            "answer": "no",
+            "answer": "impossible",
             "defined": {},
-            "known": {
-              "GitLab Dependency Scanning": {
-                "can": {
-                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "mix_audit": {
-                "can": {
-                  "runs": "mix deps.audit (mix_audit)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "osv-scanner": {
-                "can": {
-                  "runs": "osv-scanner"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "snyk": {
-                "can": {
-                  "runs": "snyk test"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "trivy": {
-                "can": {
-                  "runs": "trivy fs"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
+            "known": {},
             "language": "Erlang",
             "level": "runs",
             "runs": {},
@@ -1303,7 +1260,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running in CI: mix deps.audit (mix_audit), GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
+        "consider running in CI: mix deps.audit (mix_audit), osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"

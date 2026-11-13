@@ -1496,8 +1496,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
-        "Elixir",
-        "Erlang"
+        "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
@@ -1644,8 +1643,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
-        "Elixir",
-        "Erlang"
+        "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
@@ -1792,8 +1790,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
-        "Elixir",
-        "Erlang"
+        "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
@@ -1940,8 +1937,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
-        "Elixir",
-        "Erlang"
+        "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {

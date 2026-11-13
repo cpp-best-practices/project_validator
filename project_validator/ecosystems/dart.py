@@ -190,9 +190,9 @@ CUSTOM_LINT = analyzer(
 DCM = analyzer(name="DCM", languages=DART, how="dcm analyze lib", analyses=when(starts(("dcm", "analyze")), analysed))
 
 # semgrep reads Dart; CodeQL and GitLab SAST do not.
-SECURITY_SCANNERS = tuple(tool for tool in multi_language_scanners(DART) if tool.name == "semgrep")
+SECURITY_SCANNERS = multi_language_scanners(DART)
 # osv-scanner and trivy read pubspec.lock; snyk and GitLab Dependency Scanning do not.
-AUDITORS = tuple(tool for tool in multi_ecosystem_audits(DART) if tool.name in ("osv-scanner", "trivy"))
+AUDITORS = multi_ecosystem_audits(DART)
 
 FUNCTION_LENGTH_LIMITERS = function_length_limiters(DART)
 

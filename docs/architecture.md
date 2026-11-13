@@ -225,7 +225,9 @@ Shared tools (`project_validator/tools`) serve every language whose files they r
 for what GCC and Clang compile; lizard; osv-scanner, trivy and snyk; CodeQL, semgrep and GitLab SAST; the secret
 scanners; pre-commit; the version control systems' ignore files. Each profile makes them its own for its languages
 (`multi_ecosystem_audits(languages)`, `function_length_limiters(languages)`), so a language that has nothing to audit
-is not judged.
+is not judged. The scanners and auditors know the languages they read (`CODEQL_LANGUAGES`, `OSV_SCANNER_LANGUAGES`,
+…), so a profile gets only the tools that read one of its languages, for those languages: CodeQL for C#, not F#;
+semgrep but no CodeQL for Lua; nothing for Erlang's rebar.lock.
 
 ### Practices
 
