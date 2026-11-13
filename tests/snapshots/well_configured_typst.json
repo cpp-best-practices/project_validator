@@ -1,0 +1,655 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Typst",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "typst-community/setup-typst@00ad6338f0b34724ea002136bfb701a6c18585b0"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Typst",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "committed": [],
+            "language": "Typst",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "language": "Typst",
+            "line": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Typst",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Typst",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "typstfmt": {
+                "can": {
+                  "apply": "typstfmt main.typ",
+                  "check": "typstfmt --check main.typ"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "typstyle": {
+                "can": {
+                  "apply": "typstyle -i main.typ",
+                  "check": "typstyle --check main.typ"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Typst",
+            "level": "check",
+            "runs": {
+              "typstyle": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Typst",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Typst",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Typst",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "Typst",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Typst",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
+      }
+    ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Typst",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "Typst",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Typst",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Typst",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "typst compile": [
+                "main.typ"
+              ]
+            },
+            "known": {
+              "typst compile": {
+                "can": {
+                  "runs": "typst compile main.typ"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Typst",
+            "level": "runs",
+            "runs": {
+              "typst compile": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Typst",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Typst",
+            "outputs": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
+      }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/copy-paste-detection.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 5 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": "CI enforces the typstyle style",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "4 YAML files parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "tests found in 1 file(s)",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    }
+  }
+}
