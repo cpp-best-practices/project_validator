@@ -432,6 +432,72 @@
     },
     {
       "argv": [
+        "git",
+        "fetch",
+        "--depth=1",
+        "origin",
+        "main"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "git fetch --depth=1 origin main && git show origin/main:schema/catalog.schema.json > /tmp/base.schema.json",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "origin/main:schema/catalog.schema.json"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "git fetch --depth=1 origin main && git show origin/main:schema/catalog.schema.json > /tmp/base.schema.json",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "json-schema-diff",
+        "/tmp/base.schema.json",
+        "schema/catalog.schema.json"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes json-schema-diff /tmp/base.schema.json schema/catalog.schema.json",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "json-schema-diff",
+        "/tmp/base.schema.json",
+        "schema/catalog.schema.json"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes json-schema-diff /tmp/base.schema.json schema/catalog.schema.json",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[5].run"
+      ]
+    },
+    {
+      "argv": [
         "npx",
         "--yes",
         "prettier",
@@ -444,7 +510,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes prettier --check .",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[6].run",
       "via": []
     },
     {
@@ -459,9 +525,9 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes prettier --check .",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[6].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[4].run"
+        ".github/workflows/ci.yml:jobs.validate.steps[6].run"
       ]
     },
     {
@@ -674,7 +740,29 @@
       "languages": [
         "JSON Schema"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "provides": {
+        "compatibility": [
+          "breaking"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "json-schema-diff",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "JSON Schema"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[6].run",
       "provides": {
         "format": [
           "check"
@@ -686,7 +774,7 @@
       ],
       "tool": "prettier",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[4].run"
+        ".github/workflows/ci.yml:jobs.validate.steps[6].run"
       ]
     }
   ],

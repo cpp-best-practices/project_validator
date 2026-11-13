@@ -335,6 +335,57 @@
       ]
     },
     {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:breaking",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "breaking",
+      "origin": ".github/workflows/ci.yml:jobs.breaking",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "fetch-depth": "0"
+      },
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.breaking.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "base": "origin/main:openapi.yaml",
+        "fail-on": "ERR",
+        "revision": "HEAD:openapi.yaml"
+      },
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.breaking.steps[1]",
+      "uses": "oasdiff/oasdiff-action/breaking@8a211b41745fcecdfa4a86531ffbf08934fb14f6"
+    },
+    {
+      "argv": [
+        "oasdiff",
+        "breaking",
+        "origin/main:openapi.yaml",
+        "HEAD:openapi.yaml"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "Command",
+      "line": "uses: oasdiff/oasdiff-action/breaking@8a211b41745fcecdfa4a86531ffbf08934fb14f6",
+      "origin": ".github/workflows/ci.yml:jobs.breaking.steps[1]",
+      "via": []
+    },
+    {
       "kind": "StepReference",
       "origin": ".github/workflows/ci.yml",
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
@@ -343,6 +394,11 @@
       "kind": "StepReference",
       "origin": ".github/workflows/ci.yml",
       "reference": "stoplightio/spectral-action@6416fd018ae38e60136775066eb3e98172143141"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "oasdiff/oasdiff-action/breaking@8a211b41745fcecdfa4a86531ffbf08934fb14f6"
     },
     {
       "builds": true,
@@ -444,6 +500,23 @@
       ],
       "configurations": [],
       "default_compiler": true,
+      "ecosystems": [
+        "OpenAPI/AsyncAPI"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: breaking",
+      "origin": ".github/workflows/ci.yml:jobs.breaking",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -496,6 +569,26 @@
       ],
       "tool": "spectral",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "ToolRun",
+      "languages": [
+        "OpenAPI"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.breaking.steps[1]",
+      "provides": {
+        "compatibility": [
+          "breaking"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "oasdiff",
+      "via": []
     }
   ],
   "map": {
@@ -526,6 +619,18 @@
             "OpenAPI/AsyncAPI"
           ],
           "name": ".github/workflows/ci.yml: lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "OpenAPI/AsyncAPI"
+          ],
+          "name": ".github/workflows/ci.yml: breaking",
           "os": "linux",
           "toolchains": []
         },

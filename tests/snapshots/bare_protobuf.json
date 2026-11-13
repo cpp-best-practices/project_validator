@@ -41,6 +41,33 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Protobuf",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "buf breaking": {
+                "can": {
+                  "breaking": "buf breaking --against .git#branch=main (or bufbuild/buf-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Protobuf",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [
       {
         "auxiliary": {},
@@ -260,6 +287,13 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [
+        "consider running in CI: buf breaking --against .git#branch=main (or bufbuild/buf-action)"
+      ],
+      "message": "no check for breaking schema changes found in CI configuration",
+      "status": "WARN"
     },
     "schema-declared": {
       "details": [

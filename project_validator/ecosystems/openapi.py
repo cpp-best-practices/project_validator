@@ -4,13 +4,14 @@ that CI lints the description against its specification (`schema-validation`, an
 run: spectral with a ruleset, redocly, vacuum, swagger-cli, openapi-generator's validate; the AsyncAPI CLI), and that
 each description declares its version and `info.version` (`schema-declared`; Swagger 2.0 warns), and that the
 description's examples are checked (`schema-examples`: spectral's, redocly's and vacuum's rules validate them; or
-contract tests with schemathesis or dredd). Breaking changes (oasdiff) are the last schema practice of #85, not yet
-built."""
+contract tests with schemathesis or dredd), and that an OpenAPI description is checked for breaking changes against
+the main branch's (`schema-compatibility`: `oasdiff breaking`, its action, openapi-diff; the AsyncAPI CLI's `diff`
+reports breaking changes without failing on them, so AsyncAPI is not asked)."""
 
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Mapping
 from pathlib import PurePosixPath
 
 from project_validator import yaml_support
@@ -19,9 +20,26 @@ from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.expansion import Action
-from project_validator.facts.schema import example_checker, examples_checked, validated, validator
+from project_validator.facts.schema import (
+    compatibility_checked,
+    compatibility_checker,
+    example_checker,
+    examples_checked,
+    validated,
+    validator,
+)
 from project_validator.facts.settings import file_reader
-from project_validator.facts.tools import Condition, Definition, Tool, combined, defined_by, starts, when
+from project_validator.facts.tools import (
+    Condition,
+    Definition,
+    Tool,
+    all_of,
+    combined,
+    defined_by,
+    starts,
+    when,
+    with_option,
+)
 
 OPENAPI, ASYNCAPI = "OpenAPI", "AsyncAPI"
 OPENAPI_ONLY, ASYNCAPI_ONLY = frozenset({OPENAPI}), frozenset({ASYNCAPI})
@@ -58,8 +76,19 @@ API_ECOSYSTEM = Ecosystem(
     kind="format",
     languages=API_FORMATS,
     detect=api_descriptions,
-    ci_programs=(("spectral",), ("spectral-cli",), ("redocly",), ("vacuum",), ("swagger-cli",), ("asyncapi",)),
-    ci_usage=re.compile(r"(?<![\w-])spectral-action\b"),
+    ci_programs=(
+        ("spectral",),
+        ("spectral-cli",),
+        ("redocly",),
+        ("vacuum",),
+        ("swagger-cli",),
+        ("asyncapi",),
+        ("schemathesis",),
+        ("dredd",),
+        ("oasdiff",),
+        ("openapi-diff",),
+    ),
+    ci_usage=re.compile(r"(?<![\w-])(?:spectral-action|oasdiff-action)\b"),
 )
 
 
@@ -171,6 +200,34 @@ DREDD = example_checker(
     how="dredd <description> <base url>",
     checks=when(starts(("dredd",)), examples_checked),
 )
+
+# --- Compatibility --------------------------------------------------------------------------------------------------
+
+# `oasdiff breaking` fails on breaking changes (`--fail-on ERR` by default in CI use); `diff` and `changelog` only
+# report. openapi-diff fails only when told to.
+OASDIFF = compatibility_checker(
+    name="oasdiff",
+    languages=OPENAPI_ONLY,
+    how="oasdiff breaking <main branch's description> <description> (or oasdiff/oasdiff-action/breaking)",
+    checks=when(starts(("oasdiff", "breaking")), compatibility_checked),
+)
+OPENAPI_DIFF = compatibility_checker(
+    name="openapi-diff",
+    languages=OPENAPI_ONLY,
+    how="openapi-diff <main branch's description> <description> --fail-on-incompatible",
+    checks=when(
+        all_of(starts(("openapi-diff",)), with_option("--fail-on-incompatible", "--fail-on-changed")),
+        compatibility_checked,
+    ),
+)
+
+
+def _oasdiff_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
+    """`oasdiff/oasdiff-action/breaking` runs `oasdiff breaking` on its `base` and `revision` inputs."""
+    return (("oasdiff", "breaking", inputs.get("base", ""), inputs.get("revision", "")),)
+
+
+OASDIFF_ACTION = Action(name="oasdiff/oasdiff-action/breaking", runs=_oasdiff_action)
 
 SPECTRAL_ACTION = Action(
     name="stoplightio/spectral-action",

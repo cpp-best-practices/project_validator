@@ -14,6 +14,40 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "oasdiff": {
+                "can": {
+                  "breaking": "oasdiff breaking <main branch's description> <description> (or oasdiff/oasdiff-action/breaking)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "openapi-diff": {
+                "can": {
+                  "breaking": "openapi-diff <main branch's description> <description> --fail-on-incompatible"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OpenAPI",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [
       {
         "auxiliary": {},
@@ -353,6 +387,13 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [
+        "consider running in CI: oasdiff breaking <main branch's description> <description> (or oasdiff/oasdiff-action/breaking) or openapi-diff <main branch's description> <description> --fail-on-incompatible"
+      ],
+      "message": "no check for breaking schema changes found in CI configuration",
+      "status": "WARN"
     },
     "schema-declared": {
       "details": [

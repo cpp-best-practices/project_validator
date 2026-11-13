@@ -2,8 +2,8 @@
 compile (`schema-validation`: `buf build`, `protoc`), lint (`static-analysis`: `buf lint`, with the rules `buf.yaml`
 sets) and are formatted (`code-formatting`: `buf format --diff --exit-code`). `bufbuild/buf-action` builds, lints,
 formats and checks breaking changes unless told otherwise. Each file declares its `syntax` (or `edition`) and its
-`package` (`schema-declared`). Breaking changes (`buf breaking`) are the schema compatibility practice of #85, not
-yet built; `buf.lock` beside a `buf.yaml` with `deps` is a dependency rule (#24)."""
+`package` (`schema-declared`), and CI checks them for breaking changes (`schema-compatibility`: `buf breaking`, which
+the action runs unless told otherwise). `buf.lock` beside a `buf.yaml` with `deps` is a dependency rule (#24)."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
-from project_validator.facts.schema import validated, validator
+from project_validator.facts.schema import compatibility_checked, compatibility_checker, validated, validator
 from project_validator.facts.settings import file_reader
 from project_validator.facts.tools import defined_by, starts, when
 
@@ -72,6 +72,13 @@ PROTOC = validator(
     languages=PROTOBUF_ONLY,
     how="protoc --proto_path=proto proto/**/*.proto",
     validates=when(starts(("protoc",), ("grpc_tools.protoc",)), validated),
+)
+# `buf breaking` compares the module with what it is told (`--against .git#branch=main`, or the registry).
+BUF_BREAKING = compatibility_checker(
+    name="buf breaking",
+    languages=PROTOBUF_ONLY,
+    how="buf breaking --against .git#branch=main (or bufbuild/buf-action)",
+    checks=when(starts(("buf", "breaking")), compatibility_checked),
 )
 # buf lint has the STANDARD rules by default; buf.yaml's `lint` section sets the project's.
 BUF_LINT = analyzer(
