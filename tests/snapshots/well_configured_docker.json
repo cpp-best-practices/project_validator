@@ -61,6 +61,9 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-compatibility": [],
+    "schema-declared": [],
+    "schema-examples": [],
     "schema-validation": [],
     "secret-scanning": [],
     "security-scanning": [
@@ -344,6 +347,21 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-examples": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"

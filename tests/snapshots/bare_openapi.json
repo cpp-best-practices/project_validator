@@ -14,6 +14,117 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "oasdiff": {
+                "can": {
+                  "breaking": "oasdiff breaking <main branch's description> <description> (or oasdiff/oasdiff-action/breaking)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "openapi-diff": {
+                "can": {
+                  "breaking": "openapi-diff <main branch's description> <description> --fail-on-incompatible"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OpenAPI",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              "openapi.yaml"
+            ],
+            "language": "OpenAPI",
+            "outdated": [
+              "openapi.yaml: Swagger 2.0 is superseded by OpenAPI 3.0"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "what": "version (openapi) and info.version"
+          }
+        ]
+      }
+    ],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "dredd": {
+                "can": {
+                  "checked": "dredd <description> <base url>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "redocly": {
+                "can": {
+                  "checked": "redocly lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "schemathesis": {
+                "can": {
+                  "checked": "schemathesis run <description> --url <base url> (or st run)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "spectral": {
+                "can": {
+                  "checked": "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "vacuum": {
+                "can": {
+                  "checked": "vacuum lint <description>"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "OpenAPI",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -276,6 +387,27 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [
+        "consider running in CI: oasdiff breaking <main branch's description> <description> (or oasdiff/oasdiff-action/breaking) or openapi-diff <main branch's description> <description> --fail-on-incompatible"
+      ],
+      "message": "no check for breaking schema changes found in CI configuration",
+      "status": "WARN"
+    },
+    "schema-declared": {
+      "details": [
+        "openapi.yaml: Swagger 2.0 is superseded by OpenAPI 3.0"
+      ],
+      "message": "1 OpenAPI file declares a superseded version",
+      "status": "WARN"
+    },
+    "schema-examples": {
+      "details": [
+        "consider running in CI: spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action), redocly lint <description>, vacuum lint <description>, schemathesis run <description> --url <base url> (or st run) or dredd <description> <base url>"
+      ],
+      "message": "no check of the schemas' examples found in CI configuration",
+      "status": "WARN"
     },
     "schema-validation": {
       "details": [

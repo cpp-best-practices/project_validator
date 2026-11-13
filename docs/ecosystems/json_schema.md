@@ -18,8 +18,20 @@ pre-commit hook), `ajv validate -s <schema> -d <documents>` or `ajv test` (ajv-c
 prettier (`--check`, `--list-different`) or biome (`biome format`, `biome ci`, `biome check` without `--write`), with
 their configuration where the JavaScript profile reads it (`.prettierrc`, `biome.json`), or their defaults.
 
-## Not judged
+## `schema-declared`
 
-Whether each schema names its dialect and `$id` (`schema-declared`), comes with valid and invalid examples CI checks
-(`schema-examples`), and is diffed for breaking changes (`schema-compatibility`) are the other schema practices of
-#85, not yet built. The language practices (coverage, platform matrix, …) have no tool for a schema and are skipped.
+Every schema names its dialect (`$schema`) and itself (`$id`; `id` in draft-04 and before). A dialect older than
+2019-09 (draft-07 and before) warns. A schema under a test directory is reported, not judged.
+
+## `schema-examples`
+
+CI checks the examples that come with the schemas: `ajv test -s <schema> -d 'examples/valid/*.json' --valid` (and
+`--invalid` on the invalid ones), which asserts what each example is for; or a validator (check-jsonschema, `ajv
+validate`, the `jsonschema` CLI, jv) run on an `examples` (or `samples`, `valid`, `invalid`) directory. Warns when
+CI checks none.
+
+## `schema-compatibility`
+
+CI diffs each schema against the main branch's with json-schema-diff (`git show origin/main:<schema> > base.json`,
+then `json-schema-diff base.json <schema>`), which fails when the schema has come to accept less. Warns when CI
+checks nothing. The language practices (coverage, platform matrix, …) have no tool for a schema and are skipped.

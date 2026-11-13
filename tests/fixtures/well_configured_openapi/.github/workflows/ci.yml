@@ -8,3 +8,14 @@ jobs:
         with:
           file_glob: openapi.yaml
       - run: npx --yes @redocly/cli lint openapi.yaml
+  breaking:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: oasdiff/oasdiff-action/breaking@8a211b41745fcecdfa4a86531ffbf08934fb14f6 # v0.1.23
+        with:
+          base: origin/main:openapi.yaml
+          revision: HEAD:openapi.yaml
+          fail-on: ERR

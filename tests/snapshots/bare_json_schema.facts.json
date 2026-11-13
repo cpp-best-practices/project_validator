@@ -40,6 +40,20 @@
       "problem": null,
       "role": "product",
       "unread": null
+    },
+    {
+      "declared": {
+        "$schema": "http://json-schema.org/draft-04/schema#"
+      },
+      "format": "JSON Schema",
+      "kind": "SchemaDeclaration",
+      "missing": [
+        "$id"
+      ],
+      "origin": "schema/catalog.schema.json",
+      "outdated": "draft-04 is older than 2019-09",
+      "role": "product",
+      "what": "dialect ($schema) and $id"
     }
   ],
   "map": {

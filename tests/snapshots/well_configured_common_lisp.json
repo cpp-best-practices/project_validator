@@ -358,6 +358,45 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Common Lisp",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "Common Lisp",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Common Lisp",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -699,6 +738,21 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Lisp implementation(s) (ccl-bin, sbcl-bin), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

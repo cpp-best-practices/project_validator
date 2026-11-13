@@ -14,6 +14,10 @@ from tests.support import github_job, make_context, run_in_layout, temp_project,
 LAYOUT = "JSON Schema"
 DIALECT_ONLY = '{\n  "$schema": "https://json-schema.org/draft/2020-12/schema",\n  "type": "object"\n}\n'
 INSTANCE_OF_ANOTHER = '{\n  "$schema": "https://json.schemastore.org/tsconfig",\n  "compilerOptions": {}\n}\n'
+NESTED = {
+    "report.json": '{\n  "facts": [\n    {\n      "$schema": "https://json-schema.org/draft/2020-12/schema"\n'
+    "    }\n  ]\n}\n"
+}
 
 
 def _ci(*steps: str) -> dict[str, str]:
@@ -29,7 +33,8 @@ class RecognitionTests(unittest.TestCase):
                     (structure.languages, structure.formats), (frozenset(), frozenset({"JSON", "JSON Schema"}))
                 )
                 self.assertEqual(structure.recognised_by["JSON Schema"], ("content",))
-        for files in ({"data/catalog.json": CATALOG}, {"tsconfig.json": INSTANCE_OF_ANOTHER}):
+        # A schema quoted inside another document (a report of this validator's facts) is no schema.
+        for files in ({"data/catalog.json": CATALOG}, {"tsconfig.json": INSTANCE_OF_ANOTHER}, NESTED):
             with self.subTest(files=files), temp_project(files) as root:
                 self.assertEqual(make_context(root).structure.formats, frozenset({"JSON"}))
         self.assertEqual((JSON_SCHEMA_ECOSYSTEM.kind, JSON_SCHEMA_ECOSYSTEM.toolchain), ("format", None))

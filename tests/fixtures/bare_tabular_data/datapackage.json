@@ -1,0 +1,21 @@
+{
+  "title": "Countries",
+  "licenses": [{ "name": "MIT", "path": "LICENSE" }],
+  "resources": [
+    {
+      "name": "countries",
+      "path": "data/countries.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          { "name": "code", "type": "string", "constraints": { "required": true, "pattern": "[A-Z]{2}" } },
+          { "name": "name", "type": "string", "constraints": { "required": true } },
+          { "name": "population", "type": "integer", "constraints": { "minimum": 0 } }
+        ],
+        "primaryKey": ["code"]
+      }
+    }
+  ]
+}
