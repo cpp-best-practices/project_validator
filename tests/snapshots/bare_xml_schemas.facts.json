@@ -59,6 +59,18 @@
       "problem": null,
       "role": "product",
       "unread": null
+    },
+    {
+      "declared": {},
+      "format": "XML Schema",
+      "kind": "SchemaDeclaration",
+      "missing": [
+        "targetNamespace"
+      ],
+      "origin": "schema/catalog.xsd",
+      "outdated": null,
+      "role": "product",
+      "what": "targetNamespace"
     }
   ],
   "map": {

@@ -67,6 +67,61 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-compatibility": [],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [],
+            "language": "XML Schema",
+            "outdated": [],
+            "problems": [
+              "schema/catalog.xsd: no targetNamespace"
+            ],
+            "test_problems": [],
+            "unit": ".",
+            "what": "targetNamespace"
+          }
+        ]
+      }
+    ],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "jing": {
+                "can": {
+                  "checked": "jing <schema> examples/valid/*.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "xmllint": {
+                "can": {
+                  "checked": "xmllint --noout --schema <schema> examples/valid/*.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "XML Schema",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -305,6 +360,25 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [
+        "schema/catalog.xsd: no targetNamespace"
+      ],
+      "message": "1 XML Schema file does not declare its targetNamespace",
+      "status": "FAIL"
+    },
+    "schema-examples": {
+      "details": [
+        "consider running in CI: xmllint --noout --schema <schema> examples/valid/*.xml or jing <schema> examples/valid/*.xml"
+      ],
+      "message": "no check of the schemas' examples found in CI configuration",
+      "status": "WARN"
     },
     "schema-validation": {
       "details": [

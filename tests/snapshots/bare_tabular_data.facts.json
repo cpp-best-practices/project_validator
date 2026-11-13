@@ -1,0 +1,92 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "datapackage.json",
+      "role": "product"
+    },
+    {
+      "ecosystem": "Tabular data",
+      "kind": "ContentLanguages",
+      "languages": [
+        "Data Package"
+      ],
+      "origin": "."
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "Data Package",
+        "JSON"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "datapackage.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "declared": {},
+      "format": "Data Package",
+      "kind": "SchemaDeclaration",
+      "missing": [
+        "profile",
+        "name"
+      ],
+      "origin": "datapackage.json",
+      "outdated": null,
+      "role": "product",
+      "what": "profile ($schema) and name"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Data": [
+        ".json files"
+      ],
+      "Tabular data": [
+        "content"
+      ]
+    },
+    "formats": [
+      "Data Package",
+      "JSON"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "Data Package",
+          "JSON"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

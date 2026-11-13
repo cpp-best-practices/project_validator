@@ -89,6 +89,68 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-compatibility": [],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              "schema/catalog.xsd"
+            ],
+            "language": "XML Schema",
+            "outdated": [],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "what": "targetNamespace"
+          }
+        ]
+      }
+    ],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "jing": {
+                "can": {
+                  "checked": "jing <schema> examples/valid/*.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "xmllint": {
+                "can": {
+                  "checked": "xmllint --noout --schema <schema> examples/valid/*.xml"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "XML Schema",
+            "level": "checked",
+            "runs": {
+              "xmllint": {
+                "levels": [
+                  "checked"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -191,6 +253,7 @@
             "language": "XML",
             "parsed": [
               "data/catalog.xml",
+              "examples/valid/catalog.xml",
               "schema/catalog.xsd",
               "xslt/total.xsl"
             ],
@@ -310,7 +373,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "XML: 3 XML files parse; YAML: 4 YAML files parse",
+      "message": "XML: 4 XML files parse; YAML: 4 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -366,6 +429,21 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "1 XML Schema file declares its targetNamespace",
+      "status": "PASS"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "CI checks the schemas' examples with xmllint",
+      "status": "PASS"
     },
     "schema-validation": {
       "details": [],
