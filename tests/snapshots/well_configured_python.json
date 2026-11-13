@@ -422,6 +422,25 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Python",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -1008,6 +1027,11 @@
       ],
       "message": "the project is licensed under MIT",
       "status": "PASS"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [

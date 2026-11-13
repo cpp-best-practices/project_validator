@@ -298,6 +298,25 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Fortran",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -688,6 +707,11 @@
       ],
       "message": "no license file",
       "status": "FAIL"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

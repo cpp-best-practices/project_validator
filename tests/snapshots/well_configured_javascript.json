@@ -942,6 +942,42 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "JavaScript",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "TypeScript",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -1895,6 +1931,11 @@
       ],
       "message": "the project is licensed under MIT",
       "status": "PASS"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

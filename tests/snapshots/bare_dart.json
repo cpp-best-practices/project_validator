@@ -285,6 +285,25 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Dart",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -681,6 +700,11 @@
       ],
       "message": "no license file",
       "status": "FAIL"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

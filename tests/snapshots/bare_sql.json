@@ -248,6 +248,25 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "SQL",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -645,6 +664,11 @@
       ],
       "message": "no license file",
       "status": "FAIL"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

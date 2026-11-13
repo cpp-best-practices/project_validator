@@ -59,6 +59,7 @@
     "fuzz-testing": [],
     "hardening": [],
     "license": [],
+    "link-check": [],
     "mutation-testing": [],
     "platforms": [],
     "schema-compatibility": [],
@@ -340,6 +341,11 @@
       ],
       "message": "the project is licensed under MIT",
       "status": "PASS"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

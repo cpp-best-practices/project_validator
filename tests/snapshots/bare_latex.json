@@ -252,6 +252,25 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "LaTeX",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -587,6 +606,11 @@
       ],
       "message": "no license file",
       "status": "FAIL"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

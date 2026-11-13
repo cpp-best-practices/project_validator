@@ -340,6 +340,25 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Lua",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -850,6 +869,11 @@
       ],
       "message": "the project is licensed under MIT",
       "status": "PASS"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

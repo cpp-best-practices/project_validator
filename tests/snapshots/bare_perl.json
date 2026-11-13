@@ -275,6 +275,25 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Perl",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -650,6 +669,11 @@
       ],
       "message": "no license file",
       "status": "FAIL"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

@@ -307,6 +307,25 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "OCaml",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -733,6 +752,11 @@
       ],
       "message": "the project is licensed under MIT",
       "status": "PASS"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

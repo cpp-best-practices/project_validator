@@ -5,7 +5,9 @@ Markdown, and its configuration is YAML, TOML, Python or JavaScript, judged by t
 the site is that CI builds it (`tests-run`), that the build fails on a warning (`warnings-as-errors`: `mkdocs build
 --strict`, `sphinx-build -W`, `onBrokenLinks: 'throw'`, `hugo --panicOnWarning`, `jekyll build --strict_front_matter`;
 mdBook has no such switch), that the prose is linted (`static-analysis`: markdownlint, vale), and that the built site
-is ignored and never committed (`vcs-ignore`, `committed-artifacts`). Link checking is a check of its own, later."""
+is ignored and never committed (`vcs-ignore`, `committed-artifacts`), and that CI checks the site's links and fails
+on a broken one (`link-check`: lychee, Sphinx's `linkcheck` builder, markdown-link-check, mdbook-linkcheck, MkDocs'
+htmlproofer plugin, linkinator, muffet, htmltest, HTMLProofer, LinkChecker; a scheduled run counts)."""
 
 from __future__ import annotations
 
@@ -16,13 +18,14 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
-from project_validator.facts import Command, Facts, resolved
+from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import program
+from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.expansion import Action
+from project_validator.facts.links import link_checker, links_checked
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording, always, requirement_reader
-from project_validator.facts.settings import file_reader
+from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, Tool, defined_by, starts, when
 
@@ -96,10 +99,18 @@ DOCUMENTATION = Ecosystem(
         ("markdownlint",),
         ("markdownlint-cli2",),
         ("vale",),
+        ("lychee",),
+        ("markdown-link-check",),
+        ("mdbook-linkcheck",),
+        ("linkinator",),
+        ("muffet",),
+        ("htmltest",),
+        ("htmlproofer",),
+        ("linkchecker",),
     ),
     ci_usage=re.compile(
         r"(?<![\w-])(?:actions-hugo|actions-mdbook|mkdocs-deploy-gh-pages|jekyll-build-pages|sphinx-notes/pages"
-        r"|markdownlint-cli2-action|vale-action)\b"
+        r"|markdownlint-cli2-action|vale-action|lychee-action|github-action-markdown-link-check)\b"
     ),
 )
 
@@ -254,6 +265,134 @@ MARKDOWNLINT_ACTION = Action(
     runs=lambda inputs: (("markdownlint-cli2", *shlex.split(inputs.get("globs", "**/*.md"))),),
 )
 VALE_ACTION = Action(name="errata-ai/vale-action", runs=lambda inputs: (("vale", inputs.get("files", ".")),))
+
+
+# --- Link checking --------------------------------------------------------------------------------------------------
+
+
+def _link_checker(name: str, how: str, *prefixes: tuple[str, ...]) -> Tool:
+    """A link checker any site's CI may run, told by its program."""
+    return link_checker(name=name, languages=GENERATORS, how=how, checks=when(starts(*prefixes), links_checked))
+
+
+def _lychee(command: Command, _facts: Facts) -> Run | None:
+    """lychee checks the links of the files it is given and fails on a broken one; `--dump` only lists them."""
+    argv = resolved(command)
+    if program(argv) != "lychee" or has_option(argv, "--dump", "--dump-inputs"):
+        return None
+    return links_checked()
+
+
+LYCHEE = link_checker(
+    name="lychee",
+    languages=GENERATORS,
+    how="lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action)",
+    checks=_lychee,
+)
+MARKDOWN_LINK_CHECK = _link_checker(
+    "markdown-link-check",
+    "markdown-link-check docs/*.md (or gaurav-nelson/github-action-markdown-link-check)",
+    ("markdown-link-check",),
+)
+LINKINATOR = _link_checker("linkinator", "linkinator site --recurse", ("linkinator",))
+MUFFET = _link_checker("muffet", "muffet http://localhost:8000 (the served site)", ("muffet",))
+HTMLTEST = _link_checker("htmltest", "htmltest site", ("htmltest",))
+HTMLPROOFER = _link_checker("HTMLProofer", "htmlproofer ./_site", ("htmlproofer",), ("html-proofer",))
+LINKCHECKER = _link_checker("LinkChecker", "linkchecker site/index.html", ("linkchecker",))
+
+
+def _sphinx_linkcheck(command: Command, _facts: Facts) -> Run | None:
+    """Sphinx's `linkcheck` builder (`sphinx-build -b linkcheck`, `-M linkcheck`) checks the links of the sources;
+    `make linkcheck` runs it through the Makefile sphinx-quickstart writes (a pattern rule, which the Make reader does
+    not follow), so the target is taken at its word."""
+    argv = resolved(command)
+    if program(argv) in ("sphinx-build", "sphinx") and "linkcheck" in option_values(argv, "-b", "-M", "--builder"):
+        return links_checked()
+    return links_checked() if program(argv) == "make" and "linkcheck" in argv[1:] else None
+
+
+SPHINX_LINKCHECK = link_checker(
+    name="sphinx linkcheck",
+    languages=_only(SPHINX),
+    how="sphinx-build -b linkcheck docs docs/_build/linkcheck",
+    checks=_sphinx_linkcheck,
+)
+
+# mdBook runs mdbook-linkcheck as a backend when book.toml has an `[output.linkcheck]` table; the backend alone checks
+# too. MkDocs checks links with the htmlproofer plugin named in mkdocs.yml.
+MDBOOK_SETTINGS = SettingsReader(
+    name="mdbook",
+    files=("book.toml",),
+    read=lambda path, text: matched_settings(
+        "mdbook", path, text, {"linkcheck": (re.compile(r"^\[output\.linkcheck\]", re.MULTILINE), True)}
+    ),
+)
+MKDOCS_PLUGINS = SettingsReader(
+    name="mkdocs plugins",
+    files=("mkdocs.yml", "mkdocs.yaml"),
+    read=lambda path, text: matched_settings(
+        "mkdocs",
+        path,
+        text,
+        {"htmlproofer plugin": (re.compile(r"^\s*-\s*htmlproofer\b|^\s*htmlproofer:", re.M), True)},
+    ),
+)
+
+
+def _with_setting(build: Callable[[Command], bool], tool: str, key: str) -> Callable[[Command, Facts], Run | None]:
+    """A build that checks links when the generator's configuration turns the checker on."""
+
+    def claims(command: Command, facts: Facts) -> Run | None:
+        if not build(command):
+            return None
+        read = facts.where(Setting, tool=tool, key=key)
+        return links_checked(read=read) if read else None
+
+    return claims
+
+
+def _mdbook_linkcheck(command: Command, facts: Facts) -> Run | None:
+    if starts(("mdbook-linkcheck",))(command):
+        return links_checked()
+    return _with_setting(starts(("mdbook", "build"), ("mdbook", "test")), "mdbook", "linkcheck")(command, facts)
+
+
+MDBOOK_LINKCHECK = link_checker(
+    name="mdbook-linkcheck",
+    languages=_only(MDBOOK),
+    how="mdbook build with [output.linkcheck] in book.toml (mdbook-linkcheck installed)",
+    checks=_mdbook_linkcheck,
+    reads=(MDBOOK_SETTINGS.name,),
+)
+MKDOCS_HTMLPROOFER = link_checker(
+    name="mkdocs-htmlproofer-plugin",
+    languages=_only(MKDOCS),
+    how="mkdocs build with htmlproofer in mkdocs.yml's plugins",
+    checks=_with_setting(starts(("mkdocs", "build"), ("mkdocs", "gh-deploy")), "mkdocs", "htmlproofer plugin"),
+    reads=(MKDOCS_PLUGINS.name,),
+)
+
+
+def _lychee_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
+    """`lycheeverse/lychee-action` runs lychee with its `args` (the Markdown, HTML and reStructuredText files by
+    default) and fails the job on a broken link unless `fail` is false, when it only reports."""
+    if inputs.get("fail", "true").strip().lower() == "false":
+        return ()
+    args = inputs.get("args", "--verbose --no-progress './**/*.md' './**/*.html' './**/*.rst'")
+    return (("lychee", *shlex.split(args)),)
+
+
+def _markdown_link_check_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
+    return (("markdown-link-check", inputs.get("folder-path", ".")),)
+
+
+LYCHEE_ACTION = Action(name="lycheeverse/lychee-action", runs=_lychee_action)
+MARKDOWN_LINK_CHECK_ACTION = Action(
+    name="gaurav-nelson/github-action-markdown-link-check", runs=_markdown_link_check_action
+)
+MARKDOWN_LINK_CHECK_ACTION_FORK = Action(
+    name="tcort/github-action-markdown-link-check", runs=_markdown_link_check_action
+)
 
 
 # --- The built site ---------------------------------------------------------------------------------------------------

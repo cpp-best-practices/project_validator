@@ -47,6 +47,7 @@
     "fuzz-testing": [],
     "hardening": [],
     "license": [],
+    "link-check": [],
     "mutation-testing": [],
     "platforms": [],
     "schema-compatibility": [
@@ -339,6 +340,11 @@
       ],
       "message": "no license file",
       "status": "FAIL"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
     },
     "mutation-testing": {
       "details": [],

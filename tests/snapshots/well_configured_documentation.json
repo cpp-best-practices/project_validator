@@ -25,6 +25,89 @@
     "fuzz-testing": [],
     "hardening": [],
     "license": [],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "MkDocs",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "HTMLProofer": {
+                "can": {
+                  "checked": "htmlproofer ./_site"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "LinkChecker": {
+                "can": {
+                  "checked": "linkchecker site/index.html"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "htmltest": {
+                "can": {
+                  "checked": "htmltest site"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "linkinator": {
+                "can": {
+                  "checked": "linkinator site --recurse"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "lychee": {
+                "can": {
+                  "checked": "lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "markdown-link-check": {
+                "can": {
+                  "checked": "markdown-link-check docs/*.md (or gaurav-nelson/github-action-markdown-link-check)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "mkdocs-htmlproofer-plugin": {
+                "can": {
+                  "checked": "mkdocs build with htmlproofer in mkdocs.yml's plugins"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "muffet": {
+                "can": {
+                  "checked": "muffet http://localhost:8000 (the served site)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "MkDocs",
+            "level": "checked",
+            "runs": {
+              "lychee": {
+                "levels": [
+                  "checked"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [],
     "platforms": [],
     "schema-compatibility": [],
@@ -213,7 +296,7 @@
   "results": {
     "action-pinning": {
       "details": [],
-      "message": "all 7 actions are pinned to a commit",
+      "message": "all 8 actions are pinned to a commit",
       "status": "PASS"
     },
     "ci-build-types": {
@@ -312,6 +395,11 @@
         "LICENSE"
       ],
       "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "link-check": {
+      "details": [],
+      "message": "CI checks the documentation's links with lychee",
       "status": "PASS"
     },
     "mutation-testing": {

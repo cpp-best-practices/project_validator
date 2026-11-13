@@ -377,6 +377,52 @@
       "via": []
     },
     {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:links",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "links",
+      "origin": ".github/workflows/ci.yml:jobs.links",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:links",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.links.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "args": "--no-progress 'docs/**/*.md'"
+      },
+      "job": ".github/workflows/ci.yml:links",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.links.steps[1]",
+      "uses": "lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8"
+    },
+    {
+      "argv": [
+        "lychee",
+        "--no-progress",
+        "docs/**/*.md"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:links",
+      "kind": "Command",
+      "line": "uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8",
+      "origin": ".github/workflows/ci.yml:jobs.links.steps[1]",
+      "via": []
+    },
+    {
       "kind": "StepReference",
       "origin": ".github/workflows/ci.yml",
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
@@ -395,6 +441,11 @@
       "kind": "StepReference",
       "origin": ".github/workflows/ci.yml",
       "reference": "errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8"
     },
     {
       "builds": true,
@@ -519,6 +570,23 @@
       ],
       "configurations": [],
       "default_compiler": true,
+      "ecosystems": [
+        "Documentation site"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:links",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: links",
+      "origin": ".github/workflows/ci.yml:jobs.links",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -561,6 +629,11 @@
         "MIT"
       ],
       "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "mkdocs.yml",
+      "reader": "mkdocs plugins"
     },
     {
       "heuristic": false,
@@ -631,6 +704,31 @@
       ],
       "tool": "vale",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:links",
+      "kind": "ToolRun",
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.links.steps[1]",
+      "provides": {
+        "links": [
+          "checked"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "lychee",
+      "via": []
     }
   ],
   "map": {
@@ -676,6 +774,18 @@
             "Documentation site"
           ],
           "name": ".github/workflows/ci.yml: prose",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Documentation site"
+          ],
+          "name": ".github/workflows/ci.yml: links",
           "os": "linux",
           "toolchains": []
         },
