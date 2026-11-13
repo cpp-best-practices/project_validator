@@ -13,7 +13,9 @@ PROJECT = {"pyproject.toml": "[project]\nname = 'app'\n", "src/app.py": "", "tes
 class ToolScopeTests(unittest.TestCase):
     def _scopes(self, command: str) -> set[tuple[str, ...]]:
         with temp_project({**PROJECT, **github_job("ubuntu-latest", command)}) as root:
-            return {run.scope for run in make_context(root).facts.of(ToolRun) if run.tool == "ruff format"}
+            runs = make_context(root).facts.of(ToolRun)
+            # ruff format serves notebooks too; its run for them is another run.
+            return {run.scope for run in runs if run.tool == "ruff format" and "Python" in run.languages}
 
     def test_a_run_on_files_ci_wrote_covers_none_of_the_project(self) -> None:
         self.assertEqual(self._scopes("echo 'x = 1' > scratch.py && ruff format --check scratch.py"), {()})
