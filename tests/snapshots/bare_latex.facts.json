@@ -1,0 +1,88 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ecosystem": "LaTeX",
+      "kind": "ContentLanguages",
+      "languages": [
+        "LaTeX"
+      ],
+      "origin": "."
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "LaTeX",
+      "origin": "paper.tex",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".aux"
+    },
+    {
+      "build_systems": [],
+      "formats": [],
+      "kind": "Unit",
+      "languages": [
+        "LaTeX"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "LaTeX"
+      ],
+      "origin": "paper.aux",
+      "output": "the compiler's auxiliary files"
+    },
+    {
+      "kind": "documents (*.tex with a \\documentclass)",
+      "language": "LaTeX",
+      "origin": "paper.tex"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "LaTeX": [
+        "content",
+        ".tex files"
+      ]
+    },
+    "formats": [],
+    "languages": [
+      "LaTeX"
+    ],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [],
+        "languages": [
+          "LaTeX"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".aux"
+      }
+    ]
+  }
+}

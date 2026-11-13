@@ -1,0 +1,60 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Typst",
+      "origin": "main.typ",
+      "role": "product"
+    },
+    {
+      "build_systems": [],
+      "formats": [],
+      "kind": "Unit",
+      "languages": [
+        "Typst"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "kind": "documents (*.typ)",
+      "language": "Typst",
+      "origin": "main.typ"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Typst": [
+        ".typ files"
+      ]
+    },
+    "formats": [],
+    "languages": [
+      "Typst"
+    ],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [],
+        "languages": [
+          "Typst"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}
