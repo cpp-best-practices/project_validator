@@ -178,6 +178,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -457,6 +464,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -922,6 +936,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Lua version(s) (5.1, 5.4, luajit-2.1), 9 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

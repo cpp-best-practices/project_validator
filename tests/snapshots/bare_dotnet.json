@@ -129,6 +129,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "C#",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -412,6 +419,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "C#",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -809,6 +823,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to C#",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

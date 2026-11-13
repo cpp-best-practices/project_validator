@@ -123,6 +123,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -325,6 +332,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -663,6 +677,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

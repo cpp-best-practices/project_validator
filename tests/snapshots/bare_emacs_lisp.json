@@ -124,6 +124,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Emacs Lisp",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -317,6 +324,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Emacs Lisp",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -662,6 +676,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

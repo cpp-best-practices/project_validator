@@ -142,6 +142,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Racket",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -395,6 +402,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Racket",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -751,6 +765,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 4 Racket version(s) (8.12 BC, 8.12 CS, stable, stable CS), 8 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Racket",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

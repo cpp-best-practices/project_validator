@@ -356,6 +356,18 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -1184,6 +1196,18 @@
         ]
       }
     ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
     "schema-compatibility": [
       {
         "auxiliary": {},
@@ -1997,6 +2021,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 runtime version(s) (22, 24), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to JavaScript, TypeScript",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

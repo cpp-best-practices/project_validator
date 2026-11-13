@@ -144,6 +144,34 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "set(CMAKE_CXX_EXTENSIONS OFF)",
+                  "-DCMAKE_CXX_EXTENSIONS=OFF",
+                  "CMAKE_CXX_EXTENSIONS OFF in a preset",
+                  "CXX_EXTENSIONS OFF",
+                  "cpp_std=c++20"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "cxx-extensions",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -410,6 +438,31 @@
             "notes": [],
             "platforms": [],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "AddressSanitizer",
+                  "UndefinedBehaviorSanitizer"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -797,6 +850,13 @@
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [
+        "build with -fsanitize=address,undefined (MSVC: /fsanitize=address) in at least one configuration, behind an option CI turns on (Meson: -Db_sanitize=address,undefined)"
+      ],
+      "message": "no sanitizers found; enable AddressSanitizer, UndefinedBehaviorSanitizer",
       "status": "FAIL"
     },
     "schema-compatibility": {

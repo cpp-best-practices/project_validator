@@ -161,6 +161,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -409,6 +416,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -801,6 +815,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 OCaml version(s) (4.14, 5.2), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

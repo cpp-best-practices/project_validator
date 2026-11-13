@@ -176,6 +176,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "C#",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -557,6 +564,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "C#",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -1032,6 +1046,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 .NET SDK version(s) (10.0.x, 9.0.x), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to C#",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

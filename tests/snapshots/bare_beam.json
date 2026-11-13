@@ -242,6 +242,18 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -711,6 +723,18 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -1305,6 +1329,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

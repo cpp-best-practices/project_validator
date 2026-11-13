@@ -166,6 +166,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Common Lisp",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -394,6 +401,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Common Lisp",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -786,6 +800,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Lisp implementation(s) (ccl-bin, sbcl-bin), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

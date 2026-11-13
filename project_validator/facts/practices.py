@@ -30,6 +30,7 @@ class PracticeName(enum.StrEnum):
     WARNINGS_AS_ERRORS = "warnings-as-errors"
     HARDENING = "hardening"
     EXTENSIONS = "cxx-extensions"
+    SANITIZERS = "sanitizers"
 
 
 @dataclass(frozen=True, slots=True)

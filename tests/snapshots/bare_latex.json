@@ -121,6 +121,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -310,6 +317,13 @@
       }
     ],
     "platforms": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": []
+      }
+    ],
+    "sanitizers": [
       {
         "auxiliary": {},
         "language": "LaTeX",
@@ -642,6 +656,11 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to LaTeX",
       "status": "SKIP"

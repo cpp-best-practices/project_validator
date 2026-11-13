@@ -53,15 +53,17 @@ def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     return Result.warned(f"missing {words.kind}: {missing}", f"found {joined(answer.found())}")
 
 
-def judge_hardening(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
-    """Every hardening setting on passes (or, for a practice that forbids settings, none found); some on warns; none
-    fails. A language whose project builds no binary is skipped. Unknown is an error unless `allow_unknown`."""
+def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
+    """Every setting on passes (any one, for a practice met by any; or, for a practice that forbids settings, none
+    found); some on warns; none fails. A language the practice skips (one whose project builds no binary) is skipped.
+    Unknown is an error unless `allow_unknown`. The hardening and sanitizers policies."""
     practice, words = answer.practice, answer.practice.words
     joined = words.separator.join
     if answer.skipped is not None:
         return Result.skipped(answer.skipped)
     if answer.answer is Answer.YES:
-        return Result.passed(words.passed or f"{words.kind} are enabled: {_described(answer.compiled, _found, joined)}")
+        found = _described(answer.compiled, _found, joined)
+        return Result.passed(words.passed.format(found=found) if words.passed else f"{words.kind} are enabled: {found}")
     if answer.answer is Answer.UNKNOWN and not allow_unknown:
         asked = f"whether {words.kind} are kept" if practice.forbids else f"whether the {words.kind} are enabled"
         return unknown(asked, answer.unknowns, words.hint)
@@ -89,4 +91,6 @@ def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Res
     return Result.failed(words.failed or f"warnings are not treated as errors in {words.searched}", words.hint)
 
 
-__all__ = ["judge_any_one", "judge_hardening", "judge_warnings"]
+judge_hardening = judge_settings
+
+__all__ = ["judge_any_one", "judge_hardening", "judge_settings", "judge_warnings"]

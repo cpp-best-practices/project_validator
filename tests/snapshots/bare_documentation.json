@@ -20,6 +20,7 @@
     ],
     "compiler-warnings": [],
     "coverage": [],
+    "cxx-extensions": [],
     "dependency-audit": [],
     "dependency-management": [],
     "formatting": [],
@@ -106,6 +107,7 @@
     "migration-safety": [],
     "mutation-testing": [],
     "platforms": [],
+    "sanitizers": [],
     "schema-compatibility": [],
     "schema-declared": [],
     "schema-examples": [],
@@ -376,6 +378,11 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"

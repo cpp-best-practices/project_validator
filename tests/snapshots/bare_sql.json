@@ -104,6 +104,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -338,6 +345,13 @@
       }
     ],
     "platforms": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
+    "sanitizers": [
       {
         "auxiliary": {},
         "language": "SQL",
@@ -734,6 +748,11 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to SQL",
       "status": "SKIP"

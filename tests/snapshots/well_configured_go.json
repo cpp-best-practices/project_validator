@@ -190,6 +190,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -566,6 +573,35 @@
               }
             ],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "go test -race": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": [
+                  "go test -asan",
+                  "go test -msan"
+                ]
+              }
+            ],
+            "language": "Go",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -996,6 +1032,11 @@
         ".github/workflows/function-limits.yml: function-limits: linux / no Go version"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Go version(s) (1.22, 1.23), 6 combination(s)",
+      "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "sanitizers run in CI: go test -race",
       "status": "PASS"
     },
     "schema-compatibility": {

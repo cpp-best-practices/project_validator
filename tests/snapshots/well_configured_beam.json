@@ -318,6 +318,18 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -879,6 +891,18 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -1576,6 +1600,11 @@
       ],
       "message": "CI covers 2 OS(es) (linux, windows), 2 Erlang/OTP or Elixir version(s) (Elixir 1.17 / OTP 27, Elixir 1.18 / OTP 27), 4 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

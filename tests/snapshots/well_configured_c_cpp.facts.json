@@ -4070,8 +4070,62 @@
       "build_system": "CMake",
       "default": true,
       "kind": "BuildSetting",
-      "name": "WARNINGS_AS_ERRORS",
+      "name": "ENABLE_SANITIZERS",
       "origin": "CMakeLists.txt:option[22]",
+      "target": null,
+      "value": "OFF"
+    },
+    {
+      "applies": {
+        "compilers": [
+          "msvc"
+        ],
+        "requires": [
+          "ENABLE_SANITIZERS"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "/fsanitize=address",
+      "origin": "CMakeLists.txt:add_compile_options[25]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": "all but msvc",
+        "requires": [
+          "ENABLE_SANITIZERS"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": false,
+      "option": "-fsanitize=address,undefined",
+      "origin": "CMakeLists.txt:add_compile_options[27]",
+      "target": null
+    },
+    {
+      "applies": {
+        "compilers": "all but msvc",
+        "requires": [
+          "ENABLE_SANITIZERS"
+        ]
+      },
+      "build_system": "CMake",
+      "kind": "CompilerOption",
+      "linking": true,
+      "option": "-fsanitize=address,undefined",
+      "origin": "CMakeLists.txt:add_link_options[28]",
+      "target": null
+    },
+    {
+      "applies": {},
+      "build_system": "CMake",
+      "default": true,
+      "kind": "BuildSetting",
+      "name": "WARNINGS_AS_ERRORS",
+      "origin": "CMakeLists.txt:option[32]",
       "target": null,
       "value": "ON"
     },
@@ -4085,7 +4139,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Werror",
-      "origin": "CMakeLists.txt:add_compile_options[24]",
+      "origin": "CMakeLists.txt:add_compile_options[34]",
       "target": null
     },
     {

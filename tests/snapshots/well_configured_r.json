@@ -184,6 +184,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -451,6 +458,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -856,6 +870,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 4 R version(s) (default, devel, oldrel-1, release), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

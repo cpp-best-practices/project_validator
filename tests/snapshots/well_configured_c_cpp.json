@@ -241,6 +241,37 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "set(CMAKE_CXX_EXTENSIONS OFF)": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": [
+                  "-DCMAKE_CXX_EXTENSIONS=OFF",
+                  "CMAKE_CXX_EXTENSIONS OFF in a preset",
+                  "CXX_EXTENSIONS OFF",
+                  "cpp_std=c++20"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "cxx-extensions",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -657,6 +688,37 @@
               }
             ],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "AddressSanitizer": [
+                    "CMakeLists.txt (when ENABLE_SANITIZERS)",
+                    "fuzz_test/CMakeLists.txt"
+                  ],
+                  "UndefinedBehaviorSanitizer": [
+                    "CMakeLists.txt (when ENABLE_SANITIZERS)",
+                    "fuzz_test/CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C++",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -1134,6 +1196,11 @@
         ".github/workflows/copy-paste-detection.yml: cpd: linux / gcc (runner default)"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 compiler(s) (clang, gcc, msvc), 5 combination(s)",
+      "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "sanitizers are enabled: AddressSanitizer, UndefinedBehaviorSanitizer",
       "status": "PASS"
     },
     "schema-compatibility": {

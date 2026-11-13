@@ -332,6 +332,18 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -699,6 +711,18 @@
       }
     ],
     "platforms": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
+    "sanitizers": [
       {
         "auxiliary": {},
         "language": "PowerShell",
@@ -1307,6 +1331,11 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to PowerShell, Shell",
       "status": "SKIP"

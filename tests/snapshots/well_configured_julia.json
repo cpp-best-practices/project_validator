@@ -189,6 +189,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -460,6 +467,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -891,6 +905,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Julia version(s) (1, lts, pre), 9 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

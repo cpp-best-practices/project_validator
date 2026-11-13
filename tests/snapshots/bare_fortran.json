@@ -135,6 +135,31 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {},
+                "missing": [
+                  "-std=f2018",
+                  "fortran_std=f2018"
+                ]
+              }
+            ],
+            "language": "Fortran",
+            "practice": "cxx-extensions",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -369,6 +394,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -746,6 +778,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

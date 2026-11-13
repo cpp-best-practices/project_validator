@@ -210,6 +210,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -614,6 +621,34 @@
               }
             ],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-Zsanitizer": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": [
+                  "cargo miri test"
+                ]
+              }
+            ],
+            "language": "Rust",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -1061,6 +1096,11 @@
         ".github/workflows/function-limits.yml: function-limits: linux / no Rust toolchain"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Rust toolchain(s) (nightly, stable), 6 combination(s)",
+      "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "sanitizers run in CI: -Zsanitizer",
       "status": "PASS"
     },
     "schema-compatibility": {

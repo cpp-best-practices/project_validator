@@ -126,6 +126,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -423,6 +430,32 @@
             "notes": [],
             "platforms": [],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "go test -race",
+                  "go test -asan",
+                  "go test -msan"
+                ]
+              }
+            ],
+            "language": "Go",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -792,6 +825,13 @@
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [
+        "run go test -race (the race detector) in CI"
+      ],
+      "message": "no sanitizer runs in CI; run go test -race",
       "status": "FAIL"
     },
     "schema-compatibility": {

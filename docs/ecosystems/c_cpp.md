@@ -39,6 +39,14 @@ AppleClang on macOS, MSVC on Windows), unless it only runs another ecosystem's t
 
 Every OS/compiler combination builds Debug and Release, each with and without sanitizers.
 
+## `sanitizers`
+
+AddressSanitizer and UndefinedBehaviorSanitizer are used in some configuration, whatever the compiler:
+`-fsanitize=address,undefined` (MSVC's `/fsanitize=address`) among the build files' options or on a CI command line,
+cmake_template's `ENABLE_SANITIZER_ADDRESS` and `ENABLE_SANITIZER_UNDEFINED_BEHAVIOR` options (with or without the
+project's prefix) on by default or turned on by CI, or Meson's `b_sanitize`. One of the two warns; neither fails.
+ThreadSanitizer and MemorySanitizer are not asked, since they exclude the other two in one build.
+
 ## `compiler-warnings`
 
 `-Wall -Wextra -Wpedantic -Wshadow -Wconversion`, plus `/W4` and `/permissive-` when MSVC is in CI.

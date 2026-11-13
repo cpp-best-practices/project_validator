@@ -178,6 +178,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -539,6 +546,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -1055,6 +1069,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 PHP version(s) (8.3, 8.4), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

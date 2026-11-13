@@ -146,6 +146,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -397,6 +404,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -869,6 +883,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Terraform version(s) (1.10.3, 1.9.8), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],

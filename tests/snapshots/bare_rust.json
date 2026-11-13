@@ -136,6 +136,13 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -426,6 +433,31 @@
             "notes": [],
             "platforms": [],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "cargo miri test",
+                  "-Zsanitizer"
+                ]
+              }
+            ],
+            "language": "Rust",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -806,6 +838,13 @@
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [
+        "run cargo +nightly miri test, or build with RUSTFLAGS=-Zsanitizer=address on nightly, in CI"
+      ],
+      "message": "no sanitizer runs in CI; run cargo +nightly miri test or build with -Zsanitizer=address",
       "status": "FAIL"
     },
     "schema-compatibility": {
