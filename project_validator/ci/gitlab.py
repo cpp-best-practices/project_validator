@@ -75,6 +75,15 @@ def _image(job: Mapping[str, object], defaults: Mapping[str, object]) -> object:
     return image.get("name") if isinstance(image, Mapping) else image
 
 
+def _services(job: Mapping[str, object], defaults: Mapping[str, object]) -> list[str]:
+    """The images of a job's service containers: `services: [postgres:16]`, or entries with a `name`."""
+    services = job.get("services", defaults.get("services"))
+    if not isinstance(services, list):
+        return []
+    names = (service.get("name") if isinstance(service, Mapping) else service for service in services)
+    return [name for name in names if isinstance(name, str)]
+
+
 def _scripts(
     path: str, name: str, job: Mapping[str, object], defaults: Mapping[str, object]
 ) -> Iterator[tuple[str, Origin]]:
@@ -102,6 +111,7 @@ def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mappin
             image=substitute_variables(image_name, variables)
             if isinstance(image_name, str) and os == "linux"
             else None,
+            services=tuple(substitute_variables(name, variables) for name in _services(job, defaults)),
             env=env,
         )
         for line, origin in _scripts(path, name, job, defaults):
