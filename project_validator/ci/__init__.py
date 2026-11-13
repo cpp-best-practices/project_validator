@@ -173,7 +173,7 @@ def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project) 
         job.os,
         compilers,
         _configurations(commands, evidence),
-        detect_toolchains(texts, run),
+        detect_toolchains(texts, run, (fact for fact in facts if isinstance(fact, ActionStep))),
         detect_ecosystems(texts, run),
         heuristic=job.heuristic,
     )

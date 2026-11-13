@@ -242,14 +242,34 @@ DART_TOOL = BuildOutput(
 _SDK = r"(\d+\.\d+(?:\.\d+)?|stable|beta|dev|main)"
 _FLUTTER = r"(\d+\.\d+(?:\.\d+)?)"
 
-# dart-lang/setup-dart's `sdk` (a version or a channel) and the `dart` image name Dart SDKs; subosito/flutter-action's
-# `flutter-version` and the cirruslabs image name Flutter SDKs, each of which brings its Dart.
+# The `dart` image names a Dart SDK and the cirruslabs image a Flutter SDK, which brings its Dart.
 _SDK_VERSIONS = (
-    (re.compile(rf"\bsdk:\s*[\"']?{_SDK}\b"), "Dart {}"),
     (re.compile(rf"\bdart:{_SDK}\b"), "Dart {}"),
-    (re.compile(rf"\bflutter-version:\s*[\"']?{_FLUTTER}"), "Flutter {}"),
     (re.compile(rf"\bcirruslabs/flutter:{_FLUTTER}"), "Flutter {}"),
 )
+_CHANNELS = frozenset({"stable", "beta", "dev", "main", "master"})
+
+
+def _known(value: str | None) -> str | None:
+    """An input's value, unless it still holds an expression the matrix did not substitute, or is empty."""
+    value = (value or "").strip().strip("\"'")
+    return value if value and "${{" not in value else None
+
+
+def _setup_dart(inputs: Mapping[str, str]) -> str | None:
+    """dart-lang/setup-dart's `sdk`: a version or a channel (`3.5`, `stable`); stable when not given."""
+    return f"Dart {_known(inputs.get('sdk')) or 'stable'}"
+
+
+def _flutter_action(inputs: Mapping[str, str]) -> str | None:
+    """subosito/flutter-action's `flutter-version`, which its `channel` only qualifies; the channel alone when no
+    version is given (`channel: stable`); stable when neither is."""
+    version = _known(inputs.get("flutter-version"))
+    channel = _known(inputs.get("channel"))
+    if version:
+        return f"Flutter {version}"
+    return f"Flutter {channel if channel in _CHANNELS else 'stable'}"
+
 
 DART_ECOSYSTEM = Ecosystem(
     label="Dart",
@@ -266,6 +286,7 @@ DART_ECOSYSTEM = Ecosystem(
         actions=("flutter-action",),
         setup=("dart",),
         labelled=_SDK_VERSIONS,
+        steps=(("dart-lang/setup-dart", _setup_dart), ("subosito/flutter-action", _flutter_action)),
     ),
 )
 
