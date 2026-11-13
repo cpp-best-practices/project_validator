@@ -123,6 +123,12 @@
             "language": "OpenAPI",
             "level": "checked",
             "runs": {
+              "redocly": {
+                "levels": [
+                  "checked"
+                ],
+                "read": []
+              },
               "spectral": {
                 "levels": [
                   "checked"
@@ -185,6 +191,12 @@
             "language": "OpenAPI",
             "level": "validates",
             "runs": {
+              "redocly": {
+                "levels": [
+                  "validates"
+                ],
+                "read": []
+              },
               "spectral": {
                 "levels": [
                   "validates"
@@ -253,6 +265,12 @@
             "language": "OpenAPI",
             "level": "checks",
             "runs": {
+              "redocly": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              },
               "spectral": {
                 "levels": [
                   "checks"
@@ -437,12 +455,12 @@
     },
     "schema-examples": {
       "details": [],
-      "message": "CI checks the schemas' examples with spectral",
+      "message": "CI checks the schemas' examples with spectral, redocly",
       "status": "PASS"
     },
     "schema-validation": {
       "details": [],
-      "message": "CI validates the documents against their schemas with spectral",
+      "message": "CI validates the documents against their schemas with spectral, redocly",
       "status": "PASS"
     },
     "secret-scanning": {
@@ -462,7 +480,7 @@
     },
     "static-analysis": {
       "details": [],
-      "message": "spectral (.spectral.yaml) runs",
+      "message": "spectral (.spectral.yaml) and redocly run",
       "status": "PASS"
     },
     "status-badges": {

@@ -1,0 +1,64 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ecosystem": "GraphQL",
+      "kind": "ContentLanguages",
+      "languages": [
+        "GraphQL"
+      ],
+      "origin": "."
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "GraphQL",
+      "origin": "schema/schema.graphql",
+      "role": "product"
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "GraphQL"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "GraphQL": [
+        "content",
+        ".graphql files"
+      ]
+    },
+    "formats": [
+      "GraphQL"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "GraphQL"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

@@ -2262,6 +2262,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "eslint.config.js",
+      "reader": "graphql-eslint"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "eslint.config.js",
       "reader": "eslint"
     },
     {
@@ -2286,6 +2291,11 @@
       "kind": "Locked",
       "manager": "npm packages",
       "origin": "package-lock.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "graphql-eslint"
     },
     {
       "kind": "ConfigurationFile",

@@ -1,0 +1,409 @@
+{
+  "answers": {
+    "action-pinning": [],
+    "ci-lint": [],
+    "committed-artifacts": [],
+    "compiler-warnings": [],
+    "coverage": [],
+    "dependency-audit": [],
+    "dependency-management": [],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "GraphQL",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "prettier": [
+                ".prettierrc"
+              ]
+            },
+            "known": {
+              "prettier": {
+                "can": {
+                  "apply": "prettier --write .",
+                  "check": "prettier --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "GraphQL",
+            "level": "check",
+            "runs": {
+              "prettier": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [],
+    "fuzz-testing": [],
+    "hardening": [],
+    "license": [],
+    "mutation-testing": [],
+    "platforms": [],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "GraphQL",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "graphql-inspector": {
+                "can": {
+                  "breaking": "graphql-inspector diff <main branch's schema> schema.graphql (or graphql-hive/graphql-inspector)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "rover": {
+                "can": {
+                  "breaking": "rover graph check <graph>@<variant> --schema schema.graphql (or rover subgraph check)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "GraphQL",
+            "level": "breaking",
+            "runs": {
+              "graphql-inspector": {
+                "levels": [
+                  "breaking"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-declared": [],
+    "schema-examples": [],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "GraphQL",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "graphql-codegen": {
+                "can": {
+                  "validates": "graphql-codegen --config codegen.ts"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "graphql-inspector": {
+                "can": {
+                  "validates": "graphql-inspector validate 'operations/**/*.graphql' schema.graphql"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "GraphQL",
+            "level": "validates",
+            "runs": {
+              "graphql-inspector": {
+                "levels": [
+                  "validates"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [],
+    "security-scanning": [],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "GraphQL",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "graphql-schema-linter": [
+                ".graphql-schema-linterrc"
+              ]
+            },
+            "known": {
+              "graphql-eslint": {
+                "can": {
+                  "checks": "eslint with @graphql-eslint/eslint-plugin"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "graphql-schema-linter": {
+                "can": {
+                  "checks": "graphql-schema-linter 'schema/**/*.graphql'"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "GraphQL",
+            "level": "checks",
+            "runs": {
+              "graphql-schema-linter": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [],
+    "type-checking": [],
+    "vcs-ignore": [],
+    "warnings-as-errors": [],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "GraphQL",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "GraphQL",
+            "parsed": [],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/copy-paste-detection.yml",
+              ".graphqlrc.yml"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 5 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": ".prettierrc is defined and CI runs prettier",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "cxx-extensions": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "5 YAML files parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "CI checks the schemas for breaking changes with graphql-inspector",
+      "status": "PASS"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "CI validates the documents against their schemas with graphql-inspector",
+      "status": "PASS"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "graphql-schema-linter (.graphql-schema-linterrc) runs",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    }
+  }
+}
