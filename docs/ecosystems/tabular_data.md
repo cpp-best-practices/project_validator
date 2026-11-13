@@ -18,6 +18,11 @@ which validates the inquiry, packages, resources or tables its inputs name, and 
 told nothing; `goodtables validate`, its predecessor; `csvlint --schema=<table schema> <table>` (without a schema,
 csvlint checks that the CSV is well formed, against nothing).
 
+## `schema-declared`
+
+Every package or resource descriptor declares its profile (`$schema`, version 2; `profile`, version 1) and its
+`name`. A Table Schema on its own names neither and is not asked.
+
 ## Not judged
 
 A `dvc.yaml` alone shows data versioning, not a schema to validate against, and `large-files` already accepts a file

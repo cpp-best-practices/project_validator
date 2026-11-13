@@ -522,6 +522,45 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Python",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Python",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -991,6 +1030,21 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Python version(s) (3.13, 3.14), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

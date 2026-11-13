@@ -21,6 +21,20 @@
       "languages": [],
       "origin": ".",
       "role": "product"
+    },
+    {
+      "declared": {
+        "syntax": "proto3"
+      },
+      "format": "Protobuf",
+      "kind": "SchemaDeclaration",
+      "missing": [
+        "package"
+      ],
+      "origin": "proto/shop.proto",
+      "outdated": null,
+      "role": "product",
+      "what": "syntax (or edition) and package"
     }
   ],
   "map": {

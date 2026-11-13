@@ -111,6 +111,19 @@
       "unread": null
     },
     {
+      "declared": {
+        "name": "countries",
+        "profile": "https://datapackage.org/profiles/2.0/datapackage.json"
+      },
+      "format": "Data Package",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "datapackage.json",
+      "outdated": null,
+      "role": "product",
+      "what": "profile ($schema) and name"
+    },
+    {
       "kind": "CiConfiguration",
       "origin": ".github/workflows/ci-lint.yml",
       "provider": "GitHub Actions"

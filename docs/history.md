@@ -434,4 +434,13 @@ except where a step deliberately changes results and says so.
     profile that adopts it; `--answers` lists a format's answers to the questions it is asked where a tool could give
     one.
 
+13. **The schema practices** (#85, #86, #87, #88, #92; a stack of four changes). The tabular data profile (Frictionless
+    Data Packages, a format by intent; `frictionless validate`), and three checks across the schema formats:
+    `schema-declared`, a fact-based check like `data-wellformed` (a `Declares` per format in
+    `facts/declaration.py`, `SchemaDeclaration` facts read at extraction; what a schema leaves out fails, a
+    superseded dialect warns); `schema-examples` and `schema-compatibility`, two more aspects of the tool model
+    (`examples`, `compatibility`) with advised policies, each a validator's or linter's second face (`combined`).
+    The content probes learned to read a top-level key only, since a document quoting a schema (this validator's
+    own facts snapshots) is no schema.
+
 `--facts` and `--answers` expose the database and the answers.

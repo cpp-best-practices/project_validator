@@ -2,7 +2,7 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="../xslt/total.xsl">
   <x:scenario label="sums the prices">
     <x:context>
-      <catalog>
+      <catalog xmlns="urn:example:catalog">
         <item name="apple" price="1"/>
         <item name="pear" price="2"/>
       </catalog>

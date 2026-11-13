@@ -1,10 +1,13 @@
-"""The schema validation policy: CI validates the documents against their schemas (a validator runs); none fails, as
-a schema nothing is checked against guards nothing."""
+"""The schema policies: CI validates the documents against their schemas (a validator runs); none fails, as a schema
+nothing is checked against guards nothing. CI checks the examples that come with the schemas (valid ones that must
+pass, invalid ones that must fail); none warns, as examples are a schema's tests and a schema may do without. CI checks
+the schemas for breaking changes; none warns, as a schema whose consumers are all in the repository may change
+freely."""
 
 from __future__ import annotations
 
-from project_validator.facts.schema import VALIDATES
-from project_validator.policy.tooling import required
+from project_validator.facts.schema import BREAKING, CHECKED, VALIDATES
+from project_validator.policy.tooling import advised, required
 
 judge_schema_validation = required(
     level=VALIDATES,
@@ -14,4 +17,20 @@ judge_schema_validation = required(
     missing="no schema validation found in CI configuration",
 )
 
-__all__ = ["judge_schema_validation"]
+judge_schema_examples = advised(
+    level=CHECKED,
+    impossible="no known tool checks the examples of {language} schemas",
+    passed="CI checks the schemas' examples with {tools}",
+    asks="whether CI checks the schemas' examples",
+    missing="no check of the schemas' examples found in CI configuration",
+)
+
+judge_schema_compatibility = advised(
+    level=BREAKING,
+    impossible="no known tool checks {language} schemas for breaking changes",
+    passed="CI checks the schemas for breaking changes with {tools}",
+    asks="whether CI checks the schemas for breaking changes",
+    missing="no check for breaking schema changes found in CI configuration",
+)
+
+__all__ = ["judge_schema_compatibility", "judge_schema_examples", "judge_schema_validation"]
