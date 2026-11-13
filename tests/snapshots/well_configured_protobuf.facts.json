@@ -520,6 +520,26 @@
       ],
       "tool": "buf format",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:buf",
+      "kind": "ToolRun",
+      "languages": [
+        "Protobuf"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.buf.steps[1]",
+      "provides": {
+        "compatibility": [
+          "breaking"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "buf breaking",
+      "via": []
     }
   ],
   "map": {

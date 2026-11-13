@@ -4,8 +4,8 @@ so `data-wellformed` already covers one that does not parse. What is asked is th
 the schemas (`schema-validation`: check-jsonschema, ajv, the `jsonschema` CLI, jv), that the schemas are formatted
 (`code-formatting`: prettier, biome), that each names its dialect and `$id` (`schema-declared`; a dialect older than
 2019-09 warns) and that CI checks the examples that come with the schemas (`schema-examples`: `ajv test` with
-`--valid` and `--invalid`, or a validator run on an `examples` directory). Whether the schemas are diffed for breaking
-changes is the last schema practice of #85, not yet built."""
+`--valid` and `--invalid`, or a validator run on an `examples` directory) and the schemas for breaking changes against
+the main branch's (`schema-compatibility`: json-schema-diff)."""
 
 from __future__ import annotations
 
@@ -18,7 +18,15 @@ from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
-from project_validator.facts.schema import example_checker, examples_checked, names_examples, validated, validator
+from project_validator.facts.schema import (
+    compatibility_checked,
+    compatibility_checker,
+    example_checker,
+    examples_checked,
+    names_examples,
+    validated,
+    validator,
+)
 from project_validator.facts.tools import Condition, Tool, all_of, any_of, combined, defined_by, starts, when
 from project_validator.tools.prettier import prettier_tool
 
@@ -50,7 +58,7 @@ JSON_SCHEMA_ECOSYSTEM = Ecosystem(
     kind="format",
     languages=JSON_SCHEMA_ONLY,
     detect=json_schema_project,
-    ci_programs=(("check-jsonschema",), ("ajv",), ("jsonschema",), ("jv",)),
+    ci_programs=(("check-jsonschema",), ("ajv",), ("jsonschema",), ("jv",), ("json-schema-diff",)),
 )
 
 
@@ -127,6 +135,18 @@ JV = _validator(
     starts(("jv",)),
     "jv <schema> examples/valid/*.json",
     all_of(starts(("jv",)), names_examples),
+)
+
+
+# --- Compatibility --------------------------------------------------------------------------------------------------
+
+# json-schema-diff fails when the destination schema accepts less than the source: run against the main branch's copy
+# of the schema (`git show origin/main:<schema>`).
+JSON_SCHEMA_DIFF = compatibility_checker(
+    name="json-schema-diff",
+    languages=JSON_SCHEMA_ONLY,
+    how="json-schema-diff <main branch's schema> <schema>",
+    checks=when(starts(("json-schema-diff",)), compatibility_checked),
 )
 
 

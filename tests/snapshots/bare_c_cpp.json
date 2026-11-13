@@ -376,6 +376,25 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C++",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
     "schema-examples": [
       {
@@ -731,6 +750,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to C++",
+      "status": "SKIP"
     },
     "schema-declared": {
       "details": [],

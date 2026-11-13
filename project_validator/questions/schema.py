@@ -1,9 +1,10 @@
 """The schema questions: for each format, in each unit of the project that has it, does CI validate its documents
-against their schemas, and does CI check the examples that come with the schemas?"""
+against their schemas, does CI check the examples that come with the schemas, and does CI check the schemas for
+breaking changes?"""
 
 from __future__ import annotations
 
-from project_validator.facts.schema import CHECKED, EXAMPLES, SCHEMA, VALIDATES
+from project_validator.facts.schema import BREAKING, CHECKED, COMPATIBILITY, EXAMPLES, SCHEMA, VALIDATES
 from project_validator.questions import EVERY_KIND, Question
 from project_validator.questions.tooling import aspect_answers
 
@@ -23,4 +24,19 @@ SCHEMA_EXAMPLES_QUESTION = Question(
     kinds=EVERY_KIND,
 )
 
-__all__ = ["SCHEMA_EXAMPLES_QUESTION", "SCHEMA_VALIDATION_QUESTION", "schema_examples", "schema_validation"]
+schema_compatibility = aspect_answers(COMPATIBILITY, BREAKING)
+SCHEMA_COMPATIBILITY_QUESTION = Question(
+    name="schema-compatibility",
+    description="Does CI check each format's schemas in each unit for breaking changes?",
+    answer=schema_compatibility,
+    kinds=EVERY_KIND,
+)
+
+__all__ = [
+    "SCHEMA_COMPATIBILITY_QUESTION",
+    "SCHEMA_EXAMPLES_QUESTION",
+    "SCHEMA_VALIDATION_QUESTION",
+    "schema_compatibility",
+    "schema_examples",
+    "schema_validation",
+]

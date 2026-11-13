@@ -392,6 +392,25 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Rust",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
     "schema-examples": [
       {
@@ -740,6 +759,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
     },
     "schema-declared": {
       "details": [],

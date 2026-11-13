@@ -30,7 +30,8 @@ CI checks the examples that come with the schemas: `ajv test -s <schema> -d 'exa
 validate`, the `jsonschema` CLI, jv) run on an `examples` (or `samples`, `valid`, `invalid`) directory. Warns when
 CI checks none.
 
-## Not judged
+## `schema-compatibility`
 
-Whether the schemas are diffed for breaking changes (`schema-compatibility`) is the last schema practice of #85, not
-yet built. The language practices (coverage, platform matrix, …) have no tool for a schema and are skipped.
+CI diffs each schema against the main branch's with json-schema-diff (`git show origin/main:<schema> > base.json`,
+then `json-schema-diff base.json <schema>`), which fails when the schema has come to accept less. Warns when CI
+checks nothing. The language practices (coverage, platform matrix, …) have no tool for a schema and are skipped.

@@ -415,6 +415,25 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "R",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
     "schema-examples": [
       {
@@ -789,6 +808,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 4 R version(s) (default, devel, oldrel-1, release), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
     },
     "schema-declared": {
       "details": [],

@@ -388,6 +388,25 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Python",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
     "schema-examples": [
       {
@@ -800,6 +819,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
     },
     "schema-declared": {
       "details": [],

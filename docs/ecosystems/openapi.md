@@ -28,7 +28,13 @@ The description's examples are checked against their schemas by spectral (`oas3-
 (`no-invalid-media-type-examples`) or vacuum, or for real by contract tests: `schemathesis run` (or `st run`), dredd.
 Warns when CI checks none.
 
+## `schema-compatibility`
+
+CI checks an OpenAPI description for breaking changes against the main branch's: `oasdiff breaking <base> <revision>`
+(`oasdiff diff` and `changelog` only report), the `oasdiff/oasdiff-action/breaking` action with its `base` and
+`revision`, or `openapi-diff` with `--fail-on-incompatible`. Warns when CI checks nothing. The AsyncAPI CLI's `diff`
+reports breaking changes without failing on them, so AsyncAPI is not asked.
+
 ## Not judged
 
-The last schema practice of #85 is not yet built: breaking changes (`oasdiff breaking`, openapi-diff). The other
-checks have no tool for a description and are skipped.
+The other checks have no tool for a description and are skipped.

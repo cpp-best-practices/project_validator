@@ -2,8 +2,9 @@
 their schemas (`schema`: check-jsonschema on JSON Schema instances, kubeconform on Kubernetes manifests, `helm lint
 --strict` on a chart's values), or checks the examples that come with the schemas (`examples`: `ajv test` on the
 valid and invalid examples, a linter whose rules validate a description's examples, a validator run on an `examples`
-directory). Validators and example checkers are ordinary `Tool`s; `validator`, `validated`, `example_checker` and
-`examples_checked` only spell them."""
+directory), or checks the schemas for breaking changes against what was published before (`compatibility`: `buf
+breaking`, `oasdiff breaking`, json-schema-diff). All are ordinary `Tool`s; `validator`, `example_checker`,
+`compatibility_checker` and their runs only spell them."""
 
 from __future__ import annotations
 
@@ -17,6 +18,8 @@ SCHEMA = "schema"
 VALIDATES = "validates"
 EXAMPLES = "examples"
 CHECKED = "checked"
+COMPATIBILITY = "compatibility"
+BREAKING = "breaking"
 
 # A path component that names examples: `examples/valid/*.json`, `test/invalid_data.json`'s directory.
 _EXAMPLE_PATH = re.compile(r"(?:^|/)(?:examples?|samples?|valid|invalid)(?:/|$)", re.IGNORECASE)
@@ -42,6 +45,18 @@ def examples_checked(*, read: Iterable[Setting | str] = (), heuristic: bool = Fa
     return provided(EXAMPLES, CHECKED, read=read, heuristic=heuristic)
 
 
+def compatibility_checker(
+    *, name: str, languages: frozenset[str], how: str, checks: Claim, reads: tuple[str, ...] = ()
+) -> Tool:
+    """A checker of the schemas of `languages` for breaking changes against what was published before: `how` to run
+    it."""
+    return Tool(name=name, languages=languages, can={COMPATIBILITY: {BREAKING: how}}, claims=checks, reads=reads)
+
+
+def compatibility_checked(*, read: Iterable[Setting | str] = (), heuristic: bool = False) -> Run:
+    return provided(COMPATIBILITY, BREAKING, read=read, heuristic=heuristic)
+
+
 def names_examples(command: Command) -> bool:
     """Whether a command's arguments name an examples directory (`examples/valid/*.json`, `samples/`), as a validator
     run on the examples does."""
@@ -49,10 +64,14 @@ def names_examples(command: Command) -> bool:
 
 
 __all__ = [
+    "BREAKING",
     "CHECKED",
+    "COMPATIBILITY",
     "EXAMPLES",
     "SCHEMA",
     "VALIDATES",
+    "compatibility_checked",
+    "compatibility_checker",
     "example_checker",
     "examples_checked",
     "names_examples",

@@ -275,6 +275,25 @@
         ]
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Terraform",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
     "schema-examples": [
       {
@@ -643,6 +662,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
     },
     "schema-declared": {
       "details": [],

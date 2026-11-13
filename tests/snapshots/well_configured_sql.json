@@ -323,6 +323,25 @@
         "units": []
       }
     ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "SQL",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [],
     "schema-examples": [
       {
@@ -704,6 +723,11 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "schema-compatibility": {
       "details": [],
       "message": "not applicable to SQL",
       "status": "SKIP"

@@ -89,6 +89,40 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "JSON Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "json-schema-diff": {
+                "can": {
+                  "breaking": "json-schema-diff <main branch's schema> <schema>"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "JSON Schema",
+            "level": "breaking",
+            "runs": {
+              "json-schema-diff": {
+                "levels": [
+                  "breaking"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "schema-declared": [
       {
         "auxiliary": {},
@@ -558,6 +592,11 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "CI checks the schemas for breaking changes with json-schema-diff",
+      "status": "PASS"
     },
     "schema-declared": {
       "details": [],
