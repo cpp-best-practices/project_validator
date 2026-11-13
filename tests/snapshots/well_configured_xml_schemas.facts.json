@@ -164,6 +164,18 @@
       "unread": null
     },
     {
+      "declared": {
+        "targetNamespace": "urn:example:catalog"
+      },
+      "format": "XML Schema",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "schema/catalog.xsd",
+      "outdated": null,
+      "role": "product",
+      "what": "targetNamespace"
+    },
+    {
       "kind": "XSpec suites (*.xspec)",
       "language": "XSLT",
       "origin": "tests/total.xspec"

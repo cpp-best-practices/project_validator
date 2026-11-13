@@ -40,6 +40,19 @@
       "problem": null,
       "role": "product",
       "unread": null
+    },
+    {
+      "declared": {
+        "info.version": "0.1.0",
+        "swagger": "2.0"
+      },
+      "format": "OpenAPI",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "openapi.yaml",
+      "outdated": "Swagger 2.0 is superseded by OpenAPI 3.0",
+      "role": "product",
+      "what": "version (openapi) and info.version"
     }
   ],
   "map": {

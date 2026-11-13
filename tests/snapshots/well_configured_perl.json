@@ -424,6 +424,7 @@
         ]
       }
     ],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -780,6 +781,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Perl version(s) (5.38, 5.40), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

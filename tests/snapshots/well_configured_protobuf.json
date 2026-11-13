@@ -48,6 +48,26 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "Protobuf",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              "proto/shop/v1/shop.proto"
+            ],
+            "language": "Protobuf",
+            "outdated": [],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "what": "syntax (or edition) and package"
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -285,6 +305,11 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "1 Protobuf file declares its syntax (or edition) and package",
+      "status": "PASS"
     },
     "schema-validation": {
       "details": [],

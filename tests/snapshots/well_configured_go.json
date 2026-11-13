@@ -532,6 +532,7 @@
         ]
       }
     ],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -910,6 +911,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Go version(s) (1.22, 1.23), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

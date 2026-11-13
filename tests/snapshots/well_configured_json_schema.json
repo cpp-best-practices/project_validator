@@ -60,6 +60,26 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "JSON Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              "schema/catalog.schema.json"
+            ],
+            "language": "JSON Schema",
+            "outdated": [],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "what": "dialect ($schema) and $id"
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -291,6 +311,11 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "1 JSON Schema file declares its dialect ($schema) and $id",
+      "status": "PASS"
     },
     "schema-validation": {
       "details": [],

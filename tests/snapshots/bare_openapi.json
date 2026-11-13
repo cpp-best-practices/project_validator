@@ -14,6 +14,28 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "OpenAPI",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              "openapi.yaml"
+            ],
+            "language": "OpenAPI",
+            "outdated": [
+              "openapi.yaml: Swagger 2.0 is superseded by OpenAPI 3.0"
+            ],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "what": "version (openapi) and info.version"
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -276,6 +298,13 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [
+        "openapi.yaml: Swagger 2.0 is superseded by OpenAPI 3.0"
+      ],
+      "message": "1 OpenAPI file declares a superseded version",
+      "status": "WARN"
     },
     "schema-validation": {
       "details": [

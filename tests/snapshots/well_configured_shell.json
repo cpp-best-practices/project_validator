@@ -638,6 +638,7 @@
         "units": []
       }
     ],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -1152,6 +1153,11 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
+    "schema-declared": {
       "details": [],
       "message": "not applicable to PowerShell, Shell",
       "status": "SKIP"

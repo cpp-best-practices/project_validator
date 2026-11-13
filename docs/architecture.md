@@ -145,7 +145,10 @@ kept apart is the project's languages: `--map` lists `formats` beside `languages
 a "YAML project", and skip messages name languages only. A format's files are recognised in the hidden
 configuration directories too (`.github`, `.vscode`), where a language's are not: configuration is data. The first
 format ecosystem is `data` (`project_validator/ecosystems/data.py`), whose parsers make a `DataFile` fact of every
-data file at extraction (`project_validator/facts/wellformed.py`); `data-wellformed` is its question and policy.
+data file at extraction (`project_validator/facts/wellformed.py`); `data-wellformed` is its question and policy. A
+format whose files are schemas defines a `Declares` (`project_validator/facts/declaration.py`): which files are its
+schemas and what each declares (a dialect, an identifier), read once at extraction into `SchemaDeclaration` facts;
+`schema-declared` is their question and policy.
 
 A **unit** is the outermost directory with a build system's files (a CMake project's subdirectories and a Maven
 project's modules belong to it), or a member of a workspace a build file declares (`BuildSystem.members`: npm, yarn
@@ -267,7 +270,7 @@ an answer per language with its units (`LanguageAnswers`, `per_unit`, `language_
 answers with one `ToolAnswer` (`questions/tooling.py`: the known tools, the tools CI runs with the levels they
 provide, the files that define each, the unknowns); its question is `aspect_answers(aspect, level)`. The others have
 a question module of their own (coverage, practices, platforms, dependencies, outputs, license, pinning, secrets,
-ci-lint, wellformed).
+ci-lint, wellformed, declaration).
 
 ### Policy
 

@@ -41,6 +41,8 @@ class RecognitionTests(unittest.TestCase):
             {"data/countries.csv": COUNTRIES},
             {"data/catalog.json": '[{ "name": "apple" }]\n'},
             {"config/tool.json": '{ "$schema": "https://json.schemastore.org/tsconfig", "fields": [] }\n'},
+            # A descriptor quoted inside another document (a report of this validator's facts) is no descriptor.
+            {"report.json": '{\n  "facts": [\n    {\n      "profile": "tabular-data-package"\n    }\n  ]\n}\n'},
         ):
             with self.subTest(files=files), temp_project(files) as root:
                 self.assertNotIn("Tabular data", make_context(root).structure.recognised_by)

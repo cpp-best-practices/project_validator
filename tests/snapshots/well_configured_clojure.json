@@ -419,6 +419,7 @@
         ]
       }
     ],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -782,6 +783,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 JDK version(s) (17, 21), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

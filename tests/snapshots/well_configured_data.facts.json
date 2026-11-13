@@ -207,6 +207,31 @@
       "unread": null
     },
     {
+      "declared": {
+        "$id": "https://shop.example.com/catalog.schema.json",
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "format": "JSON Schema",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "schema/catalog.schema.json",
+      "outdated": null,
+      "role": "product",
+      "what": "dialect ($schema) and $id"
+    },
+    {
+      "declared": {
+        "targetNamespace": "urn:example:catalog"
+      },
+      "format": "XML Schema",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "schema/catalog.xsd",
+      "outdated": null,
+      "role": "product",
+      "what": "targetNamespace"
+    },
+    {
       "kind": "CiConfiguration",
       "origin": ".github/workflows/ci-lint.yml",
       "provider": "GitHub Actions"

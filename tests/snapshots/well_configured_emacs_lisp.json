@@ -376,6 +376,7 @@
         ]
       }
     ],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -738,6 +739,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Emacs version(s) (29.4, 30.1, snapshot), 9 combination(s)",
       "status": "PASS"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

@@ -1,18 +1,22 @@
 """OpenAPI and AsyncAPI descriptions, two formats recognised by intent: a YAML or JSON file whose top-level key is
 `openapi` (or `swagger`, the 2.0 name) or `asyncapi`. The files stay YAML or JSON, the Data format's. What is asked is
 that CI lints the description against its specification (`schema-validation`, and `static-analysis` for the same
-run: spectral with a ruleset, redocly, vacuum, swagger-cli, openapi-generator's validate; the AsyncAPI CLI). The other
-schema practices of #85 (the version declared, the examples checked or contract-tested with schemathesis or dredd,
-breaking changes with oasdiff) are not yet built."""
+run: spectral with a ruleset, redocly, vacuum, swagger-cli, openapi-generator's validate; the AsyncAPI CLI), and that
+each description declares its version and `info.version` (`schema-declared`; Swagger 2.0 warns). The other schema
+practices of #85 (the examples checked or contract-tested with schemathesis or dredd, breaking changes with oasdiff)
+are not yet built."""
 
 from __future__ import annotations
 
 import re
+from collections.abc import Callable, Iterator
 from pathlib import PurePosixPath
 
+from project_validator import yaml_support
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.analysis import analysed, analyzer
+from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.expansion import Action
 from project_validator.facts.schema import validated, validator
 from project_validator.facts.settings import file_reader
@@ -30,17 +34,22 @@ _DESCRIBES = {
 _DESCRIPTION_SUFFIXES = (".yaml", ".yml", ".json")
 
 
+def _described(project: Project) -> Iterator[tuple[str, str]]:
+    """(path, format) of each of the project's YAML and JSON files that is an API description, by its top-level
+    key."""
+    for path in project.files():
+        if PurePosixPath(path).suffix in _DESCRIPTION_SUFFIXES:
+            head = project.read_head(path)
+            yield from ((path, name) for name, key in _DESCRIBES.items() if key.search(head))
+
+
 def api_descriptions(project: Project) -> frozenset[str]:
     """The API description formats among the project's YAML and JSON files, told by their top-level key."""
-    found: set[str] = set()
-    for path in project.files():
-        if PurePosixPath(path).suffix not in _DESCRIPTION_SUFFIXES:
-            continue
-        head = project.read_head(path)
-        found.update(name for name, key in _DESCRIBES.items() if key.search(head))
-        if found == API_FORMATS:
-            break
-    return frozenset(found)
+    return frozenset(name for _, name in _described(project))
+
+
+def _descriptions_in(name: str) -> Callable[[Project], Iterator[str]]:
+    return lambda project: (path for path, found in _described(project) if found == name)
 
 
 API_ECOSYSTEM = Ecosystem(
@@ -51,6 +60,48 @@ API_ECOSYSTEM = Ecosystem(
     ci_programs=(("spectral",), ("spectral-cli",), ("redocly",), ("vacuum",), ("swagger-cli",), ("asyncapi",)),
     ci_usage=re.compile(r"(?<![\w-])spectral-action\b"),
 )
+
+
+# --- Declaration ----------------------------------------------------------------------------------------------------
+
+_SUPERSEDED = {"swagger": "Swagger 2.0 is superseded by OpenAPI 3.0"}
+
+
+def _read_description(*keys: str) -> Callable[[str], Declaration | None]:
+    """What a description declares: its specification version (the top-level `openapi`, `swagger` or `asyncapi`) and
+    its own version (`info.version`). One that does not parse as a YAML or JSON object declares nothing that can be
+    read."""
+
+    def read(text: str) -> Declaration | None:
+        try:
+            document = yaml_support.load(text)
+        except yaml_support.YamlError:
+            return None
+        if not isinstance(document, dict):
+            return None
+        key = next((key for key in keys if key in document), keys[0])
+        info = document.get("info")
+        version = info.get("version") if isinstance(info, dict) else None
+        return declaring({key: document.get(key), "info.version": version}, outdated=_SUPERSEDED.get(key))
+
+    return read
+
+
+OPENAPI_DECLARES = Declares(
+    format=OPENAPI,
+    what="version (openapi) and info.version",
+    find=_descriptions_in(OPENAPI),
+    read=_read_description("openapi", "swagger"),
+)
+ASYNCAPI_DECLARES = Declares(
+    format=ASYNCAPI,
+    what="version (asyncapi) and info.version",
+    find=_descriptions_in(ASYNCAPI),
+    read=_read_description("asyncapi"),
+)
+
+
+# --- Linting --------------------------------------------------------------------------------------------------------
 
 
 def _linter(name: str, languages: frozenset[str], how: str, runs: Condition, rules: Definition | None = None) -> Tool:

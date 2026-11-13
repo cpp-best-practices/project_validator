@@ -18,8 +18,12 @@ pre-commit hook), `ajv validate -s <schema> -d <documents>` or `ajv test` (ajv-c
 prettier (`--check`, `--list-different`) or biome (`biome format`, `biome ci`, `biome check` without `--write`), with
 their configuration where the JavaScript profile reads it (`.prettierrc`, `biome.json`), or their defaults.
 
+## `schema-declared`
+
+Every schema names its dialect (`$schema`) and itself (`$id`; `id` in draft-04 and before). A dialect older than
+2019-09 (draft-07 and before) warns. A schema under a test directory is reported, not judged.
+
 ## Not judged
 
-Whether each schema names its dialect and `$id` (`schema-declared`), comes with valid and invalid examples CI checks
-(`schema-examples`), and is diffed for breaking changes (`schema-compatibility`) are the other schema practices of
-#85, not yet built. The language practices (coverage, platform matrix, …) have no tool for a schema and are skipped.
+Whether the schemas come with valid and invalid examples CI checks (`schema-examples`) and are diffed for breaking
+changes (`schema-compatibility`) are the other schema practices of #85, not yet built. The language practices (coverage, platform matrix, …) have no tool for a schema and are skipped.

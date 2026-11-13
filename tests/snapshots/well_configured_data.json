@@ -89,6 +89,44 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "JSON Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              "schema/catalog.schema.json"
+            ],
+            "language": "JSON Schema",
+            "outdated": [],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "what": "dialect ($schema) and $id"
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              "schema/catalog.xsd"
+            ],
+            "language": "XML Schema",
+            "outdated": [],
+            "problems": [],
+            "test_problems": [],
+            "unit": ".",
+            "what": "targetNamespace"
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -417,6 +455,11 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "JSON Schema: 1 JSON Schema file declares its dialect ($schema) and $id; XML schemas: 1 XML Schema file declares its targetNamespace",
+      "status": "PASS"
     },
     "schema-validation": {
       "details": [],

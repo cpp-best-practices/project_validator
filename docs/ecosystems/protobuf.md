@@ -17,6 +17,11 @@ The schemas compile: `buf build` (or `bufbuild/buf-action`, which builds first),
 `buf format --diff --exit-code`, which fails on a file it would change (`--diff` alone only prints the change);
 `buf format -w` rewrites the files. `bufbuild/buf-action` formats unless `format: false`.
 
+## `schema-declared`
+
+Every `.proto` file declares its `syntax` (`proto3`; or its `edition`), without which protoc reads it as proto2 with a
+warning, and its `package`, without which its messages are in the global namespace (buf's `PACKAGE_DEFINED` rule).
+
 ## Not judged
 
 Breaking changes (`buf breaking` against the main branch or the registry; `bufbuild/buf-action` checks them unless

@@ -495,6 +495,7 @@
         ]
       }
     ],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -889,6 +890,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 compiler(s) (gcc, intel), 5 combination(s)",
       "status": "PASS"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

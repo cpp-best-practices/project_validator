@@ -67,6 +67,26 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "XML Schema",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [],
+            "language": "XML Schema",
+            "outdated": [],
+            "problems": [
+              "schema/catalog.xsd: no targetNamespace"
+            ],
+            "test_problems": [],
+            "unit": ".",
+            "what": "targetNamespace"
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -305,6 +325,13 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [
+        "schema/catalog.xsd: no targetNamespace"
+      ],
+      "message": "1 XML Schema file does not declare its targetNamespace",
+      "status": "FAIL"
     },
     "schema-validation": {
       "details": [

@@ -14,6 +14,7 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -388,6 +389,11 @@
       "status": "SKIP"
     },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "schema-declared": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"

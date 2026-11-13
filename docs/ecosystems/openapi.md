@@ -16,8 +16,12 @@ validate`.
 
 The same linters: a lint of an API description is its validation and its analysis at once.
 
+## `schema-declared`
+
+Every description declares its specification version (`openapi`, or `asyncapi`) and its own (`info.version`). A
+Swagger 2.0 description (`swagger: "2.0"`) warns: OpenAPI 3.0 superseded it.
+
 ## Not judged
 
-The other schema practices of #85 are not yet built: the version declared (`openapi` 3.0 or later, `info.version`),
-the examples checked (spectral's `oas3-valid-*-example` rules) or contract-tested (schemathesis, dredd), and breaking
+The other schema practices of #85 are not yet built: the examples checked (spectral's `oas3-valid-*-example` rules) or contract-tested (schemathesis, dredd), and breaking
 changes (`oasdiff breaking`, openapi-diff). The other checks have no tool for a description and are skipped.

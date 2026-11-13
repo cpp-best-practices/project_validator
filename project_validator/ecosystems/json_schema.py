@@ -1,17 +1,21 @@
 """JSON Schema: schemas (`*.schema.json`, or JSON whose top-level `$schema` names json-schema.org) and the documents
 they describe, a format recognised by intent, never by plain `.json` files. The schemas are JSON, the Data format's,
 so `data-wellformed` already covers one that does not parse. What is asked is that CI validates the documents against
-the schemas (`schema-validation`: check-jsonschema, ajv, the `jsonschema` CLI, jv) and that the schemas are formatted
-(`code-formatting`: prettier, biome). Whether each schema names its dialect and `$id`, comes with examples CI checks,
-and is diffed for breaking changes are the other schema practices of #85, not yet built."""
+the schemas (`schema-validation`: check-jsonschema, ajv, the `jsonschema` CLI, jv), that the schemas are formatted
+(`code-formatting`: prettier, biome) and that each names its dialect and `$id` (`schema-declared`; a dialect older
+than 2019-09 warns). Whether the schemas come with examples CI checks and are diffed for breaking changes are the
+other schema practices of #85, not yet built."""
 
 from __future__ import annotations
 
+import json
 import re
+from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
+from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.schema import validated, validator
 from project_validator.facts.tools import defined_by, starts, when
@@ -21,19 +25,23 @@ JSON_SCHEMA = "JSON Schema"
 JSON_SCHEMA_ONLY = frozenset({JSON_SCHEMA})
 
 _SCHEMA_NAME = re.compile(r"\.schema\.json$")
-_SCHEMA_DIALECT = re.compile(r'"\$schema"\s*:\s*"https?://json-schema\.org/')
+# A top-level `$schema` (indented once at most, or on the opening line); a nested one (a schema quoted inside another
+# document) makes nothing.
+_SCHEMA_DIALECT = re.compile(r'^(?:\{\s*)?\s{0,4}"\$schema"\s*:\s*"https?://json-schema\.org/', re.MULTILINE)
+
+
+def json_schemas(project: Project) -> Iterator[str]:
+    """The project's JSON Schemas: each `*.schema.json`, and each JSON file whose `$schema` is a JSON Schema dialect.
+    A `$schema` naming another schema (a tool's configuration, a Compose file) is an instance, not a schema."""
+    for path in project.files():
+        name = PurePosixPath(path).name
+        if _SCHEMA_NAME.search(name) or (name.endswith(".json") and _SCHEMA_DIALECT.search(project.read_head(path))):
+            yield path
 
 
 def json_schema_project(project: Project) -> frozenset[str]:
-    """Whether the project holds JSON Schemas: a `*.schema.json`, or a JSON file whose `$schema` is a JSON Schema
-    dialect. A `$schema` naming another schema (a tool's configuration, a Compose file) is an instance, not a schema."""
-    for path in project.files():
-        name = PurePosixPath(path).name
-        if _SCHEMA_NAME.search(name):
-            return JSON_SCHEMA_ONLY
-        if name.endswith(".json") and _SCHEMA_DIALECT.search(project.read_head(path)):
-            return JSON_SCHEMA_ONLY
-    return frozenset()
+    """Whether the project holds JSON Schemas (see `json_schemas`)."""
+    return JSON_SCHEMA_ONLY if next(json_schemas(project), None) is not None else frozenset()
 
 
 JSON_SCHEMA_ECOSYSTEM = Ecosystem(
@@ -42,6 +50,35 @@ JSON_SCHEMA_ECOSYSTEM = Ecosystem(
     languages=JSON_SCHEMA_ONLY,
     detect=json_schema_project,
     ci_programs=(("check-jsonschema",), ("ajv",), ("jsonschema",), ("jv",)),
+)
+
+
+# --- Declaration ----------------------------------------------------------------------------------------------------
+
+# The drafts before 2019-09, which the current dialects supersede.
+_OLD_DRAFT = re.compile(r"draft-0[3467]\b")
+
+
+def _read_schema(text: str) -> Declaration | None:
+    """What a JSON Schema declares: its dialect (`$schema`) and its `$id` (`id`, in draft-04 and before). A schema
+    that is not a JSON object, or does not parse, declares nothing that can be read."""
+    try:
+        schema = json.loads(text)
+    except (json.JSONDecodeError, RecursionError):
+        return None
+    if not isinstance(schema, dict):
+        return None
+    dialect = schema.get("$schema")
+    old = _OLD_DRAFT.search(dialect) if isinstance(dialect, str) else None
+    identifier = schema.get("$id", schema.get("id") if old else None)
+    return declaring(
+        {"$schema": dialect, "$id": identifier if isinstance(identifier, str) else None},
+        outdated=f"{old[0]} is older than 2019-09" if old else None,
+    )
+
+
+JSON_SCHEMA_DECLARES = Declares(
+    format=JSON_SCHEMA, what="dialect ($schema) and $id", find=json_schemas, read=_read_schema
 )
 
 

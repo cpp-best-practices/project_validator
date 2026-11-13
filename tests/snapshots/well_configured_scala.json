@@ -443,6 +443,7 @@
         ]
       }
     ],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -832,6 +833,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 JDK or Scala version(s) (JDK 17, JDK 21), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

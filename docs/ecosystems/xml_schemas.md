@@ -22,8 +22,12 @@ targets, which CI runs as `mvn test`).
 prettier with `@prettier/plugin-xml` (`prettier --plugin=@prettier/plugin-xml --check`), with its configuration where
 the JavaScript profile reads it.
 
+## `schema-declared`
+
+Every XSD declares its `targetNamespace`. RELAX NG and Schematron schemas name no namespace of their own and are not
+asked.
+
 ## Not judged
 
-The other schema practices of #86 are not yet built: a schema's `targetNamespace` and `elementFormDefault`, a
-document naming its schema (`xsi:schemaLocation`, `<?xml-model?>`), and valid and invalid example documents. The
+The other schema practices of #86 are not yet built: a schema's `elementFormDefault`, a document naming its schema (`xsi:schemaLocation`, `<?xml-model?>`), and valid and invalid example documents. The
 other checks have no tool for schemas or stylesheets and are skipped.

@@ -49,6 +49,28 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "JSON Schema",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [],
+            "language": "JSON Schema",
+            "outdated": [
+              "schema/catalog.schema.json: draft-04 is older than 2019-09"
+            ],
+            "problems": [
+              "schema/catalog.schema.json: no $id"
+            ],
+            "test_problems": [],
+            "unit": ".",
+            "what": "dialect ($schema) and $id"
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -252,6 +274,14 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [
+        "schema/catalog.schema.json: no $id",
+        "schema/catalog.schema.json: draft-04 is older than 2019-09"
+      ],
+      "message": "1 JSON Schema file does not declare its dialect ($schema) and $id",
+      "status": "FAIL"
     },
     "schema-validation": {
       "details": [

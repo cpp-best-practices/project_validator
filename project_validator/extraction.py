@@ -1,7 +1,8 @@
 """How the fact database is built: the extractors, in the order each one's facts are needed by the next.
 
 1. The project's structure: its source files and languages (or formats), build files and units (`facts.structure`).
-2. Its data files, each parsed by its format's parser (`facts.wellformed`).
+2. Its data files, each parsed by its format's parser (`facts.wellformed`), and its schemas, each read for what it
+   declares (`facts.declaration`).
 3. What the repository holds: the files git does not track, and the build outputs it does, of the project's
    languages only (`facts.repository`).
 4. Its test files, as each language defines them (`facts.testing`); with `--build`, what the probes find by
@@ -25,6 +26,7 @@ from project_validator import ci
 from project_validator.core import ExtractionError
 from project_validator.facts import (
     Facts,
+    declaration,
     expansion,
     outputs,
     repository,
@@ -36,7 +38,7 @@ from project_validator.facts import (
 )
 
 if TYPE_CHECKING:
-    from project_validator.core import Context
+    from project_validator.core import Context, Project
 
 
 def _stage[T](name: str, compute: Callable[[], T]) -> T:
@@ -49,13 +51,17 @@ def _stage[T](name: str, compute: Callable[[], T]) -> T:
         raise ExtractionError(name, error) from error
 
 
+def _data_facts(project: Project, found: Facts) -> Facts:
+    """The data files, parsed, and the schemas, read for what they declare."""
+    found = found + wellformed.data_file_facts(project, found, wellformed.known_parsers())
+    return found + declaration.declaration_facts(project, found, declaration.known_declarers())
+
+
 def extract_facts(context: Context) -> Facts:
     """Every fact about the project `context` reads, in the stages above; an `ExtractionError` when a stage fails."""
     project = context.project
     found = _stage("the project's structure", lambda: Facts(structure.structure_facts(project)))
-    found = _stage(
-        "the data files", lambda: found + wellformed.data_file_facts(project, found, wellformed.known_parsers())
-    )
+    found = _stage("the data files", lambda: _data_facts(project, found))
     # Only the build outputs of the project's languages, and of its formats (a documentation site's), can be
     # committed by it.
     names = structure.project_languages(found) | structure.project_formats(found)

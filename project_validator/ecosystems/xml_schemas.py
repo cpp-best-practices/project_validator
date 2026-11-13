@@ -3,18 +3,21 @@
 `--relaxng` or `--schematron`, jing, SchXslt). XSLT holds the stylesheets (`.xsl`, `.xslt`), whose XSpec suites CI
 runs (`tests-run`). Both are formatted with prettier and its XML plugin (`code-formatting`). The files are XML, the
 Data format's, whose parser never fetches an external DTD or entity; `.rnc`, RELAX NG's compact syntax, is accounted
-for without being XML. The other schema practices of #86 (a schema's `targetNamespace`, a document's
+for without being XML. An XSD declares its `targetNamespace` (`schema-declared`); RELAX NG and Schematron schemas
+name no namespace of their own and are not asked. The other schema practices of #86 (a document's
 `xsi:schemaLocation`, valid and invalid examples) are not yet built."""
 
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.arguments import has_option, program
+from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.schema import validated, validator
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, starts, when
@@ -43,6 +46,29 @@ XML_SCHEMAS_ECOSYSTEM = Ecosystem(
     detect=xml_schemas,
     ci_programs=(("xmllint",), ("jing",), ("schxslt",), ("xspec",), ("xspec.sh",), ("xspec.bat",)),
 )
+
+
+# --- Declaration ----------------------------------------------------------------------------------------------------
+
+_SCHEMA_ELEMENT = re.compile(r"<(?:[\w.-]+:)?schema\b([^>]*)>")
+_TARGET_NAMESPACE = re.compile(r"\btargetNamespace\s*=\s*[\"']([^\"']*)[\"']")
+
+
+def xsd_files(project: Project) -> Iterator[str]:
+    return (path for path in project.files() if PurePosixPath(path).suffix.lower() == ".xsd")
+
+
+def _read_xsd(text: str) -> Declaration | None:
+    """What an XSD declares: the `targetNamespace` of its `schema` element; a file with no such element declares
+    nothing that can be read."""
+    element = _SCHEMA_ELEMENT.search(text)
+    if element is None:
+        return None
+    namespace = _TARGET_NAMESPACE.search(element[1])
+    return declaring({"targetNamespace": namespace[1] if namespace else None})
+
+
+XSD_DECLARES = Declares(format=XML_SCHEMA, what="targetNamespace", find=xsd_files, read=_read_xsd)
 
 
 # --- Validation -----------------------------------------------------------------------------------------------------

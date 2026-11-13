@@ -376,6 +376,7 @@
         ]
       }
     ],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -722,6 +723,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to C#",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

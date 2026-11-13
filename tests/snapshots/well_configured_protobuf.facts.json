@@ -109,6 +109,19 @@
       "unread": null
     },
     {
+      "declared": {
+        "package": "shop.v1",
+        "syntax": "proto3"
+      },
+      "format": "Protobuf",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "proto/shop/v1/shop.proto",
+      "outdated": null,
+      "role": "product",
+      "what": "syntax (or edition) and package"
+    },
+    {
       "kind": "CiConfiguration",
       "origin": ".github/workflows/ci-lint.yml",
       "provider": "GitHub Actions"

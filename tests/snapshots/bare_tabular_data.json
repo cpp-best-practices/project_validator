@@ -14,6 +14,27 @@
     "license": [],
     "mutation-testing": [],
     "platforms": [],
+    "schema-declared": [
+      {
+        "auxiliary": {},
+        "language": "Data Package",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [],
+            "language": "Data Package",
+            "outdated": [],
+            "problems": [
+              "datapackage.json: no profile",
+              "datapackage.json: no name"
+            ],
+            "test_problems": [],
+            "unit": ".",
+            "what": "profile ($schema) and name"
+          }
+        ]
+      }
+    ],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -208,6 +229,14 @@
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [
+        "datapackage.json: no profile",
+        "datapackage.json: no name"
+      ],
+      "message": "1 Data Package file does not declare its profile ($schema) and name",
+      "status": "FAIL"
     },
     "schema-validation": {
       "details": [

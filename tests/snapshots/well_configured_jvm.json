@@ -520,6 +520,7 @@
         ]
       }
     ],
+    "schema-declared": [],
     "schema-validation": [
       {
         "auxiliary": {},
@@ -953,6 +954,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 JDK version(s) (21, 25), 6 combination(s)",
       "status": "PASS"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
     },
     "schema-validation": {
       "details": [],

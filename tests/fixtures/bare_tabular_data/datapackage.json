@@ -1,6 +1,4 @@
 {
-  "$schema": "https://datapackage.org/profiles/2.0/datapackage.json",
-  "name": "countries",
   "title": "Countries",
   "licenses": [{ "name": "MIT", "path": "LICENSE" }],
   "resources": [

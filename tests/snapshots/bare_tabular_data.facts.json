@@ -40,6 +40,19 @@
       "problem": null,
       "role": "product",
       "unread": null
+    },
+    {
+      "declared": {},
+      "format": "Data Package",
+      "kind": "SchemaDeclaration",
+      "missing": [
+        "profile",
+        "name"
+      ],
+      "origin": "datapackage.json",
+      "outdated": null,
+      "role": "product",
+      "what": "profile ($schema) and name"
     }
   ],
   "map": {
