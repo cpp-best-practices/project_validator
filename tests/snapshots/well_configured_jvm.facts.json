@@ -155,7 +155,7 @@
       "origin": "src/test/java/com/example/AppFuzzTest.java"
     },
     {
-      "kind": "@Test methods or Kotest specs under src/test/java or src/test/kotlin",
+      "kind": "@Test methods, JUnit 3 TestCase classes or Kotest specs under src/test (or another test source set)",
       "language": "Java",
       "origin": "src/test/java/com/example/AppTest.java"
     },

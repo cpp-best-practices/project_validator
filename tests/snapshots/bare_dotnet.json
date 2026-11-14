@@ -918,7 +918,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found ([Fact], [Test] or [TestMethod] methods in a test project (one referencing Microsoft.NET.Test.Sdk))",
+      "message": "no tests found ([Fact], [Test] or [TestMethod] methods in a test project (one referencing the test SDK or a test framework))",
       "status": "FAIL"
     },
     "top-level-guard": {

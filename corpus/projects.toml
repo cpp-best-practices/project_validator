@@ -262,13 +262,13 @@ issues = [182, 223]
 name = "dotnet/command-line-api"
 commit = "1b0c04a4ac1651129c72533ceae51e791430429e"
 ecosystems = [".NET"]
-issues = [223, 253]
+issues = [223]
 
 [[project]]
 name = "Humanizr/Humanizer"
 commit = "4574b93883bf48e3f0f3bca73297054537317ab2"
 ecosystems = [".NET"]
-issues = [223, 224, 253]
+issues = [223, 224]
 
 [[project]]
 name = "magit/magit"

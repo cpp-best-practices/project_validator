@@ -76,7 +76,6 @@ def _tests_run_in(test: unittest.TestCase, layout: str, files: dict[str, str]) -
 
 
 class JvmTestDiscoveryTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #252: the `@Test\b` regex misses @TestFactory and the other JUnit 5 markers
     def test_junit_5_annotations_other_than_test_mark_test_methods(self) -> None:
         """A class whose only tests are @TestFactory (CycloneDX/specification), @ParameterizedTest, @RepeatedTest or
         @TestTemplate methods under src/test/java holds tests, as one with @Test does."""
@@ -85,14 +84,12 @@ class JvmTestDiscoveryTests(unittest.TestCase):
                 files = {"src/test/java/ATest.java": JUNIT_5_IMPORT.format(annotation=annotation), **_ci("mvn test")}
                 _tests_run_in(self, "Maven Java", files)
 
-    @unittest.expectedFailure  # upstream #252: Maven's testSourceDirectory and JUnit 3 TestCase classes are unread
     def test_junit_3_test_cases_in_the_poms_test_source_directory_are_tests(self) -> None:
         """guava's `<testSourceDirectory>test</testSourceDirectory>` puts 1107 `extends TestCase` classes (no @Test)
         under guava-tests/test; `mvn verify` runs them."""
         files = {"pom.xml": MAVEN_TEST_DIRECTORY, "test/FooTest.java": JUNIT_3_CASE, **_ci("./mvnw -B verify")}
         _tests_run_in(self, "Maven Java", files)
 
-    @unittest.expectedFailure  # upstream #252: Kotlin multiplatform test source sets are not test paths
     def test_kotlin_multiplatform_test_source_sets_hold_tests(self) -> None:
         """okhttp's src/jvmTest and src/commonTest (117 + 12 of 199 files) and kotlinx.coroutines' jvm/test and
         common/test are test source sets, like src/test/kotlin."""
@@ -110,7 +107,6 @@ class JvmTestDiscoveryTests(unittest.TestCase):
 
 
 class DotnetTestProjectTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #253: only a Microsoft.NET.Test.Sdk reference makes a test project
     def test_a_project_referencing_a_test_framework_is_a_test_project(self) -> None:
         """A .csproj referencing xunit.v3 (Humanizer, on Microsoft.Testing.Platform) or one under the Arcade SDK
         (dotnet/command-line-api, where the test SDK is implicit) is a test project; its [Fact] methods are tests."""
