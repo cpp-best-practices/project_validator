@@ -87,12 +87,18 @@ def _runs_tests(command: Command) -> bool:
     return starts_with(argv, ("R", "CMD", "check")) is not None or _TEST_CALLS.search(r_code(command)) is not None
 
 
+# R CMD check runs every script in tests/ (data.table's base-R tests, which stop on a failed check).
+R_TEST_SCRIPTS = TestFiles(
+    name="test scripts (tests/*.R)",
+    languages=R,
+    path=re.compile(r"(?:^|/)tests/[^/]+\.[Rr]$"),
+)
 R_TESTS = test_runner(
     name="R CMD check",
     languages=R,
     how="R CMD check (or rcmdcheck::rcmdcheck(), r-lib/actions/check-r-package, devtools::test())",
     runs=lambda command, _facts: tested() if _runs_tests(command) else None,
-    tests=tests_of(R_TEST_FILES.name),
+    tests=tests_of(R_TEST_FILES.name, R_TEST_SCRIPTS.name),
 )
 
 

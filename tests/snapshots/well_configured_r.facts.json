@@ -134,6 +134,11 @@
       "unread": null
     },
     {
+      "kind": "test scripts (tests/*.R)",
+      "language": "R",
+      "origin": "tests/testthat.R"
+    },
+    {
       "kind": "testthat (tests/testthat/test-*.R) or tinytest (inst/tinytest/test_*.R) files",
       "language": "R",
       "origin": "tests/testthat/test-shop.R"

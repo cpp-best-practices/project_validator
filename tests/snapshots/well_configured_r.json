@@ -622,6 +622,7 @@
             "answer": "yes",
             "defined": {
               "R CMD check": [
+                "tests/testthat.R",
                 "tests/testthat/test-shop.R"
               ]
             },
@@ -955,7 +956,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "testthat (tests/testthat/test-*.R) or tinytest (inst/tinytest/test_*.R) files: 1 file(s), run by R CMD check",
+      "message": "testthat (tests/testthat/test-*.R) or tinytest (inst/tinytest/test_*.R) files and test scripts (tests/*.R): 2 file(s), run by R CMD check",
       "status": "PASS"
     },
     "top-level-guard": {

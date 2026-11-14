@@ -85,7 +85,6 @@ STYLE_ON_COMMENT: dict[str, object] = {
 
 
 class RTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #256: tests/*.R scripts are not tests
     def test_check_runs_the_tests_r_scripts(self) -> None:
         """`R CMD check` runs every `tests/*.R` script, so they are tests (data.table)."""
         files = {"tests/main.R": "stopifnot(total(c(1, 2)) == 3)\n", **CHECK_R_PACKAGE}

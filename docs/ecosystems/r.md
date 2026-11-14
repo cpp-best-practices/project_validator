@@ -9,7 +9,8 @@ CI runs R code in three ways, read alike: `Rscript -e "covr::codecov()"` (or `R 
 
 ## `tests-run`
 
-testthat's files (`test_that()` in `tests/testthat/test-*.R`) or tinytest's (`inst/tinytest/test_*.R`), run by
+testthat's files (`test_that()` in `tests/testthat/test-*.R`), tinytest's (`inst/tinytest/test_*.R`) or test scripts
+(`tests/*.R`, which R CMD check runs), run by
 `R CMD check` (which runs the tests), `rcmdcheck::rcmdcheck()` or `r-lib/actions/check-r-package`, `devtools::test()`
 or `devtools::check()`, `testthat::test_local()` and its kin, or `tinytest::test_package()`.
 
