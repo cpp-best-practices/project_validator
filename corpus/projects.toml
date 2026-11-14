@@ -168,7 +168,7 @@ issues = [185, 188, 227, 258]
 name = "felangel/bloc"
 commit = "b9be1e252ee24ffbe9f2fb629edc7624b2cfbf05"
 ecosystems = ["Dart"]
-issues = [185, 213, 226, 230, 258]
+issues = [185, 226, 230, 258]
 
 [[project]]
 name = "simolus3/drift"
@@ -500,7 +500,7 @@ issues = [182, 228, 229]
 name = "CycloneDX/specification"
 commit = "6470e34ef83f915868ece48934cff52e10c9eb49"
 ecosystems = ["JSON Schema"]
-issues = [195, 213, 252]
+issues = [195, 252]
 
 [[project]]
 name = "asyncapi/spec-json-schemas"
@@ -702,7 +702,7 @@ issues = [229, 285]
 name = "cachix/devenv"
 commit = "6c954cc1c04f1d0b2f6ad689c9dffd835fa4d928"
 ecosystems = ["Nix"]
-issues = [182, 211, 213, 228, 285]
+issues = [182, 211, 228, 285]
 
 [[project]]
 name = "ocaml/dune"

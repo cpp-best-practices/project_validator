@@ -223,7 +223,6 @@ class CalledWorkflowInputTests(unittest.TestCase):
 
 
 class WorkingDirectoryTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #213: defaults.run.working-directory ignored; composite directory unexpanded
     def test_the_default_working_directory_and_a_composite_actions_directory_input_apply(self) -> None:
         """A workflow's or job's `defaults.run.working-directory` resolves `npm test` against sub/package.json
         (CycloneDX/specification, devenv); a composite action run in `packages/${{ matrix.package }}` of a computed

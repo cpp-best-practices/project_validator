@@ -155,7 +155,12 @@ def _substituted(value: str, assigned: Mapping[str, str]) -> str:
 
 
 def _job_facts(
-    path: str, job_id: str, job: Mapping[str, object], workflow_env: object, caller: str = "", load: Load | None = None
+    path: str,
+    job_id: str,
+    job: Mapping[str, object],
+    workflow: Mapping[str, object],
+    caller: str = "",
+    load: Load | None = None,
 ) -> Iterator[Fact]:
     """The facts of one job; `caller` names the job that calls the workflow, for a reusable workflow's jobs. `load`
     reads the local actions its steps use."""
@@ -171,11 +176,11 @@ def _job_facts(
             hides="matrix",
         )
         unknown = _Combination(origin, f"{caller}{path}:{job_id}", {}, load=load, matrix_known=False)
-        yield from unknown.facts(job, workflow_env)
+        yield from unknown.facts(job, workflow)
         return
     for index, combination in enumerate(combinations):
         identity = f"{caller}{path}:{job_id}" + ("" if len(combinations) == 1 else f"[{index}]")
-        yield from _Combination(origin, identity, combination, load=load).facts(job, workflow_env)
+        yield from _Combination(origin, identity, combination, load=load).facts(job, workflow)
 
 
 @dataclass(frozen=True, slots=True)
@@ -192,6 +197,8 @@ class _Combination:
     matrix_known: bool = True
     # The shell the job's steps run in unless a step names its own (`defaults: run: shell:`).
     shell: str | None = None
+    # The directory the job's `run` steps run in unless a step names its own (`defaults: run: working-directory:`).
+    working_directory: str | None = None
 
     def substitute(self, text: str) -> str:
         """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
@@ -226,16 +233,17 @@ class _Combination:
             return True
         return evaluate(condition, known) if isinstance(condition, str) else bool(condition)
 
-    def facts(self, job: Mapping[str, object], workflow_env: object) -> Iterator[Fact]:
-        env = {**self.substituted(workflow_env), **self.substituted(job.get("env"))}
+    def facts(self, job: Mapping[str, object], workflow: Mapping[str, object]) -> Iterator[Fact]:
+        env = {**self.substituted(workflow.get("env")), **self.substituted(job.get("env"))}
         os = _runner_os(job, self.combination)
         known = Known(os=os, matrix=self.combination, env=env, matrix_known=self.matrix_known)
         if self.runs(job.get("if"), known) is False:
             return
-        defaults = job.get("defaults")
-        run = defaults.get("run") if isinstance(defaults, Mapping) else None
-        shell = run.get("shell") if isinstance(run, Mapping) else None
-        yield from replace(self, known=known, shell=str(shell) if shell else None).job_facts(job, known)
+        # `defaults: run:` of the workflow, then of the job.
+        run = {**_run_defaults(workflow), **_run_defaults(job)}
+        shell, directory = run.get("shell"), run.get("working-directory")
+        context = replace(self, known=known, shell=str(shell) if shell else None)
+        yield from replace(context, working_directory=self.optional(directory)).job_facts(job, known)
 
     def job_facts(self, job: Mapping[str, object], known: Known) -> Iterator[Fact]:
         container = job.get("container")
@@ -292,9 +300,9 @@ class _Combination:
     ) -> Iterator[Fact]:
         """The commands of a step's script: split as its shell would, or, under a custom shell (`shell: Rscript {0}`),
         the one command of that program given the script, with the script's text where its file would be."""
-        at = Origin(path=origin.path, at=(*origin.at, "run"))
-        env = {**known.env, **self.substituted(step.get("env"))}
-        directory = self.optional(step.get("working-directory"))
+        at, env = Origin(path=origin.path, at=(*origin.at, "run")), {**known.env, **self.substituted(step.get("env"))}
+        directory = self.optional(step.get("working-directory")) or self.working_directory
+        yield from _computed_directory(at, directory)
         if (custom := custom_shell(self.optional(step.get("shell")) or self.shell)) is not None:
             argv = tuple(script if word == "{0}" else word for word in custom)
             command = Command(origin=at, job=self.identity, argv=argv, line=script, env=env, directory=directory)
@@ -395,6 +403,20 @@ def _only_called(document: Mapping[object, object]) -> bool:
     return names == ["workflow_call"]
 
 
+def _computed_directory(origin: Origin, directory: str | None) -> Iterator[Unknown]:
+    """A working directory computed by an expression (`packages/${{ matrix.package }}` of a computed matrix): where the
+    commands run, and so what they cover, is not known."""
+    if directory is not None and "${{" in directory:
+        subject = f"the working directory {directory}"
+        yield Unknown(origin=origin, subject=subject, reason="it is computed by an expression", hides="commands")
+
+
+def _run_defaults(scope: Mapping[str, object]) -> dict[str, object]:
+    defaults = scope.get("defaults")
+    run = defaults.get("run") if isinstance(defaults, Mapping) else None
+    return dict(run) if isinstance(run, Mapping) else {}
+
+
 def _local(uses: object) -> str | None:
     """The path of a reusable workflow or action in the same repository (`./.github/workflows/build.yml`,
     `$/.github/actions/build`), else None."""
@@ -417,7 +439,7 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
         if not isinstance(job, Mapping):
             continue
         if "uses" not in job:
-            yield from _job_facts(path, str(job_id), job, document.get("env"), caller, load)
+            yield from _job_facts(path, str(job_id), job, document, caller, load)
             continue
         called = _local(job["uses"]) or _own(job["uses"], load)
         within_depth = caller.count(" → ") < _CALL_DEPTH
