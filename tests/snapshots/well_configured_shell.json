@@ -1078,6 +1078,13 @@
                 },
                 "needs_definition": true,
                 "required": false
+              },
+              "zunit": {
+                "can": {
+                  "runs": "zunit"
+                },
+                "needs_definition": true,
+                "required": false
               }
             },
             "language": "Shell",

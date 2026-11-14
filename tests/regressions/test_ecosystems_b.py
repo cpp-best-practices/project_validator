@@ -276,16 +276,16 @@ class ShellTests(unittest.TestCase):
                 result = _run(tests_run, SHELL, {**URCHIN_TESTS, **files})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #275: .zsh-theme scripts and .zunit tests are unrecognised suffixes
     def test_zsh_themes_are_shell_scripts_and_zunit_files_are_tests(self) -> None:
         """`themes/*.zsh-theme` are zsh scripts and `tests/*.zunit` are zunit tests: neither is an unrecognised suffix,
-        and with the tests never run, tests-run FAILs without saying "no tests found" (ohmyzsh/ohmyzsh)."""
+        and with the tests never run, tests-run warns that CI does not run them rather than "no tests found"
+        (ohmyzsh/ohmyzsh)."""
         for files in ({"themes/robbyrussell.zsh-theme": "PROMPT='%n'\n"}, ZUNIT_TEST):
             with self.subTest(files=files):
                 languages, unrecognised = _recognised(files)
                 self.assertEqual((languages, unrecognised), (frozenset({"Shell"}), frozenset()))
         result = _run(tests_run, SHELL, {**ZUNIT_TEST, **github_job(CI, "shellcheck src/shop.sh")})
-        self.assertEqual(result.status, Status.FAIL)
+        self.assertEqual(result.status, Status.WARN)
         self.assertNotIn("no tests found", result.message)
 
     @unittest.expectedFailure  # upstream #275: bash versions in a matrix are no toolchain axis for Shell

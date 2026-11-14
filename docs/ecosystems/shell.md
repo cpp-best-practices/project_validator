@@ -1,6 +1,6 @@
 # Shell
 
-Shell and PowerShell. Recognised by `.sh`, `.bash`, `.zsh` and `.bats` sources (Shell), by `.ps1` and `.psm1` sources (PowerShell), and by
+Shell and PowerShell. Recognised by `.sh`, `.bash`, `.zsh`, `.zsh-theme`, `.zunit` and `.bats` sources (Shell), by `.ps1` and `.psm1` sources (PowerShell), and by
 a script without a suffix whose shebang names a shell (`#!/usr/bin/env bash`) or `pwsh`. A module manifest (`.psd1`)
 is data about a module and counts for no language. There is no build system.
 
@@ -10,8 +10,8 @@ either way: a script CI runs deserves shellcheck.
 
 ## `tests-run`
 
-Shell: bats tests (`*.bats` with `@test`), shellspec specs (`spec/*_spec.sh` with `Describe` or `It`) or shunit2
-tests (`*_test.sh` sourcing shunit2), and CI runs them: `bats tests`, `shellspec`, or the shunit2 script itself
+Shell: bats tests (`*.bats` with `@test`), zunit tests (`*.zunit` with `@test`), shellspec specs (`spec/*_spec.sh` with `Describe` or `It`) or shunit2
+tests (`*_test.sh` sourcing shunit2), and CI runs them: `bats tests`, `zunit`, `shellspec`, or the shunit2 script itself
 (`./tests/shop_test.sh`, `bash tests/shop_test.sh`, `shunit2 tests/shop_test.sh`).
 
 PowerShell: Pester tests (`*.Tests.ps1` with `Describe` or `It`) that `Invoke-Pester` runs.
