@@ -168,7 +168,7 @@
       "unread": null
     },
     {
-      "kind": "test(), testWidgets() or group() calls in test/**/*_test.dart",
+      "kind": "test(), testWidgets() or group() calls in test/**/*_test.dart (or integration_test/)",
       "language": "Dart",
       "origin": "test/shop_test.dart"
     },

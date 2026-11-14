@@ -162,13 +162,13 @@ issues = [182, 265]
 name = "dart-lang/http"
 commit = "2bac218a1115a58addd140d7a7eaabf803d57631"
 ecosystems = ["Dart"]
-issues = [185, 188, 227, 258]
+issues = [185, 188, 227]
 
 [[project]]
 name = "felangel/bloc"
 commit = "b9be1e252ee24ffbe9f2fb629edc7624b2cfbf05"
 ecosystems = ["Dart"]
-issues = [185, 258]
+issues = [185]
 
 [[project]]
 name = "simolus3/drift"

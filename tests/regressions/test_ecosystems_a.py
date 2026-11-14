@@ -175,7 +175,6 @@ EMULATOR_SCRIPT = github_action(
 
 
 class DartTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #258: list-form or explicit lint sets and integration_test unrecognised
     def test_every_include_form_is_a_lint_set_and_integration_tests_are_tests(self) -> None:
         """A lint set is one however it is included (dart-lang/http, bloc); `example/integration_test/*_test.dart`
         run by `flutter test integration_test/`, in an emulator action's `script:` or not, are tests (http)."""

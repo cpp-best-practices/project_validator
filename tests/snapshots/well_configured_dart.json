@@ -992,7 +992,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "test(), testWidgets() or group() calls in test/**/*_test.dart: 1 file(s), run by dart test",
+      "message": "test(), testWidgets() or group() calls in test/**/*_test.dart (or integration_test/): 1 file(s), run by dart test",
       "status": "PASS"
     },
     "top-level-guard": {

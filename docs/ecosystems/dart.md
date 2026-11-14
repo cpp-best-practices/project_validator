@@ -11,8 +11,9 @@ apply, and nor do type checking (Dart is statically typed, with sound null safet
 
 ## `tests-run`
 
-`test()`, `testWidgets()` or `group()` calls in `test/**/*_test.dart`, run by `dart test`, `flutter test`,
-`dart run test` or `very_good test`.
+`test()`, `testWidgets()` or `group()` calls in `test/**/*_test.dart` (or `integration_test/`), run by `dart test`,
+`flutter test`, `dart run test` or `very_good test` (also in the `script` of
+reactivecircus/android-emulator-runner).
 
 ## `coverage`
 
@@ -30,7 +31,8 @@ Flutter image.
 ## `compiler-warnings`
 
 The analyzer reports what other compilers warn about, so two things are asked for: a lint set included in
-`analysis_options.yaml` (`package:lints/recommended.yaml`, `flutter_lints`, `very_good_analysis`, `lint/strict`) and
+`analysis_options.yaml` (`package:lints/recommended.yaml`, `flutter_lints`, `very_good_analysis`, `lint/strict`,
+`dart_flutter_team_lints`; as a value or a list), or rules spelled out under `linter: rules:`, and
 `dart analyze` (or `flutter analyze`) run in CI.
 
 ## `warnings-as-errors`
