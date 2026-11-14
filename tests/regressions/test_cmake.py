@@ -168,7 +168,6 @@ class SkippedConstructTests(unittest.TestCase):
         files = {"CMakeLists.txt": C_PROJECT + runner, "cmake/RunTests.cmake": RUN_TESTS_SCRIPT, **LUA_SPEC, **ci}
         self.assertEqual(_run(tests_run, files).message, expected.message)
 
-    @unittest.expectedFailure  # upstream #204: a configure_package_config_file template is parsed as a build file
     def test_a_package_config_template_is_not_a_build_file(self) -> None:
         """fortran-lang/stdlib's config/template.cmake starts with @PACKAGE_INIT@: a template rendered before it is
         read, skipped like YAML templates, so a project without warning flags fails instead of erroring "not read"."""

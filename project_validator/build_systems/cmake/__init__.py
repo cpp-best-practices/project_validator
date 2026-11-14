@@ -6,6 +6,7 @@ FetchContent declare. `cmake --build` runs the commands of the custom targets it
 
 from __future__ import annotations
 
+import re
 import shlex
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
@@ -25,6 +26,9 @@ from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader
 
 CMAKE_FILES = ("CMakeLists.txt", "*.cmake")
+# A configure_file() template (`configure_package_config_file`'s `@PACKAGE_INIT@`): a substitution where a command
+# must be. It is rendered before CMake reads it, so it is not one of the project's CMake files.
+_TEMPLATE = re.compile(r"^[ \t]*@[A-Za-z_]\w*@", re.MULTILINE)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -74,7 +78,11 @@ def _files(project: Project, patterns: Iterable[str]) -> dict[str, str]:
 
 def cmake_project(context: Context) -> CMakeProject:
     """The evaluation of the project's CMake files, made once."""
-    return context.shared("CMake", lambda: _evaluated(_files(context.project, CMAKE_FILES)))
+    return context.shared("CMake", lambda: _evaluated(_untemplated(_files(context.project, CMAKE_FILES))))
+
+
+def _untemplated(files: Mapping[str, str]) -> dict[str, str]:
+    return {path: text for path, text in files.items() if not _TEMPLATE.search(text)}
 
 
 def _read_cmake(context: Context) -> Iterator[Fact]:
