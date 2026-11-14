@@ -218,6 +218,14 @@ class GoTests(unittest.TestCase):
         )
 
 
+class AntsibullNoxTests(unittest.TestCase):
+    @unittest.expectedFailure  # upstream #261: antsibull-nox's reusable workflow is unread
+    def test_antsibull_nox_sessions_run_ansible_test(self) -> None:
+        """antsibull-nox's sessions run ansible-test (community.general)."""
+        result = run_in_layout(self, ANSIBLE_PLAYBOOK, TESTS_RUN, {**COLLECTION, **_workflow(NOX_WORKFLOW)})
+        self.assertEqual(result.status, Status.PASS, result)
+
+
 # --- Docker (#260) ---------------------------------------------------------------------------------------------------
 
 HADOLINT_HOOK = {
@@ -266,11 +274,10 @@ NOX_WORKFLOW: dict[str, object] = {
 
 
 class AnsibleKubernetesTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #261: unittests/ suites, ct.yaml, molecule verifiers, antsibull-nox unread
-    def test_helm_unittest_suites_molecule_verifiers_and_antsibull_nox_sessions_are_tests_run(self) -> None:
+    @unittest.expectedFailure  # upstream #261: unittests/ suites, ct.yaml and molecule verifiers are unread
+    def test_helm_unittest_suites_and_molecule_verifiers_are_tests_run(self) -> None:
         """`charts/*/unittests/*_test.yaml` run by chart-testing's `additional-commands` are tests (prometheus
-        helm-charts); a molecule scenario's `tests/test_*.py` is run by `molecule test` (kubespray); antsibull-nox's
-        sessions run ansible-test (community.general)."""
+        helm-charts); a molecule scenario's `tests/test_*.py` is run by `molecule test` (kubespray)."""
         _all_pass(
             self,
             {
@@ -285,7 +292,6 @@ class AnsibleKubernetesTests(unittest.TestCase):
                     {**UNITTESTS, **_ci("helm unittest charts/shop")},
                 ),
                 "molecule verifier": (ANSIBLE_PLAYBOOK, TESTS_RUN, {**SCENARIO, **VERIFIER, **_ci("molecule test")}),
-                "antsibull-nox": (ANSIBLE_PLAYBOOK, TESTS_RUN, {**COLLECTION, **_workflow(NOX_WORKFLOW)}),
             },
         )
 
