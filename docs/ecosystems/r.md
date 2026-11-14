@@ -48,6 +48,11 @@ lintr, with the linters `.lintr` names (its defaults without).
 
 lizard parses R, so CI runs it with a length limit.
 
+## `dependency-management`
+
+A `DESCRIPTION`'s `Imports`, `Depends` (beyond R itself) and `LinkingTo` declare the packages. A package's users
+resolve them; a project whose `.Rprofile` activates renv is an analysis that commits `renv.lock`.
+
 ## `committed-artifacts`
 
 `.Rhistory`, `.RData`, `.Rproj.user/` and `*.Rcheck/`.
@@ -59,6 +64,5 @@ lizard parses R, so CI runs it with a length limit.
 ## Not judged
 
 R is interpreted, so `hardening`, `cxx-extensions` and `ci-build-types` do not apply, and nor does `type-checking`;
-no code security scanner or dependency auditor the validator knows reads R, and a lock file (`renv.lock`) belongs to
-an analysis or an application rather than a package (`dependency-management`); no fuzzer or mutation testing tool
-the validator knows runs R tests.
+no code security scanner or dependency auditor the validator knows reads R; no fuzzer or mutation testing tool the
+validator knows runs R tests.

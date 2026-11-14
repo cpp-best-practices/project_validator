@@ -1176,6 +1176,16 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "DESCRIPTION",
+      "reader": "R package dependencies"
+    },
+    {
+      "kind": "Library",
+      "manager": "R packages",
+      "origin": "DESCRIPTION"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "LICENSE",
       "reader": "license files"
     },

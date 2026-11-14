@@ -25,7 +25,7 @@ issues = [188, 195, 261]
 name = "kubernetes-sigs/kubespray"
 commit = "a0a78f28d1f3dc99d3e9dec94d27dd78e67236bd"
 ecosystems = ["Ansible", "Kubernetes"]
-issues = [182, 246, 261, 262]
+issues = [182, 261, 262]
 
 [[project]]
 name = "elixir-ecto/ecto"
@@ -368,7 +368,6 @@ issues = [235, 257]
 name = "golangci/golangci-lint"
 commit = "1bdd8edc35917b370a0855d877255b4e53c29b9f"
 ecosystems = ["Go"]
-issues = [246]
 
 [[project]]
 name = "caddyserver/caddy"
@@ -526,7 +525,7 @@ issues = [267]
 name = "JuliaDocs/Documenter.jl"
 commit = "785d219105849224911315767d9a0e91550e73d1"
 ecosystems = ["Julia"]
-issues = [182, 235, 246, 267]
+issues = [182, 235, 267]
 
 [[project]]
 name = "ageron/handson-ml3"
@@ -780,7 +779,7 @@ ecosystems = ["PHP"]
 name = "guzzle/guzzle"
 commit = "f8aca40edffeae0ec508b92f4594766083c6e203"
 ecosystems = ["PHP"]
-issues = [246, 270]
+issues = [270]
 
 [[project]]
 name = "composer/composer"
@@ -792,7 +791,7 @@ issues = [188]
 name = "laravel/framework"
 commit = "c980cb5827c6512c12ac44493d172a593b41299a"
 ecosystems = ["PHP"]
-issues = [246, 270]
+issues = [270]
 
 [[project]]
 name = "PHPCSStandards/PHP_CodeSniffer"
@@ -892,19 +891,19 @@ issues = [182]
 name = "tidyverse/dplyr"
 commit = "819c99f7284b3a413b391c60bea49ae7bfb8bafc"
 ecosystems = ["R"]
-issues = [186, 228, 246]
+issues = [186, 228]
 
 [[project]]
 name = "r-lib/testthat"
 commit = "54c0edc932018079a8925845f7e278097d19c786"
 ecosystems = ["R"]
-issues = [186, 228, 246, 256]
+issues = [186, 228, 256]
 
 [[project]]
 name = "Rdatatable/data.table"
 commit = "63a95fa1097bd58359cc19a2ad4392bd92025c52"
 ecosystems = ["R"]
-issues = [182, 186, 246, 256]
+issues = [182, 186, 256]
 
 [[project]]
 name = "tidyverse/ggplot2"
@@ -1242,7 +1241,7 @@ notes = "CSV data without a Data Package descriptor; tabular data is detected fr
 name = "terraform-aws-modules/terraform-aws-vpc"
 commit = "b3abd6df2ecf052451a361ed55b8f06f8742a795"
 ecosystems = ["Terraform"]
-issues = [195, 224, 246, 262]
+issues = [195, 224, 262]
 
 [[project]]
 name = "terraform-google-modules/terraform-google-kubernetes-engine"
@@ -1288,7 +1287,7 @@ ecosystems = ["Typst"]
 name = "cetz-package/cetz"
 commit = "83c00153a11b331ed21848a5b8508148c36c26f3"
 ecosystems = ["Typst"]
-issues = [208, 246, 263]
+issues = [208, 263]
 
 [[project]]
 name = "Pablo-Gonzalez-Calderon/showybox-package"
@@ -1340,7 +1339,7 @@ name = "xmlunit/xmlunit"
 commit = "b04c6ea08c4a0b8dff9a35765650efb9cca4406a"
 ecosystems = ["JVM"]
 notes = "its .xsd files are test fixtures, so it stands for the JVM, not XML schemas"
-issues = [182, 223, 246]
+issues = [182, 223]
 
 [[project]]
 name = "zigtools/zls"

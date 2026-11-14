@@ -337,8 +337,11 @@ MISREAD_DEPENDENCIES: dict[str, tuple[dict[str, str], str]] = {
         {"composer.json": '{"name": "g/g", "require": {"psr/log": "^3"}}\n', "src/A.php": "<?php\n"},
         "not locked",
     ),
-    "a Julia Project.toml with [deps] (Documenter)": (JULIA_WITH_DEPS, "no dependencies are declared"),
-    "an R DESCRIPTION with Imports (dplyr)": (R_WITH_IMPORTS, "no dependencies are declared"),
+}
+# Manifests whose dependencies were not read: files -> what the message must say of them (upstream #246).
+UNREAD_DEPENDENCIES: dict[str, tuple[dict[str, str], str]] = {
+    "a Julia Project.toml with [deps] (Documenter)": (JULIA_WITH_DEPS, "Julia: dependencies are declared"),
+    "an R DESCRIPTION with Imports (dplyr)": (R_WITH_IMPORTS, "R: dependencies are declared"),
 }
 
 
@@ -484,7 +487,6 @@ class DependencyUpdatesTests(unittest.TestCase):
 
 
 class DependencyManagementTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #246: .gitmodules by presence, Composer's default type, R/Julia deps unread
     def test_reads_what_the_files_say(self) -> None:
         """An empty .gitmodules has no submodules, a third_party/ of license notices is not code, a Composer package
         without a type is a library, and an R DESCRIPTION or Julia Project.toml with dependencies is not "no
@@ -493,3 +495,6 @@ class DependencyManagementTests(unittest.TestCase):
             with self.subTest(name):
                 result = _run(dependency_management, files)
                 self.assertNotIn(wrong, result.message, result)
+        for name, (files, said) in UNREAD_DEPENDENCIES.items():
+            with self.subTest(name):
+                self.assertIn(said, _run(dependency_management, files).message)

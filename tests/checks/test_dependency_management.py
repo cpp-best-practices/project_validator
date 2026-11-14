@@ -85,7 +85,9 @@ class VendoringTests(unittest.TestCase):
                 self.assertEqual(result, expected)
 
     def test_git_submodules_warn(self) -> None:
-        result = run_in_every_layout(self, dependency_management, {**WELL_CONFIGURED, ".gitmodules": ""})
+        result = run_in_every_layout(
+            self, dependency_management, {**WELL_CONFIGURED, ".gitmodules": '[submodule "x"]\n\tpath = x\n'}
+        )
         expected = Result.warned(
             "third-party code is committed (git submodules (.gitmodules)); dependencies are declared in "
             "cmake/Dependencies.cmake (FetchContent)",

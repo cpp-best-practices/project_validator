@@ -162,10 +162,15 @@
         "language": "Julia",
         "units": [
           {
-            "answer": "impossible",
-            "declared": [],
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "Pkg",
+                "manifest": "Project.toml"
+              }
+            ],
             "language": "Julia",
-            "lock_required": false,
+            "lock_required": true,
             "locked": [],
             "unit": ".",
             "unknowns": []
@@ -681,9 +686,11 @@
       "status": "SKIP"
     },
     "dependency-management": {
-      "details": [],
-      "message": "not applicable to Julia",
-      "status": "SKIP"
+      "details": [
+        "bound each dependency in Project.toml's [compat] (an environment: commit Manifest.toml)"
+      ],
+      "message": "dependencies are declared in Project.toml (Pkg) but not locked",
+      "status": "WARN"
     },
     "dependency-updates": {
       "details": [

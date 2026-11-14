@@ -1778,6 +1778,16 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "Project.toml",
+      "reader": "Pkg dependencies"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Project.toml",
+      "reader": "Pkg compat bounds"
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "test/runtests.jl",
       "reader": "Julia tests"
     },

@@ -230,7 +230,7 @@
         "language": "Julia",
         "units": [
           {
-            "answer": "impossible",
+            "answer": "yes",
             "declared": [],
             "language": "Julia",
             "lock_required": false,
@@ -865,8 +865,8 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "not applicable to Julia",
-      "status": "SKIP"
+      "message": "no dependencies are declared",
+      "status": "PASS"
     },
     "dependency-updates": {
       "details": [

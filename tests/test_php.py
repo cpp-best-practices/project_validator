@@ -226,7 +226,7 @@ class DependencyTests(unittest.TestCase):
         return run_in_layout(self, "Composer PHP", DEPENDENCY_MANAGEMENT, files)
 
     def test_an_application_locks_its_dependencies(self) -> None:
-        declared = _composer(require={"php": ">=8.3", "ext-json": "*", "psr/log": "^3"})
+        declared = _composer(type="project", require={"php": ">=8.3", "ext-json": "*", "psr/log": "^3"})
         expected = Result.warned(
             "dependencies are declared in composer.json (Composer) but not locked", COMPOSER_PACKAGES.lock_hint
         )

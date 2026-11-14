@@ -223,7 +223,7 @@
         "language": "R",
         "units": [
           {
-            "answer": "impossible",
+            "answer": "yes",
             "declared": [],
             "language": "R",
             "lock_required": false,
@@ -830,8 +830,8 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "not applicable to R",
-      "status": "SKIP"
+      "message": "no dependencies are declared",
+      "status": "PASS"
     },
     "dependency-updates": {
       "details": [

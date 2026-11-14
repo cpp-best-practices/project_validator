@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import replace
+from pathlib import PurePosixPath
 
 from project_validator.core import Check, Context, Result, Status
 from project_validator.facts.dependencies import known_package_managers
@@ -24,8 +26,27 @@ def _vendored(context: Context) -> list[str]:
     outputs = {output for manager in known_package_managers() for output in manager.vendor_outputs}
     top_level = {path.partition("/")[0] for path in context.tracked_files if "/" in path}
     generated = {output.partition("/")[0] for output in outputs if context.committed(output)}
-    vendored = [f"{name}/" for name in VENDOR_DIRECTORIES if name in top_level and name not in generated]
-    return [*vendored, *((f"git submodules ({SUBMODULES})",) if context.project.exists(SUBMODULES) else ())]
+    vendored = [
+        f"{name}/"
+        for name in VENDOR_DIRECTORIES
+        if name in top_level and name not in generated and _holds_code(context, name)
+    ]
+    return [*vendored, *((f"git submodules ({SUBMODULES})",) if _submodules(context) else ())]
+
+
+# What third-party code ships beside it that is not code: notices, licenses and readmes.
+_NOTICES = re.compile(r"(?:LICEN[CS]E|COPYING|NOTICE|README|AUTHORS|PATENTS)(?:[-._].*)?", re.IGNORECASE)
+
+
+def _holds_code(context: Context, directory: str) -> bool:
+    """Whether a vendor directory holds more than notices (golangci-lint's third_party/ of license files does not)."""
+    inside = (path for path in context.tracked_files if path.startswith(f"{directory}/"))
+    return any(not _NOTICES.fullmatch(PurePosixPath(path).name) for path in inside)
+
+
+def _submodules(context: Context) -> bool:
+    """Whether `.gitmodules` declares a submodule (kubespray's is empty)."""
+    return context.project.exists(SUBMODULES) and "[submodule" in context.project.read_text(SUBMODULES)
 
 
 def _with_vendored(managed: Check) -> Check:

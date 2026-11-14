@@ -163,10 +163,15 @@
         "language": "R",
         "units": [
           {
-            "answer": "impossible",
-            "declared": [],
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "R packages",
+                "manifest": "DESCRIPTION"
+              }
+            ],
             "language": "R",
-            "lock_required": false,
+            "lock_required": true,
             "locked": [],
             "unit": ".",
             "unknowns": []
@@ -664,9 +669,11 @@
       "status": "SKIP"
     },
     "dependency-management": {
-      "details": [],
-      "message": "not applicable to R",
-      "status": "SKIP"
+      "details": [
+        "commit renv.lock (renv::snapshot()), so the analysis runs with the package versions it was tested with"
+      ],
+      "message": "dependencies are declared in DESCRIPTION (R packages) but not locked",
+      "status": "WARN"
     },
     "dependency-updates": {
       "details": [
