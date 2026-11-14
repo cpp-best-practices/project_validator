@@ -44,6 +44,33 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "set(CMAKE_EXPORT_COMPILE_COMMANDS ON)",
+                  "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                  "CMAKE_EXPORT_COMPILE_COMMANDS ON in a preset",
+                  "Meson, which writes it"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "compile-commands",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -138,6 +165,34 @@
               "rung": null,
               "tools": []
             },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "set(CMAKE_CXX_EXTENSIONS OFF)",
+                  "-DCMAKE_CXX_EXTENSIONS=OFF",
+                  "CMAKE_CXX_EXTENSIONS OFF in a preset",
+                  "CXX_EXTENSIONS OFF",
+                  "cpp_std=c++20"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "cxx-extensions",
             "unit": ".",
             "unknowns": []
           }
@@ -326,6 +381,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C++",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C++",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -360,6 +453,33 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "a check that the source and binary directories differ",
+                  "CMAKE_DISABLE_IN_SOURCE_BUILD",
+                  "CMAKE_DISABLE_SOURCE_CHANGES",
+                  "Meson, which builds out of source"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "out-of-source-build",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -372,6 +492,31 @@
             "notes": [],
             "platforms": [],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "AddressSanitizer",
+                  "UndefinedBehaviorSanitizer"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -558,6 +703,32 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "PROJECT_IS_TOP_LEVEL",
+                  "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR",
+                  "meson.is_subproject()"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "top-level-guard",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -655,6 +826,13 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [
+        "set(CMAKE_EXPORT_COMPILE_COMMANDS ON), so clang-tidy, clangd and IDEs can read the build"
+      ],
+      "message": "compile_commands.json is not exported",
+      "status": "WARN"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no compiler warning flags found; enable at least -Wall -Wextra -Wpedantic -Wshadow -Wconversion",
@@ -739,6 +917,16 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [
         "consider running mull-runner or dextool mutate in CI"
@@ -746,9 +934,23 @@
       "message": "no mutation testing runs",
       "status": "WARN"
     },
+    "out-of-source-build": {
+      "details": [
+        "compare CMAKE_SOURCE_DIR with CMAKE_BINARY_DIR and message(FATAL_ERROR) when they are equal (cmake_template's PreventInSourceBuilds.cmake)"
+      ],
+      "message": "in-source builds are not prevented",
+      "status": "WARN"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [
+        "build with -fsanitize=address,undefined (MSVC: /fsanitize=address) in at least one configuration, behind an option CI turns on (Meson: -Db_sanitize=address,undefined)"
+      ],
+      "message": "no sanitizers found; enable AddressSanitizer, UndefinedBehaviorSanitizer",
       "status": "FAIL"
     },
     "schema-compatibility": {
@@ -811,6 +1013,13 @@
       "details": [],
       "message": "no tests found (tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call) or tests registered with Meson's test() in meson.build)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [
+        "condition the tests and developer-only options on PROJECT_IS_TOP_LEVEL (Meson: meson.is_subproject()), so that the project works as a subproject through FetchContent, CPM or add_subdirectory"
+      ],
+      "message": "nothing is guarded for use as a subproject",
+      "status": "WARN"
     },
     "type-checking": {
       "details": [],

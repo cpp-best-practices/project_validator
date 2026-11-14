@@ -127,6 +127,9 @@ class Collector:
     def ctest(self, frame: Frame, key: str, value: object) -> None:
         self.facts.append(Setting(origin=Origin(path=frame.path), tool="CTest", key=key, value=value))
 
+    def guard(self, frame: Frame, text: str) -> None:
+        self.facts.append(Setting(origin=Origin(path=frame.path), tool=BUILD_SYSTEM, key="guard", value=text))
+
     def setting(
         self,
         frame: Frame,
@@ -254,10 +257,19 @@ def _set_property(collector: Collector, frame: Frame, invocation: Invocation, wo
 
 
 def _option(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
-    """An option's default: `option(NAME "help" ON)`, `cmake_dependent_option(NAME "help" ON ...)`."""
+    """An option's default: `option(NAME "help" ON)`, `cmake_dependent_option(NAME "help" ON ...)`; the condition a
+    dependent option depends on is a guard."""
     if len(words) >= 2:
         value = words[2] if len(words) > 2 else Value("OFF")
         collector.setting(frame, invocation, words[0].text, value, None, default=True)
+    if invocation.name == "cmake_dependent_option" and len(words) >= 4:
+        collector.guard(frame, words[3].text)
+
+
+def _guard(collector: Collector, frame: Frame, _invocation: Invocation, words: list[Value]) -> None:
+    """What an `if()` (or `elseif()`) tests, as written: the evaluator decides where it holds; the text says what the
+    project guards on (`PROJECT_IS_TOP_LEVEL`, a comparison of the source and binary directories)."""
+    collector.guard(frame, " ".join(word.text for word in words))
 
 
 def _set(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
@@ -331,6 +343,8 @@ _COMMANDS: Mapping[str, Callable[[Collector, Frame, Invocation, list[Value]], No
     "set_property": _set_property,
     "option": _option,
     "cmake_dependent_option": _option,
+    "if": _guard,
+    "elseif": _guard,
     "set": _set,
     "enable_testing": _enable_testing,
     "include": _include,

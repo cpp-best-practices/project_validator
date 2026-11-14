@@ -410,5 +410,5 @@ SECURITY_SCANNERS = (
         reads=("PHP_CodeSniffer security",),
     ),
     # CodeQL does not analyse PHP.
-    *(tool for tool in multi_language_scanners(PHP_ONLY) if tool.name != "CodeQL"),
+    *multi_language_scanners(PHP_ONLY),
 )

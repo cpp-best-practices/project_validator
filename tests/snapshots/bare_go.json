@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -124,6 +131,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -338,6 +352,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Go",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Go",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -373,6 +425,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -385,6 +444,32 @@
             "notes": [],
             "platforms": [],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "go test -race",
+                  "go test -asan",
+                  "go test -msan"
+                ]
+              }
+            ],
+            "language": "Go",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -571,6 +656,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -650,6 +742,11 @@
       ],
       "message": "1 build output is committed",
       "status": "FAIL"
+    },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
     },
     "compiler-warnings": {
       "details": [],
@@ -734,6 +831,16 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [
         "consider running gremlins unleash or go-mutesting ./... in CI"
@@ -741,9 +848,21 @@
       "message": "no mutation testing runs",
       "status": "WARN"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [
+        "run go test -race (the race detector) in CI"
+      ],
+      "message": "no sanitizer runs in CI; run go test -race",
       "status": "FAIL"
     },
     "schema-compatibility": {
@@ -806,6 +925,11 @@
       "details": [],
       "message": "no tests found (Test functions in *_test.go files)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

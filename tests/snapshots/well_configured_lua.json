@@ -91,6 +91,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -176,6 +183,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -340,6 +354,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Lua",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Lua",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -357,6 +409,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
       }
     ],
     "platforms": [
@@ -419,6 +478,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -613,6 +679,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -780,6 +853,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Lua linters are enabled: luacheck",
@@ -851,7 +929,22 @@
       "message": "the project is licensed under MIT",
       "status": "PASS"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Lua",
       "status": "SKIP"
@@ -874,6 +967,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Lua version(s) (5.1, 5.4, luajit-2.1), 9 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -924,6 +1022,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [

@@ -36,12 +36,20 @@
           {
             "answer": "no",
             "committed": [
-              "target/"
+              "target/",
+              "target/classes/com/example/App.class"
             ],
             "language": "Java",
             "unit": "."
           }
         ]
+      }
+    ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
       }
     ],
     "compiler-warnings": [
@@ -125,6 +133,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -338,6 +353,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Java",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Java",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -366,6 +419,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -380,6 +440,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -585,6 +652,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -613,6 +687,7 @@
             "answer": "yes",
             "language": "Java",
             "outputs": {
+              "compiled classes": {},
               "the target directory": {}
             },
             "unit": "."
@@ -696,10 +771,16 @@
     "committed-artifacts": {
       "details": [
         "target/",
+        "target/classes/com/example/App.class",
         "remove them from version control (git rm -r --cached <path>) and ignore them"
       ],
-      "message": "1 build output is committed",
+      "message": "2 build outputs are committed",
       "status": "FAIL"
+    },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
     },
     "compiler-warnings": {
       "details": [],
@@ -782,6 +863,16 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [
         "consider running pitest:mutationCoverage or the pitest Gradle task in CI"
@@ -789,10 +880,20 @@
       "message": "no mutation testing runs",
       "status": "WARN"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -854,6 +955,11 @@
       "details": [],
       "message": "no tests found (@Test methods or Kotest specs under src/test/java or src/test/kotlin)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

@@ -22,8 +22,10 @@ collection; `very_good test --coverage` counts lines.
 
 ## `platform-matrix`
 
-The toolchains are Dart or Flutter SDK versions: dart-lang/setup-dart's `sdk` (a version or a channel: `3.5`,
-`stable`), the `dart` image (`dart:3.5`), subosito/flutter-action's `flutter-version`, the cirruslabs Flutter image.
+The toolchains are Dart or Flutter SDK versions, read from the setup actions' inputs: dart-lang/setup-dart's `sdk` (a
+version or a channel: `3.5`, `stable`; stable when not given), subosito/flutter-action's `flutter-version`, or its
+`channel` when no version is given (`stable` when neither is); and from the images, `dart:3.5` and the cirruslabs
+Flutter image.
 
 ## `compiler-warnings`
 

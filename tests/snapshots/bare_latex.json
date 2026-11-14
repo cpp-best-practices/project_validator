@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -119,6 +126,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -252,6 +266,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "LaTeX",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "LaTeX",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -271,7 +323,21 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": []
+      }
+    ],
     "platforms": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": []
+      }
+    ],
+    "sanitizers": [
       {
         "auxiliary": {},
         "language": "LaTeX",
@@ -435,6 +501,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -517,6 +590,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no LaTeX lints found; enable at least chktex",
@@ -588,12 +666,32 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [],
       "message": "not applicable to LaTeX",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
+    },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to LaTeX",
       "status": "SKIP"
@@ -656,6 +754,11 @@
       "details": [],
       "message": "tests found in 1 file(s), but no CI configuration runs latexmk -pdf main.tex (or pdflatex, xelatex, lualatex, tectonic; xu-cheng/latex-action)",
       "status": "WARN"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

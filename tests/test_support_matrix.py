@@ -63,6 +63,28 @@ class SupportMatrixTests(unittest.TestCase):
         self.assertEqual(len(names), len(set(names)))
         self.assertIn("RuboCop", names)
 
+    def test_a_tool_of_several_ecosystems_is_listed_once_below_the_table(self) -> None:
+        wide = SupportMatrix(
+            ecosystems=("A", "B", "C"),
+            rows=(
+                Row(check="x", description="d", cells=(("own", "shared"), ("shared",), ("shared", "other"))),
+                Row(check="y", description="e", cells=(("t",), None, ())),
+            ),
+            everywhere=(),
+        )
+        self.assertEqual(wide.shared(wide.rows[0]), (("shared", ("A", "B", "C")),))
+        self.assertEqual(wide.shared(wide.rows[1]), ())
+        page = render(wide)
+        self.assertIn("| `x` | own | ↓ | other |\n| `y` | t | — | ✓ |\n", page)
+        self.assertIn(
+            "Tools of several ecosystems, once for all the cells they fill:\n\n- `x`: shared (A, B, C)\n", page
+        )
+        self.assertEqual(as_dict(wide)["shared"], {"x": {"shared": ["A", "B", "C"]}})
+        self.assertNotIn("Tools of several", render(SMALL))
+        # The real matrix lists CodeQL once, for the ecosystems it reads.
+        row = self._row(self.matrix, "security-scanning")
+        self.assertIn("CodeQL", dict(self.matrix.shared(row)))
+
     def test_rendering(self) -> None:
         self.assertEqual(
             render(SMALL),
@@ -92,5 +114,6 @@ class SupportMatrixTests(unittest.TestCase):
                     {"check": "y", "description": "e", "cells": {"A": [], "B": []}},
                 ],
                 "everywhere": ["z"],
+                "shared": {},
             },
         )

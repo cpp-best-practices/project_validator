@@ -80,6 +80,7 @@ API_ECOSYSTEM = Ecosystem(
         ("spectral",),
         ("spectral-cli",),
         ("redocly",),
+        ("@redocly/cli",),
         ("vacuum",),
         ("swagger-cli",),
         ("asyncapi",),
@@ -171,7 +172,7 @@ REDOCLY = _linter(
     "redocly",
     OPENAPI_ONLY,
     "redocly lint <description>",
-    starts(("redocly", "lint"), ("openapi", "lint")),
+    starts(("redocly", "lint"), ("@redocly/cli", "lint"), ("openapi", "lint")),
     defined_by(files=(REDOCLY_SETTINGS.name,)),
     examples=True,
 )

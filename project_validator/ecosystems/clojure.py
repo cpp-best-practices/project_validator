@@ -214,7 +214,7 @@ CLJ_KONDO_ANALYZER = analyzer(
 )
 
 # semgrep reads Clojure; CodeQL and GitLab SAST do not.
-SECURITY_SCANNERS = tuple(tool for tool in multi_language_scanners(CLOJURE) if tool.name == "semgrep")
+SECURITY_SCANNERS = multi_language_scanners(CLOJURE)
 
 # nvd-clojure (OWASP dependency-check over the classpath) and clj-watson audit the dependencies.
 _NVD_ALIAS = re.compile(r"^nvd(?:-clojure)?$")

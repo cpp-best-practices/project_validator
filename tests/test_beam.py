@@ -315,7 +315,8 @@ class ErlangTests(unittest.TestCase):
         self.assertEqual(self._run(dependency_management, REBAR_DEPS).status, Status.WARN)
         locked = {**REBAR_DEPS, "rebar.lock": '{"1.2.0",\n[{<<"jsx">>,{pkg,<<"jsx">>,<<"3.1.0">>},0}]}.\n'}
         self.assertEqual(self._run(dependency_management, locked).status, Status.PASS)
-        self.assertEqual(self._run(dependency_audit, _ci("osv-scanner -r .")).status, Status.PASS)
+        # Nothing reads rebar.lock: not osv-scanner, trivy or snyk, nor mix_audit (a Mix project's).
+        self.assertEqual(self._run(dependency_audit, _ci("osv-scanner -r .")).status, Status.SKIP)
 
     def test_a_rebar3_project_has_no_deps_directory_to_ignore(self) -> None:
         self.assertEqual(self._run(vcs_ignore, {".gitignore": "_build/\nerl_crash.dump\n"}).status, Status.PASS)

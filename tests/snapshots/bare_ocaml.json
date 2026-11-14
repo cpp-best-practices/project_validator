@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -121,6 +128,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -254,6 +268,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "OCaml",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "OCaml",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -273,6 +325,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -287,6 +346,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -435,6 +501,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -533,6 +606,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no OCaml warning settings found; enable at least dune's dev profile warning set (or -w +a)",
@@ -606,7 +684,22 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to OCaml",
       "status": "SKIP"
@@ -615,6 +708,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -674,6 +772,11 @@
       "details": [],
       "message": "no tests found (test stanzas, inline_tests or cram tests in dune files)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

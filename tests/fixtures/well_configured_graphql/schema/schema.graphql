@@ -1,0 +1,15 @@
+"""A price list and its total."""
+type Query {
+  """The items of the catalog."""
+  items: [Item!]!
+  """The sum of the prices."""
+  total: Int!
+}
+
+"""An item for sale."""
+type Item {
+  """The item's name."""
+  name: String!
+  """The price, in cents."""
+  price: Int!
+}

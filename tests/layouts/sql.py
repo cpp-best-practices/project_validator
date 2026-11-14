@@ -15,6 +15,8 @@ LAYOUTS = (
         },
         languages=SQL,
         build_systems=frozenset({"dbt"}),
+        # A dbt project has models, not migrations: nothing for migration-safety to judge.
+        skipped=frozenset({"migration-safety"}),
     ),
     ProjectLayout(
         name="SQL migrations",

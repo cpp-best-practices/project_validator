@@ -217,7 +217,8 @@
       "name": "ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -320,7 +321,8 @@
       "name": "test (ubuntu-latest, 3.3)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -487,7 +489,8 @@
       "name": "test (ubuntu-latest, 3.4)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -654,7 +657,8 @@
       "name": "test (macos-latest, 3.3)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -821,7 +825,8 @@
       "name": "test (macos-latest, 3.4)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -988,7 +993,8 @@
       "name": "test (windows-latest, 3.3)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -1155,7 +1161,8 @@
       "name": "test (windows-latest, 3.4)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -1329,7 +1336,8 @@
       "name": "copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -1391,7 +1399,8 @@
       "name": "function-limits",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -1470,6 +1479,7 @@
       "name": ".github/workflows/ci-lint.yml: ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -1487,6 +1497,7 @@
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 3.3)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Ruby",
@@ -1509,6 +1520,7 @@
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 3.4)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Ruby",
@@ -1531,6 +1543,7 @@
       "name": ".github/workflows/ci.yml: test (macos-latest, 3.3)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
+      "services": [],
       "toolchains": [
         {
           "language": "Ruby",
@@ -1553,6 +1566,7 @@
       "name": ".github/workflows/ci.yml: test (macos-latest, 3.4)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
+      "services": [],
       "toolchains": [
         {
           "language": "Ruby",
@@ -1575,6 +1589,7 @@
       "name": ".github/workflows/ci.yml: test (windows-latest, 3.3)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
+      "services": [],
       "toolchains": [
         {
           "language": "Ruby",
@@ -1597,6 +1612,7 @@
       "name": ".github/workflows/ci.yml: test (windows-latest, 3.4)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
+      "services": [],
       "toolchains": [
         {
           "language": "Ruby",
@@ -1617,6 +1633,7 @@
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -1634,6 +1651,7 @@
       "name": ".github/workflows/function-limits.yml: function-limits",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Python",

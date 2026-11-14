@@ -165,7 +165,8 @@
       "name": "ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -265,7 +266,8 @@
       "name": "lint",
       "origin": ".github/workflows/ci.yml:jobs.lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -345,7 +347,8 @@
       "name": "breaking",
       "origin": ".github/workflows/ci.yml:jobs.breaking",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -411,7 +414,8 @@
       "name": "copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -475,6 +479,7 @@
       "name": ".github/workflows/ci-lint.yml: ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -492,6 +497,7 @@
       "name": ".github/workflows/ci.yml: lint",
       "origin": ".github/workflows/ci.yml:jobs.lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -509,6 +515,7 @@
       "name": ".github/workflows/ci.yml: breaking",
       "origin": ".github/workflows/ci.yml:jobs.breaking",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -524,6 +531,7 @@
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -569,6 +577,34 @@
       ],
       "tool": "spectral",
       "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "ToolRun",
+      "languages": [
+        "OpenAPI"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "examples": [
+          "checked"
+        ],
+        "schema": [
+          "validates"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "redocly",
+      "via": [
+        ".github/workflows/ci.yml:jobs.lint.steps[2].run"
+      ]
     },
     {
       "heuristic": false,

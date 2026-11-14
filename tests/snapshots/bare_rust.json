@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -134,6 +141,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -348,6 +362,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Rust",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Rust",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -376,6 +428,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -388,6 +447,31 @@
             "notes": [],
             "platforms": [],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "cargo miri test",
+                  "-Zsanitizer"
+                ]
+              }
+            ],
+            "language": "Rust",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -567,6 +651,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -665,6 +756,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Rust lint settings found; enable at least cargo clippy -D warnings clippy::pedantic",
@@ -748,6 +844,16 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [
         "consider running cargo mutants in CI"
@@ -755,9 +861,21 @@
       "message": "no mutation testing runs",
       "status": "WARN"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [
+        "run cargo +nightly miri test, or build with RUSTFLAGS=-Zsanitizer=address on nightly, in CI"
+      ],
+      "message": "no sanitizer runs in CI; run cargo +nightly miri test or build with -Zsanitizer=address",
       "status": "FAIL"
     },
     "schema-compatibility": {
@@ -820,6 +938,11 @@
       "details": [],
       "message": "no tests found (#[test] functions)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

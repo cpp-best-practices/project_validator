@@ -2,7 +2,7 @@
 ignore the language's build outputs, and are none of them committed?
 
 Both are answered for the project as a whole (unit "."): its ignore files are at its root, and an output committed
-anywhere is committed. A language's build outputs are those of the build systems the project uses, or the language's
+anywhere is committed. A language's build outputs are those of the build systems the project uses and the language's
 own (see `project_validator.facts.outputs.outputs_of`).
 """
 

@@ -270,7 +270,7 @@ WARNINGS_AS_ERRORS = Practice(
 )
 
 # semgrep reads OCaml; CodeQL and GitLab SAST do not.
-SECURITY_SCANNERS = tuple(tool for tool in multi_language_scanners(OCAML) if tool.name == "semgrep")
+SECURITY_SCANNERS = multi_language_scanners(OCAML)
 
 
 # --- Outputs --------------------------------------------------------------------------------------------------------

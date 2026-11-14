@@ -295,3 +295,18 @@ CRYSTAL_FORMAT = format_tool(
     style=defined_by(),
 )
 """
+
+
+CMAKE_PROJECT = "cmake_minimum_required(VERSION 3.21)\nproject(p LANGUAGES CXX)\n"
+
+
+def in_cmake_project(
+    test: unittest.TestCase, selected: Check, build: str, ci: Mapping[str, str] | None = None
+) -> Result:
+    """The result of `selected` in a CMake C++ project whose CMakeLists adds `build` to a bare `project()`."""
+    return run_in_layout(test, "CMake C++", selected, {"CMakeLists.txt": CMAKE_PROJECT + build, **(ci or {})})
+
+
+def in_meson_project(test: unittest.TestCase, selected: Check, build: str = "project('app', 'cpp')\n") -> Result:
+    """The result of `selected` in a Meson C++ project with `build` as its meson.build."""
+    return run_in_layout(test, "Meson C++", selected, {"meson.build": build})

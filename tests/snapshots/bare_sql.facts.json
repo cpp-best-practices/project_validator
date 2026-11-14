@@ -35,6 +35,21 @@
       "role": "product"
     },
     {
+      "ecosystem": "SQL",
+      "kind": "ContentLanguages",
+      "languages": [
+        "SQL"
+      ],
+      "origin": "."
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "SQL",
+      "origin": "migrations/V1__orders.sql",
+      "role": "product"
+    },
+    {
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
@@ -121,6 +136,7 @@
       ],
       "SQL": [
         "build file dbt_project.yml",
+        "content",
         ".sql files"
       ]
     },

@@ -5,6 +5,7 @@ import unittest
 
 from project_validator.ecosystems import ToolchainPatterns
 from project_validator.ecosystems.model import toolchain_patterns
+from project_validator.facts import ActionStep, Origin
 from project_validator.facts.jobs import Toolchain
 from project_validator.platforms import (
     _language_toolchains,
@@ -110,3 +111,17 @@ class LabelledToolchainTests(unittest.TestCase):
         )
         found = _language_toolchains("GHC", patterns, *evidence("stack test --resolver lts-22 && ghc-version: 9.8"))
         self.assertEqual({str(toolchain) for toolchain in found}, {"GHC 9.8", "GHC Stackage lts-22"})
+
+
+class StepReaderTests(unittest.TestCase):
+    def test_an_actions_inputs_name_a_version_structurally(self) -> None:
+        patterns = toolchain_patterns(
+            "Thing", steps=(("acme/setup-thing", lambda inputs: inputs.get("channel") or inputs.get("version")),)
+        )
+        step = ActionStep(
+            origin=Origin(path="ci.yml"), job="job", uses="acme/setup-thing@v3", inputs={"channel": "beta"}
+        )
+        other = ActionStep(origin=Origin(path="ci.yml"), job="job", uses="acme/other@v1", inputs={"version": "9"})
+        found = _language_toolchains("Thing", patterns, ("uses: acme/setup-thing@v3",), (), (step, other))
+        self.assertEqual(found, _toolchains("Thing", "beta"))
+        self.assertEqual(_language_toolchains("Thing", patterns, (), (), (other,)), set())

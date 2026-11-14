@@ -34,6 +34,9 @@ class Job(Fact):
     toolchains: frozenset[Toolchain] = frozenset()
     # The labels of the ecosystems the job is seen building with or running (see `Ecosystem.used_by`).
     ecosystems: frozenset[str] = frozenset()
+    # The images of the service containers the job runs beside itself (`postgres:16`): what a database project is
+    # tested against.
+    services: frozenset[str] = frozenset()
     default_compiler: bool = False
     heuristic: bool = False
 

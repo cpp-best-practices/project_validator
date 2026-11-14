@@ -88,6 +88,13 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
+      "origin": "migrations/V1__orders.sql",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "SQL",
       "origin": "models/staging/stg_orders.sql",
       "role": "product"
     },
@@ -233,7 +240,8 @@
       "name": "ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -328,19 +336,24 @@
         "PGPASSWORD": "postgres"
       },
       "heuristic": false,
-      "id": ".github/workflows/ci.yml:test",
+      "id": ".github/workflows/ci.yml:test[0]",
       "image": null,
       "kind": "CiJob",
-      "matrix": {},
-      "name": "test",
+      "matrix": {
+        "postgres": "16"
+      },
+      "name": "test (16)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": [
+        "postgres:16"
+      ]
     },
     {
       "condition": null,
       "inputs": {},
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
@@ -350,7 +363,7 @@
       "inputs": {
         "python-version": "3.13"
       },
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
       "uses": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
@@ -370,7 +383,7 @@
       "env": {
         "PGPASSWORD": "postgres"
       },
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "python -m pip install dbt-postgres sqlfluff sqlfluff-templater-dbt",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
@@ -389,7 +402,7 @@
       "env": {
         "PGPASSWORD": "postgres"
       },
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "python -m pip install dbt-postgres sqlfluff sqlfluff-templater-dbt",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
@@ -407,7 +420,7 @@
       "env": {
         "PGPASSWORD": "postgres"
       },
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "dbt deps",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
@@ -425,11 +438,47 @@
       "env": {
         "PGPASSWORD": "postgres"
       },
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "sqlfluff lint models tests",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
       "via": []
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "squawk-cli",
+        "migrations/*.sql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npx --yes squawk-cli migrations/*.sql",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "squawk-cli",
+        "migrations/*.sql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "npx --yes squawk-cli migrations/*.sql",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
     },
     {
       "argv": [
@@ -441,10 +490,10 @@
       "env": {
         "PGPASSWORD": "postgres"
       },
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "dbt parse",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -459,10 +508,194 @@
       "env": {
         "PGPASSWORD": "postgres"
       },
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "dbt build --profiles-dir .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test[1]",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {
+        "postgres": "17"
+      },
+      "name": "test (17)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "provider": "GitHub Actions",
+      "services": [
+        "postgres:17"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "python-version": "3.13"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "uses": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "dbt-postgres",
+        "sqlfluff",
+        "sqlfluff-templater-dbt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "python -m pip install dbt-postgres sqlfluff sqlfluff-templater-dbt",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "pip",
+        "install",
+        "dbt-postgres",
+        "sqlfluff",
+        "sqlfluff-templater-dbt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "python -m pip install dbt-postgres sqlfluff sqlfluff-templater-dbt",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
+        "dbt",
+        "deps"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dbt deps",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "sqlfluff",
+        "lint",
+        "models",
+        "tests"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "sqlfluff lint models tests",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "squawk-cli",
+        "migrations/*.sql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npx --yes squawk-cli migrations/*.sql",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "squawk-cli",
+        "migrations/*.sql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "npx --yes squawk-cli migrations/*.sql",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "argv": [
+        "dbt",
+        "parse"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dbt parse",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "dbt",
+        "build",
+        "--profiles-dir",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "dbt build --profiles-dir .",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
@@ -486,7 +719,8 @@
       "name": "copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -550,6 +784,7 @@
       "name": ".github/workflows/ci-lint.yml: ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -563,11 +798,40 @@
         "SQL"
       ],
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Job",
-      "name": ".github/workflows/ci.yml: test",
+      "name": ".github/workflows/ci.yml: test (16)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
+      "services": [
+        "postgres:16"
+      ],
+      "toolchains": [
+        {
+          "language": "Python",
+          "version": "3.13"
+        }
+      ]
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "Python",
+        "SQL"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test (17)",
+      "origin": ".github/workflows/ci.yml:jobs.test",
+      "os": "linux",
+      "services": [
+        "postgres:17"
+      ],
       "toolchains": [
         {
           "language": "Python",
@@ -588,6 +852,7 @@
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -697,7 +962,7 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
         "SQL"
@@ -720,12 +985,37 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "migrations": [
+          "linted"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "squawk",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "SQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "analysis": [
           "checks"
@@ -740,12 +1030,100 @@
     },
     {
       "heuristic": false,
-      "job": ".github/workflows/ci.yml:test",
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "SQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dbt test",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "SQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "sqlfluff",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "SQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ],
+        "migrations": [
+          "linted"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "squawk",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "dbt parse",
+      "via": []
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "SQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "test": [
           "runs"
@@ -789,7 +1167,22 @@
             "Python",
             "SQL"
           ],
-          "name": ".github/workflows/ci.yml: test",
+          "name": ".github/workflows/ci.yml: test (16)",
+          "os": "linux",
+          "toolchains": [
+            "Python 3.13"
+          ]
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "Python",
+            "SQL"
+          ],
+          "name": ".github/workflows/ci.yml: test (17)",
           "os": "linux",
           "toolchains": [
             "Python 3.13"

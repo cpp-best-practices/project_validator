@@ -107,6 +107,7 @@ def _job_with_compilers(
         configurations=found,
         toolchains=toolchains,
         ecosystems=ecosystems,
+        services=frozenset(job.services),
         default_compiler=default is not None,
         heuristic=heuristic,
     )
@@ -173,7 +174,7 @@ def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project) 
         job.os,
         compilers,
         _configurations(commands, evidence),
-        detect_toolchains(texts, run),
+        detect_toolchains(texts, run, (fact for fact in facts if isinstance(fact, ActionStep))),
         detect_ecosystems(texts, run),
         heuristic=job.heuristic,
     )

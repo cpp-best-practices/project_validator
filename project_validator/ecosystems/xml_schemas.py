@@ -3,16 +3,20 @@
 `--relaxng` or `--schematron`, jing, SchXslt). XSLT holds the stylesheets (`.xsl`, `.xslt`), whose XSpec suites CI
 runs (`tests-run`). Both are formatted with prettier and its XML plugin (`code-formatting`). The files are XML, the
 Data format's, whose parser never fetches an external DTD or entity; `.rnc`, RELAX NG's compact syntax, is accounted
-for without being XML. An XSD declares its `targetNamespace` (`schema-declared`); RELAX NG and Schematron schemas
-name no namespace of their own and are not asked; a validator run on an `examples` directory checks the schemas'
-examples (`schema-examples`). A document naming its schema (`xsi:schemaLocation`) is the other schema practice of #86,
-not yet built."""
+for without being XML. An XSD declares its `targetNamespace`, and each document of one of the project's XSDs (its
+root element in the schema's namespace, or a global element of a schema with none) names the schema's location
+(`xsi:schemaLocation`, `xsi:noNamespaceSchemaLocation`, or an `xml-model` processing instruction), so that an editor
+or a validator finds it (`schema-declared`); RELAX NG and Schematron schemas name no namespace of their own and are
+not asked, and `elementFormDefault` is a choice with a defined default, not a declaration. A validator run on an
+`examples` directory checks the schemas' examples (`schema-examples`)."""
 
 from __future__ import annotations
 
+import io
 import re
 from collections.abc import Iterator
 from pathlib import PurePosixPath
+from xml.etree import ElementTree
 
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
@@ -70,6 +74,69 @@ def _read_xsd(text: str) -> Declaration | None:
 
 
 XSD_DECLARES = Declares(format=XML_SCHEMA, what="targetNamespace", find=xsd_files, read=_read_xsd)
+
+_XS, _XSI = "{http://www.w3.org/2001/XMLSchema}", "{http://www.w3.org/2001/XMLSchema-instance}"
+_XML_MODEL = re.compile(r"<\?xml-model\b[^>]*?\bhref\s*=\s*[\"']([^\"']+)[\"']")
+
+
+def _root(text: str) -> ElementTree.Element | None:
+    """The root element of an XML document, with its attributes, read no further; None when it does not parse (the
+    parser fetches nothing: no external entity is read)."""
+    try:
+        events = ElementTree.iterparse(io.StringIO(text), events=("start",))  # noqa: S314
+        root: ElementTree.Element | None = next((element for _, element in events), None)
+    except ElementTree.ParseError:
+        return None
+    return root
+
+
+def _schema_targets(project: Project) -> tuple[frozenset[str], frozenset[str]]:
+    """What the project's XSDs describe: the namespaces of those with a `targetNamespace`, and the global elements of
+    those without one, which a document of theirs has as its root."""
+    namespaces: set[str] = set()
+    elements: set[str] = set()
+    for path in xsd_files(project):
+        try:
+            schema = ElementTree.fromstring(project.read_text(path))  # noqa: S314 - the project's own files
+        except ElementTree.ParseError:
+            continue
+        if schema.tag != f"{_XS}schema":
+            continue
+        if namespace := schema.get("targetNamespace"):
+            namespaces.add(namespace)
+        else:
+            elements.update(name for element in schema.iterfind(f"{_XS}element") if (name := element.get("name")))
+    return frozenset(namespaces), frozenset(elements)
+
+
+def schema_documents(project: Project) -> Iterator[str]:
+    """The XML documents of the project's XSDs: each `.xml` file whose root element is in a schema's namespace, or is
+    a global element of a schema with none. Other XML (a build file, a stylesheet) is of other schemas."""
+    namespaces, elements = _schema_targets(project)
+    if not namespaces and not elements:
+        return
+    for path in project.files():
+        if PurePosixPath(path).suffix.lower() != ".xml" or (root := _root(project.read_text(path))) is None:
+            continue
+        namespace, _, name = root.tag.rpartition("}")
+        if (namespace and namespace[1:] in namespaces) or (not namespace and name in elements):
+            yield path
+
+
+def _read_document(text: str) -> Declaration | None:
+    """Where a document says its schema is: `xsi:schemaLocation` (or `xsi:noNamespaceSchemaLocation`) on its root
+    element, or an `xml-model` processing instruction before it. One that does not parse in full declares nothing that
+    can be read (`data-wellformed` says so)."""
+    try:
+        root = ElementTree.fromstring(text)  # noqa: S314 - the project's own files, parsed without fetching anything
+    except ElementTree.ParseError:
+        return None
+    model = _XML_MODEL.search(text)
+    location = root.get(f"{_XSI}schemaLocation") or root.get(f"{_XSI}noNamespaceSchemaLocation")
+    return declaring({"schema location": location or (model[1] if model else None)})
+
+
+XML_DOCUMENT_DECLARES = Declares(format=XML_SCHEMA, what="schema location", find=schema_documents, read=_read_document)
 
 
 # --- Validation -----------------------------------------------------------------------------------------------------

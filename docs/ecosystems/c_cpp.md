@@ -39,6 +39,14 @@ AppleClang on macOS, MSVC on Windows), unless it only runs another ecosystem's t
 
 Every OS/compiler combination builds Debug and Release, each with and without sanitizers.
 
+## `sanitizers`
+
+AddressSanitizer and UndefinedBehaviorSanitizer are used in some configuration, whatever the compiler:
+`-fsanitize=address,undefined` (MSVC's `/fsanitize=address`) among the build files' options or on a CI command line,
+cmake_template's `ENABLE_SANITIZER_ADDRESS` and `ENABLE_SANITIZER_UNDEFINED_BEHAVIOR` options (with or without the
+project's prefix) on by default or turned on by CI, or Meson's `b_sanitize`. One of the two warns; neither fails.
+ThreadSanitizer and MemorySanitizer are not asked, since they exclude the other two in one build.
+
 ## `compiler-warnings`
 
 `-Wall -Wextra -Wpedantic -Wshadow -Wconversion`, plus `/W4` and `/permissive-` when MSVC is in CI.
@@ -51,6 +59,27 @@ Every OS/compiler combination builds Debug and Release, each with and without sa
 
 `CMAKE_CXX_EXTENSIONS` (or `CMAKE_C_EXTENSIONS` for C) is turned off, or with Meson `cpp_std` (`c_std`) names a
 standard such as `c++20` rather than `gnu++20`, so `-std=c++NN` is used rather than `-std=gnu++NN`.
+
+## `out-of-source-build`
+
+In-source builds are prevented: a CMake file compares `CMAKE_SOURCE_DIR` (or `PROJECT_SOURCE_DIR`) with the binary
+directory and stops with `message(FATAL_ERROR)` when they are equal, as cmake_template's `PreventInSourceBuilds.cmake`
+does, or sets `CMAKE_DISABLE_IN_SOURCE_BUILD` or `CMAKE_DISABLE_SOURCE_CHANGES`. Meson refuses in-source builds itself,
+so a Meson project passes. Warns otherwise.
+
+## `compile-commands`
+
+`compile_commands.json` is exported, so clang-tidy, clangd and IDEs can read the build: `CMAKE_EXPORT_COMPILE_COMMANDS`
+on in the CMake files, in a preset or on the command line (`-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`). Meson always writes
+it, so a Meson project passes. Warns otherwise.
+
+## `top-level-guard`
+
+Tests and developer-only settings are conditioned on the project being built on its own, so that it works as a
+subproject through FetchContent, CPM or `add_subdirectory`: an `if()` on `PROJECT_IS_TOP_LEVEL` (or
+`<project>_IS_TOP_LEVEL`, or the older `CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR`), a `cmake_dependent_option`
+depending on it, or with Meson an `if` on `meson.is_subproject()`. The validator sees what the project guards on, not
+yet what it guards. Warns otherwise.
 
 ## `hardening`
 

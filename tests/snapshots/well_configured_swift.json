@@ -96,6 +96,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -186,6 +193,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -448,6 +462,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Swift",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Swift",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -484,6 +536,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
       }
     ],
     "platforms": [
@@ -561,6 +620,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -762,6 +828,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -889,6 +962,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Swift warning settings are enabled: SwiftLint, complete concurrency checking",
@@ -961,10 +1039,25 @@
       "message": "the project is licensed under MIT",
       "status": "PASS"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [],
       "message": "Muter (muter.conf.yml) runs",
       "status": "PASS"
+    },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
     },
     "platform-matrix": {
       "details": [
@@ -988,6 +1081,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Swift toolchain(s) (6.0, 6.1), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -1038,6 +1136,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

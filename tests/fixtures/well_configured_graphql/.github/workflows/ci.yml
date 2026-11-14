@@ -1,0 +1,16 @@
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: npx --yes @graphql-inspector/cli validate "operations/**/*.graphql" schema/schema.graphql
+      - run: npx --yes graphql-schema-linter schema/schema.graphql
+      - run: npx --yes prettier --check .
+  breaking:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: graphql-hive/graphql-inspector@70745e66e20a3b741cb75e1143d3a9afb1dfd7a5 # master
+        with:
+          schema: main:schema/schema.graphql

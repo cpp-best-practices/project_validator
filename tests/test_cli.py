@@ -198,7 +198,8 @@ class CliTests(unittest.TestCase):
                 self.assertEqual(code, EXIT_FAILURE, output)
                 for found in LANGUAGE_SPECIFIC_CHECKS:
                     skipped = f"[SKIP] {found.name}:" in output
-                    self.assertEqual(skipped, not found.languages & layout.languages, found.name)
+                    expected = not found.languages & layout.languages or found.name in layout.skipped
+                    self.assertEqual(skipped, expected, found.name)
 
     def test_excluded_directories_are_left_out_of_the_map(self) -> None:
         excluded = {"tests/fixtures/cmake/CMakeLists.txt": "", "tests/fixtures/cmake/main.cpp": ""}
@@ -294,6 +295,13 @@ class ListTests(unittest.TestCase):
         self.assertEqual(matrix["ci-present"], [])
         self.assertIn("C/C++", matrix["ci-build-types"])
         self.assertNotIn("Python", matrix["ci-build-types"])
+
+    def test_list_as_markdown_is_a_table(self) -> None:
+        code, output, _ = run_cli("--list", "--format", "markdown")
+        self.assertEqual(code, EXIT_SUCCESS)
+        self.assertTrue(output.startswith("| Check | Applies to | Passes when |\n|---|---|---|\n| `"))
+        self.assertIn("| `ci-present` | every project | ", output)
+        self.assertIn("| `ci-build-types` | C/C++, ", output)
 
     def test_support_matrix_is_printed_as_markdown(self) -> None:
         code, output, _ = run_cli("--support-matrix")

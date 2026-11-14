@@ -77,7 +77,11 @@ def _add_listing_options(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="print what each check recognises for each ecosystem (markdown; as JSON with --format json) and exit",
     )
-    parser.add_argument("--list", action="store_true", help="list the checks (as JSON: with what each applies to)")
+    parser.add_argument(
+        "--list",
+        action="store_true",
+        help="list the checks (as JSON: with what each applies to; as markdown: a table with the same)",
+    )
     for name, what in _DUMPS.items():
         parser.add_argument(f"--{name}", action="store_true", help=f"print {what} as JSON and exit")
 
@@ -205,6 +209,15 @@ def _format_list(checks: Sequence[Check]) -> str:
     return "\n".join(f"{c.name:<{width}}  {c.description}" for c in checks)
 
 
+def _format_list_markdown(checks: Sequence[Check]) -> str:
+    """The checks as a Markdown table, with the ecosystems each applies to ("every project" when it names none)."""
+    rows = [
+        f"| `{c.name}` | {', '.join(applies_to(c)) or 'every project'} | {c.description.replace('|', chr(92) + '|')} |"
+        for c in checks
+    ]
+    return "\n".join(["| Check | Applies to | Passes when |", "|---|---|---|", *rows])
+
+
 def check_list(checks: Sequence[Check]) -> list[dict[str, object]]:
     """Each check and the ecosystems it judges; an empty `applies_to` means every project."""
     return [{"check": c.name, "description": c.description, "applies_to": list(applies_to(c))} for c in checks]
@@ -214,7 +227,10 @@ def _print_listing(checks: Sequence[Check], arguments: argparse.Namespace) -> No
     """What --list or --support-matrix prints."""
     as_json = arguments.format == "json"
     if arguments.list:
-        print(json.dumps(check_list(checks), indent=2) if as_json else _format_list(checks))
+        if as_json:
+            print(json.dumps(check_list(checks), indent=2))
+        else:
+            print(_format_list_markdown(checks) if arguments.format == "markdown" else _format_list(checks))
         return
     matrix = support_matrix(checks)
     print(json.dumps(as_dict(matrix), indent=2) if as_json else render(matrix), end="\n" if as_json else "")

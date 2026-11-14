@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -128,6 +135,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -291,6 +305,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Scala",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Scala",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -310,6 +362,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -324,6 +383,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -501,6 +567,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -599,6 +672,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no scalac warning options found; enable at least -deprecation, -feature, -Xlint or -Wunused",
@@ -676,7 +754,22 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Scala",
       "status": "SKIP"
@@ -685,6 +778,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -746,6 +844,11 @@
       "details": [],
       "message": "no tests found (munit, ScalaTest, specs2, utest or ZIO Test suites under src/test/scala (or Mill's test/src))",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

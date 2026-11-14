@@ -72,3 +72,22 @@ HARDENING = Practice(
         hint="set overflow-checks = true in [profile.release] of Cargo.toml",
     ),
 )
+
+
+# Miri checks the tests for undefined behaviour; nightly's -Zsanitizer builds with a sanitizer.
+_MIRI = required(_setting("cargo miri test", r"\bcargo\s+(?:\+\S+\s+)?miri\s+(?:test|run|nextest)\b"), in_files=False)
+_SANITIZER = required(_setting("-Zsanitizer", r"-Z\s*sanitizer=\w+"), in_files=False)
+
+SANITIZERS = Practice(
+    name=PracticeName.SANITIZERS,
+    languages=RUST_LANGUAGE,
+    requirements=always(_MIRI, _SANITIZER),
+    any_one=True,
+    words=Wording(
+        kind="sanitizers",
+        hint="run cargo +nightly miri test, or build with RUSTFLAGS=-Zsanitizer=address on nightly, in CI",
+        passed="sanitizers run in CI: {found}",
+        failed="no sanitizer runs in CI; run cargo +nightly miri test or build with -Zsanitizer=address",
+        question="whether a sanitizer runs in CI",
+    ),
+)

@@ -414,14 +414,15 @@ EQWALIZER = type_checker(
 SOBELOW = scanner(name="Sobelow", languages=ELIXIR_ONLY, how="mix sobelow --exit", scans=when(mix("sobelow"), scanned))
 SECURITY_SCANNERS = (
     SOBELOW,
-    *(tool for tool in multi_language_scanners(ELIXIR_ONLY) if tool.name != "CodeQL"),
+    *multi_language_scanners(BEAM_LANGUAGES),
 )
 SOBELOW_ACTION = Action(name="sobelow/action", runs=lambda _inputs: (("mix", "sobelow", "--exit"),))
 
 # mix_audit knows the advisories of Hex packages; `mix hex.audit` only the retired ones.
+# mix_audit audits a Mix project's deps (Elixir's); nothing audits a rebar3 project's rebar.lock.
 MIX_AUDIT = auditor(
     name="mix_audit",
-    languages=BEAM_LANGUAGES,
+    languages=ELIXIR_ONLY,
     how="mix deps.audit (mix_audit)",
     audits=when(mix("deps.audit", "hex.audit"), audited),
 )
@@ -464,10 +465,11 @@ BUILD_DIRECTORY = BuildOutput(
     hint="consider ignoring _build/",
     artifacts=("_build/", "*.beam"),
 )
-# Only Mix fetches into deps/; an output of a build system hides the shared ones, so it is Elixir's instead.
+# Only Mix fetches into deps/ (rebar3 fetches into _build/).
 DEPS_DIRECTORY = BuildOutput(
     languages=ELIXIR_ONLY,
     name="the deps directory",
+    build_systems=frozenset({"Mix"}),
     globs=ignored_at_top_level("deps"),
     paths=directories("deps"),
     hint="consider ignoring deps/ (mix deps.get fetches it)",

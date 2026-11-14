@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -102,6 +109,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -240,6 +254,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Terraform",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Terraform",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -259,6 +311,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -273,6 +332,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -499,6 +565,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -580,6 +653,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to Terraform",
@@ -653,7 +731,22 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Terraform",
       "status": "SKIP"
@@ -662,6 +755,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -723,6 +821,11 @@
       "details": [],
       "message": "no tests found (Terraform test files (*.tftest.hcl, *.tofutest.hcl))",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

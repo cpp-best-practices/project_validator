@@ -169,7 +169,8 @@
       "name": "ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -271,7 +272,8 @@
       "name": "R-CMD-check ({\"os\": \"macos-latest\", \"r\": \"release\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "macos",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -341,7 +343,8 @@
       "name": "R-CMD-check ({\"os\": \"windows-latest\", \"r\": \"release\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "windows",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -411,7 +414,8 @@
       "name": "R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"devel\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -481,7 +485,8 @@
       "name": "R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"release\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -551,7 +556,8 @@
       "name": "R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"oldrel-1\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -619,7 +625,8 @@
       "name": "coverage",
       "origin": ".github/workflows/ci.yml:jobs.coverage",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -675,7 +682,8 @@
       "name": "lint",
       "origin": ".github/workflows/ci.yml:jobs.lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -782,7 +790,8 @@
       "name": "copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -844,7 +853,8 @@
       "name": "function-limits",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -923,6 +933,7 @@
       "name": ".github/workflows/ci-lint.yml: ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -940,6 +951,7 @@
       "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"macos-latest\", \"r\": \"release\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "macos",
+      "services": [],
       "toolchains": [
         {
           "language": "R",
@@ -962,6 +974,7 @@
       "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"windows-latest\", \"r\": \"release\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "windows",
+      "services": [],
       "toolchains": [
         {
           "language": "R",
@@ -984,6 +997,7 @@
       "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"devel\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "R",
@@ -1006,6 +1020,7 @@
       "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"release\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "R",
@@ -1028,6 +1043,7 @@
       "name": ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"oldrel-1\"})",
       "origin": ".github/workflows/ci.yml:jobs.R-CMD-check",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "R",
@@ -1050,6 +1066,7 @@
       "name": ".github/workflows/ci.yml: coverage",
       "origin": ".github/workflows/ci.yml:jobs.coverage",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "R",
@@ -1072,6 +1089,7 @@
       "name": ".github/workflows/ci.yml: lint",
       "origin": ".github/workflows/ci.yml:jobs.lint",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "R",
@@ -1092,6 +1110,7 @@
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -1109,6 +1128,7 @@
       "name": ".github/workflows/function-limits.yml: function-limits",
       "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Python",

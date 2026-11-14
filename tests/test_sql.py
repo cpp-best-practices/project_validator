@@ -7,11 +7,12 @@ import unittest
 from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.committed_artifacts import committed_artifacts
 from project_validator.checks.dependency_management import dependency_management
+from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems.sql import SQL_ECOSYSTEM
+from project_validator.ecosystems.sql import SQL_ECOSYSTEM, engine_version
 from project_validator.facts import Setting
 from tests.support import github_job, make_context, run_as, run_in_layout, temp_project, uses
 
@@ -187,3 +188,44 @@ class SqlTests(unittest.TestCase):
             with self.subTest(text=text):
                 self.assertTrue(uses(SQL_ECOSYSTEM, text))
         self.assertFalse(uses(SQL_ECOSYSTEM, "npm test"))
+
+
+class PlatformTests(unittest.TestCase):
+    def test_an_image_names_an_engine_and_its_version(self) -> None:
+        for image, expected in (
+            ("postgres:16", "PostgreSQL 16"),
+            ("postgres:16.4-alpine", "PostgreSQL 16.4"),
+            ("docker.io/library/postgres:17", "PostgreSQL 17"),
+            ("postgis/postgis:16-3.4", "PostgreSQL 16"),
+            ("mysql:8.4", "MySQL 8.4"),
+            ("mariadb:11", "MariaDB 11"),
+            ("mcr.microsoft.com/mssql/server:2022-latest", "SQL Server 2022"),
+            ("cockroachdb/cockroach:v24.1.0", "CockroachDB 24.1.0"),
+            ("postgres:latest", "PostgreSQL"),
+            ("postgres", "PostgreSQL"),
+            ("redis:7", None),
+            ("ghcr.io/acme/app:1.0", None),
+        ):
+            with self.subTest(image=image):
+                self.assertEqual(engine_version(image), expected)
+
+    def test_the_platforms_are_the_engine_versions_whatever_the_os(self) -> None:
+        def workflow(*images: str) -> dict[str, str]:
+            jobs = "\n".join(
+                f"  test{n}:\n    runs-on: ubuntu-latest\n    services:\n      db:\n        image: {image}\n"
+                f"    steps:\n      - run: dbt build\n"
+                for n, image in enumerate(images)
+            )
+            return {".github/workflows/ci.yml": f"jobs:\n{jobs}"}
+
+        result = run_as(self, platform_matrix, workflow("postgres:16", "postgres:17"), SQL_ECOSYSTEM)
+        self.assertEqual(result.status, Status.PASS, result.message)
+        self.assertIn(
+            "CI covers 2 database engine version(s) (PostgreSQL 16, PostgreSQL 17), whatever the OS", result.message
+        )
+        result = run_as(self, platform_matrix, workflow("postgres:16", "mysql:8.4"), SQL_ECOSYSTEM)
+        self.assertEqual(result.status, Status.PASS)
+        result = run_as(self, platform_matrix, workflow("postgres:16", "redis:7"), SQL_ECOSYSTEM)
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("expected at least 2 database engine versions (found 1)", result.message)
+        self.assertEqual(run_as(self, platform_matrix, _ci("dbt build"), SQL_ECOSYSTEM).status, Status.FAIL)

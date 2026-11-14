@@ -86,6 +86,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -174,6 +181,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -363,6 +377,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Dart",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Dart",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -380,6 +432,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": []
       }
     ],
     "platforms": [
@@ -427,6 +486,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -628,6 +694,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -753,6 +826,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Dart analyzer settings are enabled: a lint set in analysis_options.yaml, dart analyze",
@@ -825,7 +903,22 @@
       "message": "the project is licensed under MIT",
       "status": "PASS"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Dart",
       "status": "SKIP"
@@ -845,6 +938,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Dart or Flutter SDK version(s) (Dart 3.5, Dart stable), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -895,6 +993,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

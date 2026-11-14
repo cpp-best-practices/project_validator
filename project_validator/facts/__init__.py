@@ -62,6 +62,8 @@ class CiJob(Fact):
     os: str
     matrix: Mapping[str, str] = NOTHING
     image: str | None = None
+    # The images of the service containers the job runs beside itself (a database its tests use).
+    services: tuple[str, ...] = ()
     env: Mapping[str, str] = NOTHING
     heuristic: bool = False
     builds: bool = True

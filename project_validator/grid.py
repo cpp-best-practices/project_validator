@@ -62,11 +62,17 @@ def _table(headers: Sequence[str], rows: Sequence[Sequence[str]]) -> list[str]:
     return lines + [f"| {' | '.join(cells)} |" for cells in rows]
 
 
+_NO_ECOSYSTEM = (
+    "No ecosystem was recognised in this project: the checks of every project ran, and those of a language or format "
+    "did not apply."
+)
+
+
 def _grid_section(reports: Sequence[Report]) -> list[str]:
     rows = [report for report in reports if report.check.languages]
     columns = _columns(rows)
     if not columns:
-        return []
+        return ["## Results by ecosystem", "", _NO_ECOSYSTEM] if rows else []
     single_unit = len({unit for unit, _ in columns}) == 1
     headers = ["Check", *(_heading(column, single_unit) for column in columns)]
     body = [[f"`{row.check.name}`", *(_cell(row, column) for column in columns)] for row in rows]

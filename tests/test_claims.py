@@ -18,6 +18,14 @@ class StartsWithTests(unittest.TestCase):
             starts_with(("C:\\tools\\cmake.exe", "--build", "b"), ("cmake", "--build")), ("cmake", "--build")
         )
 
+    def test_a_scoped_npm_package_is_one_name(self) -> None:
+        # `npx @redocly/cli lint` runs the package, not a program `cli` in a directory `@redocly`.
+        self.assertEqual(starts_with(("@redocly/cli", "lint"), ("@redocly/cli", "lint")), ("@redocly/cli", "lint"))
+        self.assertEqual(starts_with(("@redocly/cli", "lint"), ("cli", "lint")), ("cli", "lint"))
+        # Its own name still counts, as it did when the scope read as a directory.
+        self.assertEqual(starts_with(("@biomejs/biome", "ci"), ("biome", "ci")), ("biome", "ci"))
+        self.assertEqual(starts_with(("@scope/bin/tool",), ("tool",)), ("tool",))
+
     def test_the_first_matching_prefix_is_returned(self) -> None:
         self.assertEqual(
             starts_with(("cargo", "test", "--all"), ("cargo", "fmt"), ("cargo", "test")), ("cargo", "test")

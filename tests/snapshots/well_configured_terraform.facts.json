@@ -158,7 +158,8 @@
       "name": "ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -261,7 +262,8 @@
       "name": "validate (ubuntu-latest, 1.9.8)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -354,7 +356,8 @@
       "name": "validate (ubuntu-latest, 1.10.3)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -447,7 +450,8 @@
       "name": "validate (macos-latest, 1.9.8)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "macos",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -540,7 +544,8 @@
       "name": "validate (macos-latest, 1.10.3)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "macos",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -633,7 +638,8 @@
       "name": "validate (windows-latest, 1.9.8)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "windows",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -726,7 +732,8 @@
       "name": "validate (windows-latest, 1.10.3)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "windows",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -816,7 +823,8 @@
       "name": "lint",
       "origin": ".github/workflows/ci.yml:jobs.lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -918,7 +926,8 @@
       "name": "copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -982,6 +991,7 @@
       "name": ".github/workflows/ci-lint.yml: ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -999,6 +1009,7 @@
       "name": ".github/workflows/ci.yml: validate (ubuntu-latest, 1.9.8)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Terraform",
@@ -1021,6 +1032,7 @@
       "name": ".github/workflows/ci.yml: validate (ubuntu-latest, 1.10.3)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Terraform",
@@ -1043,6 +1055,7 @@
       "name": ".github/workflows/ci.yml: validate (macos-latest, 1.9.8)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "macos",
+      "services": [],
       "toolchains": [
         {
           "language": "Terraform",
@@ -1065,6 +1078,7 @@
       "name": ".github/workflows/ci.yml: validate (macos-latest, 1.10.3)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "macos",
+      "services": [],
       "toolchains": [
         {
           "language": "Terraform",
@@ -1087,6 +1101,7 @@
       "name": ".github/workflows/ci.yml: validate (windows-latest, 1.9.8)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "windows",
+      "services": [],
       "toolchains": [
         {
           "language": "Terraform",
@@ -1109,6 +1124,7 @@
       "name": ".github/workflows/ci.yml: validate (windows-latest, 1.10.3)",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "windows",
+      "services": [],
       "toolchains": [
         {
           "language": "Terraform",
@@ -1131,6 +1147,7 @@
       "name": ".github/workflows/ci.yml: lint",
       "origin": ".github/workflows/ci.yml:jobs.lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -1146,6 +1163,7 @@
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {

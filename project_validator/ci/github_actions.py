@@ -205,6 +205,16 @@ class _Combination:
     def optional(self, value: object) -> str | None:
         return self.substitute(value) if isinstance(value, str) else None
 
+    def _services(self, services: object) -> tuple[str, ...]:
+        """The images of a job's service containers: `services: {postgres: {image: postgres:16}}`, or an image alone."""
+        if not isinstance(services, Mapping):
+            return ()
+        images = (
+            self.optional(service.get("image") if isinstance(service, Mapping) else service)
+            for service in services.values()
+        )
+        return tuple(image for image in images if image)
+
     def runs(self, condition: object, known: Known) -> bool | None:
         """Whether a job or step with `condition` runs in this combination; None when the checkout does not show it.
 
@@ -237,6 +247,7 @@ class _Combination:
                 key: value if isinstance(value, str) else json.dumps(value) for key, value in self.combination.items()
             },
             image=self.optional(container.get("image") if isinstance(container, Mapping) else container),
+            services=self._services(job.get("services")),
             env=self.substituted(known.env),
         )
         steps = job.get("steps")

@@ -165,7 +165,8 @@
       "name": "ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -267,7 +268,8 @@
       "name": "test (ubuntu-latest)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -331,7 +333,8 @@
       "name": "test (macos-latest)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -393,7 +396,8 @@
       "name": "lint",
       "origin": ".github/workflows/ci.yml:jobs.lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -462,7 +466,8 @@
       "name": "powershell (windows-latest)",
       "origin": ".github/workflows/ci.yml:jobs.powershell",
       "os": "windows",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -541,7 +546,8 @@
       "name": "powershell (ubuntu-latest)",
       "origin": ".github/workflows/ci.yml:jobs.powershell",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -638,7 +644,8 @@
       "name": "copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -702,6 +709,7 @@
       "name": ".github/workflows/ci-lint.yml: ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -719,6 +727,7 @@
       "name": ".github/workflows/ci.yml: test (ubuntu-latest)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Shell",
@@ -741,6 +750,7 @@
       "name": ".github/workflows/ci.yml: test (macos-latest)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
+      "services": [],
       "toolchains": [
         {
           "language": "Shell",
@@ -763,6 +773,7 @@
       "name": ".github/workflows/ci.yml: lint",
       "origin": ".github/workflows/ci.yml:jobs.lint",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Shell",
@@ -785,6 +796,7 @@
       "name": ".github/workflows/ci.yml: powershell (windows-latest)",
       "origin": ".github/workflows/ci.yml:jobs.powershell",
       "os": "windows",
+      "services": [],
       "toolchains": []
     },
     {
@@ -802,6 +814,7 @@
       "name": ".github/workflows/ci.yml: powershell (ubuntu-latest)",
       "origin": ".github/workflows/ci.yml:jobs.powershell",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -817,6 +830,7 @@
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {

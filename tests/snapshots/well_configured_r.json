@@ -96,6 +96,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -182,6 +189,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -349,6 +363,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "R",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "R",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -366,6 +418,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
       }
     ],
     "platforms": [
@@ -413,6 +472,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -585,6 +651,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -717,6 +790,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict R lints are enabled: lintr, failing on lints (LINTR_ERROR_ON_LINT)",
@@ -788,7 +866,22 @@
       "message": "the project is licensed under MIT",
       "status": "PASS"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to R",
       "status": "SKIP"
@@ -808,6 +901,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 4 R version(s) (default, devel, oldrel-1, release), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -858,6 +956,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],
