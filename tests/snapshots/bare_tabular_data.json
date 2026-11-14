@@ -231,8 +231,8 @@
       "details": [
         "add a LICENSE file with the text of a license (see https://choosealicense.com)"
       ],
-      "message": "no license file",
-      "status": "FAIL"
+      "message": "no license file; the descriptor declares MIT",
+      "status": "WARN"
     },
     "link-check": {
       "details": [],

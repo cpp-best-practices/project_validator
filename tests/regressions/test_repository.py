@@ -399,7 +399,6 @@ class VcsIgnoreTests(unittest.TestCase):
 
 
 class LicenseTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #238: EPL-1.0, LPPL, Artistic, ODbL, CC-BY, PostgreSQL and more unrecognised
     def test_recognises_the_licenses_of_the_corpus(self) -> None:
         """EPL-1.0, LPPL-1.3c, Artistic-2.0, the terms of Perl, ODbL, CC-BY, PostgreSQL, MIT in a blockquote, CRAN's
         stub, -or-later, a LICENSE-CODE/LICENSE-TEXT pair, a Data Package's licenses and a dual-licence pointer are

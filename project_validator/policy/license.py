@@ -8,6 +8,15 @@ from project_validator.questions.license import LicenseAnswer
 HINT = "add a LICENSE file with the text of a license (see https://choosealicense.com)"
 
 
+def _unrecognised(answer: LicenseAnswer) -> Result:
+    """A license file not recognised warns, naming the licenses the others hold (a CRAN stub beside LICENSE.md)."""
+    others = f" (the others hold {', '.join(sorted(found))})" if (found := answer.licenses()) else ""
+    return Result.warned(
+        f"the license in {', '.join(answer.unrecognised())} is not recognised{others}",
+        "use the license's standard text, or add an SPDX-License-Identifier line",
+    )
+
+
 def judge_license(answer: LicenseAnswer) -> Result:
     """No license file fails, unless the project's packages each have one (a monorepo), which warns; one not
     recognised, or a manifest that declares another license, warns."""
@@ -18,13 +27,12 @@ def judge_license(answer: LicenseAnswer) -> Result:
             "add a LICENSE at the root too, so that the repository says how it is licensed",
             *(path for path, _ in answer.packages),
         )
+    if not answer.files and answer.in_place:
+        return Result.warned(f"no license file; the descriptor declares {', '.join(sorted(answer.in_place))}", HINT)
     if not answer.files:
         return Result.failed("no license file", HINT)
-    if unknown := answer.unrecognised():
-        return Result.warned(
-            f"the license in {', '.join(unknown)} is not recognised",
-            "use the license's standard text, or add an SPDX-License-Identifier line",
-        )
+    if answer.unrecognised():
+        return _unrecognised(answer)
     if answer.mismatches:
         return Result.warned(
             "the manifest declares another license than the license files",

@@ -447,6 +447,19 @@
       "origin": "LICENSE"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "datapackage.json",
+      "reader": "datapackage.json licenses"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "Data Package"
+      ],
+      "origin": "datapackage.json"
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
