@@ -82,6 +82,11 @@ class ShellTests(unittest.TestCase):
         [unsplittable] = split_script("echo ${{ 'a' }} 'open", EXPRESSION)
         self.assertEqual(unsplittable, Unsplittable(line="echo ${{ 'a' }} 'open", reason="No closing quotation"))
 
+    @unittest.expectedFailure  # upstream #294: `$((…))` arithmetic is split into a command named `((`
+    def test_arithmetic_expansion_is_a_value_not_a_command(self) -> None:
+        """`total=$((total + price))` assigns; `echo $(( 1 + 2 ))` runs echo with one argument."""
+        self.assertEqual(self._split("total=$((total + price))\necho $(( 1 + 2 ))\n"), [("echo", "$(( 1 + 2 ))")])
+
     def test_command_substitutions_run_before_their_command(self) -> None:
         for script, expected in (
             ('test -z "$(gofmt -l .)"', [("gofmt", "-l", "."), ("test", "-z", "$(gofmt -l .)")]),
