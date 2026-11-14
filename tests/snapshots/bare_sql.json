@@ -550,6 +550,13 @@
                 },
                 "needs_definition": true,
                 "required": false
+              },
+              "pg_regress": {
+                "can": {
+                  "runs": "make installcheck (PGXS's pg_regress)"
+                },
+                "needs_definition": true,
+                "required": false
               }
             },
             "language": "SQL",
@@ -855,7 +862,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (dbt schema tests (tests: in the models' YAML), dbt singular tests (tests/*.sql) or pgTAP tests (SELECT plan(...) in tests/*.sql))",
+      "message": "no tests found (dbt schema tests (tests: in the models' YAML), dbt singular tests (tests/*.sql), pg_regress tests (test/sql/*.sql) or pgTAP tests (SELECT plan(...) in tests/*.sql))",
       "status": "FAIL"
     },
     "top-level-guard": {

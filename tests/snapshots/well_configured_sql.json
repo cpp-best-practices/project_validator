@@ -647,6 +647,13 @@
                 },
                 "needs_definition": true,
                 "required": false
+              },
+              "pg_regress": {
+                "can": {
+                  "runs": "make installcheck (PGXS's pg_regress)"
+                },
+                "needs_definition": true,
+                "required": false
               }
             },
             "language": "SQL",

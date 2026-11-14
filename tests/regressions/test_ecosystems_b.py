@@ -309,7 +309,6 @@ C_MAKEFILE = {"Makefile": "all:\n\t$(CC) -o shop src/shop.c\n", "src/shop.c": "i
 
 
 class SqlTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #276: a PGXS extension (control file, sql/, test/sql) is plain C
     def test_a_postgresql_extension_is_an_sql_project(self) -> None:
         """A `*.control` file, a PGXS Makefile (`EXTENSION =`, `DATA = sql/*.sql`) and `test/sql` + `test/expected`
         make SQL one of the project's languages; `.sql` and `.control` are not unrecognised (pgvector, pgaudit)."""
@@ -317,10 +316,17 @@ class SqlTests(unittest.TestCase):
         self.assertIn("SQL", languages)
         self.assertFalse(unrecognised & {".sql", ".control"}, unrecognised)
 
-    @unittest.expectedFailure  # upstream #276: pg_regress (REGRESS) and TAP tests run by installcheck are unknown
-    def test_installcheck_runs_the_pg_regress_and_tap_tests(self) -> None:
-        """`make installcheck` runs the `REGRESS` tests under test/sql and `make prove_installcheck` the TAP tests
-        under test/t: the extension's tests run (pgvector/pgvector, pgaudit/pgaudit)."""
+    def test_installcheck_runs_the_pg_regress_tests(self) -> None:
+        """`make installcheck` runs the `REGRESS` tests under test/sql: the extension's SQL tests run
+        (pgvector/pgvector, pgaudit/pgaudit)."""
+        result = _result(tests_run, {**PGXS_EXTENSION, **github_job(CI, "make", "make installcheck")})
+        [clause] = (clause for clause in result.message.split("; ") if clause.startswith("SQL:"))
+        self.assertIn("run by pg_regress", clause, result)
+
+    @unittest.expectedFailure  # upstream #276: the TAP tests and an extension's C tests are unread
+    def test_an_extensions_tests_cover_its_c_and_its_tap_tests_run(self) -> None:
+        """`make prove_installcheck` runs the TAP tests under test/t, and the extension's C code is tested by its SQL
+        tests, not "no tests found" for C (pgvector/pgvector, pgaudit/pgaudit)."""
         for target in ("installcheck", "prove_installcheck"):
             with self.subTest(target=target):
                 result = _result(tests_run, {**PGXS_EXTENSION, **github_job(CI, "make", f"make {target}")})
