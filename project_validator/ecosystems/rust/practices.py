@@ -19,9 +19,11 @@ def _setting(name: str, regex: str) -> Pattern:
 RUST_LINTS = (
     # cargo's toolchain and global options may come before the subcommand (`cargo --config ci.toml clippy`).
     _setting("cargo clippy", rf"\bcargo\s+(?:{CARGO_OPTIONS}\s+)*clippy\b"),
+    # Not on a line that sets RUSTDOCFLAGS, which denies rustdoc's lints only.
     _setting(
         "-D warnings",
-        r"""-D[\s"',]*warnings\b|--deny[=\s]+warnings\b|\bdeny\s*\(\s*warnings\s*\)|^\s*warnings\s*=\s*["']deny["']""",
+        r"""^(?:(?!RUSTDOCFLAGS)[^\n])*?(?:-D[\s"',]*warnings\b|--deny[=\s]+warnings\b)"""
+        r"""|\bdeny\s*\(\s*warnings\s*\)|^\s*warnings\s*=\s*["']deny["']""",
     ),
     # `-D clippy::pedantic` and `-Dclippy::pedantic` alike.
     _setting("clippy::pedantic", r"(?:\b|(?<=-[DWF]))clippy::pedantic\b|^\s*pedantic\s*="),

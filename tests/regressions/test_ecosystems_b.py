@@ -487,7 +487,6 @@ class RustTests(unittest.TestCase):
         result = _run(warnings_as_errors, RUST, _workflow(job))
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #287: `-D warnings` in RUSTDOCFLAGS is credited as a rustc setting
     def test_rustdocflags_are_not_the_compilers_lint_settings(self) -> None:
         """`RUSTDOCFLAGS: -D warnings` on a `cargo doc` step denies rustdoc's lints only: no Rust lint setting is found
         (BurntSushi/ripgrep)."""
