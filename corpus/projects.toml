@@ -115,7 +115,7 @@ issues = [182, 282]
 name = "ggml-org/llama.cpp"
 commit = "9d25e0014c4b4b316873c01f4938c0e3c687287d"
 ecosystems = ["C/C++", "Python"]
-issues = [181, 224, 230]
+issues = [181, 224]
 
 [[project]]
 name = "glfw/glfw"
@@ -168,13 +168,13 @@ issues = [185, 188, 227, 258]
 name = "felangel/bloc"
 commit = "b9be1e252ee24ffbe9f2fb629edc7624b2cfbf05"
 ecosystems = ["Dart"]
-issues = [185, 230, 258]
+issues = [185, 258]
 
 [[project]]
 name = "simolus3/drift"
 commit = "46e857b622686b785515eb7be087dbcfa65b3002"
 ecosystems = ["Dart"]
-issues = [182, 185, 188, 230]
+issues = [182, 185, 188]
 
 [[project]]
 name = "mledoze/countries"
@@ -415,7 +415,7 @@ issues = [182]
 name = "simonmichael/hledger"
 commit = "01a4b48662ed526402ef22b0a62eb8ba144c022d"
 ecosystems = ["Haskell"]
-issues = [182, 223, 230, 266, 283]
+issues = [182, 223, 266, 283]
 
 [[project]]
 name = "haskell/cabal"
@@ -513,7 +513,7 @@ issues = [182]
 name = "fonsp/Pluto.jl"
 commit = "db2a5cdf1df2c39acec058f09d7e87aaab9ed728"
 ecosystems = ["Julia"]
-issues = [182, 230]
+issues = [182]
 
 [[project]]
 name = "jump-dev/JuMP.jl"
@@ -1001,7 +1001,7 @@ issues = [182, 287]
 name = "tokio-rs/tokio"
 commit = "ab0814fc8c62b3d8be40aad068e2fed6562cfeb0"
 ecosystems = ["Rust"]
-issues = [188, 224, 230, 287]
+issues = [188, 224, 287]
 
 [[project]]
 name = "clap-rs/clap"
@@ -1019,7 +1019,7 @@ issues = [182]
 name = "serde-rs/serde"
 commit = "aa7913ad0211fef960df68e7812a6211145a888c"
 ecosystems = ["Rust"]
-issues = [188, 230, 287]
+issues = [188, 287]
 
 [[project]]
 name = "starship/starship"
@@ -1036,7 +1036,7 @@ issues = [188, 287]
 name = "uutils/coreutils"
 commit = "18ddc48d1cc5edc9ba66f6eb332bc6673c27ef24"
 ecosystems = ["Rust"]
-issues = [182, 195, 230]
+issues = [182, 195]
 
 [[project]]
 name = "nushell/nushell"

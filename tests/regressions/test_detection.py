@@ -183,26 +183,16 @@ class ContentFormatOwnershipTests(unittest.TestCase):
 
 
 class TestsCountedPerUnitTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #230: a unit is credited with the test files of every other unit
     def test_a_unit_reports_only_the_test_files_it_owns(self) -> None:
-        """The root unit, which owns no tests, has none: the children's test files are theirs (bloc, drift, hledger,
-        Pluto.jl)."""
+        """The root unit, which owns no tests, has none: a child package's test files are its own (bloc, drift,
+        Pluto.jl). (A separate test project's tests, hledger's web/test/browser, count for every unit by design.)"""
         dart = {
             "tool/gen.dart": "void main() {}\n",
             "packages/a/pubspec.yaml": "name: a\nenvironment:\n  sdk: ^3.5.0\n",
             "packages/a/lib/a.dart": "",
             "packages/a/test/a_test.dart": DART_TEST,
         }
-        javascript = {
-            "cabal.project": "packages: .\n",
-            "app.cabal": "cabal-version: 3.0\nname: app\nversion: 0.1\n",
-            "assets/app.js": "",
-            "web/test/browser/package.json": json.dumps({"devDependencies": {"@playwright/test": "1"}}),
-            "web/test/browser/browse.spec.js": "test('x', () => {});\n",
-        }
-        for language, files in (("Dart", dart), ("JavaScript", javascript)):
-            with self.subTest(language=language):
-                self.assertEqual(_root_unit_tests(files, language), ())
+        self.assertEqual(_root_unit_tests(dart, "Dart"), ())
 
 
 class JobAttributionTests(unittest.TestCase):

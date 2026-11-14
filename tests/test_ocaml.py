@@ -109,7 +109,7 @@ class OCamlTests(unittest.TestCase):
         ):
             with self.subTest(line=line):
                 self.assertEqual(self._run(tests_run, {**TEST_STANZA, **_ci(line)}).status, Status.PASS)
-        inline = {"lib/dune": "(library\n (name shop)\n (inline_tests)\n (preprocess (pps ppx_expect)))\n"}
+        inline = {"src/dune": "(library\n (name shop)\n (inline_tests)\n (preprocess (pps ppx_expect)))\n"}
         self.assertEqual(self._run(tests_run, {**inline, **_ci("dune test")}).status, Status.PASS)
         self.assertEqual(self._run(tests_run, {**TEST_STANZA, **_ci("dune build")}).status, Status.WARN)
         self.assertEqual(self._run(tests_run, _ci("dune test")).status, Status.FAIL)
