@@ -113,7 +113,6 @@ class AuxiliaryLanguageTests(unittest.TestCase):
 
 
 class RoleBelowSourceRootTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #184: role() stops at src/, pkg/, so testdata below them is product
     def test_a_test_directory_below_a_source_root_names_the_test_role(self) -> None:
         """Maven's src/test, Go's pkg/**/testdata and vite's src/**/__tests__/fixtures hold tests and their data
         (liquibase, golangci-lint, vite, SchemaStore)."""
@@ -121,7 +120,6 @@ class RoleBelowSourceRootTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertEqual(role(path), "test")
 
-    @unittest.expectedFailure  # upstream #184: a malformed fixture under src/test/resources fails data-wellformed
     def test_malformed_test_data_below_a_source_root_is_reported_not_judged(self) -> None:
         """A deliberately broken JSON fixture under src/test/resources is test data and does not fail the project
         (liquibase's invalidChangeLog.xml, golangci-lint's testdata/json/empty.json)."""

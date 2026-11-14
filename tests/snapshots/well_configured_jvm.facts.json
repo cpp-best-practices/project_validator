@@ -65,14 +65,14 @@
       "kind": "SourceFile",
       "language": "Java",
       "origin": "src/test/java/com/example/AppFuzzTest.java",
-      "role": "product"
+      "role": "test"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Java",
       "origin": "src/test/java/com/example/AppTest.java",
-      "role": "product"
+      "role": "test"
     },
     {
       "build_systems": [

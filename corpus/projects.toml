@@ -311,7 +311,7 @@ issues = [188, 195]
 name = "jacobwilliams/json-fortran"
 commit = "b7d03d0c800d24cfed81594bb6bc5bc0e9bad882"
 ecosystems = ["Fortran"]
-issues = [184, 186, 188, 229]
+issues = [186, 188, 229]
 
 [[project]]
 name = "actions/checkout"
@@ -376,7 +376,7 @@ issues = [234, 235, 257]
 name = "golangci/golangci-lint"
 commit = "1bdd8edc35917b370a0855d877255b4e53c29b9f"
 ecosystems = ["Go"]
-issues = [184, 198, 222, 229, 237, 246]
+issues = [198, 222, 229, 237, 246]
 
 [[project]]
 name = "caddyserver/caddy"
@@ -453,7 +453,7 @@ issues = [219]
 name = "prettier/prettier"
 commit = "f391bf3e7ee219bcfeb61b06555ee1ac8e9c0680"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 184, 220, 231, 235, 237]
+issues = [182, 220, 231, 235, 237]
 
 [[project]]
 name = "vitejs/vite"
@@ -483,7 +483,7 @@ issues = [182, 201, 219, 226, 231, 236, 290]
 name = "SchemaStore/schemastore"
 commit = "e2606e03284e60792672dc9e7e930f3c496c5c3d"
 ecosystems = ["JSON Schema"]
-issues = [184, 229, 234, 272, 273]
+issues = [229, 234, 272, 273]
 
 [[project]]
 name = "json-schema-org/JSON-Schema-Test-Suite"
@@ -763,7 +763,7 @@ issues = [182, 272]
 name = "mojolicious/mojo"
 commit = "33648dc25bad1594461180d0793cd1b21753b0bd"
 ecosystems = ["Perl"]
-issues = [182, 184, 219, 238, 248]
+issues = [182, 219, 238, 248]
 
 [[project]]
 name = "Perl-Critic/Perl-Critic"
@@ -1185,7 +1185,7 @@ name = "liquibase/liquibase"
 commit = "d1818f8621c3c1f23c14ae0f196a5211f41d8f25"
 ecosystems = ["JVM"]
 notes = "a migration tool; its .sql files are test fixtures, so it stands for the JVM, not SQL"
-issues = [182, 184, 228, 252]
+issues = [182, 228, 252]
 
 [[project]]
 name = "apple/swift-argument-parser"

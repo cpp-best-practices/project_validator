@@ -157,7 +157,8 @@ units below it), and what its build files build unless they only declare a works
 belong to the root unit.
 
 Every source file and unit has a **role** (`project_validator/facts/roles.py`), told by the directories it is in
-(above any source root such as `src` or `lib`, so `com/example/App.java` is product code): `product`, `test`,
+(above any source root such as `src` or `lib`, so `com/example/App.java` is product code, but for a test directory
+below one, `src/test/resources`): `product`, `test`,
 `example`, `docs`, `tooling`, `benchmark`, `template` (below a `templates` directory: rendered before it is read, so a
 data file there is noted, not parsed), or `vendored` (below a vendor directory anywhere, or a minified bundle).
 A role names code; it judges none: every source outside vendored directories is the product's, whatever its role,

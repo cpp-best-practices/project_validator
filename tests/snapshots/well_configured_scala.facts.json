@@ -68,7 +68,7 @@
       "kind": "SourceFile",
       "language": "Scala",
       "origin": "src/test/scala/shop/ShopSuite.scala",
-      "role": "product"
+      "role": "test"
     },
     {
       "ambiguous": true,
