@@ -104,18 +104,19 @@ WARNINGS_AS_ERRORS_BY_COMPILER: ByCompiler = (
 # The build system settings a command line sets the flags with: Meson's `warning_level` (by the GCC-style flags each
 # level passes) and `werror`, and CMake's `COMPILE_WARNING_AS_ERROR`; and the text that finds them in a command.
 _LEVELS = {"-Wall": "[123]|everything", "-Wextra": "[23]|everything", "-Wpedantic": "3|everything"}
-WARNING_LEVEL_HINTS = ("-Dwarning_level=", "--warnlevel")
+# Meson's `-D` takes its option in the same word or the next (`-Dwerror=true`, `-D werror=true`).
+WARNING_LEVEL_HINTS = ("warning_level=", "--warnlevel")
 WARNINGS_AS_ERRORS_SETTINGS = (
-    r"(?<![\w-])--werror\b|-Dwerror=true\b",
+    r"(?<![\w-])--werror\b|-D\s*werror=true\b",
     r"COMPILE_WARNING_AS_ERROR(?::BOOL)?=(?i:on|true|yes|1)\b",
 )
-WARNINGS_AS_ERRORS_SETTING_HINTS = ("--werror", "-Dwerror=", "COMPILE_WARNING_AS_ERROR")
+WARNINGS_AS_ERRORS_SETTING_HINTS = ("--werror", "werror=", "COMPILE_WARNING_AS_ERROR")
 
 
 def warning_level_settings(flag: Flag) -> tuple[str, ...]:
     """The Meson warning levels, on a command line, that pass the GCC-style `flag`."""
     level = _LEVELS.get(flag.name)
-    return (rf"(?:-Dwarning_level=|--warnlevel[=\s])(?:{level})\b",) if level else ()
+    return (rf"(?:-D\s*warning_level=|--warnlevel[=\s])(?:{level})\b",) if level else ()
 
 
 __all__ = [

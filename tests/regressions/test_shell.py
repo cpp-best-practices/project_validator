@@ -162,7 +162,6 @@ class UnknownCommandTests(unittest.TestCase):
 
 
 class EnvironmentTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #196: workflow- and job-level `env:` are not substituted into commands
     def test_workflow_and_job_env_are_substituted_into_command_lines(self) -> None:
         """`meson setup ${ARGS} build .` with `ARGS: -D werror=true` at the workflow or job level treats warnings as
         errors (dbus-broker's CI_MESON_ARGS)."""

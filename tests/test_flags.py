@@ -17,7 +17,7 @@ class RequirementSetTests(unittest.TestCase):
     def test_warnings_are_also_set_by_the_build_systems_warning_level(self) -> None:
         [wall] = warning_requirements((Flag("-Wall", "-Wall"),), C)
         self.assertIn("warning_level", wall.runs.pattern if wall.runs else "")
-        self.assertIn("-Dwarning_level=", wall.hints)
+        self.assertIn("warning_level=", wall.hints)
 
     def test_warnings_as_errors_are_also_set_by_the_build_systems_setting(self) -> None:
         self.assertEqual(errors_requirements(None, C), ())
