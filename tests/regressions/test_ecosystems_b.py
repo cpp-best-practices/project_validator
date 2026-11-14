@@ -68,7 +68,6 @@ JUMP_FORMAT_CHECK = (
 
 
 class JuliaTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #267: only the literal `|| exit(1)` makes JuliaFormatter a check
     def test_formatting_then_exiting_non_zero_on_a_git_diff_is_a_gate(self) -> None:
         """A julia step that runs `format(".")`, reads `git diff` and `exit(1)`s when it is not empty fails on a file
         it changed: JuliaFormatter enforces the style (jump-dev/JuMP.jl)."""

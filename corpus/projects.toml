@@ -208,7 +208,6 @@ issues = [195]
 name = "jupyter/docker-stacks"
 commit = "660dc22b671e02e765273c9f8931588b4a00f263"
 ecosystems = ["Docker", "Python"]
-issues = [260]
 
 [[project]]
 name = "linuxserver/docker-code-server"
@@ -513,13 +512,12 @@ issues = [182]
 name = "jump-dev/JuMP.jl"
 commit = "6333923172279e3e8a6c8ed091b0cebcf6d45ce2"
 ecosystems = ["Julia"]
-issues = [267]
 
 [[project]]
 name = "JuliaDocs/Documenter.jl"
 commit = "785d219105849224911315767d9a0e91550e73d1"
 ecosystems = ["Julia"]
-issues = [182, 267]
+issues = [182]
 
 [[project]]
 name = "ageron/handson-ml3"

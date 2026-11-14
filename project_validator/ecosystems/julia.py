@@ -168,7 +168,9 @@ JET = type_checker(
 
 JULIAFORMATTER_SETTINGS = file_reader("JuliaFormatter", (".JuliaFormatter.toml",))
 _FORMAT = re.compile(r"\bJuliaFormatter\b|\bformat(?:_file)?\s*\(")
-_FAILS = re.compile(r"\|\|\s*exit\s*\(\s*1\s*\)|@assert\s+format")
+# `format(".") || exit(1)`, `@assert format(...)`, or a script that exits non-zero when `git diff` shows a change
+# (JuMP.jl's: read the diff, `exit(1)` unless it is empty).
+_FAILS = re.compile(r"\|\|\s*exit\s*\(\s*1\s*\)|@assert\s+format|git diff[\s\S]*\bexit\s*\(\s*1\s*\)")
 
 
 def _juliaformatter(command: Command, facts: Facts) -> Run | None:

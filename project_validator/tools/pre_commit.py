@@ -46,7 +46,13 @@ def _expansion(path: str, at: tuple[str | int, ...], repo: str, hook: Mapping[st
     words = tuple(str(arg) for arg in args) if isinstance(args, list) else ()
     if repo == "local" and isinstance(entry := hook.get("entry"), str):
         return Script(text=" ".join((entry, *(f"'{word}'" for word in words))), origin=origin)
-    return Invocation(argv=(str(hook["id"]), *words), line=f"the {hook['id']} hook of {repo}", origin=origin)
+    program = _PROGRAMS_OF_HOOKS.get(str(hook["id"]), str(hook["id"]))
+    return Invocation(argv=(program, *words), line=f"the {hook['id']} hook of {repo}", origin=origin)
+
+
+# Hooks whose id is not their program's name: the program the repository's hook runs (hadolint's `hadolint-docker`
+# runs hadolint in its image).
+_PROGRAMS_OF_HOOKS = {"hadolint-docker": "hadolint"}
 
 
 _OPTIONS = frozenset({"--hook-stage", "--config", "-c", "--files", "--from-ref"})

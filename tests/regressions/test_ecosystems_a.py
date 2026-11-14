@@ -228,7 +228,6 @@ HADOLINT_HOOK = {
 
 
 class DockerTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #260: the hadolint-docker pre-commit hook id does not match hadolint
     def test_the_hadolint_docker_hook_runs_hadolint(self) -> None:
         """The `hadolint-docker` hook of hadolint's own pre-commit repo runs hadolint on the Dockerfiles, so hadolint
         lints and scans when CI runs pre-commit (jupyter/docker-stacks)."""
