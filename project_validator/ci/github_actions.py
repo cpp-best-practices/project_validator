@@ -342,7 +342,8 @@ class _Combination:
 
     def _action(self, directory: str) -> tuple[str, Mapping[str, object]] | None:
         for name in ("action.yml", "action.yaml"):
-            path = f"{directory}/{name}"
+            # `uses: ./` is the repository's own action, at its root.
+            path = f"{directory}/{name}" if directory else name
             if self.load is not None and isinstance(document := self.load(path), Mapping):
                 return path, document
         return None

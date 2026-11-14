@@ -317,25 +317,24 @@ issues = [184, 186, 188, 229]
 name = "actions/checkout"
 commit = "f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a"
 ecosystems = ["GitHub Action"]
-issues = [210, 219, 227, 234, 254]
+issues = [219, 227, 234, 254]
 
 [[project]]
 name = "peter-evans/create-pull-request"
 commit = "3ffccacd46053766916f087ce41d627c0b8cf2d1"
 ecosystems = ["GitHub Action"]
-issues = [210, 234]
+issues = [234]
 
 [[project]]
 name = "lycheeverse/lychee-action"
 commit = "649b0e4890508ea3e11ea6b3ee35ce899a25afd5"
 ecosystems = ["GitHub Action"]
-issues = [210, 219]
+issues = [219]
 
 [[project]]
 name = "pre-commit/action"
 commit = "1b06ec171f2f6faa71ed760c4042bd969e4f8b43"
 ecosystems = ["GitHub Action"]
-issues = [210]
 
 [[project]]
 name = "softprops/action-gh-release"
@@ -347,7 +346,7 @@ issues = [216, 226]
 name = "docker/build-push-action"
 commit = "562e51947939164e4fe808a6eab5101977e509e0"
 ecosystems = ["GitHub Action"]
-issues = [182, 195, 210, 217, 219]
+issues = [182, 195, 217, 219]
 
 [[project]]
 name = "cli/cli"

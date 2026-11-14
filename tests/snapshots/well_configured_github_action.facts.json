@@ -278,12 +278,62 @@
       "via": []
     },
     {
-      "hides": "commands",
-      "kind": "Unknown",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
-      "reason": "its action.yml is not read",
-      "subject": "the action ./",
-      "tools": []
+      "argv": [
+        "for",
+        "price",
+        "in",
+        "1",
+        "2",
+        "3"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "for price in 1 2 3; do total=$((total + price)); done",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
+    },
+    {
+      "argv": [
+        "((",
+        "total",
+        "+",
+        "price",
+        "));",
+        "done"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "total": "$"
+      },
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "for price in 1 2 3; do total=$((total + price)); done",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
+    },
+    {
+      "argv": [
+        "echo",
+        "total=$total"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "echo \"total=$total\" >> \"$GITHUB_OUTPUT\"",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
     },
     {
       "argv": [
@@ -349,12 +399,62 @@
       "via": []
     },
     {
-      "hides": "commands",
-      "kind": "Unknown",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
-      "reason": "its action.yml is not read",
-      "subject": "the action ./",
-      "tools": []
+      "argv": [
+        "for",
+        "price",
+        "in",
+        "1",
+        "2",
+        "3"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "for price in 1 2 3; do total=$((total + price)); done",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
+    },
+    {
+      "argv": [
+        "((",
+        "total",
+        "+",
+        "price",
+        "));",
+        "done"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "total": "$"
+      },
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "for price in 1 2 3; do total=$((total + price)); done",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
+    },
+    {
+      "argv": [
+        "echo",
+        "total=$total"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "echo \"total=$total\" >> \"$GITHUB_OUTPUT\"",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
     },
     {
       "argv": [
@@ -420,12 +520,62 @@
       "via": []
     },
     {
-      "hides": "commands",
-      "kind": "Unknown",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
-      "reason": "its action.yml is not read",
-      "subject": "the action ./",
-      "tools": []
+      "argv": [
+        "for",
+        "price",
+        "in",
+        "1",
+        "2",
+        "3"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "for price in 1 2 3; do total=$((total + price)); done",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
+    },
+    {
+      "argv": [
+        "((",
+        "total",
+        "+",
+        "price",
+        "));",
+        "done"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {
+        "total": "$"
+      },
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "for price in 1 2 3; do total=$((total + price)); done",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
+    },
+    {
+      "argv": [
+        "echo",
+        "total=$total"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "echo \"total=$total\" >> \"$GITHUB_OUTPUT\"",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
     },
     {
       "argv": [

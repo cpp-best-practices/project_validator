@@ -190,7 +190,6 @@ class SameRepositoryReferenceTests(unittest.TestCase):
                 result = _run(action_pinning, {GITHUB_WORKFLOW: ci, **LOCAL_TARGETS})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #210: `uses: ./` looks for "/action.yml": the root action is never read
     def test_the_repositorys_own_action_is_read(self) -> None:
         """`uses: ./` runs the root action.yml: a composite action's steps are the job's commands and a JavaScript
         action has nothing to read; neither is unknown (actions/checkout, lychee-action, pre-commit/action)."""
