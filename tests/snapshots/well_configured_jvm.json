@@ -859,6 +859,9 @@
             "answer": "yes",
             "language": "Java",
             "outputs": {
+              "compiled classes": {
+                ".gitignore": "*.class"
+              },
               "the target directory": {
                 ".gitignore": "target/"
               }
@@ -1153,7 +1156,7 @@
     },
     "vcs-ignore": {
       "details": [],
-      "message": ".gitignore ignores target/",
+      "message": ".gitignore ignores target/; .gitignore ignores *.class",
       "status": "PASS"
     },
     "warnings-as-errors": {

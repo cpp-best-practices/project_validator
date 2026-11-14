@@ -53,7 +53,8 @@ class ToolchainPatterns:
     the job runs: `raco cover` is Racket's, `cover` alone Perl's), or a program from one of its `directories`
     (`vendor/bin/`), or its text matches `usage` (a setup action). `labelled` patterns name a toolchain by something
     other than its version, written with their label: a Stackage snapshot pins a GHC (a resolver `lts-22` is
-    "Stackage lts-22")."""
+    "Stackage lts-22"). `steps` read a version from a setup action's inputs, structurally: the action's repository
+    (`subosito/flutter-action`) and a reader of its inputs, which returns the version named (or None)."""
 
     language: str
     versions: tuple[re.Pattern[str], ...]
@@ -61,6 +62,7 @@ class ToolchainPatterns:
     directories: tuple[str, ...] = ()
     usage: re.Pattern[str] | None = None
     labelled: tuple[tuple[re.Pattern[str], str], ...] = ()
+    steps: tuple[tuple[str, Callable[[Mapping[str, str]], str | None]], ...] = ()
 
     def used_by(self, texts: Iterable[str], commands: Iterable[tuple[str, ...]]) -> bool:
         """Whether a job with `texts` that runs `commands` (each its words) uses the toolchain, without naming it."""
@@ -105,22 +107,21 @@ def toolchain_patterns(
     actions: Iterable[str] = (),
     setup: Iterable[str] = (),
     labelled: Iterable[tuple[re.Pattern[str], str]] = (),
+    steps: Iterable[tuple[str, Callable[[Mapping[str, str]], str | None]]] = (),
 ) -> ToolchainPatterns:
-    """How CI names a `language` toolchain and shows it uses one. A version (`version`, a regular expression with one
-    group) is named by a setup action's `inputs` (`go-version: 1.22`), a container's `images` tag (`golang:1.22`;
-    `image_version` where tagged otherwise) or `more` patterns. A job that names none uses the toolchain when it runs
-    one of its `programs` (`"cargo"`, `("go", "test")`) or one from its `directories`, or uses `setup` or `actions`."""
-    named = (
-        *(rf"\b{re.escape(name)}\W+{version}" for name in inputs),
-        *(rf"\b{re.escape(image)}:{image_version or version}" for image in images),
-    )
+    """How CI names a `language` toolchain (a `version` pattern with one group, in a setup action's `inputs`, an
+    `images` tag, `more` patterns, or `steps` reading an action's inputs) and shows it uses one (`programs`,
+    `directories`, `setup`, `actions`): see `ToolchainPatterns`."""
+    by_input = (rf"\b{re.escape(name)}\W+{version}" for name in inputs)
+    by_image = (rf"\b{re.escape(image)}:{image_version or version}" for image in images)
     return ToolchainPatterns(
         language=language,
-        versions=tuple(re.compile(found) for found in (*named, *more)),
+        versions=tuple(re.compile(found) for found in (*by_input, *by_image, *more)),
         programs=tuple((found,) if isinstance(found, str) else found for found in programs),
         directories=tuple(directories),
         usage=_usage(setup, actions),
         labelled=tuple(labelled),
+        steps=tuple(steps),
     )
 
 

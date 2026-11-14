@@ -10,6 +10,7 @@ from project_validator.facts import Facts
 from project_validator.facts.security import SCANS, SECURITY
 from project_validator.policy.security import judge_security
 from project_validator.questions.tooling import tool_answer
+from project_validator.tools.scanners import CODEQL_LANGUAGES, multi_language_scanners
 from tests.layouts.model import ProjectLayout
 from tests.support import (
     BARE_PROJECT,
@@ -61,30 +62,34 @@ class SecurityScanningTests(unittest.TestCase):
             self._run(BARE_PROJECT), Result.warned("no code security scanning found in CI configuration", C_HINT)
         )
 
-    def test_passes_with_codeql_in_every_layout(self) -> None:
-        # CodeQL does not analyse PHP, Terraform's HCL, Elixir, Scala, Dart, Lua, OCaml, Julia, Clojure, Dockerfiles,
-        # Kubernetes manifests or Ansible (nothing scans Erlang or Haskell: skipped); zizmor, in the well-configured
-        # fixture's ci-lint workflow, scans an action repository, so that layout is judged apart.
-        unread = {
-            "PHP": "PHP",
-            "Terraform": "Terraform",
-            "Elixir": "BEAM",
-            "Scala": "Scala",
-            "Dart": "Dart",
-            "Lua": "Lua",
-            "OCaml": "OCaml",
-            "Julia": "Julia",
-            "Clojure": "Clojure",
-            "Dockerfile": "Docker",
-            "Kubernetes": "Kubernetes",
-            "Ansible": "Ansible",
-        }
-        apart = {*unread, "GitHub Action"}
-        layouts = tuple(layout for layout in PROJECT_LAYOUTS if not (layout.languages | layout.formats) & apart)
-        self.assertEqual(run_in_every_layout(self, security_scanning, WELL_CONFIGURED, layouts), _found("CodeQL"))
-        for language, label in unread.items():
-            result = run_in_every_layout(self, security_scanning, WELL_CONFIGURED, _layouts_of(language))
-            self.assertIn(f"{label}: no code security scanning found in CI configuration", result.message)
+    def test_passes_with_codeql_in_every_layout_whose_languages_it_reads(self) -> None:
+        # A language or format some scanner reads but CodeQL does not (semgrep's Lua, hadolint's Dockerfile) is
+        # judged apart; one nothing scans (Zig, Erlang) is skipped and leaves the C++ of the fixture's files to CodeQL.
+        # zizmor, in the well-configured fixture's ci-lint workflow, scans an action repository: judged apart too.
+        for layout in PROJECT_LAYOUTS:
+            if "GitHub Action" in layout.formats:
+                continue
+            scanned_somehow = (layout.languages | layout.formats) & security_scanning.languages
+            unread = scanned_somehow - CODEQL_LANGUAGES
+            with self.subTest(layout=layout.name):
+                result = run_in_every_layout(self, security_scanning, WELL_CONFIGURED, (layout,))
+                if unread:
+                    self.assertNotEqual(result, _found("CodeQL"))
+                    self.assertIn("no code security scanning found in CI configuration", result.message)
+                else:
+                    self.assertEqual(result, _found("CodeQL"))
+
+    def test_the_scanners_read_their_languages_only(self) -> None:
+        self.assertEqual([tool.name for tool in multi_language_scanners(frozenset({"Lua"}))], ["semgrep"])
+        self.assertEqual(
+            [tool.name for tool in multi_language_scanners(frozenset({"PHP"}))], ["GitLab SAST", "semgrep"]
+        )
+        self.assertEqual(multi_language_scanners(frozenset({"Erlang", "Fortran"})), ())
+        for tool in multi_language_scanners(frozenset({"Python", "Lua"})):
+            with self.subTest(tool=tool.name):
+                self.assertEqual(
+                    tool.languages, frozenset({"Python", "Lua"}) if tool.name == "semgrep" else frozenset({"Python"})
+                )
 
     def test_multi_language_scanners(self) -> None:
         for files, tool in (

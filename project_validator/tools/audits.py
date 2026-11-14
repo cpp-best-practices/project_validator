@@ -1,10 +1,11 @@
-"""Dependency auditors of many ecosystems at once: osv-scanner, trivy and snyk. Each profile makes them its own, for its
-languages (`multi_ecosystem_audits`), since they audit whatever lockfiles the project has."""
+"""Dependency auditors of many ecosystems at once: osv-scanner, trivy, snyk and GitLab Dependency Scanning. Each knows
+the languages whose lockfiles it reads (`OSV_SCANNER_LANGUAGES`, ...); a profile asks for the auditors of its languages
+(`multi_ecosystem_audits`) and gets those that read one of them, for those languages only."""
 
 from __future__ import annotations
 
 import shlex
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.arguments import starts_with
@@ -27,21 +28,53 @@ def _gitlab_dependency_scanning(command: Command, _facts: Facts) -> Run | None:
     return audited() if template else None
 
 
-def multi_ecosystem_audits(languages: frozenset[str]) -> tuple[Tool, ...]:
-    """osv-scanner, trivy (of the file system), snyk and GitLab Dependency Scanning, as auditors of `languages`."""
-    return (
-        auditor(
-            name="GitLab Dependency Scanning",
-            languages=languages,
-            how="GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)",
-            audits=_gitlab_dependency_scanning,
-        ),
-        auditor(
-            name="osv-scanner", languages=languages, how="osv-scanner", audits=when(starts(("osv-scanner",)), audited)
-        ),
-        auditor(name="trivy", languages=languages, how="trivy fs", audits=_trivy),
-        auditor(name="snyk", languages=languages, how="snyk test", audits=when(starts(("snyk", "test")), audited)),
+# The languages whose lockfiles each auditor reads: npm's, pip's and poetry's, go.sum, Cargo.lock, Maven's and Gradle's,
+# NuGet's, Composer's, Bundler's, Swift's. pubspec.lock is read by osv-scanner and trivy; mix.lock by those and snyk; an
+# sbt build by snyk and GitLab only; nothing reads rebar.lock.
+_LOCKFILE_LANGUAGES = frozenset(
+    {"JavaScript", "TypeScript", "Python", "Go", "Rust", "Java", "Kotlin", "C#", "F#", "PHP", "Ruby", "Swift"}
+)
+OSV_SCANNER_LANGUAGES = _LOCKFILE_LANGUAGES | {"Dart", "Elixir"}
+TRIVY_LANGUAGES = _LOCKFILE_LANGUAGES | {"Dart", "Elixir"}
+SNYK_LANGUAGES = _LOCKFILE_LANGUAGES | {"Scala", "Elixir"}
+GITLAB_DEPENDENCY_SCANNING_LANGUAGES = _LOCKFILE_LANGUAGES | {"Scala"}
+
+
+def _gitlab(read: frozenset[str]) -> Tool:
+    return auditor(
+        name="GitLab Dependency Scanning",
+        languages=read,
+        how="GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)",
+        audits=_gitlab_dependency_scanning,
     )
+
+
+def _osv_scanner(read: frozenset[str]) -> Tool:
+    return auditor(
+        name="osv-scanner", languages=read, how="osv-scanner", audits=when(starts(("osv-scanner",)), audited)
+    )
+
+
+def _trivy_fs(read: frozenset[str]) -> Tool:
+    return auditor(name="trivy", languages=read, how="trivy fs", audits=_trivy)
+
+
+def _snyk(read: frozenset[str]) -> Tool:
+    return auditor(name="snyk", languages=read, how="snyk test", audits=when(starts(("snyk", "test")), audited))
+
+
+_AUDITORS: tuple[tuple[frozenset[str], Callable[[frozenset[str]], Tool]], ...] = (
+    (GITLAB_DEPENDENCY_SCANNING_LANGUAGES, _gitlab),
+    (OSV_SCANNER_LANGUAGES, _osv_scanner),
+    (TRIVY_LANGUAGES, _trivy_fs),
+    (SNYK_LANGUAGES, _snyk),
+)
+
+
+def multi_ecosystem_audits(languages: frozenset[str]) -> tuple[Tool, ...]:
+    """GitLab Dependency Scanning, osv-scanner, trivy (of the file system) and snyk, each as an auditor of those of
+    `languages` whose lockfiles it reads; an auditor that reads none of them is left out."""
+    return tuple(make(read) for reads, make in _AUDITORS if (read := languages & reads))
 
 
 OSV_SCANNER_ACTION = Action(
