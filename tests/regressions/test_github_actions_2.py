@@ -308,7 +308,6 @@ class PreCommitRunnerTests(unittest.TestCase):
 
 
 class ToolchainVersionCountingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #222: "default" counted as a version; 3 vs 3.x, 1.27 vs 1.27.0 twice
     def test_versions_are_normalised_and_unpinned_jobs_not_counted(self) -> None:
         """One version spelled two ways (3/3.x, 1.27/1.27.0, ~1.27/~1.27.0) counts once (devguide, golangci-lint,
         caddy); a job pinning no version adds none (flask, Penlight, metals); 3.14t stays distinct from 3.14."""

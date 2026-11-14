@@ -233,7 +233,7 @@ issues = [199, 229, 280]
 name = "python/devguide"
 commit = "8c852bdd3f06b8447185fe2945af5de52a96a0ac"
 ecosystems = ["Documentation site"]
-issues = [182, 215, 222, 240, 280]
+issues = [182, 215, 240, 280]
 
 [[project]]
 name = "cpp-best-practices/cppbestpractices"
@@ -358,7 +358,7 @@ issues = [182, 234, 249]
 name = "spf13/cobra"
 commit = "adbc8813901bba65827259daa8e22ff94ec1f30e"
 ecosystems = ["Go"]
-issues = [222, 234]
+issues = [234]
 
 [[project]]
 name = "gin-gonic/gin"
@@ -376,13 +376,13 @@ issues = [234, 235, 257]
 name = "golangci/golangci-lint"
 commit = "1bdd8edc35917b370a0855d877255b4e53c29b9f"
 ecosystems = ["Go"]
-issues = [222, 229, 246]
+issues = [229, 246]
 
 [[project]]
 name = "caddyserver/caddy"
 commit = "7591cff1fb03202ce022982af020197f3f387220"
 ecosystems = ["Go"]
-issues = [182, 222, 226, 234]
+issues = [182, 226, 234]
 
 [[project]]
 name = "graphql-hive/graphql-inspector"
@@ -643,25 +643,24 @@ issues = [182, 227]
 name = "lunarmodules/Penlight"
 commit = "99b7542a047123bb484510d34ee567bca40b119e"
 ecosystems = ["Lua"]
-issues = [222]
 
 [[project]]
 name = "luarocks/luarocks"
 commit = "85bfe36c812465b2f377877939d884a4db829a25"
 ecosystems = ["Lua"]
-issues = [182, 222, 268]
+issues = [182, 268]
 
 [[project]]
 name = "nvim-telescope/telescope.nvim"
 commit = "1e1bab730218eaf97fce743be3f56e51075928ac"
 ecosystems = ["Lua"]
-issues = [222, 227, 228, 268]
+issues = [227, 228, 268]
 
 [[project]]
 name = "lunarmodules/busted"
 commit = "22f8089f461a563fb9553ab56f926c6805850833"
 ecosystems = ["Lua"]
-issues = [182, 222]
+issues = [182]
 
 [[project]]
 name = "koreader/koreader"
@@ -940,7 +939,7 @@ issues = [182, 238]
 name = "racket/typed-racket"
 commit = "7fe7e11fae2b04e04525d63b01b33efe5ffad075"
 ecosystems = ["Racket"]
-issues = [188, 189, 222, 240, 278]
+issues = [188, 189, 240, 278]
 
 [[project]]
 name = "Bogdanp/koyo"
@@ -958,7 +957,7 @@ issues = [182, 189]
 name = "racket/scribble"
 commit = "9c9c1d587351e53c885d6f05cba9031656fbd833"
 ecosystems = ["Racket"]
-issues = [182, 189, 222, 278]
+issues = [182, 189, 278]
 
 [[project]]
 name = "jackfirth/rebellion"
@@ -1080,7 +1079,7 @@ ecosystems = ["Scala"]
 name = "scalameta/metals"
 commit = "8640c9198960fa3f00578af0750f687ed030af56"
 ecosystems = ["Scala"]
-issues = [192, 222, 274]
+issues = [192, 274]
 
 [[project]]
 name = "http4s/http4s"
@@ -1092,7 +1091,7 @@ issues = [187, 245, 274]
 name = "scalameta/scalafmt"
 commit = "e1f0c2dcdcc5649c424264ca5b88b6b0322ae30a"
 ecosystems = ["Scala"]
-issues = [192, 222, 274]
+issues = [192, 274]
 
 [[project]]
 name = "bats-core/bats-core"
@@ -1104,7 +1103,7 @@ issues = [194, 275]
 name = "nvm-sh/nvm"
 commit = "09e620c401382f4b3d3147333dd64c1e09188fdb"
 ecosystems = ["Shell"]
-issues = [222, 235, 275]
+issues = [235, 275]
 
 [[project]]
 name = "rbenv/rbenv"

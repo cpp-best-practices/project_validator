@@ -899,7 +899,7 @@
         ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no R version",
         ".github/workflows/function-limits.yml: function-limits: linux / no R version"
       ],
-      "message": "CI covers 3 OS(es) (linux, macos, windows), 4 R version(s) (default, devel, oldrel-1, release), 6 combination(s)",
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 3 R version(s) (devel, oldrel-1, release), 5 combination(s)",
       "status": "PASS"
     },
     "sanitizers": {

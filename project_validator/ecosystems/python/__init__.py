@@ -471,7 +471,8 @@ PYTHON = Ecosystem(
     source_suffixes={".py": "Python", ".pyi": "Python"},
     toolchain=toolchain_patterns(
         "Python",
-        version=r"(\d+(?:\.(?:\d+|x))*|pypy[\d.]*)",
+        # `3.14t` is the free-threaded build, a toolchain of its own.
+        version=r"(\d+(?:\.(?:\d+|x))*t?|pypy[\d.]*)",
         inputs=("python-version",),
         images=("python",),
         image_version=r"(\d+(?:\.\d+)*)",
