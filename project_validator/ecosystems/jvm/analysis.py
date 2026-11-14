@@ -180,7 +180,7 @@ FUNCTION_LENGTH_LIMITERS = (METHOD_LENGTH, LONG_METHOD, *function_length_limiter
 # Error Prone is a compiler plugin: on a Maven compiler's processor path or arguments, or the net.ltgt.errorprone
 # Gradle plugin. Matched in the build files until they are read structurally.
 _ERROR_PRONE_GRADLE = GRADLE_PLUGIN.format(re.escape("net.ltgt.errorprone"))
-_ERROR_PRONE = re.compile(rf"error_prone_core|-Xplugin:ErrorProne|{_ERROR_PRONE_GRADLE}")
+_ERROR_PRONE = re.compile(rf"\berror_prone_core\b|-Xplugin:ErrorProne\b|{_ERROR_PRONE_GRADLE}")
 _COMPILES = {
     "maven": frozenset({"compile", "test-compile", "test", "package", "verify", "install", "deploy"}),
     "gradle": frozenset({"build", "check", "test", "assemble", "classes", "compileJava", "jar"}),

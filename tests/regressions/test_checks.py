@@ -191,7 +191,6 @@ class FuzzTestingTests(unittest.TestCase):
 
 
 class StaticAnalysisTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #251: Error Prone regex holds literal backspaces where \b was meant
     def test_error_prone_in_a_maven_compiler_configuration_runs(self) -> None:
         """Error Prone on maven-compiler-plugin's processor path with `-Xplugin:ErrorProne` runs on every compile of
         `mvn verify` (google/guava); the regex meant to match it holds literal backspaces where `\\b` was meant."""

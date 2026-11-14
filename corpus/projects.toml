@@ -554,7 +554,7 @@ issues = [238, 281]
 name = "google/guava"
 commit = "fce80fd984c8227262a63972ccc68ae6f2ad0519"
 ecosystems = ["JVM"]
-issues = [182, 216, 237, 251, 252]
+issues = [182, 216, 237, 252]
 
 [[project]]
 name = "square/okhttp"
