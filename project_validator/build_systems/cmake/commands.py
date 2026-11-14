@@ -76,6 +76,9 @@ class Collector:
     facts: list[Fact] = field(default_factory=list)
     targets: dict[str, list[CustomTarget]] = field(default_factory=dict)
     dependencies: dict[str, list[str]] = field(default_factory=dict)
+    # The variables a path was resolved into (`file(REAL_PATH)`, `get_filename_component(REALPATH)`), and the path as
+    # written: a guard comparing the variable compares the path.
+    resolved: dict[str, str] = field(default_factory=dict)
 
     def invoked(self, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
         if (handler := _COMMANDS.get(invocation.name)) is not None:
@@ -268,8 +271,28 @@ def _option(collector: Collector, frame: Frame, invocation: Invocation, words: l
 
 def _guard(collector: Collector, frame: Frame, _invocation: Invocation, words: list[Value]) -> None:
     """What an `if()` (or `elseif()`) tests, as written: the evaluator decides where it holds; the text says what the
-    project guards on (`PROJECT_IS_TOP_LEVEL`, a comparison of the source and binary directories)."""
-    collector.guard(frame, " ".join(word.text for word in words))
+    project guards on (`PROJECT_IS_TOP_LEVEL`, a comparison of the source and binary directories). A variable a path
+    was resolved into reads as the path."""
+    texts = (collector.resolved.get(word.text.removeprefix("${").removesuffix("}"), word.text) for word in words)
+    collector.guard(frame, " ".join(texts))
+
+
+def _resolve(collector: Collector, _frame: Frame, invocation: Invocation, _words: list[Value]) -> None:
+    """`file(REAL_PATH path var)` and `get_filename_component(var path REALPATH|ABSOLUTE)`: the path as written, before
+    the evaluator expands it, is what `var` holds."""
+    raw = [argument.text for argument in invocation.arguments]
+    if invocation.name == "file" and raw[:1] == ["REAL_PATH"] and len(raw) >= 3:
+        collector.resolved[raw[2]] = raw[1]
+    elif invocation.name == "get_filename_component" and len(raw) >= 3 and raw[2] in ("REALPATH", "ABSOLUTE"):
+        collector.resolved[raw[0]] = raw[1]
+
+
+def _string(collector: Collector, frame: Frame, invocation: Invocation, _words: list[Value]) -> None:
+    """`string(COMPARE EQUAL a b var)` computes a flag the project then guards on: it tests what an
+    `if(a STREQUAL b)` would, so the comparison, as written, is a guard."""
+    raw = [argument.text for argument in invocation.arguments]
+    if raw[:2] == ["COMPARE", "EQUAL"] and len(raw) >= 5:
+        collector.guard(frame, f"{raw[2]} STREQUAL {raw[3]}")
 
 
 def _set(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
@@ -346,6 +369,9 @@ _COMMANDS: Mapping[str, Callable[[Collector, Frame, Invocation, list[Value]], No
     "if": _guard,
     "elseif": _guard,
     "set": _set,
+    "string": _string,
+    "file": _resolve,
+    "get_filename_component": _resolve,
     "enable_testing": _enable_testing,
     "include": _include,
     "add_custom_target": _add_custom_target,

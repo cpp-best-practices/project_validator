@@ -104,7 +104,6 @@ def _built_target(target: str) -> dict[str, str]:
 
 
 class TopLevelGuardIdiomTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #203: a guard on a flag computed from the pre-3.21 idioms is not seen
     def test_a_flag_computed_from_a_pre_3_21_idiom_guards(self) -> None:
         """A variable computed from NOT DEFINED PROJECT_NAME, CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME, a source
         directory comparison or string(COMPARE EQUAL ...) guards the tests (fmt, Catch2, h3, glfw, simdjson,
@@ -114,7 +113,6 @@ class TopLevelGuardIdiomTests(unittest.TestCase):
                 result = _run(top_level_guard, {"CMakeLists.txt": flag + TESTS_GUARDED, **CXX_SOURCE})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #203: directories compared after REAL_PATH are not an in-source guard
     def test_the_directories_compared_after_resolving_symlinks_prevent_in_source_builds(self) -> None:
         """cmake_template's own PreventInSourceBuilds.cmake, the file the hint names, compares the source and binary
         directories through file(REAL_PATH) copies (older: get_filename_component REALPATH) and stops the build."""

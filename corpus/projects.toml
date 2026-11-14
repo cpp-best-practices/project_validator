@@ -55,19 +55,19 @@ issues = [182, 188, 241, 254]
 name = "fmtlib/fmt"
 commit = "4229eb5820af49bf797641168624c8a754a1a4eb"
 ecosystems = ["C/C++"]
-issues = [182, 194, 203, 247, 282]
+issues = [182, 194, 247, 282]
 
 [[project]]
 name = "cpp-best-practices/cmake_template"
 commit = "b86318abbf55a657a11a0cf2acce69f221841b22"
 ecosystems = ["C/C++"]
-issues = [182, 194, 203, 206, 235, 282]
+issues = [182, 194, 206, 235, 282]
 
 [[project]]
 name = "simdjson/simdjson"
 commit = "449f38e6377992798220c513f58740632355de52"
 ecosystems = ["C/C++"]
-issues = [182, 183, 194, 203]
+issues = [182, 183, 194]
 
 [[project]]
 name = "bus1/dbus-broker"
@@ -85,7 +85,7 @@ issues = [182, 183, 207, 247, 282]
 name = "catchorg/Catch2"
 commit = "5cf5dec9f5a119a08d3ee061d260ccc525093a75"
 ecosystems = ["C/C++"]
-issues = [203, 207, 242, 282]
+issues = [207, 242, 282]
 
 [[project]]
 name = "google/googletest"
@@ -97,7 +97,7 @@ issues = [182, 204, 207, 211, 229]
 name = "uber/h3"
 commit = "15920096d4a165729c01f749e2bd97334b009519"
 ecosystems = ["C/C++"]
-issues = [182, 203, 228]
+issues = [182, 228]
 
 [[project]]
 name = "GNOME/glib"
@@ -115,13 +115,13 @@ issues = [182, 204, 282]
 name = "ggml-org/llama.cpp"
 commit = "9d25e0014c4b4b316873c01f4938c0e3c687287d"
 ecosystems = ["C/C++", "Python"]
-issues = [181, 203, 224, 230, 235, 241]
+issues = [181, 224, 230, 235, 241]
 
 [[project]]
 name = "glfw/glfw"
 commit = "92dcf4ce74f2e2554a98fea09be7c705c17daa5a"
 ecosystems = ["C/C++"]
-issues = [203, 204, 223, 241, 282]
+issues = [204, 223, 241, 282]
 
 [[project]]
 name = "clj-kondo/clj-kondo"

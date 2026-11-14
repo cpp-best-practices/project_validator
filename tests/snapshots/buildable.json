@@ -719,6 +719,7 @@
                 "missing": [
                   "PROJECT_IS_TOP_LEVEL",
                   "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR",
+                  "CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME",
                   "meson.is_subproject()"
                 ]
               }
