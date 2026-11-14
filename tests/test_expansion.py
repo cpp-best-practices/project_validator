@@ -374,7 +374,6 @@ class CiEnvironmentTests(unittest.TestCase):
         [unknown] = facts.of(Unknown)
         self.assertIn("$CABAL", unknown.reason)
 
-    @unittest.expectedFailure  # upstream #190: `[[ "$X" ... ]]` is read as a command whose program is $X
     def test_a_conditional_expression_is_not_a_command(self) -> None:
         """`[[ ... ]]` is a shell keyword, not a command: nothing in it runs, so a variable in it (set by an `eval`
         nothing can read, as in uutils/coreutils' GnuTests.yml) is not an unknown program."""

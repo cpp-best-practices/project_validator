@@ -4,8 +4,9 @@ Only what the validator needs is understood: line continuations, comments, quoti
 lines), the operators that separate commands (`;`, `&&`, `||`, `|`, `&`), and command substitution (`$(…)` and
 backquotes), whose commands run before the command they are part of. PowerShell scripts (`powershell=True`) are split
 the same way, with PowerShell's escape character, the backquote, in place of the backslash (which is text there).
-Leading `NAME=value` assignments are the command's environment. Compound commands (`if`, `for`, `case`) and
-here-documents are not interpreted; their lines are split like any other.
+Leading `NAME=value` assignments (and arrays, `NAME=(a b)`) are the command's environment; a conditional expression,
+`[[ … ]]`, runs nothing, over as many lines as it takes. Compound commands (`if`, `for`, `case`) and here-documents
+are not interpreted; their lines are split like any other.
 """
 
 from __future__ import annotations
@@ -103,15 +104,27 @@ def _command(words: list[str], line: str) -> ShellCommand | None:
     env = []
     while words and _ASSIGNMENT.match(words[0]):
         name, value = words[0].split("=", 1)
-        env.append((name, value.translate(_RESTORED)))
         words = words[1:]
+        if not value and words[:1] == ["("] and ")" in words:
+            # An array assignment, `name=(a b)`: its elements are its value, not a command.
+            close = words.index(")")
+            value, words = " ".join(words[1:close]), words[close + 1 :]
+        env.append((name, value.translate(_RESTORED)))
     argv = tuple(word.translate(_RESTORED) for word in words if word not in {"(", ")"})
     return ShellCommand(argv=argv, env=tuple(env), line=line) if argv else None
 
 
 def _commands_of(words: list[str], line: str) -> Iterator[ShellCommand]:
     current: list[str] = []
+    testing = False
     for word in [*words, ";"]:
+        # A conditional expression, `[[ … ]]`, runs nothing: its words (and its `||`, `&&`) are not commands.
+        if testing:
+            testing = word != "]]"
+            continue
+        if word == "[[" and all(kept in _KEYWORDS for kept in current):
+            testing, current = True, []
+            continue
         if word in _SEPARATORS:
             if (command := _command(current, line)) is not None:
                 yield command
@@ -243,11 +256,22 @@ def _lines(raw: list[str], escape: str = "\\") -> Iterator[tuple[str, list[str] 
             continue
         while True:
             try:
-                yield line, _words(line, escape)
-                break
+                words = _words(line, escape)
             except ValueError as error:
                 following = next(lines, None)
                 if following is None or "quotation" not in str(error):
                     yield line, error
                     break
                 line = f"{line}\n{following}"
+                continue
+            # A `[[ … ]]` test may go on over several lines (`a ||` at the end of one); it is one command.
+            following = next(lines, None) if _open_test(words) else None
+            if following is None:
+                yield line, words
+                break
+            line = f"{line} {following.strip()}"
+
+
+def _open_test(words: list[str]) -> bool:
+    """Whether the words open more `[[` tests than they close."""
+    return words.count("[[") > words.count("]]")

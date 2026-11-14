@@ -56,7 +56,6 @@ def _script_run(path: str, text: str, *lines: str) -> dict[str, str]:
 
 
 class ConditionalExpressionTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #190: `[[ ]]` continuation lines and `name=(…)` are read as commands
     def test_multi_line_conditionals_and_array_assignments_are_not_commands(self) -> None:
         """A `[[ … ]]` test that continues on the next line is one compound command, and `name=(…)` is an assignment:
         neither runs a program, so neither is an unknown variable program (Homebrew, Humanizer, scikit-learn)."""

@@ -269,7 +269,7 @@ issues = [223, 253]
 name = "Humanizr/Humanizer"
 commit = "4574b93883bf48e3f0f3bca73297054537317ab2"
 ecosystems = [".NET"]
-issues = [190, 223, 224, 232, 235, 253]
+issues = [223, 224, 232, 235, 253]
 
 [[project]]
 name = "magit/magit"
@@ -902,7 +902,7 @@ issues = [182, 221]
 name = "scikit-learn/scikit-learn"
 commit = "ee56c8b5d809dc7b970a140ed501269b63c69cf8"
 ecosystems = ["Python"]
-issues = [182, 190, 232, 236, 237]
+issues = [182, 232, 236, 237]
 
 [[project]]
 name = "tidyverse/dplyr"
@@ -1003,7 +1003,7 @@ issues = [182, 186, 235, 257]
 name = "Homebrew/brew"
 commit = "cbd3ae64a5efc9990017506ed2fec2e7c007d8c4"
 ecosystems = ["Ruby"]
-issues = [182, 190, 211, 235, 257]
+issues = [182, 211, 235, 257]
 
 [[project]]
 name = "fluent/fluentd"
@@ -1057,7 +1057,7 @@ issues = [188, 212, 239, 245, 287]
 name = "uutils/coreutils"
 commit = "18ddc48d1cc5edc9ba66f6eb332bc6673c27ef24"
 ecosystems = ["Rust"]
-issues = [182, 190, 195, 218, 230]
+issues = [182, 195, 218, 230]
 
 [[project]]
 name = "nushell/nushell"
