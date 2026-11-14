@@ -126,7 +126,6 @@ class TopLevelGuardIdiomTests(unittest.TestCase):
 
 
 class SkippedConstructTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #204: the legacy COMPILE_FLAGS target property is not an option source
     def test_the_compile_flags_property_holds_compiler_options(self) -> None:
         """googletest sets -Wall -Wshadow -Wconversion through COMPILE_FLAGS: the check lists only the missing flags
         (a warning), not "no compiler warning flags found"."""
@@ -135,7 +134,6 @@ class SkippedConstructTests(unittest.TestCase):
         self.assertEqual(result.status, Status.WARN, result)
         self.assertIn("-Wpedantic", result.message)
 
-    @unittest.expectedFailure  # upstream #204: a property value with two possible values loses the properties after
     def test_c_extensions_off_counts_after_a_property_set_from_a_branched_variable(self) -> None:
         """glfw's set_target_properties(glfw PROPERTIES OUTPUT_NAME ${GLFW_LIB_NAME} ... C_EXTENSIONS OFF), where the
         name is set in both branches of an if(), disables C extensions on the target. The issue's plain repro passes:

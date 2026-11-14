@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from itertools import groupby
 
 from project_validator.build_systems.cmake.conditions import CONFIGURATION, LANGUAGE, constant
@@ -27,6 +27,8 @@ _FLAGS = re.compile(
     r"(?:_(?P<configuration>DEBUG|RELEASE|RELWITHDEBINFO|MINSIZEREL))?"
 )
 _PROPERTY_OPTIONS = {"COMPILE_OPTIONS": "compile", "COMPILE_DEFINITIONS": "definition", "LINK_OPTIONS": "link"}
+# The legacy properties that hold options as one command-line string, separated by spaces rather than semicolons.
+_PROPERTY_FLAGS = {"COMPILE_FLAGS": "compile", "LINK_FLAGS": "link"}
 _TEST_REGISTRATIONS = frozenset(
     {"add_test", "catch_discover_tests", "gtest_discover_tests", "gtest_add_tests", "doctest_discover_tests"}
     | {"boost_discover_tests"}
@@ -227,6 +229,9 @@ def _property(
     directory or the whole build are not asked about."""
     if name in _PROPERTY_OPTIONS:
         collector.options(frame, invocation, values, _PROPERTY_OPTIONS[name], target)
+    elif name in _PROPERTY_FLAGS:
+        listed = [replace(value, text=";".join(value.text.split())) for value in values]
+        collector.options(frame, invocation, listed, _PROPERTY_FLAGS[name], target)
     elif target is not None:
         for when, group in groupby(values, key=lambda value: value.when):
             collector.setting(frame, invocation, name, Value(";".join(value.text for value in group), when), target)
@@ -237,10 +242,22 @@ def _set_target_properties(collector: Collector, frame: Frame, invocation: Invoc
     if "PROPERTIES" not in texts:
         return
     split = texts.index("PROPERTIES")
-    pairs = words[split + 1 :]
+    pairs = _arguments(words[split + 1 :])
     for target in texts[:split]:
-        for name, value in zip(pairs[::2], pairs[1::2], strict=False):
-            _property(collector, frame, invocation, target, name.text, [value])
+        for name, values in zip(pairs[::2], pairs[1::2], strict=False):
+            _property(collector, frame, invocation, target, name[0].text, values)
+
+
+def _arguments(words: list[Value]) -> list[list[Value]]:
+    """`words` by the argument each is a value of: a value the argument takes in other builds (a variable set in both
+    branches of an `if()`) follows the first, and is the same argument."""
+    arguments: list[list[Value]] = []
+    for word in words:
+        if word.choice == 0 or not arguments:
+            arguments.append([word])
+        else:
+            arguments[-1].append(word)
+    return arguments
 
 
 def _set_property(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
