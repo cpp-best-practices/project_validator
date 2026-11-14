@@ -410,7 +410,6 @@ class LicenseTests(unittest.TestCase):
                 self.assertNotEqual(result.status, Status.FAIL, result)
                 self.assertIn(identifier, result.message, result)
 
-    @unittest.expectedFailure  # upstream #238: License.pm and license.t full-match the license file name pattern
     def test_perl_modules_and_tests_are_not_license_files(self) -> None:
         """Dist-Zilla's lib/Dist/Zilla/Plugin/License.pm and t/plugins/license.t match the license file name pattern
         and are recorded as (unrecognised) license files."""

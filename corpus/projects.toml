@@ -127,7 +127,7 @@ issues = [223, 282]
 name = "clj-kondo/clj-kondo"
 commit = "a38978c2fe24b3790b2b7a6d3007594c087dd863"
 ecosystems = ["Clojure"]
-issues = [182, 223, 235, 238]
+issues = [182, 223, 235]
 
 [[project]]
 name = "metosin/malli"
@@ -139,7 +139,7 @@ issues = [182]
 name = "weavejester/compojure"
 commit = "8a4758d28e8fcd28fa7610dca6e2908d039e6a4f"
 ecosystems = ["Clojure"]
-issues = [238, 265]
+issues = [265]
 
 [[project]]
 name = "fukamachi/dexador"
@@ -180,7 +180,6 @@ issues = [182, 185, 188, 230, 235]
 name = "mledoze/countries"
 commit = "fa4f62182d19ff4f8b325cde6387c9cd9d80955a"
 ecosystems = ["Data"]
-issues = [238]
 
 [[project]]
 name = "jshttp/mime-db"
@@ -239,7 +238,7 @@ issues = [182, 215, 280]
 name = "cpp-best-practices/cppbestpractices"
 commit = "d57b14ec6d7f13f0af65f9bde62aa3ebd5fb588a"
 ecosystems = ["Documentation site"]
-issues = [238, 280]
+issues = [280]
 
 [[project]]
 name = "serilog/serilog"
@@ -399,7 +398,7 @@ issues = [188, 248]
 name = "jgm/pandoc"
 commit = "300d24fdb143cff23080120c13acbe7df21cd5a3"
 ecosystems = ["Haskell"]
-issues = [182, 223, 238]
+issues = [182, 223]
 
 [[project]]
 name = "PostgREST/postgrest"
@@ -509,7 +508,7 @@ ecosystems = ["JSON Schema"]
 name = "JuliaData/DataFrames.jl"
 commit = "62b1c93dd2f45edac469c7f71756debae4108435"
 ecosystems = ["Julia"]
-issues = [182, 238]
+issues = [182]
 
 [[project]]
 name = "fonsp/Pluto.jl"
@@ -539,7 +538,7 @@ issues = [182, 281]
 name = "jakevdp/PythonDataScienceHandbook"
 commit = "d66231454ef753818dc9213c9b5942e067266966"
 ecosystems = ["Jupyter"]
-issues = [238, 281]
+issues = [281]
 
 [[project]]
 name = "google/guava"
@@ -610,7 +609,7 @@ issues = [211, 224]
 name = "posquit0/Awesome-CV"
 commit = "dfe863541ccc6ea624c48338a7ce550494530b31"
 ecosystems = ["LaTeX"]
-issues = [182, 195, 227, 238]
+issues = [182, 195, 227]
 
 [[project]]
 name = "matze/mtheme"
@@ -622,7 +621,7 @@ issues = [182]
 name = "latex3/l3build"
 commit = "f5224147f530aa66dc40ba6c4c1a27a45e21cfb6"
 ecosystems = ["LaTeX"]
-issues = [227, 238, 268]
+issues = [227, 268]
 
 [[project]]
 name = "folke/lazy.nvim"
@@ -752,25 +751,25 @@ issues = [182, 272]
 name = "mojolicious/mojo"
 commit = "33648dc25bad1594461180d0793cd1b21753b0bd"
 ecosystems = ["Perl"]
-issues = [182, 238, 248]
+issues = [182, 248]
 
 [[project]]
 name = "Perl-Critic/Perl-Critic"
 commit = "368a20326ab47ec7c4b800a2c943feea87cd183e"
 ecosystems = ["Perl"]
-issues = [182, 188, 238, 248, 269]
+issues = [182, 188, 248, 269]
 
 [[project]]
 name = "houseabsolute/perl-code-tidyall"
 commit = "9318a932cfe054125ab3f3098c98ea1532df0b9e"
 ecosystems = ["Perl"]
-issues = [182, 227, 238, 248, 269]
+issues = [182, 227, 248, 269]
 
 [[project]]
 name = "rjbs/Dist-Zilla"
 commit = "ca73e612fe4b53fd77ca37c961df8706e0317055"
 ecosystems = ["Perl"]
-issues = [182, 227, 238, 248]
+issues = [182, 227, 248]
 
 [[project]]
 name = "Seldaek/monolog"
@@ -893,13 +892,13 @@ issues = [182]
 name = "tidyverse/dplyr"
 commit = "819c99f7284b3a413b391c60bea49ae7bfb8bafc"
 ecosystems = ["R"]
-issues = [186, 228, 238, 246]
+issues = [186, 228, 246]
 
 [[project]]
 name = "r-lib/testthat"
 commit = "54c0edc932018079a8925845f7e278097d19c786"
 ecosystems = ["R"]
-issues = [186, 228, 238, 246, 256]
+issues = [186, 228, 246, 256]
 
 [[project]]
 name = "Rdatatable/data.table"
@@ -911,19 +910,17 @@ issues = [182, 186, 246, 256]
 name = "tidyverse/ggplot2"
 commit = "b638d654c8189db82a62307fefa84b1da1819da5"
 ecosystems = ["R"]
-issues = [238]
 
 [[project]]
 name = "rstudio/shiny"
 commit = "1f85217932665592b9715be794eee87c53f6bb3f"
 ecosystems = ["R"]
-issues = [238]
 
 [[project]]
 name = "ropensci/targets"
 commit = "0d4c9ba1478c53bfdd098de2a9f8e3b3c529bb3f"
 ecosystems = ["R"]
-issues = [182, 238]
+issues = [182]
 
 [[project]]
 name = "racket/typed-racket"
@@ -999,7 +996,7 @@ issues = [182, 257]
 name = "BurntSushi/ripgrep"
 commit = "178cc027e283fd965cb72d0a7395b219eada170c"
 ecosystems = ["Rust"]
-issues = [182, 238, 287]
+issues = [182, 287]
 
 [[project]]
 name = "tokio-rs/tokio"
@@ -1138,7 +1135,7 @@ issues = [228]
 name = "pgvector/pgvector"
 commit = "28dbea6e645f576461eb2343541a7e1fa712dabf"
 ecosystems = ["SQL", "C/C++"]
-issues = [238, 276]
+issues = [276]
 
 [[project]]
 name = "sqlfluff/sqlfluff"
@@ -1217,32 +1214,29 @@ issues = [188, 195]
 name = "datasets/country-codes"
 commit = "2d84034a0cae19ea5444b78c2131304a5c7f4bb9"
 ecosystems = ["Tabular data"]
-issues = [228, 238]
+issues = [228]
 
 [[project]]
 name = "datasets/gdp"
 commit = "36d761dc5617982d3e50b213e02b9a1b47c4e958"
 ecosystems = ["Tabular data"]
-issues = [238]
 
 [[project]]
 name = "datasets/population"
 commit = "d4b1a4a9a17e2123baf0ef119de05bceced1ab1b"
 ecosystems = ["Tabular data"]
-issues = [238]
 
 [[project]]
 name = "datasets/s-and-p-500-companies"
 commit = "05c998c3e714b8dc9b621239bbdef92bccefc376"
 ecosystems = ["Tabular data"]
-issues = [228, 238]
+issues = [228]
 
 [[project]]
 name = "fivethirtyeight/data"
 commit = "4c1ff5e3aef1816ae04af63218015066e186c147"
 ecosystems = ["Jupyter", "R", "Python"]
 notes = "CSV data without a Data Package descriptor; tabular data is detected from datapackage.json by design"
-issues = [238]
 
 [[project]]
 name = "terraform-aws-modules/terraform-aws-vpc"

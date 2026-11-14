@@ -88,9 +88,23 @@ def recognised(path: str, text: str) -> frozenset[str]:
 
 
 def _read(path: str, text: str) -> Iterator[Fact]:
-    reuse = PurePosixPath(path).parent.name == REUSE_DIRECTORY
-    if reuse or LICENSE_FILE.fullmatch(PurePosixPath(path).name):
+    file = PurePosixPath(path)
+    reuse = file.parent.name == REUSE_DIRECTORY
+    if reuse or (LICENSE_FILE.fullmatch(file.name) and file.suffix not in _code_suffixes()):
         yield LicenseFile(origin=Origin(path=path), licenses=recognised(path, text))
+
+
+def _code_suffixes() -> frozenset[str]:
+    """The suffixes of a language's sources: `License.pm` and `license.t` are code about licenses (Dist::Zilla)."""
+    from project_validator.ecosystems import registered  # the profiles define the suffixes; they read licenses
+
+    languages = (ecosystem for ecosystem in registered() if ecosystem.kind == "language")
+    found = (suffix for ecosystem in languages for suffix in ecosystem.source_suffixes or {})
+    return frozenset((*found, *_TEST_SCRIPTS))
+
+
+# Perl's test scripts, which its profile finds by directory rather than by suffix.
+_TEST_SCRIPTS = (".t",)
 
 
 def _any_case(name: str) -> str:
