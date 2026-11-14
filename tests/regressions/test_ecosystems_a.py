@@ -85,28 +85,22 @@ STYLE_ON_COMMENT: dict[str, object] = {
 
 
 class RTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #256: tests/*.R, sanitizer images and issue_comment styler jobs unread
-    def test_check_runs_tests_r_sanitizer_images_sanitize_and_a_comment_job_enforces_nothing(self) -> None:
-        """`R CMD check` runs every `tests/*.R` script, so they are tests (data.table); a job in a `rocker/r-devel-san`
-        image runs under ASan and UBSan (data.table); styler in an `issue_comment` job gates no push (testthat)."""
-        _all_pass(
-            self,
-            {
-                "tests/*.R": (
-                    R_PACKAGE,
-                    TESTS_RUN,
-                    {"tests/main.R": "stopifnot(total(c(1, 2)) == 3)\n", **CHECK_R_PACKAGE},
-                ),
-                "sanitizer image": (
-                    R_PACKAGE,
-                    SANITIZERS,
-                    {
-                        "src/shop.c": "",
-                        **_gitlab("R CMD build .", "R CMD check shop_0.1.0.tar.gz", image="rocker/r-devel-san"),
-                    },
-                ),
-            },
-        )
+    @unittest.expectedFailure  # upstream #256: tests/*.R scripts are not tests
+    def test_check_runs_the_tests_r_scripts(self) -> None:
+        """`R CMD check` runs every `tests/*.R` script, so they are tests (data.table)."""
+        files = {"tests/main.R": "stopifnot(total(c(1, 2)) == 3)\n", **CHECK_R_PACKAGE}
+        result = run_in_layout(self, R_PACKAGE, TESTS_RUN, files)
+        self.assertEqual(result.status, Status.PASS, result)
+
+    @unittest.expectedFailure  # upstream #256: sanitizer images and issue_comment styler jobs are unread
+    def test_sanitizer_images_sanitize_and_a_comment_job_enforces_nothing(self) -> None:
+        """A job in a `rocker/r-devel-san` image runs under ASan and UBSan (data.table); styler in an `issue_comment`
+        job gates no push (testthat)."""
+        files = {
+            "src/shop.c": "",
+            **_gitlab("R CMD build .", "R CMD check shop_0.1.0.tar.gz", image="rocker/r-devel-san"),
+        }
+        _all_pass(self, {"sanitizer image": (R_PACKAGE, SANITIZERS, files)})
         with self.subTest(case="styler on issue_comment"):
             result = run_in_layout(self, R_PACKAGE, CODE_FORMATTING, _workflow(STYLE_ON_COMMENT))
             self.assertNotEqual(result.status, Status.PASS, result)
