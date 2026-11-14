@@ -186,7 +186,6 @@ class SkippedConstructTests(unittest.TestCase):
 
 
 class MesonMultiLineConditionTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #205: a newline inside parentheses is not whitespace to the Meson parser
     def test_a_parenthesised_condition_continued_over_lines_parses(self) -> None:
         """GNOME/glib's gnulib meson.build: an if() whose parenthesised boolean expression runs over four lines is
         valid Meson (newlines inside parentheses are whitespace) and parses to one If statement."""

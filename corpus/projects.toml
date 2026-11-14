@@ -103,7 +103,7 @@ issues = [182, 203, 228]
 name = "GNOME/glib"
 commit = "a6457d849e45b9a1a9473c61364ee6e56894774b"
 ecosystems = ["C/C++"]
-issues = [182, 205, 215, 228, 235, 247, 282]
+issues = [182, 215, 228, 235, 247, 282]
 
 [[project]]
 name = "neovim/neovim"
