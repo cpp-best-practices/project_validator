@@ -269,16 +269,19 @@ def _substitutions(script: str, hide: Callable[[str, str | None], str], escape: 
     return "".join(out)
 
 
-def _arithmetic_end(script: str, start: int) -> int | None:
-    """Where the arithmetic expansion `$((…))` starting at `start` ends (just after it); None if none starts there."""
-    if not script.startswith("$((", start):
-        return None
+def _closing(script: str, start: int) -> int | None:
+    """Just after the parenthesis that closes the one at `start + 1` (`$(` or `$((`), or None when none does."""
     depth = 0
     for index in range(start + 1, len(script)):
         depth += {"(": 1, ")": -1}.get(script[index], 0)
         if depth == 0:
             return index + 1
     return None
+
+
+def _arithmetic_end(script: str, start: int) -> int | None:
+    """Where the arithmetic expansion `$((…))` starting at `start` ends (just after it); None if none starts there."""
+    return _closing(script, start) if script.startswith("$((", start) else None
 
 
 def _substitution_end(script: str, start: int, *, backquotes: bool = True) -> int | None:
@@ -288,12 +291,7 @@ def _substitution_end(script: str, start: int, *, backquotes: bool = True) -> in
         return None if end < 0 else end + 1
     if not script.startswith("$(", start) or script.startswith("$((", start):
         return None
-    depth = 0
-    for index in range(start + 1, len(script)):
-        depth += {"(": 1, ")": -1}.get(script[index], 0)
-        if depth == 0:
-            return index + 1
-    return None
+    return _closing(script, start)
 
 
 def _lines(raw: list[str], escape: str = "\\") -> Iterator[tuple[str, list[str] | ValueError]]:
