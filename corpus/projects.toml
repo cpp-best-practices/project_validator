@@ -1329,7 +1329,6 @@ issues = [182, 223]
 name = "zigtools/zls"
 commit = "9d9c9d2c41b15ed00e2b1004780e069fef495109"
 ecosystems = ["Zig"]
-issues = [284]
 
 [[project]]
 name = "karlseguin/http.zig"

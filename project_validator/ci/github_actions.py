@@ -145,11 +145,25 @@ def _exported(script: str) -> dict[str, str]:
     variables the script assigns before in place (`HC=/opt/ghc/bin/ghc` then `echo "HC=$HC" >> "$GITHUB_ENV"`)."""
     exported: dict[str, str] = {}
     for match in _EXPORT.finditer(script):
+        if _conditional(script, match.start() + match[0].index(match[0].lstrip(";& \t\n"))):
+            continue  # set only sometimes (zls's `if …; then echo "SKIP=true" >> $GITHUB_ENV; fi`): not known
         assigned = {
             found["name"]: found["value"].strip("\"'") for found in _ASSIGNMENT.finditer(script, 0, match.start())
         }
         exported[match["name"]] = _substituted(match["value"], assigned)
     return exported
+
+
+_OPENS = re.compile(r"(?:^|[;&|]\s*)\s*(?:if|case|while|until|for)\b", re.MULTILINE)
+_CLOSES = re.compile(r"(?:^|[;&|]\s*)\s*(?:fi|esac|done)\b", re.MULTILINE)
+
+
+def _conditional(script: str, at: int) -> bool:
+    """Whether the command at `at` runs only sometimes: inside an `if`, `case` or loop, or after `&&` or `||`."""
+    before = script[:at]
+    if re.search(r"(?:&&|\|\|)\s*$", before):
+        return True
+    return len(_OPENS.findall(before)) > len(_CLOSES.findall(before))
 
 
 def _substituted(value: str, assigned: Mapping[str, str]) -> str:

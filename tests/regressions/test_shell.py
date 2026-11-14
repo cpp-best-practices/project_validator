@@ -177,7 +177,6 @@ class EnvironmentTests(unittest.TestCase):
                 )
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #284: a conditional `>> $GITHUB_ENV` export drops the steps it guards
     def test_a_conditional_github_env_export_keeps_the_guarded_steps(self) -> None:
         """`echo "SKIP=true" >> $GITHUB_ENV` inside a shell `if` sets SKIP only sometimes, so a later step with
         `if: env.SKIP != 'true'` may run and is read (zigtools/zls's ReleaseSafe release build)."""
