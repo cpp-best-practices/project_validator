@@ -147,7 +147,6 @@ class CompilerWarningsTests(unittest.TestCase):
 
 
 class CoverageTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #226: Codecov/Coveralls uploads and threshold configurations are not read
     def test_uploads_and_thresholds_reach_the_reported_and_gated_rungs(self) -> None:
         """A Codecov or Coveralls upload step reports coverage (DataFrames.jl, JuMP.jl, Documenter.jl, PostgREST,
         deno std, uber/h3, mockito); vitest and codecov.yml thresholds gate it (action-gh-release, PostgREST)."""

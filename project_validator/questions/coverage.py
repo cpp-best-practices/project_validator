@@ -4,12 +4,14 @@ at each granularity?"""
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
-from project_validator.facts import Facts
+from project_validator.facts import ActionStep, Command, Facts, resolved
+from project_validator.facts.arguments import program
 from project_validator.facts.coverage import COVERAGE, Granularity, Rung, level, rung_of
 from project_validator.facts.tools import Tool, ToolRun, known_tools
 from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, per_unit, runs_of, unknowns_for
+from project_validator.tools.coverage_services import CODECOV, CODECOV_TARGET, UPLOAD_ACTIONS, UPLOADERS
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -101,13 +103,38 @@ def _answer(
     return GranularityAnswer(answer=Answer.UNKNOWN if unread else Answer.NO, known=able)
 
 
+def _uploading_jobs(facts: Facts) -> frozenset[str]:
+    """The jobs that upload a coverage report to a coverage service."""
+    actions = (step.job for step in facts.of(ActionStep) if step.uses.partition("@")[0] in UPLOAD_ACTIONS)
+    programs = (command.job for command in facts.of(Command) if program(resolved(command)) in UPLOADERS)
+    return frozenset((*actions, *programs))
+
+
+def _uploaded(run: ToolRun, rung: Rung) -> ToolRun:
+    """`run` as a run whose report a service shows (and, `rung` gated, gates): its measured granularities raised."""
+    levels = run.provides.get(COVERAGE, frozenset())
+    measured = [found for found in Granularity if str(found) in levels]
+    raised = {level(found, step) for found in measured for step in Rung if step.rank <= rung.rank}
+    return replace(run, provides={**run.provides, COVERAGE: frozenset(levels) | raised})
+
+
+def _with_uploads(runs: tuple[ToolRun, ...], facts: Facts) -> tuple[ToolRun, ...]:
+    """The coverage runs, those of a job that uploads the report to Codecov or Coveralls reported there (and gated,
+    where codecov.yml sets a status target)."""
+    jobs = _uploading_jobs(facts)
+    if not jobs:
+        return runs
+    rung = Rung.GATED if facts.setting(CODECOV, CODECOV_TARGET) is not None else Rung.REPORTED
+    return tuple(_uploaded(run, rung) if run.job in jobs else run for run in runs)
+
+
 def coverage_answer(
     language: str, facts: Facts, tools: Iterable[Tool], unit: str = ".", auxiliary: tuple[str, ...] = ()
 ) -> CoverageAnswer:
     """What coverage CI reports for `language` in `unit` (for the auxiliary code `auxiliary` names, when the answer
     is about that), by the facts, and what the known `tools` could report."""
     known = tuple(tool for tool in tools if measures_coverage(tool) and language in tool.languages)
-    runs = runs_of(COVERAGE, language, unit, facts, auxiliary=auxiliary)
+    runs = _with_uploads(runs_of(COVERAGE, language, unit, facts, auxiliary=auxiliary), facts)
     unknowns = unknowns_for(known, facts)
     return CoverageAnswer(
         language=language,

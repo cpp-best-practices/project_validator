@@ -160,8 +160,10 @@
               "known": [
                 "julia --code-coverage (julia-actions/julia-runtest, then julia-processcoverage)"
               ],
-              "reported": [],
-              "rung": "measured",
+              "reported": [
+                "julia --code-coverage"
+              ],
+              "rung": "reported",
               "tools": [
                 "julia --code-coverage"
               ]
@@ -839,10 +841,9 @@
     },
     "coverage": {
       "details": [
-        "consider reporting line coverage where it can be seen (a report CI publishes, a coverage service)",
         "consider failing CI when line coverage falls below a threshold"
       ],
-      "message": "line coverage is measured with julia --code-coverage",
+      "message": "line coverage is reported with julia --code-coverage",
       "status": "PASS"
     },
     "cxx-extensions": {

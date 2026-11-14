@@ -97,7 +97,7 @@ issues = [182, 204, 207, 211, 229]
 name = "uber/h3"
 commit = "15920096d4a165729c01f749e2bd97334b009519"
 ecosystems = ["C/C++"]
-issues = [182, 203, 226, 228, 234]
+issues = [182, 203, 228, 234]
 
 [[project]]
 name = "GNOME/glib"
@@ -168,7 +168,7 @@ issues = [185, 188, 227, 258]
 name = "felangel/bloc"
 commit = "b9be1e252ee24ffbe9f2fb629edc7624b2cfbf05"
 ecosystems = ["Dart"]
-issues = [185, 226, 230, 258]
+issues = [185, 230, 258]
 
 [[project]]
 name = "simolus3/drift"
@@ -340,7 +340,6 @@ ecosystems = ["GitHub Action"]
 name = "softprops/action-gh-release"
 commit = "8a0cd651e5b2365bd640854a3fa5dfc70e4875f3"
 ecosystems = ["GitHub Action"]
-issues = [226]
 
 [[project]]
 name = "docker/build-push-action"
@@ -382,7 +381,7 @@ issues = [229, 246]
 name = "caddyserver/caddy"
 commit = "7591cff1fb03202ce022982af020197f3f387220"
 ecosystems = ["Go"]
-issues = [182, 226, 234]
+issues = [182, 234]
 
 [[project]]
 name = "graphql-hive/graphql-inspector"
@@ -412,7 +411,7 @@ issues = [182, 219, 223, 231, 238]
 name = "PostgREST/postgrest"
 commit = "e5b4fac1c7a192af50a82dd3639ac47316ba60d3"
 ecosystems = ["Haskell"]
-issues = [182, 226, 241, 266]
+issues = [182, 241, 266]
 
 [[project]]
 name = "koalaman/shellcheck"
@@ -477,7 +476,7 @@ issues = [182, 188, 219, 254]
 name = "denoland/std"
 commit = "f834d0223364361169314833e3c7a8f62ce11d58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 219, 226, 231]
+issues = [182, 219, 231]
 
 [[project]]
 name = "SchemaStore/schemastore"
@@ -518,7 +517,7 @@ issues = [229]
 name = "JuliaData/DataFrames.jl"
 commit = "62b1c93dd2f45edac469c7f71756debae4108435"
 ecosystems = ["Julia"]
-issues = [182, 226, 238]
+issues = [182, 238]
 
 [[project]]
 name = "fonsp/Pluto.jl"
@@ -530,13 +529,13 @@ issues = [182, 230]
 name = "jump-dev/JuMP.jl"
 commit = "6333923172279e3e8a6c8ed091b0cebcf6d45ce2"
 ecosystems = ["Julia"]
-issues = [226, 267]
+issues = [267]
 
 [[project]]
 name = "JuliaDocs/Documenter.jl"
 commit = "785d219105849224911315767d9a0e91550e73d1"
 ecosystems = ["Julia"]
-issues = [182, 226, 235, 246, 267]
+issues = [182, 235, 246, 267]
 
 [[project]]
 name = "ageron/handson-ml3"
@@ -572,7 +571,7 @@ issues = [202, 235]
 name = "mockito/mockito"
 commit = "10b31ba2a8252cf340bc154c9e05224802a84691"
 ecosystems = ["JVM"]
-issues = [182, 226, 277]
+issues = [182, 277]
 
 [[project]]
 name = "junit-team/junit5"
@@ -1222,7 +1221,7 @@ issues = [188, 195, 228, 241]
 name = "nicklockwood/SwiftFormat"
 commit = "1bd6e843cfeb89b42088f663d9ae4c7ebcb3c143"
 ecosystems = ["Swift"]
-issues = [188, 195, 226, 229]
+issues = [188, 195, 229]
 
 [[project]]
 name = "datasets/country-codes"
@@ -1364,7 +1363,7 @@ issues = [182, 223, 246]
 name = "zigtools/zls"
 commit = "9d9c9d2c41b15ed00e2b1004780e069fef495109"
 ecosystems = ["Zig"]
-issues = [226, 284]
+issues = [284]
 
 [[project]]
 name = "karlseguin/http.zig"

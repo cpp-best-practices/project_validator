@@ -352,6 +352,11 @@ VITEST_CONFIG_FILES = tuple(
 )
 _JEST_COLLECTS = re.compile(r"[\"']?collectCoverage[\"']?\s*:\s*true\b")
 _VITEST_ENABLES = re.compile(r"\bcoverage\s*:\s*\{[^}]*\benabled\s*:\s*true\b")
+# Vitest fails a run under `coverage.thresholds` (`thresholds: { branches: 90 }`, or `100: true` for every one).
+_VITEST_THRESHOLDS = {
+    f"coverage.thresholds.{name}": (re.compile(rf"\bthresholds\s*:\s*\{{[^}}]*\b(?:{name}|100)\s*:"), True)
+    for name in ("branches", "lines")
+}
 BOTH = (Granularity.LINE, Granularity.BRANCH)
 
 
@@ -369,15 +374,18 @@ def _named_config(name: str) -> Callable[[Command], list[str]]:
     return named
 
 
-def _runner_settings(tool: str, key: str, pattern: re.Pattern[str]) -> Read:
-    """A runner's settings: a JSON configuration (or package.json's `jest`) as written, code matched by `pattern`."""
+def _runner_settings(
+    tool: str, key: str, pattern: re.Pattern[str], more: Mapping[str, tuple[re.Pattern[str], bool]] | None = None
+) -> Read:
+    """A runner's settings: a JSON configuration (or package.json's `jest`) as written, code matched by `pattern`
+    (and the `more` patterns of other keys)."""
 
     def read(path: str, text: str) -> Iterable[Fact]:
         if path.endswith(PACKAGE_JSON):
             return json_settings(tool, path, text, "jest")
         if path.endswith(".json"):
             return json_settings(tool, path, text)
-        return matched_settings(tool, path, text, {key: (pattern, True)})
+        return matched_settings(tool, path, text, {key: (pattern, True), **(more or {})})
 
     return read
 
@@ -391,7 +399,7 @@ JEST_SETTINGS = SettingsReader(
 VITEST_SETTINGS = SettingsReader(
     name="Vitest",
     files=VITEST_CONFIG_FILES,
-    read=_runner_settings("Vitest", "coverage.enabled", _VITEST_ENABLES),
+    read=_runner_settings("Vitest", "coverage.enabled", _VITEST_ENABLES, _VITEST_THRESHOLDS),
     named_by=_named_config("vitest"),
 )
 
@@ -408,14 +416,26 @@ def _test_runner(name: str, tool: str, flags: tuple[str, ...], files: tuple[str,
         argv = resolved(command)
         if program(argv) != name:
             return None
-        if _asks_for_coverage(argv, *flags):
-            return reported(*BOTH)
         candidates = _named_config(name)(command) or [joined(command.directory, file) for file in files]
         configuration = facts.first_file(tool, candidates) or joined(command.directory, PACKAGE_JSON)
         setting = facts.setting(tool, key, paths=[configuration])
-        return reported(*BOTH, read=[setting]) if setting is not None and setting.value is True else None
+        if not _asks_for_coverage(argv, *flags) and (setting is None or setting.value is not True):
+            return None
+        gated = _thresholds(facts, tool, configuration)
+        return reported(*BOTH, gated=gated, read=[setting] if setting is not None else [])
 
     return measures
+
+
+def _thresholds(facts: Facts, tool: str, configuration: str) -> tuple[Granularity, ...]:
+    """The granularities the runner's configuration fails a run under (Vitest's `coverage.thresholds`)."""
+    found = {
+        granularity
+        for granularity, key in ((Granularity.BRANCH, "branches"), (Granularity.LINE, "lines"))
+        if (setting := facts.setting(tool, f"coverage.thresholds.{key}", paths=[configuration])) is not None
+        and setting.value is True
+    }
+    return tuple(sorted(found, key=lambda granularity: granularity.rank))
 
 
 def _instrumenter(name: str) -> Claim:
