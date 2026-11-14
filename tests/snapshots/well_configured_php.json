@@ -81,6 +81,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -176,6 +183,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -494,6 +508,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -539,6 +560,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -776,6 +804,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -955,6 +990,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict PHP error reporting settings are enabled: error_reporting = E_ALL",
@@ -1041,6 +1081,11 @@
       "message": "Infection (infection.json5) runs; on the pull request's changes only (bonus)",
       "status": "PASS"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no PHP version",
@@ -1055,6 +1100,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 PHP version(s) (8.3, 8.4), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -1105,6 +1155,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

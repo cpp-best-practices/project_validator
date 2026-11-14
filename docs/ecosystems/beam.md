@@ -69,7 +69,7 @@ is skipped.
 
 ## `dependency-audit`
 
-mix_audit (`mix deps.audit`), or `mix hex.audit` for retired packages; osv-scanner, trivy or snyk count too.
+mix_audit (`mix deps.audit`), or `mix hex.audit` for retired packages; osv-scanner, trivy or snyk count too, for Elixir (they read `mix.lock`; nothing reads `rebar.lock`, so Erlang alone is skipped).
 
 ## `dependency-management`
 

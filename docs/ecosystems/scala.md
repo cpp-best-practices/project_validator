@@ -29,8 +29,10 @@ branches too.
 
 The toolchains are the JDK versions (the JVM profile's: `java-version`, the JDK images, coursier's `jvm` input) and the
 Scala versions a job switches to (`sbt ++3.3.5 test`, `scala-cli --scala 3.3.5`, `-S 3.3.5`, a `scala-version`
-input). A job naming both runs each Scala version on each JDK (`JDK 21 / Scala 3.3.5`); one that switches to no Scala
-version builds the version its build names, and counts its JDKs.
+input), or cross-builds (`sbt +test`, `mill __.test`) with the versions the build names (`crossScalaVersions :=
+Seq("2.13.16", "3.3.5")` in an `.sbt` file, Mill's `Cross[Module]("2.13.16", "3.3.5")`). A job naming both runs each
+Scala version on each JDK (`JDK 21 / Scala 3.3.5`); one that switches to no Scala version builds the version its build
+names, and counts its JDKs.
 
 ## `compiler-warnings`
 

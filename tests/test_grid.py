@@ -79,6 +79,16 @@ class RenderGridTests(unittest.TestCase):
         ]
         self.assertIn("| Check | C/C++ | Python |\n|---|---|---|\n| `a` | ✅ | ✅ |\n", render_grid(reports))
 
+    def test_no_ecosystem_recognised_is_said(self) -> None:
+        # A project of no recognised ecosystem: the language checks skip without a place, so the grid has no column.
+        skipped = Report(
+            check=cxx("coverage"), result=Result.skipped("not applicable to a project of no recognised language")
+        )
+        page = render_grid([skipped, Report(check=universal("license"), result=Result.passed("MIT"))])
+        self.assertIn("## Results by ecosystem\n\nNo ecosystem was recognised in this project", page)
+        self.assertIn("## Whole project\n", page)
+        self.assertNotIn("No ecosystem", render_grid([Report(check=universal("license"), result=Result.passed("MIT"))]))
+
     def test_whole_project_table_and_skipped_marks(self) -> None:
         ci = Report(check=universal("ci-present"), result=Result.passed("found"))
         skipped = Report(

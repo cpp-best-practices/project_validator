@@ -25,6 +25,11 @@ The toolchains are Rust toolchains.
 
 Every OS/toolchain combination builds the debug and release profiles, each with and without sanitizers.
 
+## `sanitizers`
+
+CI runs the tests under Miri (`cargo +nightly miri test`), which finds undefined behaviour, or builds with a nightly
+sanitizer (`RUSTFLAGS=-Zsanitizer=address`). Fails when neither runs.
+
 ## `compiler-warnings`
 
 `cargo clippy`, `-D warnings` and `clippy::pedantic`.

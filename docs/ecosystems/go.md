@@ -21,6 +21,11 @@ Go's tools measure statements only, so Go needs statement coverage: `go test` (o
 
 The toolchains are Go versions.
 
+## `sanitizers`
+
+CI runs the race detector, `go test -race` (Go's ThreadSanitizer); `-asan` and `-msan`, the C sanitizers for cgo,
+count too, with advice to run the race detector as well. Fails when none runs.
+
 ## `compiler-warnings`
 
 `go vet` and staticcheck (golangci-lint runs both).

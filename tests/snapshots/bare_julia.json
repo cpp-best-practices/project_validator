@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -121,6 +128,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -319,6 +333,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -333,6 +354,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -481,6 +509,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -605,6 +640,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Aqua.jl checks found; enable at least Aqua.test_all",
@@ -693,10 +733,20 @@
       "message": "not applicable to Julia",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -756,6 +806,11 @@
       "details": [],
       "message": "no tests found (@test and @testset in test/runtests.jl)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [

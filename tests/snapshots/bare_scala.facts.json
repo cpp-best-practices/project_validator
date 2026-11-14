@@ -51,6 +51,11 @@
       "kind": "ConfigurationFile",
       "origin": "build.sbt",
       "reader": "Scala compiler options"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "build.sbt",
+      "reader": "Scala build"
     }
   ],
   "map": {

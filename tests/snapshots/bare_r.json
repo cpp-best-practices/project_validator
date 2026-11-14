@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -122,6 +129,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -327,6 +341,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -341,6 +362,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -489,6 +517,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -589,6 +624,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no R lints found; enable at least lintr, failing on lints (LINTR_ERROR_ON_LINT)",
@@ -679,10 +719,20 @@
       "message": "not applicable to R",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -742,6 +792,11 @@
       "details": [],
       "message": "no tests found (testthat (tests/testthat/test-*.R) or tinytest (inst/tinytest/test_*.R) files)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

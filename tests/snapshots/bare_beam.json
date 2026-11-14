@@ -84,6 +84,18 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -242,6 +254,18 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -251,13 +275,6 @@
             "answer": "no",
             "defined": {},
             "known": {
-              "GitLab Dependency Scanning": {
-                "can": {
-                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
               "mix_audit": {
                 "can": {
                   "runs": "mix deps.audit (mix_audit)"
@@ -301,45 +318,9 @@
         "language": "Erlang",
         "units": [
           {
-            "answer": "no",
+            "answer": "impossible",
             "defined": {},
-            "known": {
-              "GitLab Dependency Scanning": {
-                "can": {
-                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "mix_audit": {
-                "can": {
-                  "runs": "mix deps.audit (mix_audit)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "osv-scanner": {
-                "can": {
-                  "runs": "osv-scanner"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "snyk": {
-                "can": {
-                  "runs": "snyk test"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "trivy": {
-                "can": {
-                  "runs": "trivy fs"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
+            "known": {},
             "language": "Erlang",
             "level": "runs",
             "runs": {},
@@ -683,6 +664,18 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -711,6 +704,18 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -1026,6 +1031,18 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -1206,6 +1223,11 @@
       "message": "2 build outputs are committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "Elixir: no Elixir linters found; enable at least mix credo --strict; Erlang: no Erlang warnings found; enable at least warn_* erl_opts, elvis",
@@ -1238,7 +1260,7 @@
     },
     "dependency-audit": {
       "details": [
-        "consider running in CI: mix deps.audit (mix_audit), GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
+        "consider running in CI: mix deps.audit (mix_audit), osv-scanner, trivy fs or snyk test"
       ],
       "message": "no dependency vulnerability audit found in CI configuration",
       "status": "WARN"
@@ -1301,10 +1323,20 @@
       "message": "not applicable to Elixir, Erlang",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -1367,6 +1399,11 @@
       "details": [],
       "message": "no tests found (ExUnit tests (test/**/*_test.exs), EUnit tests (*_test() functions) or Common Test suites (*_SUITE.erl))",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [

@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Racket",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -104,6 +111,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Racket",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -293,6 +307,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Racket",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -307,6 +328,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Racket",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -447,6 +475,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Racket",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -526,6 +561,11 @@
       ],
       "message": "1 build output is committed",
       "status": "FAIL"
+    },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Racket",
+      "status": "SKIP"
     },
     "compiler-warnings": {
       "details": [],
@@ -615,10 +655,20 @@
       "message": "not applicable to Racket",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Racket",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Racket",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -676,6 +726,11 @@
       "details": [],
       "message": "no tests found (rackunit tests (module+ test) in .rkt files)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Racket",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

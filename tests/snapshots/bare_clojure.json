@@ -45,6 +45,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -123,6 +130,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -344,6 +358,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -358,6 +379,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -514,6 +542,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -613,6 +648,11 @@
       "message": "2 build outputs are committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Clojure lints found; enable at least clj-kondo, *warn-on-reflection*",
@@ -703,10 +743,20 @@
       "message": "not applicable to Clojure",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -768,6 +818,11 @@
       "details": [],
       "message": "no tests found (deftest (clojure.test) or describe (speclj) under test/)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

@@ -81,6 +81,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -179,6 +186,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -415,6 +429,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -460,6 +481,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -632,6 +660,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -766,6 +801,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Perl pragmas and lints are enabled: use strict and use warnings in every module, perlcritic",
@@ -852,6 +892,11 @@
       "message": "not applicable to Perl",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no Perl version",
@@ -867,6 +912,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Perl version(s) (5.38, 5.40), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -917,6 +967,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

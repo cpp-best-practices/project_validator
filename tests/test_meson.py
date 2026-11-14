@@ -306,7 +306,7 @@ class EvaluationTests(unittest.TestCase):
                 "meson.options": _lines("option('hardening', type: 'boolean', value: true)", "option()"),
             }
         ).facts
-        tests = [fact.origin.path for fact in found if isinstance(fact, Setting)]
+        tests = [fact.origin.path for fact in found if isinstance(fact, Setting) and fact.key != "guard"]
         self.assertEqual(tests, ["src/meson.build"])
         # The top-level project() passes Meson's default warning level; examples/ has no project().
         self.assertEqual([option for option, *_ in _options(found)], ["-Wall", "/W2", "-example"])
@@ -362,3 +362,19 @@ class RunTargetTests(unittest.TestCase):
             context = make_context(root)
             self.assertIs(meson.meson_project(context), meson.meson_project(context))
         self.assertEqual(both(), ALWAYS)
+
+
+class GuardTests(unittest.TestCase):
+    def test_what_each_if_tests_is_recorded_as_written(self) -> None:
+        found = _facts(
+            "project('app', 'cpp')",
+            "if not meson.is_subproject()",
+            "  message('top level')",
+            "elif get_option('tests')",
+            "  message('tests')",
+            "else",
+            "  message('neither')",
+            "endif",
+        )
+        guards = [(fact.tool, fact.value) for fact in found if isinstance(fact, Setting) and fact.key == "guard"]
+        self.assertEqual(guards, [("Meson", "not meson.is_subproject()"), ("Meson", "get_option('tests')")])

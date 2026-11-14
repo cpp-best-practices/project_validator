@@ -42,6 +42,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -100,6 +107,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -298,7 +312,21 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
+      }
+    ],
     "platforms": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
+      }
+    ],
+    "sanitizers": [
       {
         "auxiliary": {},
         "language": "Typst",
@@ -447,6 +475,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -518,6 +553,11 @@
       "status": "FAIL"
     },
     "committed-artifacts": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "compile-commands": {
       "details": [],
       "message": "not applicable to Typst",
       "status": "SKIP"
@@ -608,7 +648,17 @@
       "message": "not applicable to Typst",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to Typst",
       "status": "SKIP"
@@ -669,6 +719,11 @@
       "details": [],
       "message": "tests found in 1 file(s), but no CI configuration runs typst compile main.typ",
       "status": "WARN"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

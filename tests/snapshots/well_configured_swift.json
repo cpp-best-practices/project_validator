@@ -96,6 +96,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -186,6 +193,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -524,6 +538,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -599,6 +620,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -800,6 +828,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -927,6 +962,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Swift warning settings are enabled: SwiftLint, complete concurrency checking",
@@ -1014,6 +1054,11 @@
       "message": "Muter (muter.conf.yml) runs",
       "status": "PASS"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no Swift toolchain",
@@ -1036,6 +1081,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Swift toolchain(s) (6.0, 6.1), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -1086,6 +1136,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],
