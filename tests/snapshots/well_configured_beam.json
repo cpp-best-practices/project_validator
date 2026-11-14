@@ -146,6 +146,18 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -318,6 +330,18 @@
         ]
       }
     ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "dependency-audit": [
       {
         "auxiliary": {},
@@ -327,13 +351,6 @@
             "answer": "yes",
             "defined": {},
             "known": {
-              "GitLab Dependency Scanning": {
-                "can": {
-                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
               "mix_audit": {
                 "can": {
                   "runs": "mix deps.audit (mix_audit)"
@@ -384,55 +401,12 @@
         "language": "Erlang",
         "units": [
           {
-            "answer": "yes",
+            "answer": "impossible",
             "defined": {},
-            "known": {
-              "GitLab Dependency Scanning": {
-                "can": {
-                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "mix_audit": {
-                "can": {
-                  "runs": "mix deps.audit (mix_audit)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "osv-scanner": {
-                "can": {
-                  "runs": "osv-scanner"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "snyk": {
-                "can": {
-                  "runs": "snyk test"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "trivy": {
-                "can": {
-                  "runs": "trivy fs"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
+            "known": {},
             "language": "Erlang",
             "level": "runs",
-            "runs": {
-              "mix_audit": {
-                "levels": [
-                  "runs"
-                ],
-                "read": []
-              }
-            },
+            "runs": {},
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
@@ -737,6 +711,42 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Elixir",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Erlang",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -771,6 +781,18 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
       }
     ],
     "platforms": [
@@ -843,6 +865,18 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -1209,6 +1243,18 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -1442,6 +1488,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "Elixir: strict Elixir linters are enabled: mix credo --strict; Erlang: strict Erlang warnings are enabled: warn_* erl_opts, elvis",
@@ -1518,7 +1569,17 @@
       "message": "not applicable to Elixir, Erlang",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Elixir, Erlang",
       "status": "SKIP"
@@ -1535,6 +1596,11 @@
       ],
       "message": "CI covers 2 OS(es) (linux, windows), 2 Erlang/OTP or Elixir version(s) (Elixir 1.17 / OTP 27, Elixir 1.18 / OTP 27), 4 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -1585,6 +1651,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

@@ -91,6 +91,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -178,6 +185,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -441,6 +455,25 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Python",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -494,6 +527,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -539,6 +579,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -790,6 +837,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -956,6 +1010,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Python warning settings are enabled: -W error",
@@ -1033,12 +1092,22 @@
       "message": "not applicable to Python",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [
         "consider running it on the pull request's changes only: mutmut run <module>.* for the changed modules"
       ],
       "message": "mutmut (pyproject.toml) runs",
       "status": "PASS"
+    },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
     },
     "platform-matrix": {
       "details": [
@@ -1054,6 +1123,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Python version(s) (3.13, 3.14), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -1104,6 +1178,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

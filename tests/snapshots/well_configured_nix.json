@@ -86,6 +86,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -166,6 +173,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -345,6 +359,25 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Nix",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -362,6 +395,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": []
       }
     ],
     "platforms": [
@@ -394,6 +434,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -575,6 +622,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -699,6 +753,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Nix lints are enabled: statix, deadnix",
@@ -773,7 +832,17 @@
       "message": "not applicable to Nix",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Nix",
       "status": "SKIP"
@@ -789,6 +858,11 @@
       ],
       "message": "CI covers 2 OS(es) (linux, macos), 3 system(s) (aarch64-darwin, aarch64-linux, x86_64-linux), 3 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -839,6 +913,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

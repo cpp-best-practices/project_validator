@@ -1,9 +1,12 @@
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        postgres: ["16", "17"]
     services:
       postgres:
-        image: postgres:16
+        image: postgres:${{ matrix.postgres }}
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: shop
@@ -18,5 +21,6 @@ jobs:
       - run: python -m pip install dbt-postgres sqlfluff sqlfluff-templater-dbt
       - run: dbt deps
       - run: sqlfluff lint models tests
+      - run: npx --yes squawk-cli migrations/*.sql
       - run: dbt parse
       - run: dbt build --profiles-dir .

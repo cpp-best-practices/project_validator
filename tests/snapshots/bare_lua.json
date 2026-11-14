@@ -45,6 +45,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -123,6 +130,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -283,6 +297,25 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Lua",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -302,6 +335,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -316,6 +356,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -479,6 +526,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -576,6 +630,11 @@
       "message": "2 build outputs are committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Lua linters found; enable at least luacheck, selene",
@@ -656,7 +715,17 @@
       "message": "not applicable to Lua",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Lua",
       "status": "SKIP"
@@ -665,6 +734,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -726,6 +800,11 @@
       "details": [],
       "message": "no tests found (busted specs (spec/**/*_spec.lua))",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [

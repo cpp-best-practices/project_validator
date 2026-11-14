@@ -166,7 +166,7 @@ LUAU_ANALYZE = type_checker(
 )
 
 # semgrep reads Lua; CodeQL and GitLab SAST do not.
-SECURITY_SCANNERS = tuple(tool for tool in multi_language_scanners(LUA) if tool.name == "semgrep")
+SECURITY_SCANNERS = multi_language_scanners(LUA)
 
 FUNCTION_LENGTH_LIMITERS = function_length_limiters(LUA)
 

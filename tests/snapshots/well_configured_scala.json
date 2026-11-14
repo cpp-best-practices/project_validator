@@ -86,6 +86,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -184,6 +191,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -396,6 +410,25 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Scala",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -413,6 +446,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
       }
     ],
     "platforms": [
@@ -460,6 +500,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -674,6 +721,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -799,6 +853,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict scalac warning options are enabled: -deprecation, -feature, -Xlint or -Wunused",
@@ -875,7 +934,17 @@
       "message": "not applicable to Scala",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Scala",
       "status": "SKIP"
@@ -895,6 +964,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 JDK or Scala version(s) (JDK 17, JDK 21), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -945,6 +1019,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

@@ -81,6 +81,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -172,6 +179,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -451,6 +465,25 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Java",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -490,6 +523,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
       }
     ],
     "platforms": [
@@ -537,6 +577,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -777,6 +824,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -805,6 +859,9 @@
             "answer": "yes",
             "language": "Java",
             "outputs": {
+              "compiled classes": {
+                ".gitignore": "*.class"
+              },
               "the target directory": {
                 ".gitignore": "target/"
               }
@@ -919,6 +976,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict JVM compiler warnings are enabled: -Xlint:all",
@@ -995,12 +1057,22 @@
       "message": "not applicable to Java",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [
         "consider running it on the pull request's changes only: pitest:scmMutationCoverage"
       ],
       "message": "PIT (pom.xml) runs",
       "status": "PASS"
+    },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
     },
     "platform-matrix": {
       "details": [
@@ -1016,6 +1088,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 JDK version(s) (21, 25), 6 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -1067,6 +1144,11 @@
       "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "type-checking": {
       "details": [],
       "message": "not applicable to Java",
@@ -1074,7 +1156,7 @@
     },
     "vcs-ignore": {
       "details": [],
-      "message": ".gitignore ignores target/",
+      "message": ".gitignore ignores target/; .gitignore ignores *.class",
       "status": "PASS"
     },
     "warnings-as-errors": {

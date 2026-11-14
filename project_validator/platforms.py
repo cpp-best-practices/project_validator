@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from project_validator.ecosystems import ToolchainPatterns, registered
+from project_validator.facts import ActionStep
 from project_validator.facts.jobs import Toolchain
 from project_validator.text import matching_names, pattern
 
@@ -49,11 +50,24 @@ def _named_versions(patterns: ToolchainPatterns, text: str) -> set[str]:
     return versions | {label.format(match[1]) for regex, label in patterns.labelled for match in regex.finditer(text)}
 
 
+def _step_versions(patterns: ToolchainPatterns, steps: Iterable[ActionStep]) -> set[str]:
+    """The versions the setup actions' inputs name, read by the patterns' readers of each action."""
+    readers = dict(patterns.steps)
+    found = (read(step.inputs) for step in steps if (read := readers.get(step.uses.partition("@")[0])) is not None)
+    return {version for version in found if version is not None}
+
+
 def _language_toolchains(
-    language: str, patterns: ToolchainPatterns, texts: tuple[str, ...], commands: Commands
+    language: str,
+    patterns: ToolchainPatterns,
+    texts: tuple[str, ...],
+    commands: Commands,
+    steps: Iterable[ActionStep] = (),
 ) -> set[Toolchain]:
-    """The versions named by the first text that names any, or the runner's default when the language is only used."""
+    """The versions named by the first text that names any and by the setup actions' inputs, or the runner's default
+    when the language is only used."""
     versions = next((found for text in texts if (found := _named_versions(patterns, text))), set())
+    versions |= _step_versions(patterns, steps)
     if not versions and patterns.used_by(texts, commands):
         versions = {DEFAULT_VERSION}
     return {Toolchain(language=language, version=version) for version in versions}
@@ -70,11 +84,14 @@ def detect_ecosystems(texts: Iterable[str], commands: Commands) -> frozenset[str
     return frozenset(ecosystem.label for ecosystem in registered() if ecosystem.used_by(texts, commands))
 
 
-def detect_toolchains(texts: Iterable[str], commands: Commands) -> frozenset[Toolchain]:
-    """The toolchains a CI job with `texts` that runs `commands` names, or uses without naming a version."""
-    texts = tuple(texts)
+def detect_toolchains(
+    texts: Iterable[str], commands: Commands, steps: Iterable[ActionStep] = ()
+) -> frozenset[Toolchain]:
+    """The toolchains a CI job with `texts` that runs `commands` and uses the actions `steps` names, or uses without
+    naming a version."""
+    texts, steps = tuple(texts), tuple(steps)
     return frozenset(
         toolchain
         for language, patterns in toolchains().items()
-        for toolchain in _language_toolchains(language, patterns, texts, commands)
+        for toolchain in _language_toolchains(language, patterns, texts, commands, steps)
     )

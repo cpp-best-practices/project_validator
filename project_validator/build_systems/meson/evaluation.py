@@ -93,6 +93,8 @@ class Observer(Protocol):
 
     def run_target(self, frame: Frame, name: str, command: tuple[str, ...]) -> None: ...
 
+    def guard(self, frame: Frame, text: str) -> None: ...
+
 
 class _TooMuch(Exception):
     pass
@@ -171,6 +173,9 @@ class Evaluation:
             self.variables[node.name] = assigned(old, new, frame.condition)
 
     def _if(self, node: syntax.If, frame: Frame) -> None:
+        for condition, _ in node.branches:  # each guard as written, reached in some build or not
+            if condition is not None:
+                self.observer.guard(frame, written(condition))
         remaining = frame.condition
         for condition, body in node.branches:
             held = ALWAYS if condition is None else holds(self.value(condition, frame))

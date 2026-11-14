@@ -86,6 +86,36 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "set(CMAKE_EXPORT_COMPILE_COMMANDS ON)": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": [
+                  "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                  "CMAKE_EXPORT_COMPILE_COMMANDS ON in a preset",
+                  "Meson, which writes it"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "compile-commands",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -235,6 +265,37 @@
               "rung": null,
               "tools": []
             },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "set(CMAKE_CXX_EXTENSIONS OFF)": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": [
+                  "-DCMAKE_CXX_EXTENSIONS=OFF",
+                  "CMAKE_CXX_EXTENSIONS OFF in a preset",
+                  "CXX_EXTENSIONS OFF",
+                  "cpp_std=c++20"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "cxx-extensions",
             "unit": ".",
             "unknowns": []
           }
@@ -534,6 +595,25 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C++",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -570,6 +650,36 @@
             },
             "unit": ".",
             "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "a check that the source and binary directories differ": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": [
+                  "CMAKE_DISABLE_IN_SOURCE_BUILD",
+                  "CMAKE_DISABLE_SOURCE_CHANGES",
+                  "Meson, which builds out of source"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "out-of-source-build",
+            "unit": ".",
             "unknowns": []
           }
         ]
@@ -638,6 +748,37 @@
               }
             ],
             "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "AddressSanitizer": [
+                    "CMakeLists.txt (when ENABLE_SANITIZERS)",
+                    "fuzz_test/CMakeLists.txt"
+                  ],
+                  "UndefinedBehaviorSanitizer": [
+                    "CMakeLists.txt (when ENABLE_SANITIZERS)",
+                    "fuzz_test/CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C++",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
           }
         ]
       }
@@ -862,6 +1003,35 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "C++",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "PROJECT_IS_TOP_LEVEL": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": [
+                  "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR",
+                  "meson.is_subproject()"
+                ]
+              }
+            ],
+            "language": "C++",
+            "practice": "top-level-guard",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -1003,6 +1173,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "compile_commands.json is exported with set(CMAKE_EXPORT_COMPILE_COMMANDS ON)",
+      "status": "PASS"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wshadow -Wconversion for clang and gcc; /W4 /permissive- for msvc",
@@ -1077,9 +1252,19 @@
       "message": "not applicable to C++",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [],
       "message": "Mull runs",
+      "status": "PASS"
+    },
+    "out-of-source-build": {
+      "details": [],
+      "message": "in-source builds are prevented by a check that the source and binary directories differ",
       "status": "PASS"
     },
     "platform-matrix": {
@@ -1110,6 +1295,11 @@
         ".github/workflows/copy-paste-detection.yml: cpd: linux / gcc (runner default)"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 compiler(s) (clang, gcc, msvc), 5 combination(s)",
+      "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "sanitizers are enabled: AddressSanitizer, UndefinedBehaviorSanitizer",
       "status": "PASS"
     },
     "schema-compatibility": {
@@ -1160,6 +1350,11 @@
     "tests-run": {
       "details": [],
       "message": "tests found in 2 file(s)",
+      "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "developer-only settings are guarded by PROJECT_IS_TOP_LEVEL",
       "status": "PASS"
     },
     "type-checking": {

@@ -3,8 +3,10 @@
     "action-pinning": [],
     "ci-lint": [],
     "committed-artifacts": [],
+    "compile-commands": [],
     "compiler-warnings": [],
     "coverage": [],
+    "cxx-extensions": [],
     "dependency-audit": [],
     "dependency-management": [],
     "formatting": [
@@ -59,8 +61,11 @@
     "hardening": [],
     "license": [],
     "link-check": [],
+    "migration-safety": [],
     "mutation-testing": [],
+    "out-of-source-build": [],
     "platforms": [],
+    "sanitizers": [],
     "schema-compatibility": [
       {
         "auxiliary": {},
@@ -235,6 +240,7 @@
     "security-scanning": [],
     "static-analysis": [],
     "tests": [],
+    "top-level-guard": [],
     "type-checking": [],
     "vcs-ignore": [],
     "warnings-as-errors": [],
@@ -331,6 +337,11 @@
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
@@ -405,12 +416,27 @@
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
@@ -461,6 +487,11 @@
       "status": "PASS"
     },
     "tests-run": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "top-level-guard": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"

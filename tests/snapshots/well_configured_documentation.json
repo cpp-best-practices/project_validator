@@ -16,8 +16,10 @@
         ]
       }
     ],
+    "compile-commands": [],
     "compiler-warnings": [],
     "coverage": [],
+    "cxx-extensions": [],
     "dependency-audit": [],
     "dependency-management": [],
     "formatting": [],
@@ -108,8 +110,11 @@
         ]
       }
     ],
+    "migration-safety": [],
     "mutation-testing": [],
+    "out-of-source-build": [],
     "platforms": [],
+    "sanitizers": [],
     "schema-compatibility": [],
     "schema-declared": [],
     "schema-examples": [],
@@ -208,6 +213,7 @@
         ]
       }
     ],
+    "top-level-guard": [],
     "type-checking": [],
     "vcs-ignore": [
       {
@@ -328,6 +334,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
@@ -402,12 +413,27 @@
       "message": "CI checks the documentation's links with lychee",
       "status": "PASS"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
@@ -461,6 +487,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

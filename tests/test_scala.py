@@ -16,7 +16,9 @@ from project_validator.checks.tests_run import tests_run
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems.scala import SCALA_ECOSYSTEM, mill_tasks, sbt_tasks, scala_cli_command
+from project_validator.ecosystems.scala import SCALA_ECOSYSTEM, SCALA_VERSIONS, mill_tasks, sbt_tasks, scala_cli_command
+from project_validator.facts import Origin
+from project_validator.facts.jobs import Job
 from tests.support import (
     GITHUB_WORKFLOW,
     github_job,
@@ -286,3 +288,25 @@ class ScalaTests(unittest.TestCase):
         scala_only = _ci("scala-cli --scala 3.3.5 test .")
         self.assertIn("(Scala 3.3.5)", self._run(platform_matrix, scala_only).message)
         self.assertIn("(default)", self._run(platform_matrix, _ci("sbt test")).message)
+
+    def test_a_cross_build_runs_every_version_the_build_names(self) -> None:
+        cross = {"build.sbt": 'crossScalaVersions := Seq("2.13.16", "3.3.5")\n'}
+        jdk = github_steps("uses: actions/setup-java@v4", "run: sbt +test")
+        jdk[GITHUB_WORKFLOW] = jdk[GITHUB_WORKFLOW].replace(
+            '"uses": "actions/setup-java@v4"', '"uses": "actions/setup-java@v4", "with": {"java-version": "21"}'
+        )
+        result = self._run(platform_matrix, {**cross, **jdk})
+        self.assertIn("2 JDK or Scala version(s) (JDK 21 / Scala 2.13.16, JDK 21 / Scala 3.3.5)", result.message)
+        # The prefix is what cross-builds; `sbt test` builds the one version the build names.
+        self.assertIn("(default)", self._run(platform_matrix, {**cross, **_ci("sbt test")}).message)
+        self.assertIn(
+            "(Scala 2.13.16, Scala 3.3.5)", self._run(platform_matrix, {**cross, **_ci('sbt "+core/test"')}).message
+        )
+        mill = {"build.mill": 'object foo extends Cross[FooModule]("2.13.16", "3.3.5")\n'}
+        self.assertIn(
+            "(Scala 2.13.16, Scala 3.3.5)", self._run(platform_matrix, {**mill, **_ci("mill __.test")}).message
+        )
+        self.assertIn("(default)", self._run(platform_matrix, {**mill, **_ci("mill foo[3.3.5].test")}).message)
+        # Read from the job alone (no facts), the axis sees the switched-to versions only.
+        job = Job(origin=Origin(path="ci.yml"), job="j", name="j", os="linux", compilers=frozenset())
+        self.assertEqual(SCALA_VERSIONS.of_job(job), frozenset())

@@ -76,6 +76,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -134,6 +141,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -316,6 +330,64 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "atlas migrate lint": [
+                "migrations/V1__orders.sql"
+              ],
+              "liquibase checks": [
+                "migrations/V1__orders.sql"
+              ],
+              "squawk": [
+                "migrations/V1__orders.sql"
+              ]
+            },
+            "known": {
+              "atlas migrate lint": {
+                "can": {
+                  "linted": "atlas migrate lint --dir file://migrations --dev-url <dev database> (or ariga/atlas-action/migrate/lint)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "liquibase checks": {
+                "can": {
+                  "linted": "liquibase checks run --changelog-file <changelog>"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "squawk": {
+                "can": {
+                  "linted": "squawk migrations/*.sql (or sbdchd/squawk-action with fail-on-violations: true)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "SQL",
+            "level": "linted",
+            "runs": {
+              "squawk": {
+                "levels": [
+                  "linted"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -335,7 +407,41 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "platforms": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "database engine version",
+            "language": "SQL",
+            "notes": [],
+            "platforms": [
+              {
+                "configurations": [],
+                "database engine version": "PostgreSQL 16",
+                "os": "linux"
+              },
+              {
+                "configurations": [],
+                "database engine version": "PostgreSQL 17",
+                "os": "linux"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
       {
         "auxiliary": {},
         "language": "SQL",
@@ -499,6 +605,12 @@
                   "checks"
                 ],
                 "read": []
+              },
+              "squawk": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
               }
             },
             "unit": ".",
@@ -552,6 +664,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
       }
     ],
     "type-checking": [
@@ -667,6 +786,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to SQL",
@@ -741,12 +865,32 @@
       "message": "not applicable to SQL",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "CI checks the 1 migration file for unsafe changes with squawk",
+      "status": "PASS"
+    },
     "mutation-testing": {
       "details": [],
       "message": "not applicable to SQL",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
     "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no database engine version",
+        ".github/workflows/ci.yml: test (16): linux / PostgreSQL 16",
+        ".github/workflows/ci.yml: test (17): linux / PostgreSQL 17",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no database engine version"
+      ],
+      "message": "CI covers 2 database engine version(s) (PostgreSQL 16, PostgreSQL 17), whatever the OS",
+      "status": "PASS"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to SQL",
       "status": "SKIP"
@@ -788,7 +932,7 @@
     },
     "static-analysis": {
       "details": [],
-      "message": "sqlfluff (.sqlfluff) and dbt parse run",
+      "message": "sqlfluff (.sqlfluff), squawk and dbt parse run",
       "status": "PASS"
     },
     "status-badges": {
@@ -800,6 +944,11 @@
       "details": [],
       "message": "tests found in 2 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

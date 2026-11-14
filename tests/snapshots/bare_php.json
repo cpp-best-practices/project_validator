@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -125,6 +132,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -356,6 +370,25 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "PHP",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -384,6 +417,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -398,6 +438,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -596,6 +643,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -729,6 +783,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no PHP error reporting settings found; enable at least error_reporting = E_ALL",
@@ -813,6 +872,11 @@
       "message": "not applicable to PHP",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [
         "consider running vendor/bin/infection in CI"
@@ -820,10 +884,20 @@
       "message": "no mutation testing runs",
       "status": "WARN"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -885,6 +959,11 @@
       "details": [],
       "message": "no tests found (*Test.php files with PHPUnit test cases or Pest tests)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [

@@ -42,5 +42,7 @@ LAYOUTS = (
         files={"include/app/app.hpp": ""},
         languages=frozenset({"C++"}),
         build_systems=frozenset(),
+        # Without a build file there is no build to lay out: nothing to export, guard or keep out of the source tree.
+        skipped=frozenset({"out-of-source-build", "compile-commands", "top-level-guard"}),
     ),
 )

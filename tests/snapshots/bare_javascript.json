@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -134,6 +141,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -410,6 +424,25 @@
         ]
       }
     ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "JavaScript",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -438,6 +471,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -452,6 +492,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -650,6 +697,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -784,6 +838,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no JavaScript linters found; enable at least eslint",
@@ -870,6 +929,11 @@
       "message": "not applicable to JavaScript",
       "status": "SKIP"
     },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [
         "consider running stryker run in CI"
@@ -877,10 +941,20 @@
       "message": "no mutation testing runs",
       "status": "WARN"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -942,6 +1016,11 @@
       "details": [],
       "message": "no tests found (*.test.*, *.spec.* or __tests__/ files)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [
