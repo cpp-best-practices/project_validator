@@ -606,7 +606,6 @@ issues = [182]
 name = "argoproj/argo-cd"
 commit = "ae2e784222a61b03f1d7f80f7698002a2ee0d038"
 ecosystems = ["Kubernetes", "Go"]
-issues = [180]
 
 [[project]]
 name = "grafana/helm-charts"
@@ -984,7 +983,6 @@ issues = [220]
 name = "jekyll/jekyll"
 commit = "97c3bdc822df9d5bea4c269b29a28de5a5e29d70"
 ecosystems = ["Ruby"]
-issues = [180]
 
 [[project]]
 name = "rspec/rspec"
@@ -1074,7 +1072,6 @@ issues = [187, 245, 274]
 name = "com-lihaoyi/os-lib"
 commit = "8871ab0bda9bbcc4edbef9b1a402eb4c47ef9398"
 ecosystems = ["Scala"]
-issues = [180]
 
 [[project]]
 name = "scalameta/metals"

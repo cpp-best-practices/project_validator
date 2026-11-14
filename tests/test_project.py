@@ -101,7 +101,6 @@ class TrackedFilesTests(unittest.TestCase):
             with mock.patch("shutil.which", return_value=None):
                 self.assertEqual(Project(root).tracked_files(), ["src/main.c"])
 
-    @unittest.expectedFailure  # upstream #180: a dangling symlink crashes the extraction
     def test_a_dangling_symlink_is_skipped_not_read(self) -> None:
         """A symlink to nothing (jekyll's test/source/_includes/tmp, argo-cd's testdata/link-to-nowhere) is listed as
         a file and crashes the extraction with FileNotFoundError; it has no content to read and must be skipped."""

@@ -96,6 +96,11 @@ class Options:
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})
 
 
+def _exists(path: Path) -> bool:
+    """Whether `path` (a name a directory listing gave) is there to read: not a symlink to nothing."""
+    return not path.is_symlink() or path.exists()
+
+
 def _is_cmake_file(name: str) -> bool:
     return name == "CMakeLists.txt" or name.endswith(".cmake")
 
@@ -195,7 +200,8 @@ class Project:
                 and relative / name not in self.excluded
                 and not is_build_tree(current / name)
             ]
-            yield from (str(PurePosixPath(relative, name)) for name in files)
+            # A symlink to nothing has no content to read: it is not a file of the project.
+            yield from (str(PurePosixPath(relative, name)) for name in files if _exists(current / name))
 
 
 class ExtractionError(Exception):
