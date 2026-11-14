@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from functools import partial
 from unittest import mock
 
 from project_validator import yaml_support
@@ -95,3 +96,35 @@ class MatrixToolchainTests(unittest.TestCase):
             _matrix_text({"versions": '{"ghc": "9.6"}', "os": "ubuntu"}), '{"versions": {"ghc": "9.6"}, "os": "ubuntu"}'
         )
         self.assertEqual(_matrix_text({"odd": "{not json"}), '{"odd": "{not json"}')
+
+
+class CargoProfileTests(unittest.TestCase):
+    def test_a_custom_profile_builds_what_it_inherits(self) -> None:
+        from project_validator.ecosystems.rust import cargo_profile_build_types
+        from tests.support import command
+
+        manifest = (
+            '[profile.fast]\ninherits = "release"\n[profile.slow]\ninherits = "dev"\n'
+            '[profile.loop]\ninherits = "loop"\n[profile.none]\nlto = true\n'
+        )
+        cases = {
+            "cargo build --profile fast": manifest,
+            "cargo test --profile slow": manifest,
+            "cargo build --profile loop": manifest,
+            "cargo build --profile none": manifest,
+            "cargo build --profile fast ": "[profile",
+            "cargo build": manifest,
+            "cargo fmt --profile fast": manifest,
+        }
+        expected = [{"release"}, {"debug"}, set(), set(), set(), set(), set()]
+        for (line, text), wanted in zip(cases.items(), expected, strict=True):
+            with self.subTest(line=line):
+                found = cargo_profile_build_types(command(line), partial(_same, text))
+                self.assertEqual(found, frozenset(wanted))
+        self.assertEqual(
+            cargo_profile_build_types(command("cargo build --profile fast"), lambda _path: None), frozenset()
+        )
+
+
+def _same(text: str, _path: str) -> str | None:
+    return text

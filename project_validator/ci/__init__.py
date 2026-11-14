@@ -152,10 +152,18 @@ def _evidence(job: CiJob, facts: Iterable[Command | ActionStep]) -> str:
     return "\n".join(lines)
 
 
-def _configurations(commands: Iterable[Command], evidence: str) -> set[BuildConfiguration]:
-    """The build configurations a job's commands build, as each build system reads its own commands."""
+def _configurations(commands: Iterable[Command], evidence: str, project: Project) -> set[BuildConfiguration]:
+    """The build configurations a job's commands build, as each build system reads its own commands (and, where its
+    build files decide, those)."""
     readers = [system.build_types for system in build_systems() if system.build_types is not None]
+    configured = [found for system in build_systems() if (found := system.configured_build_types) is not None]
+
+    def file(path: str) -> str | None:
+        return project.read_text(path) if project.exists(path) else None
+
+    commands = tuple(commands)
     types = {found for command in commands for read in readers for found in read(command)}
+    types |= {found for command in commands for read_files in configured for found in read_files(command, file)}
     sanitizers = sanitizers_enabled((evidence,))
     return {BuildConfiguration(build_type=build_type, sanitizers=sanitizers) for build_type in types}
 
@@ -207,7 +215,7 @@ def _job(
         f"{job.origin.path}: {job.name}" if not job.heuristic else job.origin.path,
         job.os,
         compilers,
-        _configurations(commands, evidence),
+        _configurations(commands, evidence, project),
         detect_toolchains(
             texts, run, (_with_version_files(fact, project) for fact in facts if isinstance(fact, ActionStep)), pinned
         ),

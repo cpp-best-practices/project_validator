@@ -475,7 +475,6 @@ class RustTests(unittest.TestCase):
         result = _run(compiler_warnings, RUST, _workflow({"steps": [step]}))
         self.assertEqual(result.status, Status.FAIL, result)
 
-    @unittest.expectedFailure  # upstream #287: a custom profile inheriting release yields no build type
     def test_a_profile_that_inherits_release_builds_release(self) -> None:
         """`cargo build --profile fast` with `[profile.fast] inherits = "release"` is a Release build: the job misses
         Debug and the sanitizer builds, not Release (BurntSushi/ripgrep's release-lto)."""

@@ -984,19 +984,19 @@ issues = [182, 257]
 name = "BurntSushi/ripgrep"
 commit = "178cc027e283fd965cb72d0a7395b219eada170c"
 ecosystems = ["Rust"]
-issues = [182, 287]
+issues = [182]
 
 [[project]]
 name = "tokio-rs/tokio"
 commit = "ab0814fc8c62b3d8be40aad068e2fed6562cfeb0"
 ecosystems = ["Rust"]
-issues = [188, 224, 287]
+issues = [188, 224]
 
 [[project]]
 name = "clap-rs/clap"
 commit = "ec93e71255c0b833a34f50662a3fdb22f53f6ded"
 ecosystems = ["Rust"]
-issues = [182, 188, 287]
+issues = [182, 188]
 
 [[project]]
 name = "sharkdp/bat"
@@ -1008,7 +1008,7 @@ issues = [182]
 name = "serde-rs/serde"
 commit = "aa7913ad0211fef960df68e7812a6211145a888c"
 ecosystems = ["Rust"]
-issues = [188, 287]
+issues = [188]
 
 [[project]]
 name = "starship/starship"
@@ -1019,7 +1019,7 @@ ecosystems = ["Rust"]
 name = "astral-sh/ruff"
 commit = "b140af2f48bddf33a1ae984174af3180236aaaaf"
 ecosystems = ["Rust", "Python"]
-issues = [188, 287]
+issues = [188]
 
 [[project]]
 name = "uutils/coreutils"
@@ -1031,7 +1031,7 @@ issues = [182, 195]
 name = "nushell/nushell"
 commit = "a3dd8e6c08b0a1fc9fac67de4d87938b17459c2b"
 ecosystems = ["Rust"]
-issues = [182, 287]
+issues = [182]
 
 [[project]]
 name = "rust-lang/cargo"
