@@ -176,9 +176,9 @@ OCAMLFORMAT_SETTINGS = file_reader("ocamlformat", (".ocamlformat",))
 
 def _dune_fmt(command: Command, facts: Facts) -> Run | None:
     """`dune build @fmt` fails on a file ocamlformat would change (with `--auto-promote`, it rewrites it instead);
-    `dune fmt` rewrites."""
+    `dune fmt` rewrites, but with `--preview` it only shows the changes and fails, as `dune build @fmt` does."""
     if dune_subcommand(command) == "fmt":
-        return formatted(command, facts, checks=False)
+        return formatted(command, facts, checks=has_option(resolved(command), "--preview"))
     if not _builds_alias(command, _FMT_ALIAS):
         return None
     return formatted(command, facts, checks=not has_option(resolved(command), "--auto-promote"))

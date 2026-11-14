@@ -146,7 +146,6 @@ class OCamlTests(unittest.TestCase):
         # Plain ocamlformat prints the formatted code: it is not a formatter run.
         self.assertEqual(self._run(code_formatting, {**style, **_ci("ocamlformat lib/shop.ml")}).status, Status.WARN)
 
-    @unittest.expectedFailure  # upstream #293: `dune fmt --preview` fails on a diff but is read as rewrite-only
     def test_dune_fmt_preview_checks_the_formatting(self) -> None:
         """`dune fmt --preview` is `dune build @fmt` without promotion: it fails on an unformatted file (ocaml/dune's
         `make fmt-preview`)."""
