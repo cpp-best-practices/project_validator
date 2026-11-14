@@ -104,7 +104,6 @@ class AuxiliaryLanguageTests(unittest.TestCase):
         result = _result(tests_run, {**files, **github_job("ubuntu-latest", "cargo test")})
         self.assertNotEqual(result.status, Status.FAIL, result)
 
-    @unittest.expectedFailure  # upstream #182: .dir-locals.el, an editor settings file, is an Emacs Lisp source
     def test_editor_settings_files_are_not_sources(self) -> None:
         """Emacs's per-directory settings file beside a Clojure project adds no language (clj-kondo, glib, frog)."""
         settings = {".dir-locals.el": '((nil . ((cider-clojure-cli-aliases . ":test"))))\n'}

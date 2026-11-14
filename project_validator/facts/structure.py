@@ -206,11 +206,17 @@ def _configuration(path: str) -> bool:
     return PurePosixPath(path).parts[0] in CONFIGURATION_DIRECTORIES
 
 
+# Editor settings written in a language's syntax (Emacs' per-directory variables): settings, not sources.
+_EDITOR_SETTINGS = frozenset({".dir-locals.el", ".dir-locals-2.el"})
+
+
 def _sources(project: Project) -> Iterator[SourceFile]:
     """The sources of each language among the project's files, and of each format among those and the configuration
-    directories' files."""
+    directories' files; not editor settings."""
     known = _source_suffixes()
     for path in project.files(hidden=CONFIGURATION_DIRECTORIES):
+        if PurePosixPath(path).name in _EDITOR_SETTINGS:
+            continue
         found = known.get(PurePosixPath(path).suffix)
         if found is None and (named := _by_name(path)) is not None:
             found = named[1:]
