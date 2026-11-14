@@ -11,7 +11,9 @@ from project_validator.questions.tooling import ToolAnswer
 
 
 def _hint(answer: ToolAnswer) -> str:
-    return f"consider a CI job that runs {alternatives(answer.how(Enforcement.CHECK))}"
+    """How to enforce the formatting: the tools that check it, or (when none of the language's does) those that
+    rewrite the files, with the job failing on the diff."""
+    return f"consider a CI job that runs {alternatives(answer.how(Enforcement.CHECK) or answer.how(Enforcement.APPLY))}"
 
 
 def _enforced(answer: ToolAnswer) -> Result:

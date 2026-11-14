@@ -28,7 +28,9 @@ def _settings(build_system: str, name: str, *, target: bool, preset: bool | None
             in_preset = PurePosixPath(setting.origin.path).name in PRESET_FILES
             off = re.fullmatch(value, setting.value) if value else constant(setting.value) is False
             if off and (setting.target is not None) == target and preset in (None, in_preset):
-                yield Evidence(setting.origin.path, setting.applies.requires)
+                yield Evidence(
+                    setting.origin.path, setting.applies.requires, f"{name}={setting.value}" if value else None
+                )
 
     return found
 

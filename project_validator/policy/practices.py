@@ -81,7 +81,7 @@ def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Res
     """A setting met in some configuration passes (with advice when only one that is not preferred is); none fails,
     or warns for a practice whose wording `warns`. Unknown is an error unless `allow_unknown`."""
     words = answer.practice.words
-    found = ", ".join(answer.found())
+    found = ", ".join(answer.shown())
     if answer.skipped is not None:
         return Result.skipped(answer.skipped)
     if answer.answer is Answer.YES:

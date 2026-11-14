@@ -42,6 +42,8 @@ class Evidence:
 
     where: str
     requires: frozenset[str] = frozenset()
+    # What was found, when it says more than the requirement's name (`c_std=c11` for a standard `c_std`).
+    shown: str | None = None
 
     def __str__(self) -> str:
         return f"{self.where} (when {' and '.join(sorted(self.requires))})" if self.requires else self.where

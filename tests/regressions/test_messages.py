@@ -273,7 +273,6 @@ class FunctionLimitsWordingTests(unittest.TestCase):
 
 
 class SmallMessageTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #250: example value printed, empty raco fmt hint, workflows as actions
     def test_the_fact_found_the_hint_and_the_kind_of_reference_are_right(self) -> None:
         """cxx-extensions prints the c_std found (dbus-broker: c11), not the requirement's example; the raco fmt hint
         names a command (every Racket repo); a job-level `uses:` is a reusable workflow, not an action
