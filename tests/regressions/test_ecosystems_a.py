@@ -123,10 +123,10 @@ FEATURE = {"features/shop.feature": "Feature: totals\n  Scenario: adds\n    Then
 
 
 class RubyTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #257: Rakefile warning = true, Cucumber features, runner scripts unread
-    def test_rakefile_warnings_count_and_cucumber_runner_scripts_and_ruby_run_the_tests(self) -> None:
+    @unittest.expectedFailure  # upstream #257: Rakefile warning = true and `ruby test/x.rb` are unread
+    def test_rakefile_warnings_count_and_ruby_runs_a_test_file(self) -> None:
         """A `Rake::TestTask`'s `warning = true` is the Ruby warning setting when CI runs `rake test` (fluentd);
-        Cucumber features are tests (rspec); `test/runner` (puma) and `ruby test/test_x.rb` (fzf) run Minitest."""
+        `ruby test/test_x.rb` runs Minitest (fzf)."""
         _all_pass(
             self,
             {
@@ -135,9 +135,18 @@ class RubyTests(unittest.TestCase):
                     COMPILER_WARNINGS,
                     {**WARNING_TASK, **MINITEST, **_ci("bundle exec rake test", "bundle exec rubocop")},
                 ),
+                "ruby test/*.rb": (BUNDLER, TESTS_RUN, {**MINITEST, **_ci("ruby test/test_shop.rb --verbose")}),
+            },
+        )
+
+    @unittest.expectedFailure  # upstream #257: Cucumber features and runner scripts are unread
+    def test_cucumber_features_and_runner_scripts_are_tests(self) -> None:
+        """Cucumber features are tests (rspec); `test/runner` (puma) runs Minitest."""
+        _all_pass(
+            self,
+            {
                 "cucumber": (BUNDLER, TESTS_RUN, {**FEATURE, **_ci("bundle exec cucumber")}),
                 "test/runner": (BUNDLER, TESTS_RUN, {**RUNNER, **MINITEST, **_ci("test/runner --verbose")}),
-                "ruby test/*.rb": (BUNDLER, TESTS_RUN, {**MINITEST, **_ci("ruby test/test_shop.rb --verbose")}),
             },
         )
 
