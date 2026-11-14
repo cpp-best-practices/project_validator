@@ -479,7 +479,6 @@ class RustTests(unittest.TestCase):
         result = _result(security_scanning, {**UNSAFE_WORKSPACE, **github_job(CI, "cargo build --workspace")})
         self.assertNotEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #287: warnings-as-errors is "not applicable to Rust", RUSTFLAGS ignored
     def test_rustflags_denying_warnings_is_warnings_as_errors(self) -> None:
         """`RUSTFLAGS: -Dwarnings` in the job's environment makes every warning fail the build: Rust is judged and
         PASSes, not skipped (tokio-rs/tokio, serde-rs/serde)."""

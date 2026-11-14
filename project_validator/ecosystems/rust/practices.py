@@ -53,6 +53,22 @@ WARNINGS = Practice(
 )
 
 
+# Denying warnings wherever the build or CI reads it (RUSTFLAGS, clippy's arguments, [lints.rust],
+# `#![deny(warnings)]`) makes every warning fail the build.
+WARNINGS_AS_ERRORS = Practice(
+    name=PracticeName.WARNINGS_AS_ERRORS,
+    languages=RUST_LANGUAGE,
+    requirements=always(_RUST_LINTS[1]),
+    reads=(RUST_WARNING_SETTINGS.name,),
+    words=Wording(
+        kind="warnings as errors",
+        searched="CI configuration, Cargo.toml, .cargo/config.toml or the crate roots",
+        hint='deny warnings: RUSTFLAGS="-D warnings" in CI, cargo clippy -- -D warnings, or [lints.rust] '
+        'warnings = "deny"',
+    ),
+)
+
+
 # Overflow checks are compiled into the binary; release builds leave them out unless the profile asks for them.
 _OVERFLOW_CHECKS = required(
     _setting(

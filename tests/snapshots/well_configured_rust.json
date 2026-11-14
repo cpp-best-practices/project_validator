@@ -929,7 +929,26 @@
       {
         "auxiliary": {},
         "language": "Rust",
-        "units": []
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-D warnings": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Rust",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ],
     "wellformed": [
@@ -1201,8 +1220,8 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Rust",
-      "status": "SKIP"
+      "message": "warnings are treated as errors with -D warnings",
+      "status": "PASS"
     }
   }
 }

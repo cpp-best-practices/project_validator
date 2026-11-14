@@ -32,7 +32,14 @@ sanitizer (`RUSTFLAGS=-Zsanitizer=address`). Fails when neither runs.
 
 ## `compiler-warnings`
 
-`cargo clippy`, `-D warnings` and `clippy::pedantic`.
+`cargo clippy`, `-D warnings` and `clippy::pedantic`, with any toolchain or global options before clippy
+(`cargo +nightly --config ci.toml clippy`). `-D warnings` in `RUSTDOCFLAGS` denies rustdoc's lints only and does not
+count.
+
+## `warnings-as-errors`
+
+Warnings are denied somewhere the build or CI reads it: `RUSTFLAGS="-D warnings"`, `cargo clippy -- -D warnings`,
+`[lints.rust] warnings = "deny"` or `#![deny(warnings)]`.
 
 ## `hardening`
 
