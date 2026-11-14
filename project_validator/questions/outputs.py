@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from project_validator.facts import ConfigurationFile, Facts
 from project_validator.facts.outputs import BuildOutput, CommittedOutput, IgnoreEntry, known_build_outputs, outputs_of
 from project_validator.facts.structure import BuildFile, SourceFile, Unit
+from project_validator.facts.testing import TestFile
+from project_validator.facts.tools import within
 from project_validator.questions import EVERY_KIND, Answer, LanguageAnswers, Question, answer_dict
 from project_validator.tools.version_control import IGNORE_FILES
 
@@ -67,25 +69,66 @@ def _outputs(language: str, facts: Facts) -> tuple[BuildOutput, ...]:
     return outputs_of(language, build_systems, known_build_outputs())
 
 
-def _written_at(language: str, facts: Facts) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    """Where `language`'s outputs are written: its units' directories, and the directories of its sources."""
-    units = tuple(unit.directory for unit in facts.of(Unit) if language in unit.languages) or (".",)
-    sources = tuple(
-        sorted({posixpath.dirname(source.path) for source in facts.of(SourceFile) if source.language == language})
+def _units_writing(output: BuildOutput, language: str, facts: Facts) -> tuple[str, ...]:
+    """The directories of the units that write `output`: those built with one of its build systems (Gradle's build/
+    is not written beside a Maven project), else those with `language` among their languages or formats."""
+    units = facts.of(Unit)
+    if output.build_systems:
+        built = [unit.directory for unit in units if output.build_systems & set(unit.build_systems)]
+    else:
+        built = [unit.directory for unit in units if language in unit.languages or language in unit.formats]
+    return tuple(built) or (".",)
+
+
+def _own_directories(language: str, facts: Facts) -> tuple[str, ...]:
+    """The directories of `language`'s sources and, for a format, of the files its tools are recognised by (a
+    site's conf.py)."""
+    files = (
+        *(source.path for source in facts.of(SourceFile) if source.language == language),
+        *(test.origin.path for test in facts.of(TestFile) if test.language == language),
     )
-    return units, sources
+    return tuple(sorted({posixpath.dirname(path) or "." for path in files}))
+
+
+def _written_at(language: str, facts: Facts, output: BuildOutput) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Where `output` is written: in the units that write it, and beside `language`'s own files (for a format, as
+    a unit would: Sphinx's _build next to its conf.py)."""
+    units, own = _units_writing(output, language, facts), _own_directories(language, facts)
+    if any(language in unit.formats for unit in facts.of(Unit)):
+        units = tuple(dict.fromkeys((*units, *own)))
+    return units, own
+
+
+def _below(paths: tuple[str, ...], directory: str) -> tuple[str, ...]:
+    """`paths` that are `directory` or below it, relative to it."""
+    if directory == ".":
+        return paths
+    return tuple(posixpath.relpath(path, directory) for path in paths if within(path, directory))
 
 
 def _ignored(output: BuildOutput, facts: Facts, files: tuple[str, ...], language: str = "") -> OutputIgnored:
-    units, sources = _written_at(language, facts)
+    """For each ignore file at the root, the entry that ignores `output`: its own, or that of an ignore file of the
+    same name in a directory the output is written below (a unit's own .gitignore), which applies there."""
+    units, sources = _written_at(language, facts, output)
+
+    def ignores(fact: IgnoreEntry, name: str) -> bool:
+        # The root file applies at the root wherever it is kept (`.fossil-settings/ignore-glob`); a nested one, named
+        # as a root-level file is (`docs/.gitignore`), applies in its directory.
+        if fact.origin.path == name:
+            directory = "."
+        elif "/" not in name and posixpath.basename(fact.origin.path) == name:
+            directory = posixpath.dirname(fact.origin.path)
+        else:
+            return False
+        return output.ignored_by(fact, _below(units, directory), _below(sources, directory)) and (
+            directory == "." or bool(_below(units, directory) or _below(sources, directory))
+        )
 
     def entry(path: str) -> str | None:
-        found = (
-            fact
-            for fact in facts.of(IgnoreEntry)
-            if fact.origin.path == path and output.ignored_by(fact, units, sources)
-        )
-        return next((fact.written for fact in found), None)
+        found = next((fact for fact in facts.of(IgnoreEntry) if ignores(fact, path)), None)
+        if found is None:
+            return None
+        return found.written if found.origin.path == path else f"{found.written} ({found.origin.path})"
 
     return OutputIgnored(name=output.name, hint=output.hint, entries=tuple((path, entry(path)) for path in files))
 

@@ -389,7 +389,6 @@ class VcsIgnoreTests(unittest.TestCase):
             with self.subTest(name):
                 self.assert_ignored_like({**base, ".gitignore": spelled}, {**base, ".gitignore": literal})
 
-    @unittest.expectedFailure  # upstream #237: only the root ignore file is judged, not the unit's own or its path
     def test_a_units_outputs_are_judged_against_the_ignore_files_that_apply_to_it(self) -> None:
         """The ignore file of the unit that writes the output (docs/.gitignore, web/.gitignore) and a root entry
         anchored to the unit (docs/_build/) ignore it as a root entry does (PostgREST, rich, golangci-lint, koyo,

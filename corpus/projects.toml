@@ -168,7 +168,7 @@ issues = [185, 188, 227, 258]
 name = "felangel/bloc"
 commit = "b9be1e252ee24ffbe9f2fb629edc7624b2cfbf05"
 ecosystems = ["Dart"]
-issues = [185, 213, 226, 230, 237, 258]
+issues = [185, 213, 226, 230, 258]
 
 [[project]]
 name = "simolus3/drift"
@@ -376,7 +376,7 @@ issues = [234, 235, 257]
 name = "golangci/golangci-lint"
 commit = "1bdd8edc35917b370a0855d877255b4e53c29b9f"
 ecosystems = ["Go"]
-issues = [222, 229, 237, 246]
+issues = [222, 229, 246]
 
 [[project]]
 name = "caddyserver/caddy"
@@ -412,7 +412,7 @@ issues = [182, 219, 223, 231, 238]
 name = "PostgREST/postgrest"
 commit = "e5b4fac1c7a192af50a82dd3639ac47316ba60d3"
 ecosystems = ["Haskell"]
-issues = [182, 226, 237, 241, 266]
+issues = [182, 226, 241, 266]
 
 [[project]]
 name = "koalaman/shellcheck"
@@ -453,7 +453,7 @@ issues = [219]
 name = "prettier/prettier"
 commit = "f391bf3e7ee219bcfeb61b06555ee1ac8e9c0680"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 220, 231, 235, 237]
+issues = [182, 220, 231, 235]
 
 [[project]]
 name = "vitejs/vite"
@@ -554,7 +554,7 @@ issues = [238, 281]
 name = "google/guava"
 commit = "fce80fd984c8227262a63972ccc68ae6f2ad0519"
 ecosystems = ["JVM"]
-issues = [182, 216, 237, 252]
+issues = [182, 216, 252]
 
 [[project]]
 name = "square/okhttp"
@@ -804,7 +804,7 @@ issues = [188]
 name = "laravel/framework"
 commit = "c980cb5827c6512c12ac44493d172a593b41299a"
 ecosystems = ["PHP"]
-issues = [237, 246, 270]
+issues = [246, 270]
 
 [[project]]
 name = "PHPCSStandards/PHP_CodeSniffer"
@@ -852,7 +852,7 @@ issues = [195]
 name = "pallets/flask"
 commit = "49943b5a94413a530761350f04e896f76e8d620e"
 ecosystems = ["Python"]
-issues = [188, 199, 237]
+issues = [188, 199]
 
 [[project]]
 name = "psf/black"
@@ -864,19 +864,17 @@ issues = [182, 183, 199]
 name = "pytest-dev/pytest"
 commit = "fc9a7ef678f64d17f1c03b619f3842ea1d127e74"
 ecosystems = ["Python"]
-issues = [182, 221, 237]
+issues = [182, 221]
 
 [[project]]
 name = "psf/requests"
 commit = "3c7baaa05ab4aa49cc819ce3a819d260de19c157"
 ecosystems = ["Python"]
-issues = [237]
 
 [[project]]
 name = "Textualize/rich"
 commit = "3a109ccdffe5b2d0e30684a304fbd388e99ce57b"
 ecosystems = ["Python"]
-issues = [237]
 
 [[project]]
 name = "python-poetry/poetry"
@@ -900,7 +898,7 @@ issues = [182, 221]
 name = "scikit-learn/scikit-learn"
 commit = "ee56c8b5d809dc7b970a140ed501269b63c69cf8"
 ecosystems = ["Python"]
-issues = [182, 237]
+issues = [182]
 
 [[project]]
 name = "tidyverse/dplyr"
@@ -948,7 +946,7 @@ issues = [188, 189, 222, 240, 278]
 name = "Bogdanp/koyo"
 commit = "e7072bfd5208b3327a2c36e322d6f6001e437e8b"
 ecosystems = ["Racket"]
-issues = [188, 189, 237]
+issues = [188, 189]
 
 [[project]]
 name = "greghendershott/frog"
@@ -1337,7 +1335,7 @@ ecosystems = ["XML schemas"]
 name = "docbook/docbook"
 commit = "0f5c6e72120a540c898025707b3d6c829785790b"
 ecosystems = ["XML schemas"]
-issues = [237, 283, 289]
+issues = [283, 289]
 
 [[project]]
 name = "windyroad/JUnit-Schema"
