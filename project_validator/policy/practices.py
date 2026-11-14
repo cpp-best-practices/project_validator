@@ -61,7 +61,9 @@ def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     joined = words.separator.join
     if answer.skipped is not None:
         return Result.skipped(answer.skipped)
-    if answer.answer is Answer.YES:
+    # Judged by what could be read, a practice that forbids settings is met when none of them was found.
+    nothing_forbidden = practice.forbids and answer.answer is Answer.UNKNOWN and allow_unknown and not answer.found()
+    if answer.answer is Answer.YES or nothing_forbidden:
         found = _described(answer.compiled, _found, joined)
         return Result.passed(words.passed.format(found=found) if words.passed else f"{words.kind} are enabled: {found}")
     if answer.answer is Answer.UNKNOWN and not allow_unknown:

@@ -90,7 +90,6 @@ def _said(result: Result) -> str:
 
 
 class HardeningTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #243: forbids practice unknown under --allow-unknown fails with empty evidence
     def test_nothing_forbidden_found_passes_when_unrelated_jobs_are_unread(self) -> None:
         """With --allow-unknown a `forbids` practice judges what was read: nothing forbidden found passes, as drift
         gets. swift-argument-parser, swift-nio, vapor, SwiftLint, dart-lang/http and bloc all got FAIL "...: "."""
