@@ -175,7 +175,8 @@
       "name": "ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -278,7 +279,8 @@
       "name": "test (ubuntu-latest, lts)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -389,7 +391,8 @@
       "name": "test (ubuntu-latest, 1)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -500,7 +503,8 @@
       "name": "test (ubuntu-latest, pre)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -611,7 +615,8 @@
       "name": "test (macos-latest, lts)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -722,7 +727,8 @@
       "name": "test (macos-latest, 1)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -833,7 +839,8 @@
       "name": "test (macos-latest, pre)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -944,7 +951,8 @@
       "name": "test (windows-latest, lts)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -1055,7 +1063,8 @@
       "name": "test (windows-latest, 1)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -1166,7 +1175,8 @@
       "name": "test (windows-latest, pre)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -1274,7 +1284,8 @@
       "name": "format",
       "origin": ".github/workflows/ci.yml:jobs.format",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -1408,7 +1419,8 @@
       "name": "copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -1472,6 +1484,7 @@
       "name": ".github/workflows/ci-lint.yml: ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -1489,6 +1502,7 @@
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, lts)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1511,6 +1525,7 @@
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 1)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1533,6 +1548,7 @@
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, pre)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1555,6 +1571,7 @@
       "name": ".github/workflows/ci.yml: test (macos-latest, lts)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1577,6 +1594,7 @@
       "name": ".github/workflows/ci.yml: test (macos-latest, 1)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1599,6 +1617,7 @@
       "name": ".github/workflows/ci.yml: test (macos-latest, pre)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "macos",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1621,6 +1640,7 @@
       "name": ".github/workflows/ci.yml: test (windows-latest, lts)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1643,6 +1663,7 @@
       "name": ".github/workflows/ci.yml: test (windows-latest, 1)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1665,6 +1686,7 @@
       "name": ".github/workflows/ci.yml: test (windows-latest, pre)",
       "origin": ".github/workflows/ci.yml:jobs.test",
       "os": "windows",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1687,6 +1709,7 @@
       "name": ".github/workflows/ci.yml: format",
       "origin": ".github/workflows/ci.yml:jobs.format",
       "os": "linux",
+      "services": [],
       "toolchains": [
         {
           "language": "Julia",
@@ -1707,6 +1730,7 @@
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {

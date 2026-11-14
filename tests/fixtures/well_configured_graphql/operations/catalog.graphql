@@ -1,0 +1,7 @@
+query Catalog {
+  items {
+    name
+    price
+  }
+  total
+}

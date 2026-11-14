@@ -121,6 +121,11 @@ def practice_answers(name: str) -> Callable[[str, Facts], LanguageAnswers[Practi
 warning_answers = practice_answers(PracticeName.WARNINGS)
 error_answers = practice_answers(PracticeName.WARNINGS_AS_ERRORS)
 hardening_answers = practice_answers(PracticeName.HARDENING)
+extension_answers = practice_answers(PracticeName.EXTENSIONS)
+sanitizer_answers = practice_answers(PracticeName.SANITIZERS)
+out_of_source_answers = practice_answers(PracticeName.OUT_OF_SOURCE)
+compile_commands_answers = practice_answers(PracticeName.COMPILE_COMMANDS)
+top_level_guard_answers = practice_answers(PracticeName.TOP_LEVEL_GUARD)
 
 WARNINGS_QUESTION = Question(
     name=PracticeName.WARNINGS,
@@ -138,13 +143,48 @@ WARNINGS_AS_ERRORS_QUESTION = Question(
     answer=error_answers,
     kinds=EVERY_KIND,
 )
+EXTENSIONS_QUESTION = Question(
+    name=PracticeName.EXTENSIONS,
+    description="Are compiler extensions to the language standard turned off for each compiled language?",
+    answer=extension_answers,
+)
+SANITIZERS_QUESTION = Question(
+    name=PracticeName.SANITIZERS,
+    description="Which of the sanitizers each language asks for are used in some configuration?",
+    answer=sanitizer_answers,
+)
+OUT_OF_SOURCE_QUESTION = Question(
+    name=PracticeName.OUT_OF_SOURCE,
+    description="Does the build prevent in-source builds?",
+    answer=out_of_source_answers,
+)
+COMPILE_COMMANDS_QUESTION = Question(
+    name=PracticeName.COMPILE_COMMANDS,
+    description="Does the build export compile_commands.json?",
+    answer=compile_commands_answers,
+)
+TOP_LEVEL_GUARD_QUESTION = Question(
+    name=PracticeName.TOP_LEVEL_GUARD,
+    description="Are tests and developer-only settings guarded for use as a subproject?",
+    answer=top_level_guard_answers,
+)
 
 __all__ = [
+    "COMPILE_COMMANDS_QUESTION",
+    "EXTENSIONS_QUESTION",
     "HARDENING_QUESTION",
+    "OUT_OF_SOURCE_QUESTION",
+    "SANITIZERS_QUESTION",
+    "TOP_LEVEL_GUARD_QUESTION",
     "WARNINGS_AS_ERRORS_QUESTION",
     "WARNINGS_QUESTION",
     "Compiled",
     "PracticeAnswer",
+    "compile_commands_answers",
+    "extension_answers",
+    "out_of_source_answers",
     "practice_answer",
     "practice_answers",
+    "sanitizer_answers",
+    "top_level_guard_answers",
 ]

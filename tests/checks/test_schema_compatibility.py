@@ -21,7 +21,7 @@ def _ci(*steps: str) -> dict[str, str]:
 class SchemaCompatibilityTests(unittest.TestCase):
     def test_applies_to_the_formats_with_a_compatibility_checker(self) -> None:
         self.assertEqual(schema_compatibility.aspect, COMPATIBILITY)
-        self.assertEqual(schema_compatibility.languages, frozenset({"JSON Schema", "OpenAPI", "Protobuf"}))
+        self.assertEqual(schema_compatibility.languages, frozenset({"JSON Schema", "OpenAPI", "Protobuf", "GraphQL"}))
 
     def test_json_schemas_are_diffed_against_the_base(self) -> None:
         checked = _ci(

@@ -69,6 +69,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "package.json",
+      "reader": "graphql-eslint"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
       "reader": "package.json prettier"
     },
     {

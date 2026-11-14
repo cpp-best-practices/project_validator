@@ -206,7 +206,7 @@ RUNIC_ACTION = Action(
 )
 
 # semgrep reads Julia; CodeQL and GitLab SAST do not.
-SECURITY_SCANNERS = tuple(tool for tool in multi_language_scanners(JULIA) if tool.name == "semgrep")
+SECURITY_SCANNERS = multi_language_scanners(JULIA)
 
 
 # --- Outputs --------------------------------------------------------------------------------------------------------

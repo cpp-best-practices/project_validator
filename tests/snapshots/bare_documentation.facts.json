@@ -53,6 +53,11 @@
       "kind": "the MkDocs site's configuration",
       "language": "MkDocs",
       "origin": "mkdocs.yml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "mkdocs.yml",
+      "reader": "mkdocs plugins"
     }
   ],
   "map": {

@@ -283,6 +283,30 @@
       "what": "targetNamespace"
     },
     {
+      "declared": {
+        "schema location": "urn:example:catalog ../schema/catalog.xsd"
+      },
+      "format": "XML Schema",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "data/catalog.xml",
+      "outdated": null,
+      "role": "product",
+      "what": "schema location"
+    },
+    {
+      "declared": {
+        "schema location": "urn:example:catalog ../../schema/catalog.xsd"
+      },
+      "format": "XML Schema",
+      "kind": "SchemaDeclaration",
+      "missing": [],
+      "origin": "examples/valid/catalog.xml",
+      "outdated": null,
+      "role": "example",
+      "what": "schema location"
+    },
+    {
       "kind": "CiConfiguration",
       "origin": ".github/workflows/ci-lint.yml",
       "provider": "GitHub Actions"
@@ -308,7 +332,8 @@
       "name": "ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -408,7 +433,8 @@
       "name": "validate",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -728,7 +754,8 @@
       "name": "copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
-      "provider": "GitHub Actions"
+      "provider": "GitHub Actions",
+      "services": []
     },
     {
       "condition": null,
@@ -792,6 +819,7 @@
       "name": ".github/workflows/ci-lint.yml: ci-lint",
       "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -810,6 +838,7 @@
       "name": ".github/workflows/ci.yml: validate",
       "origin": ".github/workflows/ci.yml:jobs.validate",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {
@@ -825,6 +854,7 @@
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
       "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
       "os": "linux",
+      "services": [],
       "toolchains": []
     },
     {

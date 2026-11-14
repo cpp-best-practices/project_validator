@@ -70,3 +70,21 @@ class PipelineJobTests(unittest.TestCase):
                 for sanitizers in (False, True)
             },
         )
+
+
+class ServiceTests(unittest.TestCase):
+    def test_services_are_the_jobs_service_containers(self) -> None:
+        pipeline = {
+            "default": {"services": ["redis:7"]},
+            "test": {
+                "image": "python:3.12",
+                "services": ["postgres:$PG", {"name": "mysql:8.4", "alias": "db"}, 3],
+                "parallel": {"matrix": [{"PG": ["16", "17"]}]},
+                "script": ["pytest"],
+            },
+            "lint": {"script": ["ruff check ."]},
+        }
+        jobs = {job.name.rpartition(": ")[2]: sorted(job.services) for job in parse_pipeline(pipeline)}
+        self.assertEqual(jobs["test (16)"], ["mysql:8.4", "postgres:16"])
+        self.assertEqual(jobs["test (17)"], ["mysql:8.4", "postgres:17"])
+        self.assertEqual(jobs["lint"], ["redis:7"])
