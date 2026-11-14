@@ -463,7 +463,6 @@ class ProjectMapTests(unittest.TestCase):
 
 
 class SecurityPolicyTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #242: SECURITY_CONTACTS and an obfuscated address are not a way to report
     def test_other_conventions_say_how_to_report(self) -> None:
         """The Kubernetes organisation's SECURITY_CONTACTS file (whose header points at kubernetes.io/security) and a
         "Reporting a Vulnerability" section with an obfuscated address and a PGP fingerprint are security policies

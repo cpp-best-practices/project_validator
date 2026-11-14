@@ -25,7 +25,7 @@ issues = [188, 195, 261]
 name = "kubernetes-sigs/kubespray"
 commit = "a0a78f28d1f3dc99d3e9dec94d27dd78e67236bd"
 ecosystems = ["Ansible", "Kubernetes"]
-issues = [182, 242, 246, 261, 262]
+issues = [182, 246, 261, 262]
 
 [[project]]
 name = "elixir-ecto/ecto"
@@ -85,7 +85,7 @@ issues = [182, 183, 207, 282]
 name = "catchorg/Catch2"
 commit = "5cf5dec9f5a119a08d3ee061d260ccc525093a75"
 ecosystems = ["C/C++"]
-issues = [207, 242, 282]
+issues = [207, 282]
 
 [[project]]
 name = "google/googletest"

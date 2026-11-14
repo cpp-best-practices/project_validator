@@ -7,10 +7,13 @@ import re
 from project_validator.core import Context, Result, check
 from project_validator.evidence import documents
 
-SECURITY_POLICY = re.compile(r"SECURITY(?:\.(?:md|markdown|rst|txt|adoc))?", re.IGNORECASE)
-# A way to report: an email address, a link, or a forge's private vulnerability reporting.
+# SECURITY.md, and the Kubernetes organisation's SECURITY_CONTACTS (whose header links its reporting process).
+SECURITY_POLICY = re.compile(r"SECURITY(?:\.(?:md|markdown|rst|txt|adoc)|_CONTACTS)?", re.IGNORECASE)
+# A way to report: an email address (also written out, `name <at> host <dot> com`), a link, or a forge's private
+# vulnerability reporting.
 REPORTING = re.compile(
-    r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+|https?://\S+|private vulnerability report|security advisor(?:y|ies)",
+    r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+|https?://\S+|private vulnerability report|security advisor(?:y|ies)"
+    r"|\w+\s*[<\[({]\s*at\s*[>\])}]\s*\w+\s*[<\[({]\s*dot\s*[>\])}]\s*\w+",
     re.IGNORECASE,
 )
 HINT = (
