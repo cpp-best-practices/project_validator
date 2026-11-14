@@ -45,6 +45,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -328,6 +335,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -512,6 +526,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -609,6 +630,11 @@
       "message": "2 build outputs are committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Lua linters found; enable at least luacheck, selene",
@@ -699,6 +725,11 @@
       "message": "not applicable to Lua",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
@@ -769,6 +800,11 @@
       "details": [],
       "message": "no tests found (busted specs (spec/**/*_spec.lua))",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [

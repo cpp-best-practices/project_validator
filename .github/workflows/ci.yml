@@ -189,6 +189,25 @@ jobs:
           project-validator --format markdown --exclude tests/fixtures . >> "$GITHUB_STEP_SUMMARY" || true
           project-validator --strict --exclude tests/fixtures .
 
+      # What a pull request changes in the support matrix (the rows a profile or a check adds), against main's.
+      - name: Show the support matrix changes
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --depth=1 origin "${GITHUB_BASE_REF}"
+          git worktree add --detach "${RUNNER_TEMP}/base" FETCH_HEAD
+          (cd "${RUNNER_TEMP}/base" && python -m project_validator --support-matrix) > "${RUNNER_TEMP}/base.md"
+          python -m project_validator --support-matrix > "${RUNNER_TEMP}/head.md"
+          {
+            echo "## Support matrix changes"
+            if diff -u "${RUNNER_TEMP}/base.md" "${RUNNER_TEMP}/head.md" > "${RUNNER_TEMP}/matrix.diff"; then
+              echo "None."
+            else
+              echo '```diff'
+              tail -n +3 "${RUNNER_TEMP}/matrix.diff"
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
   coverage:
     name: coverage
     runs-on: ubuntu-latest

@@ -81,6 +81,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -504,6 +511,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -791,6 +805,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -928,6 +949,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Ruby warning settings are enabled: Ruby warnings, RuboCop or Standard",
@@ -1014,6 +1040,11 @@
       "message": "mutant (.mutant.yml) runs; on the pull request's changes only (bonus)",
       "status": "PASS"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no Ruby version",
@@ -1083,6 +1114,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

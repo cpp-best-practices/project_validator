@@ -81,6 +81,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -518,6 +525,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -810,6 +824,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -838,6 +859,9 @@
             "answer": "yes",
             "language": "Java",
             "outputs": {
+              "compiled classes": {
+                ".gitignore": "*.class"
+              },
               "the target directory": {
                 ".gitignore": "target/"
               }
@@ -952,6 +976,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict JVM compiler warnings are enabled: -Xlint:all",
@@ -1040,6 +1069,11 @@
       "message": "PIT (pom.xml) runs",
       "status": "PASS"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no JDK version",
@@ -1110,6 +1144,11 @@
       "message": "tests found in 1 file(s)",
       "status": "PASS"
     },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "type-checking": {
       "details": [],
       "message": "not applicable to Java",
@@ -1117,7 +1156,7 @@
     },
     "vcs-ignore": {
       "details": [],
-      "message": ".gitignore ignores target/",
+      "message": ".gitignore ignores target/; .gitignore ignores *.class",
       "status": "PASS"
     },
     "warnings-as-errors": {

@@ -76,8 +76,8 @@ def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
 
 
 def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
-    """A setting met in some configuration passes (with advice when only one that is not preferred is); none fails.
-    Unknown is an error unless `allow_unknown`."""
+    """A setting met in some configuration passes (with advice when only one that is not preferred is); none fails,
+    or warns for a practice whose wording `warns`. Unknown is an error unless `allow_unknown`."""
     words = answer.practice.words
     found = ", ".join(answer.found())
     if answer.skipped is not None:
@@ -88,7 +88,8 @@ def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Res
         return Result.passed(passed, *(() if preferred_met else (words.preference,)))
     if answer.answer is Answer.UNKNOWN and not allow_unknown:
         return unknown(words.question or "whether warnings are treated as errors", answer.unknowns, words.hint)
-    return Result.failed(words.failed or f"warnings are not treated as errors in {words.searched}", words.hint)
+    missed = Result.warned if words.warns else Result.failed
+    return missed(words.failed or f"warnings are not treated as errors in {words.searched}", words.hint)
 
 
 judge_hardening = judge_settings

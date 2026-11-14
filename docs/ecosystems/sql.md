@@ -54,6 +54,8 @@ A dbt project's ignore rules keep out `target/`, `dbt_packages/` and `logs/`.
 
 ## `platform-matrix`
 
-Does not apply. The toolchains of a database project are database engine versions (the `postgres:16` and `mysql:8`
-service containers CI runs), and the platform policy asks for several operating systems too, which SQL has no use
-for. A policy of engine versions alone is a change to the check, not to this profile.
+The platforms are the database engine versions CI tests against: the service containers its jobs run (GitHub's
+`services:`, GitLab's), read as `PostgreSQL 16`, `MySQL 8.4`, `MariaDB 11`, `SQL Server 2022`, `CockroachDB 24.1`,
+`ClickHouse 24` or `TimescaleDB 2` from the image's name and tag (PostGIS counts as PostgreSQL). Two engine versions
+pass, whatever the OS runs them: a database project has no use for several operating systems, so that part of the
+policy does not apply to it.

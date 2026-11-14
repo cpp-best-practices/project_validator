@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -417,6 +424,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -608,6 +622,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -704,6 +725,11 @@
       ],
       "message": "1 build output is committed",
       "status": "FAIL"
+    },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
     },
     "compiler-warnings": {
       "details": [],
@@ -805,6 +831,11 @@
       "message": "no mutation testing runs",
       "status": "WARN"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
@@ -875,6 +906,11 @@
       "details": [],
       "message": "no tests found (XCTestCase classes or Swift Testing @Test functions)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

@@ -65,6 +65,10 @@ class Collector:
                     )
                 )
 
+    def guard(self, frame: Frame, text: str) -> None:
+        """What an `if` tests, as written (`not meson.is_subproject()`)."""
+        self.facts.append(Setting(origin=Origin(path=frame.path), tool=BUILD_SYSTEM, key="guard", value=text))
+
     def setting(self, frame: Frame, name: str, key: str, value: str, target: str | None, *, default: bool) -> None:
         if name != "option":
             implied = _IMPLIED.get((key, value), ())
