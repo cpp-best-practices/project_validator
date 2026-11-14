@@ -460,7 +460,7 @@ issues = [182, 184, 220, 231, 235, 237, 245]
 name = "vitejs/vite"
 commit = "f898888222297aa56d6fc281c585d4d4e4d51f58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 184, 209, 216, 219, 235, 239, 245, 248, 280]
+issues = [182, 184, 216, 219, 235, 239, 245, 248, 280]
 
 [[project]]
 name = "expressjs/express"
@@ -579,7 +579,7 @@ issues = [182, 226, 277]
 name = "junit-team/junit5"
 commit = "16ac3a3d1d712a0797108ec5be0be911e98d13c6"
 ecosystems = ["JVM"]
-issues = [182, 188, 202, 209, 233, 245]
+issues = [182, 188, 202, 233, 245]
 
 [[project]]
 name = "spring-projects/spring-petclinic"
@@ -668,7 +668,7 @@ issues = [182, 222]
 name = "koreader/koreader"
 commit = "4184b73a737b5dcc77b29e2eaf69c31a06501ab9"
 ecosystems = ["Lua"]
-issues = [182, 198, 209, 227, 228, 232, 240]
+issues = [182, 198, 227, 228, 232, 240]
 
 [[project]]
 name = "nix-community/disko"
@@ -866,7 +866,7 @@ issues = [182, 183, 199]
 name = "pytest-dev/pytest"
 commit = "fc9a7ef678f64d17f1c03b619f3842ea1d127e74"
 ecosystems = ["Python"]
-issues = [182, 209, 221, 237]
+issues = [182, 221, 237]
 
 [[project]]
 name = "psf/requests"
@@ -884,7 +884,7 @@ issues = [237]
 name = "python-poetry/poetry"
 commit = "4acc75e19f128c8340c6f977a35e53b5f7f39071"
 ecosystems = ["Python"]
-issues = [182, 188, 209, 211, 235, 239]
+issues = [182, 188, 211, 235, 239]
 
 [[project]]
 name = "fastapi/fastapi"
@@ -991,7 +991,7 @@ ecosystems = ["Ruby"]
 name = "rspec/rspec"
 commit = "23a4b50bd4203674ce87d517399c07dd70984fcb"
 ecosystems = ["Ruby"]
-issues = [209, 257]
+issues = [257]
 
 [[project]]
 name = "puma/puma"

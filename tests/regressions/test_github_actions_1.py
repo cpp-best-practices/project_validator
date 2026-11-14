@@ -179,7 +179,6 @@ def _run(check: Check, files: Mapping[str, str]) -> Result:
 
 
 class SameRepositoryReferenceTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #209: `$/` same-repository references are reported "not pinned"
     def test_references_with_the_dollar_prefix_have_nothing_to_pin(self) -> None:
         """`$/.github/actions/x` and `$/.github/workflows/w.yml` run at the triggering commit, like `./`: they are no
         references to pin, so a workflow with only them passes (junit5, koreader, pytest, poetry, vite, rspec)."""
