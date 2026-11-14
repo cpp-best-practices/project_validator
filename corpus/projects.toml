@@ -466,7 +466,7 @@ issues = [182]
 name = "SchemaStore/schemastore"
 commit = "e2606e03284e60792672dc9e7e930f3c496c5c3d"
 ecosystems = ["JSON Schema"]
-issues = [272, 273]
+issues = [273]
 
 [[project]]
 name = "json-schema-org/JSON-Schema-Test-Suite"
@@ -489,7 +489,6 @@ issues = [195, 252]
 name = "asyncapi/spec-json-schemas"
 commit = "eee8d2217d23b22c475090c0e12f20801f531f11"
 ecosystems = ["JSON Schema"]
-issues = [272]
 
 [[project]]
 name = "oasis-tcs/sarif-spec"
@@ -729,13 +728,13 @@ issues = [273, 280]
 name = "OAI/OpenAPI-Specification"
 commit = "4f86429f134f7e48b6351563549b4502fc69de52"
 ecosystems = ["OpenAPI/AsyncAPI"]
-issues = [272, 273, 280]
+issues = [273, 280]
 
 [[project]]
 name = "Redocly/openapi-starter"
 commit = "9cf62a576cac37ac90c875337fdebb3f09a072c6"
 ecosystems = ["OpenAPI/AsyncAPI"]
-issues = [182, 272]
+issues = [182]
 
 [[project]]
 name = "mojolicious/mojo"

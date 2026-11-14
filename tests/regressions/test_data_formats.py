@@ -128,7 +128,6 @@ class DataWellformedTests(unittest.TestCase):
 
 
 class ApiDescriptionTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #272: the detection regex matches `"openapi":` property keys and redocly.yaml
     def test_schemas_about_descriptions_and_the_redocly_configuration_are_not_descriptions(self) -> None:
         """A JSON Schema that describes OpenAPI or AsyncAPI documents (SchemaStore, asyncapi/spec-json-schemas, OAI's
         archived schema.json) is not an API description; Redocly's `redocly.yaml` has a theme section called `openapi:`

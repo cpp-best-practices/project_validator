@@ -45,10 +45,15 @@ OPENAPI, ASYNCAPI = "OpenAPI", "AsyncAPI"
 OPENAPI_ONLY, ASYNCAPI_ONLY = frozenset({OPENAPI}), frozenset({ASYNCAPI})
 API_FORMATS = OPENAPI_ONLY | ASYNCAPI_ONLY
 
-# The top-level key, in YAML (`openapi: 3.1.0`, at the first column) or JSON (`"openapi": "3.1.0"`, indented once).
+# The top-level key with its version, in YAML (`openapi: 3.1.0`, at the first column) or JSON (`"openapi": "3.1.0"`,
+# indented once): not a property a schema about descriptions names (`"openapi": {"type": …}`), nor Redocly's
+# `openapi:` theme section.
+_VERSIONED = r"\s*:\s*['\"]?\d"
 _DESCRIBES = {
-    OPENAPI: re.compile(r"^(?:openapi|swagger)\s*:|^\s{0,4}\"(?:openapi|swagger)\"\s*:", re.MULTILINE),
-    ASYNCAPI: re.compile(r"^asyncapi\s*:|^\s{0,4}\"asyncapi\"\s*:", re.MULTILINE),
+    OPENAPI: re.compile(
+        rf"^(?:openapi|swagger){_VERSIONED}|^\s{{0,4}}\"(?:openapi|swagger)\"{_VERSIONED}", re.MULTILINE
+    ),
+    ASYNCAPI: re.compile(rf"^asyncapi{_VERSIONED}|^\s{{0,4}}\"asyncapi\"{_VERSIONED}", re.MULTILINE),
 }
 _DESCRIPTION_SUFFIXES = (".yaml", ".yml", ".json")
 
