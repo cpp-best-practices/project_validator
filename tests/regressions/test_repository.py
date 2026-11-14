@@ -381,7 +381,6 @@ class VcsIgnoreTests(unittest.TestCase):
         result = _run(vcs_ignore, variant)
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #236: ignore entries are compared textually, not with gitignore semantics
     def test_ignore_entries_are_matched_with_gitignore_semantics(self) -> None:
         """An anchored path (/lisp/*.elc), a glob covering the output (site*/, *.pyc*, blib*, *.gz), a unit's own
         target path and a whitelist (/* then !tracked) ignore the output as the literal entry does (magit, mkdocs,

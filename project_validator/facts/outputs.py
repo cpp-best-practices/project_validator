@@ -52,6 +52,39 @@ def _regex_matches_any(pattern: str, paths: Iterable[str]) -> bool:
     return any(compiled.search(path) for path in paths)
 
 
+def _glob_regex(glob: str) -> re.Pattern[str]:
+    """A gitignore glob as a regular expression over a whole path: `*` and `?` stay within a component, `**` spans
+    components."""
+    out, index = [], 0
+    while index < len(glob):
+        if glob.startswith("**", index):
+            out.append(".*")
+            index += 2
+            continue
+        character = glob[index]
+        out.append({"*": "[^/]*", "?": "[^/]"}.get(character) or ("[" if character == "[" else re.escape(character)))
+        index += 1
+    return re.compile("".join(out).replace("\\]", "]").replace("\\!", "!"))
+
+
+def _glob_ignores(glob: str, path: str) -> bool:
+    """Whether a gitignore glob ignores `path` (a directory when it ends in "/"), or a directory it is in. A trailing
+    "/" matches directories only; a slash anchors the glob to the ignore file's directory."""
+    directory_only, glob = glob.endswith("/"), glob.rstrip("/")
+    anchored, regex = "/" in glob, _glob_regex(glob.lstrip("/"))
+    components = path.rstrip("/").split("/")
+    for depth in range(1, len(components) + 1):
+        if directory_only and depth == len(components) and not path.endswith("/"):
+            continue
+        if regex.fullmatch("/".join(components[:depth]) if anchored else components[depth - 1]):
+            return True
+    return False
+
+
+def _placed(path: str, directory: str) -> str:
+    return path if directory in ("", ".") else f"{directory.rstrip('/')}/{path}"
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class BuildOutput:
     """The build output called `name` that the builds of `languages` write (with `build_systems`, those of one of
@@ -71,10 +104,18 @@ class BuildOutput:
     not_artifacts: tuple[str, ...] = ()
     build_systems: frozenset[str] = frozenset()
 
-    def ignored_by(self, entry: IgnoreEntry) -> bool:
+    def ignored_by(self, entry: IgnoreEntry, units: Iterable[str] = (".",), sources: Iterable[str] = ()) -> bool:
+        """Whether `entry` ignores the output: as the entry the output names (`globs`), or, read as the ignore
+        file reads it, at one of the places it is written: each of the language's `units`, and, for an output that
+        is a file (`*.elc`), each directory of its `sources`."""
         if entry.syntax is Syntax.REGEX:
             return _regex_matches_any(entry.pattern, self.paths)
-        return self.globs.fullmatch(entry.pattern) is not None
+        if self.globs.fullmatch(entry.pattern) is not None:
+            return True
+        files = [path for path in self.paths if "/" not in path and f"{path}/" not in self.paths]
+        placed = [_placed(path, unit) for unit in units for path in self.paths]
+        placed += [_placed(path, directory) for directory in sources for path in files]
+        return any(_glob_ignores(entry.pattern, path) for path in placed)
 
     def artifact(self, path: str) -> str | None:
         """The build output `path` is, or is inside, as one of `artifacts` names it; None when it is not one.

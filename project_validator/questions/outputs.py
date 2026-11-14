@@ -8,11 +8,12 @@ own (see `project_validator.facts.outputs.outputs_of`).
 
 from __future__ import annotations
 
+import posixpath
 from dataclasses import dataclass
 
 from project_validator.facts import ConfigurationFile, Facts
 from project_validator.facts.outputs import BuildOutput, CommittedOutput, IgnoreEntry, known_build_outputs, outputs_of
-from project_validator.facts.structure import BuildFile
+from project_validator.facts.structure import BuildFile, SourceFile, Unit
 from project_validator.questions import EVERY_KIND, Answer, LanguageAnswers, Question, answer_dict
 from project_validator.tools.version_control import IGNORE_FILES
 
@@ -66,9 +67,24 @@ def _outputs(language: str, facts: Facts) -> tuple[BuildOutput, ...]:
     return outputs_of(language, build_systems, known_build_outputs())
 
 
-def _ignored(output: BuildOutput, facts: Facts, files: tuple[str, ...]) -> OutputIgnored:
+def _written_at(language: str, facts: Facts) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Where `language`'s outputs are written: its units' directories, and the directories of its sources."""
+    units = tuple(unit.directory for unit in facts.of(Unit) if language in unit.languages) or (".",)
+    sources = tuple(
+        sorted({posixpath.dirname(source.path) for source in facts.of(SourceFile) if source.language == language})
+    )
+    return units, sources
+
+
+def _ignored(output: BuildOutput, facts: Facts, files: tuple[str, ...], language: str = "") -> OutputIgnored:
+    units, sources = _written_at(language, facts)
+
     def entry(path: str) -> str | None:
-        found = (fact for fact in facts.of(IgnoreEntry) if fact.origin.path == path and output.ignored_by(fact))
+        found = (
+            fact
+            for fact in facts.of(IgnoreEntry)
+            if fact.origin.path == path and output.ignored_by(fact, units, sources)
+        )
         return next((fact.written for fact in found), None)
 
     return OutputIgnored(name=output.name, hint=output.hint, entries=tuple((path, entry(path)) for path in files))
@@ -81,7 +97,7 @@ def ignored_outputs(language: str, facts: Facts) -> LanguageAnswers[IgnoreAnswer
         answer = IgnoreAnswer(language=language, answer=Answer.IMPOSSIBLE)
     else:
         files = ignore_files(facts)
-        found = tuple(_ignored(output, facts, files) for output in outputs)
+        found = tuple(_ignored(output, facts, files, language) for output in outputs)
         ignored = all(not output.unignored() for output in found)
         answer = IgnoreAnswer(language=language, answer=Answer.YES if ignored else Answer.NO, outputs=found)
     return LanguageAnswers(language=language, units=(answer,))

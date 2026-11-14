@@ -227,7 +227,7 @@ issues = [182, 188, 229, 280]
 name = "mkdocs/mkdocs"
 commit = "2862536793b3c67d9d83c33e0dd6d50a791928f8"
 ecosystems = ["Documentation site", "Python"]
-issues = [199, 229, 236, 280]
+issues = [199, 229, 280]
 
 [[project]]
 name = "python/devguide"
@@ -251,7 +251,7 @@ issues = [195, 229]
 name = "FluentValidation/FluentValidation"
 commit = "5903fa65863ec66dabf10646b9c09b33130a03e8"
 ecosystems = [".NET"]
-issues = [195, 216, 236]
+issues = [195, 216]
 
 [[project]]
 name = "JamesNK/Newtonsoft.Json"
@@ -275,13 +275,13 @@ issues = [223, 224, 235, 253]
 name = "magit/magit"
 commit = "4402e972bb2b6df2dad25118d8a638fa5a9b3e5b"
 ecosystems = ["Emacs Lisp"]
-issues = [220, 236]
+issues = [220]
 
 [[project]]
 name = "emacs-evil/evil"
 commit = "6a3e1ddd04ac504a016590940d0af2a3361b9efd"
 ecosystems = ["Emacs Lisp"]
-issues = [228, 236, 279]
+issues = [228, 279]
 
 [[project]]
 name = "purcell/package-lint"
@@ -299,7 +299,7 @@ issues = [228]
 name = "fortran-lang/stdlib"
 commit = "2d9c377865727a8771e30dac1745d413744a3384"
 ecosystems = ["Fortran"]
-issues = [204, 229, 236]
+issues = [204, 229]
 
 [[project]]
 name = "fortran-lang/fpm"
@@ -406,7 +406,7 @@ issues = [188, 248]
 name = "jgm/pandoc"
 commit = "300d24fdb143cff23080120c13acbe7df21cd5a3"
 ecosystems = ["Haskell"]
-issues = [182, 219, 223, 231, 236, 238]
+issues = [182, 219, 223, 231, 238]
 
 [[project]]
 name = "PostgREST/postgrest"
@@ -477,7 +477,7 @@ issues = [182, 188, 219, 254]
 name = "denoland/std"
 commit = "f834d0223364361169314833e3c7a8f62ce11d58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 201, 219, 226, 231, 236]
+issues = [182, 201, 219, 226, 231]
 
 [[project]]
 name = "SchemaStore/schemastore"
@@ -631,7 +631,7 @@ issues = [182]
 name = "latex3/l3build"
 commit = "f5224147f530aa66dc40ba6c4c1a27a45e21cfb6"
 ecosystems = ["LaTeX"]
-issues = [227, 236, 238, 268]
+issues = [227, 238, 268]
 
 [[project]]
 name = "folke/lazy.nvim"
@@ -774,13 +774,13 @@ issues = [182, 188, 238, 248, 269]
 name = "houseabsolute/perl-code-tidyall"
 commit = "9318a932cfe054125ab3f3098c98ea1532df0b9e"
 ecosystems = ["Perl"]
-issues = [182, 219, 227, 236, 238, 248, 269]
+issues = [182, 219, 227, 238, 248, 269]
 
 [[project]]
 name = "rjbs/Dist-Zilla"
 commit = "ca73e612fe4b53fd77ca37c961df8706e0317055"
 ecosystems = ["Perl"]
-issues = [182, 219, 227, 236, 238, 248]
+issues = [182, 219, 227, 238, 248]
 
 [[project]]
 name = "Seldaek/monolog"
@@ -900,7 +900,7 @@ issues = [182, 221]
 name = "scikit-learn/scikit-learn"
 commit = "ee56c8b5d809dc7b970a140ed501269b63c69cf8"
 ecosystems = ["Python"]
-issues = [182, 236, 237]
+issues = [182, 237]
 
 [[project]]
 name = "tidyverse/dplyr"
@@ -1361,7 +1361,7 @@ name = "xmlunit/xmlunit"
 commit = "b04c6ea08c4a0b8dff9a35765650efb9cca4406a"
 ecosystems = ["JVM"]
 notes = "its .xsd files are test fixtures, so it stands for the JVM, not XML schemas"
-issues = [182, 223, 236, 246]
+issues = [182, 223, 246]
 
 [[project]]
 name = "zigtools/zls"
