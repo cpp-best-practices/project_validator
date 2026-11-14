@@ -1,0 +1,744 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".graphqlrc.yml",
+      "role": "product"
+    },
+    {
+      "ecosystem": "GraphQL",
+      "kind": "ContentLanguages",
+      "languages": [
+        "GraphQL"
+      ],
+      "origin": "."
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "GraphQL",
+      "origin": "operations/catalog.graphql",
+      "role": "product"
+    },
+    {
+      "ambiguous": true,
+      "kind": "SourceFile",
+      "language": "GraphQL",
+      "origin": "schema/schema.graphql",
+      "role": "product"
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "GraphQL",
+        "YAML"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".graphqlrc.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "via": [
+        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+      ]
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "argv": [
+        "actionlint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "via": []
+    },
+    {
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:validate",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "validate",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "@graphql-inspector/cli",
+        "validate",
+        "operations/**/*.graphql",
+        "schema/schema.graphql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes @graphql-inspector/cli validate \"operations/**/*.graphql\" schema/schema.graphql",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "@graphql-inspector/cli",
+        "validate",
+        "operations/**/*.graphql",
+        "schema/schema.graphql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes @graphql-inspector/cli validate \"operations/**/*.graphql\" schema/schema.graphql",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[1].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "graphql-schema-linter",
+        "schema/schema.graphql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes graphql-schema-linter schema/schema.graphql",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "graphql-schema-linter",
+        "schema/schema.graphql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes graphql-schema-linter schema/schema.graphql",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes prettier --check .",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "prettier",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Command",
+      "line": "npx --yes prettier --check .",
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+      ]
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:breaking",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "breaking",
+      "origin": ".github/workflows/ci.yml:jobs.breaking",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.breaking.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "schema": "main:schema/schema.graphql"
+      },
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.breaking.steps[1]",
+      "uses": "graphql-hive/graphql-inspector@70745e66e20a3b741cb75e1143d3a9afb1dfd7a5"
+    },
+    {
+      "argv": [
+        "graphql-inspector",
+        "diff",
+        "main:schema/schema.graphql"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "Command",
+      "line": "uses: graphql-hive/graphql-inspector@70745e66e20a3b741cb75e1143d3a9afb1dfd7a5",
+      "origin": ".github/workflows/ci.yml:jobs.breaking.steps[1]",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "graphql-hive/graphql-inspector@70745e66e20a3b741cb75e1143d3a9afb1dfd7a5"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "provider": "GitHub Actions"
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "GraphQL"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: validate",
+      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [
+        "GraphQL"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: breaking",
+      "origin": ".github/workflows/ci.yml:jobs.breaking",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "compilers": [
+        "gcc"
+      ],
+      "configurations": [],
+      "default_compiler": true,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "os": "linux",
+      "toolchains": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".graphql-schema-linterrc",
+      "reader": "graphql-schema-linter"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".prettierrc",
+      "reader": "prettier"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "origin": "LICENSE"
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "GraphQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1].run",
+      "provides": {
+        "schema": [
+          "validates"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "graphql-inspector",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[1].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "GraphQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "graphql-schema-linter",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:validate",
+      "kind": "ToolRun",
+      "languages": [
+        "GraphQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "prettier",
+      "via": [
+        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:breaking",
+      "kind": "ToolRun",
+      "languages": [
+        "GraphQL"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.breaking.steps[1]",
+      "provides": {
+        "compatibility": [
+          "breaking"
+        ],
+        "schema": [
+          "validates"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "graphql-inspector",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "GraphQL"
+          ],
+          "name": ".github/workflows/ci.yml: validate",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [
+            "GraphQL"
+          ],
+          "name": ".github/workflows/ci.yml: breaking",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [
+            "gcc"
+          ],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Data": [
+        ".yml files"
+      ],
+      "GraphQL": [
+        "content",
+        ".graphql files"
+      ]
+    },
+    "formats": [
+      "GraphQL",
+      "YAML"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "GraphQL",
+          "YAML"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

@@ -4,19 +4,25 @@ from __future__ import annotations
 
 
 def program(argv: tuple[str, ...]) -> str:
-    """The name of the program `argv` runs, without its directory or a Windows suffix (`./vendor/bin/phpunit`)."""
-    name = argv[0].replace("\\", "/").rsplit("/", 1)[-1] if argv else ""
+    """The name of the program `argv` runs, without its directory or a Windows suffix (`./vendor/bin/phpunit`). An npm
+    package with a scope (`@redocly/cli`, which `npx` runs) is one name, not a directory and a program."""
+    word = argv[0] if argv else ""
+    if word.startswith("@") and word.count("/") == 1:
+        return word
+    name = word.replace("\\", "/").rsplit("/", 1)[-1]
     for suffix in (".exe", ".cmd", ".bat"):
         name = name.removesuffix(suffix)
     return name
 
 
 def starts_with(argv: tuple[str, ...], *prefixes: tuple[str, ...]) -> tuple[str, ...] | None:
-    """The first of `prefixes` that `argv` starts with: a program, by name (`./vendor/bin/phpunit` is `phpunit`), and
-    the subcommands right after it (`("cargo", "test")`); None when it starts with none."""
+    """The first of `prefixes` that `argv` starts with: a program, by name (`./vendor/bin/phpunit` is `phpunit`; a
+    scoped npm package by its full name or its own, `@biomejs/biome` is `biome` too), and the subcommands right after
+    it (`("cargo", "test")`); None when it starts with none."""
     name = program(argv)
+    names = (name, name.rpartition("/")[2]) if name.startswith("@") else (name,)
     return next(
-        (prefix for prefix in prefixes if prefix and name == prefix[0] and argv[1 : len(prefix)] == prefix[1:]), None
+        (prefix for prefix in prefixes if prefix and prefix[0] in names and argv[1 : len(prefix)] == prefix[1:]), None
     )
 
 
