@@ -74,9 +74,7 @@ class ShellTests(unittest.TestCase):
 
     def test_compound_command_keywords_are_not_commands(self) -> None:
         script = "if [ -f x ]; then ctest; fi\nfor f in a b; do echo $f; done\n"
-        self.assertEqual(
-            self._split(script), [("[", "-f", "x", "]"), ("ctest",), ("for", "f", "in", "a", "b"), ("echo", "$f")]
-        )
+        self.assertEqual(self._split(script), [("[", "-f", "x", "]"), ("ctest",), ("echo", "$f")])
 
     def test_opaque_text_keeps_its_quotes(self) -> None:
         [found] = split_script("""echo "a ${{ x == 'y' }}" '${{ z }}'""", EXPRESSION)

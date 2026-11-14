@@ -279,26 +279,6 @@
     },
     {
       "argv": [
-        "for",
-        "price",
-        "in",
-        "1",
-        "2",
-        "3"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "Command",
-      "line": "for price in 1 2 3; do total=$((total + price)); done",
-      "origin": "action.yml:runs.steps[0].run",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[1]"
-      ]
-    },
-    {
-      "argv": [
         "((",
         "total",
         "+",
@@ -400,26 +380,6 @@
     },
     {
       "argv": [
-        "for",
-        "price",
-        "in",
-        "1",
-        "2",
-        "3"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "Command",
-      "line": "for price in 1 2 3; do total=$((total + price)); done",
-      "origin": "action.yml:runs.steps[0].run",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[1]"
-      ]
-    },
-    {
-      "argv": [
         "((",
         "total",
         "+",
@@ -518,26 +478,6 @@
       "line": "uses: ./",
       "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
       "via": []
-    },
-    {
-      "argv": [
-        "for",
-        "price",
-        "in",
-        "1",
-        "2",
-        "3"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "Command",
-      "line": "for price in 1 2 3; do total=$((total + price)); done",
-      "origin": "action.yml:runs.steps[0].run",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[1]"
-      ]
     },
     {
       "argv": [

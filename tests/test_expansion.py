@@ -385,7 +385,6 @@ class CiEnvironmentTests(unittest.TestCase):
             with self.subTest(script=script):
                 self.assertFalse(self._facts(f"run: {script}").of(Unknown))
 
-    @unittest.expectedFailure  # upstream #292: a `for x in …; do` header is recorded as a command named `for`
     def test_a_loop_header_is_not_a_command(self) -> None:
         """`for x in a b; do …; done` and `case $x in` assign and branch; nothing runs a program called `for` or `case`
         (the GitHub Action fixture's composite action)."""

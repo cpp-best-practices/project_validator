@@ -95,10 +95,24 @@ def _without_redirections(words: list[str]) -> list[str]:
     return kept
 
 
+def _without_compound_headers(words: list[str]) -> list[str]:
+    """`words` without what only opens a compound command: a `for`/`select` header (it assigns, it runs nothing), a
+    `case WORD in` header, and a case clause's pattern (`a)`, when commands follow it; a `)` with none after it ends a
+    subshell)."""
+    if words[:1] in (["for"], ["select"]):
+        return []
+    if words[:1] == ["case"]:
+        words = words[words.index("in") + 1 :] if "in" in words else []
+    if ")" in words and "(" not in words[: (close := words.index(")"))] and close + 1 < len(words):
+        words = words[close + 1 :]
+    return words
+
+
 def _command(words: list[str], line: str) -> ShellCommand | None:
     words = _without_redirections(words)
     while words and words[0] in _KEYWORDS:
         words = words[1:]
+    words = _without_compound_headers(words)
     if words and words[0] in _CLOSING:
         return None
     env = []
