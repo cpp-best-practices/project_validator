@@ -239,15 +239,23 @@ def _task(value: object) -> str | None:
     return value if isinstance(value, str) else None
 
 
+_DENO_TASK_OPTIONS = frozenset({"--cwd", "--config", "-c", "--filter", "-f"})
+
+
 def _deno_tasks(command: Command, context: Context) -> Iterator[Expansion] | None:
-    """`deno task lint`: the task in deno.json (or deno.jsonc)."""
-    if command.argv[:2] != ("deno", "task") or len(command.argv) < 3:
+    """`deno task lint`, `deno task --cwd sub --config deno.json build`: the task in deno.json (or deno.jsonc), of
+    the directory `--cwd` names, or the file `--config` names there; the task runs in that directory."""
+    if command.argv[:2] != ("deno", "task"):
         return None
-    name = command.argv[2]
-    path = found_at(context, command.directory, DENO_CONFIG_FILES)
+    words, options = positional(command.argv[1:], _DENO_TASK_OPTIONS)
+    if not words:
+        return None
+    name, directory = words[0], joined(command.directory, options.get("--cwd") or ".")
+    named = options.get("--config") or options.get("-c")
+    path = found_at(context, directory, [named] if named else DENO_CONFIG_FILES)
     if path is None or (text := _task(json_value(context, path, "tasks", name, comments=True))) is None:
         return iter((Unknown(origin=command.origin, subject=f"the task {name}", reason="no deno.json defines it"),))
-    return iter((Script(text=text, origin=Origin(path=path, at=("tasks", name))),))
+    return iter((Script(text=text, origin=Origin(path=path, at=("tasks", name)), directory=directory),))
 
 
 DENO_TASKS = CommandExpander(name="deno.json tasks", expand=_deno_tasks)

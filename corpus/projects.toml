@@ -477,7 +477,7 @@ issues = [182, 188, 219, 254]
 name = "denoland/std"
 commit = "f834d0223364361169314833e3c7a8f62ce11d58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 201, 219, 226, 231]
+issues = [182, 219, 226, 231]
 
 [[project]]
 name = "SchemaStore/schemastore"

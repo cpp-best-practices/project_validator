@@ -165,7 +165,6 @@ class PhpLauncherTests(unittest.TestCase):
 
 
 class DenoTaskTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #201: `deno task --cwd dir task` takes `--cwd` as the task name
     def test_options_before_the_task_name_are_skipped(self) -> None:
         """`deno task --cwd sub --config deno.json build` runs `build` of `sub/deno.json` (denoland/std)."""
         files = {
