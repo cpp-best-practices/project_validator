@@ -451,7 +451,28 @@
       {
         "auxiliary": {},
         "language": "Swift",
-        "units": []
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "swift --sanitize=address",
+                  "swift --sanitize=thread",
+                  "swift --sanitize=undefined",
+                  "-enableAddressSanitizer YES",
+                  "-enableThreadSanitizer YES"
+                ]
+              }
+            ],
+            "language": "Swift",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ],
     "schema-compatibility": [
@@ -842,9 +863,11 @@
       "status": "FAIL"
     },
     "sanitizers": {
-      "details": [],
-      "message": "not applicable to Swift",
-      "status": "SKIP"
+      "details": [
+        "run swift test --sanitize=address (or thread) in CI (Xcode: -enableAddressSanitizer YES)"
+      ],
+      "message": "no sanitizer runs in CI; run swift test --sanitize=address",
+      "status": "FAIL"
     },
     "schema-compatibility": {
       "details": [],

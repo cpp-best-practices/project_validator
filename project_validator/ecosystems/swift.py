@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterator
+from pathlib import PurePosixPath
 
 from project_validator.build_configurations import build_type_kinds
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
@@ -226,7 +227,9 @@ RUNS_SWIFTLINT = r"(?<![\w-])swiftlint\b(?!\.yml)(?![^\n]*\s(?:--fix|autocorrect
 SWIFTLINT = pattern("SwiftLint", RUNS_SWIFTLINT)
 COMPLETE_CONCURRENCY = pattern(
     "complete concurrency checking",
-    r"swift-tools-version:\s*6|\bswiftLanguageModes?\s*:\s*\[\s*\.v6|-strict-concurrency=complete"
+    # Swift 6 tools check completely unless the package pins an older language mode (Alamofire's `[.v5]`).
+    r"swift-tools-version:\s*6(?![\s\S]*\bswiftLanguage(?:Modes|Versions)\s*:\s*\[\s*\.v[45]\b)"
+    r"|\bswiftLanguageModes?\s*:\s*\[\s*\.v6|-strict-concurrency=complete"
     r"|\bStrictConcurrency\b|\bSWIFT_STRICT_CONCURRENCY\s*=\s*complete\b|\bSWIFT_VERSION\s*=\s*6",
 )
 
@@ -248,13 +251,31 @@ _SWIFT_WARNINGS_AS_ERRORS = (
     required(
         pattern(
             "-warnings-as-errors",
-            r"-warnings-as-errors\b|\btreatAllWarnings\s*\(\s*as:\s*\.error\b"
+            r"(?<![\w.-])-warnings-as-errors\b|\btreatAllWarnings\s*\(\s*as:\s*\.error\b"
             r"|\bSWIFT_TREAT_WARNINGS_AS_ERRORS\s*=\s*YES\b",
         )
     ),
 )
+# A string, the tools-version line (the first line: a comment that declares), or a comment.
+_SWIFT_TOKENS = re.compile(
+    r'(?P<string>"(?:\\.|[^"\\\n])*")|(?P<tools>\A//\s*swift-tools-version[^\n]*)|(?P<comment>//[^\n]*|/\*.*?\*/)',
+    re.DOTALL,
+)
+
+
+def _swift_code(path: str, text: str) -> str:
+    """Package.swift without its comments (vapor's commented-out `treatAllWarnings`), its tools version kept; the
+    Xcode files as written."""
+    if PurePosixPath(path).name != PACKAGE_SWIFT:
+        return text
+    return _SWIFT_TOKENS.sub(lambda match: "" if match.lastgroup == "comment" else match[0], text)
+
+
 SWIFT_BUILD_SETTINGS = requirement_reader(
-    "Swift build settings", SWIFT_BUILD_SETTINGS_FILES, (*_SWIFT_WARNINGS, *_SWIFT_WARNINGS_AS_ERRORS)
+    "Swift build settings",
+    SWIFT_BUILD_SETTINGS_FILES,
+    (*_SWIFT_WARNINGS, *_SWIFT_WARNINGS_AS_ERRORS),
+    code=_swift_code,
 )
 WARNINGS_AS_ERRORS = Practice(
     name=PracticeName.WARNINGS_AS_ERRORS,
@@ -267,6 +288,28 @@ WARNINGS_AS_ERRORS = Practice(
         searched="CI configuration, Package.swift or the Xcode build settings",
         hint="build with -Xswiftc -warnings-as-errors (SwiftPM 6.2: treatAllWarnings(as: .error); Xcode: "
         "SWIFT_TREAT_WARNINGS_AS_ERRORS = YES)",
+    ),
+)
+
+# SwiftPM builds with a sanitizer (`swift test --sanitize=address`), as does xcodebuild with its scheme options.
+SWIFT_SANITIZERS = (
+    pattern("swift --sanitize=address", r"\bswift\s+(?:build|test|run)\b[^\n]*\s--sanitize[=\s]address\b"),
+    pattern("swift --sanitize=thread", r"\bswift\s+(?:build|test|run)\b[^\n]*\s--sanitize[=\s]thread\b"),
+    pattern("swift --sanitize=undefined", r"\bswift\s+(?:build|test|run)\b[^\n]*\s--sanitize[=\s]undefined\b"),
+    pattern("-enableAddressSanitizer YES", r"-enableAddressSanitizer\s+YES\b"),
+    pattern("-enableThreadSanitizer YES", r"-enableThreadSanitizer\s+YES\b"),
+)
+SANITIZERS = Practice(
+    name=PracticeName.SANITIZERS,
+    languages=SWIFT_ONLY,
+    requirements=always(*(required(found, in_files=False) for found in SWIFT_SANITIZERS)),
+    any_one=True,
+    words=Wording(
+        kind="sanitizers",
+        hint="run swift test --sanitize=address (or thread) in CI (Xcode: -enableAddressSanitizer YES)",
+        passed="sanitizers run in CI: {found}",
+        failed="no sanitizer runs in CI; run swift test --sanitize=address",
+        question="whether a sanitizer runs in CI",
     ),
 )
 

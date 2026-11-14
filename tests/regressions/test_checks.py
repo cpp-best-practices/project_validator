@@ -98,7 +98,6 @@ class HardeningTests(unittest.TestCase):
 
 
 class SwiftSettingsTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #244: Swift settings matched by regex over comments, file names, tools version
     def test_settings_are_read_from_code_not_from_any_text(self) -> None:
         """A commented-out `.treatAllWarnings(as: .error)` (vapor) and a patch *file name* (SwiftLint) set nothing;
         `swift-tools-version: 6` with `swiftLanguageModes: [.v5]` (Alamofire) is not complete concurrency checking."""
@@ -113,7 +112,6 @@ class SwiftSettingsTests(unittest.TestCase):
             self.assertNotEqual(result.status, Status.PASS, result)
             self.assertIn("complete concurrency checking", result.message)
 
-    @unittest.expectedFailure  # upstream #244: ci-build-types demands Swift sanitizers the sanitizers check skips
     def test_ci_build_types_and_sanitizers_take_one_position_on_swift(self) -> None:
         """ci-build-types must not demand "+ sanitizers" of a language whose sanitizers check is skipped (every Swift
         project, Alamofire among them): either both see `swift build --sanitize=`, or neither asks."""

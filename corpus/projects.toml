@@ -1173,19 +1173,18 @@ issues = [186]
 name = "Alamofire/Alamofire"
 commit = "dea4bab91767a971d6e112bc955c6a82295589b7"
 ecosystems = ["Swift"]
-issues = [244]
 
 [[project]]
 name = "vapor/vapor"
 commit = "e4a5b7050f5e9e5793be3ebdeb687eac92fd9965"
 ecosystems = ["Swift"]
-issues = [188, 244]
+issues = [188]
 
 [[project]]
 name = "realm/SwiftLint"
 commit = "d9c55cdd401f57bdc1de965e620852ddb87fd175"
 ecosystems = ["Swift"]
-issues = [186, 207, 244]
+issues = [186, 207]
 
 [[project]]
 name = "apple/swift-nio"
