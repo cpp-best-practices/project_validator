@@ -28,7 +28,7 @@ def unknown(message: str, unknowns: Iterable[str], *details: str) -> Result:
     return Result(
         status=Status.ERROR,
         message=f"{message} is unknown: some of what it runs could not be read",
-        details=(*(f"not read: {found}" for found in unknowns), *details, _ALLOW_UNKNOWN),
+        details=(*dict.fromkeys(f"not read: {found}" for found in unknowns), *details, _ALLOW_UNKNOWN),
     )
 
 

@@ -27,7 +27,7 @@ def judge_ignored(answer: IgnoreAnswer, *, allow_unknown: bool = False) -> Resul
             for output in missing
             if (files := output.unignored())
         )
-        return Result.warned("; ".join(messages), *dict.fromkeys(output.hint for output in missing))
+        return Result.warned("; ".join(dict.fromkeys(messages)), *dict.fromkeys(output.hint for output in missing))
     found = (f"{path} ignores {entry}" for output in answer.outputs for path, entry in output.entries)
     return Result.passed("; ".join(dict.fromkeys(found)))
 

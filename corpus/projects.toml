@@ -315,7 +315,7 @@ issues = [186, 188]
 name = "actions/checkout"
 commit = "f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a"
 ecosystems = ["GitHub Action"]
-issues = [219, 227, 254]
+issues = [227, 254]
 
 [[project]]
 name = "peter-evans/create-pull-request"
@@ -326,7 +326,6 @@ ecosystems = ["GitHub Action"]
 name = "lycheeverse/lychee-action"
 commit = "649b0e4890508ea3e11ea6b3ee35ce899a25afd5"
 ecosystems = ["GitHub Action"]
-issues = [219]
 
 [[project]]
 name = "pre-commit/action"
@@ -342,7 +341,7 @@ ecosystems = ["GitHub Action"]
 name = "docker/build-push-action"
 commit = "562e51947939164e4fe808a6eab5101977e509e0"
 ecosystems = ["GitHub Action"]
-issues = [182, 195, 219]
+issues = [182, 195]
 
 [[project]]
 name = "cli/cli"
@@ -400,7 +399,7 @@ issues = [188, 248]
 name = "jgm/pandoc"
 commit = "300d24fdb143cff23080120c13acbe7df21cd5a3"
 ecosystems = ["Haskell"]
-issues = [182, 219, 223, 238]
+issues = [182, 223, 238]
 
 [[project]]
 name = "PostgREST/postgrest"
@@ -441,7 +440,6 @@ issues = [240, 254]
 name = "axios/axios"
 commit = "4ee8d46fc463770b8f5da718d5449a5b027b2c08"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [219]
 
 [[project]]
 name = "prettier/prettier"
@@ -453,7 +451,7 @@ issues = [182, 235]
 name = "vitejs/vite"
 commit = "f898888222297aa56d6fc281c585d4d4e4d51f58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 184, 219, 235, 239, 248, 280]
+issues = [182, 184, 235, 239, 248, 280]
 
 [[project]]
 name = "expressjs/express"
@@ -465,13 +463,13 @@ issues = [254]
 name = "colinhacks/zod"
 commit = "fef16cba0cf6668eb25ecc32fdfe2ce0a46f6f80"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 188, 219, 254]
+issues = [182, 188, 254]
 
 [[project]]
 name = "denoland/std"
 commit = "f834d0223364361169314833e3c7a8f62ce11d58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 219]
+issues = [182]
 
 [[project]]
 name = "SchemaStore/schemastore"
@@ -754,7 +752,7 @@ issues = [182, 272]
 name = "mojolicious/mojo"
 commit = "33648dc25bad1594461180d0793cd1b21753b0bd"
 ecosystems = ["Perl"]
-issues = [182, 219, 238, 248]
+issues = [182, 238, 248]
 
 [[project]]
 name = "Perl-Critic/Perl-Critic"
@@ -766,13 +764,13 @@ issues = [182, 188, 238, 248, 269]
 name = "houseabsolute/perl-code-tidyall"
 commit = "9318a932cfe054125ab3f3098c98ea1532df0b9e"
 ecosystems = ["Perl"]
-issues = [182, 219, 227, 238, 248, 269]
+issues = [182, 227, 238, 248, 269]
 
 [[project]]
 name = "rjbs/Dist-Zilla"
 commit = "ca73e612fe4b53fd77ca37c961df8706e0317055"
 ecosystems = ["Perl"]
-issues = [182, 219, 227, 238, 248]
+issues = [182, 227, 238, 248]
 
 [[project]]
 name = "Seldaek/monolog"
@@ -1001,7 +999,7 @@ issues = [182, 257]
 name = "BurntSushi/ripgrep"
 commit = "178cc027e283fd965cb72d0a7395b219eada170c"
 ecosystems = ["Rust"]
-issues = [182, 219, 238, 287]
+issues = [182, 238, 287]
 
 [[project]]
 name = "tokio-rs/tokio"

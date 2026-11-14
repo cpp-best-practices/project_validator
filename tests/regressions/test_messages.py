@@ -216,7 +216,6 @@ def _repeated(check: Check, files: Mapping[str, str]) -> list[str]:
 
 
 class RepeatedDetailTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #219: one unread subject or clause is repeated per OS, per language
     def test_each_unread_subject_and_each_clause_is_said_once(self) -> None:
         """An unread local action is one detail line, not one per matrix OS (actions/checkout, build-push-action); a
         distribution's unignored cover_db is one clause (mojo, perl-code-tidyall); a unit's clause is said once for
