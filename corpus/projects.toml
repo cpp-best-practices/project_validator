@@ -275,7 +275,6 @@ issues = [223, 224, 235, 253]
 name = "magit/magit"
 commit = "4402e972bb2b6df2dad25118d8a638fa5a9b3e5b"
 ecosystems = ["Emacs Lisp"]
-issues = [220]
 
 [[project]]
 name = "emacs-evil/evil"
@@ -449,7 +448,7 @@ issues = [219]
 name = "prettier/prettier"
 commit = "f391bf3e7ee219bcfeb61b06555ee1ac8e9c0680"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 220, 231, 235]
+issues = [182, 231, 235]
 
 [[project]]
 name = "vitejs/vite"
@@ -971,7 +970,6 @@ issues = [182]
 name = "sinatra/sinatra"
 commit = "cb22afd7902b566b6eaba6c4ea89739494a65d12"
 ecosystems = ["Ruby"]
-issues = [220]
 
 [[project]]
 name = "jekyll/jekyll"
@@ -1030,7 +1028,7 @@ issues = [182]
 name = "serde-rs/serde"
 commit = "aa7913ad0211fef960df68e7812a6211145a888c"
 ecosystems = ["Rust"]
-issues = [188, 220, 230, 287]
+issues = [188, 230, 287]
 
 [[project]]
 name = "starship/starship"

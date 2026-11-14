@@ -279,7 +279,6 @@ class ToolchainFreeTextTests(unittest.TestCase):
 
 
 class JobNameRenderingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #220: job names keep ${{ }} ternaries and newlines; uses: | keeps newline
     def test_job_and_action_names_are_rendered_as_github_shows_them(self) -> None:
         """Job names evaluate (or elide) `${{ a && 'b' || '' }}` with absent matrix keys empty (serde, prettier) and
         fold a block scalar to one line (sinatra); a `uses: |` block loses its trailing newline (magit)."""

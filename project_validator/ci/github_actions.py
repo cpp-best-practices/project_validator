@@ -6,7 +6,7 @@ import itertools
 import json
 import re
 import shlex
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, replace
 
 from project_validator.ci import REPOSITORY, CiProvider, Load, strings
@@ -120,11 +120,13 @@ def _combination_label(combination: Combination) -> str:
     return ", ".join(value if isinstance(value, str) else json.dumps(value) for value in combination.values())
 
 
-def _job_label(name: str, combination: Combination) -> str:
-    substituted = substitute_matrix(name, combination)
-    if substituted != name or not combination:
-        return substituted
-    return f"{name} ({_combination_label(combination)})"
+def _job_label(name: str, combination: Combination, substitute: Callable[[str], str]) -> str:
+    """The job's name as GitHub shows it: its expressions evaluated and its lines folded into one; a name with no
+    expression in it is followed by the matrix combination's values."""
+    shown = " ".join(substitute(name).split())
+    if EXPRESSION.search(name) or not combination:
+        return shown
+    return f"{shown} ({_combination_label(combination)})"
 
 
 _EXPORT = re.compile(
@@ -251,7 +253,7 @@ class _Combination:
             origin=self.origin,
             id=self.identity,
             provider=GITHUB_ACTIONS.name,
-            name=_job_label(str(job.get("name", self.origin.at[-1])), self.combination)
+            name=_job_label(str(job.get("name", self.origin.at[-1])), self.combination, self.substitute)
             + ("" if self.matrix_known else " (matrix computed by an expression)"),
             os=known.os,
             matrix={
@@ -282,7 +284,7 @@ class _Combination:
         condition = None if runs else self.optional(step.get("if"))
         if "uses" in step:
             inputs = self.substituted(step.get("with"))
-            uses = str(step["uses"])
+            uses = str(step["uses"]).strip()
             yield ActionStep(origin=origin, job=self.identity, uses=uses, inputs=inputs, condition=condition)
             if (local := _local_action(uses)) is not None:
                 yield from self.composite_facts(origin, local, inputs, known, (*via, origin))
@@ -441,7 +443,8 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
         if "uses" not in job:
             yield from _job_facts(path, str(job_id), job, document, caller, load)
             continue
-        called = _local(job["uses"]) or _own(job["uses"], load)
+        uses = str(job["uses"]).strip()
+        called = _local(uses) or _own(uses, load)
         within_depth = caller.count(" → ") < _CALL_DEPTH
         if called is not None and load is not None and within_depth and (target := load(called)) is not None:
             yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id} → ")
@@ -449,7 +452,7 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
         yield Unknown(
             origin=Origin(path=path, at=("jobs", str(job_id))),
             subject=f"job {job_id}",
-            reason=f"it calls the reusable workflow {job['uses']}, which is not read",
+            reason=f"it calls the reusable workflow {uses}, which is not read",
             hides="jobs",
         )
 
@@ -467,7 +470,7 @@ def _own(uses: object, load: Load | None) -> str | None:
 def _uses(entries: object) -> list[str]:
     if not isinstance(entries, list):
         return []
-    return [str(entry["uses"]) for entry in entries if isinstance(entry, Mapping) and "uses" in entry]
+    return [str(entry["uses"]).strip() for entry in entries if isinstance(entry, Mapping) and "uses" in entry]
 
 
 def action_references(document: object) -> list[str]:
