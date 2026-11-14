@@ -490,7 +490,8 @@ GITHUB_ACTIONS = CiProvider(
     badges=(
         pattern(
             "GitHub Actions",
-            r"/actions/workflows/[^/\s]+/badge\.svg|/workflows/[^/\s]+/badge\.svg|img\.shields\.io/github/actions/workflow/status/",
+            r"/actions/workflows/[^/\s]+/badge\.svg|/workflows/[^/\s]+/badge\.svg|img\.shields\.io/github/actions/workflow/status/"
+            r"|badgen\.net/github/(?:checks|status)/",
         ),
     ),
     step_references=action_references,

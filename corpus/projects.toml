@@ -37,7 +37,7 @@ issues = [195, 241, 264]
 name = "ninenines/cowboy"
 commit = "29c1f222f5a22749fd0f47a0efba40e115c02577"
 ecosystems = ["BEAM"]
-issues = [198, 228, 240, 241, 264]
+issues = [198, 228, 241, 264]
 
 [[project]]
 name = "gleam-lang/stdlib"
@@ -186,7 +186,7 @@ issues = [238]
 name = "jshttp/mime-db"
 commit = "ba120a7f71bc8ab7d5299e88c0049063239029a7"
 ecosystems = ["Data"]
-issues = [240, 254]
+issues = [254]
 
 [[project]]
 name = "toml-lang/toml-test"
@@ -233,7 +233,7 @@ issues = [280]
 name = "python/devguide"
 commit = "8c852bdd3f06b8447185fe2945af5de52a96a0ac"
 ecosystems = ["Documentation site"]
-issues = [182, 215, 240, 280]
+issues = [182, 215, 280]
 
 [[project]]
 name = "cpp-best-practices/cppbestpractices"
@@ -434,7 +434,7 @@ issues = [182, 254, 280]
 name = "sindresorhus/got"
 commit = "6b5aafc1cd538998728be6f45c65b0f80bae01b2"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [240, 254]
+issues = [254]
 
 [[project]]
 name = "axios/axios"
@@ -657,7 +657,7 @@ issues = [182]
 name = "koreader/koreader"
 commit = "4184b73a737b5dcc77b29e2eaf69c31a06501ab9"
 ecosystems = ["Lua"]
-issues = [182, 227, 228, 240]
+issues = [182, 227, 228]
 
 [[project]]
 name = "nix-community/disko"
@@ -711,7 +711,7 @@ issues = [186, 224, 286]
 name = "ocaml-ppx/ocamlformat"
 commit = "290bed65f01e14e4c67e7abe169d5c4e8a87a600"
 ecosystems = ["OCaml"]
-issues = [182, 240]
+issues = [182]
 
 [[project]]
 name = "ocaml-community/yojson"
@@ -905,7 +905,7 @@ issues = [186, 228, 238, 241, 246, 256]
 name = "Rdatatable/data.table"
 commit = "63a95fa1097bd58359cc19a2ad4392bd92025c52"
 ecosystems = ["R"]
-issues = [182, 186, 240, 241, 246, 256]
+issues = [182, 186, 241, 246, 256]
 
 [[project]]
 name = "tidyverse/ggplot2"
@@ -929,7 +929,7 @@ issues = [182, 238]
 name = "racket/typed-racket"
 commit = "7fe7e11fae2b04e04525d63b01b33efe5ffad075"
 ecosystems = ["Racket"]
-issues = [188, 189, 240, 278]
+issues = [188, 189, 278]
 
 [[project]]
 name = "Bogdanp/koyo"
@@ -1217,25 +1217,25 @@ issues = [188, 195]
 name = "datasets/country-codes"
 commit = "2d84034a0cae19ea5444b78c2131304a5c7f4bb9"
 ecosystems = ["Tabular data"]
-issues = [228, 238, 240]
+issues = [228, 238]
 
 [[project]]
 name = "datasets/gdp"
 commit = "36d761dc5617982d3e50b213e02b9a1b47c4e958"
 ecosystems = ["Tabular data"]
-issues = [238, 240]
+issues = [238]
 
 [[project]]
 name = "datasets/population"
 commit = "d4b1a4a9a17e2123baf0ef119de05bceced1ab1b"
 ecosystems = ["Tabular data"]
-issues = [238, 240]
+issues = [238]
 
 [[project]]
 name = "datasets/s-and-p-500-companies"
 commit = "05c998c3e714b8dc9b621239bbdef92bccefc376"
 ecosystems = ["Tabular data"]
-issues = [228, 238, 240]
+issues = [228, 238]
 
 [[project]]
 name = "fivethirtyeight/data"
@@ -1333,7 +1333,7 @@ ecosystems = ["XML schemas"]
 name = "dotnet/Open-XML-SDK"
 commit = "431ab05cf160248cc3885a4a766026d4f8243792"
 ecosystems = ["XML schemas"]
-issues = [182, 240]
+issues = [182]
 
 [[project]]
 name = "ISO-TC211/XML"

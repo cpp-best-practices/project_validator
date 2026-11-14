@@ -433,7 +433,6 @@ class LicenseTests(unittest.TestCase):
 
 
 class StatusBadgesTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #240: badges matched by URL fragments of every provider, not what they show
     def test_badges_are_read_by_what_they_show(self) -> None:
         """Reference-style links and badgen images are followed, a datahub badge is not Jenkins, Codecov's
         coverage.svg counts, a badge in an HTML comment does not, a travis-ci.org badge is not the status of a GitHub
