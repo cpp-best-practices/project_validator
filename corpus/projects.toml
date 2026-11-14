@@ -61,7 +61,7 @@ issues = [182, 194, 203, 214, 225, 247, 282]
 name = "cpp-best-practices/cmake_template"
 commit = "b86318abbf55a657a11a0cf2acce69f221841b22"
 ecosystems = ["C/C++"]
-issues = [182, 191, 194, 203, 206, 235, 282]
+issues = [182, 194, 203, 206, 235, 282]
 
 [[project]]
 name = "simdjson/simdjson"
@@ -115,7 +115,7 @@ issues = [182, 204, 282]
 name = "ggml-org/llama.cpp"
 commit = "9d25e0014c4b4b316873c01f4938c0e3c687287d"
 ecosystems = ["C/C++", "Python"]
-issues = [181, 191, 203, 224, 230, 232, 235, 241]
+issues = [181, 203, 224, 230, 232, 235, 241]
 
 [[project]]
 name = "glfw/glfw"
@@ -287,7 +287,7 @@ issues = [228, 236, 279]
 name = "purcell/package-lint"
 commit = "1865be780a16098f972fef50a52b21ca6ee04df9"
 ecosystems = ["Emacs Lisp"]
-issues = [191, 197, 228]
+issues = [197, 228]
 
 [[project]]
 name = "abo-abo/swiper"
@@ -425,7 +425,7 @@ issues = [182, 241]
 name = "simonmichael/hledger"
 commit = "01a4b48662ed526402ef22b0a62eb8ba144c022d"
 ecosystems = ["Haskell"]
-issues = [182, 191, 218, 223, 230, 266, 283]
+issues = [182, 218, 223, 230, 266, 283]
 
 [[project]]
 name = "haskell/cabal"

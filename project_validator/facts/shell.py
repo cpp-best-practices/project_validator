@@ -5,8 +5,8 @@ lines), the operators that separate commands (`;`, `&&`, `||`, `|`, `&`), and co
 backquotes), whose commands run before the command they are part of. PowerShell scripts (`powershell=True`) are split
 the same way, with PowerShell's escape character, the backquote, in place of the backslash (which is text there).
 Leading `NAME=value` assignments (and arrays, `NAME=(a b)`) are the command's environment; a conditional expression,
-`[[ … ]]`, runs nothing, over as many lines as it takes. Compound commands (`if`, `for`, `case`) and here-documents
-are not interpreted; their lines are split like any other.
+`[[ … ]]`, runs nothing, over as many lines as it takes, and the body of a here-document is data, not commands.
+Compound commands (`if`, `for`, `case`) are not interpreted; their lines are split like any other.
 """
 
 from __future__ import annotations
@@ -197,7 +197,7 @@ def _split_script(
     if opaque is not None:
         script = opaque.sub(lambda match: hidden.hide(match[0]), script)
     escape = "`" if powershell else "\\"
-    script = _substitutions(script, hidden.hide, escape)
+    script = _substitutions(_without_heredocs(script), hidden.hide, escape)
     continuation = _POWERSHELL_CONTINUATION if powershell else _CONTINUATION
     for line, words in _lines(continuation.sub(" ", script).splitlines(), escape):
         for commands in hidden.substituted(line):
@@ -206,6 +206,25 @@ def _split_script(
             yield Unsplittable(line=hidden.shown(line), reason=str(words))
             continue
         yield from map(hidden.restored, _commands_of(words, line))
+
+
+# A here-document's operator and its delimiter word (`<<EOF`, `<<-'EOF'`, `<< "END"`); not a here-string (`<<<`).
+_HEREDOC = re.compile(r"(?<!<)<<(?!<)-?\s*(['\"]?)([A-Za-z_][\w.-]*)\1")
+
+
+def _without_heredocs(script: str) -> str:
+    """`script` without the bodies of its here-documents: the lines after `<<WORD`, up to the line that is `WORD`,
+    are data the command reads, not commands."""
+    kept: list[str] = []
+    pending: list[str] = []
+    for line in script.splitlines():
+        if pending:
+            if line.strip() == pending[0]:
+                pending.pop(0)
+            continue
+        kept.append(line)
+        pending = [match[2] for match in _HEREDOC.finditer(line.split(" #", 1)[0])]
+    return "\n".join(kept)
 
 
 def _substitutions(script: str, hide: Callable[[str, str], str], escape: str = "\\") -> str:

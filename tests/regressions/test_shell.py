@@ -74,7 +74,6 @@ class ConditionalExpressionTests(unittest.TestCase):
 
 
 class HeredocTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #191: heredoc bodies are tokenised as shell commands
     def test_heredoc_bodies_are_data(self) -> None:
         """The body of `cat <<EOF … EOF` (redirected, inside `$(…)`, or in a followed script) is skipped: its prose and
         apostrophes are no commands, and the command after it is read (llama.cpp, cmake_template, package-lint,
