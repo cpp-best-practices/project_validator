@@ -97,6 +97,16 @@ VERSION = r"(\d+\.\d+(?:\.\d+)?)"
 """A version as most toolchains are named: `1.22`, `3.13.1`."""
 
 
+# The suffix of the input that holds the contents of the file a setup action's `*-version-file` input names (the CI
+# layer attaches it to the step, for a reader of the version the file pins).
+VERSION_FILE_CONTENTS = "@contents"
+
+
+def input_named(name: str) -> Callable[[Mapping[str, str]], str | None]:
+    """A reader of a setup action's input `name`, as written (one version, or several one per line)."""
+    return lambda inputs: inputs.get(name) or None
+
+
 def toolchain_patterns(
     language: str,
     *,

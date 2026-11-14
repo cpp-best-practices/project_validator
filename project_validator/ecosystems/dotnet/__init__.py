@@ -10,7 +10,7 @@ from collections.abc import Iterator
 from fnmatch import fnmatchcase
 from pathlib import Path
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, input_named, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
@@ -176,6 +176,7 @@ DOTNET = Ecosystem(
         images=("mcr.microsoft.com/dotnet/sdk",),
         programs=subcommands("dotnet", "build", "test", "restore", "publish", "pack", "run", "format"),
         setup=("dotnet",),
+        steps=(("actions/setup-dotnet", input_named("dotnet-version")),),
     ),
 )
 

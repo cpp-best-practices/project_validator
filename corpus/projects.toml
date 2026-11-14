@@ -251,7 +251,7 @@ issues = [195, 229]
 name = "FluentValidation/FluentValidation"
 commit = "5903fa65863ec66dabf10646b9c09b33130a03e8"
 ecosystems = [".NET"]
-issues = [195, 216]
+issues = [195]
 
 [[project]]
 name = "JamesNK/Newtonsoft.Json"
@@ -340,7 +340,7 @@ ecosystems = ["GitHub Action"]
 name = "softprops/action-gh-release"
 commit = "8a0cd651e5b2365bd640854a3fa5dfc70e4875f3"
 ecosystems = ["GitHub Action"]
-issues = [216, 226]
+issues = [226]
 
 [[project]]
 name = "docker/build-push-action"
@@ -459,7 +459,7 @@ issues = [182, 220, 231, 235]
 name = "vitejs/vite"
 commit = "f898888222297aa56d6fc281c585d4d4e4d51f58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 184, 216, 219, 235, 239, 248, 280]
+issues = [182, 184, 219, 235, 239, 248, 280]
 
 [[project]]
 name = "expressjs/express"
@@ -554,13 +554,13 @@ issues = [238, 281]
 name = "google/guava"
 commit = "fce80fd984c8227262a63972ccc68ae6f2ad0519"
 ecosystems = ["JVM"]
-issues = [182, 216, 252]
+issues = [182, 252]
 
 [[project]]
 name = "square/okhttp"
 commit = "58ca23340fc974ad0a5d411e167f1dc9f6f0886a"
 ecosystems = ["JVM"]
-issues = [182, 216, 234, 252]
+issues = [182, 234, 252]
 
 [[project]]
 name = "apache/commons-lang"
@@ -1345,7 +1345,7 @@ ecosystems = ["XML schemas"]
 name = "dotnet/Open-XML-SDK"
 commit = "431ab05cf160248cc3885a4a766026d4f8243792"
 ecosystems = ["XML schemas"]
-issues = [182, 216, 231, 240]
+issues = [182, 231, 240]
 
 [[project]]
 name = "ISO-TC211/XML"

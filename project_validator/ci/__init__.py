@@ -5,12 +5,13 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from project_validator import yaml_support
 from project_validator.build_configurations import BuildConfiguration, sanitizers_enabled
 from project_validator.core import Project
 from project_validator.ecosystems import build_systems
+from project_validator.ecosystems.model import VERSION_FILE_CONTENTS
 from project_validator.facts import (
     ActionStep,
     CiConfiguration,
@@ -161,6 +162,17 @@ def _matrix_text(matrix: Mapping[str, str]) -> str:
     return json.dumps({key: _decoded(value) for key, value in matrix.items()})
 
 
+def _with_version_files(step: ActionStep, project: Project) -> ActionStep:
+    """`step` with, beside each `*-version-file` input whose file the project holds, that file's contents (under the
+    input's name and `@contents`), for a reader of the version it names (setup-node's `.tool-versions`)."""
+    found = {
+        f"{name}{VERSION_FILE_CONTENTS}": project.read_text(path)
+        for name, path in step.inputs.items()
+        if name.endswith("-version-file") and project.exists(path)
+    }
+    return replace(step, inputs={**step.inputs, **found}) if found else step
+
+
 def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project, pinned: Mapping[str, str]) -> Job:
     """A job as the checks see it. A parsed job's compilers and toolchains are named by its matrix values first,
     then by what it runs; a heuristic job's by the whole file."""
@@ -175,7 +187,9 @@ def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project, 
         job.os,
         compilers,
         _configurations(commands, evidence),
-        detect_toolchains(texts, run, (fact for fact in facts if isinstance(fact, ActionStep)), pinned),
+        detect_toolchains(
+            texts, run, (_with_version_files(fact, project) for fact in facts if isinstance(fact, ActionStep)), pinned
+        ),
         detect_ecosystems(texts, run),
         heuristic=job.heuristic,
     )

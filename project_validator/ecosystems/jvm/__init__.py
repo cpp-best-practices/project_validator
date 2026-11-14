@@ -11,7 +11,7 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, input_named, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.axes import versions_axis
@@ -281,7 +281,11 @@ JVM = Ecosystem(
     # Kotlin and Groovy scripts are mostly Gradle builds and their helpers, which name no language.
     ambiguous_suffixes={".kts": None, ".gradle": None},
     toolchain=toolchain_patterns(
-        "JDK", more=JDK_VERSIONS, programs=("mvn", "mvnw", "gradle", "gradlew", "javac"), setup=("java",)
+        "JDK",
+        more=JDK_VERSIONS,
+        programs=("mvn", "mvnw", "gradle", "gradlew", "javac"),
+        setup=("java",),
+        steps=(("actions/setup-java", input_named("java-version")),),
     ),
 )
 

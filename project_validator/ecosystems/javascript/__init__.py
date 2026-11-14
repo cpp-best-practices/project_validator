@@ -9,14 +9,20 @@ from __future__ import annotations
 
 import json
 import re
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator import yaml_support
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
+from project_validator.ecosystems.model import (
+    VERSION_FILE_CONTENTS,
+    BuildSystem,
+    Ecosystem,
+    subcommands,
+    toolchain_patterns,
+)
 from project_validator.evidence import json_value
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
 from project_validator.facts.arguments import has_option, option_values, positional, program, starts_with
@@ -622,6 +628,26 @@ NODE_MODULES = BuildOutput(
 )
 
 _VERSION = r"(\d+(?:\.(?:\d+|x))*"
+_TOOL_VERSION = re.compile(r"^\s*(?:nodejs|node)\s+v?([\d.]+)", re.MULTILINE)
+_BARE_VERSION = re.compile(r"^\s*v?(\d+(?:\.\d+)*)\s*$")
+
+
+def _setup_node(inputs: Mapping[str, str]) -> str | None:
+    """setup-node's `node-version`, else the version its `node-version-file` names (`.tool-versions`' nodejs line,
+    or an `.nvmrc`/`.node-version` that holds only a version)."""
+    if version := inputs.get("node-version"):
+        return version
+    text = inputs.get(f"node-version-file{VERSION_FILE_CONTENTS}", "")
+    found = _TOOL_VERSION.search(text) or _BARE_VERSION.match(text)
+    return found[1] if found else None
+
+
+def _pnpm_runtime(inputs: Mapping[str, str]) -> str | None:
+    """pnpm/setup's `runtime: node@<version>`."""
+    runtime, _, version = inputs.get("runtime", "").partition("@")
+    return version or None if runtime == "node" else None
+
+
 RUNTIME_VERSIONS = (
     re.compile(rf"\bnode-version\W+{_VERSION}|lts/[\w*-]+|latest|current|node)"),
     re.compile(r"\bnode:(\d+(?:\.\d+)*)"),
@@ -650,6 +676,7 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
             *subcommands("bun", "install", "test", "run"),
         ),
         setup=("deno", "bun"),
+        steps=(("actions/setup-node", _setup_node), ("pnpm/setup", _pnpm_runtime)),
     ),
 )
 

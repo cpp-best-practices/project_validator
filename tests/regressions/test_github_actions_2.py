@@ -244,7 +244,6 @@ VERSION_COUNTS: dict[str, tuple[dict[str, str], dict[str, object], str]] = {
 
 
 class SetupActionVersionInputTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #216: block-scalar version lists, version files, pnpm runtime not read
     def test_every_version_a_setup_action_installs_is_a_toolchain(self) -> None:
         """setup-dotnet and setup-java install every version of a multi-line `*-version: |` (FluentValidation,
         Open-XML-SDK, guava, okhttp); setup-node reads `node-version-file: .tool-versions` (action-gh-release);

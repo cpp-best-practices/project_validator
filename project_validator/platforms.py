@@ -55,10 +55,13 @@ def _named_versions(patterns: ToolchainPatterns, text: str) -> set[str]:
 
 
 def _step_versions(patterns: ToolchainPatterns, steps: Iterable[ActionStep]) -> set[str]:
-    """The versions the setup actions' inputs name, read by the patterns' readers of each action."""
+    """The versions the setup actions' inputs name, read by the patterns' readers of each action; a reader may name
+    several, one per line (setup-dotnet installs every version of a `dotnet-version: |` block)."""
     readers = dict(patterns.steps)
     found = (read(step.inputs) for step in steps if (read := readers.get(step.uses.partition("@")[0])) is not None)
-    return {version for version in found if version is not None}
+    return {
+        line.strip() for versions in found if versions is not None for line in versions.splitlines() if line.strip()
+    }
 
 
 def pinned_versions(project: Project) -> dict[str, str]:
