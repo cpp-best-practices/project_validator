@@ -265,7 +265,6 @@ class CiLintUnknownTests(unittest.TestCase):
 
 
 class ToolchainFreeTextTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #218: toolchain patterns match cache keys, SHAs, linker names, '> 0'
     def test_toolchain_patterns_do_not_match_free_text(self) -> None:
         """A toolchain is read from a setup action's inputs or an install command, not from any text of the job:
         hledger has no Rust, pydantic no Python 17, cowboy no OTP 0, tinymist/ripgrep/bat no Nix system or gcc; ecto's

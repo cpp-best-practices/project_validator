@@ -208,7 +208,8 @@ NIX_ECOSYSTEM = Ecosystem(
             "cachix",
         ),
         actions=("install-nix-action", "nix-installer-action", "nix-quick-install-action", "cachix-action"),
-        labelled=((re.compile(rf"\b({_SYSTEMS})\b"), "{}"),),
+        # Not inside another name: `aarch64-linux-gnu-gcc`, `gcc-aarch64-linux-gnu` are cross compilers.
+        labelled=((re.compile(rf"(?<![\w-])({_SYSTEMS})(?![\w-])"), "{}"),),
     ),
 )
 

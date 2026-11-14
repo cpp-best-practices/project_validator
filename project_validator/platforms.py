@@ -20,7 +20,8 @@ OPERATING_SYSTEMS = (
 )
 
 COMPILERS = (
-    pattern("gcc", r"\bgcc\b|\bg\+\+|\bmingw|\bgfortran\b"),
+    # Not a cross compiler's name (`arm-linux-gnueabihf-gcc`, a linker variable's value).
+    pattern("gcc", r"(?<![\w-])gcc\b|(?<![\w-])g\+\+|\bmingw|\bgfortran\b"),
     # setup-cpp names clang `llvm` (`compiler: llvm-19.1.1`, `--compiler llvm`).
     pattern("clang", r"\bclang(?![-_]?(tidy|format|d|-apply-replacements)(?:\b|_))|\bllvm-\d|\bcompiler\W+llvm\b"),
     pattern("appleclang", r"\bapple-?clang\b"),

@@ -31,13 +31,13 @@ issues = [182, 229, 231, 242, 246, 261, 262]
 name = "elixir-ecto/ecto"
 commit = "0e31befcada8660dc622884199f4418494d73bac"
 ecosystems = ["BEAM"]
-issues = [195, 218, 241, 264]
+issues = [195, 241, 264]
 
 [[project]]
 name = "ninenines/cowboy"
 commit = "29c1f222f5a22749fd0f47a0efba40e115c02577"
 ecosystems = ["BEAM"]
-issues = [198, 218, 228, 240, 241, 264]
+issues = [198, 228, 240, 241, 264]
 
 [[project]]
 name = "gleam-lang/stdlib"
@@ -79,7 +79,7 @@ issues = [182, 186, 196, 250, 282]
 name = "nlohmann/json"
 commit = "81888ff9f005c022e60f2de572327b2e50222222"
 ecosystems = ["C/C++"]
-issues = [182, 183, 207, 218, 247, 282]
+issues = [182, 183, 207, 247, 282]
 
 [[project]]
 name = "catchorg/Catch2"
@@ -423,7 +423,7 @@ issues = [182, 241]
 name = "simonmichael/hledger"
 commit = "01a4b48662ed526402ef22b0a62eb8ba144c022d"
 ecosystems = ["Haskell"]
-issues = [182, 218, 223, 230, 266, 283]
+issues = [182, 223, 230, 266, 283]
 
 [[project]]
 name = "haskell/cabal"
@@ -838,7 +838,7 @@ issues = [223]
 name = "pydantic/pydantic"
 commit = "560f0f96a37d6913afdfddb2de22030ef08e68c3"
 ecosystems = ["Python"]
-issues = [182, 218]
+issues = [182]
 
 [[project]]
 name = "encode/httpx"
@@ -1009,7 +1009,7 @@ issues = [182, 257]
 name = "BurntSushi/ripgrep"
 commit = "178cc027e283fd965cb72d0a7395b219eada170c"
 ecosystems = ["Rust"]
-issues = [182, 218, 219, 238, 287]
+issues = [182, 219, 238, 287]
 
 [[project]]
 name = "tokio-rs/tokio"
@@ -1027,7 +1027,7 @@ issues = [182, 188, 287]
 name = "sharkdp/bat"
 commit = "8cf33bdde9a6e4c11d0f866415b1fc867df0cd40"
 ecosystems = ["Rust"]
-issues = [182, 218]
+issues = [182]
 
 [[project]]
 name = "serde-rs/serde"
@@ -1050,7 +1050,7 @@ issues = [188, 239, 287]
 name = "uutils/coreutils"
 commit = "18ddc48d1cc5edc9ba66f6eb332bc6673c27ef24"
 ecosystems = ["Rust"]
-issues = [182, 195, 218, 230]
+issues = [182, 195, 230]
 
 [[project]]
 name = "nushell/nushell"
@@ -1322,7 +1322,7 @@ issues = [208, 263]
 name = "Myriad-Dreamin/tinymist"
 commit = "c754ffe8ec9540074dacfd36ba5e8a38b4fc758a"
 ecosystems = ["Typst", "Rust"]
-issues = [218, 224]
+issues = [224]
 
 [[project]]
 name = "NIEM/NIEM-Releases"

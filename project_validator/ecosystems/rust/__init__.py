@@ -160,7 +160,8 @@ RUST = Ecosystem(
         images=("rust",),
         more=(
             rf"\brust-toolchain@{_RUST_VERSION}",
-            rf"\btoolchain\W+{_RUST_VERSION}",
+            # rust-toolchain's `toolchain:` input, not a cache key's `…-toolchain-9.14.1`.
+            rf"\btoolchain[\"']?\s*:\s*[\"']?{_RUST_VERSION}",
             rf"\bcargo\s+\+{_RUST_VERSION}",
             rf"\brustup\s+(?:default|toolchain\s+install|install)\s+{_RUST_VERSION}",
         ),

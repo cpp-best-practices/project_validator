@@ -125,7 +125,8 @@ def toolchain_patterns(
 ) -> ToolchainPatterns:
     """How CI names a `language` toolchain (a one-group `version` in setup `inputs`, `images` tags, `more`, `steps`,
     files `pinned_by`) and shows one is used (`programs`, `directories`, `setup`, `actions`); see ToolchainPatterns."""
-    by_input = (rf"\b{re.escape(name)}\W+{version}" for name in inputs)
+    # The input's value, not an action's ref (`check-python-version@17d8…`) or a range (`otp-version: '> 0'`).
+    by_input = (rf"\b{re.escape(name)}[^\w@/<>]+{version}" for name in inputs)
     by_image = (rf"\b{re.escape(image)}:{image_version or version}" for image in images)
     return ToolchainPatterns(
         language=language,
