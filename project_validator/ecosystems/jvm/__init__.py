@@ -11,11 +11,13 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, input_named, toolchain_patterns
-from project_validator.facts import Command, Facts, Setting, resolved
-from project_validator.facts.arguments import positional, program
+from project_validator.facts import Command, Facts, Origin, Setting, resolved
+from project_validator.facts.arguments import option_values, positional, program
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.expansion import CommandExpander, Expansion, Invocation, joined
 from project_validator.facts.outputs import BuildOutput, directory_output, ignored_at_top_level
 from project_validator.facts.tools import Definition
 
@@ -140,6 +142,25 @@ def build_steps(command: Command) -> tuple[str, list[str]] | None:
     if name in ("gradle", "gradlew"):
         return "gradle", [step.rsplit(":", 1)[-1] for step in positional(argv, _GRADLE_VALUES)[0]]
     return None
+
+
+# A bare `mvn` runs the POM's `<defaultGoal>` (commons-lang's `verify checkstyle:check`).
+_DEFAULT_GOAL = re.compile(r"<defaultGoal>\s*([^<]+?)\s*</defaultGoal>")
+
+
+def _maven_default_goal(command: Command, context: Context) -> list[Expansion] | None:
+    argv = resolved(command)
+    if program(argv) not in ("mvn", "mvnw") or positional(argv, _MAVEN_VALUES)[0]:
+        return None
+    named = option_values(argv, "-f", "--file")
+    pom = joined(command.directory, named[0] if named else "pom.xml")
+    if not context.project.exists(pom) or (found := _DEFAULT_GOAL.search(context.project.read_text(pom))) is None:
+        return None
+    goals = found[1].split()
+    return [Invocation(argv=(*argv, *goals), line=f"{pom}'s defaultGoal", origin=Origin(path=pom, at=("defaultGoal",)))]
+
+
+MAVEN_DEFAULT_GOAL = CommandExpander(name="Maven's default goal", expand=_maven_default_goal)
 
 
 def _verifies(kind: str, steps: list[str]) -> bool:

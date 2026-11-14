@@ -183,7 +183,6 @@ CONVENTION_PLUGIN = (
 
 
 class JvmBuildSettingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #202: a bare `mvn` runs the POM's <defaultGoal>, which is not read
     def test_a_bare_mvn_runs_the_default_goal(self) -> None:
         """`mvn -B` with `<defaultGoal>verify checkstyle:check</defaultGoal>` runs tests and Checkstyle
         (apache/commons-lang)."""
