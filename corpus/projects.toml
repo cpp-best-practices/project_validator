@@ -287,13 +287,13 @@ issues = [228, 236, 279]
 name = "purcell/package-lint"
 commit = "1865be780a16098f972fef50a52b21ca6ee04df9"
 ecosystems = ["Emacs Lisp"]
-issues = [197, 228]
+issues = [228]
 
 [[project]]
 name = "abo-abo/swiper"
 commit = "7b267e29cd47b2036eafbc212683a721bd2b7dd0"
 ecosystems = ["Emacs Lisp"]
-issues = [197, 228]
+issues = [228]
 
 [[project]]
 name = "fortran-lang/stdlib"
@@ -364,7 +364,7 @@ issues = [222, 234]
 name = "gin-gonic/gin"
 commit = "0f09c3a9b4626d9fe9979cf4d0521d6ae32ab646"
 ecosystems = ["Go"]
-issues = [197, 234]
+issues = [234]
 
 [[project]]
 name = "junegunn/fzf"
@@ -709,7 +709,7 @@ issues = [182, 211, 213, 228, 285]
 name = "ocaml/dune"
 commit = "9c38baf8d74391e6acbe743304f35e449dabb16e"
 ecosystems = ["OCaml"]
-issues = [182, 186, 197, 212, 235, 286]
+issues = [182, 186, 212, 235, 286]
 
 [[project]]
 name = "ocsigen/lwt"
@@ -733,7 +733,7 @@ issues = [290]
 name = "ocaml/opam"
 commit = "ff431a5e0af812bd4e59887769648194856780b0"
 ecosystems = ["OCaml"]
-issues = [186, 192, 197, 286]
+issues = [186, 192, 286]
 
 [[project]]
 name = "digitalocean/openapi"
@@ -817,7 +817,7 @@ issues = [182, 188]
 name = "open-telemetry/opentelemetry-proto"
 commit = "94f2f2d5f39c5139141dc7e564daa84aa2826531"
 ecosystems = ["Protobuf"]
-issues = [197, 217, 249, 271, 280]
+issues = [217, 249, 271, 280]
 
 [[project]]
 name = "grpc/grpc-proto"
@@ -829,7 +829,7 @@ issues = [207]
 name = "bufbuild/protovalidate"
 commit = "804b6087217194c7827e0d63bf2f6ae70d01f41b"
 ecosystems = ["Protobuf"]
-issues = [197, 234, 249, 271]
+issues = [234, 249, 271]
 
 [[project]]
 name = "envoyproxy/data-plane-api"
@@ -1172,7 +1172,7 @@ issues = [182, 231, 276]
 name = "golang-migrate/migrate"
 commit = "031eeb6ff17b27555cb57b1502c7da96fdce4253"
 ecosystems = ["SQL", "Go"]
-issues = [182, 197, 223, 234]
+issues = [182, 223, 234]
 
 [[project]]
 name = "flyway/flyway"
@@ -1221,7 +1221,7 @@ issues = [186, 188, 212, 229, 243]
 name = "pointfreeco/swift-composable-architecture"
 commit = "bf66bd83f3165fe4f5fdb9a6c99249276505723e"
 ecosystems = ["Swift"]
-issues = [188, 195, 197, 228, 241]
+issues = [188, 195, 228, 241]
 
 [[project]]
 name = "nicklockwood/SwiftFormat"

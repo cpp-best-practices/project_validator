@@ -39,7 +39,6 @@ def _make(makefile: str, *lines: str, **files: str) -> dict[str, str]:
 
 
 class MakeVariableTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #197: Make variables in recipes are kept literal, never expanded
     def test_assignments_and_command_line_overrides_are_expanded_into_recipes(self) -> None:
         """`GO ?= go` then `$(GO) test` runs `go test`; `make run FLAGS=-race` fills `$(FLAGS)` (gin, protovalidate,
         golang-migrate, swift-composable-architecture, dune)."""
@@ -59,7 +58,6 @@ class MakeVariableTests(unittest.TestCase):
             with self.subTest(assignment=name):
                 self.assertIn(expected, _expanded(files))
 
-    @unittest.expectedFailure  # upstream #197: a recipe whose program is an undefined variable is silently kept
     def test_a_program_that_is_an_unknown_variable_is_reported_unknown(self) -> None:
         """`$(BUF) breaking` with no value for BUF the reader can apply is an Unknown, not a command called `$(BUF)`
         (opentelemetry-proto, swiper's `$(EMACS)` through `EMACS_BATCH`)."""

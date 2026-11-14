@@ -1,7 +1,8 @@
 """Make: the recipes `make [target ...]` runs, prerequisites first.
 
-Rules are read as written: variables are not expanded (except `$(MAKE)`, which runs make again), and pattern rules,
-conditionals and included makefiles are not followed.
+Variables are expanded in the recipes as far as the makefile's assignments (`=`, `:=`, `?=`, `+=`) and the command
+line's (`make test FLAGS=-race`) give their values; a recipe whose program is still a variable is unknown. Pattern
+rules, conditionals and included makefiles are not followed.
 """
 
 from __future__ import annotations
@@ -30,10 +31,58 @@ class Rule:
     recipe: list[tuple[int, str]] = field(default_factory=list)
 
 
+# The variables make itself defines, which a makefile may use without setting.
+_BUILT_IN = {
+    "CC": "cc",
+    "CXX": "g++",
+    "CPP": "$(CC) -E",
+    "AR": "ar",
+    "AS": "as",
+    "LD": "ld",
+    "RM": "rm -f",
+    "FC": "f77",
+}
+
+
 @dataclass(slots=True)
 class Makefile:
     rules: dict[str, Rule] = field(default_factory=dict)
     default: str | None = None
+    variables: dict[str, str] = field(default_factory=lambda: dict(_BUILT_IN))
+
+
+# An assignment: `NAME = value`, `:=`, `::=`, `?=`, `+=`, optionally `override` or `export`. `!=` (the shell's output)
+# has no value to read.
+_ASSIGNMENT = re.compile(
+    r"^(?:(?:override|export)\s+)*(?P<name>[A-Za-z_][\w.-]*)\s*(?P<how>\?=|::?=|\+=|=)\s*(?P<value>.*)$"
+)
+_REFERENCE = re.compile(r"\$(?:\((?P<paren>[A-Za-z_][\w.-]*)\)|\{(?P<brace>[A-Za-z_][\w.-]*)\})")
+
+
+def _assign(variables: dict[str, str], line: str) -> bool:
+    """Record the assignment on `line` in `variables`; whether the line is one."""
+    match = _ASSIGNMENT.match(line)
+    if match is None:
+        return False
+    name, how, value = match["name"], match["how"], match["value"].split(" #", 1)[0].strip()
+    if how == "?=":
+        variables.setdefault(name, value)
+    elif how == "+=":
+        variables[name] = f"{variables[name]} {value}" if name in variables else value
+    else:
+        variables[name] = value
+    return True
+
+
+def expand_variables(line: str, variables: dict[str, str]) -> str:
+    """`line` with the references to `variables` replaced by their values, which may refer to others in turn; a
+    reference to a variable without a value stays as written."""
+    for _ in range(10):
+        expanded = _REFERENCE.sub(lambda match: variables.get(match["paren"] or match["brace"], match[0]), line)
+        if expanded == line:
+            break
+        line = expanded
+    return line
 
 
 def _recipe_line(line: str) -> str:
@@ -61,6 +110,8 @@ def parse_makefile(text: str) -> Makefile:
             for rule in current:
                 rule.recipe.append((number, _recipe_line(line)))
             continue
+        if _assign(makefile.variables, line):
+            continue
         match = _RULE.match(line)
         if match is None:
             current = [] if line.strip() and not line.lstrip().startswith("#") else current
@@ -76,14 +127,25 @@ def parse_makefile(text: str) -> Makefile:
     return makefile
 
 
-def _recipes(makefile: Makefile, path: str, target: str, visited: set[str]) -> Iterator[Script]:
+def _recipes(makefile: Makefile, path: str, target: str, visited: set[str]) -> Iterator[Script | Unknown]:
     if target in visited or (rule := makefile.rules.get(target)) is None:
         return
     visited.add(target)
     for prerequisite in rule.prerequisites:
         yield from _recipes(makefile, path, prerequisite, visited)
     for number, line in rule.recipe:
-        yield Script(text=line, origin=Origin(path=path, at=(target, number)), opaque=VARIABLE)
+        origin = Origin(path=path, at=(target, number))
+        # A variable may hold the recipe's prefixes (`Q = @`, then `$(Q)$(CC) …`).
+        text = expand_variables(line, makefile.variables).lstrip("@-+ ")
+        if (program := _REFERENCE.match(text)) is not None:
+            name = program["paren"] or program["brace"]
+            yield Unknown(
+                origin=origin,
+                subject=f"the recipe {text!r}",
+                reason=f"its program is the variable {name}, which neither the makefile nor the command line sets",
+            )
+            continue
+        yield Script(text=text, origin=origin, opaque=VARIABLE)
 
 
 _OPTIONS = frozenset({"-C", "--directory", "-f", "--file", "-j", "--jobs"})
@@ -109,6 +171,9 @@ def _make_targets(command: Command, context: Context) -> Iterator[Expansion] | N
     if (path := _makefile(context, directory, options)) is None:
         return iter((Unknown(origin=command.origin, subject="the makefile", reason="none is found where make runs"),))
     makefile = parse_makefile(context.project.read_text(path))
+    for word in words:
+        if "=" in word and _ASSIGNMENT.match(word):
+            _assign(makefile.variables, word)  # a command-line assignment overrides the makefile's
     goals = [word for word in words if "=" not in word] or ([makefile.default] if makefile.default else [])
     visited: set[str] = set()
     return (script for goal in goals for script in _recipes(makefile, path, goal, visited))

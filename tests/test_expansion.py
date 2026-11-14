@@ -146,12 +146,12 @@ lint:
         files = {"Makefile": self.MAKEFILE, **github_job("ubuntu-latest", "make check")}
         self.assertEqual(
             _expanded(_facts(files)),
-            [("$(CC)", "-o", "app", "src/a.c"), ("./app", "--selftest"), ("make", "-C", "docs", "lint")],
+            [("gcc", "-o", "app", "src/a.c"), ("./app", "--selftest"), ("make", "-C", "docs", "lint")],
         )
 
     def test_without_a_target_make_runs_the_default_goal(self) -> None:
         files = {"Makefile": self.MAKEFILE, **github_job("ubuntu-latest", "make -j4 CC=clang")}
-        self.assertEqual(_expanded(_facts(files)), [("$(CC)", "-o", "app", "src/a.c")])
+        self.assertEqual(_expanded(_facts(files)), [("clang", "-o", "app", "src/a.c")])
 
     def test_the_makefile_is_found_where_make_runs(self) -> None:
         files = {"docs/GNUmakefile": "lint:\n\tvale .\n", **github_job("ubuntu-latest", "make -C docs lint")}
