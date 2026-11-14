@@ -2,8 +2,6 @@
 # expected/<owner>--<repo>.json and compared by `python -m corpus` (see corpus/__init__.py). `ecosystems` names the
 # profiles a project stands for (the labels of the support matrix); `issues` lists the upstream issues about what the
 # recorded expectation gets wrong, to be removed as they are fixed and the expectation changes.
-#
-# Not listed, until #PERF is fixed: haskell/cabal and rust-lang/cargo take more than ten minutes each.
 
 [[project]]
 name = "geerlingguy/ansible-role-docker"
@@ -428,6 +426,11 @@ name = "simonmichael/hledger"
 commit = "01a4b48662ed526402ef22b0a62eb8ba144c022d"
 ecosystems = ["Haskell"]
 issues = [182, 191, 218, 223, 230, 266, 283]
+
+[[project]]
+name = "haskell/cabal"
+commit = "585e22c2be4baa024dffdc6ec38d822e17366a62"
+ecosystems = ["Haskell"]
 
 [[project]]
 name = "fastify/fastify"
@@ -1061,6 +1064,11 @@ name = "nushell/nushell"
 commit = "a3dd8e6c08b0a1fc9fac67de4d87938b17459c2b"
 ecosystems = ["Rust"]
 issues = [182, 287]
+
+[[project]]
+name = "rust-lang/cargo"
+commit = "382ecb8707b82592bb7176ba62b07590c29dee35"
+ecosystems = ["Rust"]
 
 [[project]]
 name = "typelevel/cats"

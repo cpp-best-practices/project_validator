@@ -242,7 +242,6 @@ class UnitTests(unittest.TestCase):
         self.assertEqual([inside.covers(unit, units) for unit in units], [False, True, False, False, False])
         self.assertTrue(_measured("cov", BRANCH, scope=("src",)).covers(".", units))
 
-    @unittest.expectedFailure  # upstream #181: covers() is quadratic in the units, cubic over a project's runs
     def test_many_units_and_runs_are_covered_quickly(self) -> None:
         """A monorepo of forty members with forty tool runs is judged in a fraction of a second; `owner()` walking
         every unit for every (run, unit) pair takes seconds here and minutes on the real ones (uutils/coreutils has
