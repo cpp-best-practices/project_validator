@@ -31,8 +31,12 @@ TYPESCRIPT_SETTINGS = SettingsReader(
 DENO_SETTINGS = SettingsReader(
     name="Deno", files=DENO_CONFIG_FILES, read=lambda path, text: json_settings("Deno", path, text, comments=True)
 )
-# @tsconfig/strictest turns on strict, and more.
-_STRICTEST = re.compile(r"@tsconfig/strictest\b")
+# Published bases that turn on strict: @tsconfig/strictest (and more), @tsconfig's recommended and runtime bases,
+# @sindresorhus/tsconfig, @vue/tsconfig and @total-typescript/tsconfig.
+_STRICTEST = re.compile(
+    r"@tsconfig/(?:strictest|recommended|node[\w-]*|bun|deno|svelte)\b|@sindresorhus/tsconfig\b|@vue/tsconfig\b"
+    r"|@total-typescript/tsconfig\b"
+)
 
 
 def _analyses(runs: Callable[[Command], bool]) -> Callable[[Command, Facts], Run | None]:
@@ -45,6 +49,14 @@ ESLINT = analyzer(
     how="eslint",
     analyses=_analyses(starts(("eslint",), ("next", "lint"))),
     rules=defined_by(files=("eslint",)),
+)
+# xo runs ESLint with its own configuration (package.json's `xo` key, or none: its defaults).
+XO = analyzer(
+    name="xo",
+    languages=JS_LANGUAGES,
+    how="xo",
+    analyses=_analyses(starts(("xo",))),
+    rules=defined_by(),
 )
 OXLINT = analyzer(
     name="oxlint",
@@ -86,7 +98,7 @@ BIOME = combined(
 
 
 def _strict(setting: Setting) -> bool:
-    """Whether a TypeScript setting turns on strict checking: `"strict": true`, or extending @tsconfig/strictest."""
+    """Whether a TypeScript setting turns on strict checking: `"strict": true`, or extending a strict published base."""
     if setting.key == "extends":
         return any(_STRICTEST.search(str(base)) for base in _bases(setting.value))
     return setting.key == "compilerOptions.strict" and setting.value is True

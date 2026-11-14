@@ -115,6 +115,7 @@ _OWN_COMMANDS = {
     "pnpm": frozenset({"install", "i", "add", "remove", "update", "exec", "dlx", "audit", "outdated", "list", "why"}),
     "yarn": frozenset({"install", "add", "remove", "upgrade", "up", "exec", "dlx", "audit", "npm", "workspaces"}),
     "bun": frozenset({"install", "i", "add", "remove", "update", "x", "test", "build", "pm", "audit", "outdated"}),
+    "nub": frozenset({"install", "i", "add", "remove", "update", "exec", "x"}),
 }
 _DIRECTORY_OPTIONS = frozenset({"--prefix", "--cwd", "-C", "--dir"})
 
@@ -316,23 +317,32 @@ DPRINT = format_tool(
 JS_SUFFIXES = (".js", ".mjs", ".cjs", ".jsx")
 TS_SUFFIXES = (".ts", ".mts", ".cts", ".tsx")
 SOURCE_SUFFIXES = (*JS_SUFFIXES, *TS_SUFFIXES)
-# app.test.ts, app.spec.js, app_test.ts (Deno), or any source in a __tests__ directory (Jest).
+# app.test.ts, app.spec.js, app_test.ts (Deno), any source in a __tests__ directory (Jest), or in a top-level test/
+# (mocha's and node's default: express, got).
 JS_TEST_FILES = TestFiles(
-    name="*.test.*, *.spec.* or __tests__/ files",
+    name="*.test.*, *.spec.*, __tests__/ or test/ files",
     languages=JS_LANGUAGES,
-    path=re.compile(r"(?:^|/)(?:[^/]*(?:[._]test|\.spec)\.[^/]+|__tests__/.+)$"),
+    path=re.compile(r"(?:^|/)(?:[^/]*(?:[._]test|\.spec)\.[^/]+|__tests__/.+)$|^tests?/[^/]+\.[cm]?[jt]sx?$"),
 )
-_JS_RUNNERS = frozenset({"jest", "vitest", "mocha", "ava"})
+_JS_RUNNERS = frozenset({"jest", "vitest", "mocha", "ava", "borp"})
+# A runner's entry point that node runs (Jest's documented ESM invocation, `node ./node_modules/jest/bin/jest.js`).
+_RUNNER_ENTRY = re.compile(r"(?:^|/)(?:jest/bin/jest|vitest/vitest|mocha/bin/_?mocha|ava/entrypoints/cli)\.[cm]?js$")
+
+
+def _node_runs_tests(argv: tuple[str, ...]) -> bool:
+    """`node --test`, node running a runner's entry point, or node running the test directory (`node test`)."""
+    words = [word for word in argv[1:] if not word.startswith("-")]
+    return "--test" in argv or any(_RUNNER_ENTRY.search(word) for word in words) or words[:1] in (["test"], ["test/"])
 
 
 def _js_tests(command: Command, _facts: Facts) -> Run | None:
-    """jest, vitest, mocha, ava, `playwright test`, `node --test`, `deno test` or `bun test`."""
+    """jest, vitest, mocha, ava, borp, `playwright test`, `node --test`, `deno test` or `bun test`."""
     argv = resolved(command)
     name = program(argv)
     runs = (
         name in _JS_RUNNERS
         or starts_with(argv, ("playwright", "test"), ("deno", "test"), ("bun", "test"))
-        or (name == "node" and "--test" in argv)
+        or (name == "node" and _node_runs_tests(argv))
     )
     return tested() if runs else None
 

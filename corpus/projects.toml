@@ -49,7 +49,7 @@ issues = [264]
 name = "phoenixframework/phoenix"
 commit = "789f851c3cda02f56702a16700ebba48d270cbd3"
 ecosystems = ["BEAM"]
-issues = [182, 188, 254]
+issues = [182, 188]
 
 [[project]]
 name = "fmtlib/fmt"
@@ -185,7 +185,6 @@ ecosystems = ["Data"]
 name = "jshttp/mime-db"
 commit = "ba120a7f71bc8ab7d5299e88c0049063239029a7"
 ecosystems = ["Data"]
-issues = [254]
 
 [[project]]
 name = "toml-lang/toml-test"
@@ -312,7 +311,7 @@ issues = [186, 188]
 name = "actions/checkout"
 commit = "f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a"
 ecosystems = ["GitHub Action"]
-issues = [227, 254]
+issues = [227]
 
 [[project]]
 name = "peter-evans/create-pull-request"
@@ -383,7 +382,6 @@ issues = [188]
 name = "octokit/graphql-schema"
 commit = "82ff2d4780080e6929ebb95608cefa22dfa05ac7"
 ecosystems = ["GraphQL"]
-issues = [254]
 
 [[project]]
 name = "dimaMachina/graphql-eslint"
@@ -424,13 +422,12 @@ ecosystems = ["Haskell"]
 name = "fastify/fastify"
 commit = "7e0c8febb2a1ba4d55309cdc2ccd51694eca46d3"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 254, 280]
+issues = [182, 280]
 
 [[project]]
 name = "sindresorhus/got"
 commit = "6b5aafc1cd538998728be6f45c65b0f80bae01b2"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [254]
 
 [[project]]
 name = "axios/axios"
@@ -453,13 +450,12 @@ issues = [182, 184, 248, 280]
 name = "expressjs/express"
 commit = "43fca52d28a422c8be48fd489cbd4f2d6152bab6"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [254]
 
 [[project]]
 name = "colinhacks/zod"
 commit = "fef16cba0cf6668eb25ecc32fdfe2ce0a46f6f80"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 188, 254]
+issues = [182, 188]
 
 [[project]]
 name = "denoland/std"

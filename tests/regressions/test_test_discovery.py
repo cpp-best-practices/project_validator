@@ -122,7 +122,6 @@ class DotnetTestProjectTests(unittest.TestCase):
 
 
 class JavaScriptTestLayoutTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #254: test files are found by file name only, never by directory
     def test_a_test_directory_run_by_a_known_runner_holds_the_tests(self) -> None:
         """mocha's and node's classic layout, `test/*.js` without `.test.` in the name, holds the tests when `npm test`
         runs mocha on it (express, mime-db), `node --test 'test/*.ts'` (got) or `node test` (octokit/graphql-schema)."""
@@ -135,7 +134,6 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
             with self.subTest(runner=name):
                 _tests_run_in(self, "npm JavaScript", {**tests, **_scripts(test=script), **_ci("npm test")})
 
-    @unittest.expectedFailure  # upstream #254: `node <path>/jest/bin/jest.js` is not matched as jest
     def test_jest_launched_through_node_is_jest(self) -> None:
         """`node --experimental-vm-modules ./node_modules/jest/bin/jest.js` (Jest's documented ESM invocation: phoenix,
         actions/checkout) runs the tests, as `jest` does."""
@@ -144,7 +142,6 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
                 script = JEST_THROUGH_NODE.format(path=path)
                 _tests_run_in(self, "npm JavaScript", {"a.test.js": "", **_scripts(test=script), **_ci("npm test")})
 
-    @unittest.expectedFailure  # upstream #254: borp (node:test runner) is an unknown runner
     def test_borp_runs_the_node_test_files_it_is_configured_with(self) -> None:
         """fastify's `npm run unit` runs borp, a node:test runner, on the files of .borp.yaml."""
         files = {
@@ -155,7 +152,6 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
         }
         _tests_run_in(self, "npm JavaScript", files)
 
-    @unittest.expectedFailure  # upstream #254: `nub run <script>` is unknown yet judged a confident miss, not unread
     def test_an_unknown_runner_of_a_package_script_is_not_a_confident_miss(self) -> None:
         """zod's `nub run test` runs the `test` package script (`vitest run`): the tests are run, or at worst the
         answer is unknown; a confident "no CI runs the tests" is wrong."""
@@ -163,13 +159,11 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
         result = run_in_layout(self, "npm JavaScript", TESTS_RUN, files)
         self.assertIn(result.status, (Status.PASS, Status.ERROR), result)
 
-    @unittest.expectedFailure  # upstream #254: xo (eslint wrapper) is an unknown linter
     def test_xo_is_an_eslint_wrapper_that_lints(self) -> None:
         """got's `npm test` runs xo (eslint configured in package.json's `xo` key): a static analyzer runs."""
         package = {"package.json": json.dumps({"main": "index.js", "scripts": {"test": "xo"}, "xo": {}})}
         _passes(self, "npm JavaScript", STATIC_ANALYSIS, {**package, **_ci("npm test")})
 
-    @unittest.expectedFailure  # upstream #254: the strict hint ignores an `extends` base that may be strict
     def test_a_tsconfig_extending_a_base_is_not_told_to_enable_strict(self) -> None:
         """got's tsconfig extends @sindresorhus/tsconfig (strict): whether strict is on is not visible, so the hint
         "consider enabling strict mode" is wrong; the result may say strict is not visible instead."""

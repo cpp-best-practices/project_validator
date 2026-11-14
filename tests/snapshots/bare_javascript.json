@@ -658,6 +658,13 @@
                 },
                 "needs_definition": false,
                 "required": false
+              },
+              "xo": {
+                "can": {
+                  "checks": "xo"
+                },
+                "needs_definition": false,
+                "required": false
               }
             },
             "language": "JavaScript",
@@ -1000,7 +1007,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider running eslint, oxlint, deno lint or biome lint in CI"
+        "consider running eslint, xo, oxlint, deno lint or biome lint in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"
@@ -1015,7 +1022,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (*.test.*, *.spec.* or __tests__/ files)",
+      "message": "no tests found (*.test.*, *.spec.*, __tests__/ or test/ files)",
       "status": "FAIL"
     },
     "top-level-guard": {

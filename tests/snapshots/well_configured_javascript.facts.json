@@ -216,7 +216,7 @@
       "origin": "fuzz/add.fuzz.js"
     },
     {
-      "kind": "*.test.*, *.spec.* or __tests__/ files",
+      "kind": "*.test.*, *.spec.*, __tests__/ or test/ files",
       "language": "TypeScript",
       "origin": "src/add.test.ts"
     },

@@ -1527,6 +1527,13 @@
                 },
                 "needs_definition": false,
                 "required": false
+              },
+              "xo": {
+                "can": {
+                  "checks": "xo"
+                },
+                "needs_definition": false,
+                "required": false
               }
             },
             "language": "JavaScript",
@@ -1581,6 +1588,13 @@
               "oxlint": {
                 "can": {
                   "checks": "oxlint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "xo": {
+                "can": {
+                  "checks": "xo"
                 },
                 "needs_definition": false,
                 "required": false
@@ -2122,7 +2136,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "*.test.*, *.spec.* or __tests__/ files: 1 file(s), run by a JavaScript test runner",
+      "message": "*.test.*, *.spec.*, __tests__/ or test/ files: 1 file(s), run by a JavaScript test runner",
       "status": "PASS"
     },
     "top-level-guard": {
