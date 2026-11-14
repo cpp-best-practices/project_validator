@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -102,6 +109,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -248,6 +262,76 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "SQL",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {
+              "atlas migrate lint": [
+                "migrations/V1__orders.sql"
+              ],
+              "liquibase checks": [
+                "migrations/V1__orders.sql"
+              ],
+              "squawk": [
+                "migrations/V1__orders.sql"
+              ]
+            },
+            "known": {
+              "atlas migrate lint": {
+                "can": {
+                  "linted": "atlas migrate lint --dir file://migrations --dev-url <dev database> (or ariga/atlas-action/migrate/lint)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "liquibase checks": {
+                "can": {
+                  "linted": "liquibase checks run --changelog-file <changelog>"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "squawk": {
+                "can": {
+                  "linted": "squawk migrations/*.sql (or sbdchd/squawk-action with fail-on-violations: true)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "SQL",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -267,7 +351,30 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "platforms": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "database engine version",
+            "language": "SQL",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
       {
         "auxiliary": {},
         "language": "SQL",
@@ -455,6 +562,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -573,6 +687,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to SQL",
@@ -646,12 +765,34 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [
+        "consider running squawk migrations/*.sql (or sbdchd/squawk-action with fail-on-violations: true), atlas migrate lint --dir file://migrations --dev-url <dev database> (or ariga/atlas-action/migrate/lint) or liquibase checks run --changelog-file <changelog>"
+      ],
+      "message": "1 migration file, but no CI configuration checks them for unsafe changes",
+      "status": "WARN"
+    },
     "mutation-testing": {
       "details": [],
       "message": "not applicable to SQL",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
     "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to SQL",
       "status": "SKIP"
@@ -714,6 +855,11 @@
       "details": [],
       "message": "no tests found (dbt schema tests (tests: in the models' YAML), dbt singular tests (tests/*.sql) or pgTAP tests (SELECT plan(...) in tests/*.sql))",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

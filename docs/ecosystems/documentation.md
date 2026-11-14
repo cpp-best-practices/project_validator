@@ -7,8 +7,10 @@ names its theme). Prose itself, the Markdown in every repository, makes no docum
 configuration is YAML, TOML, Python or JavaScript, judged by its own profile as well.
 
 A CI job works with the ecosystem when it runs a generator (`mkdocs`, `sphinx-build`, `docusaurus`, `mdbook`, `hugo`,
-`jekyll`), a prose linter, or one of the `actions-hugo`, `actions-mdbook`, `mkdocs-deploy-gh-pages`,
-`jekyll-build-pages`, `sphinx-notes/pages`, `markdownlint-cli2-action` or `vale-action` actions.
+`jekyll`), a prose linter, a link checker (lychee, markdown-link-check, mdbook-linkcheck, linkinator, muffet,
+htmltest, htmlproofer, linkchecker), or one of the `actions-hugo`, `actions-mdbook`, `mkdocs-deploy-gh-pages`,
+`jekyll-build-pages`, `sphinx-notes/pages`, `markdownlint-cli2-action`, `vale-action`, `lychee-action` or
+`github-action-markdown-link-check` actions.
 
 ## `tests-run`
 
@@ -29,6 +31,18 @@ The prose is linted: markdownlint (`markdownlint-cli2`, or `DavidAnson/markdownl
 `.markdownlint.yaml`, `.markdownlint.json` or `.markdownlint-cli2.*`) or vale (`vale`, or `errata-ai/vale-action`;
 `.vale.ini`, which it needs).
 
+## `link-check`
+
+CI checks the site's links and fails on a broken one: lychee on the sources (`lychee --no-progress 'docs/**/*.md'`,
+or `lycheeverse/lychee-action`, which fails the job unless `fail: false`; `lychee --dump` only lists the links),
+Sphinx's `linkcheck` builder (`sphinx-build -b linkcheck`, `-M linkcheck`; `make linkcheck` is taken to run it),
+markdown-link-check (or `gaurav-nelson/github-action-markdown-link-check`), mdBook's `mdbook build` with an
+`[output.linkcheck]` table in `book.toml` (or `mdbook-linkcheck` itself), MkDocs' `mkdocs build` with `htmlproofer` in
+`mkdocs.yml`'s plugins, linkinator or muffet on the served site, htmltest or HTMLProofer on the built one, LinkChecker.
+A job a schedule runs counts as much as one a push runs: links rot without a change to the repository. Warns when CI
+checks nothing. Docusaurus's `onBrokenLinks: 'throw'` fails the build on a broken internal link only, which
+`warnings-as-errors` already asks.
+
 ## `vcs-ignore`
 
 The built site is ignored: `site/` (MkDocs), `_build/` (Sphinx), `build/` and `.docusaurus/` (Docusaurus), `book/`
@@ -40,6 +54,5 @@ A built site is a build output, never committed.
 
 ## Not judged
 
-Link checking (lychee, `sphinx-build -b linkcheck`, markdown-link-check) is a check of its own, not yet built.
 `compiler-warnings` is a compiled language's; the prose linters are `static-analysis`. The other checks have no tool
 for a site and are skipped.

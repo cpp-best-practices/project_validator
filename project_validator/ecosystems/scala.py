@@ -13,7 +13,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
-from project_validator.facts import Command, Facts, resolved
+from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
 from project_validator.facts.audit import audited, auditor
@@ -23,7 +23,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directory_output
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
-from project_validator.facts.settings import file_reader
+from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Condition, Run, any_of, defined_by, either, when
 from project_validator.text import Pattern
@@ -349,7 +349,7 @@ SCALAFIX = analyzer(
 )
 
 # CodeQL does not analyse Scala; semgrep and GitLab SAST do.
-SECURITY_SCANNERS = tuple(tool for tool in multi_language_scanners(SCALA) if tool.name != "CodeQL")
+SECURITY_SCANNERS = multi_language_scanners(SCALA)
 
 # osv-scanner and trivy read no sbt build; snyk and GitLab Dependency Scanning do.
 SBT_DEPENDENCY_CHECK = auditor(
@@ -360,7 +360,7 @@ SBT_DEPENDENCY_CHECK = auditor(
 )
 AUDITORS = (
     SBT_DEPENDENCY_CHECK,
-    *(tool for tool in multi_ecosystem_audits(SCALA) if tool.name in ("snyk", "GitLab Dependency Scanning")),
+    *multi_ecosystem_audits(SCALA),
 )
 
 FUNCTION_LENGTH_LIMITERS = function_length_limiters(SCALA)
@@ -403,15 +403,65 @@ SCALA_ECOSYSTEM = Ecosystem(
 # A Scala job without a version switch builds the version its build names: no version of its own.
 _DEFAULT = "default"
 
+# The Scala versions a build cross-builds: sbt's `crossScalaVersions := Seq("2.13.16", "3.3.5")` (in build.sbt or
+# another .sbt file), Mill's `Cross[Module]("2.13.16", "3.3.5")`.
+_CROSS_VERSIONS = {
+    "crossScalaVersions": (re.compile(r"\bcrossScalaVersions\s*:?=\s*(?:Seq|List|Vector)\(([^)]*)\)"), None),
+    "Cross": (re.compile(r"\bCross\[[^\]]*\]\s*\(([^)]*)\)"), None),
+}
+SCALA_BUILD_SETTINGS = SettingsReader(
+    name="Scala build",
+    files=("build.sbt", "*.sbt", "build.sc", "build.mill"),
+    read=lambda path, text: matched_settings("Scala build", path, text, _CROSS_VERSIONS),
+)
+_VERSION_LITERAL = re.compile(_SCALA_VERSION)
 
-def _scala_platforms(job: Job) -> frozenset[str]:
-    """A job's toolchains: each Scala version it switches to (`++3.3.5`) on each JDK it names; the JDKs alone when it
-    switches to none, or the Scala versions alone when it names no JDK."""
-    scala = {f"Scala {version}" for version in toolchain_versions(job.toolchains, "Scala") if version != _DEFAULT}
+
+def _cross_versions(facts: Facts) -> frozenset[str]:
+    """The Scala versions the build cross-builds."""
+    settings = facts.where(Setting, tool=SCALA_BUILD_SETTINGS.name)
+    return frozenset(version for setting in settings for version in _VERSION_LITERAL.findall(str(setting.value)))
+
+
+def _cross_builds(argv: tuple[str, ...]) -> bool:
+    """Whether a command builds every cross version: an sbt task with the `+` prefix (`sbt +test`; `++3.3.5` only
+    switches), or a Mill selector over every module (`mill __.test`, `mill foo[_].test`)."""
+    if program(argv) in ("sbt", "sbtn", "sbtx"):
+        pieces = (piece for word in argv[1:] for piece in _SBT_PIECES.split(word))
+        return any(piece.startswith("+") and not piece.startswith("++") for piece in pieces)
+    return any(
+        "__" in segment or segment == "_" or "[_]" in segment
+        for segments, _ in mill_tasks(argv)
+        for segment in segments
+    )
+
+
+def _scala_versions(job: Job, facts: Facts | None) -> set[str]:
+    """The Scala versions a job builds: those it switches to, and the build's cross versions when it cross-builds."""
+    switched = {version for version in toolchain_versions(job.toolchains, "Scala") if version != _DEFAULT}
+    if facts is not None and any(_cross_builds(resolved(command)) for command in facts.where(Command, job=job.job)):
+        switched |= _cross_versions(facts)
+    return switched
+
+
+def _platforms(job: Job, facts: Facts | None) -> frozenset[str]:
+    """A job's toolchains: each Scala version it builds on each JDK it names; the JDKs alone when it builds the one
+    version its build names, or the Scala versions alone when it names no JDK."""
+    scala = {f"Scala {version}" for version in _scala_versions(job, facts)}
     jdk = {f"JDK {version}" for version in toolchain_versions(job.toolchains, "JDK")}
     if scala and jdk:
         return frozenset(f"{runtime} / {language}" for runtime in sorted(jdk) for language in sorted(scala))
     return frozenset(scala | jdk) or toolchain_versions(job.toolchains, "Scala")
 
 
-SCALA_VERSIONS = ToolchainAxis(languages=SCALA, noun="JDK or Scala version", of_job=_scala_platforms)
+def _scala_platforms(job: Job) -> frozenset[str]:
+    return _platforms(job, None)
+
+
+def _scala_platforms_in(job: Job, facts: Facts) -> frozenset[str]:
+    return _platforms(job, facts)
+
+
+SCALA_VERSIONS = ToolchainAxis(
+    languages=SCALA, noun="JDK or Scala version", of_job=_scala_platforms, of_job_in=_scala_platforms_in
+)

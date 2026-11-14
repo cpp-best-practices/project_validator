@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Haskell",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -126,6 +133,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Haskell",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -287,6 +301,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Haskell",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Haskell",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Haskell",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Haskell",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -306,6 +358,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Haskell",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -320,6 +379,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Haskell",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -486,6 +552,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Haskell",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -583,6 +656,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Haskell",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no GHC warning flags found; enable at least -Wall -Wcompat -Widentities -Wredundant-constraints",
@@ -660,7 +738,22 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Haskell",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Haskell",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Haskell",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Haskell",
       "status": "SKIP"
@@ -669,6 +762,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Haskell",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -728,6 +826,11 @@
       "details": [],
       "message": "tests found in 1 file(s), but no CI configuration runs cabal test (or stack test)",
       "status": "WARN"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Haskell",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

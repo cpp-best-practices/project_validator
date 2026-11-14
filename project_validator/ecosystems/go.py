@@ -189,6 +189,25 @@ GO_LINTS = (
 )
 
 
+# The race detector is Go's ThreadSanitizer; -asan and -msan build with the C sanitizers for cgo.
+GO_SANITIZERS = (
+    pattern("go test -race", r"\b(?:go\s+test|gotestsum)\b[^\n]*\s-race\b"),
+    pattern("go test -asan", r"\b(?:go\s+test|gotestsum)\b[^\n]*\s-asan\b"),
+    pattern("go test -msan", r"\b(?:go\s+test|gotestsum)\b[^\n]*\s-msan\b"),
+)
+SANITIZERS = Practice(
+    name=PracticeName.SANITIZERS,
+    languages=GO_LANGUAGE,
+    requirements=always(*(required(found, in_files=False) for found in GO_SANITIZERS)),
+    any_one=True,
+    words=Wording(
+        kind="sanitizers",
+        hint="run go test -race (the race detector) in CI",
+        passed="sanitizers run in CI: {found}",
+        failed="no sanitizer runs in CI; run go test -race",
+        question="whether the race detector runs in CI",
+    ),
+)
 WARNINGS = Practice(
     name=PracticeName.WARNINGS,
     languages=GO_LANGUAGE,

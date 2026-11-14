@@ -133,10 +133,10 @@ def known_build_outputs() -> tuple[BuildOutput, ...]:
 
 def outputs_of(language: str, build_systems: frozenset[str], outputs: Iterable[BuildOutput]) -> tuple[BuildOutput, ...]:
     """The build outputs of `language` for a project built with `build_systems`: those of the build systems it uses,
-    or, when none of them has one, the language's own."""
+    and the language's own (tied to no build system), which every build of the language writes. The two add up: an
+    output tied to a build system hides none."""
     found = [output for output in outputs if language in output.languages]
-    used = [output for output in found if output.build_systems & build_systems]
-    return tuple(used or [output for output in found if not output.build_systems])
+    return tuple(output for output in found if not output.build_systems or output.build_systems & build_systems)
 
 
 __all__ = [
