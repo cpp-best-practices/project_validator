@@ -82,7 +82,6 @@ class ShellTests(unittest.TestCase):
         [unsplittable] = split_script("echo ${{ 'a' }} 'open", EXPRESSION)
         self.assertEqual(unsplittable, Unsplittable(line="echo ${{ 'a' }} 'open", reason="No closing quotation"))
 
-    @unittest.expectedFailure  # upstream #294: `$((…))` arithmetic is split into a command named `((`
     def test_arithmetic_expansion_is_a_value_not_a_command(self) -> None:
         """`total=$((total + price))` assigns; `echo $(( 1 + 2 ))` runs echo with one argument."""
         self.assertEqual(self._split("total=$((total + price))\necho $(( 1 + 2 ))\n"), [("echo", "$(( 1 + 2 ))")])
@@ -92,7 +91,7 @@ class ShellTests(unittest.TestCase):
             ('test -z "$(gofmt -l .)"', [("gofmt", "-l", "."), ("test", "-z", "$(gofmt -l .)")]),
             ("echo `git rev-parse HEAD` x", [("git", "rev-parse", "HEAD"), ("echo", "`git rev-parse HEAD`", "x")]),
             ("cd $(dirname $(pwd)) && ls", [("pwd",), ("dirname", "$(pwd)"), ("cd", "$(dirname $(pwd))"), ("ls",)]),
-            ("echo $((1 + 2)) '$(not run)'", [("echo", "$", "((", "1", "+", "2", "))", "$(not run)")]),
+            ("echo $((1 + 2)) '$(not run)'", [("echo", "$((1 + 2))", "$(not run)")]),
             ('echo "\\$(not run)" \\`x', [("echo", "\\$(not run)", "`x")]),
             ("echo $(unclosed", [("echo", "$", "unclosed")]),
             ("echo `unclosed", [("echo", "`unclosed")]),

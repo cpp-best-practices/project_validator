@@ -241,13 +241,17 @@ def _without_heredocs(script: str) -> str:
     return "\n".join(kept)
 
 
-def _substitutions(script: str, hide: Callable[[str, str], str], escape: str = "\\") -> str:
+def _substitutions(script: str, hide: Callable[[str, str | None], str], escape: str = "\\") -> str:
     """`script` with each command substitution outside single quotes (`$(…)`, and `` `…` `` where the backquote is no
     escape; not arithmetic `$((…))`) replaced by what `hide` returns for its text and its commands."""
     out: list[str] = []
     index, quote = 0, ""
     while index < len(script):
         character = script[index]
+        if quote != "'" and (arithmetic := _arithmetic_end(script, index)) is not None:
+            out.append(hide(script[index:arithmetic], None))  # a value: kept whole, it runs nothing
+            index = arithmetic
+            continue
         end = None if quote == "'" else _substitution_end(script, index, backquotes=escape != "`")
         if end is not None:
             text = script[index:end]
@@ -263,6 +267,18 @@ def _substitutions(script: str, hide: Callable[[str, str], str], escape: str = "
         out.append(character)
         index += 1
     return "".join(out)
+
+
+def _arithmetic_end(script: str, start: int) -> int | None:
+    """Where the arithmetic expansion `$((…))` starting at `start` ends (just after it); None if none starts there."""
+    if not script.startswith("$((", start):
+        return None
+    depth = 0
+    for index in range(start + 1, len(script)):
+        depth += {"(": 1, ")": -1}.get(script[index], 0)
+        if depth == 0:
+            return index + 1
+    return None
 
 
 def _substitution_end(script: str, start: int, *, backquotes: bool = True) -> int | None:
