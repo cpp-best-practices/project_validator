@@ -481,7 +481,6 @@ class SecurityPolicyTests(unittest.TestCase):
 
 
 class DependencyUpdatesTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #245: .github/renovate.json5 and the other Renovate locations are unknown
     def test_renovate_is_found_at_every_documented_location(self) -> None:
         """.github/renovate.json5 (prettier, vite, okhttp, junit5, opentelemetry-proto, clap, starship, ruff),
         .renovaterc.json5 and .gitlab/renovate.json[5] are Renovate configurations."""

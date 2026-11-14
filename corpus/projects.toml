@@ -453,13 +453,13 @@ issues = [219]
 name = "prettier/prettier"
 commit = "f391bf3e7ee219bcfeb61b06555ee1ac8e9c0680"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 184, 220, 231, 235, 237, 245]
+issues = [182, 184, 220, 231, 235, 237]
 
 [[project]]
 name = "vitejs/vite"
 commit = "f898888222297aa56d6fc281c585d4d4e4d51f58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 184, 216, 219, 235, 239, 245, 248, 280]
+issues = [182, 184, 216, 219, 235, 239, 248, 280]
 
 [[project]]
 name = "expressjs/express"
@@ -560,7 +560,7 @@ issues = [182, 216, 237, 252]
 name = "square/okhttp"
 commit = "58ca23340fc974ad0a5d411e167f1dc9f6f0886a"
 ecosystems = ["JVM"]
-issues = [182, 216, 234, 245, 252]
+issues = [182, 216, 234, 252]
 
 [[project]]
 name = "apache/commons-lang"
@@ -578,7 +578,7 @@ issues = [182, 226, 277]
 name = "junit-team/junit5"
 commit = "16ac3a3d1d712a0797108ec5be0be911e98d13c6"
 ecosystems = ["JVM"]
-issues = [182, 188, 202, 233, 245]
+issues = [182, 188, 202, 233]
 
 [[project]]
 name = "spring-projects/spring-petclinic"
@@ -817,7 +817,7 @@ issues = [182, 188, 200]
 name = "open-telemetry/opentelemetry-proto"
 commit = "94f2f2d5f39c5139141dc7e564daa84aa2826531"
 ecosystems = ["Protobuf"]
-issues = [197, 217, 245, 249, 271, 280]
+issues = [197, 217, 249, 271, 280]
 
 [[project]]
 name = "grpc/grpc-proto"
@@ -1026,7 +1026,7 @@ issues = [188, 224, 230, 287]
 name = "clap-rs/clap"
 commit = "ec93e71255c0b833a34f50662a3fdb22f53f6ded"
 ecosystems = ["Rust"]
-issues = [182, 188, 198, 245, 287]
+issues = [182, 188, 198, 287]
 
 [[project]]
 name = "sharkdp/bat"
@@ -1044,13 +1044,12 @@ issues = [188, 220, 230, 287]
 name = "starship/starship"
 commit = "e3b64da0b660552377de8f7101a73a36b145791c"
 ecosystems = ["Rust"]
-issues = [245]
 
 [[project]]
 name = "astral-sh/ruff"
 commit = "b140af2f48bddf33a1ae984174af3180236aaaaf"
 ecosystems = ["Rust", "Python"]
-issues = [188, 212, 239, 245, 287]
+issues = [188, 212, 239, 287]
 
 [[project]]
 name = "uutils/coreutils"

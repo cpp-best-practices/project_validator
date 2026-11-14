@@ -4,7 +4,21 @@ from project_validator.core import Context, Result, check
 
 DEPENDENCY_UPDATERS = (
     ("Dependabot", (".github/dependabot.yml", ".github/dependabot.yaml")),
-    ("Renovate", ("renovate.json", "renovate.json5", ".github/renovate.json", ".renovaterc", ".renovaterc.json")),
+    # Every location Renovate documents for a repository's configuration (but package.json's `renovate` key).
+    (
+        "Renovate",
+        (
+            "renovate.json",
+            "renovate.json5",
+            ".github/renovate.json",
+            ".github/renovate.json5",
+            ".gitlab/renovate.json",
+            ".gitlab/renovate.json5",
+            ".renovaterc",
+            ".renovaterc.json",
+            ".renovaterc.json5",
+        ),
+    ),
 )
 
 
