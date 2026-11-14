@@ -347,7 +347,7 @@ issues = [182, 195]
 name = "cli/cli"
 commit = "3d5a9e355a837f2f5ee78d7484c118cc1342ad1a"
 ecosystems = ["Go"]
-issues = [182, 249]
+issues = [182]
 
 [[project]]
 name = "spf13/cobra"
@@ -575,7 +575,7 @@ issues = [182, 188, 202]
 name = "spring-projects/spring-petclinic"
 commit = "500158f732419217507c7656904b8e6aa1bcc0d6"
 ecosystems = ["JVM"]
-issues = [182, 249, 277]
+issues = [182, 277]
 
 [[project]]
 name = "Kotlin/kotlinx.coroutines"
@@ -805,7 +805,7 @@ issues = [182, 188]
 name = "open-telemetry/opentelemetry-proto"
 commit = "94f2f2d5f39c5139141dc7e564daa84aa2826531"
 ecosystems = ["Protobuf"]
-issues = [249, 271, 280]
+issues = [271, 280]
 
 [[project]]
 name = "grpc/grpc-proto"
@@ -817,7 +817,7 @@ issues = [207]
 name = "bufbuild/protovalidate"
 commit = "804b6087217194c7827e0d63bf2f6ae70d01f41b"
 ecosystems = ["Protobuf"]
-issues = [249, 271]
+issues = [271]
 
 [[project]]
 name = "envoyproxy/data-plane-api"

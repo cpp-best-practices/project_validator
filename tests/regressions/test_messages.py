@@ -288,7 +288,6 @@ class SmallMessageTests(unittest.TestCase):
 
 
 class ConfiguredClaimTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #249: a tool is "configured" or passes from a file's existence alone
     def test_a_tool_is_credited_only_when_its_section_enables_it(self) -> None:
         """buf lint is not "configured" by a buf.yaml with only `breaking:` (opentelemetry-proto); Checkstyle with only
         NoHttpCheck is no static analysis (spring-petclinic); staticcheck is not enabled under `default: none`

@@ -161,3 +161,16 @@ class GoTests(unittest.TestCase):
         }
         result = self._run(platform_matrix, files)
         self.assertIn("2 Go version(s) (1.22, 1.23)", result.message)
+
+
+class GosecExclusionTests(unittest.TestCase):
+    def test_only_a_rule_dropping_every_finding_in_every_file_excludes_gosec(self) -> None:
+        from project_validator.ecosystems.go import _drops_all
+
+        sources = ["a.go", "cmd/b.go"]
+        self.assertTrue(_drops_all({"linters": ["gosec"]}, "gosec", sources))
+        self.assertTrue(_drops_all({"linters": ["gosec"], "path": r"\.go$"}, "gosec", sources))
+        self.assertFalse(_drops_all({"linters": ["gosec"], "path": "^cmd/"}, "gosec", sources))
+        self.assertFalse(_drops_all({"linters": ["gosec"], "text": "G104"}, "gosec", sources))
+        self.assertFalse(_drops_all({"linters": ["errcheck"]}, "gosec", sources))
+        self.assertFalse(_drops_all({"linters": ["gosec"], "path": "("}, "gosec", sources))
