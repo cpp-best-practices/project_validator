@@ -13,7 +13,8 @@ or `azure/k8s-deploy` actions.
 
 ## `tests-run`
 
-helm-unittest tests (`tests/*_test.yaml` with a `suite:`) that `helm unittest <chart>` runs, or the chart's test hooks
+helm-unittest tests (`tests/*_test.yaml` or `unittests/`, with a `suite:`) that `helm unittest <chart>` runs (also
+as one of chart-testing's `additional-commands`), or the chart's test hooks
 (`templates/tests/*.yaml` with `helm.sh/hook: test`) that `helm test`, or chart-testing's `ct install`, runs.
 
 ## `static-analysis`

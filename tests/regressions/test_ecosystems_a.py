@@ -218,6 +218,15 @@ class GoTests(unittest.TestCase):
         )
 
 
+class MoleculeVerifierTests(unittest.TestCase):
+    @unittest.expectedFailure  # upstream #261: a molecule scenario's testinfra verifier is unread
+    def test_molecule_runs_its_scenarios_testinfra_tests(self) -> None:
+        """A molecule scenario's `tests/test_*.py` is run by `molecule test` (kubespray)."""
+        files = {**SCENARIO, **VERIFIER, **_ci("molecule test")}
+        result = run_in_layout(self, ANSIBLE_PLAYBOOK, TESTS_RUN, files)
+        self.assertEqual(result.status, Status.PASS, result)
+
+
 class AntsibullNoxTests(unittest.TestCase):
     @unittest.expectedFailure  # upstream #261: antsibull-nox's reusable workflow is unread
     def test_antsibull_nox_sessions_run_ansible_test(self) -> None:
@@ -274,10 +283,9 @@ NOX_WORKFLOW: dict[str, object] = {
 
 
 class AnsibleKubernetesTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #261: unittests/ suites, ct.yaml and molecule verifiers are unread
-    def test_helm_unittest_suites_and_molecule_verifiers_are_tests_run(self) -> None:
-        """`charts/*/unittests/*_test.yaml` run by chart-testing's `additional-commands` are tests (prometheus
-        helm-charts); a molecule scenario's `tests/test_*.py` is run by `molecule test` (kubespray)."""
+    def test_helm_unittest_suites_are_tests_run(self) -> None:
+        """`charts/*/unittests/*_test.yaml`, run by `helm unittest` or chart-testing's `additional-commands`, are tests
+        (prometheus helm-charts)."""
         _all_pass(
             self,
             {
@@ -291,7 +299,6 @@ class AnsibleKubernetesTests(unittest.TestCase):
                     TESTS_RUN,
                     {**UNITTESTS, **_ci("helm unittest charts/shop")},
                 ),
-                "molecule verifier": (ANSIBLE_PLAYBOOK, TESTS_RUN, {**SCENARIO, **VERIFIER, **_ci("molecule test")}),
             },
         )
 

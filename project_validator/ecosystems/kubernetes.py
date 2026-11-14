@@ -16,10 +16,13 @@ import re
 from collections.abc import Mapping
 from pathlib import PurePosixPath
 
-from project_validator.core import Project
+from project_validator import yaml_support
+from project_validator.core import Context, Project
 from project_validator.ecosystems.model import Ecosystem
+from project_validator.facts import Command, Origin, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.expansion import Action
+from project_validator.facts.arguments import option_values, starts_with
+from project_validator.facts.expansion import Action, CommandExpander, Expansion, Script, found_at, joined
 from project_validator.facts.schema import validated, validator
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import file_reader
@@ -113,9 +116,9 @@ KUBERNETES_ECOSYSTEM = Ecosystem(
 # --- Tests ----------------------------------------------------------------------------------------------------------
 
 HELM_UNITTEST_TESTS = TestFiles(
-    name="helm-unittest tests (tests/*_test.yaml)",
+    name="helm-unittest tests (tests/*_test.yaml or unittests/)",
     languages=KUBERNETES_ONLY,
-    path=re.compile(r"(?:^|/)tests/.+_test\.ya?ml$"),
+    path=re.compile(r"(?:^|/)(?:unit)?tests/.+_test\.ya?ml$"),
     contains=re.compile(r"^suite:", re.MULTILINE),
     written_in=YAML,
 )
@@ -133,6 +136,36 @@ HELM_UNITTEST = test_runner(
     runs=when(starts(("helm", "unittest")), tested),
     tests=tests_of(HELM_UNITTEST_TESTS.name),
 )
+# chart-testing runs its configuration's `additional-commands` on each chart it lints (prometheus-community's
+# `helm unittest … {{ .Path }}`).
+CT_CONFIGURATION = ("ct.yaml", "ct.yml", ".github/ct.yaml", ".github/ct.yml")
+
+
+def _ct_commands(command: Command, context: Context) -> list[Expansion] | None:
+    argv = resolved(command)
+    if not starts_with(argv, ("ct", "lint"), ("ct", "lint-and-install")):
+        return None
+    named = option_values(argv, "--config")
+    path = joined(command.directory, named[0]) if named else found_at(context, command.directory, CT_CONFIGURATION)
+    if path is None or not context.project.exists(path):
+        return None
+    try:
+        configuration = yaml_support.load(context.project.read_text(path))
+    except yaml_support.YamlError:
+        return [
+            Unknown(
+                origin=Origin(path=path),
+                subject=f"the chart-testing configuration {path}",
+                reason="it does not parse",
+                hides="commands",
+            )
+        ]
+    commands = configuration.get("additional-commands") if isinstance(configuration, Mapping) else None
+    texts = (str(text).replace("{{ .Path }}", ".") for text in commands) if isinstance(commands, list) else ()
+    return [Script(text=text, origin=Origin(path=path, at=("additional-commands",))) for text in texts] or None
+
+
+CT_COMMANDS = CommandExpander(name="chart-testing additional commands", expand=_ct_commands)
 # chart-testing's `ct install` installs each changed chart and runs its tests.
 HELM_TEST = test_runner(
     name="helm test",

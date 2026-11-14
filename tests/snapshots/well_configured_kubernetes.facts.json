@@ -207,7 +207,7 @@
       "origin": "charts/shop/templates/tests/test-connection.yaml"
     },
     {
-      "kind": "helm-unittest tests (tests/*_test.yaml)",
+      "kind": "helm-unittest tests (tests/*_test.yaml or unittests/)",
       "language": "Kubernetes",
       "origin": "charts/shop/tests/deployment_test.yaml"
     },
