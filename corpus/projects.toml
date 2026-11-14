@@ -708,7 +708,7 @@ issues = [182, 211, 213, 228, 285]
 name = "ocaml/dune"
 commit = "9c38baf8d74391e6acbe743304f35e449dabb16e"
 ecosystems = ["OCaml"]
-issues = [182, 186, 212, 235, 286]
+issues = [182, 186, 235, 286]
 
 [[project]]
 name = "ocsigen/lwt"
@@ -1045,7 +1045,7 @@ ecosystems = ["Rust"]
 name = "astral-sh/ruff"
 commit = "b140af2f48bddf33a1ae984174af3180236aaaaf"
 ecosystems = ["Rust", "Python"]
-issues = [188, 212, 239, 287]
+issues = [188, 239, 287]
 
 [[project]]
 name = "uutils/coreutils"
@@ -1210,7 +1210,7 @@ issues = [186, 207, 229, 241, 244]
 name = "apple/swift-nio"
 commit = "b440f7bae8894b5ec42e0f1842fcd77483ab3984"
 ecosystems = ["Swift"]
-issues = [186, 188, 212, 229]
+issues = [186, 188, 229]
 
 [[project]]
 name = "pointfreeco/swift-composable-architecture"

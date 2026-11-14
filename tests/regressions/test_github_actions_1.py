@@ -200,7 +200,6 @@ class SameRepositoryReferenceTests(unittest.TestCase):
                 self.assertEqual(unknowns, [])
                 self.assertLessEqual(commands, {argv for argv, _ in found})
 
-    @unittest.expectedFailure  # upstream #212: own workflow referenced by full name owner/repo/...@ref is not read
     def test_a_same_repository_workflow_referenced_by_its_full_name_is_read(self) -> None:
         """`uses: me/repo/.github/workflows/w.yml@main` names a file of this checkout, whose origin is me/repo: it is
         read like `./.github/workflows/w.yml` (swift-nio, ruff, dune)."""

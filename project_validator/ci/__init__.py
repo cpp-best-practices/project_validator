@@ -256,8 +256,23 @@ def _file_facts(project: Project, ci_file: CiFile) -> Iterator[Fact]:
         yield from (StepReference(origin=origin, reference=reference) for reference in references)
 
 
+# What `load` answers with the checkout's own repository, `owner/repo` as its origin remote names it (a reusable
+# workflow referenced as `owner/repo/.github/workflows/x.yml@ref` is then one of its own files).
+REPOSITORY = "<repository>"
+_ORIGIN = re.compile(r'\[remote "origin"\][^\[]*?\burl\s*=\s*\S*?[:/]([\w.-]+/[\w.-]+?)(?:\.git)?\s*$', re.MULTILINE)
+
+
+def _repository(project: Project) -> str | None:
+    if not project.exists(".git/config"):
+        return None
+    found = _ORIGIN.search(project.read_text(".git/config"))
+    return found[1] if found else None
+
+
 def _loader(project: Project) -> Load:
     def load(path: str) -> object | None:
+        if path == REPOSITORY:
+            return _repository(project)
         if not project.exists(path):
             return None
         try:

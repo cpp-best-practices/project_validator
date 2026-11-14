@@ -9,7 +9,7 @@ import shlex
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, replace
 
-from project_validator.ci import CiProvider, Load, strings
+from project_validator.ci import REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.expansion import script_facts
@@ -419,7 +419,7 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
         if "uses" not in job:
             yield from _job_facts(path, str(job_id), job, document.get("env"), caller, load)
             continue
-        called = _local(job["uses"])
+        called = _local(job["uses"]) or _own(job["uses"], load)
         within_depth = caller.count(" → ") < _CALL_DEPTH
         if called is not None and load is not None and within_depth and (target := load(called)) is not None:
             yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id} → ")
@@ -430,6 +430,16 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
             reason=f"it calls the reusable workflow {job['uses']}, which is not read",
             hides="jobs",
         )
+
+
+def _own(uses: object, load: Load | None) -> str | None:
+    """The path of a reusable workflow of this repository referenced by its full name
+    (`apple/swift-nio/.github/workflows/unit_tests.yml@main` in swift-nio's own checkout), else None."""
+    text, _, _ref = str(uses).partition("@")
+    owner, _, rest = text.partition("/")
+    name, _, path = rest.partition("/")
+    repository = load(REPOSITORY) if load is not None and path else None
+    return path if isinstance(repository, str) and repository.lower() == f"{owner}/{name}".lower() else None
 
 
 def _uses(entries: object) -> list[str]:
