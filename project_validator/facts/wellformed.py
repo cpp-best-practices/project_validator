@@ -4,6 +4,7 @@ does not parse. Nothing here judges: the `wellformed` question counts, and its p
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, replace
 
@@ -67,6 +68,11 @@ class DataFile(Fact):
         return self.origin.path
 
 
+# A placeholder a build substitutes before the file is read (Gradle's and autoconf's `@GIT_BRANCH@`): a file that
+# holds one and does not parse is a template, not malformed.
+_PLACEHOLDER = re.compile(rb"@[A-Z][A-Z0-9_]*@")
+
+
 def known_parsers() -> tuple[Parser, ...]:
     """Every parser a profile or a plugin defines."""
     return known(Parser)
@@ -84,9 +90,12 @@ def _parsed(project: Project, parser: Parser, found: DataFile) -> DataFile:
         return replace(found, unread="a template, rendered before it is read")
     if project.size(found.path) > MAX_SIZE:
         return replace(found, unread=f"larger than {MAX_SIZE >> 20} MiB")
+    data = project.read_bytes(found.path)
     try:
-        parser.parse(found.path, project.read_bytes(found.path))
+        parser.parse(found.path, data)
     except ParseError as error:
+        if _PLACEHOLDER.search(data):
+            return replace(found, unread="a template (its @NAME@ placeholders are substituted before it is read)")
         return replace(found, problem=error.message, line=error.line, column=error.column)
     except RecursionError:
         return replace(found, problem=NESTED_MESSAGE)

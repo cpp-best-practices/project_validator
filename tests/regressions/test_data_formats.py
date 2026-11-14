@@ -115,7 +115,6 @@ class DataWellformedTests(unittest.TestCase):
                 result = _run(data_wellformed, {path: text})
                 self.assertEqual(result.status, Status.PASS, result.details)
 
-    @unittest.expectedFailure  # upstream #233: PyYAML rejects `[:a]` flow scalars; `@TOKEN@` templates are judged
     def test_yaml_flow_scalars_may_start_with_a_colon_and_templates_are_not_judged(self) -> None:
         """A plain scalar starting with `:` inside `[...]` is valid YAML 1.2 (drift's build.yaml, read by build_runner
         in every CI run) and parses; a file of `@TOKEN@` placeholders is a template (junit5's antora-playbook.yml),

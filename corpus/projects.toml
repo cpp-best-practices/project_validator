@@ -174,7 +174,7 @@ issues = [185, 230, 258]
 name = "simolus3/drift"
 commit = "46e857b622686b785515eb7be087dbcfa65b3002"
 ecosystems = ["Dart"]
-issues = [182, 185, 188, 230, 233, 235]
+issues = [182, 185, 188, 230, 235]
 
 [[project]]
 name = "mledoze/countries"
@@ -574,7 +574,7 @@ issues = [182, 277]
 name = "junit-team/junit5"
 commit = "16ac3a3d1d712a0797108ec5be0be911e98d13c6"
 ecosystems = ["JVM"]
-issues = [182, 188, 202, 233]
+issues = [182, 188, 202]
 
 [[project]]
 name = "spring-projects/spring-petclinic"
