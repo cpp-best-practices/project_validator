@@ -165,5 +165,10 @@ RUST = Ecosystem(
             rf"\brustup\s+(?:default|toolchain\s+install|install)\s+{_RUST_VERSION}",
         ),
         programs=("cargo", "rustup", "rustc"),
+        # rustup runs the toolchain these name for every cargo in the project that names none.
+        pinned_by=(
+            ("rust-toolchain.toml", re.compile(r"^\s*channel\s*=\s*[\"']([^\"']+)[\"']", re.MULTILINE)),
+            ("rust-toolchain", re.compile(r"^\s*(?:channel\s*=\s*[\"'])?([\w.-]+)", re.MULTILINE)),
+        ),
     ),
 )

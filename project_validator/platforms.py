@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
+from typing import TYPE_CHECKING
 
 from project_validator.ecosystems import ToolchainPatterns, registered
 from project_validator.facts import ActionStep
 from project_validator.facts.jobs import Toolchain
 from project_validator.text import matching_names, pattern
+
+if TYPE_CHECKING:
+    from project_validator.core import Project
 
 OPERATING_SYSTEMS = (
     pattern("linux", r"\b(ubuntu|linux|debian|fedora|alpine|centos|rocky|archlinux)\b"),
@@ -57,19 +61,31 @@ def _step_versions(patterns: ToolchainPatterns, steps: Iterable[ActionStep]) -> 
     return {version for version in found if version is not None}
 
 
+def pinned_versions(project: Project) -> dict[str, str]:
+    """Language -> the version the project's files pin for a job that names none (`rust-toolchain.toml`'s channel)."""
+    pinned: dict[str, str] = {}
+    for language, patterns in toolchains().items():
+        for name, version in patterns.pinned_by:
+            if project.exists(name) and (found := version.search(project.read_text(name))) is not None:
+                pinned[language] = found[1]
+                break
+    return pinned
+
+
 def _language_toolchains(
     language: str,
     patterns: ToolchainPatterns,
     texts: tuple[str, ...],
     commands: Commands,
     steps: Iterable[ActionStep] = (),
+    pinned: str | None = None,
 ) -> set[Toolchain]:
-    """The versions named by the first text that names any and by the setup actions' inputs, or the runner's default
-    when the language is only used."""
+    """The versions named by the first text that names any and by the setup actions' inputs, or, when the language
+    is only used, the version the project pins, else the runner's default."""
     versions = next((found for text in texts if (found := _named_versions(patterns, text))), set())
     versions |= _step_versions(patterns, steps)
     if not versions and patterns.used_by(texts, commands):
-        versions = {DEFAULT_VERSION}
+        versions = {pinned or DEFAULT_VERSION}
     return {Toolchain(language=language, version=version) for version in versions}
 
 
@@ -85,13 +101,13 @@ def detect_ecosystems(texts: Iterable[str], commands: Commands) -> frozenset[str
 
 
 def detect_toolchains(
-    texts: Iterable[str], commands: Commands, steps: Iterable[ActionStep] = ()
+    texts: Iterable[str], commands: Commands, steps: Iterable[ActionStep] = (), pinned: Mapping[str, str] | None = None
 ) -> frozenset[Toolchain]:
     """The toolchains a CI job with `texts` that runs `commands` and uses the actions `steps` names, or uses without
-    naming a version."""
-    texts, steps = tuple(texts), tuple(steps)
+    naming a version (then the version `pinned` names for the language, if any; see `pinned_versions`)."""
+    texts, steps, pinned = tuple(texts), tuple(steps), pinned or {}
     return frozenset(
         toolchain
         for language, patterns in toolchains().items()
-        for toolchain in _language_toolchains(language, patterns, texts, commands, steps)
+        for toolchain in _language_toolchains(language, patterns, texts, commands, steps, pinned.get(language))
     )

@@ -32,6 +32,7 @@ from project_validator.platforms import (
     detect_ecosystems,
     detect_operating_systems,
     detect_toolchains,
+    pinned_versions,
 )
 from project_validator.text import Pattern
 
@@ -160,7 +161,7 @@ def _matrix_text(matrix: Mapping[str, str]) -> str:
     return json.dumps({key: _decoded(value) for key, value in matrix.items()})
 
 
-def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project) -> Job:
+def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project, pinned: Mapping[str, str]) -> Job:
     """A job as the checks see it. A parsed job's compilers and toolchains are named by its matrix values first,
     then by what it runs; a heuristic job's by the whole file."""
     commands = [fact for fact in facts if isinstance(fact, Command)]
@@ -174,7 +175,7 @@ def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project) 
         job.os,
         compilers,
         _configurations(commands, evidence),
-        detect_toolchains(texts, run, (fact for fact in facts if isinstance(fact, ActionStep))),
+        detect_toolchains(texts, run, (fact for fact in facts if isinstance(fact, ActionStep)), pinned),
         detect_ecosystems(texts, run),
         heuristic=job.heuristic,
     )
@@ -186,7 +187,8 @@ def job_facts(facts: Facts, project: Project) -> Iterator[Job]:
     for fact in facts:
         if isinstance(fact, (Command, ActionStep)):
             by_job.setdefault(fact.job, []).append(fact)
-    return (_job(job, tuple(by_job.get(job.id, ())), project) for job in facts.of(CiJob) if job.builds)
+    pinned = pinned_versions(project)
+    return (_job(job, tuple(by_job.get(job.id, ())), project, pinned) for job in facts.of(CiJob) if job.builds)
 
 
 def ci_analysis(facts: Facts) -> CiAnalysis:

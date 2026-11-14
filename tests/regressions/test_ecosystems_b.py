@@ -499,7 +499,6 @@ class RustTests(unittest.TestCase):
         result = _run(ci_build_types, RUST, {**INHERITED_PROFILE, **github_job(CI, "cargo build --profile fast")})
         self.assertEqual(result.details, ("linux / default: missing Debug, Debug + sanitizers, Release + sanitizers",))
 
-    @unittest.expectedFailure  # upstream #287: rust-toolchain.toml's channel is not the jobs' toolchain
     def test_rust_toolchain_toml_pins_the_toolchain_plain_cargo_uses(self) -> None:
         """With `rust-toolchain.toml` saying `channel = "1.80"`, a job running `cargo test` runs Rust 1.80, not the
         runner's default (nushell/nushell, astral-sh/ruff)."""
