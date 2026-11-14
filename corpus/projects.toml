@@ -227,7 +227,7 @@ issues = [182, 188, 229, 280]
 name = "mkdocs/mkdocs"
 commit = "2862536793b3c67d9d83c33e0dd6d50a791928f8"
 ecosystems = ["Documentation site", "Python"]
-issues = [199, 229, 280]
+issues = [229, 280]
 
 [[project]]
 name = "python/devguide"
@@ -851,13 +851,13 @@ issues = [195]
 name = "pallets/flask"
 commit = "49943b5a94413a530761350f04e896f76e8d620e"
 ecosystems = ["Python"]
-issues = [188, 199]
+issues = [188]
 
 [[project]]
 name = "psf/black"
 commit = "b10cbe43b8169e688ab86989ddcc8ad2a53ff2cd"
 ecosystems = ["Python"]
-issues = [182, 183, 199]
+issues = [182, 183]
 
 [[project]]
 name = "pytest-dev/pytest"
@@ -1155,7 +1155,7 @@ issues = [238, 276]
 name = "sqlfluff/sqlfluff"
 commit = "30c281373b61a77cb5d9d10a04d8abe6d43b1a87"
 ecosystems = ["SQL", "Python"]
-issues = [182, 188, 199]
+issues = [182, 188]
 
 [[project]]
 name = "pgaudit/pgaudit"

@@ -113,7 +113,6 @@ def _tox_project(tox_ini: str, job: dict[str, object]) -> dict[str, str]:
 
 
 class PythonTaskRunnerTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #199: `tox -e env -- posargs` runs nothing: `--` is read as a subcommand
     def test_an_env_run_with_positional_arguments_runs_its_commands(self) -> None:
         """`tox -e winpy -- -n 2 test` runs `[testenv]`'s pytest, the posargs after `--` notwithstanding (sqlfluff's
         Windows job); without the `--` part the same env is expanded."""
@@ -123,7 +122,6 @@ class PythonTaskRunnerTests(unittest.TestCase):
                 found = _expanded(_tox_project(tox_ini, {"steps": [{"run": line}]}))
                 self.assertTrue(any(argv[:1] == ("pytest",) for argv in found), found)
 
-    @unittest.expectedFailure  # upstream #199: TOX_ENV in the job's environment does not select the env
     def test_tox_env_selects_the_environment_a_bare_tox_runs(self) -> None:
         """`tox run` with `TOX_ENV: py311` runs only py311's commands, not `docs` (pallets/flask)."""
         tox_ini = (
@@ -135,7 +133,6 @@ class PythonTaskRunnerTests(unittest.TestCase):
         self.assertIn(("pytest",), found)
         self.assertNotIn(("sphinx-build", "-W", "docs"), found)
 
-    @unittest.expectedFailure  # upstream #199: `hatch run env:script` leaves `env:script` as the program
     def test_hatch_run_resolves_the_environment_script(self) -> None:
         """`hatch run lint:check` runs the script of `[tool.hatch.envs.lint.scripts]` (mkdocs)."""
         files = {"pyproject.toml": HATCH_PYPROJECT, **github_job(CI, "hatch run lint:check")}
