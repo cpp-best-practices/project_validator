@@ -346,7 +346,7 @@ issues = [226]
 name = "docker/build-push-action"
 commit = "562e51947939164e4fe808a6eab5101977e509e0"
 ecosystems = ["GitHub Action"]
-issues = [182, 195, 217, 219]
+issues = [182, 195, 219]
 
 [[project]]
 name = "cli/cli"
@@ -815,7 +815,7 @@ issues = [182, 188]
 name = "open-telemetry/opentelemetry-proto"
 commit = "94f2f2d5f39c5139141dc7e564daa84aa2826531"
 ecosystems = ["Protobuf"]
-issues = [217, 249, 271, 280]
+issues = [249, 271, 280]
 
 [[project]]
 name = "grpc/grpc-proto"

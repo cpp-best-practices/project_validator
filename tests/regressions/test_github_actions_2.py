@@ -254,7 +254,6 @@ class SetupActionVersionInputTests(unittest.TestCase):
 
 
 class CiLintUnknownTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #217: an unread reusable workflow makes ci-lint WARN, not ERROR
     def test_an_unread_reusable_workflow_leaves_ci_lint_unknown(self) -> None:
         """docker/build-push-action and opentelemetry-proto: zizmor.yml's only job calls another repository's reusable
         workflow, which is not read; whether CI lints its workflows is unknown, an ERROR without --allow-unknown."""
