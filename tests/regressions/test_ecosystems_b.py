@@ -87,7 +87,6 @@ TEAL_SOURCES = {"tlconfig.lua": 'return { source_dir = "src" }\n', "src/shop.tl"
 
 
 class LuaAndLatexTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #268: nvim's `-c <command>` is taken for busted's `-c` coverage flag
     def test_nvims_c_option_is_not_busteds_coverage_flag(self) -> None:
         """Plenary's busted inside Neovim (`nvim --headless -c "PlenaryBustedDirectory tests"`) collects no coverage:
         without luacov anywhere, coverage FAILs (nvim-telescope/telescope.nvim)."""
@@ -360,7 +359,6 @@ RUST_TEST = {"src/lib.rs": "#[cfg(test)]\nmod tests {\n    #[test]\n    fn total
 
 
 class NixTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #285: treefmt's `--ci` (fail-on-change) is not a checking flag
     def test_treefmts_ci_flag_makes_nix_fmt_a_check(self) -> None:
         """`nix fmt -- --ci` (treefmt's `--fail-on-change --no-cache`) fails on an unformatted file: CI enforces the
         style (ryantm/agenix, nix-community/home-manager)."""
@@ -376,7 +374,6 @@ class NixTests(unittest.TestCase):
         result = _run(code_formatting, NIX, github_job(CI, "nix fmt all-maintainers.nix", BOT_COMMIT))
         self.assertNotEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #285: treefmt.toml, which says what `nix fmt` runs, is never read
     def test_treefmt_toml_says_which_lints_nix_fmt_runs(self) -> None:
         """With `treefmt.toml` naming statix and deadnix, `nix fmt -- --ci` runs them: the Nix lints are enabled and
         a static analyzer runs (nix-community/home-manager, nix-community/disko)."""

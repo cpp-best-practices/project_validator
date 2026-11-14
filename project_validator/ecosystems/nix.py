@@ -9,14 +9,16 @@ rule waits for its check (#24)."""
 from __future__ import annotations
 
 import re
+import tomllib
+from pathlib import PurePosixPath
 
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
-from project_validator.facts import Command, Facts, resolved
+from project_validator.facts import Command, Facts, Origin, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
-from project_validator.facts.expansion import CommandExpander, Expansion, Launched
+from project_validator.facts.expansion import CommandExpander, Expansion, Invocation, Launched, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, ignored_at_top_level
@@ -61,6 +63,48 @@ FLAKE_CHECK = test_runner(
 
 # --- Formatting -----------------------------------------------------------------------------------------------------
 
+
+# --- treefmt: `nix fmt` (a flake whose formatter is treefmt) or `treefmt` runs the formatters treefmt.toml lists. With
+# `--ci` (`--fail-on-change`), a formatter that changes a file fails the run: statix's and deadnix's fixes are their
+# checks.
+TREEFMT_FILES = ("treefmt.toml", ".treefmt.toml")
+_FAILING_FORMS = {"statix": ("statix", "check"), "deadnix": ("deadnix", "--fail")}
+
+
+def _treefmt_file(command: Command, context: Context) -> str | None:
+    paths = (joined(command.directory, name) for name in TREEFMT_FILES)
+    return next((path for path in paths if context.project.exists(path)), None)
+
+
+def _formatter_argv(formatter: object, failing: bool) -> tuple[str, ...] | None:
+    """What a treefmt formatter runs: its command (a `treefmt-` wrapper named for its tool) and options."""
+    if not isinstance(formatter, dict) or not isinstance(program := formatter.get("command"), str):
+        return None
+    tool = PurePosixPath(program).name.removeprefix("treefmt-")
+    options = formatter.get("options")
+    words = (tool, *(map(str, options) if isinstance(options, list) else ()))
+    return _FAILING_FORMS.get(tool, words) if failing else words
+
+
+def _treefmt_formatters(command: Command, context: Context) -> list[Expansion] | None:
+    argv = resolved(command)
+    if not starts_with(argv, ("nix", "fmt"), ("treefmt",)) or (path := _treefmt_file(command, context)) is None:
+        return None
+    try:
+        formatters = tomllib.loads(context.project.read_text(path)).get("formatter", {})
+    except tomllib.TOMLDecodeError as error:
+        subject = f"the treefmt configuration {path}"
+        return [Unknown(origin=Origin(path=path), subject=subject, reason=str(error), hides="commands")]
+    failing = any(word in ("--ci", "--fail-on-change") for word in argv)
+    return [
+        Invocation(argv=found, line=f"treefmt's {name} formatter", origin=Origin(path=path, at=("formatter", name)))
+        for name, formatter in (formatters.items() if isinstance(formatters, dict) else ())
+        if (found := _formatter_argv(formatter, failing)) is not None
+    ] or None
+
+
+TREEFMT = CommandExpander(name="treefmt formatters", expand=_treefmt_formatters)
+
 # nixfmt and alejandra each have one style; `nix fmt` runs the flake's `formatter` output, whatever its style.
 NIXFMT = format_tool(
     name="nixfmt",
@@ -79,9 +123,10 @@ ALEJANDRA = format_tool(
 
 
 def _nix_fmt(command: Command, facts: Facts) -> Run | None:
-    """`nix fmt` applies the flake's formatter; with `--check` (or `-c`) passed through, it checks (the formatter
+    """`nix fmt` applies the flake's formatter; with `--check` (or `-c`, or treefmt's `--ci`, which fails on a change)
+    passed through, it checks (the formatter
     must take it: nixfmt, alejandra and treefmt do)."""
-    return flagged(("nix", "fmt"), checks=("--check", "-c", "--fail-on-change"))(command, facts)
+    return flagged(("nix", "fmt"), checks=("--check", "-c", "--fail-on-change", "--ci"))(command, facts)
 
 
 NIX_FMT = format_tool(
