@@ -293,7 +293,6 @@ class JobNameRenderingTests(unittest.TestCase):
 
 
 class PreCommitRunnerTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #221: pre-commit.ci needs a ci: section; prek-action is not a runner
     def test_pre_commit_ci_by_badge_and_prek_action_run_the_hooks(self) -> None:
         """pytest and pre-commit run their hooks on pre-commit.ci with no `ci:` section (the README badge shows it);
         Bash-it runs them with j178/prek-action: the ruff-format hook enforces formatting in both."""

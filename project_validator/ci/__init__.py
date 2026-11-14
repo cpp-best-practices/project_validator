@@ -43,6 +43,9 @@ type Load = Callable[[str], object | None]
 type FactExtractor = Callable[[str, object, Load], Iterable[Fact]]
 
 
+_README = re.compile(r"README(?:\.\w+)?", re.IGNORECASE)
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class CiProvider:
     name: str
@@ -58,7 +61,7 @@ class CiProvider:
     step_references: Callable[[object], list[str]] | None = None
     facts: FactExtractor | None = None
     # Whether a configuration file's text shows the provider is used, for a file that may exist without it (a
-    # `.pre-commit-config.yaml` is pre-commit.ci's only with a `ci:` section).
+    # `.pre-commit-config.yaml` is pre-commit.ci's with a `ci:` section, or when the README shows its badge).
     recognises: Callable[[str], bool] | None = None
 
     def config_files(self, project: Project) -> list[str]:
@@ -66,7 +69,14 @@ class CiProvider:
         for directory in self.directories:
             found.extend(project.files_in(directory, self.suffixes))
         recognises = self.recognises
-        return found if recognises is None else [path for path in found if recognises(project.read_text(path))]
+        if recognises is None or (found and self._badged(project)):
+            return found
+        return [path for path in found if recognises(project.read_text(path))]
+
+    def _badged(self, project: Project) -> bool:
+        """Whether a README at the root shows one of the provider's badges."""
+        readmes = (path for path in project.files() if "/" not in path and _README.fullmatch(path))
+        return any(badge.regex.search(project.read_text(path)) for path in readmes for badge in self.badges)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

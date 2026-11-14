@@ -92,6 +92,14 @@ PRE_COMMIT_ACTION = Action(
     ),
 )
 
+# prek's action runs every hook the same way, with its own name for the arguments.
+PREK_ACTION = Action(
+    name="j178/prek-action",
+    runs=lambda inputs: (
+        ("prek", "run", "--show-diff-on-failure", *shlex.split(inputs.get("extra-args", "--all-files"))),
+    ),
+)
+
 
 def _read_hooks(path: str, text: str) -> Iterator[Fact]:
     """Each hook a pre-commit configuration defines, as its repository, id, entry and arguments: a hook runs before

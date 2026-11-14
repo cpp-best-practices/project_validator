@@ -858,7 +858,7 @@ issues = [182, 183]
 name = "pytest-dev/pytest"
 commit = "fc9a7ef678f64d17f1c03b619f3842ea1d127e74"
 ecosystems = ["Python"]
-issues = [182, 221]
+issues = [182]
 
 [[project]]
 name = "psf/requests"
@@ -880,13 +880,13 @@ issues = [182, 188, 211, 235, 239]
 name = "fastapi/fastapi"
 commit = "5758a9c8347d911444dca97a55b708cc4a8de4f8"
 ecosystems = ["Python"]
-issues = [182, 221]
+issues = [182]
 
 [[project]]
 name = "pre-commit/pre-commit"
 commit = "ba5c4209a6d561b0dff5db24620778d2133d068e"
 ecosystems = ["Python"]
-issues = [182, 221]
+issues = [182]
 
 [[project]]
 name = "scikit-learn/scikit-learn"
@@ -1125,7 +1125,7 @@ ecosystems = ["Shell"]
 name = "Bash-it/bash-it"
 commit = "72ea9e285fe1828977d1cd2bc596b901bcc57440"
 ecosystems = ["Shell"]
-issues = [221, 224]
+issues = [224]
 
 [[project]]
 name = "dbt-labs/dbt-utils"
