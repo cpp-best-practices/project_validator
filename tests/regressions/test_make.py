@@ -153,7 +153,6 @@ PHP_SCRIPTS = {"composer.json": json.dumps({"scripts": {"phpstan": "@php vendor/
 
 
 class PhpLauncherTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #200: `php <script>` is not a launcher, so the tool run is missed
     def test_php_runs_the_script_that_follows(self) -> None:
         """`php "vendor/bin/phpunit"` runs PHPUnit and `@php vendor/bin/phpstan analyse` runs PHPStan
         (PHP_CodeSniffer, monolog, composer); `simple-phpunit` is PHPUnit too."""

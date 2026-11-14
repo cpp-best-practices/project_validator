@@ -14,7 +14,7 @@ from project_validator.facts.analysis import analyzer
 from project_validator.facts.arguments import has_option, option_values, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
-from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
+from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
@@ -141,16 +141,22 @@ PHP_TEST_FILES = TestFiles(
 )
 
 
+# simple-phpunit is symfony/phpunit-bridge's PHPUnit, as the Symfony ecosystem runs it.
+_PHPUNIT_PROGRAMS = frozenset({"phpunit", "pest", "paratest", "simple-phpunit"})
+
+
 PHP_TESTS = test_runner(
     name="phpunit, pest or composer test",
     languages=PHP_ONLY,
     how="phpunit, pest or composer test",
-    runs=lambda command, _facts: tested() if program(resolved(command)) in ("phpunit", "pest", "paratest") else None,
+    runs=lambda command, _facts: tested() if program(resolved(command)) in _PHPUNIT_PROGRAMS else None,
     tests=tests_of(PHP_TEST_FILES.name),
 )
 
 
-_PHPUNIT_PROGRAMS = frozenset({"phpunit", "pest", "paratest"})
+# `php vendor/bin/phpstan`, and Composer's `@php vendor/bin/phpunit` (read as `php …`): the interpreter runs the script
+# that follows its options.
+PHP = launcher("php", (("php",),), with_values=frozenset({"-c", "-d", "-z", "-t", "-S"}))
 
 
 _CONFIGURATION_OPTIONS = frozenset({"--configuration", "-c"})

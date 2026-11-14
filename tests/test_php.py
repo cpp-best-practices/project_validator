@@ -298,6 +298,8 @@ class ScriptExpansionTests(unittest.TestCase):
                     [
                         ("composer", "run-script", "lint"),
                         ("php", "vendor/bin/phpstan", "analyse"),
+                        # `php` runs the script that follows it.
+                        ("vendor/bin/phpstan", "analyse"),
                         ("phpunit", "--path-coverage"),
                     ],
                 )

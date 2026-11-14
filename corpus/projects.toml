@@ -787,7 +787,7 @@ issues = [182, 219, 227, 236, 238, 248]
 name = "Seldaek/monolog"
 commit = "3bed304b1905fed5c30d172872f4d890cbb03c6a"
 ecosystems = ["PHP"]
-issues = [200, 229]
+issues = [229]
 
 [[project]]
 name = "guzzle/guzzle"
@@ -799,7 +799,7 @@ issues = [246, 270]
 name = "composer/composer"
 commit = "5147ea1a01c124f461090a72bee6ea6de02a67a6"
 ecosystems = ["PHP"]
-issues = [188, 200]
+issues = [188]
 
 [[project]]
 name = "laravel/framework"
@@ -811,7 +811,7 @@ issues = [237, 246, 270]
 name = "PHPCSStandards/PHP_CodeSniffer"
 commit = "c17bea2b241d09596accb728e097de010a002c8a"
 ecosystems = ["PHP"]
-issues = [182, 188, 200]
+issues = [182, 188]
 
 [[project]]
 name = "open-telemetry/opentelemetry-proto"
