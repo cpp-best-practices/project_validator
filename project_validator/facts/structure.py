@@ -7,7 +7,7 @@ The project map (`--map`, `project_validator.project_map`) is a view over these 
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
@@ -165,6 +165,19 @@ def _by_name(path: str) -> tuple[str, str, Kind] | None:
     """The name pattern that recognises the file at `path` as a source, with its language or format."""
     name = PurePosixPath(path).name
     return next((found for found in _source_names() if fnmatchcase(name, found[0])), None)
+
+
+def source_languages() -> Callable[[str], str | None]:
+    """A lookup of the language or format the file at a path is a source of (by suffix, else by name), or None."""
+    suffixes = _source_suffixes()
+
+    def language(path: str) -> str | None:
+        if (found := suffixes.get(PurePosixPath(path).suffix)) is not None:
+            return found[0]
+        named = _by_name(path)
+        return named[1] if named is not None else None
+
+    return language
 
 
 def source_signal(path: str) -> str:
@@ -373,6 +386,7 @@ __all__ = [
     "UnrecognisedSuffix",
     "project_formats",
     "project_languages",
+    "source_languages",
     "source_signal",
     "structure_facts",
 ]

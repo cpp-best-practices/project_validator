@@ -100,3 +100,12 @@ class CommittedArtifactsTests(unittest.TestCase):
         self.assertEqual(_run(files, tracked=("Cargo.toml", "src")), PASSED)
         expected = Result.failed("1 build output is committed", "target/", HINT)
         self.assertEqual(_run(files, tracked=("Cargo.toml", "src", "target")), expected)
+
+
+class BinaryOutputTests(unittest.TestCase):
+    def test_a_file_named_like_a_binary_is_one_only_when_it_holds_binary_data(self) -> None:
+        sources = {"CMakeLists.txt": "project(x)\n", "a.cpp": ""}
+        binary = _run({**sources, "tool.exe": "MZ\0\0"})
+        self.assertEqual(binary.status, Status.FAIL)
+        self.assertIn("tool.exe", binary.details)
+        self.assertEqual(_run({**sources, "tool.exe": "#!/bin/sh\nexec x\n"}), PASSED)

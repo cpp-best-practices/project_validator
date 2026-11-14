@@ -61,7 +61,7 @@ issues = [182, 194, 282]
 name = "cpp-best-practices/cmake_template"
 commit = "b86318abbf55a657a11a0cf2acce69f221841b22"
 ecosystems = ["C/C++"]
-issues = [182, 194, 235, 282]
+issues = [182, 194, 282]
 
 [[project]]
 name = "simdjson/simdjson"
@@ -103,7 +103,7 @@ issues = [182, 228]
 name = "GNOME/glib"
 commit = "a6457d849e45b9a1a9473c61364ee6e56894774b"
 ecosystems = ["C/C++"]
-issues = [182, 215, 228, 235, 282]
+issues = [182, 215, 228, 282]
 
 [[project]]
 name = "neovim/neovim"
@@ -115,7 +115,7 @@ issues = [182, 282]
 name = "ggml-org/llama.cpp"
 commit = "9d25e0014c4b4b316873c01f4938c0e3c687287d"
 ecosystems = ["C/C++", "Python"]
-issues = [181, 224, 230, 235]
+issues = [181, 224, 230]
 
 [[project]]
 name = "glfw/glfw"
@@ -127,7 +127,7 @@ issues = [223, 282]
 name = "clj-kondo/clj-kondo"
 commit = "a38978c2fe24b3790b2b7a6d3007594c087dd863"
 ecosystems = ["Clojure"]
-issues = [182, 223, 235]
+issues = [182, 223]
 
 [[project]]
 name = "metosin/malli"
@@ -174,7 +174,7 @@ issues = [185, 230, 258]
 name = "simolus3/drift"
 commit = "46e857b622686b785515eb7be087dbcfa65b3002"
 ecosystems = ["Dart"]
-issues = [182, 185, 188, 230, 235]
+issues = [182, 185, 188, 230]
 
 [[project]]
 name = "mledoze/countries"
@@ -268,7 +268,7 @@ issues = [223, 253]
 name = "Humanizr/Humanizer"
 commit = "4574b93883bf48e3f0f3bca73297054537317ab2"
 ecosystems = [".NET"]
-issues = [223, 224, 235, 253]
+issues = [223, 224, 253]
 
 [[project]]
 name = "magit/magit"
@@ -362,7 +362,7 @@ ecosystems = ["Go"]
 name = "junegunn/fzf"
 commit = "4499615fe9c06c0651aa5650e5d0d0a5face99a8"
 ecosystems = ["Go"]
-issues = [235, 257]
+issues = [257]
 
 [[project]]
 name = "golangci/golangci-lint"
@@ -443,13 +443,13 @@ ecosystems = ["JavaScript/TypeScript"]
 name = "prettier/prettier"
 commit = "f391bf3e7ee219bcfeb61b06555ee1ac8e9c0680"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 235]
+issues = [182]
 
 [[project]]
 name = "vitejs/vite"
 commit = "f898888222297aa56d6fc281c585d4d4e4d51f58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 184, 235, 248, 280]
+issues = [182, 184, 248, 280]
 
 [[project]]
 name = "expressjs/express"
@@ -525,7 +525,7 @@ issues = [267]
 name = "JuliaDocs/Documenter.jl"
 commit = "785d219105849224911315767d9a0e91550e73d1"
 ecosystems = ["Julia"]
-issues = [182, 235, 267]
+issues = [182, 267]
 
 [[project]]
 name = "ageron/handson-ml3"
@@ -555,7 +555,7 @@ issues = [182, 252]
 name = "apache/commons-lang"
 commit = "9368465e7575810c45acd9d2e6f805cd002f4ff8"
 ecosystems = ["JVM"]
-issues = [202, 235]
+issues = [202]
 
 [[project]]
 name = "mockito/mockito"
@@ -697,7 +697,7 @@ issues = [182, 211, 228, 285]
 name = "ocaml/dune"
 commit = "9c38baf8d74391e6acbe743304f35e449dabb16e"
 ecosystems = ["OCaml"]
-issues = [182, 186, 235, 286]
+issues = [182, 186, 286]
 
 [[project]]
 name = "ocsigen/lwt"
@@ -867,7 +867,7 @@ ecosystems = ["Python"]
 name = "python-poetry/poetry"
 commit = "4acc75e19f128c8340c6f977a35e53b5f7f39071"
 ecosystems = ["Python"]
-issues = [182, 188, 211, 235]
+issues = [182, 188, 211]
 
 [[project]]
 name = "fastapi/fastapi"
@@ -977,13 +977,13 @@ issues = [257]
 name = "puma/puma"
 commit = "30ef0143045d66e0166eb94efdec9df3afac868c"
 ecosystems = ["Ruby"]
-issues = [182, 186, 235, 257]
+issues = [182, 186, 257]
 
 [[project]]
 name = "Homebrew/brew"
 commit = "cbd3ae64a5efc9990017506ed2fec2e7c007d8c4"
 ecosystems = ["Ruby"]
-issues = [182, 211, 235, 257]
+issues = [182, 211, 257]
 
 [[project]]
 name = "fluent/fluentd"
@@ -1088,7 +1088,7 @@ issues = [194, 275]
 name = "nvm-sh/nvm"
 commit = "09e620c401382f4b3d3147333dd64c1e09188fdb"
 ecosystems = ["Shell"]
-issues = [235, 275]
+issues = [275]
 
 [[project]]
 name = "rbenv/rbenv"
@@ -1247,7 +1247,7 @@ issues = [195, 224, 262]
 name = "terraform-google-modules/terraform-google-kubernetes-engine"
 commit = "945d9aacad1bdd8ed6b5a239d4e13f3f224b0648"
 ecosystems = ["Terraform"]
-issues = [195, 223, 235, 262]
+issues = [195, 223, 262]
 
 [[project]]
 name = "terraform-aws-modules/terraform-aws-eks"
@@ -1276,7 +1276,6 @@ issues = [224, 263]
 name = "andreasKroepelin/polylux"
 commit = "9a5650618d75b855d0b23211406ed2472132b905"
 ecosystems = ["Typst"]
-issues = [235]
 
 [[project]]
 name = "typst/templates"
@@ -1369,10 +1368,10 @@ issues = [288]
 name = "tigerbeetle/tigerbeetle"
 commit = "a2a3c7064519e08233abe26c54a43fca2f9ad9bc"
 ecosystems = ["Zig"]
-issues = [182, 235, 288]
+issues = [182, 288]
 
 [[project]]
 name = "ghostty-org/ghostty"
 commit = "6d9577708a211b0e6c5e6c6886f3cfb7efc47555"
 ecosystems = ["Zig"]
-issues = [227, 235, 288]
+issues = [227, 288]

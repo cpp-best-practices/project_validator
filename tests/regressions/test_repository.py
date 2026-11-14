@@ -365,7 +365,6 @@ def _structure(files: Mapping[str, str]) -> ProjectStructure:
 
 @unittest.skipUnless(shutil.which("git"), "git is not installed")
 class CommittedArtifactsTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #235: committed-artifacts flags directories and files by name, not by content
     def test_sources_fixtures_and_settings_are_judged_by_what_they_are(self) -> None:
         """A build/ of Dart sources, a bin/ of scripts, a coverage/ Julia environment, a .bundle/config, fixtures
         under tests/, a text .exe and the mdBook source directory are not build outputs (drift, fzf, Documenter, puma,
