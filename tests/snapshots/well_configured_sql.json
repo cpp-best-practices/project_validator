@@ -418,7 +418,27 @@
       {
         "auxiliary": {},
         "language": "SQL",
-        "units": []
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "database engine version",
+            "language": "SQL",
+            "notes": [],
+            "platforms": [
+              {
+                "configurations": [],
+                "database engine version": "PostgreSQL 16",
+                "os": "linux"
+              },
+              {
+                "configurations": [],
+                "database engine version": "PostgreSQL 17",
+                "os": "linux"
+              }
+            ],
+            "unit": "."
+          }
+        ]
       }
     ],
     "sanitizers": [
@@ -861,9 +881,14 @@
       "status": "SKIP"
     },
     "platform-matrix": {
-      "details": [],
-      "message": "not applicable to SQL",
-      "status": "SKIP"
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / no database engine version",
+        ".github/workflows/ci.yml: test (16): linux / PostgreSQL 16",
+        ".github/workflows/ci.yml: test (17): linux / PostgreSQL 17",
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no database engine version"
+      ],
+      "message": "CI covers 2 database engine version(s) (PostgreSQL 16, PostgreSQL 17), whatever the OS",
+      "status": "PASS"
     },
     "sanitizers": {
       "details": [],

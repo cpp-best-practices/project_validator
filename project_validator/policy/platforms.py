@@ -22,26 +22,34 @@ NO_CI = "no CI configuration found"
 
 
 def _shortfalls(answer: PlatformAnswer, operating_systems: set[str], toolchains: set[str]) -> list[str]:
+    toolchain_requirement = (answer.axis.plural(), len(toolchains), MINIMUM_COMPILERS)
     requirements = (
-        ("operating systems", len(operating_systems), MINIMUM_OPERATING_SYSTEMS),
-        (answer.axis.plural(), len(toolchains), MINIMUM_COMPILERS),
-        (f"OS/{answer.axis.noun} combinations", len(answer.platforms), MINIMUM_COMBINATIONS),
+        (
+            ("operating systems", len(operating_systems), MINIMUM_OPERATING_SYSTEMS),
+            toolchain_requirement,
+            (f"OS/{answer.axis.noun} combinations", len(answer.platforms), MINIMUM_COMBINATIONS),
+        )
+        if answer.axis.operating_systems
+        else (toolchain_requirement,)
     )
     return [f"at least {minimum} {kind} (found {found})" for kind, found, minimum in requirements if found < minimum]
 
 
 def judge_matrix(answer: PlatformAnswer, *, allow_unknown: bool = False) -> Result:
-    """Two OSes, two toolchains and three combinations of them pass; fewer fail."""
+    """Two OSes, two toolchains and three combinations of them pass; fewer fail. For an axis the OS is no part of (a
+    database's engine versions), two toolchains pass, whatever runs them."""
     del allow_unknown  # what CI was read only heuristically is noted, not unknown
     if answer.answer is Answer.NO:
         return Result.failed(NO_CI)
     operating_systems = {os for (os, _), _ in answer.platforms}
     toolchains = {toolchain for (_, toolchain), _ in answer.platforms}
     noun = answer.axis.noun
+    found = f"{len(toolchains)} {noun}(s) ({', '.join(sorted(toolchains)) or 'none'})"
     summary = (
-        f"{len(operating_systems)} OS(es) ({', '.join(sorted(operating_systems)) or 'none'}), "
-        f"{len(toolchains)} {noun}(s) ({', '.join(sorted(toolchains)) or 'none'}), "
+        f"{len(operating_systems)} OS(es) ({', '.join(sorted(operating_systems)) or 'none'}), {found}, "
         f"{len(answer.platforms)} combination(s)"
+        if answer.axis.operating_systems
+        else f"{found}, whatever the OS"
     )
     details = (*answer.notes, *answer.jobs)
     if shortfalls := _shortfalls(answer, operating_systems, toolchains):

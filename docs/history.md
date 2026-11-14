@@ -443,4 +443,16 @@ except where a step deliberately changes results and says so.
     The content probes learned to read a top-level key only, since a document quoting a schema (this validator's
     own facts snapshots) is no schema.
 
+14. **The roadmap's last rows** (#89, #91, #92, #86, #10, #18, #23, #25, and the follow-ups #143 and #145 to #149; a
+    stack of twelve changes). The last profile, GraphQL (a format by intent, with graphql-inspector, GraphQL Code
+    Generator, graphql-schema-linter and rover); the documents of an XSD naming the schema's location; `link-check`
+    and `migration-safety`, two more aspects of the tool model (`links`, `migrations`, the latter defining what it
+    checks: the migrations themselves); `sanitizers` and the three build layout practices of C/C++, read from what an
+    `if()` guards on, which both build evaluators now record as written. Then what building the profiles had shown:
+    the shared scanners and auditors declare the languages they read; a setup action's inputs are read structurally
+    for the toolchain they name (Flutter's channel); a toolchain axis may read the project's facts (the Scala
+    versions a cross-build runs) and leave the OS out (the database engine versions a SQL project is tested against,
+    from the service containers CI runs, now facts); a build system's outputs add to the language's own; the support
+    matrix lists a shared tool once and the grid says when no ecosystem was recognised.
+
 `--facts` and `--answers` expose the database and the answers.

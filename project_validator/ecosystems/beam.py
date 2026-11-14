@@ -465,10 +465,11 @@ BUILD_DIRECTORY = BuildOutput(
     hint="consider ignoring _build/",
     artifacts=("_build/", "*.beam"),
 )
-# Only Mix fetches into deps/; an output of a build system hides the shared ones, so it is Elixir's instead.
+# Only Mix fetches into deps/ (rebar3 fetches into _build/).
 DEPS_DIRECTORY = BuildOutput(
     languages=ELIXIR_ONLY,
     name="the deps directory",
+    build_systems=frozenset({"Mix"}),
     globs=ignored_at_top_level("deps"),
     paths=directories("deps"),
     hint="consider ignoring deps/ (mix deps.get fetches it)",

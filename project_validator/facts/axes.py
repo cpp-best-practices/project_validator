@@ -42,6 +42,9 @@ class ToolchainAxis:
     # Reads the job's toolchains with the project's facts too (what its build file names), where a job alone does not
     # tell: an sbt cross-build runs every `crossScalaVersions` of the build.
     of_job_in: Callable[[Job, Facts], frozenset[str]] | None = None
+    # Whether the OS is an axis of the platforms too. A database project's is not: its platforms are the engine
+    # versions it is tested against, whatever runs the tests.
+    operating_systems: bool = True
 
     def plural(self) -> str:
         return f"{self.noun}s"

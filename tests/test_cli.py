@@ -296,6 +296,13 @@ class ListTests(unittest.TestCase):
         self.assertIn("C/C++", matrix["ci-build-types"])
         self.assertNotIn("Python", matrix["ci-build-types"])
 
+    def test_list_as_markdown_is_a_table(self) -> None:
+        code, output, _ = run_cli("--list", "--format", "markdown")
+        self.assertEqual(code, EXIT_SUCCESS)
+        self.assertTrue(output.startswith("| Check | Applies to | Passes when |\n|---|---|---|\n| `"))
+        self.assertIn("| `ci-present` | every project | ", output)
+        self.assertIn("| `ci-build-types` | C/C++, ", output)
+
     def test_support_matrix_is_printed_as_markdown(self) -> None:
         code, output, _ = run_cli("--support-matrix")
         self.assertEqual(code, EXIT_SUCCESS)
