@@ -6,7 +6,7 @@ from __future__ import annotations
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass, field, replace
-from itertools import groupby
+from itertools import groupby, takewhile
 
 from project_validator.build_systems.cmake.conditions import CONFIGURATION, LANGUAGE, constant
 from project_validator.build_systems.cmake.evaluation import Frame
@@ -42,6 +42,15 @@ _CUSTOM_TARGET_KEYWORDS = frozenset(
     {"COMMAND", "DEPENDS", "BYPRODUCTS", "WORKING_DIRECTORY", "COMMENT", "JOB_POOL", "JOB_SERVER_AWARE", "VERBATIM"}
     | {"USES_TERMINAL", "COMMAND_EXPAND_LISTS", "SOURCES"}
 )
+_CUSTOM_COMMAND_KEYWORDS = _CUSTOM_TARGET_KEYWORDS | {
+    "OUTPUT",
+    "MAIN_DEPENDENCY",
+    "IMPLICIT_DEPENDS",
+    "DEPFILE",
+    "APPEND",
+    "DEPENDS_EXPLICIT_ONLY",
+    "CODEGEN",
+}
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -333,12 +342,14 @@ def _include(collector: Collector, frame: Frame, invocation: Invocation, words: 
         collector.facts.append(Declared(origin=Origin(path=frame.path), manager="CPM"))
 
 
-def _commands(words: Iterable[Value], origin: Origin) -> Iterator[tuple[tuple[str, ...], Origin]]:
+def _commands(
+    words: Iterable[Value], origin: Origin, keywords: frozenset[str] = _CUSTOM_TARGET_KEYWORDS
+) -> Iterator[tuple[tuple[str, ...], Origin]]:
     """The commands of a custom target: the words after its name (and ALL), then after each COMMAND; of an argument
     whose value depends on the build, its first value."""
     current: list[str] | None = []
     for word in (word for word in words if word.choice == 0):
-        if word.text in _CUSTOM_TARGET_KEYWORDS:
+        if word.text in keywords:
             if current:
                 yield tuple(current), origin
             current = [] if word.text == "COMMAND" else None
@@ -363,6 +374,26 @@ def _add_custom_target(collector: Collector, frame: Frame, invocation: Invocatio
         directory=frame.directory,
     )
     collector.targets.setdefault(target.name, []).append(target)
+
+
+def _add_custom_command(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
+    """`add_custom_command(OUTPUT files... COMMAND ...)`: a target depending on one of the files runs its commands
+    first, so each file is a custom target of its own that builds by running them."""
+    texts = [word.text for word in words]
+    if texts[:1] != ["OUTPUT"]:
+        return
+    ends = [at for at, text in enumerate(texts[1:], 1) if text in _CUSTOM_COMMAND_KEYWORDS] or [len(texts)]
+    depends = _following(texts, "DEPENDS")
+    commands = tuple(_commands(words[ends[0] :], frame.origin(invocation), _CUSTOM_COMMAND_KEYWORDS))
+    for output in texts[1 : ends[0]]:
+        target = CustomTarget(name=output, all=False, commands=commands, depends=depends, directory=frame.directory)
+        collector.targets.setdefault(output, []).append(target)
+
+
+def _following(texts: list[str], keyword: str) -> tuple[str, ...]:
+    """The words after `keyword`, up to the next keyword of `add_custom_command`."""
+    rest = texts[texts.index(keyword) + 1 :] if keyword in texts else []
+    return tuple(takewhile(lambda text: text not in _CUSTOM_COMMAND_KEYWORDS, rest))
 
 
 def _add_dependencies(collector: Collector, _frame: Frame, _invocation: Invocation, words: list[Value]) -> None:
@@ -392,6 +423,7 @@ _COMMANDS: Mapping[str, Callable[[Collector, Frame, Invocation, list[Value]], No
     "enable_testing": _enable_testing,
     "include": _include,
     "add_custom_target": _add_custom_target,
+    "add_custom_command": _add_custom_command,
     "add_dependencies": _add_dependencies,
 }
 

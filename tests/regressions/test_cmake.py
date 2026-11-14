@@ -146,7 +146,6 @@ class SkippedConstructTests(unittest.TestCase):
         result = _run(cxx_extensions, {"CMakeLists.txt": C_PROJECT + build, "a.c": ""})
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #204: a target depending on an add_custom_command output runs nothing
     def test_a_wrapper_around_add_custom_command_runs_its_linter(self) -> None:
         """neovim's lintsh target, made by add_glob_target() (cmake_parse_arguments, add_custom_command OUTPUT, a
         target DEPENDS on it), runs shellcheck when CI builds it; a plain add_custom_target with the command is

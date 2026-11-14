@@ -616,6 +616,10 @@ CUSTOM_TARGETS = {
         "add_dependencies(docs lint)",
         "add_custom_target()",
         "add_dependencies()",
+        "add_custom_command(OUTPUT gen.h gen.c COMMAND generate gen MAIN_DEPENDENCY gen.in DEPENDS tool COMMENT x)",
+        "add_custom_command(TARGET format POST_BUILD COMMAND echo after)",
+        "add_custom_target(generated DEPENDS gen.c)",
+        "add_custom_target(tool COMMAND echo tool)",
     ),
     "tools/CMakeLists.txt": _lines("add_custom_target(check COMMAND ./run.sh WORKING_DIRECTORY x)"),
 }
@@ -636,6 +640,15 @@ class CustomTargetTests(unittest.TestCase):
                 (("clang-tidy", "-p", "build", "src/a.cpp"), None, "CMakeLists.txt:add_custom_target[3]"),
                 (("echo", "done"), None, "CMakeLists.txt:add_custom_target[3]"),
                 (("./run.sh",), "tools", "tools/CMakeLists.txt:add_custom_target[1]"),
+            ],
+        )
+
+    def test_a_target_depending_on_a_custom_commands_output_runs_its_commands(self) -> None:
+        self.assertEqual(
+            _expanded("cmake --build build --target generated"),
+            [
+                (("echo", "tool"), None, "CMakeLists.txt:add_custom_target[13]"),
+                (("generate", "gen"), None, "CMakeLists.txt:add_custom_command[10]"),
             ],
         )
 
