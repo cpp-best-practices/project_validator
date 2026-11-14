@@ -61,9 +61,18 @@ def custom_shell(shell: str | None) -> tuple[str, ...] | None:
         words = shlex.split(shell)
     except ValueError:
         words = shell.split()
-    if not words or words[0] in _SHELLS:
+    if not words or words[0] in _SHELLS or _runs_a_shell(words):
         return None
     return tuple(words) if "{0}" in words else (*words, "{0}")
+
+
+# A wrapper that runs the script with a shell GitHub knows: msys2's shell (setup-msys2), or a word that is such a
+# shell running `{0}` (`script -q -e -c "bash {0}"`, which gives the script a terminal).
+_SHELL_OF_SCRIPT = re.compile(r"(?:ba|z|da|k)?sh(?:\s+-\w+)*\s+\{0\}")
+
+
+def _runs_a_shell(words: list[str]) -> bool:
+    return words[0] == "msys2" or any(_SHELL_OF_SCRIPT.fullmatch(word) for word in words)
 
 
 def _is_subset(entry: Mapping[str, object], combination: Combination) -> bool:

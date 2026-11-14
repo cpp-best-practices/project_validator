@@ -120,7 +120,6 @@ class FollowedScriptTests(unittest.TestCase):
 
 
 class CustomShellTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #194: `shell: msys2 {0}` / `script -c "bash {0}"` hide the step's script
     def test_a_shell_wrapper_that_runs_bash_has_its_script_split(self) -> None:
         """A custom `shell:` whose `{0}` is run by bash (msys2's shell, `script -q -e -c "bash {0}"`) runs the step's
         commands, so the cmake build type (fmt, simdjson) and the kcov coverage run (bats-core) are read."""

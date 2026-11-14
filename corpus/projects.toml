@@ -55,19 +55,19 @@ issues = [182, 188]
 name = "fmtlib/fmt"
 commit = "4229eb5820af49bf797641168624c8a754a1a4eb"
 ecosystems = ["C/C++"]
-issues = [182, 194, 282]
+issues = [182, 282]
 
 [[project]]
 name = "cpp-best-practices/cmake_template"
 commit = "b86318abbf55a657a11a0cf2acce69f221841b22"
 ecosystems = ["C/C++"]
-issues = [182, 194, 282]
+issues = [182, 282]
 
 [[project]]
 name = "simdjson/simdjson"
 commit = "449f38e6377992798220c513f58740632355de52"
 ecosystems = ["C/C++"]
-issues = [182, 183, 194]
+issues = [182, 183]
 
 [[project]]
 name = "bus1/dbus-broker"
@@ -1071,7 +1071,7 @@ issues = [192]
 name = "bats-core/bats-core"
 commit = "9c153ec126fa6c005dfc6d2a39c04bb81a329e9b"
 ecosystems = ["Shell"]
-issues = [194, 275]
+issues = [275]
 
 [[project]]
 name = "nvm-sh/nvm"
