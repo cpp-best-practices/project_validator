@@ -112,15 +112,18 @@ class BuildOutput:
             return _regex_matches_any(entry.pattern, self.paths)
         if self.globs.fullmatch(entry.pattern) is not None:
             return True
-        # A sample inside a directory the output is (`compiled/main_rkt.zo`) is not the output: the directory is.
+        return any(_glob_ignores(entry.pattern, path) for path in self._placed(units, sources))
+
+    def _placed(self, units: Iterable[str], sources: Iterable[str]) -> list[str]:
+        """The output's paths in each unit, and, for a file output, beside each source directory. A sample inside a
+        directory the output is (`compiled/main_rkt.zo`) is not the output: the directory is."""
         folders = [path for path in self.paths if path.endswith("/")]
         whole = [
             path for path in self.paths if not any(path != folder and path.startswith(folder) for folder in folders)
         ]
         files = [path for path in whole if "/" not in path and f"{path}/" not in self.paths]
-        placed = [_placed(path, unit) for unit in units for path in whole]
-        placed += [_placed(path, directory) for directory in sources for path in files]
-        return any(_glob_ignores(entry.pattern, path) for path in placed)
+        in_units = [_placed(path, unit) for unit in units for path in whole]
+        return in_units + [_placed(path, directory) for directory in sources for path in files]
 
     def artifact(self, path: str) -> str | None:
         """The build output `path` is, or is inside, as one of `artifacts` names it; None when it is not one.
