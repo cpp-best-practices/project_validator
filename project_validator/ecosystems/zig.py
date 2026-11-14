@@ -15,12 +15,13 @@ from project_validator.facts import Command, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.fuzzing import FuzzTargets, fuzzed, fuzzer
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import defined_by
+from project_validator.facts.tools import Run, defined_by
 from project_validator.text import pattern
 from project_validator.tools.kcov import kcov_tool
 from project_validator.tools.limits import function_length_limiters
@@ -214,3 +215,30 @@ ZIG_ECOSYSTEM = Ecosystem(
 )
 
 ZIG_VERSIONS = versions_axis("Zig version", "Zig", ZIG, compiled=True)
+
+
+# --- Fuzzing: std.testing.fuzz in a test block, run by `zig build test --fuzz`, or a `fuzz` step build.zig defines,
+# run by `zig build fuzz` (tigerbeetle).
+ZIG_FUZZ_TARGETS = FuzzTargets(
+    name="std.testing.fuzz tests (or a fuzz step in build.zig)",
+    languages=ZIG,
+    path=re.compile(r"(?:^|/)(?:[^/]+\.zig)$"),
+    contains=re.compile(r"\bstd\.testing\.fuzz\s*\(|\bb\.step\(\s*\"fuzz\""),
+)
+
+
+def _zig_fuzzes(command: Command, _facts: Facts) -> Run | None:
+    argv = resolved(command)
+    if starts_with(argv, ("zig", "build")) is None:
+        return None
+    steps = [word for word in argv[2:] if not word.startswith("-")]
+    return fuzzed() if "--fuzz" in argv or steps[:1] == ["fuzz"] else None
+
+
+ZIG_FUZZ = fuzzer(
+    name="zig build fuzz",
+    languages=ZIG,
+    how="zig build test --fuzz (or a fuzz step: zig build fuzz)",
+    runs=_zig_fuzzes,
+    targets=(ZIG_FUZZ_TARGETS,),
+)

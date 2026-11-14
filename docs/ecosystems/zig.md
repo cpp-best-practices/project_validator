@@ -36,6 +36,11 @@ release modes drop them. A release build keeps them with `-Doptimize=ReleaseSafe
 default mode in `build.zig` (`standardOptimizeOption(.{ .preferred_optimize_mode = .ReleaseSafe })`). A build with no
 `addExecutable` is a library, with no binary to harden, and skipped.
 
+## `fuzz-testing`
+
+`std.testing.fuzz` in a test block (or a `fuzz` step in `build.zig`), run by `zig build test --fuzz` or
+`zig build fuzz`.
+
 ## `code-formatting`
 
 `zig fmt --check .` fails on a file it would change; `zig fmt .` rewrites. zig fmt has one style.
@@ -55,6 +60,6 @@ lizard parses Zig, so CI runs it with a length limit.
 ## Not judged
 
 Zig has no warnings (`compiler-warnings`, `warnings-as-errors`) and no standard to pick (`cxx-extensions`); it is
-statically typed (`type-checking`); no code security scanner, dependency auditor, fuzzer or mutation testing tool the
+statically typed (`type-checking`); no code security scanner, dependency auditor or mutation testing tool the
 validator knows reads Zig; the `.hash` of every dependency in `build.zig.zon` belongs to `dependency-management`, not
 judged for Zig yet.

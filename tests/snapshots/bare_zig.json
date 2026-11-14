@@ -217,14 +217,22 @@
         "language": "Zig",
         "units": [
           {
-            "answer": "impossible",
+            "answer": "no",
             "language": "Zig",
             "other_runs": [],
             "property_files": [],
             "tools": {
-              "answer": "impossible",
+              "answer": "no",
               "defined": {},
-              "known": {},
+              "known": {
+                "zig build fuzz": {
+                  "can": {
+                    "runs": "zig build test --fuzz (or a fuzz step: zig build fuzz)"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
               "language": "Zig",
               "level": "runs",
               "runs": {},
@@ -648,9 +656,11 @@
       "status": "FAIL"
     },
     "fuzz-testing": {
-      "details": [],
-      "message": "not applicable to Zig",
-      "status": "SKIP"
+      "details": [
+        "consider adding zig build test --fuzz (or a fuzz step: zig build fuzz)"
+      ],
+      "message": "no fuzz targets found (std.testing.fuzz tests (or a fuzz step in build.zig))",
+      "status": "FAIL"
     },
     "hardening": {
       "details": [

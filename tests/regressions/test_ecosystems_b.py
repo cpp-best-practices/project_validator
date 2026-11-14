@@ -531,7 +531,6 @@ class ZigTests(unittest.TestCase):
         result = _run(platform_matrix, ZIG, files)
         self.assertIn("1 Zig version(s) (0.14.0)", result.message)
 
-    @unittest.expectedFailure  # upstream #288: fuzz-testing is "not applicable to Zig"; zig build fuzz unknown
     def test_zig_build_fuzz_and_test_fuzz_run_the_fuzzers(self) -> None:
         """`zig build fuzz` (a fuzz step in build.zig) and `zig build test --fuzz` (std.testing.fuzz) run the
         project's fuzzers: Zig is judged and PASSes (tigerbeetle/tigerbeetle)."""

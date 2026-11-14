@@ -23,3 +23,12 @@ test "discounted takes the percentage off" {
     try std.testing.expectEqual(@as(u32, 90), discounted(100, 10));
     try std.testing.expectEqual(@as(u32, 100), discounted(100, 0));
 }
+
+test "discounted never exceeds the price" {
+    try std.testing.fuzz({}, struct {
+        fn one(_: void, input: []const u8) anyerror!void {
+            if (input.len < 2) return;
+            try std.testing.expect(discounted(input[0], input[1] % 101) <= input[0]);
+        }
+    }.one, .{});
+}

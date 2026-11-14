@@ -1332,7 +1332,6 @@ ecosystems = ["Zig"]
 name = "karlseguin/http.zig"
 commit = "1bb71ff128a044b1645df91046473c38abbf965c"
 ecosystems = ["Zig"]
-issues = [288]
 
 [[project]]
 name = "mitchellh/libxev"
@@ -1344,16 +1343,15 @@ issues = [182]
 name = "Hejsil/zig-clap"
 commit = "d7b9b5727f2ad156144a889141b14bbfc45de687"
 ecosystems = ["Zig"]
-issues = [288]
 
 [[project]]
 name = "tigerbeetle/tigerbeetle"
 commit = "a2a3c7064519e08233abe26c54a43fca2f9ad9bc"
 ecosystems = ["Zig"]
-issues = [182, 288]
+issues = [182]
 
 [[project]]
 name = "ghostty-org/ghostty"
 commit = "6d9577708a211b0e6c5e6c6886f3cfb7efc47555"
 ecosystems = ["Zig"]
-issues = [227, 288]
+issues = [227]
