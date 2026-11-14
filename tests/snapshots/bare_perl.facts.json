@@ -69,6 +69,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "lib/Shop.pm",
+      "reader": "Module::Build actions"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "lib/Shop.pm",
       "reader": "Perl modules"
     },
     {

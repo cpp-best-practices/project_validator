@@ -148,7 +148,6 @@ TEST_CLASS = {
 
 
 class PerlTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #269: `./Build authortest`, defined under inc/, is not a test run
     def test_a_build_action_that_depends_on_test_runs_the_tests(self) -> None:
         """`./Build authortest` runs the tests when `inc/**/*.pm` defines `sub ACTION_authortest` that
         `depends_on('test')` (Perl-Critic/Perl-Critic)."""
@@ -156,7 +155,6 @@ class PerlTests(unittest.TestCase):
         result = _run(tests_run, "Perl modules", {**PERL_TEST, **BUILD_ACTION, **ci})
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #269: Test::Perl::Critic in the author tests is not perlcritic running
     def test_test_perl_critic_in_the_tests_is_perlcritic(self) -> None:
         """An author test that uses Test::Perl::Critic, run by `prove -l xt`, runs perlcritic over the code
         (Perl-Critic/Perl-Critic; the profile doc says so)."""
@@ -164,14 +162,12 @@ class PerlTests(unittest.TestCase):
         result = _run(static_analysis, "Perl modules", {**critic, **github_job(CI, "prove -l xt")})
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #269: Test::Warnings in a test class under t/lib is not read
     def test_test_warnings_in_a_test_class_counts(self) -> None:
         """`use Test::Warnings` in `t/lib/TestFor/*.pm`, loaded by the `t/*.t` files, fails every test on a
         warning (houseabsolute/perl-code-tidyall)."""
         result = _run(warnings_as_errors, "Perl modules", TEST_CLASS)
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #269: corpus/ and inc/ are not auxiliary roles, their modules are judged
     def test_corpus_and_inc_hold_no_modules_of_the_product(self) -> None:
         """A module under `corpus/` (Dist::Zilla's test distributions) or `inc/` (bundled build code) is not one of
         the product's modules that must `use strict` (Perl-Critic, perl-code-tidyall)."""

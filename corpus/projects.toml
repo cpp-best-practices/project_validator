@@ -747,13 +747,13 @@ issues = [182, 248]
 name = "Perl-Critic/Perl-Critic"
 commit = "368a20326ab47ec7c4b800a2c943feea87cd183e"
 ecosystems = ["Perl"]
-issues = [182, 188, 248, 269]
+issues = [182, 188, 248]
 
 [[project]]
 name = "houseabsolute/perl-code-tidyall"
 commit = "9318a932cfe054125ab3f3098c98ea1532df0b9e"
 ecosystems = ["Perl"]
-issues = [182, 227, 248, 269]
+issues = [182, 227, 248]
 
 [[project]]
 name = "rjbs/Dist-Zilla"
