@@ -35,10 +35,10 @@ NOT_SOURCE_SUFFIXES = frozenset(
         # Templates (config.h.in, MANIFEST.in) can belong to any language.
         ".in",
         # Lock files, test plans and data the profiles' tools write or read (cabal.project.freeze, Package.resolved,
-        # Xcode test plans, R's data and Windows Makevars), templates (EEx, Terraform's templatefile), cheatsheets and
-        # AsciiDoc.
+        # Xcode test plans, R's data and Windows Makevars), templates (EEx, Terraform's templatefile, `.tpl`),
+        # cheatsheets and AsciiDoc.
         *(".freeze", ".resolved", ".xctestplan", ".rda", ".rds", ".rdata", ".win"),
-        *(".eex", ".heex", ".leex", ".tftpl", ".cheatmd", ".asciidoc"),
+        *(".eex", ".heex", ".leex", ".tftpl", ".tpl", ".cheatmd", ".asciidoc"),
     }
 )
 # Java's service-provider files are named after the interface they implement (`com.example.Spi`).

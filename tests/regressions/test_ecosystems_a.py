@@ -319,7 +319,6 @@ def _chdir_pipeline(cli: str) -> dict[str, str]:
 
 
 class TerraformTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #262: -chdir= before the subcommand and .tftpl/.tpl templates are unread
     def test_chdir_before_the_subcommand_and_templates_are_read(self) -> None:
         """`tofu -chdir=dir validate` validates and `fmt -check` checks (kubespray); `.tftpl` and `.tpl` are Terraform
         templates (terraform-google-kubernetes-engine, terraform-aws-eks)."""
