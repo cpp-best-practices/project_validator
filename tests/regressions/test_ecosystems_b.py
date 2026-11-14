@@ -526,14 +526,12 @@ FUZZ_STEP = {
 
 
 class ZigTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #288: any addExecutable, examples included, means a binary to harden
     def test_a_library_whose_only_executables_are_examples_has_no_binary_to_harden(self) -> None:
         """A build.zig whose only `addExecutable` builds `examples/*.zig` is a library: hardening is skipped, not
         failed for a missing ReleaseSafe build (karlseguin/http.zig, mitchellh/libxev)."""
         result = _run(hardening, ZIG, EXAMPLES_ONLY)
         self.assertEqual(result.status, Status.SKIP, result)
 
-    @unittest.expectedFailure  # upstream #288: an __AFL_LOOP in a comment makes a C file a fuzz target
     def test_an_afl_macro_named_in_a_comment_is_not_a_fuzz_target(self) -> None:
         """A `.c` file whose only `__AFL_LOOP` is in a comment (ghostty's AFL++ packaging shim) holds no fuzz
         target: "no fuzz targets found" (ghostty-org/ghostty)."""

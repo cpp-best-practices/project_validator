@@ -17,6 +17,7 @@ from project_validator.facts.axes import versions_axis
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
+from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import defined_by
@@ -119,10 +120,18 @@ PROGRAMS = "Zig programs"
 _EXECUTABLE = re.compile(r"\baddExecutable\s*\(")
 
 
+# The source an addExecutable builds, in the text after it (`.root_source_file = b.path("examples/x.zig")`).
+_ROOT_SOURCE = re.compile(r'\.root_source_file\s*=\s*b\.path\(\s*"([^"]+)"')
+
+
 def _read_programs(path: str, text: str) -> Iterator[Setting]:
-    """Whether the build defines an executable: a library has no binary to harden."""
-    if _EXECUTABLE.search(text):
-        yield Setting(origin=Origin(path=path), tool=PROGRAMS, key="executable", value=True)
+    """Whether the build defines an executable other than an example (http.zig's examples/*.zig): a library has no
+    binary to harden."""
+    for match in _EXECUTABLE.finditer(text):
+        source = _ROOT_SOURCE.search(text, match.end(), match.end() + 400)
+        if source is None or role(source[1]) != "example":
+            yield Setting(origin=Origin(path=path), tool=PROGRAMS, key="executable", value=True)
+            return
 
 
 ZIG_PROGRAMS = SettingsReader(name=PROGRAMS, files=(BUILD_FILE,), read=_read_programs)

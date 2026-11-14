@@ -14,7 +14,8 @@ C_FUZZ_TARGETS = FuzzTargets(
     name="libFuzzer or AFL++ fuzz targets (LLVMFuzzerTestOneInput, __AFL_LOOP)",
     languages=C_AND_CXX.languages,
     path=re.compile(r"\.(?:c|cc|cpp|cxx|C)$"),
-    contains=re.compile(r"\bLLVMFuzzerTestOneInput\b|__AFL_LOOP|__AFL_FUZZ_TESTCASE_BUF"),
+    # On a line where no `//` comment comes first (ghostty's shim names __AFL_LOOP in a comment only).
+    contains=re.compile(r"^[^/\n]*(?:\bLLVMFuzzerTestOneInput\b|__AFL_LOOP|__AFL_FUZZ_TESTCASE_BUF)", re.MULTILINE),
 )
 C_PROPERTY_TESTS = PropertyTests(
     name="RapidCheck tests",
