@@ -190,8 +190,9 @@ unknown, and a tool run there covers the whole project, heuristically.
 
 **What a job builds with** is a fact (`Job`, `project_validator/facts/jobs.py`, from `ci.job_facts`): its OS, its
 compilers (or the runner's default), its toolchains and versions, its build configurations, and the ecosystems it
-builds with. A job's evidence is what it runs: commands (with the variables its environment defines), image,
-environment, and action inputs whose values are known; step names and conditions are not evidence. Whether a job
+builds with, and the service containers it runs beside itself (a database its tests use). A job's evidence is what
+it runs: commands (with the variables its environment defines), image, environment, and action inputs whose values
+are known; step names and conditions are not evidence. Whether a job
 uses a toolchain, or builds with an ecosystem, is read from the commands it runs, by program and subcommand
 (`ToolchainPatterns.programs`, `Ecosystem.ci_programs`: `raco cover` is Racket's, `cover` alone Perl's); versions
 and compilers are matched in the evidence as text, matrix values first (`project_validator/platforms.py`).
@@ -200,7 +201,7 @@ and compilers are matched in the evidence as text, matrix values first (`project
 
 There is one tool model (`Tool`, `project_validator/facts/tools.py`). A tool records the languages it handles and,
 per *aspect* it can provide (`coverage`, `format`, `analysis`, `type-check`, `test`, `audit`, `security`, `schema`, `examples`, `compatibility`,
-`function-length`, `fuzz`, `mutation`), the levels it can provide and how to ask for each (`can`). It claims commands
+`links`, `migrations`, `function-length`, `fuzz`, `mutation`), the levels it can provide and how to ask for each (`can`). It claims commands
 (`claims(command, facts)`: `starts`, `when`, `flagged`, `with_option`, `all_of`, `any_of` spell the common claims)
 and reads only facts. A claimed command is a `ToolRun`: job, tool, languages, the aspects and levels that run
 provides, the settings files it read, and its scope (its working directory); only the tools of the project's own
@@ -225,7 +226,9 @@ Shared tools (`project_validator/tools`) serve every language whose files they r
 for what GCC and Clang compile; lizard; osv-scanner, trivy and snyk; CodeQL, semgrep and GitLab SAST; the secret
 scanners; pre-commit; the version control systems' ignore files. Each profile makes them its own for its languages
 (`multi_ecosystem_audits(languages)`, `function_length_limiters(languages)`), so a language that has nothing to audit
-is not judged.
+is not judged. The scanners and auditors know the languages they read (`CODEQL_LANGUAGES`, `OSV_SCANNER_LANGUAGES`,
+…), so a profile gets only the tools that read one of its languages, for those languages: CodeQL for C#, not F#;
+semgrep but no CodeQL for Lua; nothing for Erlang's rebar.lock.
 
 ### Practices
 

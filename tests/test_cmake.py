@@ -654,3 +654,27 @@ class CustomTargetTests(unittest.TestCase):
             self.assertIs(cmake.cmake_project(context), cmake.cmake_project(context))
             [option] = context.facts.of(CompilerOption)
         self.assertEqual(option.origin, Origin(path="CMakeLists.txt", at=("add_compile_options", 1)))
+
+
+class GuardTests(unittest.TestCase):
+    def test_what_each_if_tests_is_recorded_as_written(self) -> None:
+        found = _listed(
+            "if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)",
+            '  message(FATAL_ERROR "no")',
+            "elseif(NOT PROJECT_IS_TOP_LEVEL)",
+            "else()",
+            "endif()",
+            'cmake_dependent_option(p_TESTS "" ON "PROJECT_IS_TOP_LEVEL;BUILD_TESTING" OFF)',
+        )
+        guards = [fact.value for fact in found if isinstance(fact, Setting) and fact.key == "guard"]
+        self.assertEqual(
+            guards,
+            [
+                "CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR",
+                "NOT PROJECT_IS_TOP_LEVEL",
+                "PROJECT_IS_TOP_LEVEL;BUILD_TESTING",
+            ],
+        )
+        self.assertTrue(
+            all(fact.tool == "CMake" for fact in found if isinstance(fact, Setting) and fact.key == "guard")
+        )

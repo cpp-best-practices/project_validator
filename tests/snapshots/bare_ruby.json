@@ -44,6 +44,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -124,6 +131,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -329,6 +343,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Ruby",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Ruby",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -357,6 +409,13 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": []
+      }
+    ],
     "platforms": [
       {
         "auxiliary": {},
@@ -371,6 +430,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -569,6 +635,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -666,6 +739,11 @@
       "message": "1 build output is committed",
       "status": "FAIL"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Ruby warning settings found; enable at least Ruby warnings, RuboCop or Standard",
@@ -745,6 +823,16 @@
       "message": "no license file",
       "status": "FAIL"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [
         "consider running mutant run in CI"
@@ -752,10 +840,20 @@
       "message": "no mutation testing runs",
       "status": "WARN"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
     "platform-matrix": {
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -817,6 +915,11 @@
       "details": [],
       "message": "no tests found (spec/**/*_spec.rb or test/**/*_test.rb files)",
       "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [

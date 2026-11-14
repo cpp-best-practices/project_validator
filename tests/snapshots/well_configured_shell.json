@@ -166,6 +166,18 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -330,6 +342,18 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
       }
     ],
     "dependency-audit": [
@@ -590,6 +614,78 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "PowerShell",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Shell",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "PowerShell",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Shell",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -626,7 +722,31 @@
         ]
       }
     ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
     "platforms": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
+    "sanitizers": [
       {
         "auxiliary": {},
         "language": "PowerShell",
@@ -977,6 +1097,18 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -1147,6 +1279,11 @@
       "message": "not applicable to PowerShell, Shell",
       "status": "SKIP"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "PowerShell: strict PowerShell lints are enabled: PSScriptAnalyzer; Shell: strict shell lints are enabled: shellcheck",
@@ -1219,12 +1356,32 @@
       "message": "the project is licensed under MIT",
       "status": "PASS"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
     "mutation-testing": {
       "details": [],
       "message": "not applicable to PowerShell, Shell",
       "status": "SKIP"
     },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
     "platform-matrix": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
+    "sanitizers": {
       "details": [],
       "message": "not applicable to PowerShell, Shell",
       "status": "SKIP"
@@ -1278,6 +1435,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],

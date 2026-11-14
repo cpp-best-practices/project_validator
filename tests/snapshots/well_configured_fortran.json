@@ -86,6 +86,13 @@
         ]
       }
     ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -203,6 +210,45 @@
               "rung": null,
               "tools": []
             },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "cxx-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-std=f2018": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": [
+                  "fortran_std=f2018"
+                ]
+              },
+              {
+                "compiler": "intel",
+                "found": {
+                  "-stand f18": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": [
+                  "fortran_std=f2018"
+                ]
+              }
+            ],
+            "language": "Fortran",
+            "practice": "cxx-extensions",
             "unit": ".",
             "unknowns": []
           }
@@ -409,6 +455,44 @@
         ]
       }
     ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Fortran",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Fortran",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "mutation-testing": [
       {
         "auxiliary": {},
@@ -426,6 +510,13 @@
             "unknowns": []
           }
         ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": []
       }
     ],
     "platforms": [
@@ -493,6 +584,13 @@
             "unit": "."
           }
         ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": []
       }
     ],
     "schema-compatibility": [
@@ -675,6 +773,13 @@
         ]
       }
     ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": []
+      }
+    ],
     "type-checking": [
       {
         "auxiliary": {},
@@ -824,6 +929,11 @@
       "message": "no build outputs are committed",
       "status": "PASS"
     },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Fortran compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wimplicit-interface for gcc; -warn all for intel",
@@ -895,7 +1005,22 @@
       "message": "the project is licensed under MIT",
       "status": "PASS"
     },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
     "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
       "details": [],
       "message": "not applicable to Fortran",
       "status": "SKIP"
@@ -928,6 +1053,11 @@
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 compiler(s) (gcc, intel), 5 combination(s)",
       "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
     },
     "schema-compatibility": {
       "details": [],
@@ -978,6 +1108,11 @@
       "details": [],
       "message": "tests found in 1 file(s)",
       "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Fortran",
+      "status": "SKIP"
     },
     "type-checking": {
       "details": [],
