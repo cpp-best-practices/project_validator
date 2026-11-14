@@ -187,6 +187,18 @@ class DartTests(unittest.TestCase):
             '"uses": "subosito/flutter-action@v2", "with": {"flutter-version": "3.24.0"}',
         )
         self.assertIn("(Flutter 3.24.0)", self._run(platform_matrix, flutter).message)
+        # The channel names the SDK when no version is given; with both, the version alone counts.
+        for inputs, expected in (
+            ('{"channel": "stable"}', "1 Dart or Flutter SDK version(s) (Flutter stable)"),
+            ('{"flutter-version": "3.24.0", "channel": "stable"}', "1 Dart or Flutter SDK version(s) (Flutter 3.24.0)"),
+            ("{}", "1 Dart or Flutter SDK version(s) (Flutter stable)"),
+        ):
+            with self.subTest(inputs=inputs):
+                step = github_steps("uses: subosito/flutter-action@v2", "run: flutter test")
+                step[GITHUB_WORKFLOW] = step[GITHUB_WORKFLOW].replace(
+                    '"uses": "subosito/flutter-action@v2"', f'"uses": "subosito/flutter-action@v2", "with": {inputs}'
+                )
+                self.assertIn(expected, self._run(platform_matrix, step).message)
         image = {
             GITHUB_WORKFLOW: "jobs:\n  test:\n    runs-on: ubuntu-latest\n    container: dart:3.5\n"
             "    steps:\n      - run: dart test\n"
