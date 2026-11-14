@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import unittest
+from unittest import mock
 
 from project_validator.ecosystems import data
 from project_validator.ecosystems.data import DATA
@@ -61,3 +63,15 @@ class ParserTests(unittest.TestCase):
         for text in bad:
             with self.subTest(text=text), self.assertRaises(ParseError):
                 data._check_deep_json(text)
+
+    @unittest.expectedFailure  # upstream #290: the message depends on whether Python's parser recurses that deep
+    def test_deeply_nested_json_is_reported_the_same_whatever_python_recurses(self) -> None:
+        """JSONTestSuite's `n_structure_100000_opening_arrays.json` (denoland/std, yojson) is reported the same on a
+        Python whose decoder raises RecursionError and on one that reads that deep and fails on the end."""
+        text = b"[" * 100000
+        reported = []
+        for raised in (RecursionError(), json.JSONDecodeError("Expecting value", "[" * 100000, 100000)):
+            with mock.patch.object(data.json, "loads", side_effect=raised), self.assertRaises(ParseError) as caught:
+                data._parse_json("deep.json", text)
+            reported.append((str(caught.exception), caught.exception.line, caught.exception.column))
+        self.assertEqual(reported[0], reported[1])
