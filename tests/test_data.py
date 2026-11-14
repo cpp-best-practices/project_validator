@@ -64,7 +64,6 @@ class ParserTests(unittest.TestCase):
             with self.subTest(text=text), self.assertRaises(ParseError):
                 data._check_deep_json(text)
 
-    @unittest.expectedFailure  # upstream #290: the message depends on whether Python's parser recurses that deep
     def test_deeply_nested_json_is_reported_the_same_whatever_python_recurses(self) -> None:
         """JSONTestSuite's `n_structure_100000_opening_arrays.json` (denoland/std, yojson) is reported the same on a
         Python whose decoder raises RecursionError and on one that reads that deep and fails on the end."""

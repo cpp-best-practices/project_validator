@@ -477,7 +477,7 @@ issues = [182, 188, 219, 254]
 name = "denoland/std"
 commit = "f834d0223364361169314833e3c7a8f62ce11d58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 201, 219, 226, 231, 236, 290]
+issues = [182, 201, 219, 226, 231, 236]
 
 [[project]]
 name = "SchemaStore/schemastore"
@@ -727,7 +727,6 @@ issues = [182, 240]
 name = "ocaml-community/yojson"
 commit = "df9e87cdef7c0fcddf7fa7d4e8e6d8a45c95bcab"
 ecosystems = ["OCaml"]
-issues = [290]
 
 [[project]]
 name = "ocaml/opam"
