@@ -419,7 +419,6 @@ class LicenseTests(unittest.TestCase):
             paths = [fact.origin.path for fact in make_context(root).facts.of(LicenseFile)]
         self.assertEqual(paths, [])
 
-    @unittest.expectedFailure  # upstream #239: fixture manifests are compared; a combined file's longest licence wins
     def test_only_the_projects_own_manifests_are_compared_with_its_license_files(self) -> None:
         """A test fixture's pyproject.toml declaring INVALID or GPL-2.0 is not the project's manifest, and a combined
         LICENSE whose first licence is MIT (CC0 for the bundled templates) agrees with a package.json declaring MIT

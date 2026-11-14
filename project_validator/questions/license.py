@@ -130,13 +130,13 @@ def _declared(facts: Facts, where: Callable[[str], bool]) -> frozenset[str]:
 
 def _compared(facts: Facts, language: str | None) -> Iterator[DeclaredLicense]:
     """The manifests (of `language`, or every language's) whose declared license is compared: those outside vendored
-    code and outside the code `--auxiliary` names."""
+    code, test fixtures and the code `--auxiliary` names."""
     named = selectors(facts)
     return (
         fact
         for fact in facts.of(DeclaredLicense)
         if (language is None or language in fact.languages)
-        and role(fact.origin.path) != "vendored"
+        and role(fact.origin.path) not in ("vendored", "test")
         and not named.matching(fact.origin.path, None)
     )
 

@@ -450,7 +450,7 @@ issues = [182, 235]
 name = "vitejs/vite"
 commit = "f898888222297aa56d6fc281c585d4d4e4d51f58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 184, 235, 239, 248, 280]
+issues = [182, 184, 235, 248, 280]
 
 [[project]]
 name = "expressjs/express"
@@ -868,7 +868,7 @@ ecosystems = ["Python"]
 name = "python-poetry/poetry"
 commit = "4acc75e19f128c8340c6f977a35e53b5f7f39071"
 ecosystems = ["Python"]
-issues = [182, 188, 211, 235, 239]
+issues = [182, 188, 211, 235]
 
 [[project]]
 name = "fastapi/fastapi"
@@ -1031,7 +1031,7 @@ ecosystems = ["Rust"]
 name = "astral-sh/ruff"
 commit = "b140af2f48bddf33a1ae984174af3180236aaaaf"
 ecosystems = ["Rust", "Python"]
-issues = [188, 239, 287]
+issues = [188, 287]
 
 [[project]]
 name = "uutils/coreutils"

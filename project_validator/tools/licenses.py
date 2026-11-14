@@ -84,7 +84,13 @@ def recognised(path: str, text: str) -> frozenset[str]:
         return frozenset(spdx for expression in identifiers for spdx in identifiers_in(expression))
     # A Markdown blockquote (`> Permission is hereby granted…`) is read as its text.
     flat = " ".join(_QUOTED.sub("", head).lower().split())
-    return next((identifiers_in(spdx) for spdx, opening in KNOWN_LICENSES if opening.search(flat)), frozenset())
+    # A combined file (a package's license, then its bundled parts') is the license it opens with.
+    found = [
+        (match.start(), index, spdx)
+        for index, (spdx, opening) in enumerate(KNOWN_LICENSES)
+        if (match := opening.search(flat))
+    ]
+    return identifiers_in(min(found)[2]) if found else frozenset()
 
 
 def _read(path: str, text: str) -> Iterator[Fact]:
