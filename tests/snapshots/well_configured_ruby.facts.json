@@ -1737,6 +1737,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Rakefile",
+      "reader": "Ruby warning settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Rakefile",
       "reader": "Rake"
     },
     {

@@ -123,7 +123,6 @@ FEATURE = {"features/shop.feature": "Feature: totals\n  Scenario: adds\n    Then
 
 
 class RubyTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #257: Rakefile warning = true and `ruby test/x.rb` are unread
     def test_rakefile_warnings_count_and_ruby_runs_a_test_file(self) -> None:
         """A `Rake::TestTask`'s `warning = true` is the Ruby warning setting when CI runs `rake test` (fluentd);
         `ruby test/test_x.rb` runs Minitest (fzf)."""
