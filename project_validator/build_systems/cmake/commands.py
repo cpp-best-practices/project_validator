@@ -42,6 +42,12 @@ _CUSTOM_TARGET_KEYWORDS = frozenset(
     {"COMMAND", "DEPENDS", "BYPRODUCTS", "WORKING_DIRECTORY", "COMMENT", "JOB_POOL", "JOB_SERVER_AWARE", "VERBATIM"}
     | {"USES_TERMINAL", "COMMAND_EXPAND_LISTS", "SOURCES"}
 )
+_EXECUTE_PROCESS_KEYWORDS = frozenset(
+    {"COMMAND", "WORKING_DIRECTORY", "TIMEOUT", "RESULT_VARIABLE", "RESULTS_VARIABLE", "OUTPUT_VARIABLE"}
+    | {"ERROR_VARIABLE", "INPUT_FILE", "OUTPUT_FILE", "ERROR_FILE", "OUTPUT_QUIET", "ERROR_QUIET", "COMMAND_ECHO"}
+    | {"OUTPUT_STRIP_TRAILING_WHITESPACE", "ERROR_STRIP_TRAILING_WHITESPACE", "ENCODING", "ECHO_OUTPUT_VARIABLE"}
+    | {"ECHO_ERROR_VARIABLE", "COMMAND_ERROR_IS_FATAL"}
+)
 _CUSTOM_COMMAND_KEYWORDS = _CUSTOM_TARGET_KEYWORDS | {
     "OUTPUT",
     "MAIN_DEPENDENCY",
@@ -90,6 +96,8 @@ class Collector:
     # The variables a path was resolved into (`file(REAL_PATH)`, `get_filename_component(REALPATH)`), and the path as
     # written: a guard comparing the variable compares the path.
     resolved: dict[str, str] = field(default_factory=dict)
+    # The commands `execute_process()` runs (a script run with `cmake -P` runs them).
+    processes: list[tuple[tuple[str, ...], Origin]] = field(default_factory=list)
 
     def invoked(self, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
         if (handler := _COMMANDS.get(invocation.name)) is not None:
@@ -396,6 +404,10 @@ def _following(texts: list[str], keyword: str) -> tuple[str, ...]:
     return tuple(takewhile(lambda text: text not in _CUSTOM_COMMAND_KEYWORDS, rest))
 
 
+def _execute_process(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
+    collector.processes += _commands(words, frame.origin(invocation), _EXECUTE_PROCESS_KEYWORDS)
+
+
 def _add_dependencies(collector: Collector, _frame: Frame, _invocation: Invocation, words: list[Value]) -> None:
     if words:
         collector.dependencies.setdefault(words[0].text, []).extend(word.text for word in words[1:])
@@ -424,6 +436,7 @@ _COMMANDS: Mapping[str, Callable[[Collector, Frame, Invocation, list[Value]], No
     "include": _include,
     "add_custom_target": _add_custom_target,
     "add_custom_command": _add_custom_command,
+    "execute_process": _execute_process,
     "add_dependencies": _add_dependencies,
 }
 

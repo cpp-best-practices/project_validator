@@ -154,7 +154,6 @@ class SkippedConstructTests(unittest.TestCase):
         result = _run(static_analysis, files)
         self.assertIn("Shell: shellcheck runs", result.message)
 
-    @unittest.expectedFailure  # upstream #204: a custom target running `cmake -P script` is not followed into it
     def test_a_cmake_script_test_runner_runs_the_tests_it_executes(self) -> None:
         """neovim's unittest target runs busted through `cmake -D TEST_TYPE=unit -P cmake/RunTests.cmake`: the Lua
         tests count as run, exactly as when the target runs busted itself."""

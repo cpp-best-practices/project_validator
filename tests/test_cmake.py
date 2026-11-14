@@ -652,6 +652,37 @@ class CustomTargetTests(unittest.TestCase):
             ],
         )
 
+    def test_a_cmake_script_runs_the_commands_it_executes_with_the_variables_defined(self) -> None:
+        script = 'execute_process(COMMAND run ${KIND} RESULT_VARIABLE r COMMAND echo "${MODE}")\n'
+        files = {"CMakeLists.txt": "project(app)\n", "tools/run.cmake": script}
+        lines = {
+            "cmake -DKIND=unit -D MODE:STRING=fast -P tools/run.cmake": [("run", "unit"), ("echo", "fast")],
+            "cmake -P tools/missing.cmake": [],
+            "cmake -P": [],
+            "cmake -DKIND=unit": [],
+        }
+        for line, expected in lines.items():
+            with self.subTest(line=line), temp_project({**files, **github_job("test", line)}) as root:
+                facts = make_context(root).facts
+                self.assertEqual([fact.argv for fact in facts.of(Command) if fact.via], expected)
+
+    def test_a_cmake_script_that_cannot_be_evaluated_is_unknown(self) -> None:
+        scripts = {
+            "if(A)\n": "line 1: if() is never closed with endif()",
+            "set(A 1)\n" * 5: "evaluation stopped after 3",
+        }
+        for script, reason in scripts.items():
+            files = {"run.cmake": script, **github_job("test", "cmake -P run.cmake")}
+            with (
+                self.subTest(reason=reason),
+                temp_project(files) as root,
+                mock.patch.object(evaluation, "MOST_COMMANDS", 3),
+            ):
+                unknowns = [
+                    fact for fact in make_context(root).facts.of(Unknown) if fact.subject.startswith("the CMake script")
+                ]
+            self.assertTrue(unknowns and unknowns[0].reason.startswith(reason), unknowns)
+
     def test_a_build_without_targets_builds_every_all_target(self) -> None:
         expected = [(("echo", "built"), None, "CMakeLists.txt:add_custom_target[5]")]
         self.assertEqual(_expanded("cmake --build build"), expected)

@@ -91,7 +91,7 @@ issues = [207, 242, 282]
 name = "google/googletest"
 commit = "e882c36410197464e3429546e6a7d5e217bde51e"
 ecosystems = ["C/C++"]
-issues = [182, 204, 207, 211, 229]
+issues = [182, 207, 211, 229]
 
 [[project]]
 name = "uber/h3"
@@ -109,7 +109,7 @@ issues = [182, 215, 228, 235, 247, 282]
 name = "neovim/neovim"
 commit = "49b853fb327f5f6b5c1bdb38d2e3b8026a4124eb"
 ecosystems = ["C/C++", "Lua"]
-issues = [182, 204, 282]
+issues = [182, 282]
 
 [[project]]
 name = "ggml-org/llama.cpp"
@@ -121,7 +121,7 @@ issues = [181, 224, 230, 235, 241]
 name = "glfw/glfw"
 commit = "92dcf4ce74f2e2554a98fea09be7c705c17daa5a"
 ecosystems = ["C/C++"]
-issues = [204, 223, 241, 282]
+issues = [223, 241, 282]
 
 [[project]]
 name = "clj-kondo/clj-kondo"
@@ -299,7 +299,7 @@ issues = [228]
 name = "fortran-lang/stdlib"
 commit = "2d9c377865727a8771e30dac1745d413744a3384"
 ecosystems = ["Fortran"]
-issues = [204, 229]
+issues = [229]
 
 [[project]]
 name = "fortran-lang/fpm"

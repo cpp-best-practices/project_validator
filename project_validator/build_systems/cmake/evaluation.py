@@ -171,6 +171,18 @@ class Evaluation:
         except RecursionError:
             self.problems["CMakeLists.txt"] = "nested too deeply to read"
 
+    def script(self, path: str, defines: Mapping[str, str]) -> None:
+        """Run `path` as `cmake -D name=value... -P path` does: on its own, with the variables the command defines."""
+        directory = posixpath.dirname(path) or "."
+        scope = _root_scope(directory, path)
+        for name, value in defines.items():
+            scope.variables[name] = (Item(value),)
+        frame = Frame(scope=scope, condition=ALWAYS, directory=directory, path=path)
+        try:
+            self._file(path, frame)
+        except _TooMuch:
+            self.problems[path] = f"evaluation stopped after {MOST_COMMANDS} commands"
+
     def _evaluate_all(self) -> None:
         lists = sorted((path for path in self.files if PurePosixPath(path).name == LISTS_FILE), key=_depth)
         for path in lists:
