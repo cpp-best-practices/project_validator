@@ -76,7 +76,11 @@ class FuzzAspectTests(unittest.TestCase):
             [
                 TestFile(origin=Origin(path="tests/fuzz/fuzz_x.py"), language="Python", kind="python fuzz targets"),
                 TestFile(origin=Origin(path="tests/fuzz/fuzz_x.py"), language="Python", kind="python fuzz targets"),
-                TestFile(origin=Origin(path="tests/test_x.py"), language="Python", kind="test_*.py, *_test.py or tests/*_tests.py files"),
+                TestFile(
+                    origin=Origin(path="tests/test_x.py"),
+                    language="Python",
+                    kind="test_*.py, *_test.py or tests/*_tests.py files",
+                ),
             ]
         )
         self.assertEqual(tool.defined(FUZZ, facts), ("tests/fuzz/fuzz_x.py",))

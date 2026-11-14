@@ -246,7 +246,6 @@ class ScalaTests(unittest.TestCase):
         self.assertIn("JDK 8 / Scala 2.12", result.message)
         self.assertIn("6 combination(s)", result.message)
 
-    @unittest.expectedFailure  # upstream #274: `${{ matrix.java || '17' }}` as java-version is "JDK default"
     def test_a_jdk_version_from_a_fallback_expression_is_read(self) -> None:
         """`java-version: ${{ matrix.java || '17' }}` over `java: ['17', '21']` names JDK 17 and JDK 21
         (scalameta/scalafmt)."""

@@ -226,7 +226,10 @@ class MixedLanguageTestsRunTests(unittest.TestCase):
         result = run_as(self, tests_run, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
         self.assertEqual(
             result,
-            Result.failed("C/C++: tests found in 2 file(s); Python: no tests found (test_*.py, *_test.py or tests/*_tests.py files)"),
+            Result.failed(
+                "C/C++: tests found in 2 file(s); "
+                "Python: no tests found (test_*.py, *_test.py or tests/*_tests.py files)"
+            ),
         )
 
 
