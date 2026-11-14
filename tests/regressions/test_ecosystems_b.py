@@ -200,14 +200,12 @@ SETUP_JAVA = "actions/setup-java@v4"
 
 
 class ScalaTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #274: sbt command aliases defined in build.sbt are not resolved
     def test_an_sbt_alias_for_scalafix_check_runs_scalafix(self) -> None:
         """`sbt scalafixCheck` runs scalafix when build.sbt's `addCommandAlias("scalafixCheck", "; scalafix --check
         ...")` says so (scalameta/metals)."""
         result = _run(static_analysis, SBT, {**SCALAFIX_ALIAS, **github_job(CI, "sbt scalafixCheck")})
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #274: scalacOptions set in project/*.scala are never read
     def test_scalac_options_in_the_build_definitions_scala_code_count(self) -> None:
         """`scalacOptions ++= Seq("-Werror", "-Wunused:all", ...)` in `project/*.scala` are the build's warning
         settings and make warnings fatal (scalameta/scalafmt)."""
@@ -216,7 +214,6 @@ class ScalaTests(unittest.TestCase):
                 result = _run(check, SBT, PROJECT_OPTIONS)
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #274: -Werror in a string literal and the meta-build's options credited
     def test_text_that_is_not_a_compiler_setting_is_not_credited(self) -> None:
         """`-Werror` inside a string literal (an sbt command text) is no setting, and `project/build.sbt` sets the
         options of the build definition's own compilation, not the product's (http4s/http4s)."""
@@ -226,7 +223,6 @@ class ScalaTests(unittest.TestCase):
                 result = _run(check, SBT, files)
                 self.assertEqual(result.status, Status.FAIL, result)
 
-    @unittest.expectedFailure  # upstream #274: sbt-typelevel bundles sbt-tpolecat, which is not known
     def test_sbt_typelevel_brings_tpolecats_strict_warning_set(self) -> None:
         """`addSbtPlugin("org.typelevel" % "sbt-typelevel" % ...)` enables the whole strict scalac set, as
         sbt-tpolecat (which it bundles) does (typelevel/cats)."""
@@ -234,7 +230,6 @@ class ScalaTests(unittest.TestCase):
         result = _run(compiler_warnings, SBT, plugin)
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #274: `'++ ${{ matrix.scala }}'` with binary versions reads as default
     def test_a_matrix_scala_version_switched_to_with_a_space_is_counted(self) -> None:
         """`sbt '++ ${{ matrix.scala }}' test` over `scala: [2.12, 2.13, 3]` builds each Scala version on each JDK:
         6 combinations, not 2 "Scala default" ones (typelevel/cats, http4s/http4s)."""

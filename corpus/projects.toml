@@ -1044,7 +1044,7 @@ ecosystems = ["Rust"]
 name = "typelevel/cats"
 commit = "e28985fe2a0d7123a8fb84cbb70c72b5e3d935ca"
 ecosystems = ["Scala"]
-issues = [187, 245, 274]
+issues = [187, 245]
 
 [[project]]
 name = "com-lihaoyi/os-lib"
@@ -1055,19 +1055,19 @@ ecosystems = ["Scala"]
 name = "scalameta/metals"
 commit = "8640c9198960fa3f00578af0750f687ed030af56"
 ecosystems = ["Scala"]
-issues = [192, 274]
+issues = [192]
 
 [[project]]
 name = "http4s/http4s"
 commit = "35c5c3d9162bfe0cecaaeaadfc47d758f10edabb"
 ecosystems = ["Scala"]
-issues = [187, 245, 274]
+issues = [187, 245]
 
 [[project]]
 name = "scalameta/scalafmt"
 commit = "e1f0c2dcdcc5649c424264ca5b88b6b0322ae30a"
 ecosystems = ["Scala"]
-issues = [192, 274]
+issues = [192]
 
 [[project]]
 name = "bats-core/bats-core"
