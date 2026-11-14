@@ -1257,7 +1257,7 @@ ecosystems = ["Terraform"]
 name = "touying-typ/touying"
 commit = "086466cb1031f2a760719a0e5309b03ae3d32145"
 ecosystems = ["Typst"]
-issues = [224, 263]
+issues = [224]
 
 [[project]]
 name = "andreasKroepelin/polylux"
@@ -1273,7 +1273,7 @@ ecosystems = ["Typst"]
 name = "cetz-package/cetz"
 commit = "83c00153a11b331ed21848a5b8508148c36c26f3"
 ecosystems = ["Typst"]
-issues = [208, 263]
+issues = [208]
 
 [[project]]
 name = "Pablo-Gonzalez-Calderon/showybox-package"
@@ -1284,7 +1284,7 @@ ecosystems = ["Typst"]
 name = "Jollywatt/typst-fletcher"
 commit = "25532955f0ce01e61fdf017ba6c7746a73b34ce6"
 ecosystems = ["Typst"]
-issues = [208, 263]
+issues = [208]
 
 [[project]]
 name = "Myriad-Dreamin/tinymist"

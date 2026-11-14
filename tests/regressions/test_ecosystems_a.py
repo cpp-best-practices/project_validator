@@ -350,7 +350,6 @@ TYPSTYLE_ACTION = github_steps("uses: typstyle-rs/typstyle-action@v1", "run: git
 
 
 class TypstTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #263: tytanic's tt run and the typstyle action are unknown
     def test_tytanic_runs_the_tests_and_the_typstyle_action_formats(self) -> None:
         """`tt run` (tytanic) compiles every `tests/**/test.typ` against its reference, so it runs the tests (cetz,
         fletcher, touying); typstyle's action followed by `git diff --exit-code` enforces the style (touying)."""
