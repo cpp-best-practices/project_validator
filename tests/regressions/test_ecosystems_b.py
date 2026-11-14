@@ -467,7 +467,6 @@ class RustTests(unittest.TestCase):
         result = _run(compiler_warnings, RUST, github_job(CI, "cargo clippy -- -Dwarnings -Dclippy::pedantic"))
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #287: one member crate's forbid(unsafe_code) is credited workspace-wide
     def test_a_workspace_that_only_warns_on_unsafe_code_does_not_forbid_it(self) -> None:
         """With `[workspace.lints.rust] unsafe_code = "warn"` and `unsafe {` in one crate, one other crate's
         `#![forbid(unsafe_code)]` does not make the build forbid unsafe code (astral-sh/ruff)."""
