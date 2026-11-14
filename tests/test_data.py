@@ -70,7 +70,7 @@ class ParserTests(unittest.TestCase):
         text = b"[" * 100000
         reported = []
         for raised in (RecursionError(), json.JSONDecodeError("Expecting value", "[" * 100000, 100000)):
-            with mock.patch.object(data.json, "loads", side_effect=raised), self.assertRaises(ParseError) as caught:
+            with mock.patch("json.loads", side_effect=raised), self.assertRaises(ParseError) as caught:
                 data._parse_json("deep.json", text)
             reported.append((str(caught.exception), caught.exception.line, caught.exception.column))
         self.assertEqual(reported[0], reported[1])

@@ -112,8 +112,13 @@ class BuildOutput:
             return _regex_matches_any(entry.pattern, self.paths)
         if self.globs.fullmatch(entry.pattern) is not None:
             return True
-        files = [path for path in self.paths if "/" not in path and f"{path}/" not in self.paths]
-        placed = [_placed(path, unit) for unit in units for path in self.paths]
+        # A sample inside a directory the output is (`compiled/main_rkt.zo`) is not the output: the directory is.
+        folders = [path for path in self.paths if path.endswith("/")]
+        whole = [
+            path for path in self.paths if not any(path != folder and path.startswith(folder) for folder in folders)
+        ]
+        files = [path for path in whole if "/" not in path and f"{path}/" not in self.paths]
+        placed = [_placed(path, unit) for unit in units for path in whole]
         placed += [_placed(path, directory) for directory in sources for path in files]
         return any(_glob_ignores(entry.pattern, path) for path in placed)
 

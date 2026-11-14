@@ -98,7 +98,8 @@ class FunctionLimitsTests(unittest.TestCase):
     def test_what_ci_configuration_that_is_not_parsed_hides_is_an_error(self) -> None:
         for provider in UNSTRUCTURED_CI_FILES:
             with self.subTest(ci=provider):
-                result = self._run(ci_running(provider, "make lint"))
+                # (A command no layout expands: `make` builds CMake's targets where CMake configures in place.)
+                result = self._run(ci_running(provider, "echo lint"))
                 self.assertEqual(result.status, Status.ERROR)
                 self.assertEqual(
                     result.message,

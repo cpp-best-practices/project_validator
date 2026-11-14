@@ -195,7 +195,9 @@ class StructureTests(unittest.TestCase):
             ("src/minimal.js", "product"),
             ("src/main.cpp", "product"),
             ("src/main/java/com/example/App.java", "product"),
-            ("src/test/java/com/example/AppTest.java", "product"),
+            # Below a source root, only a test directory tells (upstream #184).
+            ("src/test/java/com/example/AppTest.java", "test"),
+            ("src/main/java/com/example/tools/Gen.java", "product"),
             ("src/vendor/x.php", "vendored"),
             ("tokio/fuzz/fuzz_targets/a.rs", "test"),
             ("stress-test/src/main.rs", "test"),
