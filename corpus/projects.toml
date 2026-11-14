@@ -689,13 +689,13 @@ issues = [182, 211, 285]
 name = "ocaml/dune"
 commit = "9c38baf8d74391e6acbe743304f35e449dabb16e"
 ecosystems = ["OCaml"]
-issues = [182, 186, 286]
+issues = [182, 186]
 
 [[project]]
 name = "ocsigen/lwt"
 commit = "e604e6cf9faf64de8f03520dbb2fcde94d92326c"
 ecosystems = ["OCaml"]
-issues = [186, 224, 286]
+issues = [186, 224]
 
 [[project]]
 name = "ocaml-ppx/ocamlformat"
@@ -712,7 +712,7 @@ ecosystems = ["OCaml"]
 name = "ocaml/opam"
 commit = "ff431a5e0af812bd4e59887769648194856780b0"
 ecosystems = ["OCaml"]
-issues = [186, 192, 286]
+issues = [186, 192]
 
 [[project]]
 name = "digitalocean/openapi"

@@ -406,7 +406,6 @@ FIXTURE_ENV = {
 
 
 class OCamlTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #286: ocamllex `(flags -ml)` and fixture `(env …)` drop :standard
     def test_lexer_flags_and_test_fixtures_are_not_the_products_compiler_flags(self) -> None:
         """An `(ocamllex ... (flags -ml))` stanza's flags are the lexer generator's, and an `(env ...)` inside a cram
         test's fixture is the fixture's: neither drops the dev profile's warnings (ocaml/dune)."""
@@ -420,7 +419,6 @@ class OCamlTests(unittest.TestCase):
                 result = _run(check, DUNE, {**files, **github_job(CI, "dune build")})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #286: a matrix variable `ocamlv` of compiler versions reads as default
     def test_a_matrix_of_compiler_versions_built_by_a_script_is_counted(self) -> None:
         """`ocamlv: [4.14.4, 5.5.0]` passed to the script that builds the compiler (`.github/scripts/main/ocaml-cache.sh
         ${{ matrix.ocamlv }}`) is 2 OCaml versions, not "1 (default)" (ocaml/opam)."""
@@ -431,7 +429,6 @@ class OCamlTests(unittest.TestCase):
         result = _run(platform_matrix, DUNE, _matrix({"ocamlv": ["4.14.4", "5.5.0"]}, *steps))
         self.assertIn("2 OCaml version(s) (4.14.4, 5.5.0)", result.message)
 
-    @unittest.expectedFailure  # upstream #286: ocaml/setup-ocaml/lint-fmt, which runs `dune build @fmt`, unknown
     def test_setup_ocamls_lint_fmt_action_is_the_format_check(self) -> None:
         """`uses: ocaml/setup-ocaml/lint-fmt@v3` runs `dune build @fmt` and fails on unformatted files: with an
         `.ocamlformat`, CI runs ocamlformat (ocsigen/lwt)."""
