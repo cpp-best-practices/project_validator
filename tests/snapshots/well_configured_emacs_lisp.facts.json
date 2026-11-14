@@ -1583,6 +1583,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Eask",
+      "reader": "Eask commands"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Eask",
       "reader": "Emacs Lisp build settings"
     },
     {

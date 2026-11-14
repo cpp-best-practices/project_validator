@@ -16,7 +16,7 @@ from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
-from project_validator.facts.settings import SettingsReader, matched_settings
+from project_validator.facts.settings import SettingsReader, matched_settings, settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, when
 from project_validator.text import pattern
@@ -60,11 +60,31 @@ def _runs_tests(command: Command) -> bool:
     return program(argv) == "emacs" and _ERT_BATCH.search(_text(command)) is not None
 
 
+# An Eask command whose body runs ERT (evil's `(eask-defcommand test … (ert-run-tests-batch-and-exit))`), which
+# `eask run command <name>` runs.
+EASK_COMMANDS = "Eask commands"
+_EASK_COMMAND = re.compile(r"\(eask-defcommand\s+([\w-]+)(.*?)(?=\(eask-defcommand\b|\Z)", re.DOTALL)
+
+
+def _read_eask_commands(path: str, text: str) -> Iterator[Setting]:
+    found = ((name, True) for name, body in _EASK_COMMAND.findall(text) if _ERT_BATCH.search(body))
+    return settings(EASK_COMMANDS, path, found, heuristic=True)
+
+
+EASK_COMMAND_SETTINGS = SettingsReader(name=EASK_COMMANDS, files=("Eask", "Easkfile"), read=_read_eask_commands)
+
+
+def _runs_eask_command(command: Command, facts: Facts) -> bool:
+    argv = resolved(command)
+    named = argv[3] if starts_with(argv, ("eask", "run", "command")) is not None and len(argv) > 3 else None
+    return named is not None and any(setting.key == named for setting in facts.where(Setting, tool=EASK_COMMANDS))
+
+
 ERT = test_runner(
     name="ERT",
     languages=ELISP,
     how="eask test ert test/*.el (or cask exec ert-runner, emacs -batch -l test/x.el -f ert-run-tests-batch-and-exit)",
-    runs=lambda command, _facts: tested() if _runs_tests(command) else None,
+    runs=lambda command, facts: tested() if _runs_tests(command) or _runs_eask_command(command, facts) else None,
     tests=tests_of(ELISP_TEST_FILES.name),
 )
 

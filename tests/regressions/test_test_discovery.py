@@ -195,7 +195,6 @@ class LispTestRunnerTests(unittest.TestCase):
         }
         _tests_run_in(self, "ASDF system", files)
 
-    @unittest.expectedFailure  # upstream #265: project.clj :aliases and `lein with-profile X test` are not resolved
     def test_leiningen_aliases_and_with_profile_run_the_tests(self) -> None:
         """compojure's `lein test-all` is a project.clj alias for `lein with-profile ... test`: both run the tests."""
         for line in ("lein test-all", "lein with-profile default:+1.12 test"):
@@ -205,7 +204,6 @@ class LispTestRunnerTests(unittest.TestCase):
 
 
 class EaskCommandTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #279: `eask run command <name>` running ert is not a test run
     def test_an_eask_command_that_runs_ert_is_a_test_run(self) -> None:
         """evil's `eask run command test` runs an Eask-defined command whose body requires the test file and calls
         ert-run-tests-batch-and-exit: the tests run (or, the body being Elisp, the answer is unknown), not "no CI
