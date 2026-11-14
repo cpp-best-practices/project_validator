@@ -76,6 +76,7 @@ def _go_run(command: Command, _context: Context) -> list[Expansion] | None:
 
 GO_RUN = CommandExpander(name="go run and go tool", expand=_go_run)
 
+
 # golangci-lint runs the formatters its configuration enables (`formatters.enable` since v2, `linters.enable` before).
 _GOFMT_FORMATTERS = frozenset({"gofmt", "gofumpt", "goimports", "gci", "golines", "swaggo"})
 
@@ -127,12 +128,14 @@ GOFMT = format_tool(
 
 # The go tool measures statement coverage only.
 _COVER = ("-cover", "-coverprofile", "-covermode", "-coverpkg")
+# What runs `go test`: the go tool, and richgo, which only colours its output.
+_GO_TEST = (("go", "test"), ("richgo", "test"))
 
 
 def _go_cover(command: Command, _: Facts) -> Run | None:
     """`go test -cover` (or `go build -cover`), which counts statements (and so lines): nothing finer."""
     argv = resolved(command)
-    if not starts_with(argv, ("go", "test"), ("go", "build")) or not has_option(argv, *_COVER):
+    if not starts_with(argv, *_GO_TEST, ("go", "build")) or not has_option(argv, *_COVER):
         return None
     return reported(Granularity.LINE, Granularity.STATEMENT)
 
@@ -176,7 +179,7 @@ GO_TEST = test_runner(
     name="go test",
     languages=GO_LANGUAGE,
     how="go test",
-    runs=when(starts(("go", "test"), ("gotestsum",)), tested),
+    runs=when(starts(*_GO_TEST, ("gotestsum",)), tested),
     tests=tests_of(GO_TEST_FILES.name),
 )
 
@@ -191,9 +194,9 @@ GO_LINTS = (
 
 # The race detector is Go's ThreadSanitizer; -asan and -msan build with the C sanitizers for cgo.
 GO_SANITIZERS = (
-    pattern("go test -race", r"\b(?:go\s+test|gotestsum)\b[^\n]*\s-race\b"),
-    pattern("go test -asan", r"\b(?:go\s+test|gotestsum)\b[^\n]*\s-asan\b"),
-    pattern("go test -msan", r"\b(?:go\s+test|gotestsum)\b[^\n]*\s-msan\b"),
+    pattern("go test -race", r"\b(?:(?:rich)?go\s+test|gotestsum)\b[^\n]*\s-race\b"),
+    pattern("go test -asan", r"\b(?:(?:rich)?go\s+test|gotestsum)\b[^\n]*\s-asan\b"),
+    pattern("go test -msan", r"\b(?:(?:rich)?go\s+test|gotestsum)\b[^\n]*\s-msan\b"),
 )
 SANITIZERS = Practice(
     name=PracticeName.SANITIZERS,

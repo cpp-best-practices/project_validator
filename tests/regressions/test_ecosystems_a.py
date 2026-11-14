@@ -203,7 +203,6 @@ GO_TEST_FILE = {"app_test.go": 'package app\n\nimport "testing"\n\nfunc TestAdd(
 
 
 class GoTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #259: richgo test, a go test output wrapper, is not go test
     def test_richgo_test_is_go_test(self) -> None:
         """`richgo test ./...` is `go test` with coloured output, run directly or through a Makefile target (cobra)."""
         _all_pass(

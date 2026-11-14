@@ -358,7 +358,7 @@ issues = [182, 234, 249]
 name = "spf13/cobra"
 commit = "adbc8813901bba65827259daa8e22ff94ec1f30e"
 ecosystems = ["Go"]
-issues = [222, 234, 259]
+issues = [222, 234]
 
 [[project]]
 name = "gin-gonic/gin"
