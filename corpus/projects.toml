@@ -25,7 +25,7 @@ issues = [188, 195, 261]
 name = "kubernetes-sigs/kubespray"
 commit = "a0a78f28d1f3dc99d3e9dec94d27dd78e67236bd"
 ecosystems = ["Ansible", "Kubernetes"]
-issues = [182, 229, 231, 242, 246, 261, 262]
+issues = [182, 231, 242, 246, 261, 262]
 
 [[project]]
 name = "elixir-ecto/ecto"
@@ -91,7 +91,7 @@ issues = [207, 242, 282]
 name = "google/googletest"
 commit = "e882c36410197464e3429546e6a7d5e217bde51e"
 ecosystems = ["C/C++"]
-issues = [182, 207, 211, 229]
+issues = [182, 207, 211]
 
 [[project]]
 name = "uber/h3"
@@ -221,13 +221,13 @@ ecosystems = ["Docker"]
 name = "rust-lang/book"
 commit = "2771df165f092a4fbb9f46b5b2e7450f19010adb"
 ecosystems = ["Documentation site"]
-issues = [182, 188, 229, 280]
+issues = [182, 188, 280]
 
 [[project]]
 name = "mkdocs/mkdocs"
 commit = "2862536793b3c67d9d83c33e0dd6d50a791928f8"
 ecosystems = ["Documentation site", "Python"]
-issues = [229, 280]
+issues = [280]
 
 [[project]]
 name = "python/devguide"
@@ -245,7 +245,7 @@ issues = [238, 280]
 name = "serilog/serilog"
 commit = "43105b35095337d77f022561a8f2d3db2f9a7937"
 ecosystems = [".NET"]
-issues = [195, 229]
+issues = [195]
 
 [[project]]
 name = "FluentValidation/FluentValidation"
@@ -298,7 +298,6 @@ issues = [228]
 name = "fortran-lang/stdlib"
 commit = "2d9c377865727a8771e30dac1745d413744a3384"
 ecosystems = ["Fortran"]
-issues = [229]
 
 [[project]]
 name = "fortran-lang/fpm"
@@ -310,7 +309,7 @@ issues = [188, 195]
 name = "jacobwilliams/json-fortran"
 commit = "b7d03d0c800d24cfed81594bb6bc5bc0e9bad882"
 ecosystems = ["Fortran"]
-issues = [186, 188, 229]
+issues = [186, 188]
 
 [[project]]
 name = "actions/checkout"
@@ -371,7 +370,7 @@ issues = [235, 257]
 name = "golangci/golangci-lint"
 commit = "1bdd8edc35917b370a0855d877255b4e53c29b9f"
 ecosystems = ["Go"]
-issues = [229, 246]
+issues = [246]
 
 [[project]]
 name = "caddyserver/caddy"
@@ -478,7 +477,7 @@ issues = [182, 219, 231]
 name = "SchemaStore/schemastore"
 commit = "e2606e03284e60792672dc9e7e930f3c496c5c3d"
 ecosystems = ["JSON Schema"]
-issues = [229, 272, 273]
+issues = [272, 273]
 
 [[project]]
 name = "json-schema-org/JSON-Schema-Test-Suite"
@@ -489,7 +488,7 @@ ecosystems = ["JSON Schema"]
 name = "compose-spec/compose-spec"
 commit = "3a4a6995e4a971f6173dff9130cb3e38e6738651"
 ecosystems = ["JSON Schema"]
-issues = [182, 228, 229]
+issues = [182, 228]
 
 [[project]]
 name = "CycloneDX/specification"
@@ -507,7 +506,6 @@ issues = [272]
 name = "oasis-tcs/sarif-spec"
 commit = "1742a253eb654bf8a4ed7c60eaef7412b2c23553"
 ecosystems = ["JSON Schema"]
-issues = [229]
 
 [[project]]
 name = "JuliaData/DataFrames.jl"
@@ -691,7 +689,7 @@ issues = [182, 285]
 name = "ryantm/agenix"
 commit = "5e5b88a0c8e56f291a108c2fe9934054d9745b2e"
 ecosystems = ["Nix"]
-issues = [229, 285]
+issues = [285]
 
 [[project]]
 name = "cachix/devenv"
@@ -780,7 +778,6 @@ issues = [182, 219, 227, 238, 248]
 name = "Seldaek/monolog"
 commit = "3bed304b1905fed5c30d172872f4d890cbb03c6a"
 ecosystems = ["PHP"]
-issues = [229]
 
 [[project]]
 name = "guzzle/guzzle"
@@ -1167,7 +1164,7 @@ issues = [182, 223]
 name = "flyway/flyway"
 commit = "15b6298cc9a19d489bf9d45b87de4ddb68c90e9a"
 ecosystems = ["SQL", "JVM"]
-issues = [182, 229, 241]
+issues = [182, 241]
 
 [[project]]
 name = "liquibase/liquibase"
@@ -1186,25 +1183,25 @@ issues = [186]
 name = "Alamofire/Alamofire"
 commit = "dea4bab91767a971d6e112bc955c6a82295589b7"
 ecosystems = ["Swift"]
-issues = [229, 241, 244]
+issues = [241, 244]
 
 [[project]]
 name = "vapor/vapor"
 commit = "e4a5b7050f5e9e5793be3ebdeb687eac92fd9965"
 ecosystems = ["Swift"]
-issues = [188, 229, 244]
+issues = [188, 244]
 
 [[project]]
 name = "realm/SwiftLint"
 commit = "d9c55cdd401f57bdc1de965e620852ddb87fd175"
 ecosystems = ["Swift"]
-issues = [186, 207, 229, 241, 244]
+issues = [186, 207, 241, 244]
 
 [[project]]
 name = "apple/swift-nio"
 commit = "b440f7bae8894b5ec42e0f1842fcd77483ab3984"
 ecosystems = ["Swift"]
-issues = [186, 188, 229]
+issues = [186, 188]
 
 [[project]]
 name = "pointfreeco/swift-composable-architecture"
@@ -1216,7 +1213,7 @@ issues = [188, 195, 228, 241]
 name = "nicklockwood/SwiftFormat"
 commit = "1bd6e843cfeb89b42088f663d9ae4c7ebcb3c143"
 ecosystems = ["Swift"]
-issues = [188, 195, 229]
+issues = [188, 195]
 
 [[project]]
 name = "datasets/country-codes"
@@ -1247,7 +1244,7 @@ name = "fivethirtyeight/data"
 commit = "4c1ff5e3aef1816ae04af63218015066e186c147"
 ecosystems = ["Jupyter", "R", "Python"]
 notes = "CSV data without a Data Package descriptor; tabular data is detected from datapackage.json by design"
-issues = [229, 238]
+issues = [238]
 
 [[project]]
 name = "terraform-aws-modules/terraform-aws-vpc"
@@ -1265,7 +1262,7 @@ issues = [195, 223, 235, 241, 262]
 name = "terraform-aws-modules/terraform-aws-eks"
 commit = "91b8a8d944e3cf169483108acd12d5b1e47856f7"
 ecosystems = ["Terraform"]
-issues = [229, 241, 262]
+issues = [241, 262]
 
 [[project]]
 name = "terraform-aws-modules/terraform-aws-lambda"
@@ -1289,7 +1286,7 @@ issues = [224, 263]
 name = "andreasKroepelin/polylux"
 commit = "9a5650618d75b855d0b23211406ed2472132b905"
 ecosystems = ["Typst"]
-issues = [229, 235]
+issues = [235]
 
 [[project]]
 name = "typst/templates"

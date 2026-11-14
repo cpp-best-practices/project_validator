@@ -511,7 +511,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "XSpec suites (*.xspec): 1 file(s), run by XSpec",
       "status": "PASS"
     },
     "top-level-guard": {

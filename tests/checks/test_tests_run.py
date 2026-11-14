@@ -40,6 +40,10 @@ NO_C_TESTS = (
 )
 
 
+CTEST_TESTS = "tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call)"
+PYTHON_TESTS = "test_*.py, *_test.py or tests/*_tests.py files"
+
+
 class CtestRunsTests(unittest.TestCase):
     def _run(self, files: dict[str, str], options: Options | None = None) -> Result:
         return run_in_every_layout(self, tests_run, files, c_family_layouts_built_with(tests_run, "CMake"), options)
@@ -50,7 +54,7 @@ class CtestRunsTests(unittest.TestCase):
         self.assertIn("ctest-runs", tests_run.aliases)
 
     def test_passes_when_tests_are_registered_and_run_in_ci(self) -> None:
-        self.assertEqual(self._run(WELL_CONFIGURED), Result.passed("tests found in 2 file(s)"))
+        self.assertEqual(self._run(WELL_CONFIGURED), Result.passed(f"{CTEST_TESTS}: 2 file(s), run by ctest"))
 
     def test_a_project_without_a_build_system_has_no_registered_tests(self) -> None:
         layouts = tuple(layout for layout in NON_CMAKE_C_FAMILY_LAYOUTS if not layout.build_systems)
@@ -70,7 +74,7 @@ class CtestRunsTests(unittest.TestCase):
         cmake = {"CMakeLists.txt": "include(CTest)\ncatch_discover_tests(tests)\n"}
         result = self._run({**cmake, **github_job("ubuntu-latest", "cmake --build build")})
         self.assertEqual(
-            result, Result.warned("tests found in 1 file(s), but no CI configuration runs ctest or meson test")
+            result, Result.warned(f"{CTEST_TESTS}: 1 file(s), but no CI configuration runs ctest or meson test")
         )
 
     def test_passes_when_any_ci_provider_runs_ctest(self) -> None:
@@ -84,14 +88,14 @@ class CtestRunsTests(unittest.TestCase):
     def test_build_mode_counts_the_tests_ctest_finds(self) -> None:
         result = tests_run.run(make_context(FIXTURES / "buildable", Options(build=True)))
         self.assertEqual(
-            result, Result.warned("tests found in 1 file(s), but no CI configuration runs ctest or meson test")
+            result, Result.warned(f"{CTEST_TESTS}: 1 file(s), but no CI configuration runs ctest or meson test")
         )
 
     @unittest.skipUnless(shutil.which("cmake") and shutil.which("ninja"), "cmake or ninja is not installed")
     def test_build_mode_finds_tests_with_multi_config_generators(self) -> None:
         with mock.patch.dict(os.environ, {"CMAKE_GENERATOR": "Ninja Multi-Config"}):
             result = tests_run.run(make_context(FIXTURES / "buildable", Options(build=True)))
-        self.assertIn("tests found in 1 file(s)", result.message)
+        self.assertIn(f"{CTEST_TESTS}: 1 file(s)", result.message)
 
     def test_build_mode_counts_what_ctest_lists(self) -> None:
         cmake = {"CMakeLists.txt": "enable_testing()\nadd_test(NAME t COMMAND t)\n", **github_job("x", "ctest")}
@@ -133,9 +137,8 @@ class MesonTestsTests(unittest.TestCase):
 
     def test_warns_when_ci_never_runs_meson_test(self) -> None:
         result = self._run({"tests/meson.build": "test('unit', executable('t', 't.cpp'))\n"})
-        self.assertEqual(
-            result, Result.warned("tests found in 1 file(s), but no CI configuration runs ctest or meson test")
-        )
+        meson = "tests registered with Meson's test() in meson.build"
+        self.assertEqual(result, Result.warned(f"{meson}: 1 file(s), but no CI configuration runs ctest or meson test"))
 
     def test_passes_when_ci_runs_meson_test(self) -> None:
         for command in ("meson test -C build", "ninja -C build test"):
@@ -151,10 +154,13 @@ class PythonTestsRunTests(unittest.TestCase):
     def test_passes_when_tests_exist_and_any_ci_runs_them(self) -> None:
         tests = {"tests/test_app.py": "", "app/io_test.py": ""}
         for provider in CI_FILES:
-            for runner in ("python -m pytest", "python -m unittest discover", "nox -s tests"):
+            for runner, name in (("python -m pytest", "pytest"), ("python -m unittest discover", "unittest")):
                 with self.subTest(ci=provider, runner=runner):
                     result = self._run({**tests, **ci_running(provider, runner)})
-                    self.assertEqual(result, Result.passed("tests found in 2 file(s)"))
+                    self.assertEqual(result, Result.passed(f"{PYTHON_TESTS}: 2 file(s), run by {name}"))
+            with self.subTest(ci=provider, runner="nox"):
+                result = self._run({**tests, **ci_running(provider, "nox -s tests")})
+                self.assertEqual(result, Result.passed(f"{PYTHON_TESTS}: 2 file(s), run by nox"))
 
     def test_coverage_run_runs_the_module_it_names(self) -> None:
         tests = {"tests/test_app.py": ""}
@@ -177,7 +183,7 @@ class PythonTestsRunTests(unittest.TestCase):
     def test_warns_when_ci_never_runs_the_tests(self) -> None:
         result = self._run({"tests/test_app.py": "", **github_job("x", "python -m build")})
         self.assertEqual(
-            result, Result.warned("tests found in 1 file(s), but no CI configuration runs pytest, unittest or nox")
+            result, Result.warned(f"{PYTHON_TESTS}: 1 file(s), but no CI configuration runs pytest, unittest or nox")
         )
 
     def test_unread_ci_makes_whether_tests_run_unknown(self) -> None:
@@ -204,7 +210,7 @@ class RustTestsRunTests(unittest.TestCase):
             for runner in ("cargo test", "cargo +nightly nextest run", "cargo llvm-cov --branch"):
                 with self.subTest(ci=provider, runner=runner):
                     result = self._run({**sources, **ci_running(provider, runner)})
-                    self.assertEqual(result, Result.passed("tests found in 2 file(s)"))
+                    self.assertEqual(result, Result.passed("#[test] functions: 2 file(s), run by cargo test"))
 
     def test_fails_without_tests(self) -> None:
         result = self._run({"src/lib.rs": "pub fn testing() {}\n", **github_job("x", "cargo test")})
@@ -212,7 +218,7 @@ class RustTestsRunTests(unittest.TestCase):
 
     def test_warns_when_ci_never_runs_the_tests(self) -> None:
         result = self._run({"src/lib.rs": "#[test]\nfn unit() {}\n", **github_job("x", "cargo build")})
-        self.assertEqual(result, Result.warned("tests found in 1 file(s), but no CI configuration runs cargo test"))
+        self.assertEqual(result, Result.warned("#[test] functions: 1 file(s), but no CI configuration runs cargo test"))
 
 
 class AnswerTests(unittest.TestCase):
@@ -227,7 +233,7 @@ class MixedLanguageTestsRunTests(unittest.TestCase):
         self.assertEqual(
             result,
             Result.failed(
-                "C/C++: tests found in 2 file(s); "
+                f"C/C++: {CTEST_TESTS}: 2 file(s), run by ctest; "
                 "Python: no tests found (test_*.py, *_test.py or tests/*_tests.py files)"
             ),
         )

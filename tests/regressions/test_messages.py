@@ -74,7 +74,7 @@ TESTS_RUN_WORDING = (
     (
         "mkdocs",
         {"mkdocs.yml": "site_name: x\n", "docs/index.md": "# x\n", **RUNS("ubuntu-latest", "mkdocs build")},
-        "mkdocs build",
+        "MkDocs build",
         "tests found",
     ),
     ("jekyll", {"_config.yml": "theme: jekyll-theme-slate\n", "docs/a.md": "# a\n"}, "", "tests found"),
@@ -232,7 +232,6 @@ class RepeatedDetailTests(unittest.TestCase):
 
 
 class TestsRunWordingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #229: a passing tests-run part says only "tests found in N file(s)"
     def test_the_message_says_what_was_found_and_that_ci_runs_it(self) -> None:
         """A pass names the runner CI uses (fmt, googletest: ctest; terraform-aws-eks: mkdocs build); a site's
         configuration (monolog, kubespray: a one-line _config.yml) and notebooks (fivethirtyeight/data) are not

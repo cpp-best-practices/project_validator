@@ -1200,7 +1200,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "#[test] functions: 1 file(s), run by cargo test",
       "status": "PASS"
     },
     "top-level-guard": {

@@ -832,7 +832,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "documents (*.tex with a \\documentclass): 1 file(s), run by latexmk",
       "status": "PASS"
     },
     "top-level-guard": {

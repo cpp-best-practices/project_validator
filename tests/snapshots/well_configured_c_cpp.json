@@ -1350,7 +1350,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 2 file(s)",
+      "message": "tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call): 2 file(s), run by ctest",
       "status": "PASS"
     },
     "top-level-guard": {

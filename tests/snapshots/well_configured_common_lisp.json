@@ -884,7 +884,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "FiveAM, Parachute, Rove or Prove tests (tests/*.lisp): 1 file(s), run by asdf:test-system",
       "status": "PASS"
     },
     "top-level-guard": {

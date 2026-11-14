@@ -360,7 +360,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "workflows that use the action itself (uses: ./): 1 file(s), run by the action's own workflow",
       "status": "PASS"
     },
     "top-level-guard": {

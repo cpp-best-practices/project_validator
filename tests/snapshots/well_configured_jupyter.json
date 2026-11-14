@@ -425,7 +425,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "notebooks (*.ipynb): 1 file(s), run by notebook execution",
       "status": "PASS"
     },
     "top-level-guard": {

@@ -1433,7 +1433,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "PowerShell: Pester tests (*.Tests.ps1): 1 file(s), run by Pester; Shell: bats tests (*.bats): 1 file(s), run by bats",
       "status": "PASS"
     },
     "top-level-guard": {

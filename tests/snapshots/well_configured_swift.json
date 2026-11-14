@@ -1134,7 +1134,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "XCTestCase classes or Swift Testing @Test functions: 1 file(s), run by swift test or xcodebuild test",
       "status": "PASS"
     },
     "top-level-guard": {

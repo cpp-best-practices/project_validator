@@ -82,7 +82,12 @@ class ToolTests(unittest.TestCase):
     def test_tests_are_xctest_cases_or_swift_testing_functions(self) -> None:
         xctest = {"Tests/AppTests/AppTests.swift": "final class AppTests: XCTestCase {}\n"}
         result = run_in_layout(self, SWIFTPM, TESTS_RUN, {**xctest, **_ci("swift test")})
-        self.assertEqual(result, Result.passed("tests found in 1 file(s)"))
+        self.assertEqual(
+            result,
+            Result.passed(
+                "XCTestCase classes or Swift Testing @Test functions: 1 file(s), run by swift test or xcodebuild test"
+            ),
+        )
         xcode = {"AppTests/Tests.swift": "@Test func adds() {}\n", **_ci("xcodebuild -scheme App test")}
         self.assertEqual(run_in_layout(self, XCODE, TESTS_RUN, xcode).status, Status.PASS)
         self.assertEqual(run_in_layout(self, SWIFTPM, TESTS_RUN, {}).status, Status.FAIL)

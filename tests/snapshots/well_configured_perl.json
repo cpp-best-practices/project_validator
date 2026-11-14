@@ -965,7 +965,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "Test::More or Test2 tests in t/*.t: 1 file(s), run by prove",
       "status": "PASS"
     },
     "top-level-guard": {

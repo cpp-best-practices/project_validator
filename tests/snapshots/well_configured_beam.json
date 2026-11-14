@@ -1649,7 +1649,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "ExUnit tests (test/**/*_test.exs), EUnit tests (*_test() functions) and Common Test suites (*_SUITE.erl): 1 file(s), run by mix test",
       "status": "PASS"
     },
     "top-level-guard": {

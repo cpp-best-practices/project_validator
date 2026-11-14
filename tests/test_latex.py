@@ -51,7 +51,10 @@ class LatexTests(unittest.TestCase):
     def test_the_documents_compile(self) -> None:
         for files in (_ci("latexmk -pdf main.tex"), _ci("xelatex main.tex"), _ci("tectonic -X build")):
             with self.subTest(files=files):
-                self.assertEqual(self._run(tests_run, files), Result.passed("tests found in 1 file(s)"))
+                self.assertEqual(
+                    self._run(tests_run, files),
+                    Result.passed("documents (*.tex with a \\documentclass): 1 file(s), run by latexmk"),
+                )
         for files in (
             github_action("xu-cheng/latex-action@v4"),
             github_action("xu-cheng/latex-action@v4", root_file="main.tex thesis.tex"),

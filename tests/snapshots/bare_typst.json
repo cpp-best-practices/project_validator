@@ -717,7 +717,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s), but no CI configuration runs typst compile main.typ",
+      "message": "documents (*.typ): 1 file(s), but no CI configuration runs typst compile main.typ",
       "status": "WARN"
     },
     "top-level-guard": {

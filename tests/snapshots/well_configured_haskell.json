@@ -974,7 +974,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "test-suite sections in .cabal files (or tests: in package.yaml): 1 file(s), run by cabal test",
       "status": "PASS"
     },
     "top-level-guard": {

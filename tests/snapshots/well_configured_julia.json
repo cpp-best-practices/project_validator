@@ -990,7 +990,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "@test and @testset in test/runtests.jl: 1 file(s), run by Pkg.test",
       "status": "PASS"
     },
     "top-level-guard": {

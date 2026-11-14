@@ -942,7 +942,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 2 file(s)",
+      "message": "dbt schema tests (tests: in the models' YAML) and dbt singular tests (tests/*.sql): 2 file(s), run by dbt test",
       "status": "PASS"
     },
     "top-level-guard": {

@@ -967,7 +967,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "Terraform test files (*.tftest.hcl, *.tofutest.hcl): 1 file(s), run by terraform test",
       "status": "PASS"
     },
     "top-level-guard": {

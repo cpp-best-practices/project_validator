@@ -934,7 +934,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "test blocks in .zig files: 1 file(s), run by zig build test",
       "status": "PASS"
     },
     "top-level-guard": {

@@ -1130,7 +1130,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "[Fact], [Test] or [TestMethod] methods in a test project (one referencing Microsoft.NET.Test.Sdk): 1 file(s), run by dotnet test",
       "status": "PASS"
     },
     "top-level-guard": {

@@ -923,7 +923,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "ERT (ert-deftest) or Buttercup tests in test/*.el: 1 file(s), run by ERT",
       "status": "PASS"
     },
     "top-level-guard": {

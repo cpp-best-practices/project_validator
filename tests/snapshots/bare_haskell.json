@@ -824,7 +824,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s), but no CI configuration runs cabal test (or stack test)",
+      "message": "test-suite sections in .cabal files (or tests: in package.yaml): 1 file(s), but no CI configuration runs cabal test (or stack test)",
       "status": "WARN"
     },
     "top-level-guard": {

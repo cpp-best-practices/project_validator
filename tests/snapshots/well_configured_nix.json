@@ -911,7 +911,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "flake checks (a checks output in flake.nix): 1 file(s), run by nix flake check",
       "status": "PASS"
     },
     "top-level-guard": {

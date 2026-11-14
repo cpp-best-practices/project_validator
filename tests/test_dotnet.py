@@ -113,7 +113,13 @@ class BuildSettingTests(unittest.TestCase):
 class TestAndCoverageTests(unittest.TestCase):
     def test_tests_need_a_test_project(self) -> None:
         files = {**TEST_PROJECT, **_ci("dotnet test")}
-        self.assertEqual(run_in_layout(self, CSHARP, TESTS_RUN, files), Result.passed("tests found in 1 file(s)"))
+        self.assertEqual(
+            run_in_layout(self, CSHARP, TESTS_RUN, files),
+            Result.passed(
+                "[Fact], [Test] or [TestMethod] methods in a test project (one referencing Microsoft.NET.Test.Sdk): "
+                "1 file(s), run by dotnet test"
+            ),
+        )
         no_sdk = {"tests/AddTests.cs": "[Fact] void Adds() {}"}
         self.assertIn("no tests found", run_in_layout(self, CSHARP, TESTS_RUN, no_sdk).message)
         no_tests = {"tests/App.Tests/App.Tests.csproj": '<Project Sdk="MSTest.Sdk/3.9.3" />'}

@@ -539,7 +539,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 2 file(s)",
+      "message": "helm-unittest tests (tests/*_test.yaml) and Helm test hooks (templates/tests/*.yaml): 2 file(s), run by helm-unittest and helm test",
       "status": "PASS"
     },
     "top-level-guard": {

@@ -1153,7 +1153,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "*Test.php files with PHPUnit test cases or Pest tests: 1 file(s), run by phpunit, pest or composer test",
       "status": "PASS"
     },
     "top-level-guard": {

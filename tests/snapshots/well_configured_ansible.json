@@ -419,7 +419,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "molecule scenarios (molecule/*/molecule.yml): 1 file(s), run by molecule",
       "status": "PASS"
     },
     "top-level-guard": {

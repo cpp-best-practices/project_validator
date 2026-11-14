@@ -1141,7 +1141,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "@Test methods or Kotest specs under src/test/java or src/test/kotlin: 1 file(s), run by mvn test or gradle test",
       "status": "PASS"
     },
     "top-level-guard": {

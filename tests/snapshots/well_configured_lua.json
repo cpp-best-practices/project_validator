@@ -1020,7 +1020,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "busted specs (spec/**/*_spec.lua): 1 file(s), run by busted",
       "status": "PASS"
     },
     "top-level-guard": {

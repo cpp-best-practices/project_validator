@@ -2120,7 +2120,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "*.test.*, *.spec.* or __tests__/ files: 1 file(s), run by a JavaScript test runner",
       "status": "PASS"
     },
     "top-level-guard": {

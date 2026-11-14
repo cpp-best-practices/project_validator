@@ -1010,7 +1010,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s), but no CI configuration runs ctest or meson test",
+      "message": "tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call): 1 file(s), but no CI configuration runs ctest or meson test",
       "status": "WARN"
     },
     "top-level-guard": {

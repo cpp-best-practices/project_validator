@@ -117,7 +117,10 @@ class JavaScriptTests(unittest.TestCase):
         for path in ("src/app.test.ts", "app.spec.jsx", "lib/app_test.mjs", "src/__tests__/app.js"):
             with self.subTest(path=path):
                 result = self._run(tests_run, {path: "", **_ci("npx vitest run")})
-                self.assertEqual(result, Result.passed("tests found in 1 file(s)"))
+                self.assertEqual(
+                    result,
+                    Result.passed("*.test.*, *.spec.* or __tests__/ files: 1 file(s), run by a JavaScript test runner"),
+                )
         for path in ("src/latest.js", "test.md", "app.test.py"):
             with self.subTest(path=path):
                 self.assertEqual(self._run(tests_run, {path: ""}).status, Status.FAIL)
