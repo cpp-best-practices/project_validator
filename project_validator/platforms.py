@@ -21,7 +21,8 @@ OPERATING_SYSTEMS = (
 
 COMPILERS = (
     # Not a cross compiler's name (`arm-linux-gnueabihf-gcc`, a linker variable's value).
-    pattern("gcc", r"(?<![\w-])gcc\b|(?<![\w-])g\+\+|\bmingw|\bgfortran\b"),
+    # Nor the 32-bit libraries a clang job installs (`gcc-multilib`).
+    pattern("gcc", r"(?<![\w-])gcc\b(?!-multilib)|(?<![\w-])g\+\+(?!-multilib)|\bmingw|\bgfortran\b"),
     # setup-cpp names clang `llvm` (`compiler: llvm-19.1.1`, `--compiler llvm`).
     pattern("clang", r"\bclang(?![-_]?(tidy|format|d|-apply-replacements)(?:\b|_))|\bllvm-\d|\bcompiler\W+llvm\b"),
     pattern("appleclang", r"\bapple-?clang\b"),
@@ -32,6 +33,8 @@ COMPILERS = (
 )
 
 RUNNER_DEFAULT_COMPILERS = {"linux": "gcc", "macos": "appleclang", "windows": "msvc"}
+# The ecosystems whose jobs compile with the runner's default compiler when they name none.
+COMPILING_ECOSYSTEMS = frozenset({"C/C++", "Fortran"})
 
 
 def detect_operating_systems(text: str) -> list[str]:

@@ -37,7 +37,7 @@ issues = [195, 264]
 name = "ninenines/cowboy"
 commit = "29c1f222f5a22749fd0f47a0efba40e115c02577"
 ecosystems = ["BEAM"]
-issues = [198, 228, 264]
+issues = [198, 264]
 
 [[project]]
 name = "gleam-lang/stdlib"
@@ -97,13 +97,13 @@ issues = [182, 207, 211]
 name = "uber/h3"
 commit = "15920096d4a165729c01f749e2bd97334b009519"
 ecosystems = ["C/C++"]
-issues = [182, 228]
+issues = [182]
 
 [[project]]
 name = "GNOME/glib"
 commit = "a6457d849e45b9a1a9473c61364ee6e56894774b"
 ecosystems = ["C/C++"]
-issues = [182, 215, 228, 282]
+issues = [182, 215, 282]
 
 [[project]]
 name = "neovim/neovim"
@@ -279,19 +279,17 @@ ecosystems = ["Emacs Lisp"]
 name = "emacs-evil/evil"
 commit = "6a3e1ddd04ac504a016590940d0af2a3361b9efd"
 ecosystems = ["Emacs Lisp"]
-issues = [228, 279]
+issues = [279]
 
 [[project]]
 name = "purcell/package-lint"
 commit = "1865be780a16098f972fef50a52b21ca6ee04df9"
 ecosystems = ["Emacs Lisp"]
-issues = [228]
 
 [[project]]
 name = "abo-abo/swiper"
 commit = "7b267e29cd47b2036eafbc212683a721bd2b7dd0"
 ecosystems = ["Emacs Lisp"]
-issues = [228]
 
 [[project]]
 name = "fortran-lang/stdlib"
@@ -484,7 +482,7 @@ ecosystems = ["JSON Schema"]
 name = "compose-spec/compose-spec"
 commit = "3a4a6995e4a971f6173dff9130cb3e38e6738651"
 ecosystems = ["JSON Schema"]
-issues = [182, 228]
+issues = [182]
 
 [[project]]
 name = "CycloneDX/specification"
@@ -643,7 +641,7 @@ issues = [182, 268]
 name = "nvim-telescope/telescope.nvim"
 commit = "1e1bab730218eaf97fce743be3f56e51075928ac"
 ecosystems = ["Lua"]
-issues = [227, 228, 268]
+issues = [227, 268]
 
 [[project]]
 name = "lunarmodules/busted"
@@ -655,7 +653,7 @@ issues = [182]
 name = "koreader/koreader"
 commit = "4184b73a737b5dcc77b29e2eaf69c31a06501ab9"
 ecosystems = ["Lua"]
-issues = [182, 227, 228]
+issues = [182, 227]
 
 [[project]]
 name = "nix-community/disko"
@@ -691,7 +689,7 @@ issues = [285]
 name = "cachix/devenv"
 commit = "6c954cc1c04f1d0b2f6ad689c9dffd835fa4d928"
 ecosystems = ["Nix"]
-issues = [182, 211, 228, 285]
+issues = [182, 211, 285]
 
 [[project]]
 name = "ocaml/dune"
@@ -726,7 +724,6 @@ issues = [186, 192, 286]
 name = "digitalocean/openapi"
 commit = "998192821fe95ee79e41f577933601d009179dcf"
 ecosystems = ["OpenAPI/AsyncAPI"]
-issues = [228]
 
 [[project]]
 name = "asyncapi/spec"
@@ -891,13 +888,13 @@ issues = [182]
 name = "tidyverse/dplyr"
 commit = "819c99f7284b3a413b391c60bea49ae7bfb8bafc"
 ecosystems = ["R"]
-issues = [186, 228]
+issues = [186]
 
 [[project]]
 name = "r-lib/testthat"
 commit = "54c0edc932018079a8925845f7e278097d19c786"
 ecosystems = ["R"]
-issues = [186, 228, 256]
+issues = [186, 256]
 
 [[project]]
 name = "Rdatatable/data.table"
@@ -1122,13 +1119,12 @@ issues = [224]
 name = "dbt-labs/dbt-utils"
 commit = "2a8f07bcbd02fb7a8c011298a1bdaf3e92759c14"
 ecosystems = ["SQL"]
-issues = [182, 188, 223, 228, 276]
+issues = [182, 188, 223, 276]
 
 [[project]]
 name = "dbt-labs/jaffle-shop"
 commit = "5beb145b00f5465ec759cfcdd9745e858818cf95"
 ecosystems = ["SQL"]
-issues = [228]
 
 [[project]]
 name = "pgvector/pgvector"
@@ -1165,7 +1161,7 @@ name = "liquibase/liquibase"
 commit = "d1818f8621c3c1f23c14ae0f196a5211f41d8f25"
 ecosystems = ["JVM"]
 notes = "a migration tool; its .sql files are test fixtures, so it stands for the JVM, not SQL"
-issues = [182, 228, 252]
+issues = [182, 252]
 
 [[project]]
 name = "apple/swift-argument-parser"
@@ -1201,7 +1197,7 @@ issues = [186, 188]
 name = "pointfreeco/swift-composable-architecture"
 commit = "bf66bd83f3165fe4f5fdb9a6c99249276505723e"
 ecosystems = ["Swift"]
-issues = [188, 195, 228]
+issues = [188, 195]
 
 [[project]]
 name = "nicklockwood/SwiftFormat"
@@ -1213,7 +1209,6 @@ issues = [188, 195]
 name = "datasets/country-codes"
 commit = "2d84034a0cae19ea5444b78c2131304a5c7f4bb9"
 ecosystems = ["Tabular data"]
-issues = [228]
 
 [[project]]
 name = "datasets/gdp"
@@ -1229,7 +1224,6 @@ ecosystems = ["Tabular data"]
 name = "datasets/s-and-p-500-companies"
 commit = "05c998c3e714b8dc9b621239bbdef92bccefc376"
 ecosystems = ["Tabular data"]
-issues = [228]
 
 [[project]]
 name = "fivethirtyeight/data"

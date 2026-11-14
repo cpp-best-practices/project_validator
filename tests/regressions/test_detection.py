@@ -196,7 +196,6 @@ class TestsCountedPerUnitTests(unittest.TestCase):
 
 
 class JobAttributionTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #228: make/devenv mark a job C/C++, and every runner gets a compiler
     def test_a_job_is_c_cxx_only_when_it_compiles_c_or_cxx(self) -> None:
         """A job that runs `make lint` in a Python project, or the devenv CLI, is not a C/C++ job; a job that compiles
         nothing has no compiler (compose-spec, country-codes, devenv, dbt-utils, every JVM project)."""
@@ -212,7 +211,6 @@ class JobAttributionTests(unittest.TestCase):
                 self.assertNotIn("C/C++", job.ecosystems)
                 self.assertEqual(job.compilers, frozenset())
 
-    @unittest.expectedFailure  # upstream #228: `apt-get install gcc-multilib` credits gcc with a clang job's build
     def test_a_clang_job_installing_gcc_multilib_is_clang_only(self) -> None:
         """h3's sanitizer jobs set CC=clang and install gcc-multilib for 32-bit libraries: clang builds, gcc does
         not, so gcc gets no sanitizer credit (uber/h3)."""

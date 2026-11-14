@@ -10,7 +10,7 @@ from dataclasses import dataclass, replace
 from project_validator import yaml_support
 from project_validator.build_configurations import BuildConfiguration, sanitizers_enabled
 from project_validator.core import Project
-from project_validator.ecosystems import build_systems
+from project_validator.ecosystems import build_systems, registered
 from project_validator.ecosystems.model import VERSION_FILE_CONTENTS
 from project_validator.facts import (
     ActionStep,
@@ -28,6 +28,7 @@ from project_validator.facts import (
 from project_validator.facts.expansion import script_facts
 from project_validator.facts.jobs import Job, Toolchain
 from project_validator.platforms import (
+    COMPILING_ECOSYSTEMS,
     RUNNER_DEFAULT_COMPILERS,
     detect_compilers,
     detect_ecosystems,
@@ -107,9 +108,12 @@ def _job_with_compilers(
     ecosystems: frozenset[str],
     *,
     heuristic: bool = False,
+    compiled: bool = True,
 ) -> Job:
     found = frozenset(configurations)
-    default = None if compilers else RUNNER_DEFAULT_COMPILERS.get(os)
+    # The runner's compiler builds a job of a compiling ecosystem, or of none recognisable in a project that compiles.
+    compiling = bool(ecosystems & COMPILING_ECOSYSTEMS) or (not ecosystems and compiled)
+    default = None if compilers or not compiling else RUNNER_DEFAULT_COMPILERS.get(os)
     return Job(
         origin=job.origin,
         job=job.id,
@@ -183,7 +187,14 @@ def _with_version_files(step: ActionStep, project: Project) -> ActionStep:
     return replace(step, inputs={**step.inputs, **found}) if found else step
 
 
-def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project, pinned: Mapping[str, str]) -> Job:
+def _job(
+    job: CiJob,
+    facts: tuple[Command | ActionStep, ...],
+    project: Project,
+    pinned: Mapping[str, str],
+    *,
+    compiled: bool = True,
+) -> Job:
     """A job as the checks see it. A parsed job's compilers and toolchains are named by its matrix values first,
     then by what it runs; a heuristic job's by the whole file."""
     commands = [fact for fact in facts if isinstance(fact, Command)]
@@ -202,6 +213,7 @@ def _job(job: CiJob, facts: tuple[Command | ActionStep, ...], project: Project, 
         ),
         detect_ecosystems(texts, run),
         heuristic=job.heuristic,
+        compiled=compiled,
     )
 
 
@@ -212,7 +224,26 @@ def job_facts(facts: Facts, project: Project) -> Iterator[Job]:
         if isinstance(fact, (Command, ActionStep)):
             by_job.setdefault(fact.job, []).append(fact)
     pinned = pinned_versions(project)
-    return (_job(job, tuple(by_job.get(job.id, ())), project, pinned) for job in facts.of(CiJob) if job.builds)
+    compiled = _compiles(facts)
+    return (
+        _job(job, tuple(by_job.get(job.id, ())), project, pinned, compiled=compiled)
+        for job in facts.of(CiJob)
+        if job.builds
+    )
+
+
+def _compiles(facts: Facts) -> bool:
+    """Whether the project compiles C, C++ or Fortran (or shows no language at all, as a bare CI file does)."""
+    from project_validator.facts.structure import project_languages  # structure reads the profiles
+
+    languages = project_languages(facts)
+    compiling = {
+        language
+        for ecosystem in registered()
+        if ecosystem.label in COMPILING_ECOSYSTEMS
+        for language in ecosystem.languages
+    }
+    return not languages or bool(languages & compiling)
 
 
 def ci_analysis(facts: Facts) -> CiAnalysis:
