@@ -385,6 +385,15 @@ class CiEnvironmentTests(unittest.TestCase):
             with self.subTest(script=script):
                 self.assertFalse(self._facts(f"run: {script}").of(Unknown))
 
+    @unittest.expectedFailure  # upstream #292: a `for x in …; do` header is recorded as a command named `for`
+    def test_a_loop_header_is_not_a_command(self) -> None:
+        """`for x in a b; do …; done` and `case $x in` assign and branch; nothing runs a program called `for` or `case`
+        (the GitHub Action fixture's composite action)."""
+        facts = self._facts(
+            "run: for price in 1 2; do total=$((total + price)); done", "run: case $X in a) echo a;; esac"
+        )
+        self.assertFalse([fact.argv for fact in facts.of(Command) if fact.argv[0] in ("for", "case", "a)")])
+
     def test_a_program_the_script_sets_is_known(self) -> None:
         for script in ("CC=gcc; $CC -c a.c", "for f in a b; do $f; done", "read -r TOOL; ${TOOL} x"):
             with self.subTest(script=script):
