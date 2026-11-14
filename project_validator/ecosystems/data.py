@@ -22,7 +22,13 @@ JSON, TOML, XML, YAML = "JSON", "TOML", "XML", "YAML"
 DATA_FORMATS = frozenset({JSON, TOML, XML, YAML})
 
 # JSON files that tools read with comments and trailing commas allowed.
-JSON_WITH_COMMENTS = ("*.jsonc", "tsconfig*.json", "jsconfig.json", "devcontainer.json", ".vscode/*.json")
+# JSON files whose tool reads them with comments and trailing commas (and documents that it does).
+JSON_WITH_COMMENTS = (
+    *("*.jsonc", "tsconfig*.json", "jsconfig.json", "devcontainer.json", ".vscode/*.json"),
+    *("pyrightconfig.json", "turbo.json", ".luarc.json", "asv.conf.json", ".eslintrc.json", "biome.json", "deno.json"),
+    # Nerdbank.GitVersioning's version file.
+    "version.json",
+)
 
 
 def _allows_comments(path: str) -> bool:

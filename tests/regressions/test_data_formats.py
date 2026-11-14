@@ -106,7 +106,6 @@ def _module_at(directory: str) -> dict[str, str]:
 
 
 class DataWellformedTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #232: JSONC-by-convention files fail the plain JSON parser
     def test_json_files_that_are_jsonc_by_their_tools_specification_parse(self) -> None:
         """A JSON file its tool documents as accepting `//` comments and trailing commas (pyright, Turborepo, the Lua
         language server, Nerdbank.GitVersioning, asv) parses: llama.cpp, graphql-eslint, koreader, Humanizer and
