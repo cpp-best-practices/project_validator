@@ -20,7 +20,8 @@ kcov counts the lines a test binary runs: `zig test src/main.zig --test-cmd kcov
 
 The toolchains are Zig versions: the `version` of mlugg/setup-zig or goto-bus-stop/setup-zig (counted after their own
 `uses:` line only, since every action has a `version` input), korandoru/setup-zig's `zig-version`, a matrix key `zig`,
-or `zigup`.
+or `zigup`. A job that names none runs the `minimum_zig_version` of `build.zig.zon`, which mlugg/setup-zig installs
+when given no `version`.
 
 ## `ci-build-types`
 

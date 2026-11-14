@@ -199,6 +199,8 @@ ZIG_ECOSYSTEM = Ecosystem(
         ),
         programs=(*subcommands("zig", "build", "test", "fmt", "run", "cc", "c++", "translate-c"), "zigup"),
         setup=("zig",),
+        # mlugg/setup-zig with no `version` installs the manifest's minimum Zig.
+        pinned_by=(("build.zig.zon", re.compile(r"\.minimum_zig_version\s*=\s*\"([^\"]+)\"")),),
     ),
 )
 

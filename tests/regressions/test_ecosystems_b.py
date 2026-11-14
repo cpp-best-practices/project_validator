@@ -544,7 +544,6 @@ class ZigTests(unittest.TestCase):
         result = _run(fuzz_testing, "CMake C", AFL_SHIM)
         self.assertIn("no fuzz targets found", result.message)
 
-    @unittest.expectedFailure  # upstream #288: setup-zig without `version` installs the manifest's minimum
     def test_setup_zig_without_a_version_installs_the_manifests_minimum(self) -> None:
         """`mlugg/setup-zig` with no `version` input installs `build.zig.zon`'s `minimum_zig_version`: the job's Zig
         is 0.14.0, not "default" (Hejsil/zig-clap, zls, libxev, ghostty)."""
