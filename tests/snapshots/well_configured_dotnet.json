@@ -901,6 +901,10 @@
               "stryker-config.json"
             ],
             "problems": [],
+            "test_data": [
+              "fuzz/App.Fuzz/packages.lock.json",
+              "tests/App.Tests/packages.lock.json"
+            ],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -922,6 +926,7 @@
               ".github/workflows/function-limits.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}

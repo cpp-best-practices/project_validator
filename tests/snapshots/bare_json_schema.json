@@ -220,6 +220,7 @@
               "schema/catalog.schema.json"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -235,6 +236,7 @@
             "language": "JSON Schema",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}

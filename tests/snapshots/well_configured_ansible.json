@@ -196,6 +196,7 @@
             "language": "Ansible",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -225,6 +226,7 @@
               "roles/shop/tasks/main.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}

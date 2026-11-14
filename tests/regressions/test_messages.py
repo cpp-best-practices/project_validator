@@ -246,7 +246,6 @@ class TestsRunWordingTests(unittest.TestCase):
 
 
 class DataWellformedSummaryTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #231: every template is a detail line; "no X file" contradicts the map
     def test_a_pass_summarises_and_agrees_with_the_detection(self) -> None:
         """A chart's templates are counted, not listed one per line (prometheus-community/helm-charts: 577 lines);
         a format detected from test data alone is not "no XML file to parse" (community.general, Open-XML-SDK,

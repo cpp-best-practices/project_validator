@@ -316,6 +316,7 @@
             "language": "Kubernetes",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -339,6 +340,9 @@
               "charts/shop/values.yaml"
             ],
             "problems": [],
+            "test_data": [
+              "charts/shop/tests/deployment_test.yaml"
+            ],
             "test_problems": [],
             "unit": ".",
             "unread": {
@@ -412,8 +416,7 @@
     },
     "data-wellformed": {
       "details": [
-        "charts/shop/templates/deployment.yaml: not parsed, a template, rendered before it is read",
-        "charts/shop/templates/tests/test-connection.yaml: not parsed, a template, rendered before it is read"
+        "2 YAML files not parsed, a template, rendered before it is read"
       ],
       "message": "7 YAML files parse",
       "status": "PASS"

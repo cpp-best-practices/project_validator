@@ -178,6 +178,7 @@
             "problems": [
               "Dockerfile:1:1: the first instruction is RUN, not FROM"
             ],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}

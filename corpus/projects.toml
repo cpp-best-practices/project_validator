@@ -13,7 +13,7 @@ issues = [261]
 name = "ansible-collections/community.general"
 commit = "cd164d52daca91105f6b787405f86551cb383553"
 ecosystems = ["Ansible"]
-issues = [182, 223, 231, 261]
+issues = [182, 223, 261]
 
 [[project]]
 name = "geerlingguy/ansible-for-devops"
@@ -25,7 +25,7 @@ issues = [188, 195, 261]
 name = "kubernetes-sigs/kubespray"
 commit = "a0a78f28d1f3dc99d3e9dec94d27dd78e67236bd"
 ecosystems = ["Ansible", "Kubernetes"]
-issues = [182, 231, 242, 246, 261, 262]
+issues = [182, 242, 246, 261, 262]
 
 [[project]]
 name = "elixir-ecto/ecto"
@@ -192,7 +192,7 @@ issues = [240, 254]
 name = "toml-lang/toml-test"
 commit = "96fd088448ec0f4d9f061c730ed7854399c46faf"
 ecosystems = ["Data"]
-issues = [182, 231, 248]
+issues = [182, 248]
 
 [[project]]
 name = "docker-library/postgres"
@@ -400,7 +400,7 @@ issues = [188, 248]
 name = "jgm/pandoc"
 commit = "300d24fdb143cff23080120c13acbe7df21cd5a3"
 ecosystems = ["Haskell"]
-issues = [182, 219, 223, 231, 238]
+issues = [182, 219, 223, 238]
 
 [[project]]
 name = "PostgREST/postgrest"
@@ -447,7 +447,7 @@ issues = [219]
 name = "prettier/prettier"
 commit = "f391bf3e7ee219bcfeb61b06555ee1ac8e9c0680"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 231, 235]
+issues = [182, 235]
 
 [[project]]
 name = "vitejs/vite"
@@ -471,7 +471,7 @@ issues = [182, 188, 219, 254]
 name = "denoland/std"
 commit = "f834d0223364361169314833e3c7a8f62ce11d58"
 ecosystems = ["JavaScript/TypeScript"]
-issues = [182, 219, 231]
+issues = [182, 219]
 
 [[project]]
 name = "SchemaStore/schemastore"
@@ -589,7 +589,7 @@ issues = [182, 252]
 name = "prometheus-community/helm-charts"
 commit = "f7c2da805a5bf25a51ed10e6d9b73d6d83d3ce0f"
 ecosystems = ["Kubernetes"]
-issues = [182, 231, 261]
+issues = [182, 261]
 
 [[project]]
 name = "kubernetes/examples"
@@ -606,7 +606,7 @@ ecosystems = ["Kubernetes", "Go"]
 name = "grafana/helm-charts"
 commit = "89a1e8bb7dcd6307d1cc927008c1cafb10aecceb"
 ecosystems = ["Kubernetes"]
-issues = [211, 224, 231]
+issues = [211, 224]
 
 [[project]]
 name = "posquit0/Awesome-CV"
@@ -1152,7 +1152,7 @@ issues = [182, 188]
 name = "pgaudit/pgaudit"
 commit = "2a7322004a90ebb8cf51d929e3dcf79e791b557e"
 ecosystems = ["SQL"]
-issues = [182, 231, 276]
+issues = [182, 276]
 
 [[project]]
 name = "golang-migrate/migrate"
@@ -1336,7 +1336,7 @@ ecosystems = ["XML schemas"]
 name = "dotnet/Open-XML-SDK"
 commit = "431ab05cf160248cc3885a4a766026d4f8243792"
 ecosystems = ["XML schemas"]
-issues = [182, 231, 240]
+issues = [182, 240]
 
 [[project]]
 name = "ISO-TC211/XML"
