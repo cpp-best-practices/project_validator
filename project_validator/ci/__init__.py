@@ -107,6 +107,7 @@ def _job_with_compilers(
         configurations=found,
         toolchains=toolchains,
         ecosystems=ecosystems,
+        services=frozenset(job.services),
         default_compiler=default is not None,
         heuristic=heuristic,
     )

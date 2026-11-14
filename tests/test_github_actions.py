@@ -106,6 +106,29 @@ class WorkflowJobTests(unittest.TestCase):
         workflow = {"jobs": {"c": {"runs-on": "self-hosted", "container": "gcc:14", "steps": []}}}
         self.assertEqual(self._jobs(workflow)[0].os, "linux")
 
+    def test_service_containers_are_the_jobs_services(self) -> None:
+        workflow = {
+            "jobs": {
+                "test": {
+                    "runs-on": "ubuntu-latest",
+                    "strategy": {"matrix": {"pg": ["16", "17"]}},
+                    "services": {
+                        "postgres": {"image": "postgres:${{ matrix.pg }}", "ports": ["5432:5432"]},
+                        "cache": "redis:7",
+                        "odd": 3,
+                    },
+                    "steps": [{"run": "pytest"}],
+                }
+            }
+        }
+        jobs = self._jobs(workflow)
+        self.assertEqual(
+            sorted(sorted(job.services) for job in jobs), [["postgres:16", "redis:7"], ["postgres:17", "redis:7"]]
+        )
+        self.assertEqual(
+            self._jobs({"jobs": {"a": {"runs-on": "ubuntu-latest", "steps": []}}})[0].services, frozenset()
+        )
+
     def test_reusable_workflow_calls_are_not_jobs_here(self) -> None:
         self.assertEqual(self._jobs({"jobs": {"call": {"uses": "org/repo/.github/workflows/x.yml@v1"}}}), ())
 
