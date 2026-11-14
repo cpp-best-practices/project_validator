@@ -227,7 +227,7 @@ issues = [182, 188, 229, 280]
 name = "mkdocs/mkdocs"
 commit = "2862536793b3c67d9d83c33e0dd6d50a791928f8"
 ecosystems = ["Documentation site", "Python"]
-issues = [199, 229, 236, 255, 280]
+issues = [199, 229, 236, 280]
 
 [[project]]
 name = "python/devguide"

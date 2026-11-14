@@ -150,7 +150,7 @@
       "origin": "tests/fuzz/fuzz_app.py"
     },
     {
-      "kind": "test_*.py or *_test.py files",
+      "kind": "test_*.py, *_test.py or tests/*_tests.py files",
       "language": "Python",
       "origin": "tests/test_app.py"
     },

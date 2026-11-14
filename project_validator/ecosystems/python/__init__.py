@@ -287,9 +287,10 @@ PYTHON_RUNNERS = launcher(
 
 
 PYTHON_TEST_FILES = TestFiles(
-    name="test_*.py or *_test.py files",
+    name="test_*.py, *_test.py or tests/*_tests.py files",
     languages=PYTHON_ONLY,
-    path=re.compile(r"(?:^|/)(?:test_[^/]*|[^/]*_test)\.py$"),
+    # `*_tests.py` only under a tests directory, where unittest's `discover -p "*tests.py"` finds them (mkdocs).
+    path=re.compile(r"(?:^|/)(?:test_[^/]*|[^/]*_test)\.py$|(?:^|/)tests?/(?:[^/]+/)*[^/]*_tests\.py$"),
 )
 _PYTHON_TESTS = tests_of(PYTHON_TEST_FILES.name)
 

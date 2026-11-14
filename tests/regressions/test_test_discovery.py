@@ -184,7 +184,6 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
 
 
 class PythonTestFilePatternTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #255: `*_tests.py` under tests/ is not a Python test file pattern
     def test_tests_py_files_under_a_tests_directory_are_test_files(self) -> None:
         """mkdocs' `mkdocs/tests/build_tests.py` (12 such files), discovered by CI with
         `unittest discover -s mkdocs -p "*tests.py"`, holds tests."""
