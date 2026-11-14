@@ -319,11 +319,10 @@ def _chdir_pipeline(cli: str) -> dict[str, str]:
 
 
 class TerraformTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #262: -chdir= before the subcommand, .tftpl/.tpl, terraform-min-max unread
-    def test_chdir_before_the_subcommand_templates_and_min_max_versions_are_read(self) -> None:
+    @unittest.expectedFailure  # upstream #262: -chdir= before the subcommand and .tftpl/.tpl templates are unread
+    def test_chdir_before_the_subcommand_and_templates_are_read(self) -> None:
         """`tofu -chdir=dir validate` validates and `fmt -check` checks (kubespray); `.tftpl` and `.tpl` are Terraform
-        templates (terraform-google-kubernetes-engine, terraform-aws-eks); a terraform-min-max version is two versions
-        or unknown, not none (terraform-aws-vpc)."""
+        templates (terraform-google-kubernetes-engine, terraform-aws-eks)."""
         _all_pass(
             self,
             {
@@ -337,9 +336,12 @@ class TerraformTests(unittest.TestCase):
             temp_project({"main.tf": "", "templates/init.tftpl": "", "templates/user_data.tpl": ""}) as root,
         ):
             self.assertEqual(make_context(root).structure.unrecognised_suffixes, ())
-        with self.subTest(case="terraform-min-max"):
-            result = run_in_layout(self, TERRAFORM, PLATFORM_MATRIX, _workflow(MIN_MAX_WORKFLOW))
-            self.assertTrue(result.status is Status.ERROR or "2 Terraform version(s)" in result.message, result)
+
+    @unittest.expectedFailure  # upstream #262: terraform-min-max's versions are unread
+    def test_terraform_min_max_versions_are_two_versions_or_unknown(self) -> None:
+        """A terraform-min-max version is two versions or unknown, not none (terraform-aws-vpc)."""
+        result = run_in_layout(self, TERRAFORM, PLATFORM_MATRIX, _workflow(MIN_MAX_WORKFLOW))
+        self.assertTrue(result.status is Status.ERROR or "2 Terraform version(s)" in result.message, result)
 
 
 # --- Typst (#263) ----------------------------------------------------------------------------------------------------
