@@ -362,7 +362,16 @@
       {
         "auxiliary": {},
         "language": "SQL",
-        "units": []
+        "units": [
+          {
+            "answer": "no",
+            "axis": "database engine version",
+            "language": "SQL",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
       }
     ],
     "sanitizers": [
@@ -780,8 +789,8 @@
     },
     "platform-matrix": {
       "details": [],
-      "message": "not applicable to SQL",
-      "status": "SKIP"
+      "message": "no CI configuration found",
+      "status": "FAIL"
     },
     "sanitizers": {
       "details": [],

@@ -9,9 +9,8 @@ migration tool (Flyway, Liquibase, Atlas, a migrations directory of .sql files) 
 schema.sql in a Python project stays what it is.
 
 dbt is the one build system: its project is a unit, its target/, dbt_packages/ and logs/ are outputs, and its packages
-are dependencies locked by package-lock.yml. Database engine versions (the service containers CI runs) would be the
-platform axis, but the platform policy asks for several operating systems, which a database project has no use for;
-`platform-matrix` does not apply, and neither do the compiled-language checks.
+are dependencies locked by package-lock.yml. The platforms are the database engine versions CI tests against (the
+service containers it runs: `postgres:16`, `mysql:8`), whatever the OS; the compiled-language checks do not apply.
 """
 
 from __future__ import annotations
@@ -24,9 +23,11 @@ from project_validator.core import Project
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands
 from project_validator.facts import Fact, Origin
 from project_validator.facts.analysis import analysed, analyzer
+from project_validator.facts.axes import ToolchainAxis
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.jobs import Job
 from project_validator.facts.migrations import is_migration, migration_linter, migrations_linted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings, unreadable
@@ -310,6 +311,43 @@ CI_PROGRAMS = (
     ("squawk",),
     ("squawk-cli",),
     ("tsqllint",),
+)
+
+# --- platforms: the database engines CI tests against
+
+# Image name (the registry path, without a tag) -> the engine; the tag's leading version is the engine's.
+_ENGINES = {
+    "postgres": "PostgreSQL",
+    "postgis/postgis": "PostgreSQL",
+    "timescale/timescaledb": "TimescaleDB",
+    "mysql": "MySQL",
+    "mariadb": "MariaDB",
+    "mcr.microsoft.com/mssql/server": "SQL Server",
+    "cockroachdb/cockroach": "CockroachDB",
+    "clickhouse/clickhouse-server": "ClickHouse",
+    "clickhouse": "ClickHouse",
+}
+_IMAGE = re.compile(r"^(?:docker\.io/)?(?:library/)?(?P<name>[\w./-]+?)(?::(?P<tag>[\w.-]+))?$")
+_TAG_VERSION = re.compile(r"v?(\d+(?:\.\d+)*)")
+
+
+def engine_version(image: str) -> str | None:
+    """The database engine and version an image runs (`postgres:16` is "PostgreSQL 16", `mysql:8.4` "MySQL 8.4",
+    `mcr.microsoft.com/mssql/server:2022-latest` "SQL Server 2022"); None for an image of no known engine, and the
+    engine alone for one without a version in its tag (`postgres:latest`)."""
+    match = _IMAGE.match(image.strip())
+    if match is None or (engine := _ENGINES.get(match["name"])) is None:
+        return None
+    version = _TAG_VERSION.match(match["tag"] or "")
+    return f"{engine} {version[1]}" if version else engine
+
+
+def _engines(job: Job) -> frozenset[str]:
+    return frozenset(engine for image in job.services if (engine := engine_version(image)) is not None)
+
+
+ENGINE_VERSIONS = ToolchainAxis(
+    languages=SQL_LANGUAGE, noun="database engine version", of_job=_engines, operating_systems=False
 )
 
 SQL_ECOSYSTEM = Ecosystem(
