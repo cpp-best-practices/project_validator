@@ -240,7 +240,6 @@ class WorkingDirectoryTests(unittest.TestCase):
 
 
 class ExpressionOperandTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #214: && and || render as booleans, not as the deciding operand
     def test_and_and_or_yield_the_deciding_operand(self) -> None:
         """GitHub's `a && b` is `b` when `a` is truthy, and `a || b` is `a` or else `b`: a ternary renders its branch,
         a `runs-on` fallback picks the OS, and the sanitizer flags reach cmake (fmt, mkdocs, flask, vapor)."""

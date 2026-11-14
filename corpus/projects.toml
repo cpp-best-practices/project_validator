@@ -55,7 +55,7 @@ issues = [182, 188, 241, 254]
 name = "fmtlib/fmt"
 commit = "4229eb5820af49bf797641168624c8a754a1a4eb"
 ecosystems = ["C/C++"]
-issues = [182, 194, 203, 214, 225, 247, 282]
+issues = [182, 194, 203, 225, 247, 282]
 
 [[project]]
 name = "cpp-best-practices/cmake_template"
@@ -227,7 +227,7 @@ issues = [182, 188, 229, 280]
 name = "mkdocs/mkdocs"
 commit = "2862536793b3c67d9d83c33e0dd6d50a791928f8"
 ecosystems = ["Documentation site", "Python"]
-issues = [199, 214, 229, 236, 255, 280]
+issues = [199, 229, 236, 255, 280]
 
 [[project]]
 name = "python/devguide"
@@ -853,7 +853,7 @@ issues = [195]
 name = "pallets/flask"
 commit = "49943b5a94413a530761350f04e896f76e8d620e"
 ecosystems = ["Python"]
-issues = [188, 199, 214, 237]
+issues = [188, 199, 237]
 
 [[project]]
 name = "psf/black"
@@ -1204,7 +1204,7 @@ issues = [229, 241, 244]
 name = "vapor/vapor"
 commit = "e4a5b7050f5e9e5793be3ebdeb687eac92fd9965"
 ecosystems = ["Swift"]
-issues = [188, 214, 229, 243, 244]
+issues = [188, 229, 243, 244]
 
 [[project]]
 name = "realm/SwiftLint"

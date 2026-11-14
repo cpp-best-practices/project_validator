@@ -109,6 +109,9 @@ def _runner_os(job: Mapping[str, object], combination: Combination) -> str:
     if "container" in job:
         return "linux"
     runner = substitute_matrix(json.dumps(job.get("runs-on", "")), combination)
+    # What is left is an expression over the matrix (`matrix.os || 'ubuntu-latest'`): its value names the runner.
+    known = Known(os="unknown", matrix=combination, env={})
+    runner = EXPRESSION.sub(lambda match: rendered(match[0][3:-2], known) or match[0], runner)
     found = detect_operating_systems(runner)
     return found[0] if found else "unknown"
 

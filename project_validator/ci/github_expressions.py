@@ -2,8 +2,9 @@
 
 `runner.os`, `matrix.*` and the workflow's and job's `env.*` are known; everything else (`github.*`, `secrets.*`,
 `steps.*`, `needs.*`, unknown functions) is not, and makes the result unknown (None) unless the rest decides it:
-`false && x` is false and `true || x` is true whatever `x` is. Comparisons ignore case, as GitHub's do. A step's
-status functions are judged for a run in which every step succeeds.
+`false && x` is false and `true || x` is true whatever `x` is. `&&` and `||` yield the operand that decides them, as
+GitHub's do, so `${{ matrix.asan && '-fsanitize=address' || '' }}` renders its branch. Comparisons ignore case, as
+GitHub's do. A step's status functions are judged for a run in which every step succeeds.
 """
 
 from __future__ import annotations
@@ -149,17 +150,21 @@ def _lookup(values: Mapping[str, object], dotted: str) -> Maybe:
 
 
 def _either(_: str, left: Maybe, right: Maybe) -> Maybe:
-    left, right = _truthy(left), _truthy(right)
-    if True in (left, right):
-        return True
-    return _UNKNOWN if _UNKNOWN in (left, right) else False
+    """`a || b` as GitHub evaluates it: `a` when it is truthy, else `b` (the operand itself, not a boolean: a ternary
+    renders its branch). When `a` is unknown only a truthy `b` decides it, for a condition: true."""
+    truth = _truthy(left)
+    if truth is _UNKNOWN:
+        return True if _truthy(right) is True else _UNKNOWN
+    return left if truth else right
 
 
 def _both(_: str, left: Maybe, right: Maybe) -> Maybe:
-    left, right = _truthy(left), _truthy(right)
-    if False in (left, right):
-        return False
-    return _UNKNOWN if _UNKNOWN in (left, right) else True
+    """`a && b` as GitHub evaluates it: `a` when it is falsy, else `b`. When `a` is unknown only a falsy `b` decides
+    it, for a condition: false."""
+    truth = _truthy(left)
+    if truth is _UNKNOWN:
+        return right if _truthy(right) is False else _UNKNOWN
+    return right if truth else left
 
 
 def _compare(operator: str, left: Maybe, right: Maybe) -> Maybe:
