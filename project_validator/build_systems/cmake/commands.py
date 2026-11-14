@@ -296,11 +296,12 @@ def _set_property(collector: Collector, frame: Frame, invocation: Invocation, wo
 def _option(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
     """An option's default: `option(NAME "help" ON)`, `cmake_dependent_option(NAME "help" ON ...)`; the condition a
     dependent option depends on is a guard."""
-    if len(words) >= 2:
-        value = words[2] if len(words) > 2 else Value("OFF")
-        collector.setting(frame, invocation, words[0].text, value, None, default=True)
-    if invocation.name == "cmake_dependent_option" and len(words) >= 4:
-        collector.guard(frame, words[3].text)
+    arguments = _arguments(words)
+    if len(arguments) >= 2:
+        for value in arguments[2] if len(arguments) > 2 else [Value("OFF")]:
+            collector.setting(frame, invocation, words[0].text, value, None, default=True)
+    if invocation.name == "cmake_dependent_option" and len(arguments) >= 4:
+        collector.guard(frame, arguments[3][0].text)
 
 
 def _guard(collector: Collector, frame: Frame, _invocation: Invocation, words: list[Value]) -> None:

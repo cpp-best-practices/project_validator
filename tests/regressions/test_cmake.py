@@ -188,9 +188,10 @@ class MesonMultiLineConditionTests(unittest.TestCase):
 
 
 class SanitizerOptionDefaultTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #206: an option default from a compile check is "off", not unknown
-    def test_an_option_defaulting_to_a_compile_check_result_is_unknown(self) -> None:
-        """cmake_template's ENABLE_SANITIZER_ADDRESS defaults to ${SUPPORTS_ASAN}, set from check_cxx_source_compiles,
-        which the validator cannot run: the answer is unknown (an error without --allow-unknown), not "missing"."""
+    def test_an_option_defaulting_to_a_branched_variable_takes_every_value(self) -> None:
+        """cmake_template's ENABLE_SANITIZER_ADDRESS defaults to ${SUPPORTS_ASAN}: OFF for Clang and GCC on Windows,
+        ON for MSVC, and elsewhere ON when check_cxx_source_compiles passes. Every value is the option's default in
+        its builds (the first alone read as "OFF", so AddressSanitizer was "missing")."""
         result = _run(sanitizers, {"CMakeLists.txt": CMAKE_PROJECT + SUPPORTS_ASAN, **CXX_SOURCE})
-        self.assertEqual(result.status, Status.ERROR, result)
+        self.assertEqual(result.status, Status.PASS, result)
+        self.assertIn("AddressSanitizer", result.message)

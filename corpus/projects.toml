@@ -61,7 +61,7 @@ issues = [182, 194, 247, 282]
 name = "cpp-best-practices/cmake_template"
 commit = "b86318abbf55a657a11a0cf2acce69f221841b22"
 ecosystems = ["C/C++"]
-issues = [182, 194, 206, 235, 282]
+issues = [182, 194, 235, 282]
 
 [[project]]
 name = "simdjson/simdjson"
