@@ -55,7 +55,7 @@ issues = [182, 188, 241, 254]
 name = "fmtlib/fmt"
 commit = "4229eb5820af49bf797641168624c8a754a1a4eb"
 ecosystems = ["C/C++"]
-issues = [182, 194, 203, 225, 247, 282]
+issues = [182, 194, 203, 247, 282]
 
 [[project]]
 name = "cpp-best-practices/cmake_template"
@@ -73,13 +73,13 @@ issues = [182, 183, 194, 203]
 name = "bus1/dbus-broker"
 commit = "2956b5d381deeea709c53d02f10e799e50e44f4b"
 ecosystems = ["C/C++"]
-issues = [182, 186, 196, 225, 250, 282]
+issues = [182, 186, 196, 250, 282]
 
 [[project]]
 name = "nlohmann/json"
 commit = "81888ff9f005c022e60f2de572327b2e50222222"
 ecosystems = ["C/C++"]
-issues = [182, 183, 207, 218, 225, 247, 282]
+issues = [182, 183, 207, 218, 247, 282]
 
 [[project]]
 name = "catchorg/Catch2"
@@ -97,7 +97,7 @@ issues = [182, 204, 207, 211, 229]
 name = "uber/h3"
 commit = "15920096d4a165729c01f749e2bd97334b009519"
 ecosystems = ["C/C++"]
-issues = [182, 203, 225, 226, 228, 234]
+issues = [182, 203, 226, 228, 234]
 
 [[project]]
 name = "GNOME/glib"

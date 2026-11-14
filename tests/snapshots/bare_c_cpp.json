@@ -320,7 +320,7 @@
                 },
                 "libFuzzer": {
                   "can": {
-                    "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite)"
+                    "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz)"
                   },
                   "needs_definition": true,
                   "required": false
@@ -893,7 +893,7 @@
     },
     "fuzz-testing": {
       "details": [
-        "consider adding a fuzz target binary with -max_total_time= (or ClusterFuzzLite) or afl-fuzz -i <corpus> -o <findings> -- <target>"
+        "consider adding a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz) or afl-fuzz -i <corpus> -o <findings> -- <target>"
       ],
       "message": "no fuzz targets found (libFuzzer or AFL++ fuzz targets (LLVMFuzzerTestOneInput, __AFL_LOOP))",
       "status": "FAIL"

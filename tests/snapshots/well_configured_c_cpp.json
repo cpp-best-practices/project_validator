@@ -462,7 +462,7 @@
                 },
                 "libFuzzer": {
                   "can": {
-                    "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite)"
+                    "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz)"
                   },
                   "needs_definition": true,
                   "required": false

@@ -171,7 +171,6 @@ class CoverageTests(unittest.TestCase):
 
 
 class FuzzTestingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #225: CIFuzz (OSS-Fuzz) actions and shell loops over fuzzers are not runs
     def test_cifuzz_and_a_shell_loop_over_fuzzer_binaries_run_the_targets(self) -> None:
         """The OSS-Fuzz CIFuzz actions run the project's fuzzers in CI (fmt, nlohmann/json, dbus-broker, h3), as does
         h3's `for f in bin/fuzz*; do $f -max_total_time=60; done`."""
