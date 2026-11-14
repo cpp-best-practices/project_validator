@@ -1113,7 +1113,7 @@ issues = [222, 235, 275]
 name = "rbenv/rbenv"
 commit = "07e9b1e297a5977298c6aadc9971ae0e9eb7f0dc"
 ecosystems = ["Shell"]
-issues = [193, 224]
+issues = [224]
 
 [[project]]
 name = "ohmyzsh/ohmyzsh"
@@ -1136,7 +1136,7 @@ issues = [198]
 name = "Bash-it/bash-it"
 commit = "72ea9e285fe1828977d1cd2bc596b901bcc57440"
 ecosystems = ["Shell"]
-issues = [193, 221, 224]
+issues = [221, 224]
 
 [[project]]
 name = "dbt-labs/dbt-utils"

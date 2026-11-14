@@ -110,7 +110,6 @@ class FollowedScriptTests(unittest.TestCase):
                 self.assertLessEqual(len(unknowns), 1, [unknown.subject for unknown in unknowns])
                 self.assertTrue(all(path in unknown.subject for unknown in unknowns), unknowns)
 
-    @unittest.expectedFailure  # upstream #193: `exec <program>` in a followed script is not a launcher
     def test_exec_runs_the_program_that_follows(self) -> None:
         """`exec bats tests` at the end of `test/run` runs bats, like `env` or `time` would (rbenv, bash-it): tests-run
         sees CI running the bats tests."""
