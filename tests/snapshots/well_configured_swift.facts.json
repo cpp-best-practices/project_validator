@@ -105,12 +105,6 @@
       "role": "product"
     },
     {
-      "files": 1,
-      "kind": "UnrecognisedSuffix",
-      "origin": ".",
-      "suffix": ".resolved"
-    },
-    {
       "build_systems": [
         "SwiftPM"
       ],
@@ -5274,11 +5268,6 @@
         "role": "product"
       }
     ],
-    "unrecognised_suffixes": [
-      {
-        "files": 1,
-        "suffix": ".resolved"
-      }
-    ]
+    "unrecognised_suffixes": []
   }
 }

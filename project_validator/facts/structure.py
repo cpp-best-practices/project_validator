@@ -34,8 +34,21 @@ NOT_SOURCE_SUFFIXES = frozenset(
         *(".log", ".diff", ".patch", ".orig", ".bak", ".swp"),
         # Templates (config.h.in, MANIFEST.in) can belong to any language.
         ".in",
+        # Lock files, test plans and data the profiles' tools write or read (cabal.project.freeze, Package.resolved,
+        # Xcode test plans, R's data and Windows Makevars), templates (EEx, Terraform's templatefile), cheatsheets,
+        # zsh themes and AsciiDoc.
+        *(".freeze", ".resolved", ".xctestplan", ".rda", ".rds", ".rdata", ".win"),
+        *(".eex", ".heex", ".leex", ".tftpl", ".cheatmd", ".zsh-theme", ".asciidoc"),
     }
 )
+# Java's service-provider files are named after the interface they implement (`com.example.Spi`).
+_SERVICE_PROVIDERS = "META-INF/services/"
+# The suffixes of the languages build files name that no profile reads (CMake's `LANGUAGES CUDA OBJC`).
+BUILT_LANGUAGE_SUFFIXES = {
+    "CUDA": (".cu", ".cuh"),
+    "Objective-C": (".m",),
+    "Objective-C++": (".mm",),
+}
 # Hidden top-level directories that hold configuration. A format's files are read there too (CI workflows and
 # editor settings are data); a language's are not (a helper script in `.github/scripts` makes no language the
 # project's).
@@ -240,6 +253,7 @@ def _unrecognised(files: list[str], accounted: set[str], recognised: set[str]) -
         and suffix not in recognised
         and suffix.lower() not in NOT_SOURCE_SUFFIXES
         and not suffix.endswith("~")
+        and _SERVICE_PROVIDERS not in path
     )
     for suffix, count in sorted(counts.items(), key=lambda item: (-item[1], item[0])):
         yield UnrecognisedSuffix(origin=Origin(path="."), suffix=suffix, files=count)
@@ -344,6 +358,7 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     yield from ambiguous
     sources = (*plain.of(SourceFile), *ambiguous)
     recognised = {signal for source in sources if (signal := source_signal(source.path)).startswith(".")}
+    recognised |= {suffix for name in names for suffix in BUILT_LANGUAGE_SUFFIXES.get(name, ())}
     yield from _unrecognised(files, {*(path for _, path in found), *(source.path for source in sources)}, recognised)
     yield from _units(project, Facts((*plain, *ambiguous)), named)
 

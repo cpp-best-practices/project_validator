@@ -78,12 +78,6 @@
       "role": "test"
     },
     {
-      "files": 1,
-      "kind": "UnrecognisedSuffix",
-      "origin": ".",
-      "suffix": ".freeze"
-    },
-    {
       "build_systems": [
         "Cabal"
       ],
@@ -2356,11 +2350,6 @@
         "role": "product"
       }
     ],
-    "unrecognised_suffixes": [
-      {
-        "files": 1,
-        "suffix": ".freeze"
-      }
-    ]
+    "unrecognised_suffixes": []
   }
 }

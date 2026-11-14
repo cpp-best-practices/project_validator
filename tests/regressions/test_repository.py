@@ -446,7 +446,6 @@ class StatusBadgesTests(unittest.TestCase):
 
 
 class ProjectMapTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #241: the map lists suffixes of claimed languages and read files as unknown
     def test_files_the_profiles_know_are_not_unrecognised_suffixes(self) -> None:
         """A language the map names has no unrecognised suffix of its own (CUDA/.cu, Objective-C/.m), and the files
         a profile reads or owns (cabal.project.freeze, Package.resolved, META-INF/services, .rda, .heex, .tftpl,

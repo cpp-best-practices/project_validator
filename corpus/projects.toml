@@ -31,13 +31,13 @@ issues = [182, 246, 261, 262]
 name = "elixir-ecto/ecto"
 commit = "0e31befcada8660dc622884199f4418494d73bac"
 ecosystems = ["BEAM"]
-issues = [195, 241, 264]
+issues = [195, 264]
 
 [[project]]
 name = "ninenines/cowboy"
 commit = "29c1f222f5a22749fd0f47a0efba40e115c02577"
 ecosystems = ["BEAM"]
-issues = [198, 228, 241, 264]
+issues = [198, 228, 264]
 
 [[project]]
 name = "gleam-lang/stdlib"
@@ -49,7 +49,7 @@ issues = [264]
 name = "phoenixframework/phoenix"
 commit = "789f851c3cda02f56702a16700ebba48d270cbd3"
 ecosystems = ["BEAM"]
-issues = [182, 188, 241, 254]
+issues = [182, 188, 254]
 
 [[project]]
 name = "fmtlib/fmt"
@@ -115,13 +115,13 @@ issues = [182, 282]
 name = "ggml-org/llama.cpp"
 commit = "9d25e0014c4b4b316873c01f4938c0e3c687287d"
 ecosystems = ["C/C++", "Python"]
-issues = [181, 224, 230, 235, 241]
+issues = [181, 224, 230, 235]
 
 [[project]]
 name = "glfw/glfw"
 commit = "92dcf4ce74f2e2554a98fea09be7c705c17daa5a"
 ecosystems = ["C/C++"]
-issues = [223, 241, 282]
+issues = [223, 282]
 
 [[project]]
 name = "clj-kondo/clj-kondo"
@@ -405,13 +405,13 @@ issues = [182, 223, 238]
 name = "PostgREST/postgrest"
 commit = "e5b4fac1c7a192af50a82dd3639ac47316ba60d3"
 ecosystems = ["Haskell"]
-issues = [182, 241, 266]
+issues = [182, 266]
 
 [[project]]
 name = "koalaman/shellcheck"
 commit = "1046c00b61516a64f85a45e5fbdc69c6c1654eb5"
 ecosystems = ["Haskell", "Shell"]
-issues = [182, 241]
+issues = [182]
 
 [[project]]
 name = "simonmichael/hledger"
@@ -893,19 +893,19 @@ issues = [182]
 name = "tidyverse/dplyr"
 commit = "819c99f7284b3a413b391c60bea49ae7bfb8bafc"
 ecosystems = ["R"]
-issues = [186, 228, 238, 241, 246]
+issues = [186, 228, 238, 246]
 
 [[project]]
 name = "r-lib/testthat"
 commit = "54c0edc932018079a8925845f7e278097d19c786"
 ecosystems = ["R"]
-issues = [186, 228, 238, 241, 246, 256]
+issues = [186, 228, 238, 246, 256]
 
 [[project]]
 name = "Rdatatable/data.table"
 commit = "63a95fa1097bd58359cc19a2ad4392bd92025c52"
 ecosystems = ["R"]
-issues = [182, 186, 241, 246, 256]
+issues = [182, 186, 246, 256]
 
 [[project]]
 name = "tidyverse/ggplot2"
@@ -1104,7 +1104,7 @@ issues = [224]
 name = "ohmyzsh/ohmyzsh"
 commit = "6010fb6260f359e71d99ba25f05f9215809b3ed2"
 ecosystems = ["Shell"]
-issues = [241, 275]
+issues = [275]
 
 [[project]]
 name = "acmesh-official/acme.sh"
@@ -1162,7 +1162,7 @@ issues = [182, 223]
 name = "flyway/flyway"
 commit = "15b6298cc9a19d489bf9d45b87de4ddb68c90e9a"
 ecosystems = ["SQL", "JVM"]
-issues = [182, 241]
+issues = [182]
 
 [[project]]
 name = "liquibase/liquibase"
@@ -1181,7 +1181,7 @@ issues = [186]
 name = "Alamofire/Alamofire"
 commit = "dea4bab91767a971d6e112bc955c6a82295589b7"
 ecosystems = ["Swift"]
-issues = [241, 244]
+issues = [244]
 
 [[project]]
 name = "vapor/vapor"
@@ -1193,7 +1193,7 @@ issues = [188, 244]
 name = "realm/SwiftLint"
 commit = "d9c55cdd401f57bdc1de965e620852ddb87fd175"
 ecosystems = ["Swift"]
-issues = [186, 207, 241, 244]
+issues = [186, 207, 244]
 
 [[project]]
 name = "apple/swift-nio"
@@ -1205,7 +1205,7 @@ issues = [186, 188]
 name = "pointfreeco/swift-composable-architecture"
 commit = "bf66bd83f3165fe4f5fdb9a6c99249276505723e"
 ecosystems = ["Swift"]
-issues = [188, 195, 228, 241]
+issues = [188, 195, 228]
 
 [[project]]
 name = "nicklockwood/SwiftFormat"
@@ -1254,13 +1254,13 @@ issues = [195, 224, 246, 262]
 name = "terraform-google-modules/terraform-google-kubernetes-engine"
 commit = "945d9aacad1bdd8ed6b5a239d4e13f3f224b0648"
 ecosystems = ["Terraform"]
-issues = [195, 223, 235, 241, 262]
+issues = [195, 223, 235, 262]
 
 [[project]]
 name = "terraform-aws-modules/terraform-aws-eks"
 commit = "91b8a8d944e3cf169483108acd12d5b1e47856f7"
 ecosystems = ["Terraform"]
-issues = [241, 262]
+issues = [262]
 
 [[project]]
 name = "terraform-aws-modules/terraform-aws-lambda"
@@ -1339,7 +1339,7 @@ issues = [182]
 name = "ISO-TC211/XML"
 commit = "a3a8440162c4ea48ae36f02df6cde47fbc523687"
 ecosystems = ["XML schemas"]
-issues = [182, 241]
+issues = [182]
 
 [[project]]
 name = "xmlunit/xmlunit"
