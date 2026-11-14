@@ -50,7 +50,7 @@ def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     if not answer.found():
         return Result.failed(f"no {words.kind} found; enable at least {joined(_required(answer))}")
     missing = _described(answer.compiled, _missing, ", ".join)
-    return Result.warned(f"missing {words.kind}: {missing}", f"found {joined(answer.found())}")
+    return Result.warned(f"missing {words.kind}: {missing}", f"found {_described(answer.compiled, _found, joined)}")
 
 
 def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
@@ -74,7 +74,7 @@ def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     if not answer.found():
         return Result.failed(words.failed or f"no {words.kind} found; enable {joined(_required(answer))}", words.hint)
     missing = _described(answer.compiled, _missing, ", ".join)
-    return Result.warned(f"missing {words.kind}: {missing}", f"found {joined(answer.found())}")
+    return Result.warned(f"missing {words.kind}: {missing}", f"found {_described(answer.compiled, _found, joined)}")
 
 
 def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:

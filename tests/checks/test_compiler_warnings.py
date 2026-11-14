@@ -53,6 +53,13 @@ class CompilerWarningsTests(unittest.TestCase):
         result = self._run(WELL_CONFIGURED)
         self.assertEqual(result.status, Status.PASS, result)
 
+    def test_a_project_wide_negation_takes_a_flag_back_and_one_targets_does_not(self) -> None:
+        options = f"add_compile_options({self.GCC_FLAGS})\n"
+        negated = self._run({"CMakeLists.txt": options + "add_compile_options(-Wno-shadow)\n"})
+        self.assertEqual(negated.message, "missing compiler warning flags: -Wshadow")
+        target = "add_library(x a.cpp)\ntarget_compile_options(x PRIVATE -Wno-shadow)\n"
+        self.assertEqual(self._run({"CMakeLists.txt": options + target}).status, Status.PASS)
+
     def test_passes_with_the_minimum_gcc_and_clang_flags(self) -> None:
         result = self._run({"CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n"})
         self.assertEqual(result.status, Status.PASS)
@@ -96,7 +103,9 @@ class CompilerWarningsTests(unittest.TestCase):
         )
         self.assertEqual(
             result,
-            Result.warned("missing compiler warning flags: /W4, /permissive- for msvc", f"found {self.GCC_FLAGS}"),
+            Result.warned(
+                "missing compiler warning flags: /W4, /permissive- for msvc", f"found {self.GCC_FLAGS} for gcc"
+            ),
         )
 
     def test_msvc_in_ci_passes_with_msvc_flags(self) -> None:
@@ -151,7 +160,7 @@ class CompilerWarningsTests(unittest.TestCase):
             result,
             Result.warned(
                 "missing compiler warning flags: -Wall, -Wextra, -Wpedantic, -Wshadow, -Wconversion for clang",
-                f"found {self.GCC_FLAGS}",
+                f"found {self.GCC_FLAGS} for gcc",
             ),
         )
 

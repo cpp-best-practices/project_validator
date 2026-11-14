@@ -55,7 +55,7 @@ issues = [182, 188, 241, 254]
 name = "fmtlib/fmt"
 commit = "4229eb5820af49bf797641168624c8a754a1a4eb"
 ecosystems = ["C/C++"]
-issues = [182, 194, 247, 282]
+issues = [182, 194, 282]
 
 [[project]]
 name = "cpp-best-practices/cmake_template"
@@ -79,7 +79,7 @@ issues = [182, 186, 196, 250, 282]
 name = "nlohmann/json"
 commit = "81888ff9f005c022e60f2de572327b2e50222222"
 ecosystems = ["C/C++"]
-issues = [182, 183, 207, 247, 282]
+issues = [182, 183, 207, 282]
 
 [[project]]
 name = "catchorg/Catch2"
@@ -103,7 +103,7 @@ issues = [182, 228]
 name = "GNOME/glib"
 commit = "a6457d849e45b9a1a9473c61364ee6e56894774b"
 ecosystems = ["C/C++"]
-issues = [182, 215, 228, 235, 247, 282]
+issues = [182, 215, 228, 235, 282]
 
 [[project]]
 name = "neovim/neovim"

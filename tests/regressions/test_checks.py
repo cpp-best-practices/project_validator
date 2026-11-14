@@ -123,7 +123,6 @@ class SwiftSettingsTests(unittest.TestCase):
 
 
 class CompilerWarningsTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #247: -Wshadow=global, -Weverything, -Wno-pedantic and found/missing wording
     def test_equivalent_spellings_negations_and_conditions_of_the_flags(self) -> None:
         """`-Wshadow=global` is `-Wshadow` and more, `-Weverything` includes every warning (nlohmann/json);
         `-Wno-pedantic` takes back Meson's `-Wpedantic` (glib); "found -Wshadow" must not contradict "missing

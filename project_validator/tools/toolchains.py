@@ -36,12 +36,14 @@ class Flag:
         return re.compile(rf"(?<![\w/:-])(?:{self.spellings})(?![\w=:-])")
 
 
+# Clang's -Weverything turns on every warning, the strict set among them.
+_EVERYTHING = "-Weverything"
 GCC_WARNINGS = (
-    Flag("-Wall", "-Wall"),
-    Flag("-Wextra", "-Wextra"),
-    Flag("-Wpedantic", "-Wpedantic|-pedantic(?:-errors)?"),
-    Flag("-Wshadow", "-Wshadow"),
-    Flag("-Wconversion", "-Wconversion"),
+    Flag("-Wall", f"-Wall|{_EVERYTHING}"),
+    Flag("-Wextra", f"-Wextra|{_EVERYTHING}"),
+    Flag("-Wpedantic", f"-Wpedantic|-pedantic(?:-errors)?|{_EVERYTHING}"),
+    Flag("-Wshadow", f"-Wshadow(?:=global)?|{_EVERYTHING}"),
+    Flag("-Wconversion", f"-Wconversion|{_EVERYTHING}"),
 )
 MSVC_WARNINGS = (Flag("/W4", "/W4|/Wall"), Flag("/permissive-", "/permissive-"))
 GCC_WARNINGS_AS_ERRORS = Flag("-Werror", "-Werror")

@@ -62,16 +62,30 @@ def flag_hints(flag: Flag) -> tuple[str, ...] | None:
 
 
 def build_options(flag: Flag, languages: frozenset[str]) -> Found:
-    """The build files' options that set `flag` for a build of one of `languages` with the compiler judged."""
+    """The build files' options that set `flag` for a build of one of `languages` with the compiler judged, unless
+    they also take it back (`-Wno-pedantic` after Meson's `warning_level=3`)."""
+
+    negation = f"-Wno-{flag.name[2:]}" if flag.name.startswith("-W") else None
 
     def found(facts: Facts, compiler: str | None) -> Iterator[Evidence]:
-        for option in facts.of(CompilerOption):
-            applies = option.applies
-            for_compiler = compiler is None or compiler in applies.allowed("compilers")
-            if for_compiler and applies.allowed("languages") & languages and flag.option.fullmatch(option.option):
-                yield Evidence(option.origin.path, applies.requires)
+        options = [option for option in facts.of(CompilerOption) if _sets(option, compiler, languages)]
+        if any(
+            option.option == negation and option.target is None and not option.applies.requires for option in options
+        ):
+            return
+        for option in options:
+            if flag.option.fullmatch(option.option):
+                yield Evidence(option.origin.path, option.applies.requires)
 
     return found
+
+
+def _sets(option: CompilerOption, compiler: str | None, languages: frozenset[str]) -> bool:
+    """Whether `option` is passed when one of `languages` is compiled with `compiler` (any, when None)."""
+    applies = option.applies
+    return (compiler is None or compiler in applies.allowed("compilers")) and bool(
+        applies.allowed("languages") & languages
+    )
 
 
 def _all(found: tuple[Found, ...]) -> Found:
