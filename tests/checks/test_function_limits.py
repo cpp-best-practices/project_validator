@@ -40,7 +40,7 @@ HINT = (
 LIZARD_HINT = "consider running in CI: lizard --length 30"
 NEVER_LIMITED = Result.failed("function length is never limited", HINT)
 CLANG_TIDY_WITHOUT_LIMIT = Result.failed(
-    "CI runs clang-tidy's readability-function-size, but without a function length limit; "
+    "CI runs clang-tidy, but its readability-function-size rule is off or has no limit; "
     "set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy"
 )
 LIMITED_BY_CLANG_TIDY = Result.passed(

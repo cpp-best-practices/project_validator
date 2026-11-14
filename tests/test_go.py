@@ -133,7 +133,7 @@ class GoTests(unittest.TestCase):
 
     def test_without_funlen_or_lizard_function_length_is_not_limited(self) -> None:
         expected = Result.failed(
-            "CI runs golangci-lint's funlen, but without a function length limit; set funlen enabled in .golangci.yml"
+            "CI runs golangci-lint, but its funlen rule is off or has no limit; set funlen enabled in .golangci.yml"
         )
         self.assertEqual(self._run(function_limits, _ci("golangci-lint run")), expected)
         disabled = {".golangci.yml": "linters:\n  enable-all: true\n  disable: [funlen]\n", **_ci("golangci-lint run")}

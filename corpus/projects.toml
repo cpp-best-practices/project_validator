@@ -97,7 +97,7 @@ issues = [182, 204, 207, 211, 229]
 name = "uber/h3"
 commit = "15920096d4a165729c01f749e2bd97334b009519"
 ecosystems = ["C/C++"]
-issues = [182, 203, 228, 234]
+issues = [182, 203, 228]
 
 [[project]]
 name = "GNOME/glib"
@@ -317,13 +317,12 @@ issues = [186, 188, 229]
 name = "actions/checkout"
 commit = "f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a"
 ecosystems = ["GitHub Action"]
-issues = [219, 227, 234, 254]
+issues = [219, 227, 254]
 
 [[project]]
 name = "peter-evans/create-pull-request"
 commit = "3ffccacd46053766916f087ce41d627c0b8cf2d1"
 ecosystems = ["GitHub Action"]
-issues = [234]
 
 [[project]]
 name = "lycheeverse/lychee-action"
@@ -351,25 +350,23 @@ issues = [182, 195, 219]
 name = "cli/cli"
 commit = "3d5a9e355a837f2f5ee78d7484c118cc1342ad1a"
 ecosystems = ["Go"]
-issues = [182, 234, 249]
+issues = [182, 249]
 
 [[project]]
 name = "spf13/cobra"
 commit = "adbc8813901bba65827259daa8e22ff94ec1f30e"
 ecosystems = ["Go"]
-issues = [234]
 
 [[project]]
 name = "gin-gonic/gin"
 commit = "0f09c3a9b4626d9fe9979cf4d0521d6ae32ab646"
 ecosystems = ["Go"]
-issues = [234]
 
 [[project]]
 name = "junegunn/fzf"
 commit = "4499615fe9c06c0651aa5650e5d0d0a5face99a8"
 ecosystems = ["Go"]
-issues = [234, 235, 257]
+issues = [235, 257]
 
 [[project]]
 name = "golangci/golangci-lint"
@@ -381,13 +378,13 @@ issues = [229, 246]
 name = "caddyserver/caddy"
 commit = "7591cff1fb03202ce022982af020197f3f387220"
 ecosystems = ["Go"]
-issues = [182, 234]
+issues = [182]
 
 [[project]]
 name = "graphql-hive/graphql-inspector"
 commit = "502aa589fa70fefbd3ff3ff0f09489cad3e4fee5"
 ecosystems = ["GraphQL"]
-issues = [188, 234]
+issues = [188]
 
 [[project]]
 name = "octokit/graphql-schema"
@@ -482,7 +479,7 @@ issues = [182, 219, 231]
 name = "SchemaStore/schemastore"
 commit = "e2606e03284e60792672dc9e7e930f3c496c5c3d"
 ecosystems = ["JSON Schema"]
-issues = [229, 234, 272, 273]
+issues = [229, 272, 273]
 
 [[project]]
 name = "json-schema-org/JSON-Schema-Test-Suite"
@@ -505,7 +502,7 @@ issues = [195, 252]
 name = "asyncapi/spec-json-schemas"
 commit = "eee8d2217d23b22c475090c0e12f20801f531f11"
 ecosystems = ["JSON Schema"]
-issues = [234, 272]
+issues = [272]
 
 [[project]]
 name = "oasis-tcs/sarif-spec"
@@ -559,7 +556,7 @@ issues = [182, 252]
 name = "square/okhttp"
 commit = "58ca23340fc974ad0a5d411e167f1dc9f6f0886a"
 ecosystems = ["JVM"]
-issues = [182, 234, 252]
+issues = [182, 252]
 
 [[project]]
 name = "apache/commons-lang"
@@ -583,7 +580,7 @@ issues = [182, 188, 202, 233]
 name = "spring-projects/spring-petclinic"
 commit = "500158f732419217507c7656904b8e6aa1bcc0d6"
 ecosystems = ["JVM"]
-issues = [182, 234, 249, 277]
+issues = [182, 249, 277]
 
 [[project]]
 name = "Kotlin/kotlinx.coroutines"
@@ -826,7 +823,7 @@ issues = [207]
 name = "bufbuild/protovalidate"
 commit = "804b6087217194c7827e0d63bf2f6ae70d01f41b"
 ecosystems = ["Protobuf"]
-issues = [234, 249, 271]
+issues = [249, 271]
 
 [[project]]
 name = "envoyproxy/data-plane-api"
@@ -914,7 +911,7 @@ issues = [186, 228, 238, 241, 246, 256]
 name = "Rdatatable/data.table"
 commit = "63a95fa1097bd58359cc19a2ad4392bd92025c52"
 ecosystems = ["R"]
-issues = [182, 186, 234, 240, 241, 246, 256]
+issues = [182, 186, 240, 241, 246, 256]
 
 [[project]]
 name = "tidyverse/ggplot2"
@@ -1166,7 +1163,7 @@ issues = [182, 231, 276]
 name = "golang-migrate/migrate"
 commit = "031eeb6ff17b27555cb57b1502c7da96fdce4253"
 ecosystems = ["SQL", "Go"]
-issues = [182, 223, 234]
+issues = [182, 223]
 
 [[project]]
 name = "flyway/flyway"

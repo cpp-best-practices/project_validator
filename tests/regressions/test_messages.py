@@ -263,7 +263,6 @@ class DataWellformedSummaryTests(unittest.TestCase):
 
 
 class FunctionLimitsWordingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #234: "CI runs X's rule, but without a limit" when the rule is off
     def test_a_rule_that_is_not_enabled_is_not_said_to_run(self) -> None:
         """When the host tool runs without the length rule (checkout's eslint, cli/cli's and protovalidate's
         golangci-lint, petclinic's Checkstyle, data.table's and h3's clang-tidy), the message names the tool and says

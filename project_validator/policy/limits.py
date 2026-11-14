@@ -23,10 +23,22 @@ def _limited(answer: ToolAnswer) -> Result:
     return Result.passed(f"function length is limited with {', '.join(tools)}")
 
 
+def _not_enabled(name: str) -> str:
+    """`eslint's max-lines-per-function` as "eslint, but its max-lines-per-function rule is off or has no limit" (the
+    host tool runs, its rule does not limit); a limiter of its own (lizard) as "lizard, but without a function length
+    limit"."""
+    host, separator, rule = name.partition("'s ")
+    return (
+        f"{host}, but its {rule} rule is off or has no limit"
+        if separator
+        else f"{name}, but without a function length limit"
+    )
+
+
 def _without_limits(answer: ToolAnswer, running: tuple[str, ...]) -> Result:
-    """CI runs limiters, but none with its limit on."""
+    """CI runs the tools that could limit function length, but none with its limit on."""
     how = either(tuple(tool.describe for tool in answer.known if tool.name in running))
-    return Result.failed(f"CI runs {', '.join(running)}, but without a function length limit; set {how}")
+    return Result.failed(f"CI runs {'; '.join(_not_enabled(name) for name in running)}; set {how}")
 
 
 def judge_limits(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
