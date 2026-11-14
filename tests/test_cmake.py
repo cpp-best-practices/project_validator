@@ -644,7 +644,8 @@ class CustomTargetTests(unittest.TestCase):
         self.assertEqual(_expanded("cmake --build build"), expected)
 
     def test_other_commands_are_not_expanded(self) -> None:
-        for line in ("cmake -S . -B build", "make lint", "cmake --build build --target missing"):
+        # (`make lint` in a directory CMake configures in place builds the CMake target: see the Make expander.)
+        for line in ("cmake -S . -B build", "cmake --build build --target missing"):
             with self.subTest(line=line):
                 self.assertEqual(_expanded(line), [])
 

@@ -97,7 +97,7 @@ issues = [182, 204, 207, 211, 229]
 name = "uber/h3"
 commit = "15920096d4a165729c01f749e2bd97334b009519"
 ecosystems = ["C/C++"]
-issues = [182, 198, 203, 225, 226, 228, 234]
+issues = [182, 203, 225, 226, 228, 234]
 
 [[project]]
 name = "GNOME/glib"
@@ -210,7 +210,7 @@ issues = [195]
 name = "jupyter/docker-stacks"
 commit = "660dc22b671e02e765273c9f8931588b4a00f263"
 ecosystems = ["Docker", "Python"]
-issues = [198, 260]
+issues = [260]
 
 [[project]]
 name = "linuxserver/docker-code-server"
@@ -233,7 +233,7 @@ issues = [199, 229, 236, 280]
 name = "python/devguide"
 commit = "8c852bdd3f06b8447185fe2945af5de52a96a0ac"
 ecosystems = ["Documentation site"]
-issues = [182, 198, 215, 222, 240, 280]
+issues = [182, 215, 222, 240, 280]
 
 [[project]]
 name = "cpp-best-practices/cppbestpractices"
@@ -376,7 +376,7 @@ issues = [234, 235, 257]
 name = "golangci/golangci-lint"
 commit = "1bdd8edc35917b370a0855d877255b4e53c29b9f"
 ecosystems = ["Go"]
-issues = [198, 222, 229, 237, 246]
+issues = [222, 229, 237, 246]
 
 [[project]]
 name = "caddyserver/caddy"
@@ -667,7 +667,7 @@ issues = [182, 222]
 name = "koreader/koreader"
 commit = "4184b73a737b5dcc77b29e2eaf69c31a06501ab9"
 ecosystems = ["Lua"]
-issues = [182, 198, 227, 228, 232, 240]
+issues = [182, 227, 228, 232, 240]
 
 [[project]]
 name = "nix-community/disko"
@@ -739,7 +739,7 @@ issues = [186, 192, 286]
 name = "digitalocean/openapi"
 commit = "998192821fe95ee79e41f577933601d009179dcf"
 ecosystems = ["OpenAPI/AsyncAPI"]
-issues = [198, 228]
+issues = [228]
 
 [[project]]
 name = "asyncapi/spec"
@@ -1026,7 +1026,7 @@ issues = [188, 224, 230, 287]
 name = "clap-rs/clap"
 commit = "ec93e71255c0b833a34f50662a3fdb22f53f6ded"
 ecosystems = ["Rust"]
-issues = [182, 188, 198, 287]
+issues = [182, 188, 287]
 
 [[project]]
 name = "sharkdp/bat"
@@ -1130,7 +1130,6 @@ ecosystems = ["Shell"]
 name = "pyenv/pyenv"
 commit = "debb76275738080d671a58a587df48f7c0907b38"
 ecosystems = ["Shell"]
-issues = [198]
 
 [[project]]
 name = "Bash-it/bash-it"

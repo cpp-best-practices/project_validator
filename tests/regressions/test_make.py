@@ -67,14 +67,12 @@ class MakeVariableTests(unittest.TestCase):
 
 
 class MakefileReadingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #198: rule lines with a trailing comment are not rules
     def test_a_rule_with_a_trailing_comment_is_read(self) -> None:
         """`lint: deps ## Lint the spec` is a rule (the self-documenting Makefile idiom: digitalocean/openapi,
         jupyter/docker-stacks)."""
         files = _make("lint: deps ## Lint the OpenAPI spec\n\tspectral lint api.yaml\ndeps:\n", "make lint")
         self.assertEqual(_expanded(files), [("spectral", "lint", "api.yaml")])
 
-    @unittest.expectedFailure  # upstream #198: included makefiles are not followed, missing targets are silent
     def test_included_makefiles_are_followed_and_a_missing_target_is_unknown(self) -> None:
         """`include other.mk` brings its rules (cowboy's erlang.mk, koreader); a goal no rule defines is an Unknown."""
         included = _make("include other.mk\n", "make check", **{"other.mk": "check:\n\trebar3 dialyzer\n"})
@@ -83,7 +81,6 @@ class MakefileReadingTests(unittest.TestCase):
         with self.subTest(case="missing target"):
             self.assertTrue(any("dialyze" in subject for subject, _ in _unknowns(_make("all:\n", "make dialyze"))))
 
-    @unittest.expectedFailure  # upstream #198: pattern rules (`%:`, `lint-%:`) are not matched to goals
     def test_pattern_rules_match_the_goals_they_cover(self) -> None:
         """`make html` through sphinx-quickstart's `%:` rule runs `sphinx-build -M html` (python/devguide);
         `make lint-full` through `lint-%:` runs clippy (clap-rs/clap)."""
@@ -95,7 +92,6 @@ class MakefileReadingTests(unittest.TestCase):
             with self.subTest(rule=name):
                 self.assertTrue(any(argv[: len(prefix)] == prefix for argv in _expanded(files)), _expanded(files))
 
-    @unittest.expectedFailure  # upstream #198: make after an in-source `cmake .` has "no makefile where make runs"
     def test_make_after_an_in_source_cmake_configure_runs_cmake_targets(self) -> None:
         """After `cmake .`, `make coverage` runs the `coverage` custom target's command (uber/h3)."""
         files = {
