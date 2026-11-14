@@ -95,7 +95,6 @@ class HeredocTests(unittest.TestCase):
 
 
 class FollowedScriptTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #192: a binary launcher or autoconf configure is tokenised as shell
     def test_an_unreadable_followed_script_is_at_most_one_unknown_naming_the_file(self) -> None:
         """A followed script that is not readable shell (a zip after a shebang, as scalafmt's and metals' launcher; a
         generated configure, as opam's) gives one Unknown naming the file, or none, never its bytes as commands."""
