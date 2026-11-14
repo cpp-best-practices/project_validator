@@ -8,7 +8,7 @@ import shlex
 from collections.abc import Iterator
 from pathlib import PurePosixPath
 
-from project_validator.ecosystems.rust import RUST_LANGUAGE
+from project_validator.ecosystems.rust import RUST_LANGUAGE, cargo_argv
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, starts_with
@@ -196,7 +196,7 @@ _CARGO_COMPILES = frozenset({"build", "check", "test", "clippy", "run", "rustc",
 
 def _unsafe_forbidden(command: Command, facts: Facts) -> Run | None:
     """A cargo build that compiles the crate with unsafe code forbidden, by its settings or flags."""
-    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    argv = cargo_argv(resolved(command))
     if not starts_with(argv, *(("cargo", compiles) for compiles in _CARGO_COMPILES)):
         return None
     if _UNSAFE_FLAG.search(" ".join((*argv, command.env.get("RUSTFLAGS", "")))):
@@ -268,8 +268,8 @@ CLIPPY_SETTINGS = SettingsReader(name="clippy", files=("clippy.toml", ".clippy.t
 
 
 def _clippy(command: Command, _facts: Facts) -> Run | None:
-    """`cargo clippy`, with any toolchain (`cargo +nightly clippy`)."""
-    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    """`cargo clippy`, with any toolchain and global options (`cargo +nightly --config ci.toml clippy`)."""
+    argv = cargo_argv(resolved(command))
     return analysed() if starts_with(argv, ("cargo", "clippy"), ("cargo-clippy",)) else None
 
 

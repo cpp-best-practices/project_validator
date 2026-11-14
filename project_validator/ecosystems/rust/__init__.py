@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import tomllib
 from pathlib import Path
 
@@ -38,6 +39,26 @@ def cargo_build_types(command: Command) -> frozenset[str]:
 
 
 RUST_LANGUAGE = frozenset({"Rust"})
+
+# cargo's toolchain and the global options it takes before its subcommand, as a regular expression of one of them.
+CARGO_OPTIONS = r"(?:\+\S+|--config[=\s]\S+|-Z\s*\S+|-C\s+\S+|--color[=\s]\S+|--locked|--frozen|--offline|-[qv]+)"
+_CARGO_OPTION = re.compile(CARGO_OPTIONS)
+_CARGO_VALUED = frozenset({"--config", "-Z", "-C", "--color"})
+
+
+def cargo_argv(argv: tuple[str, ...]) -> tuple[str, ...]:
+    """A cargo command without its toolchain and the global options before its subcommand (`cargo +nightly --config
+    ci.toml clippy -D warnings` is `cargo clippy -D warnings`); any other command as it is."""
+    if argv[:1] != ("cargo",):
+        return argv
+    words = list(argv[1:])
+    while words and _CARGO_OPTION.fullmatch(words[0]):
+        words.pop(0)
+    while len(words) > 1 and words[0] in _CARGO_VALUED:
+        del words[:2]
+        while words and _CARGO_OPTION.fullmatch(words[0]):
+            words.pop(0)
+    return ("cargo", *words)
 
 
 CARGO = BuildSystem(

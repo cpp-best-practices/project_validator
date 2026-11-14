@@ -459,7 +459,6 @@ INHERITED_PROFILE = {"Cargo.toml": '[package]\nname = "shop"\n\n[profile.fast]\n
 
 
 class RustTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #287: `cargo --config <file> clippy` is not read as clippy
     def test_cargo_options_before_the_clippy_subcommand_are_skipped(self) -> None:
         """`cargo --config .cargo/ci.toml clippy ...` runs clippy: the analyzer runs and `cargo clippy` is among the
         lint settings (nushell/nushell)."""
@@ -468,7 +467,6 @@ class RustTests(unittest.TestCase):
                 result = _run(check, RUST, github_job(CI, CONFIG_CLIPPY))
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #287: `-Dclippy::pedantic` without a space misses the pedantic regex
     def test_pedantic_denied_without_a_space_after_d_counts(self) -> None:
         """`cargo clippy -- -Dwarnings -Dclippy::pedantic` enables every lint setting (serde-rs/serde)."""
         result = _run(compiler_warnings, RUST, github_job(CI, "cargo clippy -- -Dwarnings -Dclippy::pedantic"))
