@@ -28,7 +28,6 @@ def _imported_top_level_names() -> set[str]:
 
 
 class MutationSetupTests(unittest.TestCase):
-    @unittest.expectedFailure
     def test_every_repository_package_the_tests_import_is_copied_for_mutmut(self) -> None:
         config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["mutmut"]
         copied = {Path(path).parts[0] for path in (*config["source_paths"], *config["also_copy"])}
@@ -36,7 +35,6 @@ class MutationSetupTests(unittest.TestCase):
         packages = {name for name in _imported_top_level_names() if (ROOT / name / "__init__.py").is_file()}
         self.assertEqual(packages - copied, set())
 
-    @unittest.expectedFailure
     def test_steps_that_pipe_mutmut_fail_when_mutmut_fails(self) -> None:
         # GitHub runs a step without an explicit shell as "bash -e {0}", where a pipeline's status is its last
         # command's: "mutmut run | tee run.log" would read as success whatever mutmut returned. An explicit

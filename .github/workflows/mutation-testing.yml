@@ -29,6 +29,8 @@ jobs:
         run: python -m pip install --require-hashes -r .github/requirements/mutation.txt
 
       - name: Mutate the functions this pull request changes
+        # Explicit, so that GitHub adds pipefail: "mutmut run | tee" then fails when mutmut does.
+        shell: bash
         env:
           BASE: ${{ github.base_ref }}
         run: |
