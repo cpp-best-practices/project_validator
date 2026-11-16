@@ -58,28 +58,23 @@ class CAndCxxTests(unittest.TestCase):
     def _run(self, files: dict[str, str]) -> Result:
         return run_in_every_layout(self, static_analysis, files)
 
-    @unittest.expectedFailure  # one C/C++ analyzer is enough
     def test_fails_when_no_analyzer_runs(self) -> None:
         self.assertEqual(self._run(BARE_PROJECT), Result.failed("no static analyzer runs", C_HINT))
 
-    @unittest.expectedFailure  # one C/C++ analyzer is enough
     def test_either_analyzer_alone_passes(self) -> None:
         result = self._run({**CLANG_TIDY_CONFIG, **github_job("ubuntu-latest", "run-clang-tidy -p build")})
         self.assertEqual(result, Result.passed("clang-tidy (.clang-tidy) runs"))
         cmake = {"CMakeLists.txt": "set(CMAKE_CXX_CPPCHECK cppcheck)\n", **CONFIGURES}
         self.assertEqual(self._run(cmake), Result.passed("cppcheck runs"))
 
-    @unittest.expectedFailure  # one C/C++ analyzer is enough
     def test_a_configured_analyzer_that_does_not_run_beside_one_that_does_passes(self) -> None:
         cmake = {"CMakeLists.txt": "set(CMAKE_CXX_CPPCHECK cppcheck)\n", **CONFIGURES}
         self.assertEqual(self._run({**CLANG_TIDY_CONFIG, **cmake}), Result.passed("cppcheck runs"))
 
-    @unittest.expectedFailure  # one C/C++ analyzer is enough
     def test_warns_when_only_a_configuration_exists(self) -> None:
         expected = Result.warned("clang-tidy is configured (.clang-tidy) but does not run", C_HINT)
         self.assertEqual(self._run(CLANG_TIDY_CONFIG), expected)
 
-    @unittest.expectedFailure  # one C/C++ analyzer is enough
     def test_a_cmake_variable_runs_an_analyzer_only_where_ci_configures_the_build(self) -> None:
         cmake = {"CMakeLists.txt": "set(CMAKE_CXX_CPPCHECK cppcheck)\n"}
         self.assertEqual(self._run(cmake), Result.failed("no static analyzer runs", C_HINT))
@@ -88,7 +83,6 @@ class CAndCxxTests(unittest.TestCase):
         )
         self.assertEqual(self._run({**CLANG_TIDY_CONFIG, **on_the_command_line}).status, Status.PASS)
 
-    @unittest.expectedFailure  # one C/C++ analyzer is enough
     def test_warns_when_clang_tidy_runs_without_a_configuration(self) -> None:
         files = {
             "CMakeLists.txt": "set(CMAKE_CXX_CLANG_TIDY clang-tidy)\nset(CMAKE_CXX_CPPCHECK cppcheck)\n",

@@ -924,14 +924,14 @@
                   "checks": "clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy)"
                 },
                 "needs_definition": true,
-                "required": true
+                "required": false
               },
               "cppcheck": {
                 "can": {
                   "checks": "cppcheck (CMAKE_CXX_CPPCHECK)"
                 },
                 "needs_definition": false,
-                "required": true
+                "required": false
               }
             },
             "language": "C++",
