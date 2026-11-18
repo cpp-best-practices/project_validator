@@ -61,16 +61,28 @@ def flag_hints(flag: Flag) -> tuple[str, ...] | None:
     return flag.hints or literal_starts(flag.spellings)
 
 
+def _taking_back(flag: Flag) -> frozenset[str]:
+    """The options that take `flag` back project-wide: its `-Wno-` form, or one that silences every warning (`-w`;
+    MSVC's `/w` and `/W0`), which leaves no warning to enable or to treat as an error."""
+    if flag.name.startswith("-W"):
+        return frozenset({f"-Wno-{flag.name[2:]}", "-w"})
+    if flag.name.startswith("-pedantic"):
+        return frozenset({"-w"})
+    if flag.name.startswith("/W"):
+        return frozenset({"/w", "-w", "/W0", "-W0"})
+    return frozenset()
+
+
 def build_options(flag: Flag, languages: frozenset[str]) -> Found:
     """The build files' options that set `flag` for a build of one of `languages` with the compiler judged, unless
-    they also take it back (`-Wno-pedantic` after Meson's `warning_level=3`)."""
+    they also take it back project-wide (`-Wno-pedantic` after Meson's `warning_level=3`, or `-w`)."""
 
-    negation = f"-Wno-{flag.name[2:]}" if flag.name.startswith("-W") else None
+    taking_back = _taking_back(flag)
 
     def found(facts: Facts, compiler: str | None) -> Iterator[Evidence]:
         options = [option for option in facts.of(CompilerOption) if _sets(option, compiler, languages)]
         if any(
-            option.option == negation and option.target is None and not option.applies.requires for option in options
+            option.option in taking_back and option.target is None and not option.applies.requires for option in options
         ):
             return
         for option in options:
