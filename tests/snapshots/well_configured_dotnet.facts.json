@@ -2158,28 +2158,6 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "ToolRun",
-      "languages": [
         "C#",
         "F#"
       ],
@@ -2239,29 +2217,6 @@
         "."
       ],
       "tool": "NuGet audit of every package",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#",
-        "F#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -2423,28 +2378,6 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "ToolRun",
-      "languages": [
         "C#",
         "F#"
       ],
@@ -2504,29 +2437,6 @@
         "."
       ],
       "tool": "NuGet audit of every package",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#",
-        "F#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -2688,28 +2598,6 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
       "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "ToolRun",
-      "languages": [
         "C#",
         "F#"
       ],
@@ -2769,29 +2657,6 @@
         "."
       ],
       "tool": "NuGet audit of every package",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#",
-        "F#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -2953,28 +2818,6 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
       "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "ToolRun",
-      "languages": [
         "C#",
         "F#"
       ],
@@ -3034,29 +2877,6 @@
         "."
       ],
       "tool": "NuGet audit of every package",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#",
-        "F#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -3218,28 +3038,6 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
       "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "ToolRun",
-      "languages": [
         "C#",
         "F#"
       ],
@@ -3299,29 +3097,6 @@
         "."
       ],
       "tool": "NuGet audit of every package",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#",
-        "F#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": ".NET security analyzers",
       "via": []
     },
     {
@@ -3483,28 +3258,6 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
       "languages": [
-        "C#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "analysis": [
-          "checks"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "Roslynator",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "ToolRun",
-      "languages": [
         "C#",
         "F#"
       ],
@@ -3564,29 +3317,6 @@
         "."
       ],
       "tool": "NuGet audit of every package",
-      "via": []
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "ToolRun",
-      "languages": [
-        "C#",
-        "F#"
-      ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
-      "provides": {
-        "security": [
-          "scans"
-        ]
-      },
-      "read": [
-        "Directory.Build.props"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": ".NET security analyzers",
       "via": []
     },
     {

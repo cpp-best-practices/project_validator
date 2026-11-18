@@ -66,10 +66,11 @@ _BUILDS = frozenset({"build", "test", "pack", "publish", "run", "msbuild"})
 
 
 def builds_project(command: Command) -> bool:
-    """Whether a command builds a project, and so runs the analyzers it references."""
+    """Whether a command builds a project, and so runs the analyzers it references; `--no-build` runs what an
+    earlier step built."""
     argv = resolved(command)
     return program(argv) in ("msbuild", "MSBuild") or (
-        program(argv) == "dotnet" and argv[1:2] != () and argv[1] in _BUILDS
+        program(argv) == "dotnet" and argv[1:2] != () and argv[1] in _BUILDS and "--no-build" not in argv
     )
 
 

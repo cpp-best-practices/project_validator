@@ -149,7 +149,6 @@ class DotnetSecurityAnalysisTests(unittest.TestCase):
         self.assertIsNone(_security_analysis(command("dotnet format"), facts))
         self.assertIsNotNone(_security_analysis(command("dotnet test"), facts))
 
-    @unittest.expectedFailure  # upstream #301
     def test_a_run_that_does_not_build_runs_no_analyzers(self) -> None:
         facts = Facts([self._setting("AnalysisModeSecurity", "All")])
         for line in ("dotnet test --no-build", "dotnet run --no-build", "dotnet pack --no-build"):
