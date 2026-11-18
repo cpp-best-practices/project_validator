@@ -258,7 +258,6 @@ class TypeCheckingTests(unittest.TestCase):
                 files = {"jsconfig.json": f'{{"extends": {extends}}}', **_ci("npx tsc -p jsconfig.json")}
                 self.assertIn("strict mode bonus: tsc (jsconfig.json)", self._npm(files).message)
 
-    @unittest.expectedFailure  # upstream #303
     def test_a_local_base_configuration_that_is_strict_makes_tsc_strict(self) -> None:
         base = {"tsconfig.base.json": '{"compilerOptions": {"strict": true}}'}
         for config, extends, command in (

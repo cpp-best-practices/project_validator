@@ -3,6 +3,7 @@ check), with the configuration that defines their rules and strictness."""
 
 from __future__ import annotations
 
+import posixpath
 import re
 from collections.abc import Callable
 from pathlib import PurePosixPath
@@ -124,7 +125,7 @@ def _strict_settings(path: str, facts: Facts, depth: int = 0) -> list[Setting]:
         bases = _bases(setting.value) if setting.key == "extends" else ()
         for base in map(str, bases):
             if base.startswith(".") and depth < 4:
-                extended = joined(str(PurePosixPath(path).parent), base)
+                extended = posixpath.normpath(joined(str(PurePosixPath(path).parent), base))
                 found += _strict_settings(
                     extended if extended.endswith(".json") else f"{extended}.json", facts, depth + 1
                 )
