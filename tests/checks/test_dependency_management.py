@@ -69,7 +69,7 @@ class DependencyManagementTests(unittest.TestCase):
     def test_a_language_no_known_package_manager_handles_is_skipped(self) -> None:
         answer = dependency_answer("Lang", Facts(()), ())
         self.assertEqual(
-            judge_dependencies(answer),
+            judge_dependencies(answer, allow_unknown=False),
             Result(status=Status.SKIP, message="no known package manager resolves Lang dependencies"),
         )
 

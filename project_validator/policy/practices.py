@@ -38,7 +38,7 @@ def _required(answer: PracticeAnswer) -> dict[str, None]:
     return dict.fromkeys(name for compiled in answer.compiled for name in compiled.missing)
 
 
-def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
     """Every setting on passes; some on warns, naming those missing; none fails. Unknown is an error unless
     `allow_unknown`."""
     words = answer.practice.words
@@ -53,7 +53,7 @@ def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     return Result.warned(f"missing {words.kind}: {missing}", f"found {_described(answer.compiled, _found, joined)}")
 
 
-def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
     """Every setting on passes (any one, for a practice met by any; or, for a practice that forbids settings, none
     found); some on warns; none fails. A language the practice skips (one whose project builds no binary) is skipped.
     Unknown is an error unless `allow_unknown`. The hardening and sanitizers policies."""
@@ -77,7 +77,7 @@ def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     return Result.warned(f"missing {words.kind}: {missing}", f"found {_described(answer.compiled, _found, joined)}")
 
 
-def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
     """A setting met in some configuration passes (with advice when only one that is not preferred is); none fails,
     or warns for a practice whose wording `warns`. Unknown is an error unless `allow_unknown`."""
     words = answer.practice.words

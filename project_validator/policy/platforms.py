@@ -65,7 +65,7 @@ def _counted(platforms: Iterable[Platform]) -> set[Platform]:
     return pinned or counted
 
 
-def judge_matrix(answer: PlatformAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_matrix(answer: PlatformAnswer, *, allow_unknown: bool) -> Result:
     """Two OSes, two toolchains and three combinations of them pass; fewer fail. For an axis the OS is no part of (a
     database's engine versions), two toolchains pass, whatever runs them."""
     del allow_unknown  # what CI was read only heuristically is noted, not unknown
@@ -97,7 +97,7 @@ def _shortfall(platform: Platform, configurations: frozenset[BuildConfiguration]
     return None
 
 
-def judge_build_types(answer: PlatformAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_build_types(answer: PlatformAnswer, *, allow_unknown: bool) -> Result:
     """Every platform building Debug and Release, with and without sanitizers, passes; any short of it fails."""
     del allow_unknown
     if answer.answer is Answer.NO:

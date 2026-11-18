@@ -17,9 +17,11 @@ def _unrecognised(answer: LicenseAnswer) -> Result:
     )
 
 
-def judge_license(answer: LicenseAnswer) -> Result:
+def judge_license(answer: LicenseAnswer, *, allow_unknown: bool) -> Result:
     """No license file fails, unless the project's packages each have one (a monorepo), which warns; one not
-    recognised, or a manifest that declares another license, warns."""
+    recognised, or a manifest that declares another license, warns. Nothing here is unknown: license files are
+    read as written."""
+    del allow_unknown
     if not answer.files and answer.packages:
         names = ", ".join(sorted(answer.packages_licenses())) or "unrecognised licenses"
         return Result.warned(

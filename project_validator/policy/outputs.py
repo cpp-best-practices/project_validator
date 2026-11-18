@@ -16,7 +16,7 @@ def _skipped(language: str) -> Result:
     return Result.skipped(f"no known build output of {language}")
 
 
-def judge_ignored(answer: IgnoreAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_ignored(answer: IgnoreAnswer, *, allow_unknown: bool) -> Result:
     """Passes when every ignore file ignores every build output; warns, with how, for each one some file does not."""
     if answer.answer is Answer.IMPOSSIBLE:
         return _skipped(answer.language)
@@ -32,7 +32,7 @@ def judge_ignored(answer: IgnoreAnswer, *, allow_unknown: bool = False) -> Resul
     return Result.passed("; ".join(dict.fromkeys(found)))
 
 
-def judge_committed(answer: CommittedAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_committed(answer: CommittedAnswer, *, allow_unknown: bool) -> Result:
     """Fails when a build output is committed, listing the first few."""
     if answer.answer is Answer.IMPOSSIBLE:
         return _skipped(answer.language)

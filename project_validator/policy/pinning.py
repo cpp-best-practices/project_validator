@@ -13,7 +13,7 @@ HINT = (
 )
 
 
-def judge_pinning(answer: PinningAnswer, *, allow_unknown: bool = False, allow_official_tags: bool = False) -> Result:
+def judge_pinning(answer: PinningAnswer, *, allow_unknown: bool, allow_official_tags: bool = False) -> Result:
     """Unpinned or branch-following references fail; tags warn (unless allowed for official actions); none loose
     passes. Nothing here is ever unknown: a reference is read from the file as written."""
     del allow_unknown

@@ -25,11 +25,11 @@ def _answer(tool_answer: Answer, *, unknown_definitions: tuple[str, ...] = ()) -
 
 class JudgeFuzzingTests(unittest.TestCase):
     def test_a_language_no_fuzzer_runs_is_skipped(self) -> None:
-        result = judge_fuzzing(_answer(Answer.IMPOSSIBLE))
+        result = judge_fuzzing(_answer(Answer.IMPOSSIBLE), allow_unknown=False)
         self.assertEqual(result, Result.skipped("no known fuzzer runs Python"))
 
     def test_unreadable_definitions_with_no_targets_are_an_error(self) -> None:
-        result = judge_fuzzing(_answer(Answer.NO, unknown_definitions=(UNREAD,)))
+        result = judge_fuzzing(_answer(Answer.NO, unknown_definitions=(UNREAD,)), allow_unknown=False)
         self.assertEqual(result.status, Status.ERROR)
         self.assertIn("whether there are fuzz targets", result.message)
 

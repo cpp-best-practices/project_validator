@@ -69,7 +69,6 @@ class CiLintTests(unittest.TestCase):
 
 
 class CiLintUnknownTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #306
     def test_an_unknown_answer_is_an_error_unless_allowed(self) -> None:
         files = {
             GITHUB_WORKFLOW: "jobs:\n  l:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make lint\n",

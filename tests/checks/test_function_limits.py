@@ -151,7 +151,7 @@ class FunctionLimitsTests(unittest.TestCase):
     def test_a_language_no_known_tool_measures_is_skipped(self) -> None:
         answer = tool_answer(FUNCTION_LENGTH, LIMITS, "Lang", Facts(()), ())
         self.assertEqual(
-            judge_limits(answer),
+            judge_limits(answer, allow_unknown=False),
             Result(status=Status.SKIP, message="no known tool limits the length of Lang functions"),
         )
 

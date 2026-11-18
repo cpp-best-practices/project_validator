@@ -41,7 +41,7 @@ def _without_limits(answer: ToolAnswer, running: tuple[str, ...]) -> Result:
     return Result.failed(f"CI runs {'; '.join(_not_enabled(name) for name in running)}; set {how}")
 
 
-def judge_limits(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_limits(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """A limit CI enforces passes; a limit defined that CI does not run warns; none fails. A language no known tool
     measures is skipped. An unknown answer is an error unless `allow_unknown`."""
     settled = skipped_or_unknown(

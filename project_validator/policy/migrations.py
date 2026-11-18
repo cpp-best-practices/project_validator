@@ -11,7 +11,7 @@ from project_validator.questions import Answer
 from project_validator.questions.tooling import ToolAnswer
 
 
-def judge_migration_safety(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_migration_safety(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """Migrations must be checked by a migration linter CI runs; none warns. An unknown answer is an error unless
     `allow_unknown`."""
     if answer.answer is Answer.IMPOSSIBLE:

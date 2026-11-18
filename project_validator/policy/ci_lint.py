@@ -9,7 +9,7 @@ from project_validator.questions import Answer
 from project_validator.questions.ci_lint import CiLintAnswer
 
 
-def judge_ci_lint(answer: CiLintAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_ci_lint(answer: CiLintAnswer, *, allow_unknown: bool) -> Result:
     """Every lintable provider linted passes; one not warns, with how to lint it; no lintable provider is skipped.
     No linter found where a command could not be read is unknown, an error unless `allow_unknown`."""
     if answer.answer is Answer.UNKNOWN and not allow_unknown:

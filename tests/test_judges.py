@@ -31,7 +31,6 @@ class JudgeContractTests(unittest.TestCase):
     def test_there_are_judges_to_check(self) -> None:
         self.assertGreater(len(list(_module_judges())), 20)
 
-    @unittest.expectedFailure  # upstream #306
     def test_every_judge_requires_allow_unknown_as_a_keyword(self) -> None:
         for name, judge in (*_module_judges(), *_built_judges()):
             with self.subTest(judge=name):

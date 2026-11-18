@@ -17,7 +17,7 @@ def _own(count: int) -> str:
     return "its" if count == 1 else "their"
 
 
-def judge_schema_declared(answer: DeclarationAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_schema_declared(answer: DeclarationAnswer, *, allow_unknown: bool) -> Result:
     """Every judged schema must declare what its format asks (`what`). Nothing is unknown here (the validator reads
     the schemas itself), so `allow_unknown` changes nothing."""
     if answer.answer is Answer.IMPOSSIBLE:

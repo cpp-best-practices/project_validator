@@ -224,7 +224,10 @@ class RustTestsRunTests(unittest.TestCase):
 class AnswerTests(unittest.TestCase):
     def test_a_language_no_known_runner_runs_is_skipped(self) -> None:
         answer = tool_answer(TEST, RUNS, "Lang", Facts(()), ())
-        self.assertEqual(judge_tests(answer), Result(status=Status.SKIP, message="no known test runner runs Lang"))
+        self.assertEqual(
+            judge_tests(answer, allow_unknown=False),
+            Result(status=Status.SKIP, message="no known test runner runs Lang"),
+        )
 
 
 class MixedLanguageTestsRunTests(unittest.TestCase):

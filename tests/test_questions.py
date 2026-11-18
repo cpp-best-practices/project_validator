@@ -159,7 +159,7 @@ class CoveragePolicyTests(unittest.TestCase):
 
     def test_a_language_no_tool_measures_is_skipped(self) -> None:
         self.assertEqual(
-            judge_coverage(coverage_answer("Zig", Facts(), TOOLS)),
+            judge_coverage(coverage_answer("Zig", Facts(), TOOLS), allow_unknown=False),
             Result(status=Status.SKIP, message="no known tool measures the coverage of Zig"),
         )
 
@@ -171,13 +171,14 @@ class CoveragePolicyTests(unittest.TestCase):
         )
         for run, message, hints in cases:
             with self.subTest(run=run):
-                judged = judge_coverage(coverage_answer("Lang", Facts((_run("cov", run),)), TOOLS))
+                judged = judge_coverage(coverage_answer("Lang", Facts((_run("cov", run),)), TOOLS), allow_unknown=False)
                 self.assertEqual(
                     judged, Result.passed(message, *hints, "consider adding path coverage (e.g. paths --path)")
                 )
         mixed = Facts((_run("cov", measured(BRANCH)), _run("gate", reported(BRANCH, gated=(BRANCH,)))))
         self.assertEqual(
-            judge_coverage(coverage_answer("Lang", mixed, TOOLS)).message, "branch coverage is gated with gate"
+            judge_coverage(coverage_answer("Lang", mixed, TOOLS), allow_unknown=False).message,
+            "branch coverage is gated with gate",
         )
 
     def test_the_path_coverage_bonus_says_its_rung(self) -> None:
@@ -190,14 +191,14 @@ class CoveragePolicyTests(unittest.TestCase):
             with self.subTest(run=run):
                 facts = Facts((_run("cov", reported(BRANCH, gated=(BRANCH,))), _run("paths", run)))
                 self.assertEqual(
-                    judge_coverage(coverage_answer("Lang", facts, TOOLS)).message,
+                    judge_coverage(coverage_answer("Lang", facts, TOOLS), allow_unknown=False).message,
                     f"branch coverage is gated with cov; {bonus}",
                 )
 
     def test_path_coverage_is_a_bonus(self) -> None:
         both = Facts((_measured("cov", BRANCH), _measured("paths", PATH)))
         self.assertEqual(
-            judge_coverage(coverage_answer("Lang", both, TOOLS)).message,
+            judge_coverage(coverage_answer("Lang", both, TOOLS), allow_unknown=False).message,
             "branch coverage is measured with cov; path coverage bonus: measured with paths (not reported)",
         )
 

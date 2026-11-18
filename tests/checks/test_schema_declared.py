@@ -203,7 +203,7 @@ class SchemaDeclaredTests(unittest.TestCase):
         self.assertEqual(_run({"datapackage.json": "{ not json"}), Result.passed("no Data Package file to judge"))
 
     def test_a_format_that_declares_nothing_is_skipped(self) -> None:
-        result = judge_schema_declared(DeclarationAnswer(language="YAML", possible=False))
+        result = judge_schema_declared(DeclarationAnswer(language="YAML", possible=False), allow_unknown=False)
         self.assertEqual(result, Result.skipped("no YAML file declares anything"))
 
     def test_vendored_schemas_are_not_read(self) -> None:

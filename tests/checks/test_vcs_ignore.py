@@ -244,5 +244,5 @@ class NoKnownOutputTests(unittest.TestCase):
         skipped = Result(status=Status.SKIP, message="no known build output of Lang")
         [ignored] = ignored_outputs("Lang", Facts(())).units
         [committed] = committed_outputs("Lang", Facts(())).units
-        self.assertEqual(judge_ignored(ignored), skipped)
-        self.assertEqual(judge_committed(committed), skipped)
+        self.assertEqual(judge_ignored(ignored, allow_unknown=False), skipped)
+        self.assertEqual(judge_committed(committed, allow_unknown=False), skipped)

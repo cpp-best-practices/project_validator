@@ -9,7 +9,7 @@ from project_validator.questions import Answer
 from project_validator.questions.tooling import ToolAnswer
 
 
-def judge_tests(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_tests(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """Tests must exist (as each language's runners define them) and CI must run them; tests CI never runs warn. An
     unknown answer is an error unless `allow_unknown`."""
     if answer.answer is Answer.IMPOSSIBLE:

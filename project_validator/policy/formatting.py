@@ -25,7 +25,7 @@ def _enforced(answer: ToolAnswer) -> Result:
     return Result.passed(f"CI enforces the {tools} style")
 
 
-def judge_formatting(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_formatting(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """Formatting passes when CI enforces it with a tool whose style is defined (by a file, or by default); defined
     but not enforced warns. A language no known tool formats is skipped. An unknown answer is an error unless
     `allow_unknown`."""

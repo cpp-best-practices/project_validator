@@ -20,7 +20,7 @@ _ALLOW_UNKNOWN = "--allow-unknown judges only what could be read"
 class Judge[A](Protocol):
     """A policy: the judgement of one answer, erring on an unknown one unless `allow_unknown`."""
 
-    def __call__(self, answer: A, /, *, allow_unknown: bool = ...) -> Result: ...
+    def __call__(self, answer: A, /, *, allow_unknown: bool) -> Result: ...
 
 
 def unknown(message: str, unknowns: Iterable[str], *details: str) -> Result:

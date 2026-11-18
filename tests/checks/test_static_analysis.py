@@ -103,9 +103,9 @@ class ActionAndAnswerTests(unittest.TestCase):
 
     def test_a_language_no_known_analyzer_handles_is_skipped(self) -> None:
         answer = tool_answer(ANALYSIS, CHECKS, "Lang", Facts(()), ())
-        self.assertEqual(judge_analysis(answer).status, Status.SKIP)
+        self.assertEqual(judge_analysis(answer, allow_unknown=False).status, Status.SKIP)
         typed = tool_answer(TYPE_CHECK, Strictness.CHECKS, "Lang", Facts(()), ())
-        self.assertEqual(judge_type_checking(typed).message, "no known type checker handles Lang")
+        self.assertEqual(judge_type_checking(typed, allow_unknown=False).message, "no known type checker handles Lang")
 
 
 class PythonTests(unittest.TestCase):

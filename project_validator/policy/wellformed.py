@@ -24,7 +24,7 @@ def _unread(unread: Mapping[str, str], format_: str) -> Iterator[str]:
         yield f"{what}{':' * (len(paths) == 1)} not parsed, {why}"
 
 
-def judge_wellformed(answer: WellformedAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_wellformed(answer: WellformedAnswer, *, allow_unknown: bool) -> Result:
     """Every judged file must parse. Nothing is unknown here (the validator reads the files itself), so
     `allow_unknown` changes nothing."""
     noted = (
