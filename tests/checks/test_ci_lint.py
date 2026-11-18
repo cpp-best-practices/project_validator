@@ -4,7 +4,7 @@ import unittest
 from collections.abc import Mapping
 
 from project_validator.checks.ci_lint import ci_lint
-from project_validator.core import Result, Status
+from project_validator.core import Options, Result, Status
 from tests.support import CI_FILES, FIXTURES, GITHUB_WORKFLOW, github_steps, make_context, temp_project
 
 GITHUB_HINT = "GitHub Actions: run actionlint (rhysd/actionlint) or zizmor (zizmorcore/zizmor-action) in CI"
@@ -66,3 +66,16 @@ class CiLintTests(unittest.TestCase):
                 "GitLab CI: run glab ci lint (or gitlab-ci-local --preview) in CI",
             ),
         )
+
+
+class CiLintUnknownTests(unittest.TestCase):
+    @unittest.expectedFailure  # upstream #306
+    def test_an_unknown_answer_is_an_error_unless_allowed(self) -> None:
+        files = {
+            GITHUB_WORKFLOW: "jobs:\n  l:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make lint\n",
+            "Makefile": "lint:\n\t$(LINTER) .\n",
+        }
+        with temp_project(files) as root:
+            self.assertEqual(ci_lint.run(make_context(root)).status, Status.ERROR)
+            allowed = ci_lint.run(make_context(root, Options(allow_unknown=True)))
+        self.assertEqual(allowed, Result.warned("CI does not lint its GitHub Actions configuration", GITHUB_HINT))
