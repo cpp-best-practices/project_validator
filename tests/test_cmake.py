@@ -69,6 +69,11 @@ class BranchTests(unittest.TestCase):
         self.assertEqual(_options(found), [("-Werror", None, _requiring("STRICT"))])
         self.assertEqual(_settings(found, "STRICT"), [("ON", ANY, True)])
 
+    def test_an_option_without_a_default_is_off(self) -> None:
+        found = _listed('option(QUIET "be quiet")', "if(QUIET)", "  add_compile_options(-w)", "endif()")
+        self.assertEqual(_settings(found, "QUIET"), [("OFF", ANY, True)])
+        self.assertEqual(_options(found), [("-w", None, _requiring("QUIET"))])
+
     def test_loops_run_for_each_item(self) -> None:
         found = _listed(
             "set(FLAGS -Wall -Wextra)",
@@ -393,6 +398,21 @@ class FileTests(unittest.TestCase):
         self.assertEqual(_options(found), [("-Wall", None, ANY), ("-Wextra", None, ANY), ("cmake", None, ANY)])
         self.assertEqual(_settings(found, "CMAKE_CXX_STANDARD"), [("17", ANY, False), ("20", ANY, False)])
 
+    def test_a_projects_own_is_top_level_variable_says_whether_it_is_the_top_project(self) -> None:
+        files = {
+            "CMakeLists.txt": _lines(
+                "project(top)",
+                "if(top_IS_TOP_LEVEL)",
+                "  add_compile_options(-top)",
+                "endif()",
+                "add_subdirectory(src)",
+            ),
+            "src/CMakeLists.txt": _lines(
+                "project(sub)", "if(sub_IS_TOP_LEVEL)", "  add_compile_options(-sub)", "endif()"
+            ),
+        }
+        self.assertEqual([option for option, _, _ in _options(_facts(files))], ["-top"])
+
     def test_files_nothing_reaches(self) -> None:
         files = {
             "CMakeLists.txt": _lines(
@@ -511,6 +531,11 @@ class CommandTests(unittest.TestCase):
             ],
         )
 
+    @unittest.expectedFailure  # upstream #301
+    def test_add_test_without_arguments_records_nothing(self) -> None:
+        found = _listed("add_test()", "add_test(NAME)")
+        self.assertEqual([fact for fact in found if isinstance(fact, Setting) and fact.key == "test"], [])
+
     def test_add_test_records_name_and_command(self) -> None:
         found = _listed(
             "add_test(NAME fuzz_tester_run COMMAND fuzz_tester -max_total_time=10)",
@@ -593,6 +618,14 @@ class PresetTests(unittest.TestCase):
         for condition, expected in (
             ({"type": "anyOf", "conditions": [{"type": "const", "value": True}]}, [_preset()]),
             ({"type": "allOf", "conditions": [{"type": "const", "value": False}]}, []),
+            (
+                {"type": "anyOf", "conditions": [{"type": "const", "value": False}, {"type": "const", "value": True}]},
+                [_preset()],
+            ),
+            (
+                {"type": "allOf", "conditions": [{"type": "const", "value": False}, {"type": "const", "value": True}]},
+                [],
+            ),
             ({"type": "matches", "string": "x", "regex": "x"}, unknown),
             (False, []),
             ("odd", unknown),
