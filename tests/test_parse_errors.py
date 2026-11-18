@@ -42,6 +42,11 @@ class JsonPositionTests(unittest.TestCase):
     def test_an_unfinished_value_breaks_at_its_end(self) -> None:
         self.assertEqual(_json_error("  [1, 2"), ("malformed JSON", 1, 8))
 
+    @unittest.expectedFailure  # upstream #306
+    def test_content_after_the_value_breaks_where_it_starts(self) -> None:
+        self.assertEqual(_json_error("[1]\n x"), ("malformed JSON", 2, 2))
+        self.assertEqual(_json_error('{"a": 1}  ,'), ("malformed JSON", 1, 11))
+
     def test_deep_json_keeps_the_position(self) -> None:
         with self.assertRaises(ParseError) as raised:
             _check_deep_json("[1,\n  ]")
