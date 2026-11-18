@@ -159,6 +159,41 @@ lint:
         named = {"build.mk": "test:\n\tctest\n", **github_job("ubuntu-latest", "make -f build.mk test")}
         self.assertEqual(_expanded(_facts(named)), [("ctest",)])
 
+    def test_comments_and_blank_lines_keep_a_recipe_open_and_other_lines_close_it(self) -> None:
+        makefile = parse_makefile("a:\n\techo 1\n# note\n\n\techo 2\nvpath %.c src\n\techo 3\n")
+        self.assertEqual(makefile.rules["a"].recipe, [(2, "echo 1"), (5, "echo 2")])
+
+    def test_assignments_append_default_and_drop_comments(self) -> None:
+        makefile = parse_makefile("A = x\nA += y\nB ?= 1\nB ?= 2\nC += z\nD = a b # note # more\nE := e\n")
+        variables = makefile.variables
+        self.assertEqual(
+            (variables["A"], variables["B"], variables["C"], variables["D"], variables["E"]),
+            ("x y", "1", "z", "a b", "e"),
+        )
+
+    def test_includes_and_prerequisites_accumulate(self) -> None:
+        makefile = parse_makefile("include a.mk\ninclude b.mk c.mk\nx: a\nx: b c\n")
+        self.assertEqual(makefile.includes, ["a.mk", "b.mk", "c.mk"])
+        self.assertEqual(makefile.rules["x"].prerequisites, ["a", "b", "c"])
+
+    def test_continued_lines_are_numbered_by_their_first_line(self) -> None:
+        makefile = parse_makefile("a: \\\n  b \\\n  c\n\techo \\\n\t  done\n")
+        self.assertEqual(makefile.rules["a"].prerequisites, ["b", "c"])
+        self.assertEqual([number for number, _ in makefile.rules["a"].recipe], [4])
+
+    def test_recipe_prefixes_are_not_part_of_the_command(self) -> None:
+        files = {"Makefile": "all:\n\t@echo a\n\t-echo b\n\t+echo c\n\t@-echo d\n", **github_job("x", "make")}
+        self.assertEqual(_expanded(_facts(files)), [("echo", "a"), ("echo", "b"), ("echo", "c"), ("echo", "d")])
+
+    def test_a_pattern_rule_covers_the_goals_it_matches_with_their_stem(self) -> None:
+        makefile = "lint-%:\n\techo $* $@\n%.check: %.src\n\ttest -f $<\n"
+        files = {"Makefile": makefile, **github_job("x", "make lint-docs")}
+        self.assertEqual(_expanded(_facts(files)), [("echo", "docs", "lint-docs")])
+        for goal in ("lint-", "lintdocs", "other"):
+            with self.subTest(goal=goal):
+                facts = _facts({"Makefile": makefile, **github_job("x", f"make {goal}")})
+                self.assertEqual(_expanded(facts), [])
+
     def test_a_missing_makefile_is_unknown(self) -> None:
         facts = _facts(github_job("ubuntu-latest", "make check"))
         self.assertEqual(
