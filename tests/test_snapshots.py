@@ -15,6 +15,7 @@ import os
 import unittest
 from pathlib import Path
 
+from project_validator.facts.tools import known_tools
 from project_validator.plugins import discover
 from project_validator.questions.answers import answers
 from project_validator.runner import run_checks
@@ -44,11 +45,42 @@ def snapshots_of(fixture: Path) -> dict[str, dict[str, object]]:
     return {".json": behaviour, ".facts.json": facts}
 
 
+def registry_snapshot() -> dict[str, object]:
+    """What the validator tells users about its tools and checks, independent of any project: each tool's name,
+    languages, the levels it can provide with how to get each (the text of every hint naming it), what it reads, and
+    each check's name, description and aliases."""
+    tools = sorted(
+        (
+            {
+                "name": tool.name,
+                "languages": sorted(tool.languages),
+                "can": {aspect: dict(sorted(levels.items())) for aspect, levels in sorted(tool.can.items())},
+                "reads": list(tool.reads),
+                "required": sorted(tool.required),
+            }
+            for tool in known_tools()
+        ),
+        key=lambda tool: (str(tool["name"]), json.dumps(tool, sort_keys=True)),
+    )
+    checks = {
+        check.name: {"description": check.description, "aliases": list(check.aliases)}
+        for check in sorted(discover().checks, key=lambda check: check.name)
+    }
+    return {"checks": checks, "tools": tools}
+
+
 def _render(snapshot: dict[str, object]) -> str:
     return json.dumps(snapshot, indent=2, sort_keys=True) + "\n"
 
 
 class SnapshotTests(unittest.TestCase):
+    def test_the_tools_and_checks_match_their_snapshot(self) -> None:
+        path = SNAPSHOTS / "registry.json"
+        actual = _render(registry_snapshot())
+        if UPDATE:
+            path.write_text(actual, encoding="utf-8")
+        self.assertEqual(actual, path.read_text(encoding="utf-8"))
+
     def test_every_fixture_matches_its_snapshots(self) -> None:
         fixtures = sorted(path for path in FIXTURES.iterdir() if path.is_dir())
         self.assertTrue(fixtures)
