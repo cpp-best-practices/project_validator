@@ -14,6 +14,9 @@ from html.parser import HTMLParser
 from pathlib import Path
 from unittest import mock
 
+from leaderboard import entries
+from leaderboard.evaluation import write
+from leaderboard.history import record
 from project_validator.ecosystems import PROFILES
 from tests import build_site
 from tests.build_site import ROOT, Site, build, pages, render_page, rewrite_links, title_of
@@ -138,9 +141,44 @@ class BuildTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp)
             written = build(ROOT, output, SITE)
-            files = sorted(path.relative_to(output).as_posix() for path in output.rglob("*.*"))
-            self.assertEqual(sorted(written), files)
-            parsed = {page: _parse(output / page) for page in written if page.endswith(".html")}
+            self.assert_links_resolve(output, written)
+            self.assertIn("leaderboard/index.html", written)
+
+    def test_the_leaderboard_is_built_from_the_nightly_results(self) -> None:
+        listed = entries(ROOT / "leaderboard" / "projects.toml")
+        result: dict[str, object] = {
+            "name": listed[0].name,
+            "language": listed[0].language,
+            "commit": "c" * 40,
+            "validator": "v" * 40,
+            "evaluated": "2026-11-18T03:17:00Z",
+            "score": {
+                "version": "0",
+                "level": 1,
+                "completeness": 0.5,
+                "depth": 20,
+                "locked_depth": 0,
+                "cells": [],
+                "opportunities": [],
+            },
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            results, data, output = Path(tmp) / "results", Path(tmp) / "data", Path(tmp) / "site"
+            write(result, results)
+            record(results, data, "2026-11-18")
+            written = build(ROOT, output, SITE, data)
+            self.assert_links_resolve(output, written)
+            slug = listed[0].slug
+            self.assertIn(f"leaderboard/projects/{slug}.html", written)
+            self.assertIn(f"leaderboard/badges/{slug}.json", written)
+            page = (output / "leaderboard" / "projects" / f"{slug}.html").read_text(encoding="utf-8")
+        self.assertIn(f"https://owner.github.io/name/leaderboard/badges/{slug}.json", page)
+        self.assertEqual(Site(repository="Owner/Name", ref="", revision="").pages_url, "https://owner.github.io/Name/")
+
+    def assert_links_resolve(self, output: Path, written: list[str]) -> None:
+        files = sorted(path.relative_to(output).as_posix() for path in output.rglob("*.*"))
+        self.assertEqual(sorted(written), files)
+        parsed = {page: _parse(output / page) for page in written if page.endswith(".html")}
         for page, links in parsed.items():
             for href in links.hrefs:
                 if "://" in href:
@@ -168,6 +206,7 @@ class MainTests(unittest.TestCase):
             )
             self.assertEqual(done.returncode, 0, done.stderr)
             self.assertIn("docs/support-matrix.html\n", done.stdout)
+            self.assertIn("leaderboard/index.html\n", done.stdout)
             self.assertIn("Built from <code>main</code> at ", (Path(tmp) / "index.html").read_text(encoding="utf-8"))
 
     def test_defaults_to_the_checked_out_branch_and_commit(self) -> None:

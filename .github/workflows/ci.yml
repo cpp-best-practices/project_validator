@@ -123,7 +123,7 @@ jobs:
         run: python -m pip install --require-hashes -r .github/requirements/lizard.txt
 
       - name: Limit function length
-        run: lizard --length 30 --warnings_only project_validator tests
+        run: lizard --length 30 --warnings_only project_validator tests leaderboard
 
   ci-lint:
     name: ci lint

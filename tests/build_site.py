@@ -1,12 +1,13 @@
 """The documentation site CI publishes to GitHub Pages: the README, the pages under docs/ and the generated support
 matrix, rendered to HTML, each page saying which commit of which branch it was built from.
 
-    python tests/build_site.py OUTPUT [--repository OWNER/NAME] [--ref BRANCH] [--revision SHA]
+    python tests/build_site.py OUTPUT [--repository OWNER/NAME] [--ref BRANCH] [--revision SHA] [--leaderboard DATA]
 
 The site mirrors the repository: README.md becomes index.html, docs/<page>.md becomes docs/<page>.html, and
 docs/ecosystems/ gets an index of the ecosystem pages; docs/support-matrix.html is generated from the registry, as
 `--support-matrix` prints it. A link to another page is rewritten to that page; a link to anything else in the
-repository points at it on GitHub at the built revision, so every link resolves.
+repository points at it on GitHub at the built revision, so every link resolves. The leaderboard (leaderboard/) is
+built from the nightly results in DATA (the `leaderboard-data` branch), or lists the projects before the first night.
 """
 
 from __future__ import annotations
@@ -23,6 +24,8 @@ from pathlib import Path
 
 import markdown
 
+from leaderboard import entries
+from leaderboard.site import build as build_leaderboard
 from project_validator.plugins import discover
 from project_validator.support_matrix import render, support_matrix
 
@@ -34,6 +37,7 @@ NAVIGATION = (
     ("docs/history.html", "History"),
     ("docs/ecosystems/index.html", "Ecosystems"),
     ("docs/support-matrix.html", "Support matrix"),
+    ("leaderboard/index.html", "Leaderboard"),
 )
 _LINK = re.compile(r"\]\((?P<target>[^)\s]+)(?P<title>\s+\"[^\"]*\")?\)")
 _HEADING = re.compile(r"^# (?P<title>.+)$", re.MULTILINE)
@@ -83,6 +87,12 @@ class Site:
     @property
     def commit_url(self) -> str:
         return f"https://github.com/{self.repository}/commit/{self.revision}"
+
+    @property
+    def pages_url(self) -> str:
+        """Where GitHub Pages publishes the site."""
+        owner, _, name = self.repository.partition("/")
+        return f"https://{owner.lower()}.github.io/{name}/"
 
     def file_url(self, path: str, directory: bool) -> str:
         kind = "tree" if directory else "blob"
@@ -159,10 +169,15 @@ def render_page(source: str, page: str, site: Site, date: str) -> str:
     )
 
 
-def build(root: Path, output: Path, site: Site) -> list[str]:
-    """Write the site to `output`; the paths written, `style.css` included."""
+def build(root: Path, output: Path, site: Site, leaderboard: Path | None = None) -> list[str]:
+    """Write the site to `output`, the leaderboard from the results in `leaderboard`; the paths written, `style.css`
+    included."""
     date = datetime.now(UTC).date().isoformat()
     sources = pages(root)
+    board_pages, board_files = build_leaderboard(
+        entries(root / "leaderboard" / "projects.toml"), leaderboard, site.pages_url
+    )
+    sources |= board_pages
     written = []
     for page, source in sources.items():
         linked = rewrite_links(source, page, set(sources), site, root)
@@ -170,6 +185,11 @@ def build(root: Path, output: Path, site: Site) -> list[str]:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(render_page(linked, page, site, date), encoding="utf-8")
         written.append(page)
+    for path, text in board_files.items():
+        target = output / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(text, encoding="utf-8")
+        written.append(path)
     (output / "style.css").write_text(STYLE, encoding="utf-8")
     return [*written, "style.css"]
 
@@ -189,13 +209,14 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--repository", default="cpp-best-practices/project_validator", help="the GitHub repository")
     parser.add_argument("--ref", default=None, help="the branch the pages reflect (default: the current one)")
     parser.add_argument("--revision", default=None, help="the commit the pages reflect (default: HEAD)")
+    parser.add_argument("--leaderboard", type=Path, default=None, help="the leaderboard's nightly results")
     arguments = parser.parse_args(argv[1:])
     site = Site(
         repository=arguments.repository,
         ref=arguments.ref or _git("branch", "--show-current") or "HEAD",
         revision=arguments.revision or _git("rev-parse", "HEAD"),
     )
-    for page in build(ROOT, arguments.output, site):
+    for page in build(ROOT, arguments.output, site, arguments.leaderboard):
         print(page)
     return 0
 
