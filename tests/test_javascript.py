@@ -258,6 +258,18 @@ class TypeCheckingTests(unittest.TestCase):
                 files = {"jsconfig.json": f'{{"extends": {extends}}}', **_ci("npx tsc -p jsconfig.json")}
                 self.assertIn("strict mode bonus: tsc (jsconfig.json)", self._npm(files).message)
 
+    @unittest.expectedFailure  # upstream #303
+    def test_a_local_base_configuration_that_is_strict_makes_tsc_strict(self) -> None:
+        base = {"tsconfig.base.json": '{"compilerOptions": {"strict": true}}'}
+        for config, extends, command in (
+            ("tsconfig.json", "./tsconfig.base.json", "npx tsc --noEmit"),
+            ("tsconfig.json", "./tsconfig.base", "npx tsc --noEmit"),
+            ("app/tsconfig.json", "../tsconfig.base.json", "npx tsc -p app"),
+        ):
+            with self.subTest(config=config, extends=extends):
+                files = {**base, config: f'{{"extends": "{extends}"}}', **_ci(command)}
+                self.assertIn("; strict mode bonus: tsc (", self._npm(files).message)
+
     def test_without_strict_mode_it_is_suggested(self) -> None:
         files = {"tsconfig.json": '{"extends": "./base.json"}', **_ci("npx vue-tsc --noEmit")}
         self.assertEqual(self._npm(files), Result.passed("tsc (tsconfig.json) runs", STRICT_HINT))
