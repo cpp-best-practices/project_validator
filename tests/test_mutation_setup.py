@@ -48,7 +48,6 @@ class MutationSetupTests(unittest.TestCase):
                 if any("mutmut" in line and "|" in line for line in script.splitlines()):
                     self.assertEqual(step.get("shell", job_default), "bash", step.get("name"))
 
-    @unittest.expectedFailure  # upstream #307
     def test_the_mutation_step_caps_each_worker_s_memory(self) -> None:
         # A mutant that breaks a loop's progress while it appends grows without bound, faster than mutmut's CPU-time
         # limit stops it; a cap makes it fail as a kill instead of exhausting the runner.
@@ -59,7 +58,6 @@ class MutationSetupTests(unittest.TestCase):
         for script in running:
             self.assertRegex(script, r"\bulimit -[vd] \d+")
 
-    @unittest.expectedFailure  # upstream #307
     def test_the_fresh_import_test_is_left_out_of_mutation_runs(self) -> None:
         # It imports every module afresh, so mutmut maps every import-time function to it, yet it only fails on a
         # mutant that breaks an import: each such mutant paid its 70 seconds and survived.
