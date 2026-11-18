@@ -18,6 +18,7 @@ from project_validator.grid import render_grid
 from project_validator.plugins import PluginError, discover
 from project_validator.questions.answers import answers
 from project_validator.runner import Report, SelectionError, run_checks, select, succeeded
+from project_validator.score import SCORE_VERSION, Score, score
 from project_validator.support_matrix import as_dict, render, support_matrix
 
 EXIT_SUCCESS = 0
@@ -117,6 +118,12 @@ def _add_output_options(parser: argparse.ArgumentParser) -> None:
     )
     parser.add_argument(
         "--color", choices=("auto", "always", "never"), default="auto", help="color the text output (needs rich)"
+    )
+    parser.add_argument(
+        "--score",
+        action="store_true",
+        help="also score the project's tooling: its level, completeness and depth, and the next steps that raise "
+        "them (a preview; the statuses and exit code do not change)",
     )
 
 
@@ -243,13 +250,32 @@ def _usage_error(parser: argparse.ArgumentParser, message: str) -> int:
     return EXIT_USAGE
 
 
-def _print_reports(reports: list[Report], arguments: argparse.Namespace) -> None:
+NEXT_STEPS = 5  # how many opportunities the text and markdown reports list
+
+
+def _score_lines(scored: Score, *, markdown: bool) -> list[str]:
+    title = f"Score (preview v{SCORE_VERSION}):"
+    lines = [f"**{title}** {scored.summary()}" if markdown else f"{title} {scored.summary()}"]
+    if scored.opportunities:
+        lines.append("Next:")
+        lines.extend(f"  - {opportunity.describe()}" for opportunity in scored.opportunities[:NEXT_STEPS])
+    return lines
+
+
+def _print_reports(reports: list[Report], arguments: argparse.Namespace, every_check: Sequence[str]) -> None:
+    scored = score(reports, every_check) if arguments.score else None
     if arguments.format == "json":
-        print(_format_json(reports))
-    elif arguments.format == "markdown":
+        if scored is None:
+            print(_format_json(reports))
+        else:
+            print(json.dumps({"results": report_dicts(reports), "score": scored.as_dict()}, indent=2))
+        return
+    if arguments.format == "markdown":
         print(render_grid(reports), end="")
     else:
         _print_text(reports, _use_color(arguments.color))
+    if scored is not None:
+        print("\n" + "\n".join(_score_lines(scored, markdown=arguments.format == "markdown")))
 
 
 def _dump(context: Context, arguments: argparse.Namespace) -> object:
@@ -282,13 +308,18 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     project = Project(arguments.path.resolve(), frozenset(arguments.exclude), tuple(arguments.auxiliary))
     context = Context(project, plugins.providers, _options(arguments))
-    return _run(parser, arguments, context, selected)
+    return _run(parser, arguments, context, selected, [found.name for found in plugins.checks])
 
 
 def _run(
-    parser: argparse.ArgumentParser, arguments: argparse.Namespace, context: Context, selected: list[Check]
+    parser: argparse.ArgumentParser,
+    arguments: argparse.Namespace,
+    context: Context,
+    selected: list[Check],
+    every_check: Sequence[str],
 ) -> int:
-    """Print what was asked (a dump, or the reports) and say how it went."""
+    """Print what was asked (a dump, or the reports) and say how it went; `every_check` names every check there is,
+    for the score."""
     if arguments.facts or arguments.map or arguments.answers:
         try:
             print(json.dumps(_dump(context, arguments), indent=2))
@@ -296,7 +327,7 @@ def _run(
             return _extraction_failed(parser, failed)
         return EXIT_SUCCESS
     reports = run_checks(selected, context)
-    _print_reports(reports, arguments)
+    _print_reports(reports, arguments, every_check)
     if (cause := context.extraction_error) is not None:
         return _extraction_failed(parser, cause)
     return EXIT_SUCCESS if succeeded(reports, strict=arguments.strict) else EXIT_FAILURE

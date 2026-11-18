@@ -48,6 +48,7 @@ class ParserDefaultsTests(unittest.TestCase):
             "max_file_size": DEFAULT_MAX_FILE_SIZE,
             "allow_official_tags": False,
             "allow_unknown": False,
+            "score": False,
             "list": False,
             "support_matrix": False,
         }
