@@ -77,7 +77,7 @@ def _definition(text: str) -> str:
 
 def _registered_test(words: list[str]) -> tuple[str, ...]:
     """What `add_test` registers: the test's name and its command's words (`NAME n COMMAND c args...`, or the old
-    `add_test(n c args...)`)."""
+    `add_test(n c args...)`); one without a name (empty, or `NAME` alone) registers nothing."""
     if words[:1] == ["NAME"]:
         name = words[1] if len(words) > 1 else ""
         command = words[words.index("COMMAND") + 1 :] if "COMMAND" in words else []
@@ -104,8 +104,9 @@ class Collector:
             handler(self, frame, invocation, words)
         elif invocation.name in _TEST_REGISTRATIONS:
             self.ctest(frame, "registers", invocation.name)
-            if invocation.name == "add_test":
-                self.ctest(frame, "test", _registered_test([word.text for word in words]))
+            registered = _registered_test([word.text for word in words])
+            if invocation.name == "add_test" and registered[:1] not in ((), ("",)):
+                self.ctest(frame, "test", registered)
         elif invocation.name in _DEPENDENCY_MANAGERS:
             self.facts.append(Declared(origin=Origin(path=frame.path), manager=_DEPENDENCY_MANAGERS[invocation.name]))
 

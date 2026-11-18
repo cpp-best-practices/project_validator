@@ -531,7 +531,6 @@ class CommandTests(unittest.TestCase):
             ],
         )
 
-    @unittest.expectedFailure  # upstream #301
     def test_add_test_without_arguments_records_nothing(self) -> None:
         found = _listed("add_test()", "add_test(NAME)")
         self.assertEqual([fact for fact in found if isinstance(fact, Setting) and fact.key == "test"], [])
