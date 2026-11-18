@@ -125,7 +125,6 @@ class CommandSpellingTests(AliasTestCase):
             unlike="dart format .",
         )
 
-    @unittest.expectedFailure  # upstream #302
     def test_dart_format_only_shows_with_the_output_option_joined_to_its_value(self) -> None:
         self.assert_spellings(
             _with_facts(_dart_format),

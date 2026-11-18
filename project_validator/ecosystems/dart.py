@@ -13,7 +13,7 @@ from project_validator import yaml_support
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import has_option, program, starts_with
+from project_validator.facts.arguments import has_option, option_values, program, starts_with
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
@@ -123,7 +123,7 @@ def _dart_format(command: Command, facts: Facts) -> Run | None:
         return None
     if has_option(argv, "--set-exit-if-changed"):
         return formatted(command, facts, checks=True)
-    if has_option(argv, "--output", "-o") and any(word in ("none", "show", "json") for word in argv[2:]):
+    if any(value in ("none", "show", "json") for value in option_values(argv, "--output", "-o")):
         return None
     return formatted(command, facts, checks=False)
 
