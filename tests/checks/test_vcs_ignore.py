@@ -56,6 +56,11 @@ class VcsIgnoreTests(unittest.TestCase):
         expected = Result.warned(".hgignore, .bzrignore do not ignore the build directory", BUILD_HINT)
         self.assertEqual(run_in_every_layout(self, vcs_ignore, files), expected)
 
+    def test_one_ignore_files_entries_do_not_count_for_another(self) -> None:
+        files = {".gitignore": "*.o\n", ".hgignore": "build\n", "docs/.hgignore": "build\n"}
+        expected = Result.warned(".gitignore does not ignore the build directory", BUILD_HINT)
+        self.assertEqual(run_in_every_layout(self, vcs_ignore, files), expected)
+
     def test_reports_what_each_ignore_file_ignores(self) -> None:
         result = run_in_every_layout(self, vcs_ignore, {".gitignore": "/build/\n", ".hgignore": "^build/\n"})
         self.assertEqual(result, Result.passed(".gitignore ignores /build/; .hgignore ignores ^build/"))

@@ -73,6 +73,31 @@ class GoTests(unittest.TestCase):
         result = self._run(compiler_warnings, _ci("golangci-lint run ./..."))
         self.assertEqual(result, Result.passed("strict Go linters are enabled: go vet, staticcheck"))
 
+    def test_golangci_lint_configuration_can_turn_the_required_linters_off(self) -> None:
+        run = _ci("golangci-lint run ./...")
+        both = Result.passed("strict Go linters are enabled: go vet, staticcheck")
+        none = (Status.FAIL, "no Go linters found; enable at least go vet, staticcheck")
+        cases = (
+            ("linters:\n  disable: [staticcheck]\n", (Status.WARN, "missing Go linters: staticcheck")),
+            ("linters:\n  disable: [govet, staticcheck]\n", none),
+            ("linters:\n  disable-all: true\n", none),
+            ("version: '2'\nlinters:\n  default: none\n", none),
+            ("linters:\n  disable-all: true\n  enable: [staticcheck]\n", (Status.WARN, "missing Go linters: go vet")),
+        )
+        for config, expected in cases:
+            with self.subTest(config=config):
+                result = self._run(compiler_warnings, {".golangci.yml": config, **run})
+                self.assertEqual((result.status, result.message), expected)
+        for config in (
+            "linters:\n  disable: [errcheck]\n",
+            "linters:\n  disable-all: false\n",
+            "version: '2'\nlinters:\n  default: standard\n",
+            "linters:\n  disable-all: true\n  enable-all: true\n",
+            "linters:\n  disable-all: true\n  enable: [govet, staticcheck]\n",
+        ):
+            with self.subTest(config=config):
+                self.assertEqual(self._run(compiler_warnings, {".golangci.yml": config, **run}), both)
+
     def test_go_vet_alone_is_not_enough(self) -> None:
         result = self._run(compiler_warnings, _ci("go vet ./..."))
         self.assertEqual(result.status, Status.WARN)

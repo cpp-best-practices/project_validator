@@ -5,7 +5,14 @@ from __future__ import annotations
 import unittest
 
 from project_validator.core import Result, Status
-from project_validator.ecosystems.swift import SWIFT, SWIFTPM_PACKAGES, swiftpm_build_types, xcode_build_types
+from project_validator.ecosystems.swift import (
+    SWIFT,
+    SWIFTLINT_TOOL,
+    SWIFTPM_PACKAGES,
+    swiftpm_build_types,
+    xcode_build_types,
+)
+from project_validator.facts import Facts, Origin, Setting
 from tests.support import (
     GITHUB_WORKFLOW,
     checks_named,
@@ -16,6 +23,7 @@ from tests.support import (
     run_in_layout,
     temp_project,
 )
+from tests.support import command as shell_command
 
 (
     CODE_FORMATTING,
@@ -223,3 +231,23 @@ class DependencyAndOutputTests(unittest.TestCase):
                 """
         }
         self.assertIn("2 Swift toolchain(s) (16.4, 6.1)", run_as(self, PLATFORM_MATRIX, files, SWIFT).message)
+
+
+class SwiftLintClaimTests(unittest.TestCase):
+    PLUGIN = Setting(origin=Origin(path="Package.swift"), tool="SwiftPM", key="plugin", value="SwiftLint")
+
+    def test_linting_runs_are_analyses(self) -> None:
+        for line in ("swiftlint", "swiftlint lint", "swiftlint --strict", "swiftlint lint --quiet Sources"):
+            with self.subTest(line=line):
+                self.assertIsNotNone(SWIFTLINT_TOOL.claims(shell_command(line), Facts()))
+
+    def test_fixing_runs_are_not(self) -> None:
+        for line in ("swiftlint --fix", "swiftlint lint --fix", "swiftlint --autocorrect", "swiftlint autocorrect"):
+            with self.subTest(line=line):
+                self.assertIsNone(SWIFTLINT_TOOL.claims(shell_command(line), Facts()))
+
+    def test_a_build_runs_it_only_with_the_plugin(self) -> None:
+        self.assertIsNone(SWIFTLINT_TOOL.claims(shell_command("swift build"), Facts()))
+        run = SWIFTLINT_TOOL.claims(shell_command("swift build"), Facts([self.PLUGIN]))
+        self.assertIsNotNone(run)
+        self.assertIsNone(SWIFTLINT_TOOL.claims(shell_command("swift package resolve"), Facts([self.PLUGIN])))

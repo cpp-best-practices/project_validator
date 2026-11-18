@@ -14,9 +14,10 @@ from project_validator.checks.tests_run import tests_run
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems.perl import PERL_ECOSYSTEM, PERL_MODULES
-from project_validator.facts import Setting
+from project_validator.ecosystems.perl import ACTIONS, PERL_ECOSYSTEM, PERL_MODULES, PROVE
+from project_validator.facts import Facts, Origin, Setting
 from tests.support import GITHUB_WORKFLOW, github_job, make_context, run_as, run_in_layout, temp_project, uses
+from tests.support import command as shell_command
 
 PERL = frozenset({"Perl"})
 TEST = {"t/shop.t": "use Test::More;\nok(1, 'works');\ndone_testing;\n"}
@@ -188,3 +189,31 @@ class PerlTests(unittest.TestCase):
         ):
             with self.subTest(line=line):
                 self.assertIn(f"1 Perl version(s) ({version})", self._run(platform_matrix, _ci(line)).message)
+
+
+class ModuleBuildActionTests(unittest.TestCase):
+    """A Module::Build subclass's action that depends on `test` runs the tests when ./Build runs it, and only then."""
+
+    ACTION = Setting(origin=Origin(path="inc/MyBuilder.pm"), tool=ACTIONS, key="authortest", value=True, heuristic=True)
+
+    def test_build_running_an_action_that_depends_on_test_runs_the_tests(self) -> None:
+        for line in ("./Build authortest", "Build authortest", "perl Build authortest"):
+            with self.subTest(line=line):
+                self.assertIsNotNone(PROVE.claims(shell_command(line), Facts([self.ACTION])))
+
+    def test_other_actions_and_lookalikes_do_not(self) -> None:
+        for line in (
+            "./Build dist",
+            "./Build",
+            "perl Build",
+            "perl Build dist",
+            "perl Build.PL authortest",
+            "make authortest",
+            "perl Makefile.PL authortest",
+            "authortest",
+        ):
+            with self.subTest(line=line):
+                self.assertIsNone(PROVE.claims(shell_command(line), Facts([self.ACTION])))
+
+    def test_without_the_action_build_runs_no_tests(self) -> None:
+        self.assertIsNone(PROVE.claims(shell_command("./Build authortest"), Facts()))
