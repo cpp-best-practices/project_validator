@@ -48,6 +48,26 @@ class MutationSetupTests(unittest.TestCase):
                 if any("mutmut" in line and "|" in line for line in script.splitlines()):
                     self.assertEqual(step.get("shell", job_default), "bash", step.get("name"))
 
+    @unittest.expectedFailure  # upstream #307
+    def test_the_mutation_step_caps_each_worker_s_memory(self) -> None:
+        # A mutant that breaks a loop's progress while it appends grows without bound, faster than mutmut's CPU-time
+        # limit stops it; a cap makes it fail as a kill instead of exhausting the runner.
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        scripts = [step.get("run", "") for job in workflow["jobs"].values() for step in job["steps"]]
+        running = [script for script in scripts if "mutmut run" in script]
+        self.assertTrue(running)
+        for script in running:
+            self.assertRegex(script, r"\bulimit -[vd] \d+")
+
+    @unittest.expectedFailure  # upstream #307
+    def test_the_fresh_import_test_is_left_out_of_mutation_runs(self) -> None:
+        # It imports every module afresh, so mutmut maps every import-time function to it, yet it only fails on a
+        # mutant that breaks an import: each such mutant paid its 70 seconds and survived.
+        config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["mutmut"]
+        arguments = config["pytest_add_cli_args"]
+        test = "tests/test_architecture.py::ArchitectureTests::test_every_module_imports_on_its_own"
+        self.assertIn(test, [arguments[index + 1] for index, word in enumerate(arguments[:-1]) if word == "--deselect"])
+
 
 if __name__ == "__main__":
     unittest.main()

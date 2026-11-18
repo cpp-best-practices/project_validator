@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from collections.abc import Callable
 
-from project_validator.core import Check, Placed, Result, Status
+from project_validator.core import Check, Options, Placed, Result, Status
 from project_validator.ecosystems.c_cpp import C_AND_CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.facts import Facts
@@ -120,6 +120,37 @@ class AnsweredCheckTests(unittest.TestCase):
         check = self._check(languages=lambda: frozenset({"Zig"}))
         self.assertIsNone(check.aspect)
         self.assertEqual(check.languages, frozenset({"Zig"}))
+
+    def test_running_the_check_judges_each_ecosystem_s_answers(self) -> None:
+        seen: list[tuple[str, str, str, bool]] = []
+
+        def judge(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
+            seen.append((answer.language, answer.aspect, answer.level, allow_unknown))
+            return Result.passed(f"{answer.language} ok")
+
+        check = answered_check(
+            name="x",
+            description="what x checks",
+            answers=aspect_answers("format", "check"),
+            judge=judge,
+            aspect="format",
+            aliases=("old-x",),
+        )
+        self.assertEqual((check.name, check.description, check.aliases), ("x", "what x checks", ("old-x",)))
+        with temp_project({"a.py": "x = 1\n", "b.go": "package b\n"}) as root:
+            result = check.run(make_context(root))
+            allowed = check.run(make_context(root, Options(allow_unknown=True)))
+        self.assertEqual((result.status, result.message), (Status.PASS, "Go: Go ok; Python: Python ok"))
+        self.assertEqual(allowed.message, result.message)
+        self.assertEqual(
+            seen,
+            [
+                ("Go", "format", "check", False),
+                ("Python", "format", "check", False),
+                ("Go", "format", "check", True),
+                ("Python", "format", "check", True),
+            ],
+        )
 
     def test_an_aspect_or_languages_is_required(self) -> None:
         with self.assertRaisesRegex(TypeError, "aspect or languages"):
