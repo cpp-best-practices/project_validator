@@ -70,7 +70,6 @@ class GitlabLimitTests(LimitTestCase):
     def test_extends_nest_at_most_the_limit_deep(self) -> None:
         self.assert_limit(gitlab._DEPTH, self._extends, lambda files: ("ctest",) in _commands(_facts(files)))
 
-    @unittest.expectedFailure  # upstream #303
     def test_extends_past_the_limit_say_so(self) -> None:
         reasons = _reasons(_facts(self._extends(gitlab._DEPTH + 1)))
         self.assertEqual(reasons, [f"the templates it extends nest more than {gitlab._DEPTH} levels deep"])
@@ -78,7 +77,6 @@ class GitlabLimitTests(LimitTestCase):
     def test_references_nest_at_most_the_limit_deep(self) -> None:
         self.assert_limit(gitlab._DEPTH, self._references, lambda files: ("ctest",) in _commands(_facts(files)))
 
-    @unittest.expectedFailure  # upstream #303
     def test_references_past_the_limit_say_so(self) -> None:
         reasons = _reasons(_facts(self._references(gitlab._DEPTH + 1)))
         self.assertEqual(reasons, [f"its !reference tags nest more than {gitlab._DEPTH} levels deep"])
@@ -138,7 +136,6 @@ class CmakeLimitTests(LimitTestCase):
         self.assertIn("-deep", [fact.option for fact in found if isinstance(fact, CompilerOption)])
         self.assertEqual(_reasons(found), [])
 
-    @unittest.expectedFailure  # upstream #303
     def test_calls_past_the_limit_say_so(self) -> None:
         for levels in (MOST_NESTED + 1, MOST_NESTED + 2):
             with self.subTest(levels=levels):
