@@ -60,6 +60,14 @@ class CompilerWarningsTests(unittest.TestCase):
         target = "add_library(x a.cpp)\ntarget_compile_options(x PRIVATE -Wno-shadow)\n"
         self.assertEqual(self._run({"CMakeLists.txt": options + target}).status, Status.PASS)
 
+    @unittest.expectedFailure  # upstream #301
+    def test_w_silences_every_warning_project_wide(self) -> None:
+        options = f"add_compile_options({self.GCC_FLAGS})\n"
+        silenced = self._run({"CMakeLists.txt": options + "add_compile_options(-w)\n"})
+        self.assertEqual(silenced.status, Status.FAIL)
+        target = "add_library(x a.cpp)\ntarget_compile_options(x PRIVATE -w)\n"
+        self.assertEqual(self._run({"CMakeLists.txt": options + target}).status, Status.PASS)
+
     def test_passes_with_the_minimum_gcc_and_clang_flags(self) -> None:
         result = self._run({"CMakeLists.txt": f"add_compile_options({self.GCC_FLAGS})\n"})
         self.assertEqual(result.status, Status.PASS)
