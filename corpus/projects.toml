@@ -73,7 +73,7 @@ issues = [182, 183]
 name = "bus1/dbus-broker"
 commit = "2956b5d381deeea709c53d02f10e799e50e44f4b"
 ecosystems = ["C"]
-issues = [182, 186, 196, 282]
+issues = [182, 186, 282]
 
 [[project]]
 name = "nlohmann/json"
@@ -115,7 +115,7 @@ issues = [182, 282]
 name = "ggml-org/llama.cpp"
 commit = "9d25e0014c4b4b316873c01f4938c0e3c687287d"
 ecosystems = ["C", "C++", "Python"]
-issues = [181, 224]
+issues = [224]
 
 [[project]]
 name = "glfw/glfw"
