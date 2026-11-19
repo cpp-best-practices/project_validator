@@ -353,34 +353,35 @@ class TuiPageTests(unittest.TestCase):
         self.assertIn("pip install project_validator[tui]", errors)
 
 
+async def _drive_tui() -> list[str]:
+    """Run the TUI on MIXED: wait for the analysis, search the facts, open what was detected, then three pages."""
+    with temp_project(MIXED) as root:
+        app = tui.build_app(make_context(root), discover().checks, [c.name for c in discover().checks])
+        async with app.run_test() as pilot:
+            for _ in range(100):
+                await pilot.pause(0.05)
+                if app.analysis is not None:  # type: ignore[attr-defined]
+                    break
+            seen = [str(app.sub_title)]
+            await pilot.press("slash", *"release")
+            await pilot.pause(0.1)
+            seen.append(str(app.query_one("#pane").render()))
+            await pilot.press("escape", "down", "down", "enter")
+            await pilot.pause(0.1)
+            seen.append(str(app.query_one("#pane").render()))
+            analysis = app.analysis  # type: ignore[attr-defined]
+            report = next(report for report in analysis.reports if report.check.name == "static-analysis")
+            for page, value in (("facts", "SourceFile"), ("next", None), ("report", report)):
+                app._page(page, value)  # type: ignore[attr-defined]
+                seen.append(str(app.query_one("#pane").render()))
+            await pilot.press("q")
+        return seen
+
+
 @requires_textual
 class TuiAppTests(unittest.TestCase):
     def test_it_reads_the_project_then_browses_it(self) -> None:
-        async def drive() -> list[str]:
-            with temp_project(MIXED) as root:
-                app = tui.build_app(make_context(root), discover().checks, [c.name for c in discover().checks])
-                async with app.run_test() as pilot:
-                    for _ in range(100):
-                        await pilot.pause(0.05)
-                        if app.analysis is not None:  # type: ignore[attr-defined]
-                            break
-                    seen = [str(app.sub_title)]
-                    await pilot.press("slash")
-                    await pilot.press(*"release")
-                    await pilot.pause(0.1)
-                    seen.append(str(app.query_one("#pane").render()))
-                    await pilot.press("escape", "down", "down", "enter")
-                    await pilot.pause(0.1)
-                    seen.append(str(app.query_one("#pane").render()))
-                    analysis = app.analysis  # type: ignore[attr-defined]
-                    report = next(report for report in analysis.reports if report.check.name == "static-analysis")
-                    for page, value in (("facts", "SourceFile"), ("next", None), ("report", report)):
-                        app._page(page, value)  # type: ignore[attr-defined]
-                        seen.append(str(app.query_one("#pane").render()))
-                    await pilot.press("q")
-                return seen
-
-        title, facts, detected, kind, steps, report = asyncio.run(drive())
+        title, facts, detected, kind, steps, report = asyncio.run(_drive_tui())
         self.assertRegex(title, r"\d+% · Level")
         self.assertIn("release", facts)
         self.assertIn("Languages and formats", detected)
