@@ -19,8 +19,9 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from leaderboard import Entry
-from leaderboard.history import latest, movement, previous, ranked, read_history
+from leaderboard.history import latest, movement, previous, ranked, read_history, scored
 from project_validator.core import Status
+from project_validator.score import SCORE_VERSION
 from project_validator.views.html import bar, e, pill, ring, table
 
 NEXT_STEPS = 10
@@ -34,8 +35,15 @@ def percent(value: object) -> str:
 
 
 def _score(result: Mapping[str, object]) -> Mapping[str, object] | None:
-    scored = result.get("score")
-    return scored if isinstance(scored, dict) else None
+    return scored(result)
+
+
+def _unscored(result: Mapping[str, object]) -> str:
+    """Why a result has no score to show: its error, or the earlier score version that scored it."""
+    found = result.get("score")
+    if isinstance(found, dict):
+        return f"scored by score version {found.get('version')}; this version scores it next"
+    return str(result.get("error", "no result"))
 
 
 def _slug(name: str) -> str:
@@ -211,7 +219,11 @@ def _cells(scored: Mapping[str, object]) -> str:
 
 
 def _history(history: Sequence[Mapping[str, object]]) -> str:
-    values = [float(value) for night in history if isinstance(value := night.get("percent"), int | float)]
+    values = [
+        float(value)
+        for night in history
+        if night.get("version") == SCORE_VERSION and isinstance(value := night.get("percent"), int | float)
+    ]
     drawn = sparkline(values[-SPARKLINE_NIGHTS:], width=520, height=80)
     return drawn or '<p class="muted">The history starts after a second night.</p>'
 
@@ -238,9 +250,7 @@ def project_page(
     scored = _score(result)
     facts = f'<ul class="facts-list">{_facts(entry, result, report)}</ul>'
     if scored is None:
-        return (
-            title + f'<div class="card">{facts}<p>Not scored tonight: {e(result.get("error", "no result"))}</p></div>\n'
-        )
+        return title + f'<div class="card">{facts}<p>Not scored tonight: {e(_unscored(result))}</p></div>\n'
     value = _number(scored["percent"])
     since = "".join(f"<li>{e(change)}</li>" for change in changes) or "<li>No change.</li>"
     return title + (

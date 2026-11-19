@@ -178,7 +178,18 @@ class Project:
         if listed.returncode != 0:
             return self.files()
         paths = listed.stdout.decode("utf-8", errors="replace").split("\0")
+        if not any(paths) and self._ignored(git):
+            return self.files()
         return sorted(path for path in paths if path and not self._excludes(path) and (self.root / path).is_file())
+
+    def _ignored(self, git: str) -> bool:
+        """Whether the checkout around the project ignores its directory (mutmut's mutants/): then it is no checkout of
+        the project, and every file counts as tracked."""
+        root = self.root.resolve()
+        ignored = subprocess.run(  # noqa: S603 - argv list, no shell
+            [git, "-C", str(root.parent), "check-ignore", "-q", root.name], capture_output=True, check=False
+        )
+        return ignored.returncode == 0
 
     def _excludes(self, relative: str) -> bool:
         return any(parent in self.excluded for parent in PurePosixPath(relative).parents)

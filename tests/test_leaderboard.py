@@ -420,6 +420,40 @@ class RankingTests(unittest.TestCase):
         )
 
 
+class EarlierScoreVersionTests(unittest.TestCase):
+    """A night scored by an earlier version of the score (the data branch before the score changed) holds other
+    numbers: it is not compared, ranked or shown as this version's."""
+
+    OLD = _result("o/old", 0, 0) | {"score": {"version": "0", "completeness": 0.47, "depth": 50, "level": 0}}
+
+    def test_it_ranks_with_the_unscored_and_moves_nothing(self) -> None:
+        self.assertEqual([result["name"] for result in ranked([self.OLD, _result("o/new", 1, 10)])], ["o/new", "o/old"])
+        self.assertEqual(movement(self.OLD, _result("o/old", 1, 50)), [])
+
+    def test_the_board_and_its_page_say_it_awaits_tonight(self) -> None:
+        with _directory() as data:
+            with _directory() as results:
+                write(self.OLD, results)
+                record(results, data, "2026-11-18")
+            pages, files = build((Entry(name="o/old", language="Rust", consent=SEED),), data, "https://o.github.io/p/")
+        self.assertIn("Not scored tonight: scored by score version 0", pages["leaderboard/projects/o--old.html"])
+        self.assertIn('<span class="muted">-</span>', pages["leaderboard/index.html"])
+        self.assertEqual(json.loads(files["leaderboard/badges/o--old.json"])["message"], "error")
+
+    def test_its_night_is_left_out_of_the_history_drawn(self) -> None:
+        entry = Entry(name="o/old", language="Rust", consent=SEED)
+        with _directory() as data:
+            for date, result in (
+                ("2026-11-17", self.OLD | {"score": {"version": "0", "percent": 5}}),
+                ("2026-11-18", _result("o/old", 1, 50)),
+            ):
+                with _directory() as results:
+                    write(result, results)
+                    record(results, data, date)
+            pages, _ = build((entry,), data, "https://o.github.io/p/")
+        self.assertIn("The history starts after a second night.", pages["leaderboard/projects/o--old.html"])
+
+
 class SiteTests(unittest.TestCase):
     LISTED = (
         Entry(name="o/first", language="Rust", consent=SEED),

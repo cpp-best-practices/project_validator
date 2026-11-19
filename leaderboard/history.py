@@ -16,8 +16,17 @@ import json
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
+from project_validator.score import SCORE_VERSION
+
 SCORED = ("version", "percent", "level", "filled", "slots")
 HISTORY_FIELDS = ("date", "commit", "validator", *SCORED)
+
+
+def scored(result: Mapping[str, object] | None) -> Mapping[str, object] | None:
+    """The result's score when this version of the score made it; None when it was not scored, or an earlier version
+    scored it (other numbers, never compared with these)."""
+    found = result.get("score") if result else None
+    return found if isinstance(found, dict) and found.get("version") == SCORE_VERSION else None
 
 
 def _read(path: Path) -> dict[str, object] | None:
@@ -91,10 +100,10 @@ def _tools(result: Mapping[str, object] | None) -> set[tuple[str, str]]:
 
 def _numbers(result: Mapping[str, object] | None) -> tuple[float, float] | None:
     """The result's level and percent; None when it was not scored."""
-    scored = result.get("score") if result else None
-    if not isinstance(scored, dict):
+    numbers = scored(result)
+    if numbers is None:
         return None
-    level, percent = scored.get("level"), scored.get("percent")
+    level, percent = numbers.get("level"), numbers.get("percent")
     return (
         float(level) if isinstance(level, int | float) else 0.0,
         float(percent) if isinstance(percent, int | float) else 0.0,

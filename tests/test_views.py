@@ -211,11 +211,14 @@ class HtmlTests(unittest.TestCase):
             self.assertIn(html._anchor(report.check.name), self.tags.ids)
 
     def test_what_the_project_supplies_is_escaped(self) -> None:
-        with temp_project({**MIXED, "evil<script>/main.py": ""}) as root:
+        # A job's name, not a file's: Windows forbids "<" in a file name.
+        workflow = "on: push\njobs:\n  evil:\n    name: evil<script>alert(1)</script>\n    runs-on: ubuntu-latest\n"
+        workflow += "    steps:\n      - run: pytest\n"
+        with temp_project({**MIXED, ".github/workflows/ci.yml": workflow}) as root:
             document = html.render(analyse(make_context(root), discover().checks))
         self.assertNotIn("<script>alert", document)
-        self.assertNotIn("evil<script>", document)
-        self.assertIn("evil\\u003cscript>", document)  # in the facts' JSON, no "<" to end or change the element
+        self.assertIn("evil&lt;script&gt;alert(1)", document)  # in the page
+        self.assertIn("evil\\u003cscript>alert(1)\\u003c/script>", document)  # in the facts' JSON, no "<" to end it
 
     def test_the_facts_travel_as_json_with_each_kind_described(self) -> None:
         payload = self.document.split('<script type="application/json" id="facts-data">', 1)[1]
