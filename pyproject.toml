@@ -65,6 +65,15 @@ relative_files = true
 fail_under = 99
 show_missing = true
 
+[tool.pytest.ini_options]
+# CI runs the unittest suite under pytest-xdist (`pytest -n auto`); `python -m unittest` runs the same tests.
+# Collect only the unittest classes (pytest always collects those): not the helper functions named test/tested
+# the test modules import, nor product classes named Test* (TestFiles), and not the fixture projects' own tests.
+testpaths = ["tests"]
+python_classes = ["__never__"]
+python_functions = ["__never__"]
+norecursedirs = [".*", "*.egg", "build", "dist", "venv", "fixtures"]
+
 [tool.mutmut]
 source_paths = ["project_validator/"]
 pytest_add_cli_args_test_selection = ["tests/"]

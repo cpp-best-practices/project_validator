@@ -5,3 +5,6 @@ Markdown==3.11.3
 # The optional console report and TUI, so that their tests run and count.
 rich==15.0.0
 textual==8.2.8
+# Runs the suite (unittest test cases) in parallel, one worker per core.
+pytest==9.2.0
+pytest-xdist==3.8.0

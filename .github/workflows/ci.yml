@@ -67,11 +67,12 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Install PyYAML
+      - name: Install the test dependencies
         run: python -m pip install --require-hashes -r .github/requirements/test.txt
 
+      # The unittest suite, run by pytest-xdist on every core; warnings are errors in each worker.
       - name: Test
-        run: python -W error -m unittest
+        run: python -W error -m pytest -W error -n auto -p no:cacheprovider
 
   formatting:
     name: formatting
