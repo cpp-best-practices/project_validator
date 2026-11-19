@@ -4,10 +4,10 @@ import unittest
 
 from project_validator.checks.mutation_testing import mutation_testing
 from project_validator.core import Options, Result, Status
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.dotnet import DOTNET
 from project_validator.ecosystems.go import GO
-from project_validator.ecosystems.javascript import JAVASCRIPT_AND_TYPESCRIPT
+from project_validator.ecosystems.javascript import JAVASCRIPT_ECOSYSTEM
 from project_validator.ecosystems.jvm import JVM
 from project_validator.ecosystems.php import PHP
 from project_validator.ecosystems.python import PYTHON
@@ -55,7 +55,7 @@ class MutationTestingTests(unittest.TestCase):
 
     def test_the_well_configured_compiled_and_scripted_projects_pass(self) -> None:
         cases = (
-            (C_AND_CXX, WELL_CONFIGURED, "Mull runs"),
+            (CXX, WELL_CONFIGURED, "Mull runs"),
             (
                 RUST,
                 WELL_CONFIGURED_RUST,
@@ -63,7 +63,7 @@ class MutationTestingTests(unittest.TestCase):
             ),
             (GO, WELL_CONFIGURED_GO, "gremlins runs; on the pull request's changes only (bonus)"),
             (
-                JAVASCRIPT_AND_TYPESCRIPT,
+                JAVASCRIPT_ECOSYSTEM,
                 WELL_CONFIGURED_JAVASCRIPT,
                 "StrykerJS (stryker.config.json) runs; on the pull request's changes only (bonus)",
             ),
@@ -104,10 +104,10 @@ class MutationTestingTests(unittest.TestCase):
         workflow = ".github/workflows/ci.yml"
         cases = (
             (PYTHON, WELL_CONFIGURED_PYTHON, "mutmut run", "mutmut"),
-            (C_AND_CXX, WELL_CONFIGURED, "mull-runner", None),
+            (CXX, WELL_CONFIGURED, "mull-runner", None),
             (RUST, WELL_CONFIGURED_RUST, "cargo mutants", "cargo-mutants"),
             (GO, WELL_CONFIGURED_GO, "gremlins", None),
-            (JAVASCRIPT_AND_TYPESCRIPT, WELL_CONFIGURED_JAVASCRIPT, "stryker run", "StrykerJS"),
+            (JAVASCRIPT_ECOSYSTEM, WELL_CONFIGURED_JAVASCRIPT, "stryker run", "StrykerJS"),
             (DOTNET, WELL_CONFIGURED_DOTNET, "dotnet stryker", "Stryker.NET"),
             (PHP, WELL_CONFIGURED_PHP, "infection", "Infection"),
             (RUBY, WELL_CONFIGURED_RUBY, "mutant run", "mutant"),

@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import time
 from collections.abc import Iterable
 from dataclasses import dataclass
 
-from project_validator.core import Check, Context, ExtractionError, Result, Status
+from project_validator.core import Check, Context, ExtractionError, Progress, Result, Status
 
 
 class SelectionError(Exception):
@@ -60,7 +61,18 @@ def run_check(selected: Check, context: Context) -> Result:
 
 
 def run_checks(selected: Iterable[Check], context: Context) -> list[Report]:
-    return [Report(check=c, result=run_check(c, context)) for c in selected]
+    """Each check's report, in order; each check's start and end are told to the context's observers."""
+    selected = list(selected)
+    reports = []
+    for index, chosen in enumerate(selected, 1):
+        context.notify(Progress(kind="check", name=chosen.name, done=False, index=index, total=len(selected)))
+        started = time.perf_counter()
+        reports.append(Report(check=chosen, result=run_check(chosen, context)))
+        seconds = time.perf_counter() - started
+        context.notify(
+            Progress(kind="check", name=chosen.name, done=True, seconds=seconds, index=index, total=len(selected))
+        )
+    return reports
 
 
 def succeeded(reports: Iterable[Report], *, strict: bool = False) -> bool:

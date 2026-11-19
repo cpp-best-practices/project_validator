@@ -1,7 +1,14 @@
-# JavaScript/TypeScript
+# JavaScript
 
-Recognised by `.js`, `.ts` and related sources, `package.json` or `deno.json`. The package scripts CI runs
-(`npm test`, `npm run lint`, Deno tasks) count as CI configuration.
+Recognised by `.js`, `.mjs`, `.cjs` and `.jsx` sources, a `package.json` that names an entry point (`main`, `module`,
+`exports`, `bin`) or `deno.json`. The package scripts CI runs (`npm test`, `npm run lint`, Deno tasks) count as CI
+configuration.
+
+JavaScript and [TypeScript](typescript.md) are separate languages, judged separately: they share package.json, Deno,
+their runtimes and their tools, but type checking is TypeScript's defining gate and not a norm of JavaScript, so
+`type-checking` does not apply here. JavaScript tool configuration (`eslint.config.js`, `vite.config.mjs`,
+`.prettierrc.cjs`, `gulpfile.js`) in a project with TypeScript sources is configuration, not JavaScript code, and a
+package.json's `main` names the JavaScript a TypeScript package publishes, which makes it no JavaScript project.
 
 ## `tests-run`
 
@@ -33,12 +40,6 @@ A linter runs: eslint, `biome lint` / `biome ci`, or `deno lint`.
 ## `warnings-as-errors`
 
 A lint warning fails CI: `eslint --max-warnings 0`, `biome ci` or `--error-on-warnings`, or `deno lint`.
-
-## `type-checking`
-
-`tsc` or `vue-tsc` (JavaScript with `checkJs`), or `deno check` / `deno test`, also through the package scripts
-CI runs. Strict mode is a bonus: `"strict": true` or `@tsconfig/strictest` in a `tsconfig.json`, or Deno, strict by
-default.
 
 ## `mutation-testing`
 

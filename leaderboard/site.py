@@ -3,10 +3,11 @@ navigation and style: Markdown by site path, and the files served as they are (b
 
     leaderboard/index.html                  every project ranked, then one board per language
     leaderboard/projects/<owner>--<repo>.html  a project: its numbers, history, what changed, next steps, cells
-    leaderboard/badges/<owner>--<repo>.json    a shields.io endpoint: `project_validator | Level 3 · 91%`
+    leaderboard/badges/<owner>--<repo>.json    a shields.io endpoint: `project_validator | 91% · Level 3`
     leaderboard/data/latest.json            every project's numbers, for anyone to use
 
-Boards rank by level, then completeness; depth only breaks ties, since it is the least comparable number.
+Boards rank by the score's percent (100%: every quality gate that applies is in place; extra credit above), then
+level.
 """
 
 from __future__ import annotations
@@ -31,7 +32,8 @@ def _text(value: object) -> str:
 
 
 def percent(value: object) -> str:
-    return f"{math.floor(round(float(value) * 100, 6))}%" if isinstance(value, int | float) else "-"
+    """A score's percent as the boards show it: floored, so 99.9% is never shown as 100%."""
+    return f"{math.floor(round(float(value), 6))}%" if isinstance(value, int | float) else "-"
 
 
 def _score(result: Mapping[str, object]) -> Mapping[str, object] | None:
@@ -39,11 +41,12 @@ def _score(result: Mapping[str, object]) -> Mapping[str, object] | None:
     return scored if isinstance(scored, dict) else None
 
 
-def _numbers(result: Mapping[str, object]) -> tuple[str, str, str]:
+def _numbers(result: Mapping[str, object]) -> tuple[str, str]:
+    """The result's percent and level, as text."""
     scored = _score(result)
     if scored is None:
-        return "-", "-", "-"
-    return str(scored["level"]), percent(scored["completeness"]), str(scored["depth"])
+        return "-", "-"
+    return percent(scored["percent"]), f"{scored['level']} {scored['level_name']}"
 
 
 def _slug(name: str) -> str:
@@ -52,17 +55,17 @@ def _slug(name: str) -> str:
 
 def _row(position: int, result: Mapping[str, object], changes: Sequence[str], *, language: bool) -> str:
     name = str(result["name"])
-    level, completeness, depth = _numbers(result)
+    score, level = _numbers(result)
     cells = [str(position), f"[{_text(name)}](projects/{_slug(name)}.md)"]
     if language:
         cells.append(_text(result["language"]))
     status = "error: " + _text(result["error"]) if "error" in result and _score(result) is None else ""
-    cells += [level, completeness, depth, status or _text(", ".join(changes) or "-")]
+    cells += [score, level, status or _text(", ".join(changes) or "-")]
     return "| " + " | ".join(cells) + " |"
 
 
 def _board(results: Sequence[Mapping[str, object]], changes: Mapping[str, list[str]], *, language: bool) -> list[str]:
-    header = ["#", "Project", *(["Language"] if language else []), "Level", "Completeness", "Depth", "Since last night"]
+    header = ["#", "Project", *(["Language"] if language else []), "Score", "Level", "Since last night"]
     lines = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
     lines += [
         _row(position, result, changes[str(result["name"])], language=language)
@@ -78,9 +81,10 @@ def index(
         "# Leaderboard",
         "",
         "Open-source projects that opted in, scored every night by the latest validator with `--score` "
-        "([how the score works](../docs/score.md)). Boards rank by **level**, then **completeness**; depth only "
-        "breaks ties. The score is a preview: it measures tooling coverage, not code quality. Seeds await a "
-        "maintainer's confirmation. To add a project, see [how to join](README.md).",
+        "([how the score works](../docs/score.md)). 100% means every quality gate that applies to the project is in "
+        "place; complementary tools earn extra credit above it. Boards rank by the score, then the level. The score "
+        "measures tooling, not code quality. Seeds await a maintainer's confirmation. To add a project, see "
+        "[how to join](README.md).",
         "",
     ]
     shown = [results[entry.name] for entry in listed if entry.name in results]
@@ -96,14 +100,16 @@ def index(
 
 
 def sparkline(values: Sequence[float], width: int = 240, height: int = 40) -> str:
-    """An inline SVG of the values (completeness, 0 to 1) over the nights, oldest first."""
+    """An inline SVG of the values (the score's percent) over the nights, oldest first, from 0 to 100% (or the most
+    extra credit)."""
     if len(values) < 2:
         return ""
+    top = max(100.0, *values)
     step = width / (len(values) - 1)
-    points = " ".join(f"{index * step:.1f},{height - value * height:.1f}" for index, value in enumerate(values))
+    points = " ".join(f"{index * step:.1f},{height - value / top * height:.1f}" for index, value in enumerate(values))
     return (
         f'<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" '
-        f'aria-label="completeness over the last {len(values)} nights">'
+        f'aria-label="the score over the last {len(values)} nights">'
         f'<polyline fill="none" stroke="#0550ae" stroke-width="2" points="{points}"/></svg>'
     )
 
@@ -126,25 +132,21 @@ def _facts(entry: Entry | None, result: Mapping[str, object]) -> list[str]:
     return facts
 
 
-def _opportunities(scored: Mapping[str, object]) -> list[str]:
-    found = scored.get("opportunities")
-    opportunities = found if isinstance(found, list) else []
-    if not opportunities:
-        return ["Every applicable cell is covered."]
-    lines = ["| Check | Where | Tier | Now | Completeness | Depth | Level |", "|---|---|---|---|---|---|---|"]
-    for opportunity in opportunities[:NEXT_STEPS]:
-        where = " in ".join(part for part in (opportunity["ecosystem"], opportunity["unit"]) if part) or "the project"
-        level = (
-            f"unlocks {opportunity['unlocks']}"
-            if opportunity.get("unlocks")
-            else (f"toward {opportunity['blocks']}" if opportunity.get("blocks") else "")
-        )
+def _next_steps(scored: Mapping[str, object]) -> list[str]:
+    found = scored.get("next_steps")
+    steps = found if isinstance(found, list) else []
+    if not steps:
+        return ["Every quality gate that applies is in place."]
+    lines = ["| Check | Where | Now | Points | Level |", "|---|---|---|---|---|"]
+    for step in steps[:NEXT_STEPS]:
+        where = " in ".join(part for part in (step["ecosystem"], step["unit"]) if part) or "the project"
+        needed = step.get("needed_for")
+        level = f"{'completes' if step.get('completes') else 'needed for'} Level {needed}" if needed else ""
         lines.append(
-            f"| `{_text(opportunity['check'])}` | {_text(where)} | {opportunity['tier']} | {opportunity['status']} "
-            f"| +{float(opportunity['completeness']):.1%} | +{opportunity['depth']} | {level} |"
+            f"| `{_text(step['check'])}` | {_text(where)} | {step['status']} | +{float(step['points']):.1f} | {level} |"
         )
-    if len(opportunities) > NEXT_STEPS:
-        lines += ["", f"And {len(opportunities) - NEXT_STEPS} more."]
+    if len(steps) > NEXT_STEPS:
+        lines += ["", f"And {len(steps) - NEXT_STEPS} more."]
     return lines
 
 
@@ -152,21 +154,20 @@ def _cells(scored: Mapping[str, object]) -> list[str]:
     found = scored.get("cells")
     cells = found if isinstance(found, list) else []
     lines = [
-        "| Check | Level | Ecosystem | Unit | Tier | Status | Tools | Points |",
-        "|---|---|---|---|---|---|---|---|",
+        "| Check | Level | Language | Unit | Tier | Status | Tools | Filled | Extra credit |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for cell in sorted(cells, key=lambda cell: (cell["level"], cell["check"], cell["unit"], cell["ecosystem"])):
-        points = str(cell["points"]) if cell["counted"] else f"{cell['points']} (locked)"
         lines.append(
             f"| `{_text(cell['check'])}` | {cell['level']} | {_text(cell['ecosystem'] or '-')} "
             f"| {_text(cell['unit'] or '-')} | {cell['tier']} | {cell['status']} "
-            f"| {_text(', '.join(cell['tools']) or '-')} | {points} |"
+            f"| {_text(', '.join(cell['tools']) or '-')} | {cell['filled']} of {cell['weight']} | {cell['extra']} |"
         )
     return lines
 
 
 def _history_line(history: Sequence[Mapping[str, object]]) -> str:
-    values = [float(value) for night in history if isinstance(value := night.get("completeness"), int | float)]
+    values = [float(value) for night in history if isinstance(value := night.get("percent"), int | float)]
     return sparkline(values[-SPARKLINE_NIGHTS:])
 
 
@@ -182,16 +183,12 @@ def project_page(
     if scored is None:
         lines += [f"Not scored tonight: {_text(result.get('error', 'no result'))}", ""]
         return "\n".join(lines)
-    locked = (
-        f" ({scored['locked_depth']} more locked until the levels below are complete)" if scored["locked_depth"] else ""
-    )
-    level, completeness, depth = _numbers(result)
-    lines += [f"**Level {level} · {completeness} complete · {depth} depth**{locked}", ""]
+    lines += [f"**{_text(scored['summary'])}**", ""]
     if drawn := _history_line(history):
         lines += [drawn, ""]
     lines += ["## Since last night", "", _text(", ".join(changes) or "No change."), ""]
-    lines += ["## Next steps", "", *_opportunities(scored), ""]
-    lines += ["## Cells", "", *_cells(scored), ""]
+    lines += ["## Next steps", "", *_next_steps(scored), ""]
+    lines += ["## Every gate", "", *_cells(scored), ""]
     return "\n".join([*lines, *_badge_section(badge_url)])
 
 
@@ -206,7 +203,7 @@ def badge(result: Mapping[str, object]) -> dict[str, object]:
     if scored is None:
         return {"schemaVersion": 1, "label": "project_validator", "message": "error", "color": "lightgrey"}
     level = int(str(scored["level"]))
-    message = f"Level {level} · {percent(scored['completeness'])}"
+    message = f"{percent(scored['percent'])} · Level {level}"
     return {"schemaVersion": 1, "label": "project_validator", "message": message, "color": _BADGE_COLORS[level]}
 
 
@@ -217,7 +214,7 @@ def _summary(result: Mapping[str, object]) -> dict[str, object]:
         "language": result["language"],
         "commit": result.get("commit"),
         "evaluated": result.get("evaluated"),
-        **{key: scored.get(key) for key in ("version", "level", "completeness", "depth")},
+        **{key: scored.get(key) for key in ("version", "percent", "level", "level_name", "filled", "slots")},
     }
 
 

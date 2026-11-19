@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -133,13 +140,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Swift",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -752,6 +752,11 @@
       "message": "not applicable to Swift",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Swift warning settings found; enable at least SwiftLint, complete concurrency checking",
@@ -770,11 +775,6 @@
       ],
       "message": "no region coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Swift",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

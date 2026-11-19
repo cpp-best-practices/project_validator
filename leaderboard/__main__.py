@@ -21,7 +21,6 @@ from leaderboard import MANIFEST, Entry, ManifestError, by_name, entries, parse
 from leaderboard.evaluation import evaluate, failed, fetch, write
 from leaderboard.history import record
 from leaderboard.rules import Repository, changed, duplicates, github_repository, problems, token
-from leaderboard.site import percent
 from project_validator.score import SCORE_VERSION
 
 PREVIEW_MARKER = "<!-- leaderboard-preview -->"
@@ -66,14 +65,13 @@ def _preview_lines(entry: Entry, found: list[str], result: dict[str, object] | N
     scored = result.get("score") if result else None
     if not isinstance(scored, dict):
         return [*lines, f"Could not be scored: {result.get('error') if result else 'no result'}", ""]
-    complete = percent(scored["completeness"])
-    lines += [f"**Level {scored['level']} · {complete} complete · {scored['depth']} depth**", ""]
-    opportunities = scored.get("opportunities")
-    if isinstance(opportunities, list) and opportunities:
+    lines += [f"**{scored['summary']}**", ""]
+    steps = scored.get("next_steps")
+    if isinstance(steps, list) and steps:
         lines += ["Next steps that would raise it most:", ""]
-        for opportunity in opportunities[:PREVIEW_STEPS]:
-            where = " in ".join(part for part in (opportunity["ecosystem"], opportunity["unit"]) if part)
-            lines.append(f"- `{opportunity['check']}`{f' ({where})' if where else ''}")
+        for step in steps[:PREVIEW_STEPS]:
+            where = " in ".join(part for part in (step["ecosystem"], step["unit"]) if part and part != ".")
+            lines.append(f"- `{step['check']}`{f' ({where})' if where else ''}: +{float(step['points']):.1f} points")
         lines.append("")
     return lines
 
@@ -98,7 +96,10 @@ def check(
         found = problems(entry, repository(entry.name))
         ok = ok and not found
         lines += _preview_lines(entry, found, None if found else evaluated(entry))
-    lines.append(f"Scored by score version {SCORE_VERSION} (a preview). The board ranks by level, then completeness.")
+    lines.append(
+        f"Scored by score version {SCORE_VERSION}. The board ranks by the score: 100% is every quality gate that "
+        "applies in place."
+    )
     return ok, "\n".join(lines) + "\n"
 
 

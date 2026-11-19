@@ -103,6 +103,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -189,13 +196,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "R",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -797,6 +797,11 @@
       "message": "not applicable to R",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict R lints are enabled: lintr, failing on lints (LINTR_ERROR_ON_LINT)",
@@ -813,11 +818,6 @@
       ],
       "message": "line coverage is reported with covr",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to R",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

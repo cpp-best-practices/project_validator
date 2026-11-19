@@ -88,6 +88,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -174,13 +181,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Clojure",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -810,6 +810,11 @@
       "message": "not applicable to Clojure",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Clojure lints are enabled: clj-kondo, *warn-on-reflection*",
@@ -826,11 +831,6 @@
       ],
       "message": "statement coverage is reported with cloverage",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Clojure",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

@@ -9,7 +9,7 @@ from unittest import mock
 from project_validator.checks.tests_run import tests_run
 from project_validator.core import Options, Result, Status
 from project_validator.ecosystems import C_FAMILY
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 from project_validator.facts import Facts
@@ -232,11 +232,11 @@ class AnswerTests(unittest.TestCase):
 
 class MixedLanguageTestsRunTests(unittest.TestCase):
     def test_every_language_needs_tests_and_findings_are_labelled(self) -> None:
-        result = run_as(self, tests_run, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        result = run_as(self, tests_run, dict(WELL_CONFIGURED), CXX, PYTHON)
         self.assertEqual(
             result,
             Result.failed(
-                f"C/C++: {CTEST_TESTS}: 2 file(s), run by ctest; "
+                f"C++: {CTEST_TESTS}: 2 file(s), run by ctest; "
                 "Python: no tests found (test_*.py, *_test.py or tests/*_tests.py files)"
             ),
         )

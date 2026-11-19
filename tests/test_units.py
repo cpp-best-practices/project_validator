@@ -58,7 +58,7 @@ def _coverage(files: dict[str, str]) -> Result:
 class UnitTests(unittest.TestCase):
     def test_a_project_built_from_its_root_is_one_unit(self) -> None:
         nested = {"CMakeLists.txt": "", "src/CMakeLists.txt": "", "src/main.cpp": "", "test/CMakeLists.txt": ""}
-        self.assertEqual(_units(nested), [(".", ("CMake",), ["C", "C++"])])
+        self.assertEqual(_units(nested), [(".", ("CMake",), ["C++"])])
 
     def test_workspace_members_are_units_of_their_own(self) -> None:
         self.assertEqual(
@@ -101,7 +101,7 @@ class MonorepoCoverageTests(unittest.TestCase):
 
     def test_a_run_outside_the_project_covers_none_of_it(self) -> None:
         result = _coverage({**MIXED, **_workflow(("cd /tmp/other && gcovr --xml x", None))})
-        self.assertIn("C/C++: no branch coverage measurement found in what CI runs", result.message)
+        self.assertIn("C++: no branch coverage measurement found in what CI runs", result.message)
 
     def test_a_run_from_the_root_covers_every_unit(self) -> None:
         result = _coverage({**WORKSPACES, **_workflow(("npx c8 node --test", None))})
@@ -305,7 +305,7 @@ class AuxiliaryCodeTests(unittest.TestCase):
                 self.assertIn(f"Python (auxiliary: tooling): {ADVISORY}", result.details)
 
     def test_code_is_named_by_its_language_or_ecosystem_or_a_directory_as_given(self) -> None:
-        for named, ecosystem in (("Python", "Python"), ("scripts/", "Python"), ("c/c++", "C/C++")):
+        for named, ecosystem in (("Python", "Python"), ("scripts/", "Python"), ("c++", "C++")):
             with self.subTest(named):
                 result = _check("static-analysis", HELPER_SCRIPTS, (named,))
                 place = _place(result, ecosystem)
@@ -364,7 +364,7 @@ class AuxiliaryCodeTests(unittest.TestCase):
         del files["scripts/release.py"]
         self.assertEqual(_place(_check("static-analysis", files), "Python").result.status, Status.FAIL)
         named = _check("tests-run", files, ("test",))
-        self.assertEqual(_place(named, "C/C++").result.status, Status.PASS, named.message)
+        self.assertEqual(_place(named, "C++").result.status, Status.PASS, named.message)
         python = _place(named, "Python")
         self.assertEqual((python.result.status, python.auxiliary), (Status.WARN, ("test",)))
 
@@ -384,7 +384,7 @@ class AuxiliaryCodeTests(unittest.TestCase):
             [report] = json.loads(output)
             self.assertEqual(report["status"], "FAIL")
             places = {(place["ecosystem"], place["unit"]): place for place in report["places"]}
-            self.assertEqual(set(places), {("C/C++", "."), ("Python", ".")})
+            self.assertEqual(set(places), {("C++", "."), ("Python", ".")})
             python = places[("Python", ".")]
             self.assertEqual((python["status"], python["auxiliary"], python["tools"]), ("FAIL", [], []))
             self.assertEqual(python["message"], "no static analyzer runs")
@@ -414,9 +414,10 @@ class SelectorTests(unittest.TestCase):
     """What `--auxiliary` names, and which code it matches."""
 
     def test_an_ecosystem_names_every_language_of_it_whatever_the_case(self) -> None:
-        named = Selectors.parse(("C/C++", "PYTHON"))
-        self.assertEqual(named.matching("src/a.c", "C"), "C/C++")
-        self.assertEqual(named.matching("src/a.cpp", "C++"), "C/C++")
+        named = Selectors.parse(("jvm", "PYTHON"))
+        self.assertEqual(named.matching("src/A.java", "Java"), "jvm")
+        self.assertEqual(named.matching("src/B.kt", "Kotlin"), "jvm")
+        self.assertEqual(named.matching("src/a.c", "C"), "")
         self.assertEqual(named.matching("a.py", "Python"), "PYTHON")
         self.assertEqual(named.matching("a.rs", "Rust"), "")
 

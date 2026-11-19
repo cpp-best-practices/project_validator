@@ -41,9 +41,9 @@ from tests.support import (
 LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.languages - parsed_formats())
 # The checks that apply to the C++ fixture: those of every project, and of its languages and the formats its CI
 # configuration is in (YAML); the fixture passes them all.
-_C_CPP_FIXTURE_NAMES = make_context(FIXTURES / "well_configured_c_cpp").structure.languages_and_formats
+_CXX_FIXTURE_NAMES = make_context(FIXTURES / "well_configured_cpp").structure.languages_and_formats
 PASSING_IN_C_CPP = [
-    found for found in discover().checks if not found.languages or found.languages & _C_CPP_FIXTURE_NAMES
+    found for found in discover().checks if not found.languages or found.languages & _CXX_FIXTURE_NAMES
 ]
 COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
@@ -97,13 +97,14 @@ class CliTests(unittest.TestCase):
             ".github/workflows/python.yml": WELL_CONFIGURED_PYTHON[".github/workflows/ci.yml"],
         }
         mixed = [layout for layout in C_FAMILY_LAYOUTS if layout not in C_FAMILY_ONLY_LAYOUTS]
-        # ci-build-types is left out: a Python-only job on a runner counts as a C/C++ build with its default compiler.
+        # ci-build-types is left out: a Python-only job on a runner counts as a C or C++ build with its default
+        # compiler.
         judged_per_language = "compiler-warnings,coverage,tests-run,hardening,platform-matrix"
         for layout in mixed:
             with layout_project(self, layout, {**WELL_CONFIGURED, **python}) as root:
                 code, output, _ = run_cli("--only", judged_per_language, str(root))
                 self.assertEqual(code, EXIT_SUCCESS, output)
-                self.assertIn("[PASS] coverage: C/C++: branch coverage is gated with gcovr", output)
+                self.assertIn("[PASS] coverage: C++: branch coverage is gated with gcovr", output)
 
     def test_bare_project_fails(self) -> None:
         for layout in PROJECT_LAYOUTS:
@@ -156,7 +157,7 @@ class CliTests(unittest.TestCase):
             self.assertIn(cause, errors)
 
     def test_map_prints_the_project_structure(self) -> None:
-        code, output, _ = run_cli("--map", str(FIXTURES / "well_configured_c_cpp"))
+        code, output, _ = run_cli("--map", str(FIXTURES / "well_configured_cpp"))
         self.assertEqual(code, EXIT_SUCCESS)
         mapped = json.loads(output)
         self.assertEqual(mapped["languages"], ["C++"])
@@ -216,21 +217,21 @@ class CliTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, EXIT_USAGE)
 
     def test_max_file_size_sets_the_large_file_limit(self) -> None:
-        code, output, _ = run_cli("--only", "large-files", "--max-file-size", "0.5", str(FIXTURES / "bare_c_cpp"))
+        code, output, _ = run_cli("--only", "large-files", "--max-file-size", "0.5", str(FIXTURES / "bare_cpp"))
         self.assertEqual(
             (code, output.strip()), (EXIT_SUCCESS, "[PASS] large-files: no committed file is larger than 512 KiB")
         )
 
     @requires_rich
     def test_color_always_beautifies_the_output(self) -> None:
-        code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured_c_cpp"))
+        code, output, _ = run_cli("--color", "always", str(FIXTURES / "well_configured_cpp"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("\x1b[", output)
         self.assertIn(f"{len(PASSING_IN_C_CPP)} passed", output)
 
     def test_color_never_and_auto_when_redirected_keep_plain_text(self) -> None:
         for choice in ("never", "auto"):
-            _, output, _ = run_cli("--color", choice, str(FIXTURES / "well_configured_c_cpp"))
+            _, output, _ = run_cli("--color", choice, str(FIXTURES / "well_configured_cpp"))
             self.assertNotIn("\x1b[", output)
             self.assertIn("[PASS] coverage:", output)
             self.assertEqual(output.count("[PASS] "), len(PASSING_IN_C_CPP))
@@ -238,26 +239,26 @@ class CliTests(unittest.TestCase):
     def test_color_auto_is_used_for_a_terminal_unless_no_color_is_set(self) -> None:
         with mock.patch.object(pretty, "available", return_value=False):
             with mock.patch.dict("os.environ", {}, clear=True):
-                self.assertIn("install rich", run_cli(str(FIXTURES / "well_configured_c_cpp"), terminal=True)[2])
+                self.assertIn("install rich", run_cli(str(FIXTURES / "well_configured_cpp"), terminal=True)[2])
             with mock.patch.dict("os.environ", {"NO_COLOR": "1"}):
-                self.assertEqual(run_cli(str(FIXTURES / "well_configured_c_cpp"), terminal=True)[2], "")
+                self.assertEqual(run_cli(str(FIXTURES / "well_configured_cpp"), terminal=True)[2], "")
 
     def test_color_without_rich_falls_back_to_plain_text_and_says_so(self) -> None:
         with mock.patch.object(pretty, "_rich", None):
-            code, output, errors = run_cli("--color", "always", str(FIXTURES / "well_configured_c_cpp"))
+            code, output, errors = run_cli("--color", "always", str(FIXTURES / "well_configured_cpp"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("[PASS] coverage:", output)
         self.assertIn("install rich", errors)
 
     def test_missing_pyyaml_is_an_error_instead_of_reduced_accuracy(self) -> None:
         with mock.patch.object(yaml_support, "_yaml", None):
-            code, output, error = run_cli(str(FIXTURES / "well_configured_c_cpp"))
+            code, output, error = run_cli(str(FIXTURES / "well_configured_cpp"))
         self.assertEqual((code, output), (EXIT_USAGE, ""))
         self.assertIn("PyYAML", error)
 
     def test_pyyaml_can_not_be_disabled(self) -> None:
         with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
-            main(["--no-yaml", str(FIXTURES / "well_configured_c_cpp")])
+            main(["--no-yaml", str(FIXTURES / "well_configured_cpp")])
 
 
 class DependencyTests(unittest.TestCase):
@@ -269,7 +270,7 @@ class DependencyTests(unittest.TestCase):
 
 class ListTests(unittest.TestCase):
     def test_facts_are_printed_as_json(self) -> None:
-        code, output, _ = run_cli("--facts", str(FIXTURES / "well_configured_c_cpp"))
+        code, output, _ = run_cli("--facts", str(FIXTURES / "well_configured_cpp"))
         self.assertEqual(code, EXIT_SUCCESS)
         facts = json.loads(output)
         self.assertIn("CiJob", {fact["kind"] for fact in facts})
@@ -293,7 +294,7 @@ class ListTests(unittest.TestCase):
         matrix = {row["check"]: row["applies_to"] for row in json.loads(output)}
         self.assertEqual(matrix, {found.name: list(applies_to(found)) for found in discover().checks})
         self.assertEqual(matrix["ci-present"], [])
-        self.assertIn("C/C++", matrix["ci-build-types"])
+        self.assertIn("C", matrix["ci-build-types"])
         self.assertNotIn("Python", matrix["ci-build-types"])
 
     def test_list_as_markdown_is_a_table(self) -> None:
@@ -301,7 +302,7 @@ class ListTests(unittest.TestCase):
         self.assertEqual(code, EXIT_SUCCESS)
         self.assertTrue(output.startswith("| Check | Applies to | Passes when |\n|---|---|---|\n| `"))
         self.assertIn("| `ci-present` | every project | ", output)
-        self.assertIn("| `ci-build-types` | C/C++, ", output)
+        self.assertIn("| `ci-build-types` | C, C++, ", output)
 
     def test_support_matrix_is_printed_as_markdown(self) -> None:
         code, output, _ = run_cli("--support-matrix")
@@ -314,7 +315,7 @@ class ListTests(unittest.TestCase):
     def test_support_matrix_as_json(self) -> None:
         code, output, _ = run_cli("--support-matrix", "--format", "json")
         self.assertEqual(code, EXIT_SUCCESS)
-        self.assertIn("C/C++", json.loads(output)["ecosystems"])
+        self.assertIn("C", json.loads(output)["ecosystems"])
 
     def test_support_matrix_needs_no_yaml(self) -> None:
         with mock.patch.object(yaml_support, "available", return_value=False):

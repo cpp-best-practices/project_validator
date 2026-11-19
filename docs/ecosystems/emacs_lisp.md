@@ -49,4 +49,4 @@ The byte-compiled `*.elc` files, the generated `*-autoloads.el`, and the tools' 
 Emacs Lisp has no standard formatter (`code-formatting`), and no type checker, code security scanner, dependency
 auditor, fuzzer or mutation testing tool the validator knows; lizard does not parse it (`function-limits`); a package
 has no lock file (`dependency-management`); byte-compilation builds no debug or release configuration
-(`ci-build-types`, `hardening`, `cxx-extensions`).
+(`ci-build-types`, `hardening`, `compiler-extensions`).

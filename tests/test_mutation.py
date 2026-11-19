@@ -6,7 +6,7 @@ from __future__ import annotations
 import unittest
 from collections.abc import Mapping
 
-from project_validator.ecosystems.c_cpp.mutation import DEXTOOL, MULL
+from project_validator.c_family.mutation import DEXTOOL, MULL
 from project_validator.ecosystems.dotnet.mutation import STRYKER_NET
 from project_validator.ecosystems.go import GO_MUTESTING, GREMLINS
 from project_validator.ecosystems.javascript.mutation import STRYKER_JS

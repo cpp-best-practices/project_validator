@@ -1,5 +1,5 @@
-"""The sanitizers check: C/C++ builds with AddressSanitizer and UndefinedBehaviorSanitizer in some configuration (one
-warns, neither fails); Rust runs Miri or builds with -Zsanitizer; Go runs the race detector."""
+"""The sanitizers check: C and C++ builds with AddressSanitizer and UndefinedBehaviorSanitizer in some configuration
+(one warns, neither fails); Rust runs Miri or builds with -Zsanitizer; Go runs the race detector."""
 
 from __future__ import annotations
 

@@ -158,6 +158,18 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -328,18 +340,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Elixir",
-        "units": []
-      },
-      {
-        "auxiliary": {},
-        "language": "Erlang",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -1494,6 +1494,11 @@
       "message": "not applicable to Elixir, Erlang",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "Elixir: strict Elixir linters are enabled: mix credo --strict; Erlang: strict Erlang warnings are enabled: warn_* erl_opts, elvis",
@@ -1510,11 +1515,6 @@
       ],
       "message": "line coverage is reported with mix test --cover",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Elixir, Erlang",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

@@ -1,0 +1,20 @@
+"""Kinds of TypeScript project, for tests that run a check in every layout."""
+
+from __future__ import annotations
+
+from tests.layouts.model import ProjectLayout
+
+LAYOUTS = (
+    ProjectLayout(
+        name="npm TypeScript",
+        files={"package.json": '{"main": "dist/index.js"}\n', "tsconfig.json": "{}\n", "src/index.ts": ""},
+        languages=frozenset({"TypeScript"}),
+        build_systems=frozenset({"npm"}),
+    ),
+    ProjectLayout(
+        name="Deno TypeScript",
+        files={"deno.json": "{}\n", "main.ts": ""},
+        languages=frozenset({"TypeScript"}),
+        build_systems=frozenset({"Deno"}),
+    ),
+)

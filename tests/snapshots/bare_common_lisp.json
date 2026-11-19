@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Common Lisp",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -128,13 +135,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Common Lisp",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -600,6 +600,11 @@
       "message": "not applicable to Common Lisp",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Lisp compiler lints found; enable at least sblint",
@@ -618,11 +623,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Common Lisp",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

@@ -13,12 +13,13 @@ from pathlib import Path, PurePosixPath
 from project_validator import pretty, yaml_support
 from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, ExtractionError, Options, Project
 from project_validator.ecosystems import applies_to
+from project_validator.explanations import explain
 from project_validator.facts.auxiliary import Selectors
 from project_validator.grid import render_grid
 from project_validator.plugins import PluginError, discover
 from project_validator.questions.answers import answers
 from project_validator.runner import Report, SelectionError, run_checks, select, succeeded
-from project_validator.score import SCORE_VERSION, Score, score
+from project_validator.score import Score, score
 from project_validator.support_matrix import as_dict, render, support_matrix
 
 EXIT_SUCCESS = 0
@@ -85,6 +86,11 @@ def _add_listing_options(parser: argparse.ArgumentParser) -> None:
     )
     for name, what in _DUMPS.items():
         parser.add_argument(f"--{name}", action="store_true", help=f"print {what} as JSON and exit")
+    parser.add_argument(
+        "--explain",
+        metavar="CHECK",
+        help="explain a check: what it looks for, why it matters, and the tools it recognises for each language",
+    )
 
 
 def _add_scope_options(parser: argparse.ArgumentParser) -> None:
@@ -103,7 +109,7 @@ def _add_scope_options(parser: argparse.ArgumentParser) -> None:
         default=[],
         metavar="WHAT",
         help="judge this code as auxiliary, not the product's: by role (tooling, docs, example, benchmark, test), "
-        "language or ecosystem (python, c/c++), or directory (scripts/); its failures are warnings, labelled; "
+        "language or ecosystem (python, c++), or directory (scripts/); its failures are warnings, labelled; "
         "may be repeated",
     )
 
@@ -122,8 +128,9 @@ def _add_output_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--score",
         action="store_true",
-        help="also score the project's tooling: its level, completeness and depth, and the next steps that raise "
-        "them (a preview; the statuses and exit code do not change)",
+        help="also score the project's tooling: the share of the quality gates that apply to it that are in place "
+        "(100%%: all of them; extra credit above for complementary tools), its level, and the next steps (the "
+        "statuses and exit code do not change)",
     )
 
 
@@ -254,11 +261,11 @@ NEXT_STEPS = 5  # how many opportunities the text and markdown reports list
 
 
 def _score_lines(scored: Score, *, markdown: bool) -> list[str]:
-    title = f"Score (preview v{SCORE_VERSION}):"
+    title = "Score:"
     lines = [f"**{title}** {scored.summary()}" if markdown else f"{title} {scored.summary()}"]
-    if scored.opportunities:
-        lines.append("Next:")
-        lines.extend(f"  - {opportunity.describe()}" for opportunity in scored.opportunities[:NEXT_STEPS])
+    if scored.next_steps:
+        lines.append("Next steps:")
+        lines.extend(f"  - {step.describe()}" for step in scored.next_steps[:NEXT_STEPS])
     return lines
 
 
@@ -300,6 +307,13 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if arguments.list or arguments.support_matrix:
         _print_listing(plugins.checks, arguments)
+        return EXIT_SUCCESS
+    if arguments.explain:
+        try:
+            (found,) = select(plugins.checks, [arguments.explain])
+        except SelectionError as error:
+            return _usage_error(parser, str(error))
+        print("\n".join(explain(found, tuple(plugins.checks)).lines()))
         return EXIT_SUCCESS
     if not yaml_support.available():
         return _usage_error(parser, yaml_support.MISSING_MESSAGE)

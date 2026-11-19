@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "JavaScript",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -141,13 +148,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "JavaScript",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -717,26 +717,9 @@
         "language": "JavaScript",
         "units": [
           {
-            "answer": "no",
+            "answer": "impossible",
             "defined": {},
-            "known": {
-              "deno check": {
-                "can": {
-                  "checks": "deno check",
-                  "strict": "deno check (strict by default)"
-                },
-                "needs_definition": false,
-                "required": false
-              },
-              "tsc": {
-                "can": {
-                  "checks": "tsc --noEmit (JavaScript is checked with checkJs in a jsconfig.json)",
-                  "strict": "\"strict\": true in the compilerOptions of tsconfig.json"
-                },
-                "needs_definition": false,
-                "required": false
-              }
-            },
+            "known": {},
             "language": "JavaScript",
             "level": "checks",
             "runs": {},
@@ -851,6 +834,11 @@
       "message": "not applicable to JavaScript",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no JavaScript linters found; enable at least eslint",
@@ -869,11 +857,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to JavaScript",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],
@@ -1031,11 +1014,9 @@
       "status": "SKIP"
     },
     "type-checking": {
-      "details": [
-        "consider running a type checker in CI: tsc --noEmit (JavaScript is checked with checkJs in a jsconfig.json) or deno check"
-      ],
-      "message": "no type checker runs",
-      "status": "FAIL"
+      "details": [],
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
     },
     "vcs-ignore": {
       "details": [

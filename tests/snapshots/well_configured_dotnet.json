@@ -88,6 +88,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "C#",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -181,13 +188,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "C#",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -976,6 +976,11 @@
       "message": "not applicable to C#",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to C#",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict .NET analyzer settings are enabled: AnalysisMode Recommended or All, EnforceCodeStyleInBuild, Nullable enable",
@@ -993,11 +998,6 @@
       ],
       "message": "branch coverage is measured with coverlet",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to C#",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

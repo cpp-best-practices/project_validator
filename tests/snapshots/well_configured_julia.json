@@ -113,6 +113,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Julia",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -196,13 +203,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Julia",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -831,6 +831,11 @@
       "message": "not applicable to Julia",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Julia",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Aqua.jl checks are enabled: Aqua.test_all",
@@ -847,11 +852,6 @@
       ],
       "message": "line coverage is reported with julia --code-coverage",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Julia",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

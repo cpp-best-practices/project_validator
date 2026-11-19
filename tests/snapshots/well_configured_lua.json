@@ -98,6 +98,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Lua",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -183,13 +190,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Lua",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -861,6 +861,11 @@
       "message": "not applicable to Lua",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Lua",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Lua linters are enabled: luacheck",
@@ -877,11 +882,6 @@
       ],
       "message": "line coverage is reported with luacov",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Lua",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

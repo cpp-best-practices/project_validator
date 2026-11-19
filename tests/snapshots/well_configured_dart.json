@@ -93,6 +93,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Dart",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -181,13 +188,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Dart",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -832,6 +832,11 @@
       "message": "not applicable to Dart",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Dart",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Dart analyzer settings are enabled: a lint set in analysis_options.yaml, dart analyze",
@@ -849,11 +854,6 @@
       ],
       "message": "branch coverage is measured with dart test --coverage",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Dart",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

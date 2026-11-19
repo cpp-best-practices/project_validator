@@ -7,7 +7,7 @@ from project_validator.questions.testing import tests
 
 tests_run = answered_check(
     name="tests-run",
-    description="Tests exist (registered with CTest or Meson for C/C++) and CI runs them",
+    description="Tests exist (registered with CTest or Meson for C and C++) and CI runs them",
     aspect=TEST,
     answers=tests,
     judge=judge_tests,

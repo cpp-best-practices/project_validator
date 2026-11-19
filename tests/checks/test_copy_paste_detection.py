@@ -16,7 +16,7 @@ class CopyPasteDetectionTests(unittest.TestCase):
             return copy_paste_detection.run(make_context(root))
 
     def test_warns_without_ci(self) -> None:
-        result = copy_paste_detection.run(make_context(FIXTURES / "bare_c_cpp"))
+        result = copy_paste_detection.run(make_context(FIXTURES / "bare_cpp"))
         self.assertEqual(result.status, Status.WARN)
 
     def test_warns_when_ci_runs_no_copy_paste_detection(self) -> None:
@@ -25,7 +25,7 @@ class CopyPasteDetectionTests(unittest.TestCase):
         self.assertIn("no copy-paste detection", result.message)
 
     def test_passes_with_pmd_cpd(self) -> None:
-        result = copy_paste_detection.run(make_context(FIXTURES / "well_configured_c_cpp"))
+        result = copy_paste_detection.run(make_context(FIXTURES / "well_configured_cpp"))
         self.assertEqual(result.status, Status.PASS)
         self.assertEqual(result.message, "CI runs copy-paste detection with PMD CPD")
 

@@ -48,7 +48,7 @@ The stack and control-flow protections GCC's back end adds: `-fstack-protector-s
 `-fstack-clash-protection` (or GCC 14's `-fhardened`); ifx takes the first two. `_FORTIFY_SOURCE` and the C++ library
 assertions are C's and C++'s. A project with no Fortran `program` outside its tests is a library, and skipped.
 
-## `cxx-extensions`
+## `compiler-extensions`
 
 Fortran compiled to a standard rather than the compiler's dialect: `-std=f2018` (or another standard, gfortran and
 flang), `-stand f18` (ifx, ifort), or Meson's `fortran_std`.

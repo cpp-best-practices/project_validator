@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Emacs Lisp",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -129,13 +136,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Emacs Lisp",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -610,6 +610,11 @@
       "message": "not applicable to Emacs Lisp",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Emacs Lisp lints found; enable at least package-lint, checkdoc",
@@ -628,11 +633,6 @@
       ],
       "message": "no line coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Emacs Lisp",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

@@ -18,7 +18,7 @@ This document describes the design as it is. How the code got here, one pull req
 Before this design, each language profile supplied a typed rule to each practice: the regular expressions that
 recognised its tools, where to look for them, and what counted as passing. Detection and requirements were mixed in
 one object, so adding a language touched about 25 shared files and the snapshot of every other fixture; knowledge
-that was not about one language had to live in one (CMake in the C/C++ profile, although it also builds Fortran;
+that was not about one language had to live in one (CMake in the C and C++ profile, although it also builds Fortran;
 gcov, lizard and the sanitizers copied per profile); and a profile that could not meet a requirement (Go has no
 branch coverage) needed a special case in the profile and in the tests.
 
@@ -163,7 +163,7 @@ below one, `src/test/resources`): `product`, `test`,
 data file there is noted, not parsed), or `vendored` (below a vendor directory anywhere, or a minified bundle).
 A role names code; it judges none: every source outside vendored directories is the product's, whatever its role,
 and adds its language to its unit. `--auxiliary` dials that back (`project_validator/facts/auxiliary.py`): what it
-names, by role (`tooling`), by language or ecosystem (`python`, `c/c++`) or by directory (`scripts/`), is recorded as
+names, by role (`tooling`), by language or ecosystem (`python`, `c++`) or by directory (`scripts/`), is recorded as
 a fact (`AuxiliaryCode`) and resolved once per project (`selectors`). Code it names adds no language to its unit; a
 language only such code is written in is still judged by every practice, in the units that code is in, but the
 judging layer makes its failures warnings that say so and name the dial, and labels them `(auxiliary: tooling)`.
@@ -220,7 +220,7 @@ build system registers for a test runner) applies to the units at or below its d
 
 Build-wired tools are claims on the build: CMake's `CMAKE_<LANG>_CLANG_TIDY`, JVM analyzers bound to a build's
 verification, .NET analyzer packages, SwiftLint's build tool plugin, a restore with `NuGetAuditMode`. Probes
-(`Probe`) run the project's own tools when asked (`--build`): the C/C++ profile builds the project and counts what
+(`Probe`) run the project's own tools when asked (`--build`): the C and C++ profiles build the project and count what
 ctest lists.
 
 Shared tools (`project_validator/tools`) serve every language whose files they read: gcov, gcovr, lcov and llvm-cov

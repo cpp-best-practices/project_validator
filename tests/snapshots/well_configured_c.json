@@ -1,0 +1,1372 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C",
+            "references": [
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/ci-lint.yml",
+                "pinning": null,
+                "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/codeql-analysis.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              },
+              {
+                "path": ".github/workflows/codeql-analysis.yml",
+                "pinning": null,
+                "reference": "github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9"
+              },
+              {
+                "path": ".github/workflows/codeql-analysis.yml",
+                "pinning": null,
+                "reference": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
+              },
+              {
+                "path": ".github/workflows/copy-paste-detection.yml",
+                "pinning": null,
+                "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C",
+            "providers": {
+              "GitHub Actions": {
+                "lintable": true,
+                "linters": [
+                  "actionlint",
+                  "zizmor"
+                ]
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "committed": [],
+            "language": "C",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "set(CMAKE_EXPORT_COMPILE_COMMANDS ON)": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": [
+                  "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                  "CMAKE_EXPORT_COMPILE_COMMANDS ON in a preset",
+                  "Meson, which writes it"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "compile-commands",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "set(CMAKE_C_EXTENSIONS OFF)": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": [
+                  "-DCMAKE_C_EXTENSIONS=OFF",
+                  "CMAKE_C_EXTENSIONS OFF in a preset",
+                  "C_EXTENSIONS OFF",
+                  "c_std=c17"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "compiler-extensions",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "clang",
+                "found": {
+                  "-Wall": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wconversion": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wextra": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wpedantic": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wshadow": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-Wall": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wconversion": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wextra": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wpedantic": [
+                    "CMakeLists.txt"
+                  ],
+                  "-Wshadow": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "msvc",
+                "found": {
+                  "/W4": [
+                    "CMakeLists.txt"
+                  ],
+                  "/permissive-": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "branch": {
+              "answer": "yes",
+              "gated": [
+                "gcovr"
+              ],
+              "known": [
+                "gcovr --xml",
+                "lcov --rc branch_coverage=1",
+                "gcov --branch-counts",
+                "llvm-cov report"
+              ],
+              "reported": [
+                "gcovr"
+              ],
+              "rung": "gated",
+              "tools": [
+                "gcovr"
+              ]
+            },
+            "language": "C",
+            "line": {
+              "answer": "yes",
+              "gated": [],
+              "known": [
+                "gcovr",
+                "lcov",
+                "gcov",
+                "llvm-cov report"
+              ],
+              "reported": [
+                "gcovr"
+              ],
+              "rung": "reported",
+              "tools": [
+                "gcovr"
+              ]
+            },
+            "path": {
+              "answer": "yes",
+              "gated": [],
+              "known": [
+                "lcov --mcdc-coverage",
+                "gcov --conditions",
+                "llvm-cov show -show-mcdc",
+                "gcc -fcondition-coverage",
+                "gcc -fpath-coverage",
+                "clang -fcoverage-mcdc"
+              ],
+              "reported": [],
+              "rung": "measured",
+              "tools": [
+                "gcc -fcondition-coverage"
+              ]
+            },
+            "region": {
+              "answer": "no",
+              "gated": [],
+              "known": [
+                "llvm-cov report"
+              ],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "declared": [
+              {
+                "manager": "FetchContent",
+                "manifest": "cmake/Dependencies.cmake"
+              }
+            ],
+            "language": "C",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "clang-format": [
+                ".clang-format"
+              ]
+            },
+            "known": {
+              "clang-format": {
+                "can": {
+                  "apply": "clang-format -i",
+                  "check": "clang-format --dry-run -Werror"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "check",
+            "runs": {
+              "clang-format": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "clang-tidy's readability-function-size": [
+                ".clang-tidy"
+              ]
+            },
+            "known": {
+              "clang-tidy's readability-function-size": {
+                "can": {
+                  "limits": "clang-tidy with readability-function-size and a LineThreshold in .clang-tidy"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "limits",
+            "runs": {
+              "clang-tidy's readability-function-size": {
+                "levels": [
+                  "limits",
+                  "measures"
+                ],
+                "read": [
+                  ".clang-tidy"
+                ]
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C",
+            "other_runs": [
+              "CTest (fuzz_test/CMakeLists.txt): fuzz_tester_run"
+            ],
+            "property_files": [],
+            "tools": {
+              "answer": "no",
+              "defined": {
+                "AFL++": [
+                  "fuzz_test/fuzz_tester.c"
+                ],
+                "libFuzzer": [
+                  "fuzz_test/fuzz_tester.c"
+                ]
+              },
+              "known": {
+                "AFL++": {
+                  "can": {
+                    "runs": "afl-fuzz -i <corpus> -o <findings> -- <target>"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                },
+                "libFuzzer": {
+                  "can": {
+                    "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz)"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
+              "language": "C",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "clang",
+                "found": {
+                  "-fcf-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-clash-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-protector-strong": [
+                    "CMakeLists.txt"
+                  ],
+                  "_FORTIFY_SOURCE": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-fcf-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-clash-protection": [
+                    "CMakeLists.txt"
+                  ],
+                  "-fstack-protector-strong": [
+                    "CMakeLists.txt"
+                  ],
+                  "_FORTIFY_SOURCE": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "msvc",
+                "found": {
+                  "/CETCOMPAT": [
+                    "CMakeLists.txt"
+                  ],
+                  "/DYNAMICBASE": [
+                    "CMakeLists.txt"
+                  ],
+                  "/guard:cf": [
+                    "CMakeLists.txt"
+                  ],
+                  "/sdl": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C",
+            "practice": "hardening",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "files": {
+              "LICENSE": [
+                "MIT"
+              ]
+            },
+            "language": "C",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "Mull": {
+                "can": {
+                  "runs": "mull-runner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dextool mutate": {
+                "can": {
+                  "runs": "dextool mutate"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "runs",
+            "runs": {
+              "Mull": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "a check that the source and binary directories differ": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": [
+                  "CMAKE_DISABLE_IN_SOURCE_BUILD",
+                  "CMAKE_DISABLE_SOURCE_CHANGES",
+                  "Meson, which builds out of source"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "out-of-source-build",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "axis": "compiler",
+            "language": "C",
+            "notes": [],
+            "platforms": [
+              {
+                "compiler": "clang",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "compiler": "gcc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "linux"
+              },
+              {
+                "compiler": "clang",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "compiler": "gcc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "macos"
+              },
+              {
+                "compiler": "msvc",
+                "configurations": [
+                  "Debug",
+                  "Debug + sanitizers",
+                  "Release",
+                  "Release + sanitizers"
+                ],
+                "os": "windows"
+              }
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "AddressSanitizer": [
+                    "CMakeLists.txt (when ENABLE_SANITIZERS)",
+                    "fuzz_test/CMakeLists.txt"
+                  ],
+                  "UndefinedBehaviorSanitizer": [
+                    "CMakeLists.txt (when ENABLE_SANITIZERS)",
+                    "fuzz_test/CMakeLists.txt"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "C",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "configured": [],
+            "language": "C",
+            "scanners": [
+              "gitleaks"
+            ],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "scans",
+            "runs": {
+              "CodeQL": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "clang-tidy": [
+                ".clang-tidy"
+              ]
+            },
+            "known": {
+              "clang-tidy": {
+                "can": {
+                  "checks": "clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "cppcheck": {
+                "can": {
+                  "checks": "cppcheck (CMAKE_CXX_CPPCHECK)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "checks",
+            "runs": {
+              "clang-tidy": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              },
+              "cppcheck": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "defined": {
+              "ctest": [
+                "test/CMakeLists.txt",
+                "fuzz_test/CMakeLists.txt"
+              ]
+            },
+            "known": {
+              "ctest": {
+                "can": {
+                  "runs": "ctest"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "meson test": {
+                "can": {
+                  "runs": "meson test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "C",
+            "level": "runs",
+            "runs": {
+              "ctest": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "PROJECT_IS_TOP_LEVEL": [
+                    "CMakeLists.txt"
+                  ]
+                },
+                "missing": [
+                  "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR",
+                  "CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME",
+                  "meson.is_subproject()"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "top-level-guard",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "C",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "C",
+            "outputs": {
+              "the build directory": {
+                ".gitignore": "/build/"
+              }
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "C",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "clang",
+                "found": {
+                  "-Werror": [
+                    "CI (.github/workflows/ci.yml)",
+                    "CMakeLists.txt (when WARNINGS_AS_ERRORS)"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-Werror": [
+                    "CI (.github/workflows/ci.yml)",
+                    "CMakeLists.txt (when WARNINGS_AS_ERRORS)"
+                  ]
+                },
+                "missing": []
+              },
+              {
+                "compiler": "msvc",
+                "found": {},
+                "missing": [
+                  "/WX"
+                ]
+              }
+            ],
+            "language": "C",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "YAML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "YAML",
+            "parsed": [
+              ".github/dependabot.yml",
+              ".github/workflows/ci-lint.yml",
+              ".github/workflows/ci.yml",
+              ".github/workflows/codeql-analysis.yml",
+              ".github/workflows/copy-paste-detection.yml"
+            ],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "all 7 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "all 5 OS/compiler combination(s) build Debug and Release, each with and without sanitizers",
+      "status": "PASS"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    "ci-present": {
+      "details": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/codeql-analysis.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    "code-formatting": {
+      "details": [],
+      "message": ".clang-format is defined and CI runs clang-format",
+      "status": "PASS"
+    },
+    "committed-artifacts": {
+      "details": [],
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    "compile-commands": {
+      "details": [],
+      "message": "compile_commands.json is exported with set(CMAKE_EXPORT_COMPILE_COMMANDS ON)",
+      "status": "PASS"
+    },
+    "compiler-extensions": {
+      "details": [],
+      "message": "C compiler extensions are disabled with set(CMAKE_C_EXTENSIONS OFF)",
+      "status": "PASS"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "strict compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wshadow -Wconversion for clang and gcc; /W4 /permissive- for msvc",
+      "status": "PASS"
+    },
+    "copy-paste-detection": {
+      "details": [],
+      "message": "CI runs copy-paste detection with PMD CPD",
+      "status": "PASS"
+    },
+    "coverage": {
+      "details": [],
+      "message": "branch coverage is gated with gcovr; path coverage bonus: measured with gcc -fcondition-coverage (not reported)",
+      "status": "PASS"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "5 YAML files parse",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to C",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "dependencies are declared in cmake/Dependencies.cmake (FetchContent)",
+      "status": "PASS"
+    },
+    "dependency-updates": {
+      "details": [
+        ".github/dependabot.yml"
+      ],
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "function length is limited with clang-tidy's readability-function-size (.clang-tidy)",
+      "status": "PASS"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "fuzz targets in 1 file(s), run by CTest (fuzz_test/CMakeLists.txt): fuzz_tester_run",
+      "status": "PASS"
+    },
+    "hardening": {
+      "details": [],
+      "message": "hardening options are enabled: _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection for clang and gcc; /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT for msvc",
+      "status": "PASS"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "LICENSE"
+      ],
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to C",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to C",
+      "status": "SKIP"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "Mull runs",
+      "status": "PASS"
+    },
+    "out-of-source-build": {
+      "details": [],
+      "message": "in-source builds are prevented by a check that the source and binary directories differ",
+      "status": "PASS"
+    },
+    "platform-matrix": {
+      "details": [
+        ".github/workflows/ci-lint.yml: ci-lint: linux / gcc (runner default)",
+        ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, ON): linux / gcc",
+        ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, OFF): linux / gcc",
+        ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, ON): linux / gcc",
+        ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, OFF): linux / gcc",
+        ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, ON): linux / clang",
+        ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, OFF): linux / clang",
+        ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, ON): linux / clang",
+        ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, OFF): linux / clang",
+        ".github/workflows/ci.yml: test (macos-latest, gcc, Release, ON): macos / gcc",
+        ".github/workflows/ci.yml: test (macos-latest, gcc, Release, OFF): macos / gcc",
+        ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, ON): macos / gcc",
+        ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, OFF): macos / gcc",
+        ".github/workflows/ci.yml: test (macos-latest, clang, Release, ON): macos / clang",
+        ".github/workflows/ci.yml: test (macos-latest, clang, Release, OFF): macos / clang",
+        ".github/workflows/ci.yml: test (macos-latest, clang, Debug, ON): macos / clang",
+        ".github/workflows/ci.yml: test (macos-latest, clang, Debug, OFF): macos / clang",
+        ".github/workflows/ci.yml: test (windows-latest, msvc, Release, ON): windows / msvc",
+        ".github/workflows/ci.yml: test (windows-latest, msvc, Release, OFF): windows / msvc",
+        ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, ON): windows / msvc",
+        ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, OFF): windows / msvc",
+        ".github/workflows/ci.yml: format: linux / gcc (runner default)",
+        ".github/workflows/codeql-analysis.yml: analyze: linux / gcc (runner default)",
+        ".github/workflows/copy-paste-detection.yml: cpd: linux / gcc (runner default)"
+      ],
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 3 compiler(s) (clang, gcc, msvc), 5 combination(s)",
+      "status": "PASS"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "sanitizers are enabled: AddressSanitizer, UndefinedBehaviorSanitizer",
+      "status": "PASS"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to C",
+      "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to C",
+      "status": "SKIP"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to C",
+      "status": "SKIP"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to C",
+      "status": "SKIP"
+    },
+    "secret-scanning": {
+      "details": [],
+      "message": "secrets are scanned for with gitleaks",
+      "status": "PASS"
+    },
+    "security-policy": {
+      "details": [],
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "CI scans the code for security problems with CodeQL",
+      "status": "PASS"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "clang-tidy (.clang-tidy) and cppcheck run",
+      "status": "PASS"
+    },
+    "status-badges": {
+      "details": [],
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call): 2 file(s), run by ctest",
+      "status": "PASS"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "developer-only settings are guarded by PROJECT_IS_TOP_LEVEL",
+      "status": "PASS"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to C",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [],
+      "message": ".gitignore ignores /build/",
+      "status": "PASS"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "warnings are treated as errors with -Werror",
+      "status": "PASS"
+    }
+  }
+}

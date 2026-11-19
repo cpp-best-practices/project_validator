@@ -59,7 +59,7 @@ lizard parses Zig, so CI runs it with a length limit.
 
 ## Not judged
 
-Zig has no warnings (`compiler-warnings`, `warnings-as-errors`) and no standard to pick (`cxx-extensions`); it is
+Zig has no warnings (`compiler-warnings`, `warnings-as-errors`) and no standard to pick (`compiler-extensions`); it is
 statically typed (`type-checking`); no code security scanner, dependency auditor or mutation testing tool the
 validator knows reads Zig; the `.hash` of every dependency in `build.zig.zon` belongs to `dependency-management`, not
 judged for Zig yet.

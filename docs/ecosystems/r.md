@@ -64,6 +64,6 @@ resolve them; a project whose `.Rprofile` activates renv is an analysis that com
 
 ## Not judged
 
-R is interpreted, so `hardening`, `cxx-extensions` and `ci-build-types` do not apply, and nor does `type-checking`;
+R is interpreted, so `hardening`, `compiler-extensions` and `ci-build-types` do not apply, and nor does `type-checking`;
 no code security scanner or dependency auditor the validator knows reads R; no fuzzer or mutation testing tool the
 validator knows runs R tests.

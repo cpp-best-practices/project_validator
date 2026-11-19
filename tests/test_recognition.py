@@ -11,7 +11,6 @@ from project_validator.build_systems.cmake.build import CMAKE
 from project_validator.core import Context, Project
 from project_validator.ecosystems import (
     BUILT_IN,
-    C_FAMILY,
     BuildSystem,
     Ecosystem,
     RegistryError,
@@ -89,9 +88,10 @@ class SuffixTests(unittest.TestCase):
             self.assertEqual(structure.unrecognised_suffixes, ())
 
     def test_an_ambiguous_suffix_without_a_language_adds_none(self) -> None:
+        """A CMake module adds no language; a header alone is C (see tests/test_c_and_cxx.py)."""
         with _structure({"CMakeLists.txt": "", "include/app.h": "", "cmake/Warnings.cmake": ""}) as structure:
-            self.assertEqual(structure.languages, C_FAMILY)
-            self.assertEqual(structure.recognised_by, {"C/C++": ("build file CMakeLists.txt",)})
+            self.assertEqual(structure.languages, frozenset({"C"}))
+            self.assertEqual(structure.recognised_by, {"C": ("build file CMakeLists.txt", ".h files")})
             self.assertEqual(structure.unrecognised_suffixes, ())
         with _structure({"include/app.h": ""}) as structure:
             self.assertEqual(structure.languages, frozenset())
@@ -138,7 +138,7 @@ class UnrecognisedSuffixTests(unittest.TestCase):
             mapped["unrecognised_suffixes"],
             [{"suffix": ".odin", "files": 2}, {"suffix": ".awk", "files": 1}, {"suffix": ".nim", "files": 1}],
         )
-        self.assertEqual(mapped["ecosystems"], {"C/C++": ["build file meson.build"]})
+        self.assertEqual(mapped["ecosystems"], {"C": ["build file meson.build"]})
 
 
 class ClaimConflictTests(unittest.TestCase):

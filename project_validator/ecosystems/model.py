@@ -171,6 +171,12 @@ class Ecosystem:
     maps to the language it adds, or to None for a file of the ecosystem that adds no language.
 
     A project using none of its `build_systems` is taken to use `default_build_system`.
+
+    Ecosystems of one `family` (C and C++; JavaScript and TypeScript) are separate languages that share build files
+    and tools, so what only says "this family" gives way to the sources: a build file that declares a language of the
+    family (CMake's default C and C++, package.json's `main`) adds it only where no source of the family says
+    otherwise, and a source whose name matches `tool_configuration` (`eslint.config.js`) is tool configuration, not
+    a source of its language, where the family's other languages have sources.
     """
 
     label: str
@@ -187,6 +193,8 @@ class Ecosystem:
     ci_programs: tuple[tuple[str, ...], ...] = ()
     ci_usage: re.Pattern[str] | None = None
     default_build_system: BuildSystem | None = None
+    family: str | None = None
+    tool_configuration: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if self.kind == "format" and self.toolchain is not None:

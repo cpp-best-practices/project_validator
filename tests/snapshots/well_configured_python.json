@@ -98,6 +98,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -185,13 +192,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Python",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -1017,6 +1017,11 @@
       "message": "not applicable to Python",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Python warning settings are enabled: -W error",
@@ -1034,11 +1039,6 @@
       ],
       "message": "branch coverage is measured with coverage.py",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Python",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

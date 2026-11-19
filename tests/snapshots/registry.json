@@ -28,6 +28,12 @@
       "aliases": [],
       "description": "compile_commands.json is exported (CMAKE_EXPORT_COMPILE_COMMANDS; Meson always writes it)"
     },
+    "compiler-extensions": {
+      "aliases": [
+        "cxx-extensions"
+      ],
+      "description": "Compiler extensions are disabled (-std=c++NN or -std=cNN rather than -std=gnu++NN or -std=gnuNN)"
+    },
     "compiler-warnings": {
       "aliases": [],
       "description": "A strict compiler warning (or lint) set is enabled"
@@ -39,10 +45,6 @@
     "coverage": {
       "aliases": [],
       "description": "CI measures branch coverage (or the finest the language's tools measure), reports it where it can be seen and fails under a threshold; path coverage is a bonus"
-    },
-    "cxx-extensions": {
-      "aliases": [],
-      "description": "Compiler extensions are disabled (-std=c++NN rather than -std=gnu++NN)"
     },
     "data-wellformed": {
       "aliases": [],
@@ -102,7 +104,7 @@
     },
     "sanitizers": {
       "aliases": [],
-      "description": "Sanitizers are used in some configuration: AddressSanitizer and UndefinedBehaviorSanitizer for C/C++ (one of the two warns), cargo miri test or -Zsanitizer for Rust, go test -race for Go"
+      "description": "Sanitizers are used in some configuration: AddressSanitizer and UndefinedBehaviorSanitizer for C and C++ (one of the two warns), cargo miri test or -Zsanitizer for Rust, go test -race for Go"
     },
     "schema-compatibility": {
       "aliases": [],
@@ -144,7 +146,7 @@
       "aliases": [
         "ctest-runs"
       ],
-      "description": "Tests exist (registered with CTest or Meson for C/C++) and CI runs them"
+      "description": "Tests exist (registered with CTest or Meson for C and C++) and CI runs them"
     },
     "top-level-guard": {
       "aliases": [],
@@ -2882,7 +2884,6 @@
         }
       },
       "languages": [
-        "JavaScript",
         "TypeScript"
       ],
       "name": "deno check",
@@ -6685,12 +6686,11 @@
     {
       "can": {
         "type-check": {
-          "checks": "tsc --noEmit (JavaScript is checked with checkJs in a jsconfig.json)",
+          "checks": "tsc --noEmit",
           "strict": "\"strict\": true in the compilerOptions of tsconfig.json"
         }
       },
       "languages": [
-        "JavaScript",
         "TypeScript"
       ],
       "name": "tsc",

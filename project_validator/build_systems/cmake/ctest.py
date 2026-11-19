@@ -1,6 +1,6 @@
-"""C/C++ tests: registered with CTest in the CMake files (`enable_testing()`, then `add_test` or a `*_discover_tests`
-call, as `project_validator.build_systems.cmake` reads them), or, with `--build`, listed by ctest after a real build.
-ctest runs them."""
+"""C and C++ tests: registered with CTest in the CMake files (`enable_testing()`, then `add_test` or a
+`*_discover_tests` call, as `project_validator.build_systems.cmake` reads them), or, with `--build`, listed by ctest
+after a real build. ctest runs them."""
 
 from __future__ import annotations
 

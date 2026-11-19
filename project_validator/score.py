@@ -1,35 +1,36 @@
-"""The tooling score (upstream #295): three numbers read from the reports, beside the statuses, which do not change.
+"""The tooling score (upstream #295), version 1: how many of the quality gates that apply to a project are in place.
 
-- **Level** is a gated tech tree: level N when the core and project cells of every check of levels 1 to N pass.
-  Level 4 needs every applicable cell, auxiliary ones included.
-- **Completeness** is covered cells over applicable cells, averaged across units (the whole project's own cells
-  are one more unit). Auxiliary cells weigh half, a warning covers half a cell, a skip is not applicable, and an
-  error scores nothing but stays in the maximum, so neither adding untooled code nor hiding something ever pays.
-- **Depth** is the high score: each tool in a covered cell earns points by its rank in the cell, by tier. Depth
-  earned in a level counts only once the levels below it are complete; the rest is shown as locked.
+**100% means every gate that applies to each part of the project is in place.** A part is a language in a unit (one
+check's result there is a *slot*); the gates of the whole project (a licence, CI) are one slot each.
 
-A **cell** is one check's result for one ecosystem in one unit (a place); a check of the whole project (no places)
-is one project cell.
+- **Fill.** A passing slot is filled, a warning half filled, anything else empty. A skip is not a slot (the gate does
+  not apply), and an error stays one: hiding something never helps.
+- **Weight.** Auxiliary code (`--auxiliary`) weighs half, and is not asked for the gates of the product alone
+  (`NOT_FOR_AUXILIARY`: fuzzing tests, measuring their coverage, ...). Cosmetic checks (`UNSCORED`) are reported, not
+  scored.
+- **Pooled.** `percent = 100 * filled / slots`: a folder of data files with one gate weighs one slot.
+- **Extra credit**, only for gates where more tools find more (`EXTRA_CREDIT`: analysers, scanners, auditors,
+  fuzzers, sanitizers, type checkers): a second distinct tool in a slot earns a quarter slot more, a third a tenth;
+  tools of one family (ruff and flake8; golangci-lint and the linters it bundles) count once. It is **held** until
+  every slot is filled, so passing 100% always means every gate is in place.
+- **Levels** are milestones: level N when the core and project slots of every check of levels 1 to N pass, and each
+  of those checks ran; level 4, Complete, is 100% with every check run.
 
-This is the preview (version 0): it reads only what the reports carry. Strength (disabled diagnostics, suppression
-density), advisory runs at half points, tool families and verified points need facts the readers do not record yet,
-and arrive with version 1. Until then a covered cell earns its first rank even when the check names no tool, so
-checks that do not report their tools do not distort the comparison.
+A next step is every slot not filled, with the points filling it is worth and the level it is needed for.
 """
 
 from __future__ import annotations
 
 import math
-from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field
 
 from project_validator.core import Status
 from project_validator.runner import Report
 
-SCORE_VERSION = "0"
+SCORE_VERSION = "1"
 
-# The checks each level's core and project cells must pass, in order; every other check belongs to level 4.
+# The checks each level's core and project slots must pass, in order; every other check belongs to the top level.
 LEVELS: Mapping[int, tuple[str, ...]] = {
     1: (
         "ci-present",
@@ -44,52 +45,94 @@ LEVELS: Mapping[int, tuple[str, ...]] = {
     3: ("sanitizers", "fuzz-testing", "mutation-testing", "security-scanning", "action-pinning"),
 }
 TOP_LEVEL = 4
+LEVEL_NAMES: Mapping[int, str] = {0: "Getting started", 1: "Foundations", 2: "Analysis", 3: "Hardening", 4: "Complete"}
+
+# Reported, never scored: what a README shows is not a quality gate.
+UNSCORED = frozenset({"status-badges"})
+# The gates of the product alone, which auxiliary code (tests, examples, scripts) is not asked for.
+NOT_FOR_AUXILIARY = frozenset(
+    {
+        "coverage",
+        "fuzz-testing",
+        "mutation-testing",
+        "sanitizers",
+        "hardening",
+        "dependency-audit",
+        "platform-matrix",
+        "ci-build-types",
+        "security-scanning",
+    }
+)
+# The gates where each more tool finds more: two analysers are stronger than one; two formatters are not.
+EXTRA_CREDIT = frozenset(
+    {
+        "static-analysis",
+        "security-scanning",
+        "dependency-audit",
+        "fuzz-testing",
+        "sanitizers",
+        "type-checking",
+        "compiler-warnings",
+    }
+)
+# The extra credit of the 2nd, 3rd, ... distinct tool family in a slot, in slots.
+EXTRA = (0.25, 0.10)
+# Tools that are one tool for the extra credit: reimplementations of each other's rules.
+FAMILIES: Mapping[str, str] = {"flake8": "ruff", "pylint": "pylint", "ruff": "ruff"}
 
 CORE, AUXILIARY, PROJECT = "core", "auxiliary", "project"
 _WEIGHT = {CORE: 1.0, AUXILIARY: 0.5, PROJECT: 1.0}
-# Points for the 1st, 2nd, 3rd, ... tool in a cell; tools past the end earn nothing.
-_RANKS = {CORE: (10, 5, 2, 1, 1, 1), AUXILIARY: (5, 2, 1), PROJECT: (10, 5, 2, 1, 1, 1)}
-_FLAT = 5  # a project cell that passes without naming a tool (a licence, a security policy)
-_COVERS = {Status.PASS: 1.0, Status.WARN: 0.5}
+_FILLS = {Status.PASS: 1.0, Status.WARN: 0.5}
 
 
 def level_of(check: str) -> int:
     return next((level for level, checks in LEVELS.items() if check in checks), TOP_LEVEL)
 
 
+def family(tool: str) -> str:
+    """The family a tool counts in for the extra credit: a bundled linter's bundle (`golangci-lint's gosec`), a
+    reimplementation's original, else the tool itself."""
+    bundle, separator, _ = tool.partition("'s ")
+    return bundle if separator else FAMILIES.get(tool, tool)
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Cell:
+    """One slot: a check's result for a language in a unit (or for the whole project)."""
+
     check: str
     level: int
-    ecosystem: str  # "" for a project cell
-    unit: str  # "" for a project cell
+    ecosystem: str  # "" for the whole project
+    unit: str  # "" for the whole project
     tier: str
     status: Status
     tools: tuple[str, ...]
-    points: float = 0.0
-    counted: bool = False
-
-    @property
-    def covered(self) -> float:
-        return _COVERS.get(self.status, 0.0)
+    message: str = ""
+    hint: str = ""
 
     @property
     def weight(self) -> float:
         return _WEIGHT[self.tier]
 
     @property
-    def first_rank(self) -> float:
-        return _FLAT if self.tier == PROJECT and not self.tools else _RANKS[self.tier][0]
+    def fill(self) -> float:
+        return _FILLS.get(self.status, 0.0)
 
-    def earned(self) -> float:
-        """The cell's points before gating: its tools by rank (at least its first rank, named or not), scaled by
-        how much of the cell is covered."""
-        if not self.covered:
+    @property
+    def filled(self) -> float:
+        return self.weight * self.fill
+
+    @property
+    def families(self) -> tuple[str, ...]:
+        return tuple(dict.fromkeys(family(tool) for tool in self.tools))
+
+    @property
+    def extra(self) -> float:
+        """The extra credit the slot earns, in slots: for each distinct tool family past the first, in a gate where
+        more tools find more."""
+        if self.check not in EXTRA_CREDIT or not self.fill:
             return 0.0
-        if self.tier == PROJECT and not self.tools:
-            return _FLAT * self.covered
-        ranks = _RANKS[self.tier]
-        return sum(ranks[: max(1, len(self.tools))]) * self.covered
+        return sum(EXTRA[: max(0, len(self.families) - 1)]) * self.weight * self.fill
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -100,14 +143,15 @@ class Cell:
             "tier": self.tier,
             "status": str(self.status),
             "tools": list(self.tools),
-            "points": _number(self.points),
-            "counted": self.counted,
+            "weight": self.weight,
+            "filled": self.filled,
+            "extra": _number(self.extra),
         }
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class Opportunity:
-    """A cell that is not covered, and what covering it is worth."""
+class NextStep:
+    """A slot not filled, and what filling it is worth."""
 
     check: str
     ecosystem: str
@@ -115,10 +159,26 @@ class Opportunity:
     tier: str
     status: Status
     level: int  # the level of its check
-    completeness: float  # how much completeness would rise
-    depth: float  # the first-rank points it would earn (0 while its level is locked)
-    blocks: int | None  # the next level, when the cell stands in its way
-    unlocks: int | None  # the next level, when the cell alone stands in its way
+    points: float  # how much the percent rises
+    needed_for: int | None  # the next level, when the slot stands in its way
+    completes: bool  # whether it alone stands in the way of the next level
+    message: str = ""
+    hint: str = ""
+
+    @property
+    def where(self) -> str:
+        unit = {"": "", ".": ""}.get(self.unit, self.unit)
+        return " in ".join(part for part in (self.ecosystem, unit) if part)
+
+    def describe(self) -> str:
+        """`coverage (C++ in lib): +12 points, needed for Level 2 (Analysis); run gcovr in CI`."""
+        where = f" ({self.where})" if self.where else ""
+        gains = [f"+{_points(self.points)} points"]
+        if self.needed_for is not None:
+            verb = "completes" if self.completes else "needed for"
+            gains.append(f"{verb} Level {self.needed_for} ({LEVEL_NAMES[self.needed_for]})")
+        hint = f"; {self.hint}" if self.hint else ""
+        return f"{self.check}{where}: {', '.join(gains)}{hint}"
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -128,48 +188,87 @@ class Opportunity:
             "tier": self.tier,
             "status": str(self.status),
             "level": self.level,
-            "completeness": round(self.completeness, 4),
-            "depth": _number(self.depth),
-            "blocks": self.blocks,
-            "unlocks": self.unlocks,
+            "points": round(self.points, 2),
+            "needed_for": self.needed_for,
+            "completes": self.completes,
+            "message": self.message,
+            "hint": self.hint,
         }
-
-    def describe(self) -> str:
-        unit = {"": "", ".": "the root"}.get(self.unit, f"unit {self.unit}")
-        where = " in ".join(part for part in (self.ecosystem, unit) if part)
-        gains = [f"+{self.completeness:.1%} completeness"]
-        if self.depth:
-            gains.append(f"+{_number(self.depth)} depth")
-        if self.unlocks is not None:
-            gains.append(f"unlocks Level {self.unlocks}")
-        elif self.blocks is not None:
-            gains.append(f"toward Level {self.blocks}")
-        return f"{self.check}{f' ({where})' if where else ''}: {', '.join(gains)}"
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Score:
     level: int
-    completeness: float
-    depth: float
-    locked_depth: float
+    filled: float
+    slots: float
+    extra_slots: float
     cells: tuple[Cell, ...]
-    opportunities: tuple[Opportunity, ...]
+    next_steps: tuple[NextStep, ...] = field(default=())
+
+    @property
+    def base(self) -> float:
+        """The share of the slots filled, in percent."""
+        return 100.0 * self.filled / self.slots if self.slots else 100.0
+
+    @property
+    def complete(self) -> bool:
+        return math.isclose(self.filled, self.slots)
+
+    @property
+    def extra(self) -> float:
+        """The extra credit, in percent: counted once every slot is filled."""
+        return 100.0 * self.extra_slots / self.slots if self.slots and self.complete else 0.0
+
+    @property
+    def held(self) -> float:
+        """The extra credit earned but held until every slot is filled, in percent."""
+        return 100.0 * self.extra_slots / self.slots if self.slots and not self.complete else 0.0
+
+    @property
+    def percent(self) -> float:
+        return 100.0 + self.extra if self.complete else self.base
+
+    @property
+    def gates(self) -> int:
+        return sum(1 for cell in self.cells if cell.fill)
+
+    @property
+    def level_name(self) -> str:
+        return LEVEL_NAMES[self.level]
 
     def summary(self) -> str:
-        percent = math.floor(round(self.completeness * 100, 6))
-        return f"Level {self.level} · {percent}% complete · {_number(self.depth)} depth"
+        """`87% · Level 1 Foundations · 41 of 47 gates in place`."""
+        head = f"{_floor(self.percent)}% · Level {self.level} {self.level_name}"
+        if self.complete:
+            gates = f"all {len(self.cells)} gates in place"
+            return f"{head} · {gates}, +{_floor(self.extra)} extra credit" if self.extra else f"{head} · {gates}"
+        gates = f"{self.gates} of {len(self.cells)} gates in place"
+        held = f" (+{_floor(self.held)} extra credit held until every gate is in place)" if self.held else ""
+        return f"{head} · {gates}{held}"
+
+    def breakdown(self) -> dict[str, tuple[float, float]]:
+        """Language -> (filled, slots); the whole project's own gates are under ""."""
+        found: dict[str, tuple[float, float]] = {}
+        for cell in self.cells:
+            filled, slots = found.get(cell.ecosystem, (0.0, 0.0))
+            found[cell.ecosystem] = (filled + cell.filled, slots + cell.weight)
+        return found
 
     def as_dict(self) -> dict[str, object]:
         return {
             "version": SCORE_VERSION,
-            "preview": True,
+            "percent": round(self.percent, 2),
+            "base": round(self.base, 2),
+            "extra": round(self.extra, 2),
+            "held": round(self.held, 2),
             "level": self.level,
-            "completeness": round(self.completeness, 4),
-            "depth": _number(self.depth),
-            "locked_depth": _number(self.locked_depth),
+            "level_name": self.level_name,
+            "filled": _number(self.filled),
+            "slots": _number(self.slots),
+            "summary": self.summary(),
+            "breakdown": {name: [_number(a), _number(b)] for name, (a, b) in self.breakdown().items()},
             "cells": [cell.as_dict() for cell in self.cells],
-            "opportunities": [opportunity.as_dict() for opportunity in self.opportunities],
+            "next_steps": [step.as_dict() for step in self.next_steps],
         }
 
 
@@ -177,33 +276,59 @@ def _number(value: float) -> float | int:
     return int(value) if float(value).is_integer() else round(value, 2)
 
 
+def _floor(value: float) -> int:
+    return math.floor(round(value, 6))
+
+
+def _points(value: float) -> str:
+    return str(_number(round(value, 1)))
+
+
+def _hint(details: Sequence[str]) -> str:
+    return details[0] if details else ""
+
+
 def _report_cells(report: Report) -> Iterator[Cell]:
-    """The report's applicable cells: one per place that does not skip, or one project cell for a check of the whole
-    project."""
+    """The report's slots: one per place that does not skip, or one for a check of the whole project; auxiliary
+    places of the product's own gates, and unscored checks, are left out."""
     name, level = report.check.name, level_of(report.check.name)
-    if not report.result.places:
-        if report.result.status is not Status.SKIP:
-            yield Cell(
-                check=name, level=level, ecosystem="", unit="", tier=PROJECT, status=report.result.status, tools=()
-            )
+    if name in UNSCORED:
         return
-    for place in report.result.places:
-        if place.result.status is not Status.SKIP:
-            tier = AUXILIARY if place.auxiliary else CORE
+    result = report.result
+    if not result.places:
+        if result.status is not Status.SKIP:
             yield Cell(
                 check=name,
                 level=level,
-                ecosystem=place.ecosystem,
-                unit=place.unit,
-                tier=tier,
-                status=place.result.status,
-                tools=place.tools,
+                ecosystem="",
+                unit="",
+                tier=PROJECT,
+                status=result.status,
+                tools=(),
+                message=result.message,
+                hint=_hint(result.details),
             )
+        return
+    for place in result.places:
+        tier = AUXILIARY if place.auxiliary else CORE
+        if place.result.status is Status.SKIP or (tier == AUXILIARY and name in NOT_FOR_AUXILIARY):
+            continue
+        yield Cell(
+            check=name,
+            level=level,
+            ecosystem=place.ecosystem,
+            unit=place.unit,
+            tier=tier,
+            status=place.result.status,
+            tools=place.tools,
+            message=place.result.message,
+            hint=_hint(place.result.details),
+        )
 
 
 def _blocking(cells: Iterable[Cell], level: int) -> list[Cell]:
-    """The cells that stand between the project and `level`: below the top level, the core and project cells of
-    levels 1 to `level` that do not pass; at the top, every cell that does not."""
+    """The slots that stand between the project and `level`: below the top level, the core and project slots of
+    levels 1 to `level` that do not pass; at the top, every slot that does not."""
     return [
         cell
         for cell in cells
@@ -217,72 +342,38 @@ def _ran_all(level: int, ran: frozenset[str], every_check: frozenset[str]) -> bo
 
 
 def _level(cells: Sequence[Cell], ran: frozenset[str], every_check: frozenset[str]) -> int:
-    """The highest level reached: no cell blocks it or a level below, and each check they need ran."""
     reached = 0
     while reached < TOP_LEVEL and not _blocking(cells, reached + 1) and _ran_all(reached + 1, ran, every_check):
         reached += 1
     return reached
 
 
-def _units(cells: Iterable[Cell]) -> dict[str, list[Cell]]:
-    units: dict[str, list[Cell]] = defaultdict(list)
-    for cell in cells:
-        units[cell.unit].append(cell)
-    return units
+def _rank(step: NextStep) -> tuple[bool, bool, int, bool, float, str]:
+    """The next level's blockers first (the one that completes it first), lowest level first, then core before
+    auxiliary, then by the points."""
+    return (step.needed_for is None, not step.completes, step.level, step.tier == AUXILIARY, -step.points, step.check)
 
 
-def _completeness(units: Mapping[str, Sequence[Cell]]) -> float:
-    if not units:
-        return 1.0
-    return sum(
-        sum(cell.weight * cell.covered for cell in cells) / sum(cell.weight for cell in cells)
-        for cells in units.values()
-    ) / len(units)
-
-
-def _opportunity(cell: Cell, unit_weight: float, units: int, level: int, blocking: Sequence[Cell]) -> Opportunity:
-    """What covering `cell` is worth, in a unit of `unit_weight` among `units`, at `level`."""
-    missing = 1.0 - cell.covered
-    return Opportunity(
-        check=cell.check,
-        ecosystem=cell.ecosystem,
-        unit=cell.unit,
-        tier=cell.tier,
-        status=cell.status,
-        level=cell.level,
-        completeness=cell.weight * missing / unit_weight / units,
-        depth=cell.first_rank * missing if cell.level <= level + 1 else 0.0,
-        blocks=level + 1 if cell in blocking else None,
-        unlocks=level + 1 if list(blocking) == [cell] else None,
-    )
-
-
-def _rank(opportunity: Opportunity) -> tuple[bool, bool, int, bool, float, float, str]:
-    """The next level's blockers first (lowest level first), then core before auxiliary, then by what it is worth."""
-    return (
-        opportunity.blocks is None,
-        opportunity.unlocks is None,
-        opportunity.level,
-        opportunity.tier == AUXILIARY,
-        -opportunity.completeness,
-        -opportunity.depth,
-        opportunity.check,
-    )
-
-
-def _opportunities(
-    cells: Sequence[Cell], units: Mapping[str, Sequence[Cell]], level: int, *, complete_run: bool
-) -> tuple[Opportunity, ...]:
-    """Every cell not covered, ranked. A cell unlocks the next level when it alone stands in the way; nothing does
-    when the next level's checks did not all run."""
+def _next_steps(cells: Sequence[Cell], slots: float, level: int, *, complete_run: bool) -> tuple[NextStep, ...]:
     blocking = _blocking(cells, level + 1) if level < TOP_LEVEL and complete_run else []
-    weights = {unit: sum(cell.weight for cell in members) for unit, members in units.items()}
-    found = (
-        _opportunity(cell, weights[cell.unit], len(units), level, blocking)
+    steps = (
+        NextStep(
+            check=cell.check,
+            ecosystem=cell.ecosystem,
+            unit=cell.unit,
+            tier=cell.tier,
+            status=cell.status,
+            level=cell.level,
+            points=100.0 * (cell.weight - cell.filled) / slots,
+            needed_for=level + 1 if cell in blocking else None,
+            completes=blocking == [cell],
+            message=cell.message,
+            hint=cell.hint,
+        )
         for cell in cells
         if cell.status is not Status.PASS
     )
-    return tuple(sorted(found, key=_rank))
+    return tuple(sorted(steps, key=_rank))
 
 
 def score(reports: Iterable[Report], every_check: Iterable[str] = ()) -> Score:
@@ -290,19 +381,34 @@ def score(reports: Iterable[Report], every_check: Iterable[str] = ()) -> Score:
     only when `every_check` (the names of every check there is) ran too: a run narrowed by `--only` or `--skip`
     reaches no level past the checks it left out."""
     reports = list(reports)
-    raw = [cell for report in reports for cell in _report_cells(report)]
+    cells = tuple(cell for report in reports for cell in _report_cells(report))
     ran = frozenset(report.check.name for report in reports)
     everything = frozenset(every_check)
-    level = _level(raw, ran, everything)
-    cells = tuple(replace(cell, points=cell.earned(), counted=cell.level <= level + 1) for cell in raw)
-    units = _units(cells)
+    level = _level(cells, ran, everything)
+    slots = sum(cell.weight for cell in cells)
+    complete_run = level == TOP_LEVEL or _ran_all(level + 1, ran, everything)
     return Score(
         level=level,
-        completeness=_completeness(units),
-        depth=sum(cell.points for cell in cells if cell.counted),
-        locked_depth=sum(cell.points for cell in cells if not cell.counted),
+        filled=sum(cell.filled for cell in cells),
+        slots=slots,
+        extra_slots=sum(cell.extra for cell in cells),
         cells=cells,
-        opportunities=_opportunities(
-            cells, units, level, complete_run=level == TOP_LEVEL or _ran_all(level + 1, ran, everything)
-        ),
+        next_steps=_next_steps(cells, slots, level, complete_run=complete_run),
     )
+
+
+__all__ = [
+    "EXTRA_CREDIT",
+    "LEVELS",
+    "LEVEL_NAMES",
+    "NOT_FOR_AUXILIARY",
+    "SCORE_VERSION",
+    "TOP_LEVEL",
+    "UNSCORED",
+    "Cell",
+    "NextStep",
+    "Score",
+    "family",
+    "level_of",
+    "score",
+]

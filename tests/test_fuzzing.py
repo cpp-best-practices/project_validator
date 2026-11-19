@@ -5,13 +5,13 @@ from __future__ import annotations
 import re
 import unittest
 
-from project_validator.core import Result
-from project_validator.ecosystems.c_cpp.fuzzing import (
+from project_validator.c_family.fuzzing import (
     AFL,
     C_FUZZ_TARGETS,
     C_PROPERTY_TESTS,
     LIBFUZZER,
 )
+from project_validator.core import Result
 from project_validator.ecosystems.dotnet.fuzzing import DOTNET_FUZZ_TARGETS, DOTNET_PROPERTY_TESTS, SHARPFUZZ
 from project_validator.ecosystems.go import GO_FUZZ, GO_FUZZ_TARGETS, GO_PROPERTY_TESTS, GO_TEST_FILES
 from project_validator.ecosystems.javascript.fuzzing import (
@@ -197,7 +197,7 @@ class CFuzzingTests(unittest.TestCase):
 
     def test_a_ctest_registered_fuzz_target_runs(self) -> None:
         files = {
-            **fixture_files("well_configured_c_cpp"),
+            **fixture_files("well_configured_cpp"),
             "fuzz_test/CMakeLists.txt": "add_test(NAME other_run COMMAND other_tool crashes/crash-1)\n",
         }
         self.assertEqual(_ctest_entries(files), ())
@@ -215,12 +215,12 @@ class CFuzzingTests(unittest.TestCase):
             ("add_test(NAME t_max_total_time=10 COMMAND fuzz_tester)", False),
         ):
             with self.subTest(registration=registration):
-                files = {**fixture_files("well_configured_c_cpp"), "fuzz_test/CMakeLists.txt": registration + "\n"}
+                files = {**fixture_files("well_configured_cpp"), "fuzz_test/CMakeLists.txt": registration + "\n"}
                 self.assertEqual(bool(_ctest_entries(files)), counted)
 
     def test_a_ctest_fuzz_test_does_not_run_without_a_ctest_run(self) -> None:
         files = {
-            **fixture_files("well_configured_c_cpp"),
+            **fixture_files("well_configured_cpp"),
             **github_job("ubuntu-latest", "cmake --build build"),
             "fuzz_test/CMakeLists.txt": "add_test(NAME fuzz_tester_run COMMAND fuzz_tester -max_total_time=10)\n",
         }
@@ -248,7 +248,7 @@ class CFuzzingTests(unittest.TestCase):
         ):
             with self.subTest(line=line):
                 files = {
-                    **fixture_files("well_configured_c_cpp"),
+                    **fixture_files("well_configured_cpp"),
                     **github_job("ubuntu-latest", line),
                     "fuzz_test/CMakeLists.txt": FUZZ_TESTER_REGISTRATION,
                 }

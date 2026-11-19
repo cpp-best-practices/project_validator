@@ -5,7 +5,7 @@ import unittest
 from project_validator.checks.function_limits import function_limits
 from project_validator.core import Result, Status
 from project_validator.ecosystems import C_FAMILY
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 from project_validator.facts import Facts
@@ -186,15 +186,15 @@ class OtherLanguageFunctionLimitsTests(unittest.TestCase):
 
 class MixedLanguageFunctionLimitsTests(unittest.TestCase):
     def test_every_language_needs_a_limit_and_findings_are_labelled(self) -> None:
-        result = run_as(self, function_limits, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        result = run_as(self, function_limits, dict(WELL_CONFIGURED), CXX, PYTHON)
         self.assertEqual(result.status, Status.FAIL)
         self.assertEqual(
             result.message,
-            "C/C++: function length is limited with clang-tidy's readability-function-size (.clang-tidy); "
+            "C++: function length is limited with clang-tidy's readability-function-size (.clang-tidy); "
             "Python: function length is never limited",
         )
 
     def test_one_lizard_length_limit_covers_every_language(self) -> None:
-        result = run_as(self, function_limits, github_job("x", "lizard -L 30"), C_AND_CXX, PYTHON)
+        result = run_as(self, function_limits, github_job("x", "lizard -L 30"), CXX, PYTHON)
         # The same result for every ecosystem is said once.
         self.assertEqual(result, LIMITED_BY_LIZARD)

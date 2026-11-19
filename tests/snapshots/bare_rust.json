@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -141,13 +148,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Rust",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -779,6 +779,11 @@
       "message": "not applicable to Rust",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Rust lint settings found; enable at least cargo clippy -D warnings clippy::pedantic",
@@ -797,11 +802,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Rust",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

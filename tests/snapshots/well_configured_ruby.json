@@ -88,6 +88,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Ruby",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -180,13 +187,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Ruby",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -955,6 +955,11 @@
       "message": "not applicable to Ruby",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Ruby warning settings are enabled: Ruby warnings, RuboCop or Standard",
@@ -971,11 +976,6 @@
       ],
       "message": "branch coverage is reported with SimpleCov",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Ruby",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

@@ -83,6 +83,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Typst",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -141,13 +148,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Typst",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -650,6 +650,11 @@
       "message": "not applicable to Typst",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Typst",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to Typst",
@@ -661,11 +666,6 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "not applicable to Typst",
-      "status": "SKIP"
-    },
-    "cxx-extensions": {
       "details": [],
       "message": "not applicable to Typst",
       "status": "SKIP"

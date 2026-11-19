@@ -4,7 +4,7 @@ import unittest
 
 from project_validator.checks.type_checking import type_checking
 from project_validator.core import Result, Status
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.go import GO
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
@@ -27,7 +27,7 @@ class TypeCheckingTests(unittest.TestCase):
 
     def test_applies_to_python_only_of_the_built_in_ecosystems(self) -> None:
         self.assertIn("Python", type_checking.languages)
-        for ecosystem in (C_AND_CXX, RUST, GO):
+        for ecosystem in (CXX, RUST, GO):
             with self.subTest(ecosystem.label):
                 self.assertFalse(ecosystem.languages & type_checking.languages)
 
@@ -36,7 +36,7 @@ class TypeCheckingTests(unittest.TestCase):
         self.assertEqual(self._run(WELL_CONFIGURED_PYTHON), expected)
 
     def test_compiled_ecosystems_are_skipped(self) -> None:
-        self.assertEqual(type_checking.run(make_context(FIXTURES / "well_configured_c_cpp")).status, Status.SKIP)
+        self.assertEqual(type_checking.run(make_context(FIXTURES / "well_configured_cpp")).status, Status.SKIP)
 
     def test_fails_when_no_type_checker_runs(self) -> None:
         self.assertEqual(self._run(_ci("pytest")), Result.failed("no type checker runs", HINT))

@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Python",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -132,13 +139,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Python",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -806,6 +806,11 @@
       "message": "not applicable to Python",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Python warning settings found; enable at least -W error",
@@ -824,11 +829,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Python",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

@@ -5,7 +5,7 @@ import unittest
 from project_validator.checks.coverage import coverage
 from project_validator.core import Options, Result, Status
 from project_validator.ecosystems import C_FAMILY
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 from tests.support import (
@@ -342,15 +342,15 @@ class RustCoverageTests(unittest.TestCase):
 
 class MixedLanguageCoverageTests(unittest.TestCase):
     def test_every_language_needs_branch_coverage_and_findings_are_labelled(self) -> None:
-        result = run_as(self, coverage, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        result = run_as(self, coverage, dict(WELL_CONFIGURED), CXX, PYTHON)
         self.assertEqual(result.status, Status.FAIL)
         self.assertEqual(
             result.message,
-            "C/C++: branch coverage is gated with gcovr; path coverage bonus: measured with gcc -fcondition-coverage "
+            "C++: branch coverage is gated with gcovr; path coverage bonus: measured with gcc -fcondition-coverage "
             "(not reported); Python: no branch coverage measurement found in what CI runs",
         )
 
     def test_passes_when_every_language_reports_branch_coverage(self) -> None:
         python = {".github/workflows/python.yml": github_job("x", "coverage run --branch -m x")[GITHUB_WORKFLOW]}
         files = {**WELL_CONFIGURED, **python}
-        self.assertEqual(run_as(self, coverage, files, C_AND_CXX, PYTHON).status, Status.PASS)
+        self.assertEqual(run_as(self, coverage, files, CXX, PYTHON).status, Status.PASS)

@@ -115,7 +115,7 @@
       "Data": [
         ".json files"
       ],
-      "JavaScript/TypeScript": [
+      "JavaScript": [
         "build file package.json",
         ".js files"
       ]

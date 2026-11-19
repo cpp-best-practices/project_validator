@@ -208,11 +208,11 @@ class SecurityLintTests(unittest.TestCase):
         self.assertEqual(self._run(without, "Go").status, Status.WARN)
 
     def test_each_language_is_judged_and_findings_are_labelled(self) -> None:
-        result = self._run(github_job("x", "bandit -r python"), "C", "C++", "Python")
+        result = self._run(github_job("x", "bandit -r python"), "C++", "Python")
         self.assertEqual(result.status, Status.WARN)
         self.assertEqual(
             result.message,
-            "C/C++: no code security scanning found in CI configuration; Python: CI scans the code for security "
+            "C++: no code security scanning found in CI configuration; Python: CI scans the code for security "
             "problems with bandit",
         )
 

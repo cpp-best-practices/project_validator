@@ -37,9 +37,9 @@ class WarningsAsErrorsTests(unittest.TestCase):
             self, warnings_as_errors, files, c_family_layouts_built_with(warnings_as_errors, "CMake")
         )
 
-    # -Werror and /WX are C/C++ compiler flags, and the JVM and .NET compilers have their own; eslint --max-warnings 0
-    # fails JavaScript linting on a warning, and PHPUnit's failOn* settings fail PHP tests on one. Other languages'
-    # equivalents are judged by compiler-warnings.
+    # -Werror and /WX are C and C++ compiler flags, and the JVM and .NET compilers have their own; eslint
+    # --max-warnings 0 fails JavaScript linting on a warning, and PHPUnit's failOn* settings fail PHP tests on one.
+    # Other languages' equivalents are judged by compiler-warnings.
     def test_declares_the_languages_it_judges(self) -> None:
         self.assertLessEqual(C_FAMILY | {"JavaScript", "Java"}, warnings_as_errors.languages)
         self.assertNotIn("Python", warnings_as_errors.languages)
@@ -147,7 +147,7 @@ class MesonWarningsAsErrorsTests(unittest.TestCase):
                 self.assertEqual(result, Result.passed("warnings are treated as errors with -Werror"))
 
     def test_passes_with_werror_or_wx_as_project_arguments(self) -> None:
-        result = self._run({"meson.build": "add_project_arguments('-Werror', language: 'cpp')\n"})
+        result = self._run({"meson.build": "add_project_arguments('-Werror', language: ['c', 'cpp'])\n"})
         self.assertEqual(result.message, "warnings are treated as errors with -Werror")
 
     def test_disabled_or_commented_out_werror_and_cmake_settings_do_not_count(self) -> None:

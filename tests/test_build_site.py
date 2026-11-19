@@ -132,7 +132,8 @@ class PagesTests(unittest.TestCase):
     def test_the_ecosystems_index_links_every_ecosystem_page_by_its_title(self) -> None:
         index = pages(ROOT)["docs/ecosystems/index.html"]
         self.assertIn("- [Fortran](fortran.md)", index)
-        self.assertIn("- [C/C++](c_cpp.md)", index)
+        self.assertIn("- [C](c.md)", index)
+        self.assertIn("- [C++](cpp.md)", index)
         self.assertEqual(index.count("\n- ["), len(PROFILES))
 
 
@@ -153,13 +154,15 @@ class BuildTests(unittest.TestCase):
             "validator": "v" * 40,
             "evaluated": "2026-11-18T03:17:00Z",
             "score": {
-                "version": "0",
+                "version": "1",
+                "percent": 50.0,
                 "level": 1,
-                "completeness": 0.5,
-                "depth": 20,
-                "locked_depth": 0,
+                "level_name": "Foundations",
+                "filled": 1,
+                "slots": 2,
+                "summary": "50% · Level 1 Foundations · 1 of 2 gates in place",
                 "cells": [],
-                "opportunities": [],
+                "next_steps": [],
             },
         }
         with tempfile.TemporaryDirectory() as tmp:

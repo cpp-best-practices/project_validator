@@ -178,6 +178,18 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -342,18 +354,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "PowerShell",
-        "units": []
-      },
-      {
-        "auxiliary": {},
-        "language": "Shell",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -1292,6 +1292,11 @@
       "message": "not applicable to PowerShell, Shell",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "PowerShell: strict PowerShell lints are enabled: PSScriptAnalyzer; Shell: strict shell lints are enabled: shellcheck",
@@ -1309,11 +1314,6 @@
       ],
       "message": "PowerShell: statement coverage is reported with Pester; Shell: line coverage is reported with kcov",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to PowerShell, Shell",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

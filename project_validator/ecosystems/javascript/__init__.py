@@ -1,5 +1,10 @@
-"""JavaScript and TypeScript: packaged with package.json (npm, pnpm, yarn, bun) or deno.json, judged by the Node.js,
-Deno and Bun versions CI runs.
+"""JavaScript: packaged with package.json (npm, pnpm, yarn, bun) or deno.json, judged by the Node.js, Deno and Bun
+versions CI runs.
+
+TypeScript is a separate language and ecosystem (`project_validator.ecosystems.typescript`) built on JavaScript's
+platform: it shares this profile's build systems, runtimes and tools (their `JS_LANGUAGES` are both), and only
+TypeScript is asked for type checking, its defining gate. JavaScript tool configuration (`eslint.config.js`) in a
+TypeScript project is configuration, not JavaScript code.
 
 Much of a JavaScript project's tooling runs through the scripts of its package.json (`npm run lint`), so the scripts
 CI runs count as CI configuration wherever a rule reads more than CI configuration.
@@ -695,27 +700,46 @@ RUNTIME_VERSIONS = (
     re.compile(r"\boven/bun:(\d+(?:\.\d+)*)"),
 )
 
-JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
-    label="JavaScript/TypeScript",
-    languages=frozenset({JAVASCRIPT, TYPESCRIPT}),
-    build_systems=(NPM, DENO),
-    source_suffixes={
-        **dict.fromkeys(JS_SUFFIXES, JAVASCRIPT),
-        **dict.fromkeys(TS_SUFFIXES, TYPESCRIPT),
-    },
-    toolchain=toolchain_patterns(
-        "JavaScript runtime",
-        more=RUNTIME_VERSIONS,
-        # Not npx alone: other ecosystems' CI runs tools such as jscpd with it.
-        programs=(
-            *subcommands("npm", "ci", "install", "i", "test", "t", "run"),
-            *("pnpm", "yarn", "node"),
-            *subcommands("deno", "test", "task", "run", "check", "lint", "fmt"),
-            *subcommands("bun", "install", "test", "run"),
-        ),
-        setup=("deno", "bun"),
-        steps=(("actions/setup-node", _setup_node), ("pnpm/setup", _pnpm_runtime)),
-    ),
+# The tool configuration written in JavaScript, which a TypeScript project's tools read: configuration, not sources.
+TOOL_CONFIGURATION = (
+    "*.config.js",
+    "*.config.mjs",
+    "*.config.cjs",
+    ".*rc.js",
+    ".*rc.cjs",
+    ".*rc.mjs",
+    "gulpfile.js",
+    "Gruntfile.js",
+    "Jakefile.js",
 )
+
+
+def ecmascript_ecosystem(language: str, suffixes: tuple[str, ...]) -> Ecosystem:
+    """The ecosystem of JavaScript or TypeScript (`language`, recognised by its `suffixes`): separate languages, which
+    share package.json, Deno, their runtimes and their tools (this profile's components)."""
+    return Ecosystem(
+        label=language,
+        languages=frozenset({language}),
+        build_systems=(NPM, DENO),
+        source_suffixes=dict.fromkeys(suffixes, language),
+        family="ECMAScript",
+        tool_configuration=TOOL_CONFIGURATION if language == JAVASCRIPT else (),
+        toolchain=toolchain_patterns(
+            "JavaScript runtime",
+            more=RUNTIME_VERSIONS,
+            # Not npx alone: other ecosystems' CI runs tools such as jscpd with it.
+            programs=(
+                *subcommands("npm", "ci", "install", "i", "test", "t", "run"),
+                *("pnpm", "yarn", "node"),
+                *subcommands("deno", "test", "task", "run", "check", "lint", "fmt"),
+                *subcommands("bun", "install", "test", "run"),
+            ),
+            setup=("deno", "bun"),
+            steps=(("actions/setup-node", _setup_node), ("pnpm/setup", _pnpm_runtime)),
+        ),
+    )
+
+
+JAVASCRIPT_ECOSYSTEM = ecmascript_ecosystem(JAVASCRIPT, JS_SUFFIXES)
 
 RUNTIME_AXIS = versions_axis("runtime version", "JavaScript runtime", JS_LANGUAGES)

@@ -127,10 +127,10 @@ class RoleBelowSourceRootTests(unittest.TestCase):
 
 
 class FlutterScaffoldingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #185: Flutter's generated runners make C/C++, Swift and JVM units
+    @unittest.expectedFailure  # upstream #185: Flutter's generated runners make C, C++, Swift and JVM units
     def test_flutter_platform_directories_are_the_flutter_builds_own(self) -> None:
         """The android/, ios/ and linux/ runners beside a pubspec with a `flutter:` section make the project neither
-        C/C++, Swift nor JVM, and add no CMake or Xcode build (dart-lang/http, bloc, drift)."""
+        C, C++, Swift nor JVM, and add no CMake or Xcode build (dart-lang/http, bloc, drift)."""
         structure = _structure(FLUTTER)
         self.assertEqual(structure.languages, frozenset({"Dart"}))
         self.assertEqual(structure.build_systems, frozenset({"pub"}))
@@ -197,8 +197,8 @@ class TestsCountedPerUnitTests(unittest.TestCase):
 
 class JobAttributionTests(unittest.TestCase):
     def test_a_job_is_c_cxx_only_when_it_compiles_c_or_cxx(self) -> None:
-        """A job that runs `make lint` in a Python project, or the devenv CLI, is not a C/C++ job; a job that compiles
-        nothing has no compiler (compose-spec, country-codes, devenv, dbt-utils, every JVM project)."""
+        """A job that runs `make lint` in a Python project, or the devenv CLI, is not a C or C++ job; a job that
+        compiles nothing has no compiler (compose-spec, country-codes, devenv, dbt-utils, every JVM project)."""
         cases = (
             {**PYTHON, **github_job("ubuntu-latest", "make lint")},
             {**RUST, "flake.nix": DEV_SHELL_FLAKE, **github_job("ubuntu-latest", "devenv shell -- cargo test")},
@@ -208,7 +208,7 @@ class JobAttributionTests(unittest.TestCase):
         for files in cases:
             job = _job(files)
             with self.subTest(workflow=files[GITHUB_WORKFLOW]):
-                self.assertNotIn("C/C++", job.ecosystems)
+                self.assertFalse({"C", "C++"} & job.ecosystems)
                 self.assertEqual(job.compilers, frozenset())
 
     def test_a_clang_job_installing_gcc_multilib_is_clang_only(self) -> None:

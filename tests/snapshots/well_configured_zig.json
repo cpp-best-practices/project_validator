@@ -88,6 +88,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Zig",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -152,13 +159,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Zig",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -777,6 +777,11 @@
       "message": "not applicable to Zig",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Zig",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to Zig",
@@ -793,11 +798,6 @@
       ],
       "message": "line coverage is reported with kcov",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Zig",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

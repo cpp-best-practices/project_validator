@@ -79,15 +79,15 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
-      "language": "TypeScript",
-      "origin": "src/add.test.ts",
+      "language": "JavaScript",
+      "origin": "src/add.js",
       "role": "product"
     },
     {
       "ambiguous": false,
       "kind": "SourceFile",
-      "language": "TypeScript",
-      "origin": "src/add.ts",
+      "language": "JavaScript",
+      "origin": "src/add.test.js",
       "role": "product"
     },
     {
@@ -95,13 +95,6 @@
       "kind": "SourceFile",
       "language": "JSON",
       "origin": "stryker.config.json",
-      "role": "product"
-    },
-    {
-      "ambiguous": false,
-      "kind": "SourceFile",
-      "language": "JSON",
-      "origin": "tsconfig.json",
       "role": "product"
     },
     {
@@ -114,8 +107,7 @@
       ],
       "kind": "Unit",
       "languages": [
-        "JavaScript",
-        "TypeScript"
+        "JavaScript"
       ],
       "origin": ".",
       "role": "product"
@@ -201,24 +193,14 @@
       "unread": null
     },
     {
-      "column": null,
-      "format": "JSON",
-      "kind": "DataFile",
-      "line": null,
-      "origin": "tsconfig.json",
-      "problem": null,
-      "role": "product",
-      "unread": null
-    },
-    {
       "kind": "Jazzer.js fuzz targets (an exported fuzz function or .fuzz())",
       "language": "JavaScript",
       "origin": "fuzz/add.fuzz.js"
     },
     {
       "kind": "*.test.*, *.spec.*, __tests__/ or test/ files",
-      "language": "TypeScript",
-      "origin": "src/add.test.ts"
+      "language": "JavaScript",
+      "origin": "src/add.test.js"
     },
     {
       "kind": "CiConfiguration",
@@ -458,37 +440,6 @@
     {
       "argv": [
         "npm",
-        "run",
-        "typecheck"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "Command",
-      "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "tsc",
-        "--noEmit"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "Command",
-      "line": "tsc --noEmit",
-      "origin": "package.json:scripts.typecheck",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "argv": [
-        "npm",
         "test"
       ],
       "condition": null,
@@ -497,7 +448,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -514,7 +465,7 @@
       "line": "vitest run --coverage",
       "origin": "package.json:scripts.test",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -529,7 +480,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -545,7 +496,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
@@ -560,9 +511,9 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -579,7 +530,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -595,9 +546,9 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -717,37 +668,6 @@
     {
       "argv": [
         "npm",
-        "run",
-        "typecheck"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "Command",
-      "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "tsc",
-        "--noEmit"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "Command",
-      "line": "tsc --noEmit",
-      "origin": "package.json:scripts.typecheck",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "argv": [
-        "npm",
         "test"
       ],
       "condition": null,
@@ -756,7 +676,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -773,7 +693,7 @@
       "line": "vitest run --coverage",
       "origin": "package.json:scripts.test",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -788,7 +708,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -804,7 +724,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
@@ -819,9 +739,9 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -838,7 +758,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -854,9 +774,9 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -976,37 +896,6 @@
     {
       "argv": [
         "npm",
-        "run",
-        "typecheck"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "Command",
-      "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "tsc",
-        "--noEmit"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "Command",
-      "line": "tsc --noEmit",
-      "origin": "package.json:scripts.typecheck",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "argv": [
-        "npm",
         "test"
       ],
       "condition": null,
@@ -1015,7 +904,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -1032,7 +921,7 @@
       "line": "vitest run --coverage",
       "origin": "package.json:scripts.test",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -1047,7 +936,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -1063,7 +952,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
@@ -1078,9 +967,9 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -1097,7 +986,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -1113,9 +1002,9 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -1235,37 +1124,6 @@
     {
       "argv": [
         "npm",
-        "run",
-        "typecheck"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "Command",
-      "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "tsc",
-        "--noEmit"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "Command",
-      "line": "tsc --noEmit",
-      "origin": "package.json:scripts.typecheck",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "argv": [
-        "npm",
         "test"
       ],
       "condition": null,
@@ -1274,7 +1132,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -1291,7 +1149,7 @@
       "line": "vitest run --coverage",
       "origin": "package.json:scripts.test",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -1306,7 +1164,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -1322,7 +1180,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
@@ -1337,9 +1195,9 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -1356,7 +1214,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -1372,9 +1230,9 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -1494,37 +1352,6 @@
     {
       "argv": [
         "npm",
-        "run",
-        "typecheck"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "Command",
-      "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "tsc",
-        "--noEmit"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "Command",
-      "line": "tsc --noEmit",
-      "origin": "package.json:scripts.typecheck",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "argv": [
-        "npm",
         "test"
       ],
       "condition": null,
@@ -1533,7 +1360,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -1550,7 +1377,7 @@
       "line": "vitest run --coverage",
       "origin": "package.json:scripts.test",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -1565,7 +1392,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -1581,7 +1408,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
@@ -1596,9 +1423,9 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -1615,7 +1442,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -1631,9 +1458,9 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -1753,37 +1580,6 @@
     {
       "argv": [
         "npm",
-        "run",
-        "typecheck"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "Command",
-      "line": "npm run typecheck",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
-      "via": []
-    },
-    {
-      "argv": [
-        "tsc",
-        "--noEmit"
-      ],
-      "condition": null,
-      "directory": null,
-      "env": {},
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "Command",
-      "line": "tsc --noEmit",
-      "origin": "package.json:scripts.typecheck",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "argv": [
-        "npm",
         "test"
       ],
       "condition": null,
@@ -1792,7 +1588,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npm test",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
       "via": []
     },
     {
@@ -1809,7 +1605,7 @@
       "line": "vitest run --coverage",
       "origin": "package.json:scripts.test",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -1824,7 +1620,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npm audit --audit-level=moderate",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "via": []
     },
     {
@@ -1840,7 +1636,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": []
     },
     {
@@ -1855,9 +1651,9 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npx stryker run --incremental",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -1874,7 +1670,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": []
     },
     {
@@ -1890,9 +1686,9 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "npx jazzer fuzz/add.fuzz.js -- -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -2065,7 +1861,7 @@
       "configurations": [],
       "default_compiler": false,
       "ecosystems": [
-        "JavaScript/TypeScript"
+        "JavaScript"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
@@ -2086,7 +1882,7 @@
       "configurations": [],
       "default_compiler": false,
       "ecosystems": [
-        "JavaScript/TypeScript"
+        "JavaScript"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
@@ -2107,7 +1903,7 @@
       "configurations": [],
       "default_compiler": false,
       "ecosystems": [
-        "JavaScript/TypeScript"
+        "JavaScript"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
@@ -2128,7 +1924,7 @@
       "configurations": [],
       "default_compiler": false,
       "ecosystems": [
-        "JavaScript/TypeScript"
+        "JavaScript"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
@@ -2149,7 +1945,7 @@
       "configurations": [],
       "default_compiler": false,
       "ecosystems": [
-        "JavaScript/TypeScript"
+        "JavaScript"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
@@ -2170,7 +1966,7 @@
       "configurations": [],
       "default_compiler": false,
       "ecosystems": [
-        "JavaScript/TypeScript"
+        "JavaScript"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
@@ -2350,53 +2146,6 @@
       "reader": "StrykerJS"
     },
     {
-      "kind": "ConfigurationFile",
-      "origin": "tsconfig.json",
-      "reader": "TypeScript"
-    },
-    {
-      "heuristic": false,
-      "key": "compilerOptions.target",
-      "kind": "Setting",
-      "origin": "tsconfig.json:compilerOptions.target",
-      "tool": "TypeScript",
-      "value": "es2022"
-    },
-    {
-      "heuristic": false,
-      "key": "compilerOptions.module",
-      "kind": "Setting",
-      "origin": "tsconfig.json:compilerOptions.module",
-      "tool": "TypeScript",
-      "value": "nodenext"
-    },
-    {
-      "heuristic": false,
-      "key": "compilerOptions.strict",
-      "kind": "Setting",
-      "origin": "tsconfig.json:compilerOptions.strict",
-      "tool": "TypeScript",
-      "value": true
-    },
-    {
-      "heuristic": false,
-      "key": "compilerOptions.outDir",
-      "kind": "Setting",
-      "origin": "tsconfig.json:compilerOptions.outDir",
-      "tool": "TypeScript",
-      "value": "dist"
-    },
-    {
-      "heuristic": false,
-      "key": "include",
-      "kind": "Setting",
-      "origin": "tsconfig.json:include",
-      "tool": "TypeScript",
-      "value": [
-        "src"
-      ]
-    },
-    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2499,32 +2248,6 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": "package.json:scripts.typecheck",
-      "provides": {
-        "type-check": [
-          "checks",
-          "strict"
-        ]
-      },
-      "read": [
-        "tsconfig.json"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "tsc",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[0]",
-      "kind": "ToolRun",
-      "languages": [
-        "JavaScript",
-        "TypeScript"
-      ],
       "origin": "package.json:scripts.test",
       "provides": {
         "test": [
@@ -2537,7 +2260,7 @@
       ],
       "tool": "a JavaScript test runner",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -2563,7 +2286,7 @@
       ],
       "tool": "Vitest",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -2574,7 +2297,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "audit": [
           "runs"
@@ -2595,7 +2318,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "mutation": [
           "incremental",
@@ -2608,7 +2331,7 @@
       ],
       "tool": "StrykerJS",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -2619,7 +2342,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
         "fuzz": [
           "runs"
@@ -2631,7 +2354,7 @@
       ],
       "tool": "Jazzer.js",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -2737,32 +2460,6 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": "package.json:scripts.typecheck",
-      "provides": {
-        "type-check": [
-          "checks",
-          "strict"
-        ]
-      },
-      "read": [
-        "tsconfig.json"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "tsc",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[1]",
-      "kind": "ToolRun",
-      "languages": [
-        "JavaScript",
-        "TypeScript"
-      ],
       "origin": "package.json:scripts.test",
       "provides": {
         "test": [
@@ -2775,7 +2472,7 @@
       ],
       "tool": "a JavaScript test runner",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -2801,7 +2498,7 @@
       ],
       "tool": "Vitest",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -2812,7 +2509,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "audit": [
           "runs"
@@ -2833,7 +2530,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "mutation": [
           "incremental",
@@ -2846,7 +2543,7 @@
       ],
       "tool": "StrykerJS",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -2857,7 +2554,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
         "fuzz": [
           "runs"
@@ -2869,7 +2566,7 @@
       ],
       "tool": "Jazzer.js",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -2975,32 +2672,6 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": "package.json:scripts.typecheck",
-      "provides": {
-        "type-check": [
-          "checks",
-          "strict"
-        ]
-      },
-      "read": [
-        "tsconfig.json"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "tsc",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[2]",
-      "kind": "ToolRun",
-      "languages": [
-        "JavaScript",
-        "TypeScript"
-      ],
       "origin": "package.json:scripts.test",
       "provides": {
         "test": [
@@ -3013,7 +2684,7 @@
       ],
       "tool": "a JavaScript test runner",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -3039,7 +2710,7 @@
       ],
       "tool": "Vitest",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -3050,7 +2721,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "audit": [
           "runs"
@@ -3071,7 +2742,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "mutation": [
           "incremental",
@@ -3084,7 +2755,7 @@
       ],
       "tool": "StrykerJS",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -3095,7 +2766,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
         "fuzz": [
           "runs"
@@ -3107,7 +2778,7 @@
       ],
       "tool": "Jazzer.js",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -3213,32 +2884,6 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": "package.json:scripts.typecheck",
-      "provides": {
-        "type-check": [
-          "checks",
-          "strict"
-        ]
-      },
-      "read": [
-        "tsconfig.json"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "tsc",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[3]",
-      "kind": "ToolRun",
-      "languages": [
-        "JavaScript",
-        "TypeScript"
-      ],
       "origin": "package.json:scripts.test",
       "provides": {
         "test": [
@@ -3251,7 +2896,7 @@
       ],
       "tool": "a JavaScript test runner",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -3277,7 +2922,7 @@
       ],
       "tool": "Vitest",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -3288,7 +2933,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "audit": [
           "runs"
@@ -3309,7 +2954,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "mutation": [
           "incremental",
@@ -3322,7 +2967,7 @@
       ],
       "tool": "StrykerJS",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -3333,7 +2978,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
         "fuzz": [
           "runs"
@@ -3345,7 +2990,7 @@
       ],
       "tool": "Jazzer.js",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -3451,32 +3096,6 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": "package.json:scripts.typecheck",
-      "provides": {
-        "type-check": [
-          "checks",
-          "strict"
-        ]
-      },
-      "read": [
-        "tsconfig.json"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "tsc",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[4]",
-      "kind": "ToolRun",
-      "languages": [
-        "JavaScript",
-        "TypeScript"
-      ],
       "origin": "package.json:scripts.test",
       "provides": {
         "test": [
@@ -3489,7 +3108,7 @@
       ],
       "tool": "a JavaScript test runner",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -3515,7 +3134,7 @@
       ],
       "tool": "Vitest",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -3526,7 +3145,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "audit": [
           "runs"
@@ -3547,7 +3166,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "mutation": [
           "incremental",
@@ -3560,7 +3179,7 @@
       ],
       "tool": "StrykerJS",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -3571,7 +3190,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
         "fuzz": [
           "runs"
@@ -3583,7 +3202,7 @@
       ],
       "tool": "Jazzer.js",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -3689,32 +3308,6 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": "package.json:scripts.typecheck",
-      "provides": {
-        "type-check": [
-          "checks",
-          "strict"
-        ]
-      },
-      "read": [
-        "tsconfig.json"
-      ],
-      "scope": [
-        "."
-      ],
-      "tool": "tsc",
-      "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[5].run"
-      ]
-    },
-    {
-      "heuristic": false,
-      "job": ".github/workflows/ci.yml:test[5]",
-      "kind": "ToolRun",
-      "languages": [
-        "JavaScript",
-        "TypeScript"
-      ],
       "origin": "package.json:scripts.test",
       "provides": {
         "test": [
@@ -3727,7 +3320,7 @@
       ],
       "tool": "a JavaScript test runner",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -3753,7 +3346,7 @@
       ],
       "tool": "Vitest",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[6].run"
+        ".github/workflows/ci.yml:jobs.test.steps[5].run"
       ]
     },
     {
@@ -3764,7 +3357,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
       "provides": {
         "audit": [
           "runs"
@@ -3785,7 +3378,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
       "provides": {
         "mutation": [
           "incremental",
@@ -3798,7 +3391,7 @@
       ],
       "tool": "StrykerJS",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[8].run"
+        ".github/workflows/ci.yml:jobs.test.steps[7].run"
       ]
     },
     {
@@ -3809,7 +3402,7 @@
         "JavaScript",
         "TypeScript"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[9].run",
+      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
       "provides": {
         "fuzz": [
           "runs"
@@ -3821,7 +3414,7 @@
       ],
       "tool": "Jazzer.js",
       "via": [
-        ".github/workflows/ci.yml:jobs.test.steps[9].run"
+        ".github/workflows/ci.yml:jobs.test.steps[8].run"
       ]
     },
     {
@@ -3871,7 +3464,7 @@
           "compilers": [],
           "configurations": [],
           "ecosystems": [
-            "JavaScript/TypeScript"
+            "JavaScript"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, 22)",
           "os": "linux",
@@ -3883,7 +3476,7 @@
           "compilers": [],
           "configurations": [],
           "ecosystems": [
-            "JavaScript/TypeScript"
+            "JavaScript"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, 24)",
           "os": "linux",
@@ -3895,7 +3488,7 @@
           "compilers": [],
           "configurations": [],
           "ecosystems": [
-            "JavaScript/TypeScript"
+            "JavaScript"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, 22)",
           "os": "macos",
@@ -3907,7 +3500,7 @@
           "compilers": [],
           "configurations": [],
           "ecosystems": [
-            "JavaScript/TypeScript"
+            "JavaScript"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, 24)",
           "os": "macos",
@@ -3919,7 +3512,7 @@
           "compilers": [],
           "configurations": [],
           "ecosystems": [
-            "JavaScript/TypeScript"
+            "JavaScript"
           ],
           "name": ".github/workflows/ci.yml: test (windows-latest, 22)",
           "os": "windows",
@@ -3931,7 +3524,7 @@
           "compilers": [],
           "configurations": [],
           "ecosystems": [
-            "JavaScript/TypeScript"
+            "JavaScript"
           ],
           "name": ".github/workflows/ci.yml: test (windows-latest, 24)",
           "os": "windows",
@@ -3969,10 +3562,9 @@
         ".json files",
         ".yml files"
       ],
-      "JavaScript/TypeScript": [
+      "JavaScript": [
         "build file package.json",
-        ".js files",
-        ".ts files"
+        ".js files"
       ]
     },
     "formats": [
@@ -3980,8 +3572,7 @@
       "YAML"
     ],
     "languages": [
-      "JavaScript",
-      "TypeScript"
+      "JavaScript"
     ],
     "units": [
       {
@@ -3994,8 +3585,7 @@
           "YAML"
         ],
         "languages": [
-          "JavaScript",
-          "TypeScript"
+          "JavaScript"
         ],
         "role": "product"
       }

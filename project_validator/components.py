@@ -20,6 +20,7 @@ from typing import Any, cast
 # The packages whose modules may define components, besides the profiles.
 _PACKAGES = (
     "project_validator.build_systems",
+    "project_validator.c_family",
     "project_validator.ci",
     "project_validator.tools",
     "project_validator.questions",

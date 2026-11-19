@@ -96,6 +96,18 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Elixir",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Erlang",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -252,18 +264,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Elixir",
-        "units": []
-      },
-      {
-        "auxiliary": {},
-        "language": "Erlang",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -1228,6 +1228,11 @@
       "message": "not applicable to Elixir, Erlang",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Elixir, Erlang",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "Elixir: no Elixir linters found; enable at least mix credo --strict; Erlang: no Erlang warnings found; enable at least warn_* erl_opts, elvis",
@@ -1247,11 +1252,6 @@
       ],
       "message": "Elixir: no line coverage measurement found in what CI runs; Erlang: no line coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Elixir, Erlang",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

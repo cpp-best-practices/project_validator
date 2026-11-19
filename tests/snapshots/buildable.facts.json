@@ -75,7 +75,7 @@
       "providers": []
     },
     "ecosystems": {
-      "C/C++": [
+      "C": [
         "build file CMakeLists.txt"
       ]
     },

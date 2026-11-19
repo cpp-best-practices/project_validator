@@ -29,7 +29,7 @@ class PracticeName(enum.StrEnum):
     WARNINGS = "compiler-warnings"
     WARNINGS_AS_ERRORS = "warnings-as-errors"
     HARDENING = "hardening"
-    EXTENSIONS = "cxx-extensions"
+    EXTENSIONS = "compiler-extensions"
     SANITIZERS = "sanitizers"
     OUT_OF_SOURCE = "out-of-source-build"
     COMPILE_COMMANDS = "compile-commands"

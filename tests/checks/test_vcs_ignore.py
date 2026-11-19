@@ -6,7 +6,7 @@ from pathlib import Path, PurePosixPath
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Context, Options, Project, Result, Status
 from project_validator.ecosystems import C_FAMILY
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 from project_validator.facts import Facts
@@ -232,15 +232,15 @@ class RustVcsIgnoreTests(unittest.TestCase):
 
 class MixedLanguageVcsIgnoreTests(unittest.TestCase):
     def test_every_language_needs_its_outputs_ignored_and_findings_are_labelled(self) -> None:
-        result = run_as(self, vcs_ignore, {".gitignore": "build/\n"}, C_AND_CXX, PYTHON)
+        result = run_as(self, vcs_ignore, {".gitignore": "build/\n"}, CXX, PYTHON)
         expected = Result.warned(
-            "C/C++: .gitignore ignores build/; Python: .gitignore does not ignore Python bytecode",
+            "C++: .gitignore ignores build/; Python: .gitignore does not ignore Python bytecode",
             "Python: consider ignoring __pycache__/ and *.py[cod]",
         )
         self.assertEqual(result, expected)
 
     def test_passes_when_every_language_is_ignored(self) -> None:
-        result = run_as(self, vcs_ignore, {".gitignore": "build/\n__pycache__/\n"}, C_AND_CXX, PYTHON)
+        result = run_as(self, vcs_ignore, {".gitignore": "build/\n__pycache__/\n"}, CXX, PYTHON)
         self.assertEqual(result.status, Status.PASS)
 
 

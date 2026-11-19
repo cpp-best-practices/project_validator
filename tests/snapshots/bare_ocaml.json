@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -128,13 +135,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "OCaml",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -611,6 +611,11 @@
       "message": "not applicable to OCaml",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no OCaml warning settings found; enable at least dune's dev profile warning set (or -w +a)",
@@ -629,11 +634,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to OCaml",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

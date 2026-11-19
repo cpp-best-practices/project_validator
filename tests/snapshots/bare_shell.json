@@ -90,6 +90,18 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "PowerShell",
+        "units": []
+      },
+      {
+        "auxiliary": {},
+        "language": "Shell",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -242,18 +254,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "PowerShell",
-        "units": []
-      },
-      {
-        "auxiliary": {},
-        "language": "Shell",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -1097,6 +1097,11 @@
       "message": "not applicable to PowerShell, Shell",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to PowerShell, Shell",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "PowerShell: no PowerShell lints found; enable at least PSScriptAnalyzer; Shell: no shell lints found; enable at least shellcheck",
@@ -1116,11 +1121,6 @@
       ],
       "message": "PowerShell: no statement coverage measurement found in what CI runs; Shell: no line coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to PowerShell, Shell",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

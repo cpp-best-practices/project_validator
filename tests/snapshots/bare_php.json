@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -132,13 +139,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "PHP",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -789,6 +789,11 @@
       "message": "not applicable to PHP",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no PHP error reporting settings found; enable at least error_reporting = E_ALL",
@@ -807,11 +812,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to PHP",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

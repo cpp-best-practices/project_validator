@@ -54,73 +54,73 @@ issues = [182, 188]
 [[project]]
 name = "fmtlib/fmt"
 commit = "4229eb5820af49bf797641168624c8a754a1a4eb"
-ecosystems = ["C/C++"]
+ecosystems = ["C", "C++"]
 issues = [182, 282]
 
 [[project]]
 name = "cpp-best-practices/cmake_template"
 commit = "b86318abbf55a657a11a0cf2acce69f221841b22"
-ecosystems = ["C/C++"]
+ecosystems = ["C++"]
 issues = [182, 282]
 
 [[project]]
 name = "simdjson/simdjson"
 commit = "449f38e6377992798220c513f58740632355de52"
-ecosystems = ["C/C++"]
+ecosystems = ["C++"]
 issues = [182, 183]
 
 [[project]]
 name = "bus1/dbus-broker"
 commit = "2956b5d381deeea709c53d02f10e799e50e44f4b"
-ecosystems = ["C/C++"]
+ecosystems = ["C"]
 issues = [182, 186, 196, 282]
 
 [[project]]
 name = "nlohmann/json"
 commit = "81888ff9f005c022e60f2de572327b2e50222222"
-ecosystems = ["C/C++"]
+ecosystems = ["C++"]
 issues = [182, 183, 207, 282]
 
 [[project]]
 name = "catchorg/Catch2"
 commit = "5cf5dec9f5a119a08d3ee061d260ccc525093a75"
-ecosystems = ["C/C++"]
+ecosystems = ["C++"]
 issues = [207, 282]
 
 [[project]]
 name = "google/googletest"
 commit = "e882c36410197464e3429546e6a7d5e217bde51e"
-ecosystems = ["C/C++"]
+ecosystems = ["C++"]
 issues = [182, 207, 211]
 
 [[project]]
 name = "uber/h3"
 commit = "15920096d4a165729c01f749e2bd97334b009519"
-ecosystems = ["C/C++"]
+ecosystems = ["C"]
 issues = [182]
 
 [[project]]
 name = "GNOME/glib"
 commit = "a6457d849e45b9a1a9473c61364ee6e56894774b"
-ecosystems = ["C/C++"]
+ecosystems = ["C", "C++"]
 issues = [182, 215, 282]
 
 [[project]]
 name = "neovim/neovim"
 commit = "49b853fb327f5f6b5c1bdb38d2e3b8026a4124eb"
-ecosystems = ["C/C++", "Lua"]
+ecosystems = ["C", "Lua"]
 issues = [182, 282]
 
 [[project]]
 name = "ggml-org/llama.cpp"
 commit = "9d25e0014c4b4b316873c01f4938c0e3c687287d"
-ecosystems = ["C/C++", "Python"]
+ecosystems = ["C", "C++", "Python"]
 issues = [181, 224]
 
 [[project]]
 name = "glfw/glfw"
 commit = "92dcf4ce74f2e2554a98fea09be7c705c17daa5a"
-ecosystems = ["C/C++"]
+ecosystems = ["C"]
 issues = [223, 282]
 
 [[project]]
@@ -419,46 +419,46 @@ ecosystems = ["Haskell"]
 [[project]]
 name = "fastify/fastify"
 commit = "7e0c8febb2a1ba4d55309cdc2ccd51694eca46d3"
-ecosystems = ["JavaScript/TypeScript"]
+ecosystems = ["JavaScript", "TypeScript"]
 issues = [182, 280]
 
 [[project]]
 name = "sindresorhus/got"
 commit = "6b5aafc1cd538998728be6f45c65b0f80bae01b2"
-ecosystems = ["JavaScript/TypeScript"]
+ecosystems = ["JavaScript", "TypeScript"]
 
 [[project]]
 name = "axios/axios"
 commit = "4ee8d46fc463770b8f5da718d5449a5b027b2c08"
-ecosystems = ["JavaScript/TypeScript"]
+ecosystems = ["JavaScript", "TypeScript"]
 
 [[project]]
 name = "prettier/prettier"
 commit = "f391bf3e7ee219bcfeb61b06555ee1ac8e9c0680"
-ecosystems = ["JavaScript/TypeScript"]
+ecosystems = ["JavaScript", "TypeScript"]
 issues = [182]
 
 [[project]]
 name = "vitejs/vite"
 commit = "f898888222297aa56d6fc281c585d4d4e4d51f58"
-ecosystems = ["JavaScript/TypeScript"]
+ecosystems = ["JavaScript", "TypeScript"]
 issues = [182, 184, 248, 280]
 
 [[project]]
 name = "expressjs/express"
 commit = "43fca52d28a422c8be48fd489cbd4f2d6152bab6"
-ecosystems = ["JavaScript/TypeScript"]
+ecosystems = ["JavaScript"]
 
 [[project]]
 name = "colinhacks/zod"
 commit = "fef16cba0cf6668eb25ecc32fdfe2ce0a46f6f80"
-ecosystems = ["JavaScript/TypeScript"]
+ecosystems = ["JavaScript", "TypeScript"]
 issues = [182, 188]
 
 [[project]]
 name = "denoland/std"
 commit = "f834d0223364361169314833e3c7a8f62ce11d58"
-ecosystems = ["JavaScript/TypeScript"]
+ecosystems = ["JavaScript", "TypeScript"]
 issues = [182]
 
 [[project]]
@@ -1119,7 +1119,7 @@ ecosystems = ["SQL"]
 [[project]]
 name = "pgvector/pgvector"
 commit = "28dbea6e645f576461eb2343541a7e1fa712dabf"
-ecosystems = ["SQL", "C/C++"]
+ecosystems = ["SQL", "C"]
 issues = [276]
 
 [[project]]

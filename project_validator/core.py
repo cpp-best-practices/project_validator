@@ -10,7 +10,7 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path, PurePosixPath
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Literal, cast
 
 if TYPE_CHECKING:
     from project_validator.ci import CiAnalysis, CiFile, CiProvider
@@ -214,6 +214,23 @@ class ExtractionError(Exception):
         self.error = error
 
 
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Progress:
+    """What the validator is doing, for a view to show while it works: an extraction stage or a check, starting or
+    done. A stage that is done says how long it took and how many facts it `found`; a check is `index` of `total`."""
+
+    kind: Literal["stage", "check"]
+    name: str
+    done: bool
+    seconds: float = 0.0
+    found: int = 0
+    index: int = 0
+    total: int = 0
+
+
+type Observer = Callable[[Progress], None]
+
+
 class Context:
     """Everything a check may inspect; CI discovery is computed once and shared between checks."""
 
@@ -223,6 +240,15 @@ class Context:
         self.options = options
         self._shared: dict[str, object] = {}
         self._extracted: Facts | ExtractionError | None = None
+        self._observers: list[Observer] = []
+
+    def observe(self, observer: Observer) -> None:
+        """Have `observer` told what the validator does from now on (see `Progress`)."""
+        self._observers.append(observer)
+
+    def notify(self, event: Progress) -> None:
+        for observer in self._observers:
+            observer(event)
 
     def shared[T](self, key: str, compute: Callable[[], T]) -> T:
         """What `compute` returns, computed once: extractors that read the same files (CMake's, for its facts and its

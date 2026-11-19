@@ -8,7 +8,13 @@ import re
 from collections.abc import Callable
 from pathlib import PurePosixPath
 
-from project_validator.ecosystems.javascript import DENO_CONFIG_FILES, ESLINT_CONFIG_FILES, JS_LANGUAGES, PACKAGE_JSON
+from project_validator.ecosystems.javascript import (
+    DENO_CONFIG_FILES,
+    ESLINT_CONFIG_FILES,
+    JS_LANGUAGES,
+    PACKAGE_JSON,
+    TYPESCRIPT,
+)
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import option_values
@@ -149,9 +155,9 @@ def _deno_check(command: Command, facts: Facts) -> Run | None:
 
 TSC = type_checker(
     name="tsc",
-    languages=JS_LANGUAGES,
+    languages=frozenset({TYPESCRIPT}),
     can={
-        Strictness.CHECKS: "tsc --noEmit (JavaScript is checked with checkJs in a jsconfig.json)",
+        Strictness.CHECKS: "tsc --noEmit",
         Strictness.STRICT: '"strict": true in the compilerOptions of tsconfig.json',
     },
     checks=_tsc,
@@ -160,7 +166,7 @@ TSC = type_checker(
 )
 DENO_CHECK = type_checker(
     name="deno check",
-    languages=JS_LANGUAGES,
+    languages=frozenset({TYPESCRIPT}),
     can={Strictness.CHECKS: "deno check", Strictness.STRICT: "deno check (strict by default)"},
     checks=_deno_check,
     configuration=defined_by(settings=("Deno",)),

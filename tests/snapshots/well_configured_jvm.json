@@ -88,6 +88,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -179,13 +186,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Java",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -983,6 +983,11 @@
       "message": "not applicable to Java",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict JVM compiler warnings are enabled: -Xlint:all",
@@ -999,11 +1004,6 @@
       ],
       "message": "branch coverage is reported with JaCoCo",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Java",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

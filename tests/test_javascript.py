@@ -1,4 +1,4 @@
-"""The JavaScript/TypeScript profile's rules, judged by the generic checks in every JavaScript project layout."""
+"""The JavaScript profile's rules, judged by the generic checks in every JavaScript project layout."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ from project_validator.checks.type_checking import type_checking
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
-from project_validator.ecosystems.javascript import JAVASCRIPT_AND_TYPESCRIPT, JS_PACKAGE_MANAGER, NODE_MODULES
+from project_validator.ecosystems.javascript import JAVASCRIPT_ECOSYSTEM, JS_PACKAGE_MANAGER, NODE_MODULES
 from project_validator.facts import Command, Unknown
 from tests.support import (
     GITHUB_WORKFLOW,
@@ -34,10 +34,7 @@ from tests.support import (
 
 _GATE_HINT = "consider failing CI when branch coverage falls below a threshold"
 _REPORT_HINT = "consider reporting branch coverage where it can be seen (a report CI publishes, a coverage service)"
-TYPE_HINT = (
-    "consider running a type checker in CI: tsc --noEmit (JavaScript is checked with checkJs in a "
-    "jsconfig.json) or deno check"
-)
+TYPE_HINT = "consider running a type checker in CI: tsc --noEmit or deno check"
 STRICT_HINT = (
     'consider enabling strict mode: "strict": true in the compilerOptions of tsconfig.json or deno check '
     "(strict by default)"
@@ -81,7 +78,7 @@ class RecognitionTests(unittest.TestCase):
 
 class JavaScriptTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
-        return run_as(self, selected, files, JAVASCRIPT_AND_TYPESCRIPT)
+        return run_as(self, selected, files, JAVASCRIPT_ECOSYSTEM)
 
     def test_formatting_is_enforced_by_any_formatter_in_ci_or_a_script_it_runs(self) -> None:
         for files in (
@@ -203,7 +200,7 @@ class JavaScriptTests(unittest.TestCase):
 
 class FunctionLimitTests(unittest.TestCase):
     def _run(self, files: dict[str, str]) -> Result:
-        return run_as(self, function_limits, files, JAVASCRIPT_AND_TYPESCRIPT)
+        return run_as(self, function_limits, files, JAVASCRIPT_ECOSYSTEM)
 
     def test_eslint_max_lines_per_function_limits_functions_when_eslint_runs(self) -> None:
         config = {"eslint.config.js": 'export default [{ rules: { "max-lines-per-function": ["error", 40] } }];\n'}
@@ -223,7 +220,7 @@ class FunctionLimitTests(unittest.TestCase):
 
 class StaticAnalysisTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
-        return run_as(self, selected, files, JAVASCRIPT_AND_TYPESCRIPT)
+        return run_as(self, selected, files, JAVASCRIPT_ECOSYSTEM)
 
     def test_a_linter_is_the_static_analyzer(self) -> None:
         files = {"eslint.config.js": "export default [];\n", **_scripts(lint="eslint ."), **_ci("npm run lint")}
@@ -242,7 +239,7 @@ class StaticAnalysisTests(unittest.TestCase):
 
 class TypeCheckingTests(unittest.TestCase):
     def _npm(self, files: dict[str, str]) -> Result:
-        return run_in_layout(self, "npm JavaScript", type_checking, files)
+        return run_in_layout(self, "npm TypeScript", type_checking, files)
 
     def _deno(self, files: dict[str, str]) -> Result:
         return run_in_layout(self, "Deno TypeScript", type_checking, files)
@@ -319,7 +316,7 @@ class DependencyTests(unittest.TestCase):
 
 class OutputTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
-        return run_as(self, selected, files, JAVASCRIPT_AND_TYPESCRIPT)
+        return run_as(self, selected, files, JAVASCRIPT_ECOSYSTEM)
 
     def test_node_modules_must_be_ignored(self) -> None:
         for entry in ("node_modules", "/node_modules/", "**/node_modules"):

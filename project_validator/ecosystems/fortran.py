@@ -136,7 +136,7 @@ CI_USAGE = re.compile(
 
 def builds_fortran(job: Job) -> bool:
     """A job builds Fortran when it is seen doing so, or building with the tools Fortran shares with C and C++."""
-    return not job.ecosystems or bool({FORTRAN, "C/C++"} & job.ecosystems)
+    return not job.ecosystems or bool({FORTRAN, "C", "C++"} & job.ecosystems)
 
 
 def _compilers(job: Job) -> frozenset[str]:

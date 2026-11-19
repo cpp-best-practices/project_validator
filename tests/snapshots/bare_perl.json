@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -133,13 +140,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Perl",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -653,6 +653,11 @@
       "message": "not applicable to Perl",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Perl pragmas and lints found; enable at least use strict and use warnings in every module, perlcritic",
@@ -671,11 +676,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Perl",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

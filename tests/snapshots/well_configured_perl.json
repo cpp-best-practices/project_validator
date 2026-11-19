@@ -88,6 +88,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Perl",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -186,13 +193,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Perl",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -807,6 +807,11 @@
       "message": "not applicable to Perl",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Perl",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Perl pragmas and lints are enabled: use strict and use warnings in every module, perlcritic",
@@ -823,11 +828,6 @@
       ],
       "message": "branch coverage is reported with Devel::Cover; path coverage bonus: reported with Devel::Cover",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Perl",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

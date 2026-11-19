@@ -64,6 +64,6 @@ only `cover_db/` ignored.
 
 ## Not judged
 
-Perl is interpreted (`hardening`, `cxx-extensions`, `ci-build-types`) and dynamically typed (`type-checking`); no code
+Perl is interpreted (`hardening`, `compiler-extensions`, `ci-build-types`) and dynamically typed (`type-checking`); no code
 security scanner, fuzzer or mutation testing tool the validator knows reads Perl; Carton's `cpanfile.snapshot` for
 applications belongs to `dependency-management`, not judged for Perl yet.

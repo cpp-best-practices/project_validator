@@ -140,12 +140,13 @@ def _found_signals(facts: Facts) -> Iterator[tuple[frozenset[str], str]]:
     yield from ((frozenset({language}), f"{suffix} files") for suffix, language, ambiguous in sources if ambiguous)
 
 
-def _signals(facts: Facts) -> dict[str, tuple[str, ...]]:
-    """Ecosystem label -> the signals that recognised it."""
+def _signals(facts: Facts, names: frozenset[str]) -> dict[str, tuple[str, ...]]:
+    """Ecosystem label -> the signals that recognised it, for the ecosystems of the project's languages and formats
+    (`names`): a CMake file that enables C and C++ by default does not make a C++ project a C one."""
     signals: dict[str, dict[str, None]] = {}
     for languages, signal in _found_signals(facts):
         for ecosystem in registered():
-            if ecosystem.languages & languages:
+            if ecosystem.languages & languages & names:
                 signals.setdefault(ecosystem.label, {})[signal] = None
     return {label: tuple(found) for label, found in signals.items()}
 
@@ -153,11 +154,12 @@ def _signals(facts: Facts) -> dict[str, tuple[str, ...]]:
 def map_project(facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis) -> ProjectStructure:
     """The project map: a view over the structure facts, and the CI the facts show."""
     vendored = [source.path for source in facts.of(SourceFile) if source.vendored]
+    languages, formats_ = project_languages(facts), project_formats(facts)
     return ProjectStructure(
-        languages=project_languages(facts),
-        formats=project_formats(facts),
+        languages=languages,
+        formats=formats_,
         build_systems=frozenset(build.build_system for build in facts.of(BuildFile)),
-        recognised_by=_signals(facts),
+        recognised_by=_signals(facts, languages | formats_),
         unrecognised_suffixes=tuple((found.suffix, found.files) for found in facts.of(UnrecognisedSuffix)),
         vendored=tuple(vendored),
         units=facts.of(Unit),
