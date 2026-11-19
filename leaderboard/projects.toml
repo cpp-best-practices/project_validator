@@ -1,0 +1,145 @@
+# The leaderboard: open-source projects scored every night with `--score` and published to GitHub Pages, one board
+# per language (see leaderboard/README.md). Each entry names its GitHub `owner/repo`, the board it appears on
+# (`language`: an ecosystem label of the support matrix) and its maintainers' `consent`: a link to their approval,
+# or "seed" for the seed list until a maintainer confirms. Optional: `branch` (else the default branch),
+# `auxiliary` and `exclude` (as the CLI takes them), and `license` when GitHub can not tell which it is.
+#
+# The seeds are one project per language, taken from the corpus (Compiler Explorer excepted): each stands for its
+# ecosystem alone and has the fewest open validator issues against it. Sorted by language.
+
+[[project]]
+name = "serilog/serilog"
+language = ".NET"
+consent = "seed"
+
+[[project]]
+name = "gleam-lang/stdlib"
+language = "BEAM"
+consent = "seed"
+
+[[project]]
+name = "uber/h3"
+language = "C/C++"
+consent = "seed"
+
+[[project]]
+name = "metosin/malli"
+language = "Clojure"
+consent = "seed"
+
+[[project]]
+name = "edicl/cl-ppcre"
+language = "Common Lisp"
+consent = "seed"
+
+[[project]]
+name = "felangel/bloc"
+language = "Dart"
+consent = "seed"
+
+[[project]]
+name = "magit/magit"
+language = "Emacs Lisp"
+consent = "seed"
+
+[[project]]
+name = "fortran-lang/stdlib"
+language = "Fortran"
+consent = "seed"
+
+[[project]]
+name = "spf13/cobra"
+language = "Go"
+consent = "seed"
+
+[[project]]
+name = "haskell/cabal"
+language = "Haskell"
+consent = "seed"
+license = "BSD-3-Clause"
+
+[[project]]
+name = "compiler-explorer/compiler-explorer"
+language = "JavaScript/TypeScript"
+consent = "seed"
+# Its examples/ and test inputs hold programs in about 100 languages, which would otherwise count as its own code
+# (upstream #182).
+auxiliary = ["example", "test"]
+
+[[project]]
+name = "jump-dev/JuMP.jl"
+language = "Julia"
+consent = "seed"
+license = "MPL-2.0"
+
+[[project]]
+name = "apache/commons-lang"
+language = "JVM"
+consent = "seed"
+
+[[project]]
+name = "lunarmodules/Penlight"
+language = "Lua"
+consent = "seed"
+
+[[project]]
+name = "ocaml-community/yojson"
+language = "OCaml"
+consent = "seed"
+
+[[project]]
+name = "mojolicious/mojo"
+language = "Perl"
+consent = "seed"
+
+[[project]]
+name = "Seldaek/monolog"
+language = "PHP"
+consent = "seed"
+
+[[project]]
+name = "psf/requests"
+language = "Python"
+consent = "seed"
+
+[[project]]
+name = "tidyverse/ggplot2"
+language = "R"
+consent = "seed"
+license = "MIT"
+
+[[project]]
+name = "jackfirth/rebellion"
+language = "Racket"
+consent = "seed"
+
+[[project]]
+name = "sinatra/sinatra"
+language = "Ruby"
+consent = "seed"
+
+[[project]]
+name = "starship/starship"
+language = "Rust"
+consent = "seed"
+
+[[project]]
+name = "com-lihaoyi/os-lib"
+language = "Scala"
+consent = "seed"
+license = "MIT"
+
+[[project]]
+name = "acmesh-official/acme.sh"
+language = "Shell"
+consent = "seed"
+
+[[project]]
+name = "Alamofire/Alamofire"
+language = "Swift"
+consent = "seed"
+
+[[project]]
+name = "zigtools/zls"
+language = "Zig"
+consent = "seed"

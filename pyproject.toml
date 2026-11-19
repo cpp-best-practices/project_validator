@@ -41,7 +41,7 @@ required-imports = ["from __future__ import annotations"]
 [tool.mypy]
 strict = true
 python_version = "3.12"
-files = ["project_validator", "tests", "corpus"]
+files = ["project_validator", "tests", "corpus", "leaderboard"]
 
 [[tool.mypy.overrides]]
 module = "atheris"
@@ -49,7 +49,7 @@ ignore_missing_imports = true
 
 [tool.coverage.run]
 branch = true
-source = ["project_validator"]
+source = ["project_validator", "leaderboard"]
 relative_files = true
 
 [tool.coverage.report]
@@ -73,4 +73,14 @@ pytest_add_cli_args = [
     "tests/test_architecture.py::ArchitectureTests::test_every_module_imports_on_its_own",
 ]
 # The self-referential tests read these files from the repository root; tests/test_corpus.py imports corpus.
-also_copy = [".github/", ".gitignore", ".jscpd.json", "LICENSE.txt", "README.md", "SECURITY.md", "corpus/", "docs/"]
+also_copy = [
+    ".github/",
+    ".gitignore",
+    ".jscpd.json",
+    "LICENSE.txt",
+    "README.md",
+    "SECURITY.md",
+    "corpus/",
+    "docs/",
+    "leaderboard/",
+]

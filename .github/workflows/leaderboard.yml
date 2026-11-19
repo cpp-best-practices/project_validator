@@ -1,0 +1,135 @@
+name: leaderboard
+
+# The leaderboard (leaderboard/README.md): every night, each project on leaderboard/projects.toml is fetched at the
+# head of its branch and scored by this validator, the results are added to the `leaderboard-data` branch, and the
+# site is published with the boards. Evaluating runs no project code (the validator only parses), with read-only
+# permissions and no secrets; only the job that records the results writes, and only to the data branch.
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+# One night at a time; a run is never cancelled halfway through recording.
+concurrency:
+  group: leaderboard
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  list:
+    name: list the projects
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.list.outputs.projects }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install PyYAML
+        run: python -m pip install --require-hashes -r .github/requirements/test.txt
+
+      - id: list
+        name: List the projects
+        run: echo "projects=$(python -m leaderboard matrix)" >> "$GITHUB_OUTPUT"
+
+  evaluate:
+    name: score ${{ matrix.project }}
+    needs: list
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        project: ${{ fromJSON(needs.list.outputs.projects) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install PyYAML
+        run: python -m pip install --require-hashes -r .github/requirements/test.txt
+
+      # A project that can not be fetched is recorded as such, unscored; the step itself does not fail.
+      - name: Score the project
+        id: score
+        env:
+          PROJECT: ${{ matrix.project }}
+          VALIDATOR: ${{ github.sha }}
+        run: |
+          python -m leaderboard evaluate results "$PROJECT" --cache "${RUNNER_TEMP}/checkouts" --validator "$VALIDATOR"
+          echo "slug=${PROJECT//\//--}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: leaderboard-${{ steps.score.outputs.slug }}
+          path: results/
+          retention-days: 7
+
+  record:
+    name: record the night
+    needs: evaluate
+    # Record whatever was scored, even when a project's job failed or timed out.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install PyYAML
+        run: python -m pip install --require-hashes -r .github/requirements/test.txt
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: leaderboard-*
+          path: ${{ runner.temp }}/results
+          merge-multiple: true
+
+      # The data branch holds only the results (an orphan branch, created on the first night). The token is used for
+      # this push alone, not kept in the checkout.
+      - name: Add the night to the leaderboard-data branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          data="${RUNNER_TEMP}/data"
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${REPOSITORY}.git"
+          if git ls-remote --exit-code --heads "$remote" leaderboard-data > /dev/null; then
+            git clone --quiet --depth 1 --branch leaderboard-data "$remote" "$data"
+          else
+            git init --quiet -b leaderboard-data "$data"
+          fi
+          python -m leaderboard record "${RUNNER_TEMP}/results" "$data" --date "$(date -u +%F)"
+          cd "$data"
+          git add --all
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit --quiet --allow-empty -m "Leaderboard for $(date -u +%F)"
+          git push --quiet "$remote" HEAD:leaderboard-data
+
+  publish:
+    name: publish the site
+    needs: record
+    if: ${{ !cancelled() && needs.record.result == 'success' }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml # zizmor: ignore[self-repository] the pinned actionlint rejects $/ yet
