@@ -85,3 +85,29 @@ class RenderedTests(unittest.TestCase):
         ):
             with self.subTest(expression=expression):
                 self.assertEqual(rendered(expression, KNOWN), expected)
+
+
+class UndecidedOperandTests(unittest.TestCase):
+    """When the left operand of `||` or `&&` is not known, the right one may still decide a condition, but never the
+    value: `${{ inputs.flags || '-DX=1' }}` renders either operand, so it is not known (#214)."""
+
+    def test_an_unknown_left_operand_decides_a_condition_but_not_a_value(self) -> None:
+        for expression, condition in (
+            ("github.event.inputs.flags || '-DX=1'", True),
+            ("github.event.inputs.flags && ''", False),
+        ):
+            with self.subTest(expression=expression):
+                self.assertEqual(evaluate(expression, KNOWN), condition)
+                self.assertIsNone(rendered(f"${{{{ {expression} }}}}", KNOWN))
+
+    def test_an_undecided_value_compares_and_calls_as_unknown(self) -> None:
+        for expression in (
+            "(github.event.inputs.flags || 'x') == 'x'",
+            "contains(github.event.inputs.flags || 'x', 'x')",
+        ):
+            with self.subTest(expression=expression):
+                self.assertIsNone(evaluate(expression, KNOWN))
+
+    def test_a_known_operand_still_renders_its_value(self) -> None:
+        self.assertEqual(rendered("${{ matrix.generator || 'Ninja' }}", KNOWN), "Ninja")
+        self.assertEqual(rendered("${{ (github.event.inputs.flags || 'x') && 'y' }}", KNOWN), "y")
