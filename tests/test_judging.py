@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import unittest
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
+from types import MappingProxyType
 
+from project_validator.checks.static_analysis import static_analysis
 from project_validator.core import Check, Options, Placed, Result, Status
 from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.python import PYTHON
@@ -240,45 +242,48 @@ class PlacesTests(unittest.TestCase):
         )
 
 
-class AuxiliaryUnitTests(unittest.TestCase):
-    """A unit the map itself names test, benchmark, example, docs or tooling code is not the product: its failure is a
-    warning that says so, so long as a product unit is judged too (#183)."""
-
-    PRODUCT = {
+PRODUCT = MappingProxyType(
+    {
         "pyproject.toml": "[project]\nname = 'app'\n\n[tool.ruff]\nline-length = 100\n",
         "src/app.py": "",
         ".github/workflows/ci.yml": "jobs:\n  lint:\n    runs-on: ubuntu-latest\n    steps:\n"
         "      - run: ruff check .\n",
     }
-    BENCHMARK = {"benches/Cargo.toml": "[package]\nname = 'bench'\nversion = '0.1.0'\n", "benches/src/lib.rs": ""}
+)
+BENCHMARK = MappingProxyType(
+    {"benches/Cargo.toml": "[package]\nname = 'bench'\nversion = '0.1.0'\n", "benches/src/lib.rs": ""}
+)
 
-    def _result(self, files: dict[str, str]) -> Result:
-        from project_validator.checks.static_analysis import static_analysis
 
+class AuxiliaryUnitTests(unittest.TestCase):
+    """A unit the map itself names test, benchmark, example, docs or tooling code is not the product: its failure is a
+    warning that says so, so long as a product unit is judged too (#183)."""
+
+    def _result(self, files: Mapping[str, str]) -> Result:
         with temp_project(files) as root:
             return static_analysis.run(make_context(root))
 
     def test_a_benchmark_units_failure_beside_a_passing_product_warns(self) -> None:
-        result = self._result({**self.PRODUCT, **self.BENCHMARK})
+        result = self._result({**PRODUCT, **BENCHMARK})
         self.assertEqual(result.status, Status.WARN, result)
         self.assertIn(
             "Rust: a warning, not a failure: benches is benchmark code, not the product's", result.details, result
         )
 
     def test_a_benchmark_unit_alone_is_judged_as_it_is(self) -> None:
-        result = self._result(self.BENCHMARK)
+        result = self._result(BENCHMARK)
         self.assertEqual(result.status, Status.FAIL, result)
 
     def test_a_documentation_site_alone_is_judged_as_it_is(self) -> None:
         """Sphinx's conf.py is Python, but configuration of the site is no product beside it."""
         docs = {"conf.py": 'project = "guide"\n', "index.rst": "Guide\n=====\n"}
-        ci = {".github/workflows/ci.yml": self.PRODUCT[".github/workflows/ci.yml"]}
+        ci = {".github/workflows/ci.yml": PRODUCT[".github/workflows/ci.yml"]}
         result = self._result({**docs, **ci})
         self.assertEqual(result.status, Status.FAIL, result)
 
     def test_a_documentation_sites_failure_beside_a_passing_product_warns(self) -> None:
         docs = {"docs/conf.py": 'project = "app"\n', "docs/index.rst": "App\n===\n"}
-        result = self._result({**self.PRODUCT, **docs})
+        result = self._result({**PRODUCT, **docs})
         self.assertEqual(result.status, Status.WARN, result)
         self.assertTrue(
             any("a warning, not a failure: the documentation site is not the product" in d for d in result.details),

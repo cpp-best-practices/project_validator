@@ -11,7 +11,7 @@ from __future__ import annotations
 import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
@@ -104,10 +104,8 @@ def script_facts(
     opaque: re.Pattern[str] | None = None,
     via: tuple[Origin, ...] = (),
     powershell: bool = False,
-    advisory: str = "",
 ) -> Iterator[Fact]:
-    """The commands of a shell script a job runs (PowerShell when `powershell`; `opaque`: see `split_script`;
-    `advisory`: see `Command.advisory`)."""
+    """The commands of a shell script a job runs (PowerShell when `powershell`; `opaque`: see `split_script`)."""
     assigned = None if via or powershell else _assigned(script)
     for found in split_script(script, opaque, powershell=powershell):
         if isinstance(found, ShellCommand):
@@ -120,12 +118,17 @@ def script_facts(
                 env={**env, **dict(found.env)},
                 directory=directory,
                 condition=condition,
-                advisory=advisory,
                 via=via,
             )
             yield from _with_program(command, assigned)
         else:
             yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
+
+
+def advised(facts: Iterable[Fact], advisory: str) -> Iterator[Fact]:
+    """`facts` with their commands marked `advisory` (see `Command.advisory`), when it is set."""
+    for fact in facts:
+        yield replace(fact, advisory=advisory) if advisory and isinstance(fact, Command) else fact
 
 
 _WHOLE_VARIABLE = re.compile(r"\$(?:\{\w+\}|\w+)")
@@ -204,7 +207,7 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
             via=via,
         )
     else:
-        yield from script_facts(
+        commands = script_facts(
             expansion.text,
             job=command.job,
             origin=expansion.origin,
@@ -213,8 +216,8 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
             condition=command.condition,
             opaque=expansion.opaque,
             via=via,
-            advisory=command.advisory,
         )
+        yield from advised(commands, command.advisory)
 
 
 def inside(context: Context, directory: str | None) -> bool:
@@ -339,6 +342,7 @@ __all__ = [
     "Launched",
     "Script",
     "action_commands",
+    "advised",
     "expand_command",
     "expanded",
     "found_at",

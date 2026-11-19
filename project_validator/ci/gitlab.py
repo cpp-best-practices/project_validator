@@ -15,7 +15,7 @@ from collections.abc import Iterator, Mapping
 
 from project_validator.ci import CiProvider, Load, strings
 from project_validator.facts import CiJob, Command, Fact, Origin, Unknown
-from project_validator.facts.expansion import script_facts
+from project_validator.facts.expansion import advised, script_facts
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
 from project_validator.yaml_support import Tagged
@@ -120,9 +120,8 @@ def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mappin
         for line, origin in _scripts(path, name, job, defaults):
             # A Windows runner's shell is PowerShell.
             text = substitute_variables(line, variables)
-            yield from script_facts(
-                text, job=identity, origin=origin, env=env, powershell=os == "windows", advisory=advisory
-            )
+            found = script_facts(text, job=identity, origin=origin, env=env, powershell=os == "windows")
+            yield from advised(found, advisory)
 
 
 # GitLab reads at most this many levels of nested includes, and of extends.

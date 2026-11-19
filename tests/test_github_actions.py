@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import unittest
+from collections.abc import Mapping
 
 from project_validator.ci.github_actions import (
     Combination,
@@ -219,7 +220,7 @@ class ConditionalExportTests(unittest.TestCase):
 class AdvisoryStepTests(unittest.TestCase):
     """A step that cannot fail the job (`continue-on-error`) runs, but only advises: its commands say why."""
 
-    def _commands(self, job: dict[str, object]) -> list[Command]:
+    def _commands(self, job: Mapping[str, object]) -> list[Command]:
         workflow = {"jobs": {"check": {"runs-on": "ubuntu-latest", **job}}}
         with temp_project({GITHUB_WORKFLOW: json.dumps(workflow)}) as root:
             return [command for command in make_context(root).facts.of(Command) if not command.via]

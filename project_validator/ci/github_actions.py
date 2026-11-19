@@ -12,7 +12,7 @@ from dataclasses import dataclass, replace
 from project_validator.ci import REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import ActionStep, CiJob, Command, Fact, Origin, Unknown
-from project_validator.facts.expansion import script_facts
+from project_validator.facts.expansion import advised, script_facts
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
 
@@ -364,12 +364,10 @@ class _Combination:
         at, env = Origin(path=origin.path, at=(*origin.at, "run")), {**known.env, **self.substituted(step.get("env"))}
         directory = self.optional(step.get("working-directory")) or self.working_directory
         yield from _computed_directory(at, directory)
-        if (custom := custom_shell(self.optional(step.get("shell")) or self.shell)) is not None:
-            argv = tuple(script if word == "{0}" else word for word in custom)
-            command = Command(origin=at, job=self.identity, argv=argv, line=script, env=env, directory=directory)
-            yield replace(command, condition=condition, via=via, advisory=self.advisory)
+        if (custom := self.custom_command(step, script, at, env, directory)) is not None:
+            yield replace(custom, condition=condition, via=via, advisory=self.advisory)
             return
-        yield from script_facts(
+        commands = script_facts(
             script,
             job=self.identity,
             origin=at,
@@ -379,8 +377,18 @@ class _Combination:
             opaque=EXPRESSION,
             via=via,
             powershell=self.powershell(step, known),
-            advisory=self.advisory,
         )
+        yield from advised(commands, self.advisory)
+
+    def custom_command(
+        self, step: Mapping[str, object], script: str, at: Origin, env: Mapping[str, str], directory: str | None
+    ) -> Command | None:
+        """The one command a step runs under a custom shell (`shell: Rscript {0}`), the script where its file would
+        be; None under a shell that splits the script."""
+        if (custom := custom_shell(self.optional(step.get("shell")) or self.shell)) is None:
+            return None
+        argv = tuple(script if word == "{0}" else word for word in custom)
+        return Command(origin=at, job=self.identity, argv=argv, line=script, env=env, directory=directory)
 
     def powershell(self, step: Mapping[str, object], known: Known) -> bool:
         """Whether a step's script is PowerShell: its `shell`, the job's default, or the runner's (pwsh on Windows)."""

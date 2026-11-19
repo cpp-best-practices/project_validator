@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import json
 import unittest
+from collections.abc import Mapping
 
 from project_validator.build_configurations import BuildConfiguration
 from project_validator.ci.gitlab import expand_parallel
-from project_validator.facts.jobs import Job
 from project_validator.facts import Command
+from project_validator.facts.jobs import Job
 from tests.support import ci_jobs, make_context, temp_project
 
 
@@ -94,7 +95,7 @@ class ServiceTests(unittest.TestCase):
 class AllowFailureTests(unittest.TestCase):
     """A job with `allow_failure: true` cannot fail the pipeline: its commands are advisory."""
 
-    def _advisory(self, job: dict[str, object]) -> list[str]:
+    def _advisory(self, job: Mapping[str, object]) -> list[str]:
         with temp_project({".gitlab-ci.yml": json.dumps({"check": job})}) as root:
             return [command.advisory for command in make_context(root).facts.of(Command) if not command.via]
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import unittest
+from collections.abc import Mapping
 
 from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.static_analysis import static_analysis
@@ -18,7 +19,7 @@ PYTHON = {
 }
 
 
-def _workflow(*steps: dict[str, object], **job: object) -> dict[str, str]:
+def _workflow(*steps: Mapping[str, object], **job: object) -> dict[str, str]:
     return {GITHUB_WORKFLOW: json.dumps({"jobs": {"check": {"runs-on": "ubuntu-latest", "steps": steps, **job}}})}
 
 

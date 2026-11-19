@@ -127,7 +127,7 @@ class ToolAnswer:
             },
             unknowns=list(self.unknowns),
             unknown_definitions=list(self.unknown_definitions),
-            advisory={tool: why for tool, why in self.advisory},
+            advisory=dict(self.advisory),
         )
 
 
