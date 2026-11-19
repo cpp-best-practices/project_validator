@@ -8,3 +8,5 @@ textual==8.2.8
 # Runs the suite (unittest test cases) in parallel, one worker per core.
 pytest==9.2.0
 pytest-xdist==3.8.0
+# pytest needs it on Windows only, so compiling on Linux would leave it out of the pins.
+colorama==0.4.6
