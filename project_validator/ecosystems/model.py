@@ -195,6 +195,10 @@ class Ecosystem:
     default_build_system: BuildSystem | None = None
     family: str | None = None
     tool_configuration: tuple[str, ...] = ()
+    # Set when the ecosystem accompanies a product rather than being one (a documentation site): the paths of its own
+    # configuration (a site's conf.py). Beside a language with sources other than those, its failures are warnings
+    # that say so (see `project_validator.judging.check_each_ecosystem`).
+    companion: re.Pattern[str] | None = None
 
     def __post_init__(self) -> None:
         if self.kind == "format" and self.toolchain is not None:
