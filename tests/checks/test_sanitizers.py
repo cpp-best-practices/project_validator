@@ -38,7 +38,7 @@ def _cmake(test: unittest.TestCase, build: str, ci: dict[str, str] | None = None
 
 class SanitizersTests(unittest.TestCase):
     def test_declares_the_languages_it_judges(self) -> None:
-        self.assertEqual(sanitizers.languages, C_FAMILY | {"Rust", "Go"})
+        self.assertEqual(sanitizers.languages, C_FAMILY | {"Rust", "Go", "Swift"})
 
 
 class CAndCxxSanitizersTests(unittest.TestCase):

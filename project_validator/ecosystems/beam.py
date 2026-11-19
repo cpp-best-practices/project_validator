@@ -502,11 +502,14 @@ _ELIXIR = r"(\d+\.\d+(?:\.\d+)?(?:-rc\.\d+)?)"
 # A job names an Erlang/OTP version, an Elixir version or both: `otp-version` and `elixir-version` of
 # erlef/setup-beam, the `erlang` and `elixir` images (`elixir:1.18.3-otp-27`, `hexpm/elixir:1.18.3-erlang-27.3`).
 _BEAM_VERSIONS = (
-    (re.compile(rf"\botp-version\W+{_OTP}"), "OTP {}"),
-    (re.compile(rf"\belixir-version\W+{_ELIXIR}"), "Elixir {}"),
+    # The input's value, not a range spec (`otp-version: '> 0'`, setup-beam's latest).
+    (re.compile(rf"\botp-version[^\w@/<>]+{_OTP}"), "OTP {}"),
+    (re.compile(rf"\belixir-version[^\w@/<>]+{_ELIXIR}"), "Elixir {}"),
     (re.compile(rf"\berlang:{_OTP}"), "OTP {}"),
     (re.compile(rf"\belixir:{_ELIXIR}"), "Elixir {}"),
     (re.compile(rf"-(?:otp|erlang)-{_OTP}"), "OTP {}"),
+    # A hexpm/elixir tag names both: `1.17.3-erlang-27.1-alpine-3.17.9`.
+    (re.compile(rf"(?<![\w.]){_ELIXIR}-(?:otp|erlang)-"), "Elixir {}"),
 )
 
 BEAM = Ecosystem(

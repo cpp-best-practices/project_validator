@@ -278,12 +278,20 @@
       "via": []
     },
     {
-      "hides": "commands",
-      "kind": "Unknown",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
-      "reason": "its action.yml is not read",
-      "subject": "the action ./",
-      "tools": []
+      "argv": [
+        "echo",
+        "total=$total"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "Command",
+      "line": "echo \"total=$total\" >> \"$GITHUB_OUTPUT\"",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
     },
     {
       "argv": [
@@ -349,12 +357,20 @@
       "via": []
     },
     {
-      "hides": "commands",
-      "kind": "Unknown",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
-      "reason": "its action.yml is not read",
-      "subject": "the action ./",
-      "tools": []
+      "argv": [
+        "echo",
+        "total=$total"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "Command",
+      "line": "echo \"total=$total\" >> \"$GITHUB_OUTPUT\"",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
     },
     {
       "argv": [
@@ -420,12 +436,20 @@
       "via": []
     },
     {
-      "hides": "commands",
-      "kind": "Unknown",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
-      "reason": "its action.yml is not read",
-      "subject": "the action ./",
-      "tools": []
+      "argv": [
+        "echo",
+        "total=$total"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "Command",
+      "line": "echo \"total=$total\" >> \"$GITHUB_OUTPUT\"",
+      "origin": "action.yml:runs.steps[0].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.test.steps[1]"
+      ]
     },
     {
       "argv": [

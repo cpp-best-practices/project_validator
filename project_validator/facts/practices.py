@@ -42,6 +42,8 @@ class Evidence:
 
     where: str
     requires: frozenset[str] = frozenset()
+    # What was found, when it says more than the requirement's name (`c_std=c11` for a standard `c_std`).
+    shown: str | None = None
 
     def __str__(self) -> str:
         return f"{self.where} (when {' and '.join(sorted(self.requires))})" if self.requires else self.where
@@ -100,9 +102,20 @@ def command_text(command: Command) -> str:
     return " ".join((*words, *values))
 
 
-def requirement_reader(name: str, files: tuple[str, ...], requirements: Iterable[Requirement]) -> SettingsReader:
+def _as_written(_path: str, text: str) -> str:
+    return text
+
+
+def requirement_reader(
+    name: str,
+    files: tuple[str, ...],
+    requirements: Iterable[Requirement],
+    *,
+    code: Callable[[str, str], str] = _as_written,
+) -> SettingsReader:
     """A reader of the settings `files` that records each requirement whose pattern it matches, as a `Setting` of the
-    tool `name` keyed by the requirement's name; heuristic, as the files are not parsed."""
+    tool `name` keyed by the requirement's name; heuristic, as the files are not parsed. `code` gives the text the
+    patterns search (a file's text without its comments)."""
     patterns = [
         (requirement.name, found)
         for requirement in requirements
@@ -110,8 +123,9 @@ def requirement_reader(name: str, files: tuple[str, ...], requirements: Iterable
     ]
 
     def read(path: str, text: str) -> Iterator[Fact]:
+        searched = code(path, text)
         for key, pattern in patterns:
-            if pattern.search(text):
+            if pattern.search(searched):
                 yield Setting(origin=Origin(path=path), tool=name, key=key, value=True, heuristic=True)
 
     return SettingsReader(name=name, files=files, read=read)

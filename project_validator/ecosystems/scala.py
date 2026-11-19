@@ -9,16 +9,19 @@ that version on each JDK it names."""
 from __future__ import annotations
 
 import re
+import shlex
 from collections.abc import Callable
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
-from project_validator.facts import Command, Facts, Setting, resolved
+from project_validator.facts import Command, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
+from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directory_output
@@ -103,6 +106,28 @@ def sbt_tasks(argv: tuple[str, ...]) -> tuple[str, ...]:
     return tuple(found)
 
 
+# `addCommandAlias("scalafixCheck", "; scalafix --check ; Test/scalafix --check")` in a build file.
+_ALIAS = re.compile(r'addCommandAlias\s*\(\s*"([^"]+)"\s*,\s*"([^"]*)"')
+
+
+def _sbt_aliases(command: Command, context: Context) -> list[Expansion] | None:
+    """`sbt <alias>`: the sbt commands the alias stands for, as build.sbt defines them (metals' scalafixCheck)."""
+    argv = resolved(command)
+    if program(argv) not in ("sbt", "sbtn", "sbtx"):
+        return None
+    path = joined(command.directory, "build.sbt")
+    if not context.project.exists(path):
+        return None
+    aliases = dict(_ALIAS.findall(context.project.read_text(path)))
+    found: list[Expansion] = [
+        Script(text=shlex.join((argv[0], aliases[word])), origin=Origin(path=path))
+        for word in argv[1:]
+        if word in aliases
+    ]
+    return found or None
+
+
+SBT_ALIASES = CommandExpander(name="sbt command aliases", expand=_sbt_aliases)
 _MILL_VALUES = frozenset({"-j", "--jobs", "--color", "--ticker", "-D", "--define", "--import", "--meta-level"})
 
 
@@ -291,7 +316,8 @@ def _setting(name: str, regex: str) -> Pattern:
 
 
 # sbt-tpolecat sets the whole strict set (and, in its CI mode, fatal warnings).
-_TPOLECAT = r"\bsbt-tpolecat\b|\btpolecat(?:ScalacOptions|DefaultOptionsMode|OptionsMode)\b"
+# sbt-typelevel bundles sbt-tpolecat (typelevel/cats).
+_TPOLECAT = r"\bsbt-tpolecat\b|\bsbt-typelevel\b|\btpolecat(?:ScalacOptions|DefaultOptionsMode|OptionsMode)\b"
 DEPRECATION = _setting("-deprecation", rf"-deprecation\b|{_TPOLECAT}")
 FEATURE = _setting("-feature", rf"-feature\b|{_TPOLECAT}")
 LINT = _setting("-Xlint or -Wunused", rf"-Xlint\b|-Wunused\b|-Ywarn-unused\b|-Wall\b|{_TPOLECAT}")
@@ -303,10 +329,26 @@ _SCALA_WARNINGS_AS_ERRORS = (required(FATAL_WARNINGS), required(TPOLECAT_CI_MODE
 
 # Where scalac options are set: the sbt build (and `project/plugins.sbt`, which adds sbt-tpolecat), the Mill build,
 # scala-cli's `//> using options` directives.
+# A triple-quoted string is text (an sbt command a build runs later, http4s's `"""set … += "-Werror""""`), not an
+# option.
+_TEXT_BLOCK = re.compile(r'"""[\s\S]*?"""(?!")|"""[\s\S]*?""""')
+_PLUGIN = re.compile(r"^\s*addSbtPlugin\b.*$", re.MULTILINE)
+
+
+def _options_code(path: str, text: str) -> str:
+    """The build code that sets the product's scalac options: without its text blocks; of the meta-build's `.sbt`
+    files (`project/build.sbt` compiles the build itself), only the plugins they add (sbt-tpolecat)."""
+    file = PurePosixPath(path)
+    if file.suffix == ".sbt" and file.parent.name == "project":
+        return "\n".join(_PLUGIN.findall(text))
+    return _TEXT_BLOCK.sub("", text)
+
+
 SCALA_COMPILER_OPTIONS = requirement_reader(
     "Scala compiler options",
-    (*SBT_FILES, *MILL_FILES, *SCALA_CLI_FILES),
+    (*SBT_FILES, *MILL_FILES, *SCALA_CLI_FILES, "project/*.scala"),
     (*(required(lint) for lint in SCALA_LINTS), *_SCALA_WARNINGS_AS_ERRORS),
+    code=_options_code,
 )
 
 WARNINGS = Practice(
@@ -393,7 +435,12 @@ SCALA_ECOSYSTEM = Ecosystem(
         "Scala",
         version=_SCALA_VERSION,
         inputs=("scala-version",),
-        more=(rf"\+\+{_SCALA_VERSION}", rf"--scala[=\s]+{_SCALA_VERSION}", rf"(?<![\w-])-S\s+{_SCALA_VERSION}"),
+        # sbt's `++2.13.16`, or `'++ 2.13'` with a binary version (cats); not C++'s `c++17`.
+        more=(
+            r"(?<![\w+])\+\+\s*(\d+(?:\.\d+){0,2}(?:-\w+)?)\b",
+            rf"--scala[=\s]+{_SCALA_VERSION}",
+            rf"(?<![\w-])-S\s+{_SCALA_VERSION}",
+        ),
         programs=("sbt", "sbtn", "mill", "scala-cli", "scalac"),
         actions=("coursier/setup-action",),
         setup=("sbt", "scala"),

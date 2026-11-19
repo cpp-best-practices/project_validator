@@ -195,20 +195,35 @@ def _included(path: str, document: Mapping[str, object], load: Load | None, dept
     return _merged(pipeline, own), sources, unread
 
 
-def _extended(name: str, pipeline: Mapping[str, object], depth: int = 0) -> Mapping[str, object] | None:
-    """Job `name` with the templates it `extends` merged in first; None when one of them is not defined."""
+_UNDEFINED = "a template it extends is not defined"
+_TOO_DEEP = f"the templates it extends nest more than {_DEPTH} levels deep"
+_REFERENCES_TOO_DEEP = f"its !reference tags nest more than {_DEPTH} levels deep"
+
+
+def _extended(name: str, pipeline: Mapping[str, object], depth: int = 0) -> Mapping[str, object] | str:
+    """Job `name` with the templates it `extends` merged in first; why not, when one of them is not defined or they
+    nest deeper than GitLab reads."""
     job = pipeline.get(name)
     if not isinstance(job, Mapping):
-        return None
+        return _UNDEFINED
     parents = job.get("extends")
     names = parents if isinstance(parents, list) else [] if parents is None else [parents]
     merged: dict[str, object] = {}
     for parent in map(str, names):
-        base = _extended(parent, pipeline, depth + 1) if depth < _DEPTH else None
-        if base is None:
-            return None
+        base = _extended(parent, pipeline, depth + 1) if depth < _DEPTH else _TOO_DEEP
+        if isinstance(base, str):
+            return base
         merged = _merged(merged, base)
     return _merged(merged, {key: value for key, value in job.items() if key != "extends"})
+
+
+def _unresolved(value: object) -> bool:
+    """Whether `value` still holds a `!reference` tag: one nested deeper than GitLab reads."""
+    if isinstance(value, Tagged):
+        return value.tag == "!reference"
+    if isinstance(value, list):
+        return any(_unresolved(item) for item in value)
+    return isinstance(value, Mapping) and any(_unresolved(item) for item in value.values())
 
 
 def _referenced(value: object, pipeline: Mapping[str, object], depth: int = 0) -> object:
@@ -251,11 +266,14 @@ def pipeline_facts(path: str, document: object, load: Load | None = None) -> Ite
         if not _is_job(name, job):
             continue
         resolved = _extended(name, pipeline)
-        if resolved is None:
-            origin = Origin(path=sources.get(name, path), at=(name,))
-            yield Unknown(origin=origin, subject=f"job {name}", reason="a template it extends is not defined")
+        origin = Origin(path=sources.get(name, path), at=(name,))
+        if isinstance(resolved, str):
+            yield Unknown(origin=origin, subject=f"job {name}", reason=resolved)
             continue
-        yield from _job_facts(sources.get(name, path), name, _referenced_mapping(resolved, pipeline), defaults)
+        referenced = _referenced_mapping(resolved, pipeline)
+        if _unresolved(referenced):
+            yield Unknown(origin=origin, subject=f"job {name}", reason=_REFERENCES_TOO_DEEP)
+        yield from _job_facts(sources.get(name, path), name, referenced, defaults)
 
 
 GITLAB_CI = CiProvider(

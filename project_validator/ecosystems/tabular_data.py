@@ -10,6 +10,7 @@ it recognises nothing here. The other schema practices of #85 are not yet built.
 
 from __future__ import annotations
 
+import json
 import re
 from collections.abc import Iterator, Mapping
 from pathlib import PurePosixPath
@@ -19,6 +20,7 @@ from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.expansion import Action
+from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.schema import validated, validator
 from project_validator.facts.tools import all_of, starts, when, with_option
 
@@ -131,3 +133,23 @@ def _frictionless_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ..
 
 FRICTIONLESS_CI = Action(name="frictionlessdata/frictionless-ci", runs=_frictionless_action)
 FRICTIONLESS_REPOSITORY = Action(name="frictionlessdata/repository", runs=_frictionless_action)
+
+
+def _data_package_licenses(text: str) -> str | None:
+    """The licenses a Data Package descriptor names (`licenses[].name`), as an SPDX expression of any of them."""
+    try:
+        document = json.loads(text)
+    except json.JSONDecodeError:
+        return None
+    entries = document.get("licenses") if isinstance(document, dict) else None
+    names = [entry["name"] for entry in entries or [] if isinstance(entry, dict) and isinstance(entry.get("name"), str)]
+    return " OR ".join(names) or None
+
+
+# A Data Package declares its license in its descriptor, the data world's manifest.
+DATA_PACKAGE_LICENSE = declared_license_reader(
+    name="datapackage.json licenses",
+    files=("datapackage.json",),
+    languages=DATA_PACKAGE_ONLY,
+    declared=_data_package_licenses,
+)

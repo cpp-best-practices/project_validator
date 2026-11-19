@@ -5,8 +5,8 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
-from dataclasses import dataclass, field
-from itertools import groupby
+from dataclasses import dataclass, field, replace
+from itertools import groupby, takewhile
 
 from project_validator.build_systems.cmake.conditions import CONFIGURATION, LANGUAGE, constant
 from project_validator.build_systems.cmake.evaluation import Frame
@@ -27,6 +27,8 @@ _FLAGS = re.compile(
     r"(?:_(?P<configuration>DEBUG|RELEASE|RELWITHDEBINFO|MINSIZEREL))?"
 )
 _PROPERTY_OPTIONS = {"COMPILE_OPTIONS": "compile", "COMPILE_DEFINITIONS": "definition", "LINK_OPTIONS": "link"}
+# The legacy properties that hold options as one command-line string, separated by spaces rather than semicolons.
+_PROPERTY_FLAGS = {"COMPILE_FLAGS": "compile", "LINK_FLAGS": "link"}
 _TEST_REGISTRATIONS = frozenset(
     {"add_test", "catch_discover_tests", "gtest_discover_tests", "gtest_add_tests", "doctest_discover_tests"}
     | {"boost_discover_tests"}
@@ -40,6 +42,21 @@ _CUSTOM_TARGET_KEYWORDS = frozenset(
     {"COMMAND", "DEPENDS", "BYPRODUCTS", "WORKING_DIRECTORY", "COMMENT", "JOB_POOL", "JOB_SERVER_AWARE", "VERBATIM"}
     | {"USES_TERMINAL", "COMMAND_EXPAND_LISTS", "SOURCES"}
 )
+_EXECUTE_PROCESS_KEYWORDS = frozenset(
+    {"COMMAND", "WORKING_DIRECTORY", "TIMEOUT", "RESULT_VARIABLE", "RESULTS_VARIABLE", "OUTPUT_VARIABLE"}
+    | {"ERROR_VARIABLE", "INPUT_FILE", "OUTPUT_FILE", "ERROR_FILE", "OUTPUT_QUIET", "ERROR_QUIET", "COMMAND_ECHO"}
+    | {"OUTPUT_STRIP_TRAILING_WHITESPACE", "ERROR_STRIP_TRAILING_WHITESPACE", "ENCODING", "ECHO_OUTPUT_VARIABLE"}
+    | {"ECHO_ERROR_VARIABLE", "COMMAND_ERROR_IS_FATAL"}
+)
+_CUSTOM_COMMAND_KEYWORDS = _CUSTOM_TARGET_KEYWORDS | {
+    "OUTPUT",
+    "MAIN_DEPENDENCY",
+    "IMPLICIT_DEPENDS",
+    "DEPFILE",
+    "APPEND",
+    "DEPENDS_EXPLICIT_ONLY",
+    "CODEGEN",
+}
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -60,7 +77,7 @@ def _definition(text: str) -> str:
 
 def _registered_test(words: list[str]) -> tuple[str, ...]:
     """What `add_test` registers: the test's name and its command's words (`NAME n COMMAND c args...`, or the old
-    `add_test(n c args...)`)."""
+    `add_test(n c args...)`); one without a name (empty, or `NAME` alone) registers nothing."""
     if words[:1] == ["NAME"]:
         name = words[1] if len(words) > 1 else ""
         command = words[words.index("COMMAND") + 1 :] if "COMMAND" in words else []
@@ -76,14 +93,20 @@ class Collector:
     facts: list[Fact] = field(default_factory=list)
     targets: dict[str, list[CustomTarget]] = field(default_factory=dict)
     dependencies: dict[str, list[str]] = field(default_factory=dict)
+    # The variables a path was resolved into (`file(REAL_PATH)`, `get_filename_component(REALPATH)`), and the path as
+    # written: a guard comparing the variable compares the path.
+    resolved: dict[str, str] = field(default_factory=dict)
+    # The commands `execute_process()` runs (a script run with `cmake -P` runs them).
+    processes: list[tuple[tuple[str, ...], Origin]] = field(default_factory=list)
 
     def invoked(self, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
         if (handler := _COMMANDS.get(invocation.name)) is not None:
             handler(self, frame, invocation, words)
         elif invocation.name in _TEST_REGISTRATIONS:
             self.ctest(frame, "registers", invocation.name)
-            if invocation.name == "add_test":
-                self.ctest(frame, "test", _registered_test([word.text for word in words]))
+            registered = _registered_test([word.text for word in words])
+            if invocation.name == "add_test" and registered[:1] not in ((), ("",)):
+                self.ctest(frame, "test", registered)
         elif invocation.name in _DEPENDENCY_MANAGERS:
             self.facts.append(Declared(origin=Origin(path=frame.path), manager=_DEPENDENCY_MANAGERS[invocation.name]))
 
@@ -224,6 +247,9 @@ def _property(
     directory or the whole build are not asked about."""
     if name in _PROPERTY_OPTIONS:
         collector.options(frame, invocation, values, _PROPERTY_OPTIONS[name], target)
+    elif name in _PROPERTY_FLAGS:
+        listed = [replace(value, text=";".join(value.text.split())) for value in values]
+        collector.options(frame, invocation, listed, _PROPERTY_FLAGS[name], target)
     elif target is not None:
         for when, group in groupby(values, key=lambda value: value.when):
             collector.setting(frame, invocation, name, Value(";".join(value.text for value in group), when), target)
@@ -234,10 +260,22 @@ def _set_target_properties(collector: Collector, frame: Frame, invocation: Invoc
     if "PROPERTIES" not in texts:
         return
     split = texts.index("PROPERTIES")
-    pairs = words[split + 1 :]
+    pairs = _arguments(words[split + 1 :])
     for target in texts[:split]:
-        for name, value in zip(pairs[::2], pairs[1::2], strict=False):
-            _property(collector, frame, invocation, target, name.text, [value])
+        for name, values in zip(pairs[::2], pairs[1::2], strict=False):
+            _property(collector, frame, invocation, target, name[0].text, values)
+
+
+def _arguments(words: list[Value]) -> list[list[Value]]:
+    """`words` by the argument each is a value of: a value the argument takes in other builds (a variable set in both
+    branches of an `if()`) follows the first, and is the same argument."""
+    arguments: list[list[Value]] = []
+    for word in words:
+        if word.choice == 0 or not arguments:
+            arguments.append([word])
+        else:
+            arguments[-1].append(word)
+    return arguments
 
 
 def _set_property(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
@@ -259,17 +297,38 @@ def _set_property(collector: Collector, frame: Frame, invocation: Invocation, wo
 def _option(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
     """An option's default: `option(NAME "help" ON)`, `cmake_dependent_option(NAME "help" ON ...)`; the condition a
     dependent option depends on is a guard."""
-    if len(words) >= 2:
-        value = words[2] if len(words) > 2 else Value("OFF")
-        collector.setting(frame, invocation, words[0].text, value, None, default=True)
-    if invocation.name == "cmake_dependent_option" and len(words) >= 4:
-        collector.guard(frame, words[3].text)
+    arguments = _arguments(words)
+    if len(arguments) >= 2:
+        for value in arguments[2] if len(arguments) > 2 else [Value("OFF")]:
+            collector.setting(frame, invocation, words[0].text, value, None, default=True)
+    if invocation.name == "cmake_dependent_option" and len(arguments) >= 4:
+        collector.guard(frame, arguments[3][0].text)
 
 
 def _guard(collector: Collector, frame: Frame, _invocation: Invocation, words: list[Value]) -> None:
     """What an `if()` (or `elseif()`) tests, as written: the evaluator decides where it holds; the text says what the
-    project guards on (`PROJECT_IS_TOP_LEVEL`, a comparison of the source and binary directories)."""
-    collector.guard(frame, " ".join(word.text for word in words))
+    project guards on (`PROJECT_IS_TOP_LEVEL`, a comparison of the source and binary directories). A variable a path
+    was resolved into reads as the path."""
+    texts = (collector.resolved.get(word.text.removeprefix("${").removesuffix("}"), word.text) for word in words)
+    collector.guard(frame, " ".join(texts))
+
+
+def _resolve(collector: Collector, _frame: Frame, invocation: Invocation, _words: list[Value]) -> None:
+    """`file(REAL_PATH path var)` and `get_filename_component(var path REALPATH|ABSOLUTE)`: the path as written, before
+    the evaluator expands it, is what `var` holds."""
+    raw = [argument.text for argument in invocation.arguments]
+    if invocation.name == "file" and raw[:1] == ["REAL_PATH"] and len(raw) >= 3:
+        collector.resolved[raw[2]] = raw[1]
+    elif invocation.name == "get_filename_component" and len(raw) >= 3 and raw[2] in ("REALPATH", "ABSOLUTE"):
+        collector.resolved[raw[0]] = raw[1]
+
+
+def _string(collector: Collector, frame: Frame, invocation: Invocation, _words: list[Value]) -> None:
+    """`string(COMPARE EQUAL a b var)` computes a flag the project then guards on: it tests what an
+    `if(a STREQUAL b)` would, so the comparison, as written, is a guard."""
+    raw = [argument.text for argument in invocation.arguments]
+    if raw[:2] == ["COMPARE", "EQUAL"] and len(raw) >= 5:
+        collector.guard(frame, f"{raw[2]} STREQUAL {raw[3]}")
 
 
 def _set(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
@@ -293,12 +352,14 @@ def _include(collector: Collector, frame: Frame, invocation: Invocation, words: 
         collector.facts.append(Declared(origin=Origin(path=frame.path), manager="CPM"))
 
 
-def _commands(words: Iterable[Value], origin: Origin) -> Iterator[tuple[tuple[str, ...], Origin]]:
+def _commands(
+    words: Iterable[Value], origin: Origin, keywords: frozenset[str] = _CUSTOM_TARGET_KEYWORDS
+) -> Iterator[tuple[tuple[str, ...], Origin]]:
     """The commands of a custom target: the words after its name (and ALL), then after each COMMAND; of an argument
     whose value depends on the build, its first value."""
     current: list[str] | None = []
     for word in (word for word in words if word.choice == 0):
-        if word.text in _CUSTOM_TARGET_KEYWORDS:
+        if word.text in keywords:
             if current:
                 yield tuple(current), origin
             current = [] if word.text == "COMMAND" else None
@@ -325,6 +386,30 @@ def _add_custom_target(collector: Collector, frame: Frame, invocation: Invocatio
     collector.targets.setdefault(target.name, []).append(target)
 
 
+def _add_custom_command(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
+    """`add_custom_command(OUTPUT files... COMMAND ...)`: a target depending on one of the files runs its commands
+    first, so each file is a custom target of its own that builds by running them."""
+    texts = [word.text for word in words]
+    if texts[:1] != ["OUTPUT"]:
+        return
+    ends = [at for at, text in enumerate(texts[1:], 1) if text in _CUSTOM_COMMAND_KEYWORDS] or [len(texts)]
+    depends = _following(texts, "DEPENDS")
+    commands = tuple(_commands(words[ends[0] :], frame.origin(invocation), _CUSTOM_COMMAND_KEYWORDS))
+    for output in texts[1 : ends[0]]:
+        target = CustomTarget(name=output, all=False, commands=commands, depends=depends, directory=frame.directory)
+        collector.targets.setdefault(output, []).append(target)
+
+
+def _following(texts: list[str], keyword: str) -> tuple[str, ...]:
+    """The words after `keyword`, up to the next keyword of `add_custom_command`."""
+    rest = texts[texts.index(keyword) + 1 :] if keyword in texts else []
+    return tuple(takewhile(lambda text: text not in _CUSTOM_COMMAND_KEYWORDS, rest))
+
+
+def _execute_process(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
+    collector.processes += _commands(words, frame.origin(invocation), _EXECUTE_PROCESS_KEYWORDS)
+
+
 def _add_dependencies(collector: Collector, _frame: Frame, _invocation: Invocation, words: list[Value]) -> None:
     if words:
         collector.dependencies.setdefault(words[0].text, []).extend(word.text for word in words[1:])
@@ -346,9 +431,14 @@ _COMMANDS: Mapping[str, Callable[[Collector, Frame, Invocation, list[Value]], No
     "if": _guard,
     "elseif": _guard,
     "set": _set,
+    "string": _string,
+    "file": _resolve,
+    "get_filename_component": _resolve,
     "enable_testing": _enable_testing,
     "include": _include,
     "add_custom_target": _add_custom_target,
+    "add_custom_command": _add_custom_command,
+    "execute_process": _execute_process,
     "add_dependencies": _add_dependencies,
 }
 

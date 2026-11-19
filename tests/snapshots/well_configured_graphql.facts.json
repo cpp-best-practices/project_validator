@@ -500,11 +500,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "GraphQL"
       ],
@@ -518,11 +516,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "GraphQL"
       ],
@@ -683,9 +679,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "GraphQL"
@@ -695,9 +689,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "GraphQL"

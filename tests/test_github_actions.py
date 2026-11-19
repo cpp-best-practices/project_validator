@@ -201,3 +201,16 @@ class ActionReferencesTests(unittest.TestCase):
         for document in documents:
             with self.subTest(document=document):
                 self.assertEqual(action_references(document), [])
+
+
+class ConditionalExportTests(unittest.TestCase):
+    def test_an_export_that_runs_only_sometimes_is_not_known(self) -> None:
+        from project_validator.ci.github_actions import _exported
+
+        always = 'echo "A=1" >> $GITHUB_ENV\nx; echo "B=2" >> "$GITHUB_ENV"'
+        sometimes = (
+            'if x; then\n  echo "C=1" >> $GITHUB_ENV\nfi\n'
+            '[ y ] && echo "D=1" >> $GITHUB_ENV\nz || echo "E=1" >> $GITHUB_ENV'
+        )
+        self.assertEqual(_exported(always), {"A": "1", "B": "2"})
+        self.assertEqual(_exported(sometimes), {})

@@ -31,6 +31,22 @@ KNOWN_LICENSES = tuple(
         ("Apache-2.0", r"apache license,? version 2\.0"),
         ("MPL-2.0", r"mozilla public license,? version 2\.0"),
         ("EPL-2.0", r"eclipse public license -? ?v(?:ersion)? ?2\.0"),
+        ("EPL-1.0", r"eclipse public license -? ?v(?:ersion)? ?1\.0"),
+        ("LPPL-1.3c", r"latex project public license.*lppl version 1\.3c"),
+        ("Artistic-2.0", r"the artistic license 2\.0"),
+        # "The same terms as Perl itself": the GPL (version 1 or later) or the Artistic License, Perl's dual license.
+        (
+            "Artistic-1.0-Perl OR GPL-1.0-or-later",
+            r"terms (?:as|of) (?:the )?perl(?: 5 programming language system)? itself",
+        ),
+        ("ODbL-1.0", r"open database license \(odbl\)"),
+        ("CC-BY-NC-4.0", r"attribution-noncommercial 4\.0 international"),
+        ("CC-BY-4.0", r"attribution 4\.0 international"),
+        (
+            "PostgreSQL",
+            r"permission to use, copy, modify, and distribute this software and its documentation for any purpose, "
+            r"without fee, and without a written agreement",
+        ),
         ("BSL-1.0", r"boost software license -? ?version 1\.0"),
         ("Unlicense", r"this is free and unencumbered software released into the public domain"),
         ("CC0-1.0", r"cc0 1\.0 universal"),
@@ -42,6 +58,10 @@ KNOWN_LICENSES = tuple(
         ("Zlib", r"this software is provided 'as-is', without any express or implied warranty"),
     )
 )
+# Manifests that are where their ecosystem declares a license, in place of a license file (a Data Package's
+# `licenses`): their declaration stands in for one.
+DECLARED_IN_PLACE_OF_A_FILE = ("datapackage.json",)
+_QUOTED = re.compile(r"^[ \t]*>[ \t]?", re.MULTILINE)
 # How much of a license file is read: every known license is recognised by its first few paragraphs.
 HEAD_SIZE = 16384
 _WITH = "WITH"
@@ -62,14 +82,35 @@ def recognised(path: str, text: str) -> frozenset[str]:
     head = text[:HEAD_SIZE]
     if identifiers := SPDX_IDENTIFIER.findall(head):
         return frozenset(spdx for expression in identifiers for spdx in identifiers_in(expression))
-    flat = " ".join(head.lower().split())
-    return frozenset(next(([spdx] for spdx, opening in KNOWN_LICENSES if opening.search(flat)), []))
+    # A Markdown blockquote (`> Permission is hereby granted…`) is read as its text.
+    flat = " ".join(_QUOTED.sub("", head).lower().split())
+    # A combined file (a package's license, then its bundled parts') is the license it opens with.
+    found = [
+        (match.start(), index, spdx)
+        for index, (spdx, opening) in enumerate(KNOWN_LICENSES)
+        if (match := opening.search(flat))
+    ]
+    return identifiers_in(min(found)[2]) if found else frozenset()
 
 
 def _read(path: str, text: str) -> Iterator[Fact]:
-    reuse = PurePosixPath(path).parent.name == REUSE_DIRECTORY
-    if reuse or LICENSE_FILE.fullmatch(PurePosixPath(path).name):
+    file = PurePosixPath(path)
+    reuse = file.parent.name == REUSE_DIRECTORY
+    if reuse or (LICENSE_FILE.fullmatch(file.name) and file.suffix not in _code_suffixes()):
         yield LicenseFile(origin=Origin(path=path), licenses=recognised(path, text))
+
+
+def _code_suffixes() -> frozenset[str]:
+    """The suffixes of a language's sources: `License.pm` and `license.t` are code about licenses (Dist::Zilla)."""
+    from project_validator.ecosystems import registered  # the profiles define the suffixes; they read licenses
+
+    languages = (ecosystem for ecosystem in registered() if ecosystem.kind == "language")
+    found = (suffix for ecosystem in languages for suffix in ecosystem.source_suffixes or {})
+    return frozenset((*found, *_TEST_SCRIPTS))
+
+
+# Perl's test scripts, which its profile finds by directory rather than by suffix.
+_TEST_SCRIPTS = (".t",)
 
 
 def _any_case(name: str) -> str:

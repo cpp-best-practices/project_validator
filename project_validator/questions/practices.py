@@ -34,6 +34,8 @@ class Compiled:
     compiler: str | None
     found: tuple[tuple[str, tuple[str, ...]], ...]
     missing: tuple[str, ...]
+    # What was found for a requirement, when the evidence says more than its name (requirement -> what).
+    shown: tuple[tuple[str, str], ...] = ()
 
     def as_dict(self) -> dict[str, object]:
         return {"compiler": self.compiler, "found": dict(self.found), "missing": list(self.missing)}
@@ -53,6 +55,14 @@ class PracticeAnswer:
         """Every requirement met for some compiler, in order."""
         return tuple(dict.fromkeys(name for compiled in self.compiled for name, _ in compiled.found))
 
+    def shown(self) -> tuple[str, ...]:
+        """What meets each requirement met, as found where the evidence says (`c_std=c11`), else its name."""
+        return tuple(
+            dict.fromkeys(
+                dict(compiled.shown).get(name, name) for compiled in self.compiled for name, _ in compiled.found
+            )
+        )
+
     def as_dict(self) -> dict[str, object]:
         return answer_dict(
             self,
@@ -66,12 +76,15 @@ class PracticeAnswer:
 def _compiled(practice: Practice, facts: Facts, compiler: str | None, texts: Texts) -> Compiled:
     found: list[tuple[str, tuple[str, ...]]] = []
     missing: list[str] = []
+    shown: list[tuple[str, str]] = []
     for requirement in practice.requirements(facts, compiler):
         if evidence := met(practice, requirement, facts, compiler, texts):
             found.append((requirement.name, tuple(str(where) for where in evidence)))
+            if what := next((found_.shown for found_ in evidence if found_.shown), None):
+                shown.append((requirement.name, what))
         else:
             missing.append(requirement.name)
-    return Compiled(compiler=compiler, found=tuple(found), missing=tuple(missing))
+    return Compiled(compiler=compiler, found=tuple(found), missing=tuple(missing), shown=tuple(shown))
 
 
 def _met(practice: Practice, compiled: tuple[Compiled, ...]) -> bool:

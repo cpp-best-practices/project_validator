@@ -22,7 +22,13 @@ JSON, TOML, XML, YAML = "JSON", "TOML", "XML", "YAML"
 DATA_FORMATS = frozenset({JSON, TOML, XML, YAML})
 
 # JSON files that tools read with comments and trailing commas allowed.
-JSON_WITH_COMMENTS = ("*.jsonc", "tsconfig*.json", "jsconfig.json", "devcontainer.json", ".vscode/*.json")
+# JSON files whose tool reads them with comments and trailing commas (and documents that it does).
+JSON_WITH_COMMENTS = (
+    *("*.jsonc", "tsconfig*.json", "jsconfig.json", "devcontainer.json", ".vscode/*.json"),
+    *("pyrightconfig.json", "turbo.json", ".luarc.json", "asv.conf.json", ".eslintrc.json", "biome.json", "deno.json"),
+    # Nerdbank.GitVersioning's version file.
+    "version.json",
+)
 
 
 def _allows_comments(path: str) -> bool:
@@ -38,9 +44,30 @@ def _check_deep_json(text: str) -> None:
         raise ParseError(str(error), error.line, error.column) from error
 
 
+# Deeper than this, JSON is read without recursion: how deep Python's own decoder goes depends on the interpreter, and
+# a report must not (JSONTestSuite's 100000-deep arrays).
+_DEEP = 500
+_NESTING = re.compile(r'"(?:[^"\\]|\\.)*"|[\[{]|[\]}]')
+
+
+def _deep(text: str) -> bool:
+    """Whether `text` nests containers deeper than `_DEEP` (strings skipped)."""
+    if text.count("[") + text.count("{") <= _DEEP:
+        return False
+    depth = 0
+    for token in _NESTING.finditer(text):
+        depth += {"[": 1, "{": 1, "]": -1, "}": -1}.get(token[0], 0)
+        if depth > _DEEP:
+            return True
+    return False
+
+
 def _parse_json(path: str, data: bytes) -> None:
     text = decoded(data)
     text = strip_json_comments(text) if _allows_comments(path) else text
+    if _deep(text):
+        _check_deep_json(text)
+        return
     try:
         json.loads(text)
     except json.JSONDecodeError as error:

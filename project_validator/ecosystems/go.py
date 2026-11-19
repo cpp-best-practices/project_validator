@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 import shlex
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Mapping
 
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
@@ -21,7 +21,15 @@ from project_validator.facts.fuzzing import FuzzTargets, PropertyTests, fuzzed, 
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.mutation import incremental_when, mutated, mutation_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
-from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
+from project_validator.facts.practices import (
+    Practice,
+    PracticeName,
+    Requirement,
+    Wording,
+    always,
+    required,
+    requirement_reader,
+)
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -76,6 +84,7 @@ def _go_run(command: Command, _context: Context) -> list[Expansion] | None:
 
 GO_RUN = CommandExpander(name="go run and go tool", expand=_go_run)
 
+
 # golangci-lint runs the formatters its configuration enables (`formatters.enable` since v2, `linters.enable` before).
 _GOFMT_FORMATTERS = frozenset({"gofmt", "gofumpt", "goimports", "gci", "golines", "swaggo"})
 
@@ -127,12 +136,14 @@ GOFMT = format_tool(
 
 # The go tool measures statement coverage only.
 _COVER = ("-cover", "-coverprofile", "-covermode", "-coverpkg")
+# What runs `go test`: the go tool, and richgo, which only colours its output.
+_GO_TEST = (("go", "test"), ("richgo", "test"))
 
 
 def _go_cover(command: Command, _: Facts) -> Run | None:
     """`go test -cover` (or `go build -cover`), which counts statements (and so lines): nothing finer."""
     argv = resolved(command)
-    if not starts_with(argv, ("go", "test"), ("go", "build")) or not has_option(argv, *_COVER):
+    if not starts_with(argv, *_GO_TEST, ("go", "build")) or not has_option(argv, *_COVER):
         return None
     return reported(Granularity.LINE, Granularity.STATEMENT)
 
@@ -176,24 +187,46 @@ GO_TEST = test_runner(
     name="go test",
     languages=GO_LANGUAGE,
     how="go test",
-    runs=when(starts(("go", "test"), ("gotestsum",)), tested),
+    runs=when(starts(*_GO_TEST, ("gotestsum",)), tested),
     tests=tests_of(GO_TEST_FILES.name),
 )
 
 
 # The Go compiler has no warnings; go vet and staticcheck report what other compilers warn about.
 # golangci-lint runs both by default.
-GO_LINTS = (
-    pattern("go vet", rf"\bgo\s+vet\b|{RUNS_GOLANGCI_LINT}"),
-    pattern("staticcheck", rf"\bstaticcheck\b|{RUNS_GOLANGCI_LINT}"),
-)
+# Each as it runs alone, and the name golangci-lint gives it.
+GO_LINTS = (("go vet", r"\bgo\s+vet\b", "govet"), ("staticcheck", r"\bstaticcheck\b", "staticcheck"))
+
+
+def _golangci_runs(linter: str, facts: Facts) -> bool:
+    """Whether golangci-lint runs `linter`, one of its defaults: unless its configuration disables it, or turns the
+    defaults off (`linters.default: none`, `disable-all: true`) without enabling it again."""
+    found = facts.settings("golangci-lint")
+    if any(setting.key == "linters.disable" and _names(setting, linter) for setting in found):
+        return False
+    defaults_off = any(
+        (setting.key == "linters.disable-all" and setting.value is True)
+        or (setting.key == "linters.default" and setting.value == "none")
+        for setting in found
+    )
+    return not defaults_off or bool(_golangci_enables(linter)(facts))
+
+
+def _lint_requirements(facts: Facts, _compiler: str | None) -> tuple[Requirement, ...]:
+    """go vet and staticcheck, run alone or by golangci-lint where its configuration runs them."""
+    found = []
+    for name, alone, linter in GO_LINTS:
+        by_golangci = _golangci_runs(linter, facts)
+        runs = pattern(name, rf"{alone}|{RUNS_GOLANGCI_LINT}" if by_golangci else alone)
+        found.append(required(runs, in_files=False, tools=("golangci-lint",) if by_golangci else ()))
+    return tuple(found)
 
 
 # The race detector is Go's ThreadSanitizer; -asan and -msan build with the C sanitizers for cgo.
 GO_SANITIZERS = (
-    pattern("go test -race", r"\b(?:go\s+test|gotestsum)\b[^\n]*\s-race\b"),
-    pattern("go test -asan", r"\b(?:go\s+test|gotestsum)\b[^\n]*\s-asan\b"),
-    pattern("go test -msan", r"\b(?:go\s+test|gotestsum)\b[^\n]*\s-msan\b"),
+    pattern("go test -race", r"\b(?:(?:rich)?go\s+test|gotestsum)\b[^\n]*\s-race\b"),
+    pattern("go test -asan", r"\b(?:(?:rich)?go\s+test|gotestsum)\b[^\n]*\s-asan\b"),
+    pattern("go test -msan", r"\b(?:(?:rich)?go\s+test|gotestsum)\b[^\n]*\s-msan\b"),
 )
 SANITIZERS = Practice(
     name=PracticeName.SANITIZERS,
@@ -211,7 +244,7 @@ SANITIZERS = Practice(
 WARNINGS = Practice(
     name=PracticeName.WARNINGS,
     languages=GO_LANGUAGE,
-    requirements=always(*(required(lint, in_files=False, tools=("golangci-lint",)) for lint in GO_LINTS)),
+    requirements=_lint_requirements,
     words=Wording(
         kind="Go linters",
         hint="run go vet and staticcheck (golangci-lint runs both) in CI",
@@ -247,7 +280,36 @@ def _golangci_gosec(command: Command, facts: Facts) -> Run | None:
     if not starts(("golangci-lint", "run"))(command):
         return None
     read = _golangci_enables("gosec")(facts)
-    return scanned(read=read) if read else None
+    return scanned(read=read) if read and not _excluded_everywhere("gosec", facts) else None
+
+
+# Where golangci-lint's configuration excludes linters' findings: v1's `issues.exclude-rules`, v2's
+# `linters.exclusions.rules`.
+_EXCLUSIONS = ("issues.exclude-rules", "linters.exclusions.rules")
+
+
+def _excluded_everywhere(linter: str, facts: Facts) -> bool:
+    """Whether an exclusion rule drops every finding of `linter` in every Go file: a rule for it with no other filter
+    than a path every Go source matches (protovalidate's `path: .`)."""
+    from project_validator.facts.structure import SourceFile  # structure reads the profiles, this one among them
+
+    sources = [source.path for source in facts.of(SourceFile) if source.language in GO_LANGUAGE]
+    for setting in facts.settings("golangci-lint"):
+        rules = setting.value if setting.key in _EXCLUSIONS and isinstance(setting.value, tuple) else ()
+        for rule in rules:
+            if isinstance(rule, Mapping) and _drops_all(rule, linter, sources):
+                return True
+    return False
+
+
+def _drops_all(rule: Mapping[str, object], linter: str, sources: list[str]) -> bool:
+    linters, path = rule.get("linters"), rule.get("path")
+    if not isinstance(linters, list) or linter not in linters or set(rule) - {"linters", "path"}:
+        return False
+    try:
+        return path is None or all(re.search(str(path), source) for source in sources)
+    except re.error:
+        return False
 
 
 SECURITY_SCANNERS = (

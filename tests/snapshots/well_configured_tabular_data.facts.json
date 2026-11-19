@@ -395,11 +395,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Python",
         "Tabular data"
@@ -447,6 +445,19 @@
       "origin": "LICENSE"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "datapackage.json",
+      "reader": "datapackage.json licenses"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "Data Package"
+      ],
+      "origin": "datapackage.json"
+    },
+    {
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
@@ -489,9 +500,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Python",

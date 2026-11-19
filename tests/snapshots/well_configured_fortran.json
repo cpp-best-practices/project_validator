@@ -864,6 +864,7 @@
               "fpm.toml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -885,6 +886,7 @@
               ".github/workflows/function-limits.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1106,7 +1108,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "Fortran test programs in test/: 1 file(s), run by fpm test",
       "status": "PASS"
     },
     "top-level-guard": {

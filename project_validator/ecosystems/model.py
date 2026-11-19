@@ -54,7 +54,9 @@ class ToolchainPatterns:
     (`vendor/bin/`), or its text matches `usage` (a setup action). `labelled` patterns name a toolchain by something
     other than its version, written with their label: a Stackage snapshot pins a GHC (a resolver `lts-22` is
     "Stackage lts-22"). `steps` read a version from a setup action's inputs, structurally: the action's repository
-    (`subosito/flutter-action`) and a reader of its inputs, which returns the version named (or None)."""
+    (`subosito/flutter-action`) and a reader of its inputs, which returns the version named (or None). `pinned_by`
+    names the files at the project's root that pin the version a job runs when it names none (`rust-toolchain.toml`),
+    each with the pattern of that version (its first group)."""
 
     language: str
     versions: tuple[re.Pattern[str], ...]
@@ -63,6 +65,7 @@ class ToolchainPatterns:
     usage: re.Pattern[str] | None = None
     labelled: tuple[tuple[re.Pattern[str], str], ...] = ()
     steps: tuple[tuple[str, Callable[[Mapping[str, str]], str | None]], ...] = ()
+    pinned_by: tuple[tuple[str, re.Pattern[str]], ...] = ()
 
     def used_by(self, texts: Iterable[str], commands: Iterable[tuple[str, ...]]) -> bool:
         """Whether a job with `texts` that runs `commands` (each its words) uses the toolchain, without naming it."""
@@ -94,6 +97,16 @@ VERSION = r"(\d+\.\d+(?:\.\d+)?)"
 """A version as most toolchains are named: `1.22`, `3.13.1`."""
 
 
+# The suffix of the input that holds the contents of the file a setup action's `*-version-file` input names (the CI
+# layer attaches it to the step, for a reader of the version the file pins).
+VERSION_FILE_CONTENTS = "@contents"
+
+
+def input_named(name: str) -> Callable[[Mapping[str, str]], str | None]:
+    """A reader of a setup action's input `name`, as written (one version, or several one per line)."""
+    return lambda inputs: inputs.get(name) or None
+
+
 def toolchain_patterns(
     language: str,
     *,
@@ -108,11 +121,11 @@ def toolchain_patterns(
     setup: Iterable[str] = (),
     labelled: Iterable[tuple[re.Pattern[str], str]] = (),
     steps: Iterable[tuple[str, Callable[[Mapping[str, str]], str | None]]] = (),
+    pinned_by: Iterable[tuple[str, re.Pattern[str]]] = (),
 ) -> ToolchainPatterns:
-    """How CI names a `language` toolchain (a `version` pattern with one group, in a setup action's `inputs`, an
-    `images` tag, `more` patterns, or `steps` reading an action's inputs) and shows it uses one (`programs`,
-    `directories`, `setup`, `actions`): see `ToolchainPatterns`."""
-    by_input = (rf"\b{re.escape(name)}\W+{version}" for name in inputs)
+    """How CI names a `language` toolchain (a one-group `version` in setup `inputs`, `images` tags, `more`, `steps`,
+    files `pinned_by`) and shows one is used (`programs`, `directories`, `setup`, `actions`); see ToolchainPatterns."""
+    by_input = (rf"\b{re.escape(name)}[^\w@/<>]+{version}" for name in inputs)  # not a ref (`@17d8`) or range
     by_image = (rf"\b{re.escape(image)}:{image_version or version}" for image in images)
     return ToolchainPatterns(
         language=language,
@@ -122,6 +135,7 @@ def toolchain_patterns(
         usage=_usage(setup, actions),
         labelled=tuple(labelled),
         steps=tuple(steps),
+        pinned_by=tuple(pinned_by),
     )
 
 

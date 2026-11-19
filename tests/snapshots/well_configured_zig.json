@@ -273,17 +273,36 @@
         "language": "Zig",
         "units": [
           {
-            "answer": "impossible",
+            "answer": "yes",
             "language": "Zig",
             "other_runs": [],
             "property_files": [],
             "tools": {
-              "answer": "impossible",
-              "defined": {},
-              "known": {},
+              "answer": "yes",
+              "defined": {
+                "zig build fuzz": [
+                  "src/shop.zig"
+                ]
+              },
+              "known": {
+                "zig build fuzz": {
+                  "can": {
+                    "runs": "zig build test --fuzz (or a fuzz step: zig build fuzz)"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
               "language": "Zig",
               "level": "runs",
-              "runs": {},
+              "runs": {
+                "zig build fuzz": {
+                  "levels": [
+                    "runs"
+                  ],
+                  "read": []
+                }
+              },
               "unit": ".",
               "unknown_definitions": [],
               "unknowns": []
@@ -708,6 +727,7 @@
               ".github/workflows/function-limits.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -808,8 +828,8 @@
     },
     "fuzz-testing": {
       "details": [],
-      "message": "not applicable to Zig",
-      "status": "SKIP"
+      "message": "fuzz targets in 1 file(s), run by zig build fuzz",
+      "status": "PASS"
     },
     "hardening": {
       "details": [],
@@ -875,6 +895,7 @@
         ".github/workflows/ci.yml: test (windows-latest, 0.14.1, Debug, -fsanitize-c): windows / 0.14.1",
         ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, ): windows / 0.14.1",
         ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, -fsanitize-c): windows / 0.14.1",
+        ".github/workflows/ci.yml: fuzz: linux / 0.14.1",
         ".github/workflows/ci.yml: coverage: linux / 0.14.1",
         ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Zig version",
         ".github/workflows/function-limits.yml: function-limits: linux / no Zig version"
@@ -934,7 +955,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "test blocks in .zig files: 1 file(s), run by zig build test",
       "status": "PASS"
     },
     "top-level-guard": {

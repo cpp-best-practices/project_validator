@@ -114,7 +114,7 @@ class SecurityScanningTests(unittest.TestCase):
 
     def test_a_language_no_known_scanner_handles_is_skipped(self) -> None:
         answer = tool_answer(SECURITY, SCANS, "Lang", Facts(()), ())
-        self.assertEqual(judge_security(answer).status, Status.SKIP)
+        self.assertEqual(judge_security(answer, allow_unknown=False).status, Status.SKIP)
 
 
 class SecurityLintTests(unittest.TestCase):

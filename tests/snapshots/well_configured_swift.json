@@ -626,7 +626,31 @@
       {
         "auxiliary": {},
         "language": "Swift",
-        "units": []
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "swift --sanitize=address": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": [
+                  "swift --sanitize=thread",
+                  "swift --sanitize=undefined",
+                  "-enableAddressSanitizer YES",
+                  "-enableThreadSanitizer YES"
+                ]
+              }
+            ],
+            "language": "Swift",
+            "practice": "sanitizers",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ],
     "schema-compatibility": [
@@ -917,6 +941,7 @@
               "muter.conf.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1084,8 +1109,8 @@
     },
     "sanitizers": {
       "details": [],
-      "message": "not applicable to Swift",
-      "status": "SKIP"
+      "message": "sanitizers run in CI: swift --sanitize=address",
+      "status": "PASS"
     },
     "schema-compatibility": {
       "details": [],
@@ -1134,7 +1159,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "XCTestCase classes or Swift Testing @Test functions: 1 file(s), run by swift test or xcodebuild test",
       "status": "PASS"
     },
     "top-level-guard": {

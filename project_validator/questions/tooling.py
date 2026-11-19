@@ -126,14 +126,20 @@ class ToolAnswer:
 
 def _relevant(path: str, unit: str, facts: Facts, auxiliary: tuple[str, ...]) -> bool:
     """Whether a definition file applies to code in `unit`: tools look for theirs in a file's directory and the
-    directories above it, so one at or above the unit applies to all of it, and one inside it to part of it, unless
-    that part is vendored or auxiliary code (an example's own configuration, with `--auxiliary example`) the answer
-    is not about (`auxiliary`: what named the code it is about)."""
+    directories above it, so one at or above the unit applies to all of it, and one inside it (not in a unit of its
+    own) to part of it, unless that part is vendored or auxiliary code (an example's own configuration, with
+    `--auxiliary example`) the answer is not about (`auxiliary`: what named the code it is about)."""
     directory = str(PurePosixPath(path).parent)
     if within(unit, directory):
         return True
     named = selectors(facts).matching(path, None)
-    return within(directory, unit) and role(path) != "vendored" and (not named or named in auxiliary)
+    inside = within(directory, unit) and _owner(path, facts) == unit
+    return inside and role(path) != "vendored" and (not named or named in auxiliary)
+
+
+def _owner(path: str, facts: Facts) -> str:
+    """The unit a file inside units is part of: the innermost (a nested package's tests are its own)."""
+    return owner(path, [found.directory for found in facts.of(Unit)] or ["."])
 
 
 def _runs(aspect: str, language: str, unit: str, facts: Facts, auxiliary: tuple[str, ...]) -> tuple[Ran, ...]:

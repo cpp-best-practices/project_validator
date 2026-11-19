@@ -11,7 +11,9 @@ from project_validator.questions.tooling import ToolAnswer
 
 
 def _hint(answer: ToolAnswer) -> str:
-    return f"consider a CI job that runs {alternatives(answer.how(Enforcement.CHECK))}"
+    """How to enforce the formatting: the tools that check it, or (when none of the language's does) those that
+    rewrite the files, with the job failing on the diff."""
+    return f"consider a CI job that runs {alternatives(answer.how(Enforcement.CHECK) or answer.how(Enforcement.APPLY))}"
 
 
 def _enforced(answer: ToolAnswer) -> Result:
@@ -23,7 +25,7 @@ def _enforced(answer: ToolAnswer) -> Result:
     return Result.passed(f"CI enforces the {tools} style")
 
 
-def judge_formatting(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_formatting(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """Formatting passes when CI enforces it with a tool whose style is defined (by a file, or by default); defined
     but not enforced warns. A language no known tool formats is skipped. An unknown answer is an error unless
     `allow_unknown`."""

@@ -1527,6 +1527,13 @@
                 },
                 "needs_definition": false,
                 "required": false
+              },
+              "xo": {
+                "can": {
+                  "checks": "xo"
+                },
+                "needs_definition": false,
+                "required": false
               }
             },
             "language": "JavaScript",
@@ -1581,6 +1588,13 @@
               "oxlint": {
                 "can": {
                   "checks": "oxlint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "xo": {
+                "can": {
+                  "checks": "xo"
                 },
                 "needs_definition": false,
                 "required": false
@@ -1892,6 +1906,7 @@
               "tsconfig.json"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1913,6 +1928,7 @@
               ".github/workflows/function-limits.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -2120,7 +2136,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "*.test.*, *.spec.*, __tests__/ or test/ files: 1 file(s), run by a JavaScript test runner",
       "status": "PASS"
     },
     "top-level-guard": {

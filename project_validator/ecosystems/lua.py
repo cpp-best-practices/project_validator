@@ -78,7 +78,8 @@ def _luacov(command: Command, facts: Facts) -> Run | None:
         return reported(Granularity.LINE)
     if not _runs_busted(command):
         return None
-    if has_option(argv, "--coverage", "-c"):
+    # Not nvim's `-c <command>` (Plenary's busted runs inside Neovim): busted's own command line.
+    if not _plenary(command) and has_option(argv, "--coverage", "-c"):
         return reported(Granularity.LINE)
     configured = facts.where(Setting, tool="busted", key="coverage")
     return reported(Granularity.LINE, read=configured) if configured else None

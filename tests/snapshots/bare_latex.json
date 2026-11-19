@@ -752,7 +752,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s), but no CI configuration runs latexmk -pdf main.tex (or pdflatex, xelatex, lualatex, tectonic; xu-cheng/latex-action)",
+      "message": "documents (*.tex with a \\documentclass): 1 file(s), but no CI configuration runs latexmk -pdf main.tex (or pdflatex, xelatex, lualatex, tectonic; xu-cheng/latex-action)",
       "status": "WARN"
     },
     "top-level-guard": {

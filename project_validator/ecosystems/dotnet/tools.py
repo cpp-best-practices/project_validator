@@ -6,6 +6,7 @@ from __future__ import annotations
 import re
 from collections.abc import Iterator
 from pathlib import PurePosixPath
+from xml.etree import ElementTree
 
 from project_validator.ecosystems.dotnet import (
     CSHARP,
@@ -64,19 +65,27 @@ FANTOMAS = format_tool(
 
 # xUnit, NUnit and MSTest, in C# ([Fact]) and F# ([<Fact>]).
 DOTNET_TEST_FILES = TestFiles(
-    name="[Fact], [Test] or [TestMethod] methods in a test project (one referencing Microsoft.NET.Test.Sdk)",
+    name="[Fact], [Test] or [TestMethod] methods in a test project (one referencing the test SDK or a test framework)",
     languages=DOTNET_LANGUAGES,
     path=re.compile(r"\.(?:cs|fs)$"),
     contains=re.compile(r"\[<?\s*(?:Fact|Theory|Test|TestCase|TestMethod|DataTestMethod)\b"),
 )
 
 
+# The packages that make a test project: the test SDK, or a framework that brings its own runner (xunit.v3 on
+# Microsoft.Testing.Platform, TUnit).
+_TEST_PACKAGES = re.compile(r"Microsoft\.NET\.Test\.Sdk|xunit(?:\.v3)?(?:\.[\w.-]+)?|NUnit|MSTest(?:\.\w+)*|TUnit")
+# SDKs whose projects under a tests directory are test projects without naming the test SDK (dotnet's Arcade).
+_TEST_SDKS = re.compile(r"MSTest\.Sdk|Microsoft\.DotNet\.Arcade\.Sdk")
+
+
 def _test_project(facts: Facts) -> bool:
-    """Whether a project references the test SDK (Microsoft.NET.Test.Sdk, or MSTest's own SDK)."""
+    """Whether a project references the test SDK or a test framework, or builds with an SDK that makes test
+    projects (MSTest's, Arcade)."""
     settings_ = facts.settings("MSBuild")
     return any(
-        (found.key == "PackageReference" and str(found.value) == "Microsoft.NET.Test.Sdk")
-        or (found.key == "Sdk" and str(found.value).startswith("MSTest.Sdk"))
+        (found.key == "PackageReference" and _TEST_PACKAGES.fullmatch(str(found.value)))
+        or (found.key == "Sdk" and _TEST_SDKS.match(str(found.value)))
         for found in settings_
     )
 
@@ -127,8 +136,14 @@ def _read_msbuild_properties(path: str, text: str) -> Iterator[Setting]:
         for reference in root.iter(kind)
     )
     yield from settings("MSBuild", path, (("PackageReference", name) for name in references if name))
-    if sdk := root.get("Sdk"):
-        yield from settings("MSBuild", path, (("Sdk", sdk),))
+    yield from settings("MSBuild", path, (("Sdk", sdk) for sdk in _sdks(root)))
+
+
+def _sdks(root: ElementTree.Element) -> dict[str, None]:
+    """The project's SDK, and those it imports (`<Import Sdk="Microsoft.DotNet.Arcade.Sdk" />`, `<Sdk Name=... />`)."""
+    imported = (element.get("Sdk") for element in root.iter("Import"))
+    named = (element.get("Name") for element in root.iter("Sdk"))
+    return dict.fromkeys(sdk for sdk in (root.get("Sdk"), *imported, *named) if sdk)
 
 
 def _read_run_settings(path: str, text: str) -> Iterator[Setting]:

@@ -40,7 +40,7 @@ HINT = (
 LIZARD_HINT = "consider running in CI: lizard --length 30"
 NEVER_LIMITED = Result.failed("function length is never limited", HINT)
 CLANG_TIDY_WITHOUT_LIMIT = Result.failed(
-    "CI runs clang-tidy's readability-function-size, but without a function length limit; "
+    "CI runs clang-tidy, but its readability-function-size rule is off or has no limit; "
     "set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy"
 )
 LIMITED_BY_CLANG_TIDY = Result.passed(
@@ -98,7 +98,8 @@ class FunctionLimitsTests(unittest.TestCase):
     def test_what_ci_configuration_that_is_not_parsed_hides_is_an_error(self) -> None:
         for provider in UNSTRUCTURED_CI_FILES:
             with self.subTest(ci=provider):
-                result = self._run(ci_running(provider, "make lint"))
+                # (A command no layout expands: `make` builds CMake's targets where CMake configures in place.)
+                result = self._run(ci_running(provider, "echo lint"))
                 self.assertEqual(result.status, Status.ERROR)
                 self.assertEqual(
                     result.message,
@@ -150,7 +151,7 @@ class FunctionLimitsTests(unittest.TestCase):
     def test_a_language_no_known_tool_measures_is_skipped(self) -> None:
         answer = tool_answer(FUNCTION_LENGTH, LIMITS, "Lang", Facts(()), ())
         self.assertEqual(
-            judge_limits(answer),
+            judge_limits(answer, allow_unknown=False),
             Result(status=Status.SKIP, message="no known tool limits the length of Lang functions"),
         )
 

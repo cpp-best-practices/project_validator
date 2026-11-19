@@ -5,12 +5,13 @@ Recognised by `.typ` sources. A CI job uses Typst when it runs `typst`, typstyle
 
 ## `tests-run`
 
-CI compiles the documents: `typst compile main.typ`. The documents themselves are what defines the tests.
+CI compiles the documents: `typst compile main.typ`, or tytanic's `tt run`, which compiles each `tests/**/test.typ`
+against its reference. The documents themselves are what defines the tests.
 
 ## `code-formatting`
 
-typstyle (`--check`, which fails on a file it would change; `-i` rewrites) or typstfmt (`--check`), each with its one
-style.
+typstyle (`--check`, which fails on a file it would change; `-i` rewrites, as typstyle-rs/typstyle-action does, which
+enforces the style with a later `git diff --exit-code`) or typstfmt (`--check`), each with its one style.
 
 ## Not judged
 

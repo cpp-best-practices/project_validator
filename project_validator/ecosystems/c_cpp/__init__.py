@@ -21,11 +21,16 @@ from project_validator.facts.outputs import BuildOutput, directories, ignored_at
 CI_PROGRAMS = tuple(
     (program,)
     for program in (
-        *("cmake", "ctest", "meson", "ninja", "make", "gmake", "msbuild", "devenv", "bazel", "conan", "vcpkg"),
+        # Not make, which runs whatever a Makefile says (`make lint` in a Python project), nor devenv alone, which is
+        # Nix's devenv too: Visual Studio's names a solution (see CI_USAGE).
+        *("cmake", "ctest", "meson", "ninja", "msbuild", "bazel", "conan", "vcpkg"),
         *("xmake", "premake", "premake4", "premake5", "scons"),
     )
 )
-CI_USAGE = re.compile(r"\.(?:c|cc|cpp|cxx)\b|\bg\+\+|\bgcc\b|\bclang(?:\+\+|-cl)?\b|\bcl\.exe\b")
+CI_USAGE = re.compile(
+    r"\.(?:c|cc|cpp|cxx)\b|\bg\+\+(?!-multilib)|\bgcc\b(?!-multilib)|\bclang(?:\+\+|-cl)?\b|\bcl\.exe\b"
+    r"|\bdevenv(?:\.exe|\.com)?\s+\S+\.sln\b"
+)
 
 
 def _compilers(job: Job) -> frozenset[str]:

@@ -85,28 +85,21 @@ STYLE_ON_COMMENT: dict[str, object] = {
 
 
 class RTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #256: tests/*.R, sanitizer images and issue_comment styler jobs unread
-    def test_check_runs_tests_r_sanitizer_images_sanitize_and_a_comment_job_enforces_nothing(self) -> None:
-        """`R CMD check` runs every `tests/*.R` script, so they are tests (data.table); a job in a `rocker/r-devel-san`
-        image runs under ASan and UBSan (data.table); styler in an `issue_comment` job gates no push (testthat)."""
-        _all_pass(
-            self,
-            {
-                "tests/*.R": (
-                    R_PACKAGE,
-                    TESTS_RUN,
-                    {"tests/main.R": "stopifnot(total(c(1, 2)) == 3)\n", **CHECK_R_PACKAGE},
-                ),
-                "sanitizer image": (
-                    R_PACKAGE,
-                    SANITIZERS,
-                    {
-                        "src/shop.c": "",
-                        **_gitlab("R CMD build .", "R CMD check shop_0.1.0.tar.gz", image="rocker/r-devel-san"),
-                    },
-                ),
-            },
-        )
+    def test_check_runs_the_tests_r_scripts(self) -> None:
+        """`R CMD check` runs every `tests/*.R` script, so they are tests (data.table)."""
+        files = {"tests/main.R": "stopifnot(total(c(1, 2)) == 3)\n", **CHECK_R_PACKAGE}
+        result = run_in_layout(self, R_PACKAGE, TESTS_RUN, files)
+        self.assertEqual(result.status, Status.PASS, result)
+
+    @unittest.expectedFailure  # upstream #256: sanitizer images and issue_comment styler jobs are unread
+    def test_sanitizer_images_sanitize_and_a_comment_job_enforces_nothing(self) -> None:
+        """A job in a `rocker/r-devel-san` image runs under ASan and UBSan (data.table); styler in an `issue_comment`
+        job gates no push (testthat)."""
+        files = {
+            "src/shop.c": "",
+            **_gitlab("R CMD build .", "R CMD check shop_0.1.0.tar.gz", image="rocker/r-devel-san"),
+        }
+        _all_pass(self, {"sanitizer image": (R_PACKAGE, SANITIZERS, files)})
         with self.subTest(case="styler on issue_comment"):
             result = run_in_layout(self, R_PACKAGE, CODE_FORMATTING, _workflow(STYLE_ON_COMMENT))
             self.assertNotEqual(result.status, Status.PASS, result)
@@ -130,10 +123,9 @@ FEATURE = {"features/shop.feature": "Feature: totals\n  Scenario: adds\n    Then
 
 
 class RubyTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #257: Rakefile warning = true, Cucumber features, runner scripts unread
-    def test_rakefile_warnings_count_and_cucumber_runner_scripts_and_ruby_run_the_tests(self) -> None:
+    def test_rakefile_warnings_count_and_ruby_runs_a_test_file(self) -> None:
         """A `Rake::TestTask`'s `warning = true` is the Ruby warning setting when CI runs `rake test` (fluentd);
-        Cucumber features are tests (rspec); `test/runner` (puma) and `ruby test/test_x.rb` (fzf) run Minitest."""
+        `ruby test/test_x.rb` runs Minitest (fzf)."""
         _all_pass(
             self,
             {
@@ -142,9 +134,18 @@ class RubyTests(unittest.TestCase):
                     COMPILER_WARNINGS,
                     {**WARNING_TASK, **MINITEST, **_ci("bundle exec rake test", "bundle exec rubocop")},
                 ),
+                "ruby test/*.rb": (BUNDLER, TESTS_RUN, {**MINITEST, **_ci("ruby test/test_shop.rb --verbose")}),
+            },
+        )
+
+    @unittest.expectedFailure  # upstream #257: Cucumber features and runner scripts are unread
+    def test_cucumber_features_and_runner_scripts_are_tests(self) -> None:
+        """Cucumber features are tests (rspec); `test/runner` (puma) runs Minitest."""
+        _all_pass(
+            self,
+            {
                 "cucumber": (BUNDLER, TESTS_RUN, {**FEATURE, **_ci("bundle exec cucumber")}),
                 "test/runner": (BUNDLER, TESTS_RUN, {**RUNNER, **MINITEST, **_ci("test/runner --verbose")}),
-                "ruby test/*.rb": (BUNDLER, TESTS_RUN, {**MINITEST, **_ci("ruby test/test_shop.rb --verbose")}),
             },
         )
 
@@ -174,7 +175,6 @@ EMULATOR_SCRIPT = github_action(
 
 
 class DartTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #258: list-form or explicit lint sets and integration_test unrecognised
     def test_every_include_form_is_a_lint_set_and_integration_tests_are_tests(self) -> None:
         """A lint set is one however it is included (dart-lang/http, bloc); `example/integration_test/*_test.dart`
         run by `flutter test integration_test/`, in an emulator action's `script:` or not, are tests (http)."""
@@ -203,7 +203,6 @@ GO_TEST_FILE = {"app_test.go": 'package app\n\nimport "testing"\n\nfunc TestAdd(
 
 
 class GoTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #259: richgo test, a go test output wrapper, is not go test
     def test_richgo_test_is_go_test(self) -> None:
         """`richgo test ./...` is `go test` with coloured output, run directly or through a Makefile target (cobra)."""
         _all_pass(
@@ -219,6 +218,23 @@ class GoTests(unittest.TestCase):
         )
 
 
+class MoleculeVerifierTests(unittest.TestCase):
+    @unittest.expectedFailure  # upstream #261: a molecule scenario's testinfra verifier is unread
+    def test_molecule_runs_its_scenarios_testinfra_tests(self) -> None:
+        """A molecule scenario's `tests/test_*.py` is run by `molecule test` (kubespray)."""
+        files = {**SCENARIO, **VERIFIER, **_ci("molecule test")}
+        result = run_in_layout(self, ANSIBLE_PLAYBOOK, TESTS_RUN, files)
+        self.assertEqual(result.status, Status.PASS, result)
+
+
+class AntsibullNoxTests(unittest.TestCase):
+    @unittest.expectedFailure  # upstream #261: antsibull-nox's reusable workflow is unread
+    def test_antsibull_nox_sessions_run_ansible_test(self) -> None:
+        """antsibull-nox's sessions run ansible-test (community.general)."""
+        result = run_in_layout(self, ANSIBLE_PLAYBOOK, TESTS_RUN, {**COLLECTION, **_workflow(NOX_WORKFLOW)})
+        self.assertEqual(result.status, Status.PASS, result)
+
+
 # --- Docker (#260) ---------------------------------------------------------------------------------------------------
 
 HADOLINT_HOOK = {
@@ -229,7 +245,6 @@ HADOLINT_HOOK = {
 
 
 class DockerTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #260: the hadolint-docker pre-commit hook id does not match hadolint
     def test_the_hadolint_docker_hook_runs_hadolint(self) -> None:
         """The `hadolint-docker` hook of hadolint's own pre-commit repo runs hadolint on the Dockerfiles, so hadolint
         lints and scans when CI runs pre-commit (jupyter/docker-stacks)."""
@@ -268,11 +283,9 @@ NOX_WORKFLOW: dict[str, object] = {
 
 
 class AnsibleKubernetesTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #261: unittests/ suites, ct.yaml, molecule verifiers, antsibull-nox unread
-    def test_helm_unittest_suites_molecule_verifiers_and_antsibull_nox_sessions_are_tests_run(self) -> None:
-        """`charts/*/unittests/*_test.yaml` run by chart-testing's `additional-commands` are tests (prometheus
-        helm-charts); a molecule scenario's `tests/test_*.py` is run by `molecule test` (kubespray); antsibull-nox's
-        sessions run ansible-test (community.general)."""
+    def test_helm_unittest_suites_are_tests_run(self) -> None:
+        """`charts/*/unittests/*_test.yaml`, run by `helm unittest` or chart-testing's `additional-commands`, are tests
+        (prometheus helm-charts)."""
         _all_pass(
             self,
             {
@@ -286,8 +299,6 @@ class AnsibleKubernetesTests(unittest.TestCase):
                     TESTS_RUN,
                     {**UNITTESTS, **_ci("helm unittest charts/shop")},
                 ),
-                "molecule verifier": (ANSIBLE_PLAYBOOK, TESTS_RUN, {**SCENARIO, **VERIFIER, **_ci("molecule test")}),
-                "antsibull-nox": (ANSIBLE_PLAYBOOK, TESTS_RUN, {**COLLECTION, **_workflow(NOX_WORKFLOW)}),
             },
         )
 
@@ -321,11 +332,9 @@ def _chdir_pipeline(cli: str) -> dict[str, str]:
 
 
 class TerraformTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #262: -chdir= before the subcommand, .tftpl/.tpl, terraform-min-max unread
-    def test_chdir_before_the_subcommand_templates_and_min_max_versions_are_read(self) -> None:
+    def test_chdir_before_the_subcommand_and_templates_are_read(self) -> None:
         """`tofu -chdir=dir validate` validates and `fmt -check` checks (kubespray); `.tftpl` and `.tpl` are Terraform
-        templates (terraform-google-kubernetes-engine, terraform-aws-eks); a terraform-min-max version is two versions
-        or unknown, not none (terraform-aws-vpc)."""
+        templates (terraform-google-kubernetes-engine, terraform-aws-eks)."""
         _all_pass(
             self,
             {
@@ -339,9 +348,12 @@ class TerraformTests(unittest.TestCase):
             temp_project({"main.tf": "", "templates/init.tftpl": "", "templates/user_data.tpl": ""}) as root,
         ):
             self.assertEqual(make_context(root).structure.unrecognised_suffixes, ())
-        with self.subTest(case="terraform-min-max"):
-            result = run_in_layout(self, TERRAFORM, PLATFORM_MATRIX, _workflow(MIN_MAX_WORKFLOW))
-            self.assertTrue(result.status is Status.ERROR or "2 Terraform version(s)" in result.message, result)
+
+    @unittest.expectedFailure  # upstream #262: terraform-min-max's versions are unread
+    def test_terraform_min_max_versions_are_two_versions_or_unknown(self) -> None:
+        """A terraform-min-max version is two versions or unknown, not none (terraform-aws-vpc)."""
+        result = run_in_layout(self, TERRAFORM, PLATFORM_MATRIX, _workflow(MIN_MAX_WORKFLOW))
+        self.assertTrue(result.status is Status.ERROR or "2 Terraform version(s)" in result.message, result)
 
 
 # --- Typst (#263) ----------------------------------------------------------------------------------------------------
@@ -352,7 +364,6 @@ TYPSTYLE_ACTION = github_steps("uses: typstyle-rs/typstyle-action@v1", "run: git
 
 
 class TypstTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #263: tytanic's tt run and the typstyle action are unknown
     def test_tytanic_runs_the_tests_and_the_typstyle_action_formats(self) -> None:
         """`tt run` (tytanic) compiles every `tests/**/test.typ` against its reference, so it runs the tests (cetz,
         fletcher, touying); typstyle's action followed by `git diff --exit-code` enforces the style (touying)."""

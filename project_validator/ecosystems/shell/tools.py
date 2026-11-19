@@ -40,6 +40,12 @@ SHUNIT2_TESTS = TestFiles(
     path=re.compile(r"_test\.sh$"),
     contains=re.compile(r"\bshunit2\b"),
 )
+ZUNIT_TESTS = TestFiles(
+    name="zunit tests (*.zunit)",
+    languages=SHELL_ONLY,
+    path=re.compile(r"\.zunit$"),
+    contains=re.compile(r"^\s*@test\b", re.MULTILINE),
+)
 PESTER_TESTS = TestFiles(
     name="Pester tests (*.Tests.ps1)",
     languages=POWERSHELL_ONLY,
@@ -53,6 +59,13 @@ BATS = test_runner(
     how="bats tests",
     runs=when(starts(("bats",)), tested),
     tests=tests_of(BATS_TESTS.name),
+)
+ZUNIT = test_runner(
+    name="zunit",
+    languages=SHELL_ONLY,
+    how="zunit",
+    runs=when(starts(("zunit",)), tested),
+    tests=tests_of(ZUNIT_TESTS.name),
 )
 SHELLSPEC = test_runner(
     name="shellspec",

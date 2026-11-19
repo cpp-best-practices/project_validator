@@ -337,8 +337,11 @@ MISREAD_DEPENDENCIES: dict[str, tuple[dict[str, str], str]] = {
         {"composer.json": '{"name": "g/g", "require": {"psr/log": "^3"}}\n', "src/A.php": "<?php\n"},
         "not locked",
     ),
-    "a Julia Project.toml with [deps] (Documenter)": (JULIA_WITH_DEPS, "no dependencies are declared"),
-    "an R DESCRIPTION with Imports (dplyr)": (R_WITH_IMPORTS, "no dependencies are declared"),
+}
+# Manifests whose dependencies were not read: files -> what the message must say of them (upstream #246).
+UNREAD_DEPENDENCIES: dict[str, tuple[dict[str, str], str]] = {
+    "a Julia Project.toml with [deps] (Documenter)": (JULIA_WITH_DEPS, "Julia: dependencies are declared"),
+    "an R DESCRIPTION with Imports (dplyr)": (R_WITH_IMPORTS, "R: dependencies are declared"),
 }
 
 
@@ -362,7 +365,6 @@ def _structure(files: Mapping[str, str]) -> ProjectStructure:
 
 @unittest.skipUnless(shutil.which("git"), "git is not installed")
 class CommittedArtifactsTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #235: committed-artifacts flags directories and files by name, not by content
     def test_sources_fixtures_and_settings_are_judged_by_what_they_are(self) -> None:
         """A build/ of Dart sources, a bin/ of scripts, a coverage/ Julia environment, a .bundle/config, fixtures
         under tests/, a text .exe and the mdBook source directory are not build outputs (drift, fzf, Documenter, puma,
@@ -381,7 +383,6 @@ class VcsIgnoreTests(unittest.TestCase):
         result = _run(vcs_ignore, variant)
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #236: ignore entries are compared textually, not with gitignore semantics
     def test_ignore_entries_are_matched_with_gitignore_semantics(self) -> None:
         """An anchored path (/lisp/*.elc), a glob covering the output (site*/, *.pyc*, blib*, *.gz), a unit's own
         target path and a whitelist (/* then !tracked) ignore the output as the literal entry does (magit, mkdocs,
@@ -390,7 +391,6 @@ class VcsIgnoreTests(unittest.TestCase):
             with self.subTest(name):
                 self.assert_ignored_like({**base, ".gitignore": spelled}, {**base, ".gitignore": literal})
 
-    @unittest.expectedFailure  # upstream #237: only the root ignore file is judged, not the unit's own or its path
     def test_a_units_outputs_are_judged_against_the_ignore_files_that_apply_to_it(self) -> None:
         """The ignore file of the unit that writes the output (docs/.gitignore, web/.gitignore) and a root entry
         anchored to the unit (docs/_build/) ignore it as a root entry does (PostgREST, rich, golangci-lint, koyo,
@@ -401,7 +401,6 @@ class VcsIgnoreTests(unittest.TestCase):
 
 
 class LicenseTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #238: EPL-1.0, LPPL, Artistic, ODbL, CC-BY, PostgreSQL and more unrecognised
     def test_recognises_the_licenses_of_the_corpus(self) -> None:
         """EPL-1.0, LPPL-1.3c, Artistic-2.0, the terms of Perl, ODbL, CC-BY, PostgreSQL, MIT in a blockquote, CRAN's
         stub, -or-later, a LICENSE-CODE/LICENSE-TEXT pair, a Data Package's licenses and a dual-licence pointer are
@@ -413,7 +412,6 @@ class LicenseTests(unittest.TestCase):
                 self.assertNotEqual(result.status, Status.FAIL, result)
                 self.assertIn(identifier, result.message, result)
 
-    @unittest.expectedFailure  # upstream #238: License.pm and license.t full-match the license file name pattern
     def test_perl_modules_and_tests_are_not_license_files(self) -> None:
         """Dist-Zilla's lib/Dist/Zilla/Plugin/License.pm and t/plugins/license.t match the license file name pattern
         and are recorded as (unrecognised) license files."""
@@ -423,7 +421,6 @@ class LicenseTests(unittest.TestCase):
             paths = [fact.origin.path for fact in make_context(root).facts.of(LicenseFile)]
         self.assertEqual(paths, [])
 
-    @unittest.expectedFailure  # upstream #239: fixture manifests are compared; a combined file's longest licence wins
     def test_only_the_projects_own_manifests_are_compared_with_its_license_files(self) -> None:
         """A test fixture's pyproject.toml declaring INVALID or GPL-2.0 is not the project's manifest, and a combined
         LICENSE whose first licence is MIT (CC0 for the bundled templates) agrees with a package.json declaring MIT
@@ -436,7 +433,6 @@ class LicenseTests(unittest.TestCase):
 
 
 class StatusBadgesTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #240: badges matched by URL fragments of every provider, not what they show
     def test_badges_are_read_by_what_they_show(self) -> None:
         """Reference-style links and badgen images are followed, a datahub badge is not Jenkins, Codecov's
         coverage.svg counts, a badge in an HTML comment does not, a travis-ci.org badge is not the status of a GitHub
@@ -450,7 +446,6 @@ class StatusBadgesTests(unittest.TestCase):
 
 
 class ProjectMapTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #241: the map lists suffixes of claimed languages and read files as unknown
     def test_files_the_profiles_know_are_not_unrecognised_suffixes(self) -> None:
         """A language the map names has no unrecognised suffix of its own (CUDA/.cu, Objective-C/.m), and the files
         a profile reads or owns (cabal.project.freeze, Package.resolved, META-INF/services, .rda, .heex, .tftpl,
@@ -466,7 +461,6 @@ class ProjectMapTests(unittest.TestCase):
 
 
 class SecurityPolicyTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #242: SECURITY_CONTACTS and an obfuscated address are not a way to report
     def test_other_conventions_say_how_to_report(self) -> None:
         """The Kubernetes organisation's SECURITY_CONTACTS file (whose header points at kubernetes.io/security) and a
         "Reporting a Vulnerability" section with an obfuscated address and a PGP fingerprint are security policies
@@ -481,7 +475,6 @@ class SecurityPolicyTests(unittest.TestCase):
 
 
 class DependencyUpdatesTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #245: .github/renovate.json5 and the other Renovate locations are unknown
     def test_renovate_is_found_at_every_documented_location(self) -> None:
         """.github/renovate.json5 (prettier, vite, okhttp, junit5, opentelemetry-proto, clap, starship, ruff),
         .renovaterc.json5 and .gitlab/renovate.json[5] are Renovate configurations."""
@@ -493,7 +486,6 @@ class DependencyUpdatesTests(unittest.TestCase):
 
 
 class DependencyManagementTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #246: .gitmodules by presence, Composer's default type, R/Julia deps unread
     def test_reads_what_the_files_say(self) -> None:
         """An empty .gitmodules has no submodules, a third_party/ of license notices is not code, a Composer package
         without a type is a library, and an R DESCRIPTION or Julia Project.toml with dependencies is not "no
@@ -502,3 +494,6 @@ class DependencyManagementTests(unittest.TestCase):
             with self.subTest(name):
                 result = _run(dependency_management, files)
                 self.assertNotIn(wrong, result.message, result)
+        for name, (files, said) in UNREAD_DEPENDENCIES.items():
+            with self.subTest(name):
+                self.assertIn(said, _run(dependency_management, files).message)

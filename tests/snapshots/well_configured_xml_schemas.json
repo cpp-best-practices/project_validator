@@ -267,6 +267,9 @@
               "xslt/total.xsl"
             ],
             "problems": [],
+            "test_data": [
+              "tests/total.xspec"
+            ],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -282,6 +285,7 @@
             "language": "XML Schema",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -297,6 +301,7 @@
             "language": "XSLT",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -317,6 +322,7 @@
               ".github/workflows/copy-paste-detection.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -511,7 +517,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "XSpec suites (*.xspec): 1 file(s), run by XSpec",
       "status": "PASS"
     },
     "top-level-guard": {

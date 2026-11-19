@@ -26,7 +26,7 @@ from tests.support import (
 )
 
 C_HINT = (
-    "consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy) and cppcheck "
+    "consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy) or cppcheck "
     "(CMAKE_CXX_CPPCHECK) in CI"
 )
 PYTHON_HINT = "consider running ruff check, pylint or flake8 in CI"
@@ -61,15 +61,15 @@ class CAndCxxTests(unittest.TestCase):
     def test_fails_when_no_analyzer_runs(self) -> None:
         self.assertEqual(self._run(BARE_PROJECT), Result.failed("no static analyzer runs", C_HINT))
 
-    def test_warns_when_only_one_runs(self) -> None:
+    def test_either_analyzer_alone_passes(self) -> None:
         result = self._run({**CLANG_TIDY_CONFIG, **github_job("ubuntu-latest", "run-clang-tidy -p build")})
-        self.assertEqual(result, Result.warned("clang-tidy (.clang-tidy) runs, but cppcheck does not run", C_HINT))
-
-    def test_warns_when_a_clang_tidy_configuration_is_not_used(self) -> None:
+        self.assertEqual(result, Result.passed("clang-tidy (.clang-tidy) runs"))
         cmake = {"CMakeLists.txt": "set(CMAKE_CXX_CPPCHECK cppcheck)\n", **CONFIGURES}
-        result = self._run({**CLANG_TIDY_CONFIG, **cmake})
-        expected = Result.warned("cppcheck runs, but clang-tidy is configured (.clang-tidy) but does not run", C_HINT)
-        self.assertEqual(result, expected)
+        self.assertEqual(self._run(cmake), Result.passed("cppcheck runs"))
+
+    def test_a_configured_analyzer_that_does_not_run_beside_one_that_does_passes(self) -> None:
+        cmake = {"CMakeLists.txt": "set(CMAKE_CXX_CPPCHECK cppcheck)\n", **CONFIGURES}
+        self.assertEqual(self._run({**CLANG_TIDY_CONFIG, **cmake}), Result.passed("cppcheck runs"))
 
     def test_warns_when_only_a_configuration_exists(self) -> None:
         expected = Result.warned("clang-tidy is configured (.clang-tidy) but does not run", C_HINT)
@@ -103,9 +103,9 @@ class ActionAndAnswerTests(unittest.TestCase):
 
     def test_a_language_no_known_analyzer_handles_is_skipped(self) -> None:
         answer = tool_answer(ANALYSIS, CHECKS, "Lang", Facts(()), ())
-        self.assertEqual(judge_analysis(answer).status, Status.SKIP)
+        self.assertEqual(judge_analysis(answer, allow_unknown=False).status, Status.SKIP)
         typed = tool_answer(TYPE_CHECK, Strictness.CHECKS, "Lang", Facts(()), ())
-        self.assertEqual(judge_type_checking(typed).message, "no known type checker handles Lang")
+        self.assertEqual(judge_type_checking(typed, allow_unknown=False).message, "no known type checker handles Lang")
 
 
 class PythonTests(unittest.TestCase):

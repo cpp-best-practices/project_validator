@@ -8,7 +8,7 @@ import shlex
 from collections.abc import Iterator
 from pathlib import PurePosixPath
 
-from project_validator.ecosystems.rust import RUST_LANGUAGE
+from project_validator.ecosystems.rust import RUST_LANGUAGE, cargo_argv
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, starts_with
@@ -196,13 +196,42 @@ _CARGO_COMPILES = frozenset({"build", "check", "test", "clippy", "run", "rustc",
 
 def _unsafe_forbidden(command: Command, facts: Facts) -> Run | None:
     """A cargo build that compiles the crate with unsafe code forbidden, by its settings or flags."""
-    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    argv = cargo_argv(resolved(command))
     if not starts_with(argv, *(("cargo", compiles) for compiles in _CARGO_COMPILES)):
         return None
     if _UNSAFE_FLAG.search(" ".join((*argv, command.env.get("RUSTFLAGS", "")))):
         return scanned()
     read = [setting for setting in facts.settings("Rust lints") if str(setting.value) in _FORBIDDEN]
-    return scanned(read=read) if read else None
+    return scanned(read=read) if read and _covers_every_crate(read, facts) else None
+
+
+def _covers_every_crate(forbidding: list[Setting], facts: Facts) -> bool:
+    """Whether the settings forbid unsafe code in the whole build: one at the top (the root manifest, Cargo's
+    configuration), or one in every crate (ruff's one forbidding member crate does not cover the others)."""
+    from project_validator.facts.structure import SourceFile  # structure reads the profiles
+
+    if any(_top_level(setting.path) for setting in forbidding):
+        return True
+    crate_roots = {
+        _crate_of(source.path) for source in facts.of(SourceFile) if PurePosixPath(source.path).name in _ROOTS
+    }
+    covered = {_crate_of(setting.path) for setting in forbidding}
+    return bool(crate_roots) and crate_roots <= covered
+
+
+_ROOTS = frozenset({"lib.rs", "main.rs"})
+
+
+def _top_level(path: str) -> bool:
+    return path == "Cargo.toml" or PurePosixPath(path).parent.name == ".cargo"
+
+
+def _crate_of(path: str) -> str:
+    """The crate a file belongs to: the directory above its src/ (or its manifest's directory)."""
+    parts = PurePosixPath(path).parts
+    if "src" in parts:
+        return "/".join(parts[: parts.index("src")]) or "."
+    return str(PurePosixPath(path).parent)
 
 
 SECURITY_SCANNERS = (
@@ -268,8 +297,8 @@ CLIPPY_SETTINGS = SettingsReader(name="clippy", files=("clippy.toml", ".clippy.t
 
 
 def _clippy(command: Command, _facts: Facts) -> Run | None:
-    """`cargo clippy`, with any toolchain (`cargo +nightly clippy`)."""
-    argv = tuple(word for word in resolved(command) if not word.startswith("+"))
+    """`cargo clippy`, with any toolchain and global options (`cargo +nightly --config ci.toml clippy`)."""
+    argv = cargo_argv(resolved(command))
     return analysed() if starts_with(argv, ("cargo", "clippy"), ("cargo-clippy",)) else None
 
 

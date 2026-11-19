@@ -905,6 +905,7 @@
               ".rubocop.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1112,7 +1113,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "spec/**/*_spec.rb or test/**/*_test.rb files: 1 file(s), run by rspec, rake test or rails test",
       "status": "PASS"
     },
     "top-level-guard": {

@@ -13,13 +13,14 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
+from project_validator.facts import Facts, Setting
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.schema import compatibility_checked, compatibility_checker, validated, validator
-from project_validator.facts.settings import file_reader
-from project_validator.facts.tools import defined_by, starts, when
+from project_validator.facts.settings import SettingsReader, yaml_settings
+from project_validator.facts.tools import Definition, defined_by, starts, when
 
 PROTOBUF = "Protobuf"
 PROTOBUF_ONLY = frozenset({PROTOBUF})
@@ -33,7 +34,19 @@ PROTOBUF_ECOSYSTEM = Ecosystem(
     ci_usage=re.compile(r"(?<![\w-])buf-(?:setup-)?action\b"),
 )
 
-BUF_SETTINGS = file_reader("buf", ("buf.yaml", "buf.yml", "buf.work.yaml"))
+BUF_SETTINGS = SettingsReader(
+    name="buf", files=("buf.yaml", "buf.yml", "buf.work.yaml"), read=lambda path, text: yaml_settings("buf", path, text)
+)
+
+
+def _lint_section(facts: Facts) -> Iterator[str]:
+    """The buf configurations with a `lint` section: those that set the rules (without one, buf lint's defaults)."""
+    for setting in facts.where(Setting, tool="buf"):
+        if setting.key == "lint" or setting.key.startswith("lint."):
+            yield setting.path
+
+
+_LINT_RULES = Definition(found=_lint_section)
 
 # --- Declaration ----------------------------------------------------------------------------------------------------
 
@@ -86,7 +99,7 @@ BUF_LINT = analyzer(
     languages=PROTOBUF_ONLY,
     how="buf lint",
     analyses=when(starts(("buf", "lint")), analysed),
-    rules=defined_by(files=(BUF_SETTINGS.name,)),
+    rules=_LINT_RULES,
 )
 # `buf format --diff` prints what it would change; only `--exit-code` fails on it. `-w` rewrites the files.
 BUF_FORMAT = format_tool(

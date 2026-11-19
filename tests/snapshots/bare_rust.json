@@ -697,7 +697,24 @@
       {
         "auxiliary": {},
         "language": "Rust",
-        "units": []
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "-D warnings"
+                ]
+              }
+            ],
+            "language": "Rust",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ],
     "wellformed": [
@@ -712,6 +729,7 @@
               "Cargo.toml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -957,9 +975,11 @@
       "status": "FAIL"
     },
     "warnings-as-errors": {
-      "details": [],
-      "message": "not applicable to Rust",
-      "status": "SKIP"
+      "details": [
+        "deny warnings: RUSTFLAGS=\"-D warnings\" in CI, cargo clippy -- -D warnings, or [lints.rust] warnings = \"deny\""
+      ],
+      "message": "warnings are not treated as errors in CI configuration, Cargo.toml, .cargo/config.toml or the crate roots",
+      "status": "FAIL"
     }
   }
 }

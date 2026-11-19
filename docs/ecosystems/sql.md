@@ -5,7 +5,8 @@ which stay invisible (a stray `schema.sql` in a Python project adds no SQL colum
 shows it works in SQL: a dbt project (`dbt_project.yml`, its one build system); SQL tooling configured (`.sqlfluff` or a
 `[tool.sqlfluff]` table in `pyproject.toml`, `.sqlfmt.toml`, `sqlc.yaml`); a migration tool (`flyway.conf`,
 `liquibase.properties`, `atlas.hcl`, Flyway-named `V1__init.sql` files, or a `migrations/`, `db/migrate/` or
-`db/migrations/` directory of `.sql` files); or pgTAP tests (`SELECT plan(...)` under `tests/`).
+`db/migrations/` directory of `.sql` files); pgTAP tests (`SELECT plan(...)` under `tests/`); or a PostgreSQL
+extension's `*.control` file (`default_version`, `module_pathname`).
 
 The compiled-language checks (coverage, compiler warnings, hardening, build types, fuzzing, mutation testing) do not
 apply, and nor do `security-scanning` (no SQL scanner is known) and `function-limits`.
@@ -26,7 +27,8 @@ Both have a default style, so running one is enough.
 
 `dbt test`, or `dbt build`, which runs the tests too, with tests to run: schema tests (`tests:`, `data_tests:` or
 `unit_tests:` in the YAML under `models/`, `seeds/` or `snapshots/`) or singular tests (`tests/*.sql` selecting from a
-`ref()` or `source()`). pgTAP tests (`tests/*.sql` with `SELECT plan(...)`) run by `pg_prove`. A test needs a database,
+`ref()` or `source()`). pgTAP tests (`tests/*.sql` with `SELECT plan(...)`) run by `pg_prove`. A PostgreSQL extension's pg_regress tests
+(`test/sql/*.sql`) run by PGXS's `make installcheck`. A test needs a database,
 which CI provides as a service container or an installation; that is not checked for.
 
 ## `migration-safety`

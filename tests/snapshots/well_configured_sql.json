@@ -647,6 +647,13 @@
                 },
                 "needs_definition": true,
                 "required": false
+              },
+              "pg_regress": {
+                "can": {
+                  "runs": "make installcheck (PGXS's pg_regress)"
+                },
+                "needs_definition": true,
+                "required": false
               }
             },
             "language": "SQL",
@@ -743,6 +750,7 @@
               "profiles.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -942,7 +950,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 2 file(s)",
+      "message": "dbt schema tests (tests: in the models' YAML) and dbt singular tests (tests/*.sql): 2 file(s), run by dbt test",
       "status": "PASS"
     },
     "top-level-guard": {

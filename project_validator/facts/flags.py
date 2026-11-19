@@ -61,17 +61,43 @@ def flag_hints(flag: Flag) -> tuple[str, ...] | None:
     return flag.hints or literal_starts(flag.spellings)
 
 
+def _taking_back(flag: Flag) -> frozenset[str]:
+    """The options that take `flag` back project-wide: its `-Wno-` form, or one that silences every warning (`-w`;
+    MSVC's `/w` and `/W0`), which leaves no warning to enable or to treat as an error."""
+    if flag.name.startswith("-W"):
+        return frozenset({f"-Wno-{flag.name[2:]}", "-w"})
+    if flag.name.startswith("-pedantic"):
+        return frozenset({"-w"})
+    if flag.name.startswith("/W"):
+        return frozenset({"/w", "-w", "/W0", "-W0"})
+    return frozenset()
+
+
 def build_options(flag: Flag, languages: frozenset[str]) -> Found:
-    """The build files' options that set `flag` for a build of one of `languages` with the compiler judged."""
+    """The build files' options that set `flag` for a build of one of `languages` with the compiler judged, unless
+    they also take it back project-wide (`-Wno-pedantic` after Meson's `warning_level=3`, or `-w`)."""
+
+    taking_back = _taking_back(flag)
 
     def found(facts: Facts, compiler: str | None) -> Iterator[Evidence]:
-        for option in facts.of(CompilerOption):
-            applies = option.applies
-            for_compiler = compiler is None or compiler in applies.allowed("compilers")
-            if for_compiler and applies.allowed("languages") & languages and flag.option.fullmatch(option.option):
-                yield Evidence(option.origin.path, applies.requires)
+        options = [option for option in facts.of(CompilerOption) if _sets(option, compiler, languages)]
+        if any(
+            option.option in taking_back and option.target is None and not option.applies.requires for option in options
+        ):
+            return
+        for option in options:
+            if flag.option.fullmatch(option.option):
+                yield Evidence(option.origin.path, option.applies.requires)
 
     return found
+
+
+def _sets(option: CompilerOption, compiler: str | None, languages: frozenset[str]) -> bool:
+    """Whether `option` is passed when one of `languages` is compiled with `compiler` (any, when None)."""
+    applies = option.applies
+    return (compiler is None or compiler in applies.allowed("compilers")) and bool(
+        applies.allowed("languages") & languages
+    )
 
 
 def _all(found: tuple[Found, ...]) -> Found:

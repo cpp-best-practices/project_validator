@@ -29,7 +29,13 @@ _IN_SOURCE = re.compile(
 )
 _TOP_LEVEL = re.compile(r"IS_TOP_LEVEL\b")
 _TOP_LEVEL_DIRECTORIES = re.compile(
-    rf"CMAKE(?:_CURRENT)?_SOURCE_DIR{_COMPARED}(?:PROJECT|CMAKE)_SOURCE_DIR|PROJECT_SOURCE_DIR{_COMPARED}CMAKE_SOURCE_DIR"
+    rf"CMAKE(?:_CURRENT)?_SOURCE_DIR{_COMPARED}(?:PROJECT|CMAKE(?:_CURRENT)?)_SOURCE_DIR"
+    rf"|PROJECT_SOURCE_DIR{_COMPARED}CMAKE_SOURCE_DIR"
+)
+# The pre-3.21 idioms that compare names: the project's name against the top-level project's, or no project yet.
+_TOP_LEVEL_NAMES = re.compile(
+    rf"\bCMAKE_PROJECT_NAME{_COMPARED}PROJECT_NAME\b|\bPROJECT_NAME{_COMPARED}CMAKE_PROJECT_NAME\b"
+    r"|\bNOT\s+DEFINED\s+PROJECT_NAME\b"
 )
 _IS_SUBPROJECT = re.compile(r"\bis_subproject\s*\(")
 
@@ -133,6 +139,7 @@ TOP_LEVEL_GUARD = _practice(
         Requirement(
             name="CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR", found=_guards("CMake", _TOP_LEVEL_DIRECTORIES)
         ),
+        Requirement(name="CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME", found=_guards("CMake", _TOP_LEVEL_NAMES)),
         Requirement(name="meson.is_subproject()", found=_guards("Meson", _IS_SUBPROJECT)),
     ),
     Wording(

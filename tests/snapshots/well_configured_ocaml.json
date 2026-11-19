@@ -693,6 +693,7 @@
               ".github/workflows/copy-paste-detection.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -899,7 +900,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "test stanzas, inline_tests or cram tests in dune files: 1 file(s), run by dune test",
       "status": "PASS"
     },
     "top-level-guard": {

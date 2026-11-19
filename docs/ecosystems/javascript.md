@@ -5,8 +5,9 @@ Recognised by `.js`, `.ts` and related sources, `package.json` or `deno.json`. T
 
 ## `tests-run`
 
-`*.test.*`, `*.spec.*`, `*_test.*` or `__tests__/` files run by jest, vitest, mocha, ava, `node --test`,
-`deno test`, `bun test`, playwright or `npm test`.
+`*.test.*`, `*.spec.*`, `*_test.*`, `__tests__/` or top-level `test/` files run by jest, vitest, mocha, ava, borp,
+`node --test` (or node running a runner's entry point, or the test directory), `deno test`, `bun test`, playwright
+or a package script (`npm test`, `nub run test`).
 
 ## `fuzz-testing`
 
@@ -59,7 +60,7 @@ configuration. The rule on while CI does not run eslint warns.
 
 ## `static-analysis`
 
-eslint (or `next lint`), oxlint, `biome lint` / `check` / `ci` or `deno lint`, in CI, a pre-commit hook CI runs,
+eslint (or `next lint`, or xo), oxlint, `biome lint` / `check` / `ci` or `deno lint`, in CI, a pre-commit hook CI runs,
 or the package scripts CI runs.
 
 ## `security-scanning`

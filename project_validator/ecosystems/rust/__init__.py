@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import re
 import tomllib
+from collections.abc import Callable
 from pathlib import Path
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toml_members, toolchain_patterns
@@ -10,7 +12,7 @@ from project_validator.facts import Command, resolved
 from project_validator.facts.arguments import option_values
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
-from project_validator.facts.expansion import Action
+from project_validator.facts.expansion import Action, joined
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 
@@ -37,7 +39,50 @@ def cargo_build_types(command: Command) -> frozenset[str]:
     return frozenset() if profiles else frozenset({"debug"})
 
 
+def cargo_profile_build_types(command: Command, read: Callable[[str], str | None]) -> frozenset[str]:
+    """The build type of a custom profile (`cargo build --profile fast`): the one of the built-in profile it
+    inherits from, through Cargo.toml's `[profile.<name>] inherits` (ripgrep's release-lto)."""
+    argv = [word for word in resolved(command) if not word.startswith("+")]
+    if argv[:1] != ["cargo"] or not any(tuple(argv[1 : 1 + len(sub)]) == sub for sub in _CARGO_BUILDS):
+        return frozenset()
+    profiles = option_values(tuple(argv), "--profile")
+    text = read(joined(command.directory, "Cargo.toml")) if profiles else None
+    if not profiles or text is None:
+        return frozenset()
+    try:
+        declared = tomllib.loads(text).get("profile", {})
+    except tomllib.TOMLDecodeError:
+        return frozenset()
+    name, seen = profiles[0], set()
+    while isinstance(declared, dict) and name not in _BUILT_IN_PROFILES and name not in seen:
+        seen.add(name)
+        found = declared.get(name)
+        name = str(found.get("inherits", "")) if isinstance(found, dict) else ""
+    return frozenset({_BUILT_IN_PROFILES[name]}) if name in _BUILT_IN_PROFILES else frozenset()
+
+
+_BUILT_IN_PROFILES = {"release": "release", "bench": "release", "dev": "debug", "test": "debug"}
 RUST_LANGUAGE = frozenset({"Rust"})
+
+# cargo's toolchain and the global options it takes before its subcommand, as a regular expression of one of them.
+CARGO_OPTIONS = r"(?:\+\S+|--config[=\s]\S+|-Z\s*\S+|-C\s+\S+|--color[=\s]\S+|--locked|--frozen|--offline|-[qv]+)"
+_CARGO_OPTION = re.compile(CARGO_OPTIONS)
+_CARGO_VALUED = frozenset({"--config", "-Z", "-C", "--color"})
+
+
+def cargo_argv(argv: tuple[str, ...]) -> tuple[str, ...]:
+    """A cargo command without its toolchain and the global options before its subcommand (`cargo +nightly --config
+    ci.toml clippy -D warnings` is `cargo clippy -D warnings`); any other command as it is."""
+    if argv[:1] != ("cargo",):
+        return argv
+    words = list(argv[1:])
+    while words and _CARGO_OPTION.fullmatch(words[0]):
+        words.pop(0)
+    while len(words) > 1 and words[0] in _CARGO_VALUED:
+        del words[:2]
+        while words and _CARGO_OPTION.fullmatch(words[0]):
+            words.pop(0)
+    return ("cargo", *words)
 
 
 CARGO = BuildSystem(
@@ -46,6 +91,7 @@ CARGO = BuildSystem(
     languages=RUST_LANGUAGE,
     is_build_tree=is_cargo_target,
     build_types=cargo_build_types,
+    configured_build_types=cargo_profile_build_types,
     members=toml_members("workspace"),
 )
 
@@ -139,10 +185,16 @@ RUST = Ecosystem(
         images=("rust",),
         more=(
             rf"\brust-toolchain@{_RUST_VERSION}",
-            rf"\btoolchain\W+{_RUST_VERSION}",
+            # rust-toolchain's `toolchain:` input, not a cache key's `…-toolchain-9.14.1`.
+            rf"\btoolchain[\"']?\s*:\s*[\"']?{_RUST_VERSION}",
             rf"\bcargo\s+\+{_RUST_VERSION}",
             rf"\brustup\s+(?:default|toolchain\s+install|install)\s+{_RUST_VERSION}",
         ),
         programs=("cargo", "rustup", "rustc"),
+        # rustup runs the toolchain these name for every cargo in the project that names none.
+        pinned_by=(
+            ("rust-toolchain.toml", re.compile(r"^\s*channel\s*=\s*[\"']([^\"']+)[\"']", re.MULTILINE)),
+            ("rust-toolchain", re.compile(r"^\s*(?:channel\s*=\s*[\"'])?([\w.-]+)", re.MULTILINE)),
+        ),
     ),
 )

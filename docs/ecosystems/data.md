@@ -13,7 +13,9 @@ is. Vendored files (`third_party/`, `vendor/`) are not read.
 ## `data-wellformed`
 
 Every file parses, judged per format in each unit of the project whose files are in it. JSON that tools read with
-comments (`*.jsonc`, `tsconfig*.json`, `jsconfig.json`, `devcontainer.json`, `.vscode/*.json`) may have comments and
+comments (`*.jsonc`, `tsconfig*.json`, `jsconfig.json`, `devcontainer.json`, `.vscode/*.json`, `pyrightconfig.json`,
+`turbo.json`, `.luarc.json`, `asv.conf.json`, `.eslintrc.json`, `biome.json`, `deno.json`, Nerdbank.GitVersioning's
+`version.json`) may have comments and
 trailing commas; YAML tags of any tool (GitLab's `!reference`) are accepted; XML external entities are never read; JSON
 nested deeper than Python recurses is read without recursion. Files over 5 MiB are not parsed, and said so. A test
 suite's data files (`tests/`, `spec/`, `fixtures/`, ...) are read but only reported, not judged: a parser's test data

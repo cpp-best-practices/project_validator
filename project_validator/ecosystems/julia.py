@@ -9,14 +9,16 @@ CI runs Julia code in three ways, which `julia_code` reads alike: `julia -e 'usi
 from __future__ import annotations
 
 import re
+import tomllib
 from collections.abc import Iterator, Mapping
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
-from project_validator.facts import Command, Facts, Setting, resolved
+from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import Strictness, type_checked, type_checker
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
+from project_validator.facts.dependencies import Locked, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, ignored_at_top_level
@@ -166,7 +168,9 @@ JET = type_checker(
 
 JULIAFORMATTER_SETTINGS = file_reader("JuliaFormatter", (".JuliaFormatter.toml",))
 _FORMAT = re.compile(r"\bJuliaFormatter\b|\bformat(?:_file)?\s*\(")
-_FAILS = re.compile(r"\|\|\s*exit\s*\(\s*1\s*\)|@assert\s+format")
+# `format(".") || exit(1)`, `@assert format(...)`, or a script that exits non-zero when `git diff` shows a change
+# (JuMP.jl's: read the diff, `exit(1)` unless it is empty).
+_FAILS = re.compile(r"\|\|\s*exit\s*\(\s*1\s*\)|@assert\s+format|git diff[\s\S]*\bexit\s*\(\s*1\s*\)")
 
 
 def _juliaformatter(command: Command, facts: Facts) -> Run | None:
@@ -258,3 +262,42 @@ JULIA_ECOSYSTEM = Ecosystem(
 )
 
 JULIA_VERSIONS = versions_axis("Julia version", "Julia", JULIA)
+
+
+# --- Dependencies: Pkg reads a Project.toml's [deps]. A package bounds each in [compat] (the General registry asks
+# it of every dependency); an environment (one with no package name) pins them in Manifest.toml.
+
+
+def _project(text: str) -> dict[str, object]:
+    try:
+        return tomllib.loads(text)
+    except tomllib.TOMLDecodeError:
+        return {}
+
+
+def _deps(text: str) -> tuple[dict[str, object], dict[str, object]]:
+    project = _project(text)
+    deps, compat = project.get("deps"), project.get("compat")
+    return (deps if isinstance(deps, dict) else {}), (compat if isinstance(compat, dict) else {})
+
+
+def _bounded(path: str, text: str) -> Iterator[Fact]:
+    """A package's Project.toml whose [compat] bounds every dependency it declares: its lock, as Pkg reads it."""
+    deps, compat = _deps(text)
+    if deps and "name" in _project(text) and set(deps) <= set(compat):
+        yield Locked(origin=Origin(path=path), manager="Pkg")
+
+
+PKG_DEPENDENCIES = manifest_reader(
+    name="Pkg dependencies",
+    manager="Pkg",
+    files=PROJECT_FILES,
+    declares=lambda _path, text: bool(_deps(text)[0]),
+)
+PKG_COMPAT = SettingsReader(name="Pkg compat bounds", files=PROJECT_FILES, read=_bounded)
+PKG_MANIFEST = lockfile_reader(manager="Pkg", files=("Manifest.toml", "JuliaManifest.toml"))
+PKG_MANAGER = PackageManager(
+    name="Pkg",
+    languages=JULIA,
+    lock_hint="bound each dependency in Project.toml's [compat] (an environment: commit Manifest.toml)",
+)

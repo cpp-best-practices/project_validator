@@ -13,7 +13,7 @@ def _declared(answer: DependencyAnswer) -> str:
     return f"dependencies are declared in {files_listed(answer.manifests())} ({', '.join(answer.managers())})"
 
 
-def judge_dependencies(answer: DependencyAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_dependencies(answer: DependencyAnswer, *, allow_unknown: bool) -> Result:
     """Declared and locked (or a lock not asked for) passes, as does nothing declared; declared but not locked warns.
     A language no known package manager handles is skipped. An unknown answer is an error unless `allow_unknown`."""
     settled = skipped_or_unknown(

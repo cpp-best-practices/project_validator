@@ -320,7 +320,7 @@
                 },
                 "libFuzzer": {
                   "can": {
-                    "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite)"
+                    "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz)"
                   },
                   "needs_definition": true,
                   "required": false
@@ -649,14 +649,14 @@
                   "checks": "clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy)"
                 },
                 "needs_definition": true,
-                "required": true
+                "required": false
               },
               "cppcheck": {
                 "can": {
                   "checks": "cppcheck (CMAKE_CXX_CPPCHECK)"
                 },
                 "needs_definition": false,
-                "required": true
+                "required": false
               }
             },
             "language": "C++",
@@ -717,6 +717,7 @@
                 "missing": [
                   "PROJECT_IS_TOP_LEVEL",
                   "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR",
+                  "CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME",
                   "meson.is_subproject()"
                 ]
               }
@@ -893,7 +894,7 @@
     },
     "fuzz-testing": {
       "details": [
-        "consider adding a fuzz target binary with -max_total_time= (or ClusterFuzzLite) or afl-fuzz -i <corpus> -o <findings> -- <target>"
+        "consider adding a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz) or afl-fuzz -i <corpus> -o <findings> -- <target>"
       ],
       "message": "no fuzz targets found (libFuzzer or AFL++ fuzz targets (LLVMFuzzerTestOneInput, __AFL_LOOP))",
       "status": "FAIL"
@@ -996,7 +997,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy) and cppcheck (CMAKE_CXX_CPPCHECK) in CI"
+        "consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy) or cppcheck (CMAKE_CXX_CPPCHECK) in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"

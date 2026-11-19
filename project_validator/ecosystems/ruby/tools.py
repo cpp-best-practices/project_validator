@@ -175,11 +175,12 @@ _RUBY_RUNNERS = frozenset({"rspec", "m", "turbo_tests", "parallel_rspec", "cucum
 
 
 def _ruby_tests(command: Command, facts: Facts) -> Run | None:
-    """rspec and the like, `rails test`, `ruby -Itest`, `rake test` or `rake spec`, or the test task of a Rakefile
-    that rake runs."""
+    """rspec and the like, `rails test`, `ruby -Itest` or ruby running a test file (`ruby test/test_x.rb`), `rake
+    test` or `rake spec`, or the test task of a Rakefile that rake runs."""
     argv = resolved(command)
     name = program(argv)
-    if name in _RUBY_RUNNERS or argv[:2] == ("rails", "test") or (name == "ruby" and "-Itest" in argv):
+    ruby_runs_tests = name == "ruby" and ("-Itest" in argv or any(RUBY_TEST_FILES.path.search(word) for word in argv))
+    if name in _RUBY_RUNNERS or argv[:2] == ("rails", "test") or ruby_runs_tests:
         return tested()
     if read := _rake_tasks(command, facts, "tests"):
         return tested(read=read)

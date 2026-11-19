@@ -20,7 +20,7 @@ def _passed(answer: ToolAnswer) -> Result:
     return Result.passed(ran)
 
 
-def judge_mutation(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_mutation(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """Mutation testing passes when CI runs a tool, with a bonus for the pull request's changes only; configured but
     not run, or no tool, warns. An unknown answer is an error unless `allow_unknown`."""
     hint = f"consider running {either(answer.how(RUNS))} in CI"

@@ -205,6 +205,7 @@
             "language": "Protobuf",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -226,6 +227,7 @@
               "buf.yaml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}

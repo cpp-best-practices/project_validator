@@ -649,11 +649,9 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -665,11 +663,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Nix"
       ],
@@ -688,11 +684,9 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Nix"
       ],
@@ -711,11 +705,9 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Nix"
       ],
@@ -734,11 +726,9 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Nix"
       ],
@@ -757,11 +747,9 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -960,9 +948,7 @@
       ],
       "jobs": [
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [],
           "name": ".github/workflows/ci-lint.yml: ci-lint",
@@ -970,9 +956,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Nix"
@@ -984,9 +968,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Nix"
@@ -998,9 +980,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Nix"
@@ -1012,9 +992,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Nix"
@@ -1026,9 +1004,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [],
           "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",

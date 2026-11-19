@@ -49,6 +49,11 @@ checks, `runic --inplace .` rewrites.
 
 semgrep, which reads Julia; CodeQL and GitLab SAST do not.
 
+## `dependency-management`
+
+Pkg reads `Project.toml`'s `[deps]`. A package bounds each dependency in `[compat]`, as the General registry asks; an
+environment (a `Project.toml` with no package name) commits `Manifest.toml` instead.
+
 ## `committed-artifacts`
 
 The coverage files `--code-coverage` writes beside the sources (`*.jl.cov`, `*.jl.*.cov`) and the allocation files
@@ -63,5 +68,4 @@ left to `dependency-management`.
 
 Julia compiles memory-safe code (`hardening`, `cxx-extensions`, `ci-build-types`); no static analyzer besides Aqua
 and JET, dependency auditor, function length limiter (lizard does not parse Julia), fuzzer or mutation testing tool
-the validator knows reads Julia; `[compat]` entries and a committed `Manifest.toml` for applications belong to
-`dependency-management`, not judged for Julia yet.
+the validator knows reads Julia.

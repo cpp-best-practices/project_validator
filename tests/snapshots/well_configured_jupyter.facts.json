@@ -426,11 +426,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Python"
       ],
@@ -594,9 +592,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Python"

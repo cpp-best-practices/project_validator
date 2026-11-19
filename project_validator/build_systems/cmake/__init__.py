@@ -6,6 +6,8 @@ FetchContent declare. `cmake --build` runs the commands of the custom targets it
 
 from __future__ import annotations
 
+import posixpath
+import re
 import shlex
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
@@ -20,11 +22,14 @@ from project_validator.build_systems.cmake.presets import PRESET_FILES, preset_f
 from project_validator.core import Context, Project
 from project_validator.facts import Command, Fact, Origin, Unknown, resolved
 from project_validator.facts.arguments import starts_with
-from project_validator.facts.expansion import CommandExpander, Expansion, Script
+from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader
 
 CMAKE_FILES = ("CMakeLists.txt", "*.cmake")
+# A configure_file() template (`configure_package_config_file`'s `@PACKAGE_INIT@`): a substitution where a command
+# must be. It is rendered before CMake reads it, so it is not one of the project's CMake files.
+_TEMPLATE = re.compile(r"^[ \t]*@[A-Za-z_]\w*@", re.MULTILINE)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -74,7 +79,11 @@ def _files(project: Project, patterns: Iterable[str]) -> dict[str, str]:
 
 def cmake_project(context: Context) -> CMakeProject:
     """The evaluation of the project's CMake files, made once."""
-    return context.shared("CMake", lambda: _evaluated(_files(context.project, CMAKE_FILES)))
+    return context.shared("CMake", lambda: _evaluated(_untemplated(_files(context.project, CMAKE_FILES))))
+
+
+def _untemplated(files: Mapping[str, str]) -> dict[str, str]:
+    return {path: text for path, text in files.items() if not _TEMPLATE.search(text)}
 
 
 def _read_cmake(context: Context) -> Iterator[Fact]:
@@ -135,6 +144,45 @@ def _custom_targets(command: Command, context: Context) -> list[Expansion] | Non
 
 CUSTOM_TARGETS = CommandExpander(name="CMake custom targets", expand=_custom_targets)
 
+# --- scripts
+
+
+def _script_arguments(argv: tuple[str, ...]) -> tuple[dict[str, str], str | None]:
+    """`cmake [-D name[:type]=value]... -P script`: the variables it defines, and the script (None: not `-P`)."""
+    defines: dict[str, str] = {}
+    words = iter(argv[1:])
+    for word in words:
+        if word == "-P":
+            return defines, next(words, None)
+        if word.startswith("-D"):
+            definition = word[2:] or next(words, "")
+            name, _, value = definition.partition("=")
+            defines[name.partition(":")[0]] = value
+    return defines, None
+
+
+def _scripts_run(command: Command, context: Context) -> list[Expansion] | None:
+    """`cmake -P script`: the commands the script's `execute_process()` calls run."""
+    argv = resolved(command)
+    if argv[:1] != ("cmake",):
+        return None
+    defines, script = _script_arguments(argv)
+    path = posixpath.normpath(joined(command.directory, script)) if script else None
+    if path is None or not context.project.exists(path):
+        return None
+    files = _untemplated(_files(context.project, CMAKE_FILES))
+    collector = Collector()
+    evaluation = Evaluation(files=frozenset(files), read=files.__getitem__, observer=collector)
+    evaluation.script(path, defines)
+    problems: list[Expansion] = [
+        Unknown(origin=Origin(path=at), subject=f"the CMake script {at}", reason=reason, hides="commands")
+        for at, reason in evaluation.problems.items()
+    ]
+    return [*problems, *(Script(text=shlex.join(argv), origin=origin) for argv, origin in collector.processes)] or None
+
+
+SCRIPTS = CommandExpander(name="CMake scripts", expand=_scripts_run)
+
 __all__ = [
     "BUILT_TESTS",
     "CMAKE",
@@ -144,6 +192,7 @@ __all__ = [
     "CTEST",
     "CUSTOM_TARGETS",
     "PRESET_FILES",
+    "SCRIPTS",
     "CMakeProject",
     "cmake_project",
 ]

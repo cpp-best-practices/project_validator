@@ -26,7 +26,7 @@ def required(*, level: str, impossible: str, passed: str, asks: str, missing: st
 def _one_level(
     without: Callable[[str, str], Result], *, level: str, impossible: str, passed: str, asks: str, missing: str
 ) -> Judge[ToolAnswer]:
-    def judge(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
+    def judge(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
         hint = f"consider running in CI: {either(answer.how(level))}"
         settled = skipped_or_unknown(
             answer.answer,

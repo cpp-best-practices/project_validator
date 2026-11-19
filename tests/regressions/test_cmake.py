@@ -104,7 +104,6 @@ def _built_target(target: str) -> dict[str, str]:
 
 
 class TopLevelGuardIdiomTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #203: a guard on a flag computed from the pre-3.21 idioms is not seen
     def test_a_flag_computed_from_a_pre_3_21_idiom_guards(self) -> None:
         """A variable computed from NOT DEFINED PROJECT_NAME, CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME, a source
         directory comparison or string(COMPARE EQUAL ...) guards the tests (fmt, Catch2, h3, glfw, simdjson,
@@ -114,7 +113,6 @@ class TopLevelGuardIdiomTests(unittest.TestCase):
                 result = _run(top_level_guard, {"CMakeLists.txt": flag + TESTS_GUARDED, **CXX_SOURCE})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #203: directories compared after REAL_PATH are not an in-source guard
     def test_the_directories_compared_after_resolving_symlinks_prevent_in_source_builds(self) -> None:
         """cmake_template's own PreventInSourceBuilds.cmake, the file the hint names, compares the source and binary
         directories through file(REAL_PATH) copies (older: get_filename_component REALPATH) and stops the build."""
@@ -128,7 +126,6 @@ class TopLevelGuardIdiomTests(unittest.TestCase):
 
 
 class SkippedConstructTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #204: the legacy COMPILE_FLAGS target property is not an option source
     def test_the_compile_flags_property_holds_compiler_options(self) -> None:
         """googletest sets -Wall -Wshadow -Wconversion through COMPILE_FLAGS: the check lists only the missing flags
         (a warning), not "no compiler warning flags found"."""
@@ -137,7 +134,6 @@ class SkippedConstructTests(unittest.TestCase):
         self.assertEqual(result.status, Status.WARN, result)
         self.assertIn("-Wpedantic", result.message)
 
-    @unittest.expectedFailure  # upstream #204: a property value with two possible values loses the properties after
     def test_c_extensions_off_counts_after_a_property_set_from_a_branched_variable(self) -> None:
         """glfw's set_target_properties(glfw PROPERTIES OUTPUT_NAME ${GLFW_LIB_NAME} ... C_EXTENSIONS OFF), where the
         name is set in both branches of an if(), disables C extensions on the target. The issue's plain repro passes:
@@ -150,7 +146,6 @@ class SkippedConstructTests(unittest.TestCase):
         result = _run(cxx_extensions, {"CMakeLists.txt": C_PROJECT + build, "a.c": ""})
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #204: a target depending on an add_custom_command output runs nothing
     def test_a_wrapper_around_add_custom_command_runs_its_linter(self) -> None:
         """neovim's lintsh target, made by add_glob_target() (cmake_parse_arguments, add_custom_command OUTPUT, a
         target DEPENDS on it), runs shellcheck when CI builds it; a plain add_custom_target with the command is
@@ -159,7 +154,6 @@ class SkippedConstructTests(unittest.TestCase):
         result = _run(static_analysis, files)
         self.assertIn("Shell: shellcheck runs", result.message)
 
-    @unittest.expectedFailure  # upstream #204: a custom target running `cmake -P script` is not followed into it
     def test_a_cmake_script_test_runner_runs_the_tests_it_executes(self) -> None:
         """neovim's unittest target runs busted through `cmake -D TEST_TYPE=unit -P cmake/RunTests.cmake`: the Lua
         tests count as run, exactly as when the target runs busted itself."""
@@ -172,7 +166,6 @@ class SkippedConstructTests(unittest.TestCase):
         files = {"CMakeLists.txt": C_PROJECT + runner, "cmake/RunTests.cmake": RUN_TESTS_SCRIPT, **LUA_SPEC, **ci}
         self.assertEqual(_run(tests_run, files).message, expected.message)
 
-    @unittest.expectedFailure  # upstream #204: a configure_package_config_file template is parsed as a build file
     def test_a_package_config_template_is_not_a_build_file(self) -> None:
         """fortran-lang/stdlib's config/template.cmake starts with @PACKAGE_INIT@: a template rendered before it is
         read, skipped like YAML templates, so a project without warning flags fails instead of erroring "not read"."""
@@ -186,7 +179,6 @@ class SkippedConstructTests(unittest.TestCase):
 
 
 class MesonMultiLineConditionTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #205: a newline inside parentheses is not whitespace to the Meson parser
     def test_a_parenthesised_condition_continued_over_lines_parses(self) -> None:
         """GNOME/glib's gnulib meson.build: an if() whose parenthesised boolean expression runs over four lines is
         valid Meson (newlines inside parentheses are whitespace) and parses to one If statement."""
@@ -196,9 +188,10 @@ class MesonMultiLineConditionTests(unittest.TestCase):
 
 
 class SanitizerOptionDefaultTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #206: an option default from a compile check is "off", not unknown
-    def test_an_option_defaulting_to_a_compile_check_result_is_unknown(self) -> None:
-        """cmake_template's ENABLE_SANITIZER_ADDRESS defaults to ${SUPPORTS_ASAN}, set from check_cxx_source_compiles,
-        which the validator cannot run: the answer is unknown (an error without --allow-unknown), not "missing"."""
+    def test_an_option_defaulting_to_a_branched_variable_takes_every_value(self) -> None:
+        """cmake_template's ENABLE_SANITIZER_ADDRESS defaults to ${SUPPORTS_ASAN}: OFF for Clang and GCC on Windows,
+        ON for MSVC, and elsewhere ON when check_cxx_source_compiles passes. Every value is the option's default in
+        its builds (the first alone read as "OFF", so AddressSanitizer was "missing")."""
         result = _run(sanitizers, {"CMakeLists.txt": CMAKE_PROJECT + SUPPORTS_ASAN, **CXX_SOURCE})
-        self.assertEqual(result.status, Status.ERROR, result)
+        self.assertEqual(result.status, Status.PASS, result)
+        self.assertIn("AddressSanitizer", result.message)

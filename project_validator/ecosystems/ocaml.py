@@ -12,14 +12,14 @@ from __future__ import annotations
 import re
 from collections.abc import Iterator
 from itertools import pairwise
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
-from project_validator.facts.expansion import launcher
+from project_validator.facts.expansion import Action, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Evidence, Found, Practice, PracticeName, Requirement, Wording, always
@@ -176,14 +176,16 @@ OCAMLFORMAT_SETTINGS = file_reader("ocamlformat", (".ocamlformat",))
 
 def _dune_fmt(command: Command, facts: Facts) -> Run | None:
     """`dune build @fmt` fails on a file ocamlformat would change (with `--auto-promote`, it rewrites it instead);
-    `dune fmt` rewrites."""
+    `dune fmt` rewrites, but with `--preview` it only shows the changes and fails, as `dune build @fmt` does."""
     if dune_subcommand(command) == "fmt":
-        return formatted(command, facts, checks=False)
+        return formatted(command, facts, checks=has_option(resolved(command), "--preview"))
     if not _builds_alias(command, _FMT_ALIAS):
         return None
     return formatted(command, facts, checks=not has_option(resolved(command), "--auto-promote"))
 
 
+# setup-ocaml's lint-fmt action runs `dune build @fmt`, which fails on an unformatted file.
+LINT_FMT = Action(name="ocaml/setup-ocaml/lint-fmt", runs=lambda _inputs: (("dune", "build", "@fmt"),))
 # ocamlformat refuses to run without a `.ocamlformat` naming its version: the style is never a default.
 OCAMLFORMAT = format_tool(
     name="ocamlformat",
@@ -201,8 +203,14 @@ _FLAGS = "flags"
 
 def _read_flags(path: str, text: str) -> Iterator[Setting]:
     """Each `(flags …)` field of a dune file, outside its `(release …)` environment, which the dev profile does not
-    read."""
-    fields = forms(_without(_COMMENT.sub("", text), "release"), _FLAGS)
+    read, and outside the stanzas of the lexer and parser generators (`(ocamllex … (flags -ml))`), whose flags are
+    theirs; a cram test's fixture (`test/x.t/…/dune`) is not the project's."""
+    if any(part.endswith(".t") for part in PurePosixPath(path).parts[:-1]):
+        return iter(())
+    code = _COMMENT.sub("", text)
+    for stanza in ("release", "ocamllex", "menhir"):
+        code = _without(code, stanza)
+    fields = forms(code, _FLAGS)
     return settings("dune", path, ((_FLAGS, " ".join(field.split())) for field in fields), heuristic=True)
 
 
@@ -317,7 +325,8 @@ OCAML_ECOSYSTEM = Ecosystem(
     toolchain=toolchain_patterns(
         "OCaml",
         version=_OCAML_VERSION,
-        inputs=("ocaml-compiler", "ocaml-version"),
+        # setup-ocaml's inputs, and the matrix variable a script passes to the compiler build (opam's `ocamlv`).
+        inputs=("ocaml-compiler", "ocaml-version", "ocamlv"),
         more=(
             rf"\bocaml/opam:[\w.-]*?ocaml-{_OCAML_VERSION}",
             rf"\bocaml-(?:base-compiler|variants|system)\.{_OCAML_VERSION}",

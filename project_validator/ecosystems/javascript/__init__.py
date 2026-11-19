@@ -9,14 +9,20 @@ from __future__ import annotations
 
 import json
 import re
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator import yaml_support
 from project_validator.core import Context
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
+from project_validator.ecosystems.model import (
+    VERSION_FILE_CONTENTS,
+    BuildSystem,
+    Ecosystem,
+    subcommands,
+    toolchain_patterns,
+)
 from project_validator.evidence import json_value
 from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
 from project_validator.facts.arguments import has_option, option_values, positional, program, starts_with
@@ -109,6 +115,7 @@ _OWN_COMMANDS = {
     "pnpm": frozenset({"install", "i", "add", "remove", "update", "exec", "dlx", "audit", "outdated", "list", "why"}),
     "yarn": frozenset({"install", "add", "remove", "upgrade", "up", "exec", "dlx", "audit", "npm", "workspaces"}),
     "bun": frozenset({"install", "i", "add", "remove", "update", "x", "test", "build", "pm", "audit", "outdated"}),
+    "nub": frozenset({"install", "i", "add", "remove", "update", "exec", "x"}),
 }
 _DIRECTORY_OPTIONS = frozenset({"--prefix", "--cwd", "-C", "--dir"})
 
@@ -233,15 +240,23 @@ def _task(value: object) -> str | None:
     return value if isinstance(value, str) else None
 
 
+_DENO_TASK_OPTIONS = frozenset({"--cwd", "--config", "-c", "--filter", "-f"})
+
+
 def _deno_tasks(command: Command, context: Context) -> Iterator[Expansion] | None:
-    """`deno task lint`: the task in deno.json (or deno.jsonc)."""
-    if command.argv[:2] != ("deno", "task") or len(command.argv) < 3:
+    """`deno task lint`, `deno task --cwd sub --config deno.json build`: the task in deno.json (or deno.jsonc), of
+    the directory `--cwd` names, or the file `--config` names there; the task runs in that directory."""
+    if command.argv[:2] != ("deno", "task"):
         return None
-    name = command.argv[2]
-    path = found_at(context, command.directory, DENO_CONFIG_FILES)
+    words, options = positional(command.argv[1:], _DENO_TASK_OPTIONS)
+    if not words:
+        return None
+    name, directory = words[0], joined(command.directory, options.get("--cwd") or ".")
+    named = options.get("--config") or options.get("-c")
+    path = found_at(context, directory, [named] if named else DENO_CONFIG_FILES)
     if path is None or (text := _task(json_value(context, path, "tasks", name, comments=True))) is None:
         return iter((Unknown(origin=command.origin, subject=f"the task {name}", reason="no deno.json defines it"),))
-    return iter((Script(text=text, origin=Origin(path=path, at=("tasks", name))),))
+    return iter((Script(text=text, origin=Origin(path=path, at=("tasks", name)), directory=directory),))
 
 
 DENO_TASKS = CommandExpander(name="deno.json tasks", expand=_deno_tasks)
@@ -302,23 +317,32 @@ DPRINT = format_tool(
 JS_SUFFIXES = (".js", ".mjs", ".cjs", ".jsx")
 TS_SUFFIXES = (".ts", ".mts", ".cts", ".tsx")
 SOURCE_SUFFIXES = (*JS_SUFFIXES, *TS_SUFFIXES)
-# app.test.ts, app.spec.js, app_test.ts (Deno), or any source in a __tests__ directory (Jest).
+# app.test.ts, app.spec.js, app_test.ts (Deno), any source in a __tests__ directory (Jest), or in a top-level test/
+# (mocha's and node's default: express, got).
 JS_TEST_FILES = TestFiles(
-    name="*.test.*, *.spec.* or __tests__/ files",
+    name="*.test.*, *.spec.*, __tests__/ or test/ files",
     languages=JS_LANGUAGES,
-    path=re.compile(r"(?:^|/)(?:[^/]*(?:[._]test|\.spec)\.[^/]+|__tests__/.+)$"),
+    path=re.compile(r"(?:^|/)(?:[^/]*(?:[._]test|\.spec)\.[^/]+|__tests__/.+)$|^tests?/[^/]+\.[cm]?[jt]sx?$"),
 )
-_JS_RUNNERS = frozenset({"jest", "vitest", "mocha", "ava"})
+_JS_RUNNERS = frozenset({"jest", "vitest", "mocha", "ava", "borp"})
+# A runner's entry point that node runs (Jest's documented ESM invocation, `node ./node_modules/jest/bin/jest.js`).
+_RUNNER_ENTRY = re.compile(r"(?:^|/)(?:jest/bin/jest|vitest/vitest|mocha/bin/_?mocha|ava/entrypoints/cli)\.[cm]?js$")
+
+
+def _node_runs_tests(argv: tuple[str, ...]) -> bool:
+    """`node --test`, node running a runner's entry point, or node running the test directory (`node test`)."""
+    words = [word for word in argv[1:] if not word.startswith("-")]
+    return "--test" in argv or any(_RUNNER_ENTRY.search(word) for word in words) or words[:1] in (["test"], ["test/"])
 
 
 def _js_tests(command: Command, _facts: Facts) -> Run | None:
-    """jest, vitest, mocha, ava, `playwright test`, `node --test`, `deno test` or `bun test`."""
+    """jest, vitest, mocha, ava, borp, `playwright test`, `node --test`, `deno test` or `bun test`."""
     argv = resolved(command)
     name = program(argv)
     runs = (
         name in _JS_RUNNERS
         or starts_with(argv, ("playwright", "test"), ("deno", "test"), ("bun", "test"))
-        or (name == "node" and "--test" in argv)
+        or (name == "node" and _node_runs_tests(argv))
     )
     return tested() if runs else None
 
@@ -338,6 +362,11 @@ VITEST_CONFIG_FILES = tuple(
 )
 _JEST_COLLECTS = re.compile(r"[\"']?collectCoverage[\"']?\s*:\s*true\b")
 _VITEST_ENABLES = re.compile(r"\bcoverage\s*:\s*\{[^}]*\benabled\s*:\s*true\b")
+# Vitest fails a run under `coverage.thresholds` (`thresholds: { branches: 90 }`, or `100: true` for every one).
+_VITEST_THRESHOLDS = {
+    f"coverage.thresholds.{name}": (re.compile(rf"\bthresholds\s*:\s*\{{[^}}]*\b(?:{name}|100)\s*:"), True)
+    for name in ("branches", "lines")
+}
 BOTH = (Granularity.LINE, Granularity.BRANCH)
 
 
@@ -355,15 +384,18 @@ def _named_config(name: str) -> Callable[[Command], list[str]]:
     return named
 
 
-def _runner_settings(tool: str, key: str, pattern: re.Pattern[str]) -> Read:
-    """A runner's settings: a JSON configuration (or package.json's `jest`) as written, code matched by `pattern`."""
+def _runner_settings(
+    tool: str, key: str, pattern: re.Pattern[str], more: Mapping[str, tuple[re.Pattern[str], bool]] | None = None
+) -> Read:
+    """A runner's settings: a JSON configuration (or package.json's `jest`) as written, code matched by `pattern`
+    (and the `more` patterns of other keys)."""
 
     def read(path: str, text: str) -> Iterable[Fact]:
         if path.endswith(PACKAGE_JSON):
             return json_settings(tool, path, text, "jest")
         if path.endswith(".json"):
             return json_settings(tool, path, text)
-        return matched_settings(tool, path, text, {key: (pattern, True)})
+        return matched_settings(tool, path, text, {key: (pattern, True), **(more or {})})
 
     return read
 
@@ -377,7 +409,7 @@ JEST_SETTINGS = SettingsReader(
 VITEST_SETTINGS = SettingsReader(
     name="Vitest",
     files=VITEST_CONFIG_FILES,
-    read=_runner_settings("Vitest", "coverage.enabled", _VITEST_ENABLES),
+    read=_runner_settings("Vitest", "coverage.enabled", _VITEST_ENABLES, _VITEST_THRESHOLDS),
     named_by=_named_config("vitest"),
 )
 
@@ -394,14 +426,26 @@ def _test_runner(name: str, tool: str, flags: tuple[str, ...], files: tuple[str,
         argv = resolved(command)
         if program(argv) != name:
             return None
-        if _asks_for_coverage(argv, *flags):
-            return reported(*BOTH)
         candidates = _named_config(name)(command) or [joined(command.directory, file) for file in files]
         configuration = facts.first_file(tool, candidates) or joined(command.directory, PACKAGE_JSON)
         setting = facts.setting(tool, key, paths=[configuration])
-        return reported(*BOTH, read=[setting]) if setting is not None and setting.value is True else None
+        if not _asks_for_coverage(argv, *flags) and (setting is None or setting.value is not True):
+            return None
+        gated = _thresholds(facts, tool, configuration)
+        return reported(*BOTH, gated=gated, read=[setting] if setting is not None else [])
 
     return measures
+
+
+def _thresholds(facts: Facts, tool: str, configuration: str) -> tuple[Granularity, ...]:
+    """The granularities the runner's configuration fails a run under (Vitest's `coverage.thresholds`)."""
+    found = {
+        granularity
+        for granularity, key in ((Granularity.BRANCH, "branches"), (Granularity.LINE, "lines"))
+        if (setting := facts.setting(tool, f"coverage.thresholds.{key}", paths=[configuration])) is not None
+        and setting.value is True
+    }
+    return tuple(sorted(found, key=lambda granularity: granularity.rank))
 
 
 def _instrumenter(name: str) -> Claim:
@@ -622,6 +666,26 @@ NODE_MODULES = BuildOutput(
 )
 
 _VERSION = r"(\d+(?:\.(?:\d+|x))*"
+_TOOL_VERSION = re.compile(r"^\s*(?:nodejs|node)\s+v?([\d.]+)", re.MULTILINE)
+_BARE_VERSION = re.compile(r"^\s*v?(\d+(?:\.\d+)*)\s*$")
+
+
+def _setup_node(inputs: Mapping[str, str]) -> str | None:
+    """setup-node's `node-version`, else the version its `node-version-file` names (`.tool-versions`' nodejs line,
+    or an `.nvmrc`/`.node-version` that holds only a version)."""
+    if version := inputs.get("node-version"):
+        return version
+    text = inputs.get(f"node-version-file{VERSION_FILE_CONTENTS}", "")
+    found = _TOOL_VERSION.search(text) or _BARE_VERSION.match(text)
+    return found[1] if found else None
+
+
+def _pnpm_runtime(inputs: Mapping[str, str]) -> str | None:
+    """pnpm/setup's `runtime: node@<version>`."""
+    runtime, _, version = inputs.get("runtime", "").partition("@")
+    return version or None if runtime == "node" else None
+
+
 RUNTIME_VERSIONS = (
     re.compile(rf"\bnode-version\W+{_VERSION}|lts/[\w*-]+|latest|current|node)"),
     re.compile(r"\bnode:(\d+(?:\.\d+)*)"),
@@ -650,6 +714,7 @@ JAVASCRIPT_AND_TYPESCRIPT = Ecosystem(
             *subcommands("bun", "install", "test", "run"),
         ),
         setup=("deno", "bun"),
+        steps=(("actions/setup-node", _setup_node), ("pnpm/setup", _pnpm_runtime)),
     ),
 )
 

@@ -109,7 +109,7 @@ class OCamlTests(unittest.TestCase):
         ):
             with self.subTest(line=line):
                 self.assertEqual(self._run(tests_run, {**TEST_STANZA, **_ci(line)}).status, Status.PASS)
-        inline = {"lib/dune": "(library\n (name shop)\n (inline_tests)\n (preprocess (pps ppx_expect)))\n"}
+        inline = {"src/dune": "(library\n (name shop)\n (inline_tests)\n (preprocess (pps ppx_expect)))\n"}
         self.assertEqual(self._run(tests_run, {**inline, **_ci("dune test")}).status, Status.PASS)
         self.assertEqual(self._run(tests_run, {**TEST_STANZA, **_ci("dune build")}).status, Status.WARN)
         self.assertEqual(self._run(tests_run, _ci("dune test")).status, Status.FAIL)
@@ -145,6 +145,12 @@ class OCamlTests(unittest.TestCase):
                 self.assertEqual(self._run(code_formatting, {**style, **_ci(line)}).status, Status.FAIL)
         # Plain ocamlformat prints the formatted code: it is not a formatter run.
         self.assertEqual(self._run(code_formatting, {**style, **_ci("ocamlformat lib/shop.ml")}).status, Status.WARN)
+
+    def test_dune_fmt_preview_checks_the_formatting(self) -> None:
+        """`dune fmt --preview` is `dune build @fmt` without promotion: it fails on an unformatted file (ocaml/dune's
+        `make fmt-preview`)."""
+        result = self._run(code_formatting, {".ocamlformat": "version = 0.27.0\n", **_ci("dune fmt --preview")})
+        self.assertEqual(result, Result.passed(".ocamlformat is defined and CI runs ocamlformat"))
 
     def test_the_dev_profile_is_the_strict_warning_set(self) -> None:
         passed = Result.passed("strict OCaml warning settings are enabled: dune's dev profile warning set (or -w +a)")

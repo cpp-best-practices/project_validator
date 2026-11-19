@@ -328,7 +328,10 @@ class AnswerTests(unittest.TestCase):
     def test_a_language_no_known_tool_formats_is_skipped(self) -> None:
         answer = tool_answer(FORMAT, Enforcement.CHECK, "Lang", Facts(()), ())
         self.assertEqual(answer.answer, Answer.IMPOSSIBLE)
-        self.assertEqual(judge_formatting(answer), Result(status=Status.SKIP, message="no known tool formats Lang"))
+        self.assertEqual(
+            judge_formatting(answer, allow_unknown=False),
+            Result(status=Status.SKIP, message="no known tool formats Lang"),
+        )
 
     def test_a_language_only_auxiliary_code_uses_is_judged_as_advisory(self) -> None:
         files = {"CMakeLists.txt": "project(app)\n", "src/a.cpp": "", "docs/conf.py": "", **CLANG_FORMAT}

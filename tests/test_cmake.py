@@ -69,6 +69,11 @@ class BranchTests(unittest.TestCase):
         self.assertEqual(_options(found), [("-Werror", None, _requiring("STRICT"))])
         self.assertEqual(_settings(found, "STRICT"), [("ON", ANY, True)])
 
+    def test_an_option_without_a_default_is_off(self) -> None:
+        found = _listed('option(QUIET "be quiet")', "if(QUIET)", "  add_compile_options(-w)", "endif()")
+        self.assertEqual(_settings(found, "QUIET"), [("OFF", ANY, True)])
+        self.assertEqual(_options(found), [("-w", None, _requiring("QUIET"))])
+
     def test_loops_run_for_each_item(self) -> None:
         found = _listed(
             "set(FLAGS -Wall -Wextra)",
@@ -393,6 +398,21 @@ class FileTests(unittest.TestCase):
         self.assertEqual(_options(found), [("-Wall", None, ANY), ("-Wextra", None, ANY), ("cmake", None, ANY)])
         self.assertEqual(_settings(found, "CMAKE_CXX_STANDARD"), [("17", ANY, False), ("20", ANY, False)])
 
+    def test_a_projects_own_is_top_level_variable_says_whether_it_is_the_top_project(self) -> None:
+        files = {
+            "CMakeLists.txt": _lines(
+                "project(top)",
+                "if(top_IS_TOP_LEVEL)",
+                "  add_compile_options(-top)",
+                "endif()",
+                "add_subdirectory(src)",
+            ),
+            "src/CMakeLists.txt": _lines(
+                "project(sub)", "if(sub_IS_TOP_LEVEL)", "  add_compile_options(-sub)", "endif()"
+            ),
+        }
+        self.assertEqual([option for option, _, _ in _options(_facts(files))], ["-top"])
+
     def test_files_nothing_reaches(self) -> None:
         files = {
             "CMakeLists.txt": _lines(
@@ -511,6 +531,10 @@ class CommandTests(unittest.TestCase):
             ],
         )
 
+    def test_add_test_without_arguments_records_nothing(self) -> None:
+        found = _listed("add_test()", "add_test(NAME)")
+        self.assertEqual([fact for fact in found if isinstance(fact, Setting) and fact.key == "test"], [])
+
     def test_add_test_records_name_and_command(self) -> None:
         found = _listed(
             "add_test(NAME fuzz_tester_run COMMAND fuzz_tester -max_total_time=10)",
@@ -593,6 +617,14 @@ class PresetTests(unittest.TestCase):
         for condition, expected in (
             ({"type": "anyOf", "conditions": [{"type": "const", "value": True}]}, [_preset()]),
             ({"type": "allOf", "conditions": [{"type": "const", "value": False}]}, []),
+            (
+                {"type": "anyOf", "conditions": [{"type": "const", "value": False}, {"type": "const", "value": True}]},
+                [_preset()],
+            ),
+            (
+                {"type": "allOf", "conditions": [{"type": "const", "value": False}, {"type": "const", "value": True}]},
+                [],
+            ),
             ({"type": "matches", "string": "x", "regex": "x"}, unknown),
             (False, []),
             ("odd", unknown),
@@ -616,6 +648,10 @@ CUSTOM_TARGETS = {
         "add_dependencies(docs lint)",
         "add_custom_target()",
         "add_dependencies()",
+        "add_custom_command(OUTPUT gen.h gen.c COMMAND generate gen MAIN_DEPENDENCY gen.in DEPENDS tool COMMENT x)",
+        "add_custom_command(TARGET format POST_BUILD COMMAND echo after)",
+        "add_custom_target(generated DEPENDS gen.c)",
+        "add_custom_target(tool COMMAND echo tool)",
     ),
     "tools/CMakeLists.txt": _lines("add_custom_target(check COMMAND ./run.sh WORKING_DIRECTORY x)"),
 }
@@ -639,12 +675,53 @@ class CustomTargetTests(unittest.TestCase):
             ],
         )
 
+    def test_a_target_depending_on_a_custom_commands_output_runs_its_commands(self) -> None:
+        self.assertEqual(
+            _expanded("cmake --build build --target generated"),
+            [
+                (("echo", "tool"), None, "CMakeLists.txt:add_custom_target[13]"),
+                (("generate", "gen"), None, "CMakeLists.txt:add_custom_command[10]"),
+            ],
+        )
+
+    def test_a_cmake_script_runs_the_commands_it_executes_with_the_variables_defined(self) -> None:
+        script = 'execute_process(COMMAND run ${KIND} RESULT_VARIABLE r COMMAND echo "${MODE}")\n'
+        files = {"CMakeLists.txt": "project(app)\n", "tools/run.cmake": script}
+        lines = {
+            "cmake -DKIND=unit -D MODE:STRING=fast -P tools/run.cmake": [("run", "unit"), ("echo", "fast")],
+            "cmake -P tools/missing.cmake": [],
+            "cmake -P": [],
+            "cmake -DKIND=unit": [],
+        }
+        for line, expected in lines.items():
+            with self.subTest(line=line), temp_project({**files, **github_job("test", line)}) as root:
+                facts = make_context(root).facts
+                self.assertEqual([fact.argv for fact in facts.of(Command) if fact.via], expected)
+
+    def test_a_cmake_script_that_cannot_be_evaluated_is_unknown(self) -> None:
+        scripts = {
+            "if(A)\n": "line 1: if() is never closed with endif()",
+            "set(A 1)\n" * 5: "evaluation stopped after 3",
+        }
+        for script, reason in scripts.items():
+            files = {"run.cmake": script, **github_job("test", "cmake -P run.cmake")}
+            with (
+                self.subTest(reason=reason),
+                temp_project(files) as root,
+                mock.patch.object(evaluation, "MOST_COMMANDS", 3),
+            ):
+                unknowns = [
+                    fact for fact in make_context(root).facts.of(Unknown) if fact.subject.startswith("the CMake script")
+                ]
+            self.assertTrue(unknowns and unknowns[0].reason.startswith(reason), unknowns)
+
     def test_a_build_without_targets_builds_every_all_target(self) -> None:
         expected = [(("echo", "built"), None, "CMakeLists.txt:add_custom_target[5]")]
         self.assertEqual(_expanded("cmake --build build"), expected)
 
     def test_other_commands_are_not_expanded(self) -> None:
-        for line in ("cmake -S . -B build", "make lint", "cmake --build build --target missing"):
+        # (`make lint` in a directory CMake configures in place builds the CMake target: see the Make expander.)
+        for line in ("cmake -S . -B build", "cmake --build build --target missing"):
             with self.subTest(line=line):
                 self.assertEqual(_expanded(line), [])
 

@@ -22,7 +22,8 @@ class BuildSystem:
     The languages it builds are `languages`, plus those `declared_languages` reads from one of its build files, given
     the file's path and text.
     A directory for which `is_build_tree` is true holds its build output and is never inspected.
-    `build_types` reads the build types (`debug`, `release`) a command of the build system builds.
+    `build_types` reads the build types (`debug`, `release`) a command of the build system builds, and
+    `configured_build_types` those its build files decide.
     `members` reads, from a build file, the directories (globs relative to it) of the workspace it declares; each
     member is a unit of the project of its own (see `project_validator.facts.structure.Unit`).
     """
@@ -33,6 +34,9 @@ class BuildSystem:
     declared_languages: Callable[[str, str], frozenset[str]] | None = None
     is_build_tree: Callable[[Path], bool] | None = None
     build_types: Callable[[Command], frozenset[str]] | None = None
+    # The build types a command builds that its build files decide (Cargo's custom profiles, which inherit `release`),
+    # given a reader of the project's files (None for a file it does not have).
+    configured_build_types: Callable[[Command, Callable[[str], str | None]], frozenset[str]] | None = None
     members: Callable[[str], tuple[str, ...]] | None = None
 
 

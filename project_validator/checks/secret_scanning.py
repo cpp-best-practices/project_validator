@@ -9,4 +9,4 @@ from project_validator.questions.secrets import secret_scanning_answer
 
 @check(name="secret-scanning", description="CI scans for committed secrets (e.g. gitleaks, TruffleHog)")
 def secret_scanning(context: Context) -> Result:
-    return judge_secret_scanning(secret_scanning_answer(context.facts))
+    return judge_secret_scanning(secret_scanning_answer(context.facts), allow_unknown=context.options.allow_unknown)

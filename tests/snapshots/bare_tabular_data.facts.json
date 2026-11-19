@@ -53,6 +53,19 @@
       "outdated": null,
       "role": "product",
       "what": "profile ($schema) and name"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "datapackage.json",
+      "reader": "datapackage.json licenses"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "Data Package"
+      ],
+      "origin": "datapackage.json"
     }
   ],
   "map": {

@@ -10,8 +10,10 @@ from project_validator.text import matching_names, pattern
 
 README = re.compile(r"README(?:\.(?:md|markdown|rst|txt|adoc|org))?", re.IGNORECASE)
 QUALITY_BADGES = (
-    pattern("Codecov", r"codecov\.io/\S+(?:badge|graph)|img\.shields\.io/codecov/"),
-    pattern("Coveralls", r"coveralls\.io/repos/\S+badge|img\.shields\.io/coveralls(?:Coverage)?/"),
+    pattern("Codecov", r"codecov\.io/\S+(?:badge|graph|coverage\.svg)|img\.shields\.io/codecov/|badgen\.net/codecov/"),
+    pattern(
+        "Coveralls", r"coveralls\.io/repos/\S+badge|img\.shields\.io/coveralls(?:Coverage)?/|badgen\.net/coveralls/"
+    ),
     pattern("SonarCloud", r"sonarcloud\.io/api/project_badges/|img\.shields\.io/sonar/"),
     pattern("Codacy", r"(?:app|api)\.codacy\.com/project/badge/|img\.shields\.io/codacy/"),
     pattern("Code Climate", r"(?:api\.)?codeclimate\.com/\S*badges/|img\.shields\.io/codeclimate/"),
@@ -25,6 +27,8 @@ QUALITY_BADGES = (
         "OpenSSF Best Practices", r"(?:bestpractices\.dev|bestpractices\.coreinfrastructure\.org)/projects/\d+/badge"
     ),
 )
+# What an HTML comment hides is not shown.
+_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
 CI_HINT = "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)"
 QUALITY_HINT = "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
 
@@ -34,7 +38,7 @@ def status_badges(context: Context) -> Result:
     readmes = documents(context, README)
     if not readmes:
         return Result.failed("no README", CI_HINT, QUALITY_HINT)
-    text = context.project.read_text(readmes[0])
+    text = _COMMENT.sub("", context.project.read_text(readmes[0]))
     ci = matching_names((text,), (badge for provider in context.providers for badge in provider.badges))
     quality = matching_names((text,), QUALITY_BADGES)
     if not ci and not quality:

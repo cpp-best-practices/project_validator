@@ -7,6 +7,7 @@ from __future__ import annotations
 import re
 
 from project_validator.ecosystems.model import Ecosystem, toolchain_patterns
+from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import defined_by, starts, when
@@ -34,6 +35,14 @@ COMPILE = test_runner(
     runs=when(starts(("typst", "compile"), ("typst", "c")), tested),
     tests=tests_of(DOCUMENTS.name),
 )
+# tytanic (`tt run`) compiles each `tests/**/test.typ` and compares it with its reference.
+TYTANIC = test_runner(
+    name="tytanic",
+    languages=TYPST_ONLY,
+    how="tt run (tytanic)",
+    runs=when(starts(("tt", "run"), ("tytanic", "run")), tested),
+    tests=tests_of(DOCUMENTS.name),
+)
 TYPSTYLE = format_tool(
     name="typstyle",
     languages=TYPST_ONLY,
@@ -48,3 +57,5 @@ TYPSTFMT = format_tool(
     formats=flagged(("typstfmt",), checks=("--check",)),
     style=defined_by(),
 )
+# typstyle's action formats the files in place; a later `git diff --exit-code` fails on what it changed.
+TYPSTYLE_ACTION = Action(name="typstyle-rs/typstyle-action", runs=lambda _inputs: (("typstyle", "-i", "."),))

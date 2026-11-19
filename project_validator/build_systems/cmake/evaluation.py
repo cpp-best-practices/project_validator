@@ -49,6 +49,7 @@ from project_validator.facts.conditions import ALWAYS, Condition, both, either, 
 
 # How deep calls and includes nest, how many items a loop runs for, and how many commands are evaluated in all.
 MOST_NESTED = 24
+_TOO_NESTED = f"calls, includes or subdirectories nest more than {MOST_NESTED} deep"
 MOST_ITERATIONS = 64
 MOST_COMMANDS = 250_000
 # A function or macro called again with the same arguments sets the same things again: it is not followed again. Nor is
@@ -170,6 +171,18 @@ class Evaluation:
             self.problems["CMakeLists.txt"] = f"evaluation stopped after {MOST_COMMANDS} commands"
         except RecursionError:
             self.problems["CMakeLists.txt"] = "nested too deeply to read"
+
+    def script(self, path: str, defines: Mapping[str, str]) -> None:
+        """Run `path` as `cmake -D name=value... -P path` does: on its own, with the variables the command defines."""
+        directory = posixpath.dirname(path) or "."
+        scope = _root_scope(directory, path)
+        for name, value in defines.items():
+            scope.variables[name] = (Item(value),)
+        frame = Frame(scope=scope, condition=ALWAYS, directory=directory, path=path)
+        try:
+            self._file(path, frame)
+        except _TooMuch:
+            self.problems[path] = f"evaluation stopped after {MOST_COMMANDS} commands"
 
     def _evaluate_all(self) -> None:
         lists = sorted((path for path in self.files if PurePosixPath(path).name == LISTS_FILE), key=_depth)
@@ -332,6 +345,8 @@ class Evaluation:
 
     def _call(self, definition: Definition, words: list[Value], frame: Frame) -> None:
         arguments = tuple(word.text for word in words)
+        if len(frame.stack) > MOST_NESTED:
+            self.problems.setdefault(frame.path, _TOO_NESTED)
         if arguments in definition.seen or definition.name in frame.stack or len(frame.stack) > MOST_NESTED:
             definition.calls = max(definition.calls, 1)
             return
@@ -446,7 +461,10 @@ class Evaluation:
     def include(self, frame: Frame, words: list[Value], _: Invocation) -> None:
         if not words or (path := self._module(frame, words[0].text)) is None or path in frame.stack:
             return
-        if len(frame.stack) > MOST_NESTED or (path in self.reached and self._guarded(path)):
+        if len(frame.stack) > MOST_NESTED:
+            self.problems.setdefault(frame.path, _TOO_NESTED)
+            return
+        if path in self.reached and self._guarded(path):
             return
         directory = posixpath.dirname(path) or "."
         saved = {name: frame.scope.get(name) for name in ("CMAKE_CURRENT_LIST_DIR", "CMAKE_CURRENT_LIST_FILE")}
@@ -469,7 +487,10 @@ class Evaluation:
         return next((path for path in found if path is not None), None)
 
     def add_subdirectory(self, frame: Frame, words: list[Value], _: Invocation) -> None:
-        if not words or len(frame.stack) > MOST_NESTED:
+        if not words:
+            return
+        if len(frame.stack) > MOST_NESTED:
+            self.problems.setdefault(frame.path, _TOO_NESTED)
             return
         path = _within(self.files, frame.directory, f"{words[0].text}/{LISTS_FILE}")
         if path is not None and path not in frame.stack:

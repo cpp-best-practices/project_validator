@@ -11,7 +11,7 @@ BUILD_TYPE_KINDS = {"debug": "debug", "release": "release", "relwithdebinfo": "r
 
 _DISABLED = r"(?!(?:off|false|no|none|0)\b)"
 _SANITIZERS_ENABLED = re.compile(
-    r"[-/]fsanitize[=-]\w"
+    r"[-/]fsanitize[=-]\w|\s--sanitize[=\s](?:address|thread|undefined)\b|-enable(?:Address|Thread)Sanitizer\s+YES\b"
     rf"|sanitiz\w*(?::bool)?[\"']?\s*[=:]\s*[\"']?{_DISABLED}\w"
     r"""|packaging_maintainer_mode(?::bool)?["']?\s*[=:]\s*["']?(?:off|false|no|0)\b""",
     re.IGNORECASE,
@@ -34,6 +34,7 @@ def build_type_kinds(*values: str) -> frozenset[str]:
 
 
 def sanitizers_enabled(texts: Iterable[str]) -> bool:
-    """Sanitizer flags (`-fsanitize=address`; Zig's `-fsanitize-thread`) or options, or cmake_template's packaging
+    """Sanitizer flags (`-fsanitize=address`; Zig's `-fsanitize-thread`; SwiftPM's `--sanitize=address`, Xcode's
+    `-enableAddressSanitizer YES`) or options, or cmake_template's packaging
     maintainer mode being off (which enables them)."""
     return any(_SANITIZERS_ENABLED.search(text) for text in texts)

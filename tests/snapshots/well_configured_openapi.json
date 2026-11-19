@@ -306,6 +306,7 @@
             "language": "OpenAPI",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -328,6 +329,7 @@
               "openapi.yaml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}

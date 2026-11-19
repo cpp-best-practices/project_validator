@@ -549,7 +549,7 @@
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that runs "
+        "consider a CI job that runs raco fmt -i $(git ls-files '*.rkt'), with the job failing on git diff --exit-code"
       ],
       "message": "CI never runs raco fmt; its formatting is not enforced",
       "status": "FAIL"

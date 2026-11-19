@@ -8,20 +8,21 @@ r-lib/actions, whose `check-r-package` runs rcmdcheck with its inputs."""
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from pathlib import Path
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
-from project_validator.facts import Command, Facts, resolved
+from project_validator.facts import Command, Fact, Facts, Origin, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, program, starts_with
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
+from project_validator.facts.dependencies import Application, Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required
-from project_validator.facts.settings import file_reader
+from project_validator.facts.settings import SettingsReader, file_reader
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, when
 from project_validator.text import pattern
@@ -86,12 +87,18 @@ def _runs_tests(command: Command) -> bool:
     return starts_with(argv, ("R", "CMD", "check")) is not None or _TEST_CALLS.search(r_code(command)) is not None
 
 
+# R CMD check runs every script in tests/ (data.table's base-R tests, which stop on a failed check).
+R_TEST_SCRIPTS = TestFiles(
+    name="test scripts (tests/*.R)",
+    languages=R,
+    path=re.compile(r"(?:^|/)tests/[^/]+\.[Rr]$"),
+)
 R_TESTS = test_runner(
     name="R CMD check",
     languages=R,
     how="R CMD check (or rcmdcheck::rcmdcheck(), r-lib/actions/check-r-package, devtools::test())",
     runs=lambda command, _facts: tested() if _runs_tests(command) else None,
-    tests=tests_of(R_TEST_FILES.name),
+    tests=tests_of(R_TEST_FILES.name, R_TEST_SCRIPTS.name),
 )
 
 
@@ -252,3 +259,43 @@ R_ECOSYSTEM = Ecosystem(
 )
 
 R_VERSIONS = versions_axis("R version", "R", R)
+
+
+# --- Dependencies: a DESCRIPTION's Imports, Depends (beyond R itself) and LinkingTo; renv.lock pins an analysis
+# project's, while a package's users resolve them.
+_DEPENDENCY_FIELDS = re.compile(r"^(?:Imports|Depends|LinkingTo):(?P<packages>(?:.*\n?)(?:[ \t].*\n?)*)", re.MULTILINE)
+
+
+def _declares(_path: str, text: str) -> bool:
+    packages = (
+        name.strip().split("(")[0].strip()
+        for match in _DEPENDENCY_FIELDS.finditer(text)
+        for name in match["packages"].split(",")
+    )
+    return any(name and name != "R" for name in packages)
+
+
+R_DEPENDENCIES = manifest_reader(
+    name="R package dependencies",
+    manager="R packages",
+    files=("DESCRIPTION",),
+    declares=_declares,
+    library=lambda _path, text: re.search(r"^Package:", text, re.MULTILINE) is not None,
+)
+RENV_LOCK = lockfile_reader(manager="R packages", files=("renv.lock",))
+
+
+def _renv_project(path: str, text: str) -> Iterator[Fact]:
+    """A project whose .Rprofile activates renv is an analysis that restores its packages from renv.lock."""
+    if "renv/activate.R" in text:
+        yield Application(origin=Origin(path=path), manager="R packages")
+
+
+RENV_PROJECT = SettingsReader(name="renv projects", files=(".Rprofile",), read=_renv_project)
+R_PACKAGES = PackageManager(
+    name="R packages",
+    languages=R,
+    lock=Lock.APPLICATIONS,
+    applications_by_default=False,
+    lock_hint="commit renv.lock (renv::snapshot()), so the analysis runs with the package versions it was tested with",
+)

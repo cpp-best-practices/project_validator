@@ -782,6 +782,7 @@
               "pubspec.yaml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -991,7 +992,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "test(), testWidgets() or group() calls in test/**/*_test.dart (or integration_test/): 1 file(s), run by dart test",
       "status": "PASS"
     },
     "top-level-guard": {

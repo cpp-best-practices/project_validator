@@ -18,7 +18,12 @@ from project_validator.questions import Answer, LanguageAnswers, Question, answe
 from project_validator.questions.tooling import ToolAnswer, tool_answer
 
 CMAKE_LANGUAGES = frozenset(LANGUAGE_NAMES.values())
-_CLUSTERFUZZLITE = "google/clusterfuzzlite/actions/run_fuzzers"
+# The actions that build and run a project's fuzzers in CI, whatever their language: ClusterFuzzLite, and OSS-Fuzz's
+# CIFuzz for a project OSS-Fuzz fuzzes.
+_FUZZING_ACTIONS = {
+    "google/clusterfuzzlite/actions/run_fuzzers": "ClusterFuzzLite",
+    "google/oss-fuzz/infra/cifuzz/actions/run_fuzzers": "CIFuzz",
+}
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -120,11 +125,15 @@ def _ctest_fuzz_tests(facts: Facts, unit: str) -> Iterator[str]:
 
 
 def _other_runs(facts: Facts, unit: str, language: str) -> tuple[str, ...]:
-    """The runs of fuzzers that are not tools, each as written where it runs: each ClusterFuzzLite step CI has (which
-    fuzzes any language, so it filters nothing), and, for a language CMake builds, each CTest fuzz test of `unit`'s
-    CMake files when CI runs ctest (ctest runs the tests of only the languages CMake builds)."""
-    steps = (step for step in facts.of(ActionStep) if step.uses.startswith(_CLUSTERFUZZLITE))
-    found = (f"ClusterFuzzLite ({step.origin.path})" for step in steps)
+    """The runs of fuzzers that are not tools, each as written where it runs: each ClusterFuzzLite or CIFuzz step CI
+    has (which fuzzes any language, so it filters nothing), and, for a language CMake builds, each CTest fuzz test of
+    `unit`'s CMake files when CI runs ctest (ctest runs the tests of only the languages CMake builds)."""
+    found = (
+        f"{name} ({step.origin.path})"
+        for step in facts.of(ActionStep)
+        for action, name in _FUZZING_ACTIONS.items()
+        if step.uses.startswith(action)
+    )
     ctest = _ctest_fuzz_tests(facts, unit) if language in CMAKE_LANGUAGES else ()
     return tuple(dict.fromkeys((*found, *ctest)))
 

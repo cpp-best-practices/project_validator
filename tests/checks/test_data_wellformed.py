@@ -73,7 +73,7 @@ class DataWellformedTests(unittest.TestCase):
         own data files are judged."""
         only_tests = _run({"tests/data/bad.json": "{", "spec/fixtures/also.yaml": "a: [", "config.json": "{}"})
         self.assertEqual(only_tests.status, Status.PASS)
-        self.assertEqual(only_tests.message, "JSON: 1 JSON file parses; YAML: no YAML file to parse")
+        self.assertEqual(only_tests.message, "JSON: 1 JSON file parses; YAML: 1 YAML file of test data, not judged")
         self.assertEqual(len(only_tests.details), 2)
         self.assertTrue(only_tests.details[0].startswith("JSON: test data, not judged: tests/data/bad.json:1:2: "))
         self.assertTrue(only_tests.details[1].startswith("YAML: test data, not judged: spec/fixtures/also.yaml:1:"))

@@ -1,6 +1,8 @@
 """The CI lint question: for each CI provider the project uses, does CI (or a pre-commit hook) run a linter of that
 provider's configuration? Answered for the project as a whole. The linters are searched for in the configuration
-text itself, so a provider read only heuristically hides nothing here."""
+text itself, so a provider read only heuristically hides nothing here; but a command that could not be read (a
+reusable workflow of another repository, called by a job named `zizmor`) may run one, so no linter found is then
+unknown."""
 
 from __future__ import annotations
 
@@ -10,7 +12,7 @@ from project_validator.ci import CiProvider
 from project_validator.components import known
 from project_validator.facts import CiConfiguration, Facts
 from project_validator.facts.practices import named
-from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict
+from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict, unknowns_for
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -32,6 +34,7 @@ class CiLintAnswer:
     unit: str = "."
     answer: Answer
     providers: tuple[ProviderLinting, ...] = ()
+    unknowns: tuple[str, ...] = ()
 
     def lintable(self) -> tuple[ProviderLinting, ...]:
         return tuple(found for found in self.providers if found.lintable)
@@ -44,6 +47,9 @@ class CiLintAnswer:
                 found.provider: {"linters": list(found.linters), "lintable": found.lintable} for found in self.providers
             },
         )
+
+
+_HEURISTIC = "the jobs and commands:"
 
 
 def ci_lint_answer(facts: Facts, language: str = "") -> CiLintAnswer:
@@ -62,10 +68,19 @@ def ci_lint_answer(facts: Facts, language: str = "") -> CiLintAnswer:
     )
     lintable = [provider for provider in found if provider.lintable]
     if not lintable:
-        answer = Answer.IMPOSSIBLE
-    else:
-        answer = Answer.YES if all(provider.linters for provider in lintable) else Answer.NO
-    return CiLintAnswer(language=language, answer=answer, providers=found)
+        return CiLintAnswer(language=language, answer=Answer.IMPOSSIBLE, providers=found)
+    if all(provider.linters for provider in lintable):
+        return CiLintAnswer(language=language, answer=Answer.YES, providers=found)
+    unknowns = _hidden(facts)
+    answer = Answer.UNKNOWN if unknowns else Answer.NO
+    return CiLintAnswer(language=language, answer=answer, providers=found, unknowns=unknowns)
+
+
+def _hidden(facts: Facts) -> tuple[str, ...]:
+    """What could not be read that may run a linter: a job or a command. A provider read only heuristically is
+    searched as text all the same: its "jobs and commands" hide nothing here."""
+    hidden = unknowns_for((), facts, hiding=("jobs", "commands"))
+    return tuple(found for found in hidden if not found.startswith(_HEURISTIC))
 
 
 def ci_linting(language: str, facts: Facts) -> LanguageAnswers[CiLintAnswer]:

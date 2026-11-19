@@ -27,9 +27,14 @@ TAG = "pinned to a tag"
 SHORT = "pinned to an abbreviated commit"
 
 
+# An action or reusable workflow of the same repository (`./.github/actions/x`, `$/.github/workflows/w.yml`) runs at
+# the triggering commit: there is no reference to pin.
+LOCAL_PREFIXES = ("./", "$/")
+
+
 def pinning(reference: str) -> str | None:
     """How loosely `reference` is pinned; None when it is pinned to a commit (or a digest) or is local."""
-    if reference.startswith("./"):
+    if reference.startswith(LOCAL_PREFIXES):
         return None
     if reference.startswith("docker://"):
         return None if "@sha256:" in reference else TAG
@@ -95,7 +100,7 @@ def pinning_answer(facts: Facts, language: str = "") -> PinningAnswer:
             official=fact.reference.startswith(OFFICIAL_OWNERS),
         )
         for fact in facts.of(StepReference)
-        if not fact.reference.startswith("./")
+        if not fact.reference.startswith(LOCAL_PREFIXES)
     )
     loose = any(reference.how for reference in references)
     return PinningAnswer(language=language, answer=Answer.NO if loose else Answer.YES, references=references)

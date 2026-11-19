@@ -12,7 +12,7 @@ HINT = (
 )
 
 
-def judge_secret_scanning(answer: SecretScanningAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_secret_scanning(answer: SecretScanningAnswer, *, allow_unknown: bool) -> Result:
     """A scanner run passes; one configured but not run warns, as does none at all (advice: the forge's own scanning
     cannot be seen)."""
     del allow_unknown  # the scanners are searched for in the configuration text itself: nothing is hidden

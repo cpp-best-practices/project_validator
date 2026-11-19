@@ -28,7 +28,7 @@ from project_validator.facts.settings import (
     xml_root,
     yaml_settings,
 )
-from project_validator.facts.tools import Claim, Run, Tool, defined_by, either
+from project_validator.facts.tools import Claim, Definition, Run, Tool, defined_by, either
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
@@ -94,19 +94,50 @@ def _read_checkstyle(path: str, text: str) -> Iterator[Fact]:
 CHECKSTYLE_SETTINGS = SettingsReader(
     name="Checkstyle", files=("*checkstyle*.xml", "*Checkstyle*.xml"), read=_read_checkstyle
 )
+# Modules that analyse no code: the configuration's structure, its filters, and spring's nohttp, which flags http://
+# URLs in any file.
+_NOT_ANALYSIS = frozenset(
+    {"Checker", "TreeWalker", "SuppressionFilter", "SuppressWarningsFilter", "SuppressWarningsHolder"}
+    | {"SuppressionCommentFilter", "SuppressWithNearbyCommentFilter", "BeforeExecutionExclusionFileFilter"}
+    | {"NoHttpCheck"}
+)
+_CHECKSTYLE_RUNS = _wired(
+    Wiring(
+        report=re.compile(rf"{_goal('checkstyle').pattern}|checkstyle\w*"),
+        maven_plugin="maven-checkstyle-plugin",
+        bound_goal=re.compile("check"),
+        gradle_plugin="checkstyle",
+    )
+)
+
+
+def _checkstyle_analyses(command: Command, facts: Facts) -> Run | None:
+    """A Checkstyle run, unless every configuration the project has holds only modules that analyse no code
+    (spring-petclinic's, with NoHttpCheck alone)."""
+    configurations = [setting.value for setting in facts.where(Setting, tool="Checkstyle", key="modules")]
+    if configurations and all(_analyses_nothing(modules) for modules in configurations):
+        return None
+    return _CHECKSTYLE_RUNS(command, facts)
+
+
+def _analyses_nothing(modules: object) -> bool:
+    """Whether a configuration's modules (named in full or by class, `com.puppycrawl...Checker`) analyse no code."""
+    return isinstance(modules, tuple) and {str(name).rpartition(".")[2] for name in modules} <= _NOT_ANALYSIS
+
+
+def _checkstyle_rules(facts: Facts) -> Iterator[str]:
+    """The Checkstyle configurations with a module that analyses code."""
+    for setting in facts.where(Setting, tool="Checkstyle", key="modules"):
+        if not _analyses_nothing(setting.value):
+            yield setting.path
+
+
 CHECKSTYLE = analyzer(
     name="Checkstyle",
     languages=frozenset({JAVA}),
     how="Checkstyle (maven-checkstyle-plugin bound to check, or Gradle's checkstyle plugin)",
-    analyses=_wired(
-        Wiring(
-            report=re.compile(rf"{_goal('checkstyle').pattern}|checkstyle\w*"),
-            maven_plugin="maven-checkstyle-plugin",
-            bound_goal=re.compile("check"),
-            gradle_plugin="checkstyle",
-        )
-    ),
-    rules=defined_by(files=("Checkstyle",)),
+    analyses=_checkstyle_analyses,
+    rules=Definition(found=_checkstyle_rules),
     reads=("Maven", "Gradle"),
 )
 DETEKT_SETTINGS = SettingsReader(
@@ -157,7 +188,7 @@ METHOD_LENGTH = limiter(
     name="Checkstyle's MethodLength",
     languages=frozenset({JAVA}),
     how="Checkstyle with its MethodLength check",
-    runs=CHECKSTYLE.claims,
+    runs=_CHECKSTYLE_RUNS,
     rule=Rule(describe="the MethodLength module in the Checkstyle configuration", enabled=_method_length_module),
     reads=("Maven", "Gradle", "Checkstyle"),
 )
@@ -180,7 +211,7 @@ FUNCTION_LENGTH_LIMITERS = (METHOD_LENGTH, LONG_METHOD, *function_length_limiter
 # Error Prone is a compiler plugin: on a Maven compiler's processor path or arguments, or the net.ltgt.errorprone
 # Gradle plugin. Matched in the build files until they are read structurally.
 _ERROR_PRONE_GRADLE = GRADLE_PLUGIN.format(re.escape("net.ltgt.errorprone"))
-_ERROR_PRONE = re.compile(rf"error_prone_core|-Xplugin:ErrorProne|{_ERROR_PRONE_GRADLE}")
+_ERROR_PRONE = re.compile(rf"\berror_prone_core\b|-Xplugin:ErrorProne\b|{_ERROR_PRONE_GRADLE}")
 _COMPILES = {
     "maven": frozenset({"compile", "test-compile", "test", "package", "verify", "install", "deploy"}),
     "gradle": frozenset({"build", "check", "test", "assemble", "classes", "compileJava", "jar"}),

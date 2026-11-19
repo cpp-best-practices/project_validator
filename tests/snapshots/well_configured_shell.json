@@ -1078,6 +1078,13 @@
                 },
                 "needs_definition": true,
                 "required": false
+              },
+              "zunit": {
+                "can": {
+                  "runs": "zunit"
+                },
+                "needs_definition": true,
+                "required": false
               }
             },
             "language": "Shell",
@@ -1236,6 +1243,7 @@
               ".github/workflows/copy-paste-detection.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1433,7 +1441,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "PowerShell: Pester tests (*.Tests.ps1): 1 file(s), run by Pester; Shell: bats tests (*.bats): 1 file(s), run by bats",
       "status": "PASS"
     },
     "top-level-guard": {

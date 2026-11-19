@@ -179,7 +179,6 @@ def _run(check: Check, files: Mapping[str, str]) -> Result:
 
 
 class SameRepositoryReferenceTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #209: `$/` same-repository references are reported "not pinned"
     def test_references_with_the_dollar_prefix_have_nothing_to_pin(self) -> None:
         """`$/.github/actions/x` and `$/.github/workflows/w.yml` run at the triggering commit, like `./`: they are no
         references to pin, so a workflow with only them passes (junit5, koreader, pytest, poetry, vite, rspec)."""
@@ -191,7 +190,6 @@ class SameRepositoryReferenceTests(unittest.TestCase):
                 result = _run(action_pinning, {GITHUB_WORKFLOW: ci, **LOCAL_TARGETS})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #210: `uses: ./` looks for "/action.yml": the root action is never read
     def test_the_repositorys_own_action_is_read(self) -> None:
         """`uses: ./` runs the root action.yml: a composite action's steps are the job's commands and a JavaScript
         action has nothing to read; neither is unknown (actions/checkout, lychee-action, pre-commit/action)."""
@@ -202,7 +200,6 @@ class SameRepositoryReferenceTests(unittest.TestCase):
                 self.assertEqual(unknowns, [])
                 self.assertLessEqual(commands, {argv for argv, _ in found})
 
-    @unittest.expectedFailure  # upstream #212: own workflow referenced by full name owner/repo/...@ref is not read
     def test_a_same_repository_workflow_referenced_by_its_full_name_is_read(self) -> None:
         """`uses: me/repo/.github/workflows/w.yml@main` names a file of this checkout, whose origin is me/repo: it is
         read like `./.github/workflows/w.yml` (swift-nio, ruff, dune)."""
@@ -226,7 +223,6 @@ class CalledWorkflowInputTests(unittest.TestCase):
 
 
 class WorkingDirectoryTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #213: defaults.run.working-directory ignored; composite directory unexpanded
     def test_the_default_working_directory_and_a_composite_actions_directory_input_apply(self) -> None:
         """A workflow's or job's `defaults.run.working-directory` resolves `npm test` against sub/package.json
         (CycloneDX/specification, devenv); a composite action run in `packages/${{ matrix.package }}` of a computed
@@ -242,7 +238,6 @@ class WorkingDirectoryTests(unittest.TestCase):
 
 
 class ExpressionOperandTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #214: && and || render as booleans, not as the deciding operand
     def test_and_and_or_yield_the_deciding_operand(self) -> None:
         """GitHub's `a && b` is `b` when `a` is truthy, and `a || b` is `a` or else `b`: a ternary renders its branch,
         a `runs-on` fallback picks the OS, and the sanitizer flags reach cmake (fmt, mkdocs, flask, vapor)."""

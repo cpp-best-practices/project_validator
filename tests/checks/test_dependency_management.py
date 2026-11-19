@@ -69,7 +69,7 @@ class DependencyManagementTests(unittest.TestCase):
     def test_a_language_no_known_package_manager_handles_is_skipped(self) -> None:
         answer = dependency_answer("Lang", Facts(()), ())
         self.assertEqual(
-            judge_dependencies(answer),
+            judge_dependencies(answer, allow_unknown=False),
             Result(status=Status.SKIP, message="no known package manager resolves Lang dependencies"),
         )
 
@@ -85,7 +85,9 @@ class VendoringTests(unittest.TestCase):
                 self.assertEqual(result, expected)
 
     def test_git_submodules_warn(self) -> None:
-        result = run_in_every_layout(self, dependency_management, {**WELL_CONFIGURED, ".gitmodules": ""})
+        result = run_in_every_layout(
+            self, dependency_management, {**WELL_CONFIGURED, ".gitmodules": '[submodule "x"]\n\tpath = x\n'}
+        )
         expected = Result.warned(
             "third-party code is committed (git submodules (.gitmodules)); dependencies are declared in "
             "cmake/Dependencies.cmake (FetchContent)",

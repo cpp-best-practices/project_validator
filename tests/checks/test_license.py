@@ -100,7 +100,7 @@ class LicenseTests(unittest.TestCase):
     def test_warns_when_the_license_is_not_recognised(self) -> None:
         result = _run({"LICENSE": "All rights reserved.\n", "COPYING": MIT})
         self.assertEqual(result.status, Status.WARN)
-        self.assertEqual(result.message, "the license in LICENSE is not recognised")
+        self.assertEqual(result.message, "the license in LICENSE is not recognised (the others hold MIT)")
 
 
 class DeclaredLicenseTests(unittest.TestCase):

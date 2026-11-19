@@ -501,12 +501,22 @@
             "defined": {
               "typst compile": [
                 "main.typ"
+              ],
+              "tytanic": [
+                "main.typ"
               ]
             },
             "known": {
               "typst compile": {
                 "can": {
                   "runs": "typst compile main.typ"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "tytanic": {
+                "can": {
+                  "runs": "tt run (tytanic)"
                 },
                 "needs_definition": true,
                 "required": false
@@ -591,6 +601,7 @@
               ".github/workflows/copy-paste-detection.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -785,7 +796,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "documents (*.typ): 1 file(s), run by typst compile",
       "status": "PASS"
     },
     "top-level-guard": {

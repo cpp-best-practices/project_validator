@@ -979,11 +979,9 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -995,11 +993,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Terraform"
       ],
@@ -1018,11 +1014,9 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Terraform"
       ],
@@ -1041,11 +1035,9 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Terraform"
       ],
@@ -1064,11 +1056,9 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Terraform"
       ],
@@ -1087,11 +1077,9 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Terraform"
       ],
@@ -1110,11 +1098,9 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Terraform"
       ],
@@ -1133,11 +1119,9 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Terraform"
       ],
@@ -1151,11 +1135,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1694,9 +1676,7 @@
       ],
       "jobs": [
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [],
           "name": ".github/workflows/ci-lint.yml: ci-lint",
@@ -1704,9 +1684,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Terraform"
@@ -1718,9 +1696,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Terraform"
@@ -1732,9 +1708,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Terraform"
@@ -1746,9 +1720,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Terraform"
@@ -1760,9 +1732,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Terraform"
@@ -1774,9 +1744,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Terraform"
@@ -1788,9 +1756,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Terraform"
@@ -1800,9 +1766,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [],
           "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",

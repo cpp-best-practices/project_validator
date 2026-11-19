@@ -44,6 +44,7 @@
               "data.json"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -61,6 +62,7 @@
               "settings.toml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -78,6 +80,7 @@
             "problems": [
               "config.yaml:2:1: expected ',' or ']', but got '<stream end>'"
             ],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}

@@ -63,7 +63,10 @@ class JupyterTests(unittest.TestCase):
             "papermill notebooks/prices.ipynb /tmp/out.ipynb",
         ):
             with self.subTest(line=line):
-                self.assertEqual(self._run(tests_run, _ci(line)), Result.passed("tests found in 1 file(s)"))
+                self.assertEqual(
+                    self._run(tests_run, _ci(line)),
+                    Result.passed("notebooks (*.ipynb): 1 file(s), run by notebook execution"),
+                )
         # pytest without the plugin, or a conversion without executing, runs no notebook.
         for line in ("pytest tests", "jupyter nbconvert --to html notebooks/prices.ipynb"):
             with self.subTest(line=line):

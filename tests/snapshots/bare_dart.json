@@ -632,6 +632,7 @@
               "pubspec.yaml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -848,7 +849,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (test(), testWidgets() or group() calls in test/**/*_test.dart)",
+      "message": "no tests found (test(), testWidgets() or group() calls in test/**/*_test.dart (or integration_test/))",
       "status": "FAIL"
     },
     "top-level-guard": {

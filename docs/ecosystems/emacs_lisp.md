@@ -8,8 +8,8 @@ of the ecosystem with no language of its own.
 
 ERT (`ert-deftest`) or Buttercup (`describe`/`it`) tests under `test/` (or `*-test.el`), run by `eask test ert`,
 `eask test buttercup`, `eask test ert-runner`, `cask exec ert-runner` or `cask exec buttercup`, the runners
-themselves, `makem.sh test`, or Emacs in batch mode (`emacs -batch -l test/shop-test.el -f
-ert-run-tests-batch-and-exit`).
+themselves, `makem.sh test`, an Eask command whose body runs ERT (`eask run command test`), or Emacs in batch mode
+(`emacs -batch -l test/shop-test.el -f ert-run-tests-batch-and-exit`).
 
 ## `coverage`
 

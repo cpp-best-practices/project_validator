@@ -17,14 +17,16 @@ from project_validator.questions import FORMATS, Answer, LanguageAnswers, Questi
 class WellformedAnswer:
     """Whether the data files of one format in one unit ("." for the project's root unit) parse: `parsed`, the judged
     files that do; `problems`, where and why each judged file does not (`path:line:column: why`); `test_problems`,
-    the same for a test suite's data files, which may be malformed on purpose; `unread`, why each file that was not
-    parsed was not (path -> why)."""
+    the same for a test suite's data files, which may be malformed on purpose; `test_data`, the test suite's data
+    files that were parsed; `unread`, why each file that was not parsed was not (path -> why)."""
 
     language: str
     unit: str = "."
     parsed: tuple[str, ...] = ()
     problems: tuple[str, ...] = ()
     test_problems: tuple[str, ...] = ()
+    # The test suite's data files that were parsed, which are not judged.
+    test_data: tuple[str, ...] = ()
     unread: Mapping[str, str]
 
     @property
@@ -38,6 +40,7 @@ class WellformedAnswer:
             parsed=list(self.parsed),
             problems=list(self.problems),
             test_problems=list(self.test_problems),
+            test_data=list(self.test_data),
             unread=dict(self.unread),
         )
 
@@ -67,6 +70,7 @@ def wellformed_answer(format_: str, facts: Facts, unit: str = ".") -> Wellformed
         parsed=tuple(file.path for file in judged if file.problem is None),
         problems=_problems(judged),
         test_problems=_problems(file for file in files if file.role == "test"),
+        test_data=tuple(file.path for file in files if file.role == "test" and file.unread is None),
         unread={file.path: file.unread for file in files if file.unread is not None},
     )
 

@@ -56,7 +56,6 @@ def _script_run(path: str, text: str, *lines: str) -> dict[str, str]:
 
 
 class ConditionalExpressionTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #190: `[[ ]]` continuation lines and `name=(…)` are read as commands
     def test_multi_line_conditionals_and_array_assignments_are_not_commands(self) -> None:
         """A `[[ … ]]` test that continues on the next line is one compound command, and `name=(…)` is an assignment:
         neither runs a program, so neither is an unknown variable program (Homebrew, Humanizer, scikit-learn)."""
@@ -75,7 +74,6 @@ class ConditionalExpressionTests(unittest.TestCase):
 
 
 class HeredocTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #191: heredoc bodies are tokenised as shell commands
     def test_heredoc_bodies_are_data(self) -> None:
         """The body of `cat <<EOF … EOF` (redirected, inside `$(…)`, or in a followed script) is skipped: its prose and
         apostrophes are no commands, and the command after it is read (llama.cpp, cmake_template, package-lint,
@@ -97,7 +95,6 @@ class HeredocTests(unittest.TestCase):
 
 
 class FollowedScriptTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #192: a binary launcher or autoconf configure is tokenised as shell
     def test_an_unreadable_followed_script_is_at_most_one_unknown_naming_the_file(self) -> None:
         """A followed script that is not readable shell (a zip after a shebang, as scalafmt's and metals' launcher; a
         generated configure, as opam's) gives one Unknown naming the file, or none, never its bytes as commands."""
@@ -112,7 +109,6 @@ class FollowedScriptTests(unittest.TestCase):
                 self.assertLessEqual(len(unknowns), 1, [unknown.subject for unknown in unknowns])
                 self.assertTrue(all(path in unknown.subject for unknown in unknowns), unknowns)
 
-    @unittest.expectedFailure  # upstream #193: `exec <program>` in a followed script is not a launcher
     def test_exec_runs_the_program_that_follows(self) -> None:
         """`exec bats tests` at the end of `test/run` runs bats, like `env` or `time` would (rbenv, bash-it): tests-run
         sees CI running the bats tests."""
@@ -123,7 +119,6 @@ class FollowedScriptTests(unittest.TestCase):
 
 
 class CustomShellTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #194: `shell: msys2 {0}` / `script -c "bash {0}"` hide the step's script
     def test_a_shell_wrapper_that_runs_bash_has_its_script_split(self) -> None:
         """A custom `shell:` whose `{0}` is run by bash (msys2's shell, `script -q -e -c "bash {0}"`) runs the step's
         commands, so the cmake build type (fmt, simdjson) and the kcov coverage run (bats-core) are read."""
@@ -165,7 +160,6 @@ class UnknownCommandTests(unittest.TestCase):
 
 
 class EnvironmentTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #196: workflow- and job-level `env:` are not substituted into commands
     def test_workflow_and_job_env_are_substituted_into_command_lines(self) -> None:
         """`meson setup ${ARGS} build .` with `ARGS: -D werror=true` at the workflow or job level treats warnings as
         errors (dbus-broker's CI_MESON_ARGS)."""
@@ -181,7 +175,6 @@ class EnvironmentTests(unittest.TestCase):
                 )
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #284: a conditional `>> $GITHUB_ENV` export drops the steps it guards
     def test_a_conditional_github_env_export_keeps_the_guarded_steps(self) -> None:
         """`echo "SKIP=true" >> $GITHUB_ENV` inside a shell `if` sets SKIP only sometimes, so a later step with
         `if: env.SKIP != 'true'` may run and is read (zigtools/zls's ReleaseSafe release build)."""

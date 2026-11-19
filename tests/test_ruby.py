@@ -6,7 +6,10 @@ import unittest
 
 from project_validator.core import Result, Status
 from project_validator.ecosystems.ruby import BUNDLE, BUNDLER_PACKAGES, RUBY
+from project_validator.ecosystems.ruby.tools import RUBY_TESTS
+from project_validator.facts import Facts
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, run_as, run_in_layout
+from tests.support import command as shell_command
 
 (
     CODE_FORMATTING,
@@ -52,7 +55,12 @@ def _ci(*steps: str) -> dict[str, str]:
 class RakeTests(unittest.TestCase):
     def test_the_rakefile_counts_when_ci_runs_rake(self) -> None:
         files = {**RAKEFILE, **SPEC, **_ci("bundle exec rake")}
-        self.assertEqual(run_as(self, TESTS_RUN, files, RUBY), Result.passed("tests found in 1 file(s)"))
+        self.assertEqual(
+            run_as(self, TESTS_RUN, files, RUBY),
+            Result.passed(
+                "spec/**/*_spec.rb or test/**/*_test.rb files: 1 file(s), run by rspec, rake test or rails test"
+            ),
+        )
         self.assertEqual(run_as(self, CODE_FORMATTING, files, RUBY), Result.passed("CI enforces the RuboCop style"))
         # Without rake in CI, the Rakefile runs nothing.
         self.assertEqual(
@@ -214,3 +222,42 @@ class DependencyTests(unittest.TestCase):
                 """
         }
         self.assertIn("2 Ruby version(s) (3.4, jruby-10.0)", run_as(self, PLATFORM_MATRIX, files, RUBY).message)
+
+
+class RubyTestRunnerClaimTests(unittest.TestCase):
+    def test_runners_and_test_files_are_test_runs(self) -> None:
+        for line in (
+            "rspec",
+            "m test/models/user_test.rb",
+            "turbo_tests",
+            "parallel_rspec spec",
+            "cucumber",
+            "rails test",
+            "ruby -Itest test/models/user_test.rb",
+            "ruby test/test_user.rb",
+        ):
+            with self.subTest(line=line):
+                run = RUBY_TESTS.claims(shell_command(line), Facts())
+                self.assertIsNotNone(run)
+                self.assertFalse(run and run.heuristic)
+
+    def test_rake_test_and_spec_are_heuristic_test_runs(self) -> None:
+        for line in ("rake test", "rake spec", "rake test TEST=test/x_test.rb"):
+            with self.subTest(line=line):
+                run = RUBY_TESTS.claims(shell_command(line), Facts())
+                self.assertTrue(run and run.heuristic)
+
+    def test_lookalikes_are_not_test_runs(self) -> None:
+        for line in (
+            "rails server",
+            "rails",
+            "ruby script.rb",
+            "ruby -Ilib lib/user.rb",
+            "node test/test_user.rb",
+            "python test/test_user.rb",
+            "rake build",
+            "rake",
+            "rspec-queue",
+        ):
+            with self.subTest(line=line):
+                self.assertIsNone(RUBY_TESTS.claims(shell_command(line), Facts()))

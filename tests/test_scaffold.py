@@ -10,6 +10,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from project_validator import scaffold as scaffold_module
 from project_validator.ecosystems import Ecosystem
 from project_validator.scaffold import main, scaffold
 from tests.support import uses
@@ -72,6 +73,42 @@ class ScaffoldTests(unittest.TestCase):
         for module, suffixes in (("Nim", [".nim"]), ("nim", ["nim"]), ("nim", [])):
             with self.subTest(module=module, suffixes=suffixes), self.assertRaises(ValueError):
                 scaffold(self.root, module, "Nim", suffixes)
+
+    def test_the_label_and_suffixes_reach_the_files(self) -> None:
+        scaffold(self.root, "nim", "Nim", [".nim", ".nims"])
+        for relative in (
+            "project_validator/ecosystems/nim/__init__.py",
+            "project_validator/ecosystems/nim/tools.py",
+            "project_validator/ecosystems/nim/practices.py",
+            "tests/layouts/nim.py",
+            "docs/ecosystems/nim.md",
+        ):
+            with self.subTest(file=relative):
+                self.assertIn("Nim", (self.root / relative).read_text(encoding="utf-8"))
+        self.assertIn("`.nim`, `.nims`", (self.root / "docs/ecosystems/nim.md").read_text(encoding="utf-8"))
+        self.assertIn(".nim", (self.root / "tests/layouts/nim.py").read_text(encoding="utf-8"))
+
+    def test_the_root_defaults_to_the_working_directory(self) -> None:
+        out = io.StringIO()
+        with contextlib.chdir(self.root), contextlib.redirect_stdout(out):
+            self.assertEqual(main(["nim", "Nim", ".nim"]), 0)
+        self.assertTrue((self.root / "project_validator/ecosystems/nim/__init__.py").is_file())
+        self.assertIn("next: the toolchain's patterns", out.getvalue())
+
+    def test_the_help_describes_the_command(self) -> None:
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), self.assertRaises(SystemExit):
+            main(["--help"])
+        text = " ".join(out.getvalue().split())
+        self.assertTrue(text.startswith("usage: python -m project_validator.scaffold"))
+        self.assertIn(" ".join(str(scaffold_module.__doc__).split("\n")[0].split()), text)
+        for words in (
+            "the profile's module name, e.g. haskell",
+            "the ecosystem's label, e.g. Haskell",
+            "its source suffixes, e.g. .hs .lhs",
+            "the project checkout (default: here)",
+        ):
+            self.assertIn(words, text)
 
     def test_the_command_line(self) -> None:
         out, err = io.StringIO(), io.StringIO()

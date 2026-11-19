@@ -25,7 +25,7 @@ def _no_targets(answer: FuzzAnswer) -> Result:
     return Result.failed(f"no fuzz targets found ({either(kinds)})" if kinds else "no fuzz targets found", hint)
 
 
-def judge_fuzzing(answer: FuzzAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_fuzzing(answer: FuzzAnswer, *, allow_unknown: bool) -> Result:
     """Fuzz targets must exist (as each language's fuzzers define them) and CI must run them; targets CI never runs,
     or only property-based tests, warn. An unknown answer is an error unless `allow_unknown`."""
     tools = answer.tools

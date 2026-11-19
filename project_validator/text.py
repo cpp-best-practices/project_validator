@@ -105,6 +105,9 @@ def check_json(text: str) -> None:
         if not _READ[kind](stack, match):
             break
         position, done = match.end(), not stack and kind != "colon" and kind != "comma"
-    if not done or text[position:].strip(" \t\n\r"):
+    if done:
+        rest = text[position:]
+        position += len(rest) - len(rest.lstrip(" \t\n\r"))
+    if not done or position < len(text):
         line = text.count("\n", 0, position) + 1
         raise JsonSyntaxError("malformed JSON", line, position - text.rfind("\n", 0, position))

@@ -38,11 +38,13 @@ KEYWORDS = frozenset(
     | {"continue"}
 )
 _OPENING, _CLOSING = "([{", ")]}"
+# Operators a line may end with, continuing the expression on the next line.
+_CONTINUING = frozenset({"and", "or"})
 
 
 def tokens(text: str) -> Iterator[Token]:
-    """The tokens of `text`; a newline inside brackets is blank, as Meson reads it."""
-    position, line, depth = 0, 1, 0
+    """The tokens of `text`; a newline inside brackets, or after `and` or `or`, is blank, as Meson reads it."""
+    position, line, depth, previous = 0, 1, 0, ""
     while position < len(text):
         match = _TOKEN.match(text, position)
         if match is None or match.lastgroup is None:
@@ -51,8 +53,9 @@ def tokens(text: str) -> Iterator[Token]:
         depth += (found in _OPENING) - (found in _CLOSING) if kind == "operator" else 0
         if kind == "name" and found in KEYWORDS:
             kind = "keyword"
-        if kind not in ("space", "comment") and not (kind == "newline" and depth > 0):
+        if kind not in ("space", "comment") and not (kind == "newline" and (depth > 0 or previous in _CONTINUING)):
             yield Token(kind, found, line)
+            previous = found if kind == "keyword" else ""
         line += found.count("\n")
         position = match.end()
     yield Token("newline", "\n", line)

@@ -39,7 +39,6 @@ def _make(makefile: str, *lines: str, **files: str) -> dict[str, str]:
 
 
 class MakeVariableTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #197: Make variables in recipes are kept literal, never expanded
     def test_assignments_and_command_line_overrides_are_expanded_into_recipes(self) -> None:
         """`GO ?= go` then `$(GO) test` runs `go test`; `make run FLAGS=-race` fills `$(FLAGS)` (gin, protovalidate,
         golang-migrate, swift-composable-architecture, dune)."""
@@ -59,7 +58,6 @@ class MakeVariableTests(unittest.TestCase):
             with self.subTest(assignment=name):
                 self.assertIn(expected, _expanded(files))
 
-    @unittest.expectedFailure  # upstream #197: a recipe whose program is an undefined variable is silently kept
     def test_a_program_that_is_an_unknown_variable_is_reported_unknown(self) -> None:
         """`$(BUF) breaking` with no value for BUF the reader can apply is an Unknown, not a command called `$(BUF)`
         (opentelemetry-proto, swiper's `$(EMACS)` through `EMACS_BATCH`)."""
@@ -69,14 +67,12 @@ class MakeVariableTests(unittest.TestCase):
 
 
 class MakefileReadingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #198: rule lines with a trailing comment are not rules
     def test_a_rule_with_a_trailing_comment_is_read(self) -> None:
         """`lint: deps ## Lint the spec` is a rule (the self-documenting Makefile idiom: digitalocean/openapi,
         jupyter/docker-stacks)."""
         files = _make("lint: deps ## Lint the OpenAPI spec\n\tspectral lint api.yaml\ndeps:\n", "make lint")
         self.assertEqual(_expanded(files), [("spectral", "lint", "api.yaml")])
 
-    @unittest.expectedFailure  # upstream #198: included makefiles are not followed, missing targets are silent
     def test_included_makefiles_are_followed_and_a_missing_target_is_unknown(self) -> None:
         """`include other.mk` brings its rules (cowboy's erlang.mk, koreader); a goal no rule defines is an Unknown."""
         included = _make("include other.mk\n", "make check", **{"other.mk": "check:\n\trebar3 dialyzer\n"})
@@ -85,7 +81,6 @@ class MakefileReadingTests(unittest.TestCase):
         with self.subTest(case="missing target"):
             self.assertTrue(any("dialyze" in subject for subject, _ in _unknowns(_make("all:\n", "make dialyze"))))
 
-    @unittest.expectedFailure  # upstream #198: pattern rules (`%:`, `lint-%:`) are not matched to goals
     def test_pattern_rules_match_the_goals_they_cover(self) -> None:
         """`make html` through sphinx-quickstart's `%:` rule runs `sphinx-build -M html` (python/devguide);
         `make lint-full` through `lint-%:` runs clippy (clap-rs/clap)."""
@@ -97,7 +92,6 @@ class MakefileReadingTests(unittest.TestCase):
             with self.subTest(rule=name):
                 self.assertTrue(any(argv[: len(prefix)] == prefix for argv in _expanded(files)), _expanded(files))
 
-    @unittest.expectedFailure  # upstream #198: make after an in-source `cmake .` has "no makefile where make runs"
     def test_make_after_an_in_source_cmake_configure_runs_cmake_targets(self) -> None:
         """After `cmake .`, `make coverage` runs the `coverage` custom target's command (uber/h3)."""
         files = {
@@ -119,7 +113,6 @@ def _tox_project(tox_ini: str, job: dict[str, object]) -> dict[str, str]:
 
 
 class PythonTaskRunnerTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #199: `tox -e env -- posargs` runs nothing: `--` is read as a subcommand
     def test_an_env_run_with_positional_arguments_runs_its_commands(self) -> None:
         """`tox -e winpy -- -n 2 test` runs `[testenv]`'s pytest, the posargs after `--` notwithstanding (sqlfluff's
         Windows job); without the `--` part the same env is expanded."""
@@ -129,7 +122,6 @@ class PythonTaskRunnerTests(unittest.TestCase):
                 found = _expanded(_tox_project(tox_ini, {"steps": [{"run": line}]}))
                 self.assertTrue(any(argv[:1] == ("pytest",) for argv in found), found)
 
-    @unittest.expectedFailure  # upstream #199: TOX_ENV in the job's environment does not select the env
     def test_tox_env_selects_the_environment_a_bare_tox_runs(self) -> None:
         """`tox run` with `TOX_ENV: py311` runs only py311's commands, not `docs` (pallets/flask)."""
         tox_ini = (
@@ -141,7 +133,6 @@ class PythonTaskRunnerTests(unittest.TestCase):
         self.assertIn(("pytest",), found)
         self.assertNotIn(("sphinx-build", "-W", "docs"), found)
 
-    @unittest.expectedFailure  # upstream #199: `hatch run env:script` leaves `env:script` as the program
     def test_hatch_run_resolves_the_environment_script(self) -> None:
         """`hatch run lint:check` runs the script of `[tool.hatch.envs.lint.scripts]` (mkdocs)."""
         files = {"pyproject.toml": HATCH_PYPROJECT, **github_job(CI, "hatch run lint:check")}
@@ -153,7 +144,6 @@ PHP_SCRIPTS = {"composer.json": json.dumps({"scripts": {"phpstan": "@php vendor/
 
 
 class PhpLauncherTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #200: `php <script>` is not a launcher, so the tool run is missed
     def test_php_runs_the_script_that_follows(self) -> None:
         """`php "vendor/bin/phpunit"` runs PHPUnit and `@php vendor/bin/phpstan analyse` runs PHPStan
         (PHP_CodeSniffer, monolog, composer); `simple-phpunit` is PHPUnit too."""
@@ -172,7 +162,6 @@ class PhpLauncherTests(unittest.TestCase):
 
 
 class DenoTaskTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #201: `deno task --cwd dir task` takes `--cwd` as the task name
     def test_options_before_the_task_name_are_skipped(self) -> None:
         """`deno task --cwd sub --config deno.json build` runs `build` of `sub/deno.json` (denoland/std)."""
         files = {
@@ -194,7 +183,6 @@ CONVENTION_PLUGIN = (
 
 
 class JvmBuildSettingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #202: a bare `mvn` runs the POM's <defaultGoal>, which is not read
     def test_a_bare_mvn_runs_the_default_goal(self) -> None:
         """`mvn -B` with `<defaultGoal>verify checkstyle:check</defaultGoal>` runs tests and Checkstyle
         (apache/commons-lang)."""

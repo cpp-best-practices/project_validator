@@ -908,6 +908,7 @@
               ".golangci.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1117,7 +1118,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "Test functions in *_test.go files: 1 file(s), run by go test",
       "status": "PASS"
     },
     "top-level-guard": {

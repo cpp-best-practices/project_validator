@@ -4,8 +4,9 @@ Only what the validator needs is understood: line continuations, comments, quoti
 lines), the operators that separate commands (`;`, `&&`, `||`, `|`, `&`), and command substitution (`$(…)` and
 backquotes), whose commands run before the command they are part of. PowerShell scripts (`powershell=True`) are split
 the same way, with PowerShell's escape character, the backquote, in place of the backslash (which is text there).
-Leading `NAME=value` assignments are the command's environment. Compound commands (`if`, `for`, `case`) and
-here-documents are not interpreted; their lines are split like any other.
+Leading `NAME=value` assignments (and arrays, `NAME=(a b)`) are the command's environment; a conditional expression,
+`[[ … ]]`, runs nothing, over as many lines as it takes, and the body of a here-document is data, not commands.
+Compound commands (`if`, `for`, `case`) are not interpreted; their lines are split like any other.
 """
 
 from __future__ import annotations
@@ -94,24 +95,50 @@ def _without_redirections(words: list[str]) -> list[str]:
     return kept
 
 
+def _without_compound_headers(words: list[str]) -> list[str]:
+    """`words` without what only opens a compound command: a `for`/`select` header (it assigns, it runs nothing), a
+    `case WORD in` header, and a case clause's pattern (`a)`, when commands follow it; a `)` with none after it ends a
+    subshell)."""
+    if words[:1] in (["for"], ["select"]):
+        return []
+    if words[:1] == ["case"]:
+        words = words[words.index("in") + 1 :] if "in" in words else []
+    if ")" in words and "(" not in words[: (close := words.index(")"))] and close + 1 < len(words):
+        words = words[close + 1 :]
+    return words
+
+
 def _command(words: list[str], line: str) -> ShellCommand | None:
     words = _without_redirections(words)
     while words and words[0] in _KEYWORDS:
         words = words[1:]
+    words = _without_compound_headers(words)
     if words and words[0] in _CLOSING:
         return None
     env = []
     while words and _ASSIGNMENT.match(words[0]):
         name, value = words[0].split("=", 1)
-        env.append((name, value.translate(_RESTORED)))
         words = words[1:]
+        if not value and words[:1] == ["("] and ")" in words:
+            # An array assignment, `name=(a b)`: its elements are its value, not a command.
+            close = words.index(")")
+            value, words = " ".join(words[1:close]), words[close + 1 :]
+        env.append((name, value.translate(_RESTORED)))
     argv = tuple(word.translate(_RESTORED) for word in words if word not in {"(", ")"})
     return ShellCommand(argv=argv, env=tuple(env), line=line) if argv else None
 
 
 def _commands_of(words: list[str], line: str) -> Iterator[ShellCommand]:
     current: list[str] = []
+    testing = False
     for word in [*words, ";"]:
+        # A conditional expression, `[[ … ]]`, runs nothing: its words (and its `||`, `&&`) are not commands.
+        if testing:
+            testing = word != "]]"
+            continue
+        if word == "[[" and all(kept in _KEYWORDS for kept in current):
+            testing, current = True, []
+            continue
         if word in _SEPARATORS:
             if (command := _command(current, line)) is not None:
                 yield command
@@ -184,7 +211,7 @@ def _split_script(
     if opaque is not None:
         script = opaque.sub(lambda match: hidden.hide(match[0]), script)
     escape = "`" if powershell else "\\"
-    script = _substitutions(script, hidden.hide, escape)
+    script = _substitutions(_without_heredocs(script), hidden.hide, escape)
     continuation = _POWERSHELL_CONTINUATION if powershell else _CONTINUATION
     for line, words in _lines(continuation.sub(" ", script).splitlines(), escape):
         for commands in hidden.substituted(line):
@@ -195,13 +222,36 @@ def _split_script(
         yield from map(hidden.restored, _commands_of(words, line))
 
 
-def _substitutions(script: str, hide: Callable[[str, str], str], escape: str = "\\") -> str:
+# A here-document's operator and its delimiter word (`<<EOF`, `<<-'EOF'`, `<< "END"`); not a here-string (`<<<`).
+_HEREDOC = re.compile(r"(?<!<)<<(?!<)-?\s*(['\"]?)([A-Za-z_][\w.-]*)\1")
+
+
+def _without_heredocs(script: str) -> str:
+    """`script` without the bodies of its here-documents: the lines after `<<WORD`, up to the line that is `WORD`,
+    are data the command reads, not commands."""
+    kept: list[str] = []
+    pending: list[str] = []
+    for line in script.splitlines():
+        if pending:
+            if line.strip() == pending[0]:
+                pending.pop(0)
+            continue
+        kept.append(line)
+        pending = [match[2] for match in _HEREDOC.finditer(line.split(" #", 1)[0])]
+    return "\n".join(kept)
+
+
+def _substitutions(script: str, hide: Callable[[str, str | None], str], escape: str = "\\") -> str:
     """`script` with each command substitution outside single quotes (`$(…)`, and `` `…` `` where the backquote is no
     escape; not arithmetic `$((…))`) replaced by what `hide` returns for its text and its commands."""
     out: list[str] = []
     index, quote = 0, ""
     while index < len(script):
         character = script[index]
+        if quote != "'" and (arithmetic := _arithmetic_end(script, index)) is not None:
+            out.append(hide(script[index:arithmetic], None))  # a value: kept whole, it runs nothing
+            index = arithmetic
+            continue
         end = None if quote == "'" else _substitution_end(script, index, backquotes=escape != "`")
         if end is not None:
             text = script[index:end]
@@ -219,6 +269,21 @@ def _substitutions(script: str, hide: Callable[[str, str], str], escape: str = "
     return "".join(out)
 
 
+def _closing(script: str, start: int) -> int | None:
+    """Just after the parenthesis that closes the one at `start + 1` (`$(` or `$((`), or None when none does."""
+    depth = 0
+    for index in range(start + 1, len(script)):
+        depth += {"(": 1, ")": -1}.get(script[index], 0)
+        if depth == 0:
+            return index + 1
+    return None
+
+
+def _arithmetic_end(script: str, start: int) -> int | None:
+    """Where the arithmetic expansion `$((…))` starting at `start` ends (just after it); None if none starts there."""
+    return _closing(script, start) if script.startswith("$((", start) else None
+
+
 def _substitution_end(script: str, start: int, *, backquotes: bool = True) -> int | None:
     """Where the command substitution starting at `start` ends (just after it), or None if none starts there."""
     if backquotes and script.startswith("`", start):
@@ -226,12 +291,7 @@ def _substitution_end(script: str, start: int, *, backquotes: bool = True) -> in
         return None if end < 0 else end + 1
     if not script.startswith("$(", start) or script.startswith("$((", start):
         return None
-    depth = 0
-    for index in range(start + 1, len(script)):
-        depth += {"(": 1, ")": -1}.get(script[index], 0)
-        if depth == 0:
-            return index + 1
-    return None
+    return _closing(script, start)
 
 
 def _lines(raw: list[str], escape: str = "\\") -> Iterator[tuple[str, list[str] | ValueError]]:
@@ -243,11 +303,22 @@ def _lines(raw: list[str], escape: str = "\\") -> Iterator[tuple[str, list[str] 
             continue
         while True:
             try:
-                yield line, _words(line, escape)
-                break
+                words = _words(line, escape)
             except ValueError as error:
                 following = next(lines, None)
                 if following is None or "quotation" not in str(error):
                     yield line, error
                     break
                 line = f"{line}\n{following}"
+                continue
+            # A `[[ … ]]` test may go on over several lines (`a ||` at the end of one); it is one command.
+            following = next(lines, None) if _open_test(words) else None
+            if following is None:
+                yield line, words
+                break
+            line = f"{line} {following.strip()}"
+
+
+def _open_test(words: list[str]) -> bool:
+    """Whether the words open more `[[` tests than they close."""
+    return words.count("[[") > words.count("]]")

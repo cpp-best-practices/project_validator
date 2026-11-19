@@ -134,9 +134,22 @@ def judged[A: UnitAnswer](
         result = judge(answer, allow_unknown=context.options.allow_unknown)
         results[(answer.language, answer.unit)] = _advisory(result, answer.language, named) if named else result
     none = "no unit of the project is written in these languages"
-    folded = combined(results, label=lambda place, kept: _label(place, kept, auxiliary), none=none)
+    merged, named_merged = _merged(results, auxiliary)
+    folded = combined(merged, label=lambda place, kept: _label(place, kept, named_merged), none=none)
     units = dict.fromkeys(unit for _, unit in results)
     return replace(folded, places=tuple(_placed(unit, results, found, auxiliary) for unit in units))
+
+
+def _merged(results: Mapping[_Place, Result], auxiliary: _Auxiliary) -> tuple[dict[_Place, Result], _Auxiliary]:
+    """The results with the languages of one unit that have the same result (and the same auxiliary code) as one
+    place (`JavaScript and TypeScript`), so that what they share is said once; and what named each place's code."""
+    groups: dict[tuple[str, Result, tuple[str, ...]], list[str]] = {}
+    for (language, unit), result in results.items():
+        groups.setdefault((unit, result, auxiliary.get((language, unit), ())), []).append(language)
+    places = {(" and ".join(languages), unit): (result, named) for (unit, result, named), languages in groups.items()}
+    return {place: result for place, (result, _) in places.items()}, {
+        place: named for place, (_, named) in places.items() if named
+    }
 
 
 def _tools_ran(answer: object) -> tuple[str, ...]:

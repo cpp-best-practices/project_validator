@@ -74,9 +74,7 @@ class ShellTests(unittest.TestCase):
 
     def test_compound_command_keywords_are_not_commands(self) -> None:
         script = "if [ -f x ]; then ctest; fi\nfor f in a b; do echo $f; done\n"
-        self.assertEqual(
-            self._split(script), [("[", "-f", "x", "]"), ("ctest",), ("for", "f", "in", "a", "b"), ("echo", "$f")]
-        )
+        self.assertEqual(self._split(script), [("[", "-f", "x", "]"), ("ctest",), ("echo", "$f")])
 
     def test_opaque_text_keeps_its_quotes(self) -> None:
         [found] = split_script("""echo "a ${{ x == 'y' }}" '${{ z }}'""", EXPRESSION)
@@ -84,12 +82,16 @@ class ShellTests(unittest.TestCase):
         [unsplittable] = split_script("echo ${{ 'a' }} 'open", EXPRESSION)
         self.assertEqual(unsplittable, Unsplittable(line="echo ${{ 'a' }} 'open", reason="No closing quotation"))
 
+    def test_arithmetic_expansion_is_a_value_not_a_command(self) -> None:
+        """`total=$((total + price))` assigns; `echo $(( 1 + 2 ))` runs echo with one argument."""
+        self.assertEqual(self._split("total=$((total + price))\necho $(( 1 + 2 ))\n"), [("echo", "$(( 1 + 2 ))")])
+
     def test_command_substitutions_run_before_their_command(self) -> None:
         for script, expected in (
             ('test -z "$(gofmt -l .)"', [("gofmt", "-l", "."), ("test", "-z", "$(gofmt -l .)")]),
             ("echo `git rev-parse HEAD` x", [("git", "rev-parse", "HEAD"), ("echo", "`git rev-parse HEAD`", "x")]),
             ("cd $(dirname $(pwd)) && ls", [("pwd",), ("dirname", "$(pwd)"), ("cd", "$(dirname $(pwd))"), ("ls",)]),
-            ("echo $((1 + 2)) '$(not run)'", [("echo", "$", "((", "1", "+", "2", "))", "$(not run)")]),
+            ("echo $((1 + 2)) '$(not run)'", [("echo", "$((1 + 2))", "$(not run)")]),
             ('echo "\\$(not run)" \\`x', [("echo", "\\$(not run)", "`x")]),
             ("echo $(unclosed", [("echo", "$", "unclosed")]),
             ("echo `unclosed", [("echo", "`unclosed")]),

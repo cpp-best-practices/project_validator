@@ -929,7 +929,26 @@
       {
         "auxiliary": {},
         "language": "Rust",
-        "units": []
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "-D warnings": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "Rust",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ],
     "wellformed": [
@@ -944,6 +963,9 @@
               "Cargo.toml"
             ],
             "problems": [],
+            "test_data": [
+              "fuzz/Cargo.toml"
+            ],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -966,6 +988,7 @@
               ".github/workflows/function-limits.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1181,7 +1204,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "#[test] functions: 1 file(s), run by cargo test",
       "status": "PASS"
     },
     "top-level-guard": {
@@ -1201,8 +1224,8 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "not applicable to Rust",
-      "status": "SKIP"
+      "message": "warnings are treated as errors with -D warnings",
+      "status": "PASS"
     }
   }
 }

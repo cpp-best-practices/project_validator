@@ -15,11 +15,13 @@ from __future__ import annotations
 
 import re
 
+from project_validator.core import Context
 from project_validator.ecosystems.model import Ecosystem, subcommands, toolchain_patterns
+from project_validator.facts import Command, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
-from project_validator.facts.expansion import Action
+from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.settings import file_reader
@@ -37,6 +39,17 @@ _CLI = ("terraform", "tofu")
 def _commands(*words: str) -> tuple[tuple[str, ...], ...]:
     """`terraform <words>` and `tofu <words>`."""
     return tuple((cli, *words) for cli in _CLI)
+
+
+# `terraform -chdir=infra validate`: the global option before the subcommand changes the directory it runs in.
+def _chdir(command: Command, _context: Context) -> list[Expansion] | None:
+    argv = resolved(command)
+    if len(argv) < 3 or argv[0] not in _CLI or not argv[1].startswith("-chdir="):
+        return None
+    return [Launched(argv=(argv[0], *argv[2:]))]
+
+
+CHDIR = CommandExpander(name="terraform -chdir", expand=_chdir)
 
 
 # --- formatting
