@@ -169,6 +169,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -177,6 +178,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -193,6 +195,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -209,6 +212,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -217,6 +221,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -230,6 +235,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -270,6 +276,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -278,6 +285,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "file_glob": "openapi.yaml"
@@ -288,6 +296,7 @@
       "uses": "stoplightio/spectral-action@6416fd018ae38e60136775066eb3e98172143141"
     },
     {
+      "advisory": "",
       "argv": [
         "spectral",
         "lint",
@@ -303,6 +312,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -320,6 +330,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "@redocly/cli",
         "lint",
@@ -351,6 +362,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "fetch-depth": "0"
@@ -361,6 +373,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "base": "origin/main:openapi.yaml",
@@ -373,6 +386,7 @@
       "uses": "oasdiff/oasdiff-action/breaking@8a211b41745fcecdfa4a86531ffbf08934fb14f6"
     },
     {
+      "advisory": "",
       "argv": [
         "oasdiff",
         "breaking",
@@ -418,6 +432,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -426,6 +441,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -444,6 +460,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -548,6 +565,7 @@
       "origin": "LICENSE"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -575,6 +593,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -603,6 +622,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:breaking",
       "kind": "ToolRun",

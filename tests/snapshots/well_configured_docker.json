@@ -13,6 +13,7 @@
         "language": "Dockerfile",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -78,6 +79,7 @@
         "language": "Dockerfile",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -139,6 +141,7 @@
         "language": "Dockerfile",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "hadolint": [

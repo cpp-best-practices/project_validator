@@ -15,6 +15,7 @@
         "language": "Protobuf",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -60,6 +61,7 @@
         "language": "Protobuf",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -115,6 +117,7 @@
         "language": "Protobuf",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -158,6 +161,7 @@
         "language": "Protobuf",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "buf lint": [

@@ -29,6 +29,7 @@
         "language": "Kubernetes",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -78,6 +79,7 @@
         "language": "Kubernetes",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -154,6 +156,7 @@
         "language": "Kubernetes",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "kube-linter": [
@@ -254,6 +257,7 @@
         "language": "Kubernetes",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "helm test": [

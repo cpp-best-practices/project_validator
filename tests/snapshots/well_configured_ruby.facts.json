@@ -221,6 +221,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -229,6 +230,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -245,6 +247,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -261,6 +264,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -269,6 +273,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -282,6 +287,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -325,6 +331,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -333,6 +340,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "bundler-cache": "true",
@@ -344,6 +352,7 @@
       "uses": "ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651"
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -359,6 +368,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "rake"
       ],
@@ -374,6 +384,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -390,6 +401,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "steep",
         "check"
@@ -406,6 +418,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -423,6 +436,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bundle-audit",
         "check",
@@ -440,6 +454,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -458,6 +473,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mutant",
         "run",
@@ -493,6 +509,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -501,6 +518,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "bundler-cache": "true",
@@ -512,6 +530,7 @@
       "uses": "ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651"
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -527,6 +546,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "rake"
       ],
@@ -542,6 +562,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -558,6 +579,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "steep",
         "check"
@@ -574,6 +596,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -591,6 +614,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bundle-audit",
         "check",
@@ -608,6 +632,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -626,6 +651,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mutant",
         "run",
@@ -661,6 +687,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -669,6 +696,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "bundler-cache": "true",
@@ -680,6 +708,7 @@
       "uses": "ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651"
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -695,6 +724,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "rake"
       ],
@@ -710,6 +740,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -726,6 +757,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "steep",
         "check"
@@ -742,6 +774,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -759,6 +792,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bundle-audit",
         "check",
@@ -776,6 +810,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -794,6 +829,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mutant",
         "run",
@@ -829,6 +865,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -837,6 +874,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "bundler-cache": "true",
@@ -848,6 +886,7 @@
       "uses": "ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651"
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -863,6 +902,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "rake"
       ],
@@ -878,6 +918,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -894,6 +935,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "steep",
         "check"
@@ -910,6 +952,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -927,6 +970,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bundle-audit",
         "check",
@@ -944,6 +988,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -962,6 +1007,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mutant",
         "run",
@@ -997,6 +1043,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
@@ -1005,6 +1052,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "bundler-cache": "true",
@@ -1016,6 +1064,7 @@
       "uses": "ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651"
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -1031,6 +1080,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "rake"
       ],
@@ -1046,6 +1096,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -1062,6 +1113,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "steep",
         "check"
@@ -1078,6 +1130,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -1095,6 +1148,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bundle-audit",
         "check",
@@ -1112,6 +1166,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -1130,6 +1185,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mutant",
         "run",
@@ -1165,6 +1221,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
@@ -1173,6 +1230,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "bundler-cache": "true",
@@ -1184,6 +1242,7 @@
       "uses": "ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651"
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -1199,6 +1258,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "rake"
       ],
@@ -1214,6 +1274,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -1230,6 +1291,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "steep",
         "check"
@@ -1246,6 +1308,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -1263,6 +1326,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bundle-audit",
         "check",
@@ -1280,6 +1344,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bundle",
         "exec",
@@ -1298,6 +1363,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mutant",
         "run",
@@ -1340,6 +1406,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1348,6 +1415,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -1366,6 +1434,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -1403,6 +1472,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
@@ -1411,6 +1481,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -1428,6 +1499,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1445,6 +1517,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -1850,6 +1923,7 @@
       "reader": "Sorbet"
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1877,6 +1951,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1901,6 +1976,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1928,6 +2004,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1952,6 +2029,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1977,6 +2055,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2002,6 +2081,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2024,6 +2104,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2047,6 +2128,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2074,6 +2156,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2098,6 +2181,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2125,6 +2209,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2149,6 +2234,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2174,6 +2260,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2199,6 +2286,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2221,6 +2309,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2244,6 +2333,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2271,6 +2361,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2295,6 +2386,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2322,6 +2414,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2346,6 +2439,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2371,6 +2465,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2396,6 +2491,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2418,6 +2514,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2441,6 +2538,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2468,6 +2566,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2492,6 +2591,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2519,6 +2619,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2543,6 +2644,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2568,6 +2670,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2593,6 +2696,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2615,6 +2719,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2638,6 +2743,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2665,6 +2771,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2689,6 +2796,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2716,6 +2824,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2740,6 +2849,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2765,6 +2875,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2790,6 +2901,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2812,6 +2924,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2835,6 +2948,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2862,6 +2976,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2886,6 +3001,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2913,6 +3029,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2937,6 +3054,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2962,6 +3080,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2987,6 +3106,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3009,6 +3129,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3032,6 +3153,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ToolRun",

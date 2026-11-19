@@ -189,6 +189,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -197,6 +198,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -213,6 +215,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -229,6 +232,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -237,6 +241,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -250,6 +255,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -293,6 +299,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -301,6 +308,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "python-version": "3.13"
@@ -311,6 +319,7 @@
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -330,6 +339,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -349,6 +359,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bandit",
         "-c",
@@ -366,6 +377,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip-audit",
         "-r",
@@ -381,6 +393,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "format",
@@ -396,6 +409,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "check"
@@ -410,6 +424,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mypy",
         "src"
@@ -424,6 +439,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -441,6 +457,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-W",
@@ -461,6 +478,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "coverage",
         "run",
@@ -479,6 +497,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pytest"
       ],
@@ -495,6 +514,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "mutmut",
         "run"
@@ -509,6 +529,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "tests/fuzz/fuzz_app.py",
@@ -541,6 +562,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -549,6 +571,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "python-version": "3.14"
@@ -559,6 +582,7 @@
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -578,6 +602,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -597,6 +622,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bandit",
         "-c",
@@ -614,6 +640,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip-audit",
         "-r",
@@ -629,6 +656,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "format",
@@ -644,6 +672,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "check"
@@ -658,6 +687,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mypy",
         "src"
@@ -672,6 +702,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -689,6 +720,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-W",
@@ -709,6 +741,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "coverage",
         "run",
@@ -727,6 +760,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pytest"
       ],
@@ -743,6 +777,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "mutmut",
         "run"
@@ -757,6 +792,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "tests/fuzz/fuzz_app.py",
@@ -789,6 +825,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -797,6 +834,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "python-version": "3.13"
@@ -807,6 +845,7 @@
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -826,6 +865,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -845,6 +885,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bandit",
         "-c",
@@ -862,6 +903,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip-audit",
         "-r",
@@ -877,6 +919,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "format",
@@ -892,6 +935,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "check"
@@ -906,6 +950,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mypy",
         "src"
@@ -920,6 +965,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -937,6 +983,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-W",
@@ -957,6 +1004,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "coverage",
         "run",
@@ -975,6 +1023,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pytest"
       ],
@@ -991,6 +1040,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "mutmut",
         "run"
@@ -1005,6 +1055,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "tests/fuzz/fuzz_app.py",
@@ -1037,6 +1088,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -1045,6 +1097,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "python-version": "3.14"
@@ -1055,6 +1108,7 @@
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -1074,6 +1128,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1093,6 +1148,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bandit",
         "-c",
@@ -1110,6 +1166,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip-audit",
         "-r",
@@ -1125,6 +1182,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "format",
@@ -1140,6 +1198,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "check"
@@ -1154,6 +1213,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mypy",
         "src"
@@ -1168,6 +1228,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -1185,6 +1246,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-W",
@@ -1205,6 +1267,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "coverage",
         "run",
@@ -1223,6 +1286,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pytest"
       ],
@@ -1239,6 +1303,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "mutmut",
         "run"
@@ -1253,6 +1318,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "tests/fuzz/fuzz_app.py",
@@ -1285,6 +1351,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
@@ -1293,6 +1360,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "python-version": "3.13"
@@ -1303,6 +1371,7 @@
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -1322,6 +1391,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1341,6 +1411,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bandit",
         "-c",
@@ -1358,6 +1429,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip-audit",
         "-r",
@@ -1373,6 +1445,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "format",
@@ -1388,6 +1461,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "check"
@@ -1402,6 +1476,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mypy",
         "src"
@@ -1416,6 +1491,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -1433,6 +1509,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-W",
@@ -1453,6 +1530,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "coverage",
         "run",
@@ -1471,6 +1549,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pytest"
       ],
@@ -1487,6 +1566,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "mutmut",
         "run"
@@ -1501,6 +1581,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "tests/fuzz/fuzz_app.py",
@@ -1533,6 +1614,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
@@ -1541,6 +1623,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "python-version": "3.14"
@@ -1551,6 +1634,7 @@
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -1570,6 +1654,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1589,6 +1674,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "bandit",
         "-c",
@@ -1606,6 +1692,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip-audit",
         "-r",
@@ -1621,6 +1708,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "format",
@@ -1636,6 +1724,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "ruff",
         "check"
@@ -1650,6 +1739,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mypy",
         "src"
@@ -1664,6 +1754,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -1681,6 +1772,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-W",
@@ -1701,6 +1793,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "coverage",
         "run",
@@ -1719,6 +1812,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pytest"
       ],
@@ -1735,6 +1829,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "mutmut",
         "run"
@@ -1749,6 +1844,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "tests/fuzz/fuzz_app.py",
@@ -1788,6 +1884,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/codeql.yml:analyze",
@@ -1796,6 +1893,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "languages": "python"
@@ -1806,6 +1904,7 @@
       "uses": "github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/codeql.yml:analyze",
@@ -1814,6 +1913,7 @@
       "uses": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
+      "advisory": "",
       "argv": [
         "codeql",
         "database",
@@ -1858,6 +1958,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1866,6 +1967,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -1884,6 +1986,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -2225,6 +2328,7 @@
       "origin": "uv.lock"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2245,6 +2349,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2265,6 +2370,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2285,6 +2391,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2305,6 +2412,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2328,6 +2436,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2349,6 +2458,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2374,6 +2484,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2397,6 +2508,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2417,6 +2529,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2437,6 +2550,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2457,6 +2571,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2477,6 +2592,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2497,6 +2613,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2517,6 +2634,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2540,6 +2658,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2561,6 +2680,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2586,6 +2706,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2609,6 +2730,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2629,6 +2751,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2649,6 +2772,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2669,6 +2793,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2689,6 +2814,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2709,6 +2835,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2729,6 +2856,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2752,6 +2880,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2773,6 +2902,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2798,6 +2928,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2821,6 +2952,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2841,6 +2973,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2861,6 +2994,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2881,6 +3015,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2901,6 +3036,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2921,6 +3057,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2941,6 +3078,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2964,6 +3102,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2985,6 +3124,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -3010,6 +3150,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -3033,6 +3174,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -3053,6 +3195,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -3073,6 +3216,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3093,6 +3237,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3113,6 +3258,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3133,6 +3279,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3153,6 +3300,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3176,6 +3324,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3197,6 +3346,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3222,6 +3372,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3245,6 +3396,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3265,6 +3417,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3285,6 +3438,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3305,6 +3459,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3325,6 +3480,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3345,6 +3501,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3365,6 +3522,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3388,6 +3546,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3409,6 +3568,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3434,6 +3594,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3457,6 +3618,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3477,6 +3639,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3497,6 +3660,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "ToolRun",

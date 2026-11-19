@@ -308,6 +308,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -349,6 +350,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "clang-format": [
@@ -388,6 +390,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "clang-tidy's readability-function-size": [
@@ -443,6 +446,7 @@
             ],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "no",
               "defined": {
                 "AFL++": [
@@ -582,6 +586,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -601,6 +606,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -620,6 +626,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -789,6 +796,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -809,6 +817,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -828,6 +837,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -864,6 +874,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -912,6 +923,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "clang-tidy": [
@@ -963,6 +975,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "ctest": [
@@ -1039,6 +1052,7 @@
         "language": "C++",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

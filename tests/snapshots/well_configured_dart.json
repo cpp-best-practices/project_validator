@@ -196,6 +196,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -261,6 +262,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -296,6 +298,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -336,6 +339,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -383,6 +387,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -402,6 +407,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -421,6 +427,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -501,6 +508,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -521,6 +529,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -540,6 +549,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -576,6 +586,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -610,6 +621,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "dart analyze": [
@@ -662,6 +674,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "dart test": [
@@ -707,6 +720,7 @@
         "language": "Dart",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

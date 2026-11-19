@@ -162,6 +162,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -198,6 +199,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -232,6 +234,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -256,6 +259,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -303,6 +307,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -322,6 +327,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -341,6 +347,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -431,6 +438,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -451,6 +459,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -470,6 +479,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -506,6 +516,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -525,6 +536,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -544,6 +556,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "raco test": [
@@ -589,6 +602,7 @@
         "language": "Racket",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

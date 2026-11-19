@@ -188,6 +188,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -224,6 +225,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -275,6 +277,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -299,6 +302,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -346,6 +350,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -365,6 +370,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -384,6 +390,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -449,6 +456,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -469,6 +477,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -488,6 +497,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -524,6 +534,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -543,6 +554,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -590,6 +602,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "nix flake check": [
@@ -635,6 +648,7 @@
         "language": "Nix",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

@@ -198,6 +198,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -291,6 +292,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -342,6 +344,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -389,6 +392,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -436,6 +440,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -455,6 +460,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -474,6 +480,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "Infection": [
@@ -575,6 +582,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -595,6 +603,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -614,6 +623,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -650,6 +660,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -705,6 +716,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "PHPStan": [
@@ -772,6 +784,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "phpunit, pest or composer test": [
@@ -817,6 +830,7 @@
         "language": "PHP",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "PHPStan": [

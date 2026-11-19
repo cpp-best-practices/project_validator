@@ -211,6 +211,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -269,6 +270,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -319,6 +321,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -343,6 +346,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -390,6 +394,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -409,6 +414,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -428,6 +434,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -508,6 +515,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -528,6 +536,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -547,6 +556,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -583,6 +593,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -602,6 +613,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -650,6 +662,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "cabal test": [
@@ -695,6 +708,7 @@
         "language": "Haskell",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

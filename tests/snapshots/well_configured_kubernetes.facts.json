@@ -241,6 +241,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -249,6 +250,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -265,6 +267,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -281,6 +284,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -289,6 +293,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -302,6 +307,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -342,6 +348,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -350,6 +357,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -358,6 +366,7 @@
       "uses": "azure/setup-helm@2f5e7bc67f1f9972ab16657bb795f36d8f04de0e"
     },
     {
+      "advisory": "",
       "argv": [
         "helm",
         "lint",
@@ -373,6 +382,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "helm",
         "template",
@@ -388,6 +398,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "kubeconform",
         "-strict",
@@ -403,6 +414,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "helm",
         "plugin",
@@ -419,6 +431,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "helm",
         "unittest",
@@ -434,6 +447,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "config": ".kube-linter.yaml",
@@ -445,6 +459,7 @@
       "uses": "stackrox/kube-linter-action@87802a2f4e01abebb3ee3c67a3002fea71f6eae5"
     },
     {
+      "advisory": "",
       "argv": [
         "kube-linter",
         "lint",
@@ -476,6 +491,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "fetch-depth": "0"
@@ -486,6 +502,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:install",
@@ -494,6 +511,7 @@
       "uses": "helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:install",
@@ -502,6 +520,7 @@
       "uses": "helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376"
     },
     {
+      "advisory": "",
       "argv": [
         "ct",
         "install",
@@ -559,6 +578,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -567,6 +587,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -585,6 +606,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -689,6 +711,7 @@
       "origin": "LICENSE"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -709,6 +732,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -729,6 +753,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -749,6 +774,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -772,6 +798,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:install",
       "kind": "ToolRun",

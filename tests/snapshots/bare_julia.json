@@ -143,6 +143,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -184,6 +185,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -220,6 +222,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -244,6 +247,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -287,6 +291,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -306,6 +311,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -325,6 +331,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -374,6 +381,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -394,6 +402,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -413,6 +422,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -447,6 +457,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -474,6 +485,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -493,6 +505,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -527,6 +540,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {

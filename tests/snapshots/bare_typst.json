@@ -122,6 +122,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -158,6 +159,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -194,6 +196,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -218,6 +221,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -261,6 +265,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -280,6 +285,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -299,6 +305,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -339,6 +346,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -359,6 +367,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -378,6 +387,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -412,6 +422,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -431,6 +442,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -450,6 +462,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {
               "typst compile": [
@@ -498,6 +511,7 @@
         "language": "Typst",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

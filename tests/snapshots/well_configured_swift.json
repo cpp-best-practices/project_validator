@@ -208,6 +208,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -287,6 +288,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -330,6 +332,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -384,6 +387,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "yes",
               "defined": {
                 "libFuzzer": [
@@ -468,6 +472,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -487,6 +492,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -506,6 +512,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "Muter": [
@@ -659,6 +666,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -679,6 +687,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -698,6 +707,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -734,6 +744,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -782,6 +793,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "SwiftLint": [
@@ -820,6 +832,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "swift test or xcodebuild test": [
@@ -865,6 +878,7 @@
         "language": "Swift",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

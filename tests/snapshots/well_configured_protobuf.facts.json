@@ -151,6 +151,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -159,6 +160,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -175,6 +177,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -191,6 +194,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -199,6 +203,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -212,6 +217,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -252,6 +258,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:buf",
@@ -260,6 +267,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "push": "false"
@@ -270,6 +278,7 @@
       "uses": "bufbuild/buf-action@37ac33d8960807670a6e9719080e885197b09cc6"
     },
     {
+      "advisory": "",
       "argv": [
         "buf",
         "build"
@@ -284,6 +293,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "buf",
         "lint"
@@ -298,6 +308,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "buf",
         "format",
@@ -314,6 +325,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "buf",
         "breaking"
@@ -352,6 +364,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -360,6 +373,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -378,6 +392,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -506,6 +521,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:buf",
       "kind": "ToolRun",
@@ -526,6 +542,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:buf",
       "kind": "ToolRun",
@@ -546,6 +563,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:buf",
       "kind": "ToolRun",
@@ -566,6 +584,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:buf",
       "kind": "ToolRun",

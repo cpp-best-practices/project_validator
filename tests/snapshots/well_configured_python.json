@@ -200,6 +200,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -293,6 +294,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -336,6 +338,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -376,6 +379,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "yes",
               "defined": {
                 "atheris": [
@@ -442,6 +446,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -461,6 +466,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -480,6 +486,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "mutmut": [
@@ -594,6 +601,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -614,6 +622,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -633,6 +642,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -669,6 +679,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -737,6 +748,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -785,6 +797,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "nox": [
@@ -850,6 +863,7 @@
         "language": "Python",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "mypy": [

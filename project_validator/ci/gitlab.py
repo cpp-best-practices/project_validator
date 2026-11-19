@@ -97,6 +97,9 @@ def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mappin
     image_name = _image(job, defaults)
     tags = json.dumps(job.get("tags", defaults.get("tags", [])), default=str)
     combinations = expand_parallel(job.get("parallel"))
+    # `allow_failure: true` lets the pipeline pass whatever the job does; allowing some exit codes keeps the others
+    # failing, so that job is still a gate.
+    advisory = "allow_failure" if job.get("allow_failure") is True else ""
     for index, variables in enumerate(combinations):
         identity = f"{path}:{name}" if len(combinations) == 1 else f"{path}:{name}[{index}]"
         env = {**strings(defaults.get("variables")), **strings(job.get("variables")), **variables}
@@ -117,7 +120,9 @@ def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mappin
         for line, origin in _scripts(path, name, job, defaults):
             # A Windows runner's shell is PowerShell.
             text = substitute_variables(line, variables)
-            yield from script_facts(text, job=identity, origin=origin, env=env, powershell=os == "windows")
+            yield from script_facts(
+                text, job=identity, origin=origin, env=env, powershell=os == "windows", advisory=advisory
+            )
 
 
 # GitLab reads at most this many levels of nested includes, and of extends.

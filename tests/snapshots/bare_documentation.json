@@ -35,6 +35,7 @@
         "language": "MkDocs",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -122,6 +123,7 @@
         "language": "MkDocs",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -156,6 +158,7 @@
         "language": "MkDocs",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {
               "MkDocs build": [

@@ -272,6 +272,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -318,6 +319,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -374,6 +376,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -400,6 +403,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -428,6 +432,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -445,6 +450,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -477,6 +483,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -501,6 +508,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -562,6 +570,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -579,6 +588,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -598,6 +608,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -615,6 +626,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -634,6 +646,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -651,6 +664,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -724,6 +738,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -741,6 +756,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -761,6 +777,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -778,6 +795,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -797,6 +815,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -814,6 +833,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -861,6 +881,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -900,6 +921,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -919,6 +941,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -944,6 +967,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -978,6 +1002,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -1003,6 +1028,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -1049,6 +1075,7 @@
         "language": "Elixir",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -1075,6 +1102,7 @@
         "language": "Erlang",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {

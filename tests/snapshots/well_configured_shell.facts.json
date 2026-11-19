@@ -169,6 +169,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -177,6 +178,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -193,6 +195,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -209,6 +212,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -217,6 +221,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -230,6 +235,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -272,6 +278,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -280,6 +287,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -288,6 +296,7 @@
       "uses": "bats-core/bats-action@3566550e0f594451ac0f58fcbfdeca93aa29a45e"
     },
     {
+      "advisory": "",
       "argv": [
         "kcov",
         "--include-path=src",
@@ -305,6 +314,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bats",
         "tests"
@@ -337,6 +347,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -345,6 +356,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -353,6 +365,7 @@
       "uses": "bats-core/bats-action@3566550e0f594451ac0f58fcbfdeca93aa29a45e"
     },
     {
+      "advisory": "",
       "argv": [
         "kcov",
         "--include-path=src",
@@ -370,6 +383,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bats",
         "tests"
@@ -400,6 +414,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -408,6 +423,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -416,6 +432,7 @@
       "uses": "ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38"
     },
     {
+      "advisory": "",
       "argv": [
         "shellcheck"
       ],
@@ -429,6 +446,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -437,6 +455,7 @@
       "uses": "mfinelli/setup-shfmt@a25fda4c1fe115aec0f85e04126610841bc3141d"
     },
     {
+      "advisory": "",
       "argv": [
         "shfmt",
         "-d",
@@ -470,6 +489,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:powershell[0]",
@@ -478,6 +498,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "Install-Module",
         "Pester,",
@@ -496,6 +517,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "Invoke-ScriptAnalyzer",
         "-Path",
@@ -515,6 +537,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "Invoke-Pester",
         "-Path",
@@ -550,6 +573,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:powershell[1]",
@@ -558,6 +582,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "Install-Module",
         "Pester,",
@@ -576,6 +601,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "Invoke-ScriptAnalyzer",
         "-Path",
@@ -595,6 +621,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "Invoke-Pester",
         "-Path",
@@ -648,6 +675,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -656,6 +684,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -674,6 +703,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -874,6 +904,7 @@
       "reader": "Pester"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -895,6 +926,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -917,6 +949,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -938,6 +971,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -960,6 +994,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -980,6 +1015,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -1000,6 +1036,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:powershell[0]",
       "kind": "ToolRun",
@@ -1020,6 +1057,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:powershell[0]",
       "kind": "ToolRun",
@@ -1044,6 +1082,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:powershell[1]",
       "kind": "ToolRun",
@@ -1064,6 +1103,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:powershell[1]",
       "kind": "ToolRun",

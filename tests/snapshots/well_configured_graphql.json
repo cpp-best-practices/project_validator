@@ -15,6 +15,7 @@
         "language": "GraphQL",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "prettier": [
@@ -64,6 +65,7 @@
         "language": "GraphQL",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -107,6 +109,7 @@
         "language": "GraphQL",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -150,6 +153,7 @@
         "language": "GraphQL",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "graphql-schema-linter": [

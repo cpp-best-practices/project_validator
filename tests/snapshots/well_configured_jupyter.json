@@ -28,6 +28,7 @@
         "language": "Jupyter",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "ruff format": [
@@ -91,6 +92,7 @@
         "language": "Jupyter",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "ruff check": [
@@ -129,6 +131,7 @@
         "language": "Jupyter",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "notebook execution": [

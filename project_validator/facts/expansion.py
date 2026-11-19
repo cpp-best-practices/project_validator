@@ -89,6 +89,7 @@ def action_commands(step: ActionStep, actions: Iterable[Action]) -> Iterator[Com
                     line=f"uses: {step.uses}",
                     directory=step.inputs.get("working-directory") or None,
                     condition=step.condition,
+                    advisory=step.advisory,
                 )
 
 
@@ -103,8 +104,10 @@ def script_facts(
     opaque: re.Pattern[str] | None = None,
     via: tuple[Origin, ...] = (),
     powershell: bool = False,
+    advisory: str = "",
 ) -> Iterator[Fact]:
-    """The commands of a shell script a job runs (PowerShell when `powershell`; `opaque`: see `split_script`)."""
+    """The commands of a shell script a job runs (PowerShell when `powershell`; `opaque`: see `split_script`;
+    `advisory`: see `Command.advisory`)."""
     assigned = None if via or powershell else _assigned(script)
     for found in split_script(script, opaque, powershell=powershell):
         if isinstance(found, ShellCommand):
@@ -117,6 +120,7 @@ def script_facts(
                 env={**env, **dict(found.env)},
                 directory=directory,
                 condition=condition,
+                advisory=advisory,
                 via=via,
             )
             yield from _with_program(command, assigned)
@@ -196,6 +200,7 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
             env={**command.env, **expansion.env} if isinstance(expansion, Launched) else command.env,
             directory=command.directory,
             condition=command.condition,
+            advisory=command.advisory,
             via=via,
         )
     else:
@@ -208,6 +213,7 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
             condition=command.condition,
             opaque=expansion.opaque,
             via=via,
+            advisory=command.advisory,
         )
 
 

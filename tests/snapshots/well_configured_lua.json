@@ -198,6 +198,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -234,6 +235,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "StyLua": [
@@ -273,6 +275,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -313,6 +316,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -360,6 +364,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -379,6 +384,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -398,6 +404,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -493,6 +500,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -513,6 +521,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -532,6 +541,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -568,6 +578,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -602,6 +613,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "luacheck": [
@@ -647,6 +659,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "busted": [
@@ -692,6 +705,7 @@
         "language": "Lua",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "lua-language-server": [

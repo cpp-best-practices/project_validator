@@ -224,6 +224,9 @@ class _Combination:
     shell: str | None = None
     # The directory the job's `run` steps run in unless a step names its own (`defaults: run: working-directory:`).
     working_directory: str | None = None
+    # Why the steps cannot fail the workflow, when the job (or the step that uses a composite action) continues on
+    # error (see `Command.advisory`).
+    advisory: str = ""
 
     def substitute(self, text: str) -> str:
         """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
@@ -258,6 +261,19 @@ class _Combination:
             return True
         return evaluate(condition, known) if isinstance(condition, str) else bool(condition)
 
+    def continues(self, holder: Mapping[str, object], known: Known, subject: str) -> Iterator[Unknown | str]:
+        """Why the steps of a job or a step (the `holder`) cannot fail the workflow: the advisory reason, when its
+        `continue-on-error` holds or may hold in this combination, and an `Unknown` about `subject` when it may."""
+        if self.advisory:
+            yield self.advisory
+            return
+        continues = holder.get("continue-on-error")
+        held = False if continues is None else self.runs(continues, known)
+        if held is None:
+            yield Unknown(origin=self.origin, subject=subject, reason=f"continue-on-error is {continues!r}")
+        if held is not False:
+            yield "continue-on-error"
+
     def facts(self, job: Mapping[str, object], workflow: Mapping[str, object]) -> Iterator[Fact]:
         env = {**self.substituted(workflow.get("env")), **self.substituted(job.get("env"))}
         os = _runner_os(job, self.combination)
@@ -267,7 +283,13 @@ class _Combination:
         # `defaults: run:` of the workflow, then of the job.
         run = {**_run_defaults(workflow), **_run_defaults(job)}
         shell, directory = run.get("shell"), run.get("working-directory")
-        context = replace(self, known=known, shell=str(shell) if shell else None)
+        advisory = ""
+        for found in self.continues(job, known, f"whether job {self.origin.at[-1]} can fail the workflow"):
+            if isinstance(found, Unknown):
+                yield found
+            else:
+                advisory = found
+        context = replace(self, known=known, shell=str(shell) if shell else None, advisory=advisory)
         yield from replace(context, working_directory=self.optional(directory)).job_facts(job, known)
 
     def job_facts(self, job: Mapping[str, object], known: Known) -> Iterator[Fact]:
@@ -305,10 +327,24 @@ class _Combination:
         if runs is False:
             return
         condition = None if runs else self.optional(step.get("if"))
+        context = self
+        for found in self.continues(step, known, f"whether a step of job {self.origin.at[-1]} can fail it"):
+            if isinstance(found, Unknown):
+                yield replace(found, origin=origin)
+            else:
+                context = replace(self, advisory=found)
+        yield from context.step_runs(origin, step, known, condition, via)
+
+    def step_runs(
+        self, origin: Origin, step: Mapping[str, object], known: Known, condition: str | None, via: tuple[Origin, ...]
+    ) -> Iterator[Fact]:
+        """What a step runs: the action it uses (a local composite action's steps too), and its script."""
         if "uses" in step:
             inputs = self.substituted(step.get("with"))
             uses = str(step["uses"]).strip()
-            yield ActionStep(origin=origin, job=self.identity, uses=uses, inputs=inputs, condition=condition)
+            yield ActionStep(
+                origin=origin, job=self.identity, uses=uses, inputs=inputs, condition=condition, advisory=self.advisory
+            )
             if (local := _local_action(uses)) is not None:
                 yield from self.composite_facts(origin, local, inputs, known, (*via, origin))
         if isinstance(run := step.get("run"), str):
@@ -331,7 +367,7 @@ class _Combination:
         if (custom := custom_shell(self.optional(step.get("shell")) or self.shell)) is not None:
             argv = tuple(script if word == "{0}" else word for word in custom)
             command = Command(origin=at, job=self.identity, argv=argv, line=script, env=env, directory=directory)
-            yield replace(command, condition=condition, via=via)
+            yield replace(command, condition=condition, via=via, advisory=self.advisory)
             return
         yield from script_facts(
             script,
@@ -343,6 +379,7 @@ class _Combination:
             opaque=EXPRESSION,
             via=via,
             powershell=self.powershell(step, known),
+            advisory=self.advisory,
         )
 
     def powershell(self, step: Mapping[str, object], known: Known) -> bool:

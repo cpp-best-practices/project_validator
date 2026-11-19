@@ -31,6 +31,7 @@
         "language": "GitHub Action",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -58,6 +59,7 @@
         "language": "GitHub Action",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -85,6 +87,7 @@
         "language": "GitHub Action",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {

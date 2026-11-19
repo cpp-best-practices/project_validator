@@ -252,12 +252,12 @@ class ExpressionOperandTests(unittest.TestCase):
 
 
 class AdvisoryStepTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #215: continue-on-error / allow_failure steps are credited as gates
     def test_a_step_that_cannot_fail_the_pipeline_is_no_gate(self) -> None:
         """A step with `continue-on-error: true` (GitHub) or a job with `allow_failure: true` (GitLab) never fails the
         pipeline: link-check warns and code-formatting does not pass on it alone (python/devguide, GNOME/glib)."""
         with self.subTest(provider="GitHub Actions"):
-            result = _run(link_check, {**SPHINX, GITHUB_WORKFLOW: _workflow(docs=LINKCHECK_ADVISORY)})
+            makefile = {"Makefile": "linkcheck:\n\tsphinx-build -b linkcheck docs docs/_build/linkcheck\n"}
+            result = _run(link_check, {**SPHINX, **makefile, GITHUB_WORKFLOW: _workflow(docs=LINKCHECK_ADVISORY)})
             self.assertEqual(result.status, Status.WARN, result)
         with self.subTest(provider="GitLab CI"):
             result = _run(code_formatting, {**CLANG_FORMAT, ".gitlab-ci.yml": json.dumps({"style": STYLE_ADVISORY})})

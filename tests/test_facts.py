@@ -424,6 +424,7 @@ class SerialisationTests(unittest.TestCase):
                 "env": {},
                 "directory": None,
                 "condition": None,
+                "advisory": "",
                 "via": [],
             },
         )

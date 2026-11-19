@@ -16,7 +16,7 @@ from project_validator.ecosystems import Ecosystem, ecosystems_for, registered
 from project_validator.facts import Facts
 from project_validator.facts.tools import handling
 from project_validator.policy import Judge
-from project_validator.questions import LanguageAnswers, RanTools, UnitAnswer
+from project_validator.questions import AdvisedTools, LanguageAnswers, RanTools, UnitAnswer
 
 
 def labelled(results: Mapping[str, Result]) -> Result:
@@ -106,6 +106,17 @@ def _advisory(result: Result, language: str, named: tuple[str, ...]) -> Result:
     return replace(result, status=Status.WARN, details=(*result.details, _ADVISORY.format(language=language, named=by)))
 
 
+def _advised(result: Result, answer: object) -> Result:
+    """A result that did not pass says which tools CI runs for the practice where they cannot fail the pipeline: they
+    run, but enforce nothing (`continue-on-error`, `allow_failure`)."""
+    if result.status is Status.PASS or not isinstance(answer, AdvisedTools):
+        return result
+    return result.with_details(*(_ADVISED.format(tool=tool, why=why) for tool, why in answer.advised()))
+
+
+_ADVISED = "{tool} runs in CI but cannot fail it ({why})"
+
+
 def _found[A: UnitAnswer](
     languages: frozenset[str], context: Context, answers: Callable[[str, Facts], LanguageAnswers[A]]
 ) -> _Found[A]:
@@ -131,7 +142,7 @@ def judged[A: UnitAnswer](
     auxiliary: _Auxiliary = {(answer.language, answer.unit): named for answer, named in found if named}
     results: dict[_Place, Result] = {}
     for answer, named in found:
-        result = judge(answer, allow_unknown=context.options.allow_unknown)
+        result = _advised(judge(answer, allow_unknown=context.options.allow_unknown), answer)
         results[(answer.language, answer.unit)] = _advisory(result, answer.language, named) if named else result
     none = "no unit of the project is written in these languages"
     merged, named_merged = _merged(results, auxiliary)

@@ -151,6 +151,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -159,6 +160,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -175,6 +177,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -191,6 +194,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -199,6 +203,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -212,6 +217,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -257,6 +263,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -265,6 +272,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop"
@@ -275,6 +283,7 @@
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop",
@@ -287,6 +296,7 @@
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
+      "advisory": "",
       "argv": [
         "ros",
         "run",
@@ -324,6 +334,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -332,6 +343,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop"
@@ -342,6 +354,7 @@
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop",
@@ -354,6 +367,7 @@
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
+      "advisory": "",
       "argv": [
         "ros",
         "run",
@@ -391,6 +405,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -399,6 +414,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop"
@@ -409,6 +425,7 @@
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop",
@@ -421,6 +438,7 @@
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
+      "advisory": "",
       "argv": [
         "ros",
         "run",
@@ -458,6 +476,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -466,6 +485,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop"
@@ -476,6 +496,7 @@
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop",
@@ -488,6 +509,7 @@
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
+      "advisory": "",
       "argv": [
         "ros",
         "run",
@@ -525,6 +547,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
@@ -533,6 +556,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop"
@@ -543,6 +567,7 @@
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop",
@@ -555,6 +580,7 @@
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
+      "advisory": "",
       "argv": [
         "ros",
         "run",
@@ -592,6 +618,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
@@ -600,6 +627,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop"
@@ -610,6 +638,7 @@
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "asdf-system": "shop",
@@ -622,6 +651,7 @@
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
+      "advisory": "",
       "argv": [
         "ros",
         "run",
@@ -656,6 +686,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -664,6 +695,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -672,6 +704,7 @@
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
+      "advisory": "",
       "argv": [
         "ros",
         "install",
@@ -689,6 +722,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "qlot",
         "exec",
@@ -707,6 +741,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "sblint",
         "shop.asd"
@@ -754,6 +789,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -762,6 +798,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -780,6 +817,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -1055,6 +1093,7 @@
       "reader": "Lisp build settings"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1075,6 +1114,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1096,6 +1136,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1116,6 +1157,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1137,6 +1179,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1157,6 +1200,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1178,6 +1222,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1198,6 +1243,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1219,6 +1265,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1239,6 +1286,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1260,6 +1308,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -1280,6 +1329,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -1301,6 +1351,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",

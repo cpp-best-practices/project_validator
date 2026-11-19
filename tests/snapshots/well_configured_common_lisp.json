@@ -186,6 +186,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -222,6 +223,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -241,6 +243,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -265,6 +268,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -312,6 +316,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -331,6 +336,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -350,6 +356,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -430,6 +437,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -450,6 +458,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -469,6 +478,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -505,6 +515,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -524,6 +535,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -558,6 +570,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "asdf:test-system": [
@@ -603,6 +616,7 @@
         "language": "Common Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

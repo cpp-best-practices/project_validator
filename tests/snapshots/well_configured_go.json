@@ -210,6 +210,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -289,6 +290,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -324,6 +326,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -377,6 +380,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "yes",
               "defined": {
                 "go test -fuzz": [
@@ -462,6 +466,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -481,6 +486,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -500,6 +506,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -626,6 +633,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -646,6 +654,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -665,6 +674,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -701,6 +711,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -769,6 +780,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "golangci-lint": [
@@ -807,6 +819,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "go test": [
@@ -852,6 +865,7 @@
         "language": "Go",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

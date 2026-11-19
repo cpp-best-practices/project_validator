@@ -144,6 +144,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -152,6 +153,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -168,6 +170,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -184,6 +187,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -192,6 +196,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -205,6 +210,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -247,6 +253,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -255,6 +262,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "prices": "1 2 3"
@@ -265,6 +273,7 @@
       "uses": "./"
     },
     {
+      "advisory": "",
       "argv": [
         "uses-the-action-itself"
       ],
@@ -278,6 +287,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "echo",
         "total=$total"
@@ -294,6 +304,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "test",
         "${{ steps.shop.outputs.total }}",
@@ -326,6 +337,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -334,6 +346,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "prices": "1 2 3"
@@ -344,6 +357,7 @@
       "uses": "./"
     },
     {
+      "advisory": "",
       "argv": [
         "uses-the-action-itself"
       ],
@@ -357,6 +371,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "echo",
         "total=$total"
@@ -373,6 +388,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "test",
         "${{ steps.shop.outputs.total }}",
@@ -405,6 +421,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -413,6 +430,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "prices": "1 2 3"
@@ -423,6 +441,7 @@
       "uses": "./"
     },
     {
+      "advisory": "",
       "argv": [
         "uses-the-action-itself"
       ],
@@ -436,6 +455,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "echo",
         "total=$total"
@@ -452,6 +472,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "test",
         "${{ steps.shop.outputs.total }}",
@@ -492,6 +513,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -500,6 +522,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -518,6 +541,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -633,6 +657,7 @@
       "origin": "LICENSE"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ToolRun",
@@ -655,6 +680,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ToolRun",
@@ -675,6 +701,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -695,6 +722,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -715,6 +743,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",

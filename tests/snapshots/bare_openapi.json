@@ -26,6 +26,7 @@
         "language": "OpenAPI",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -82,6 +83,7 @@
         "language": "OpenAPI",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -137,6 +139,7 @@
         "language": "OpenAPI",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -194,6 +197,7 @@
         "language": "OpenAPI",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
