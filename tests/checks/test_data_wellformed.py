@@ -38,7 +38,7 @@ class DataWellformedTests(unittest.TestCase):
         self.assertEqual(data_wellformed.languages, frozenset({"Dockerfile", "JSON", "Jupyter", "TOML", "XML", "YAML"}))
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
-        result = data_wellformed.run(make_context(FIXTURES / "well_configured_c_cpp", Options()))
+        result = data_wellformed.run(make_context(FIXTURES / "well_configured_cpp", Options()))
         self.assertEqual(result.status, Status.PASS)
         self.assertRegex(result.message, r"\d+ YAML files parse")
 

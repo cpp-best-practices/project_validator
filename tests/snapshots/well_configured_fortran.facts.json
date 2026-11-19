@@ -3045,7 +3045,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3075,7 +3076,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3105,7 +3107,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3135,7 +3138,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3165,7 +3169,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3195,7 +3200,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3225,7 +3231,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3255,7 +3262,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3285,7 +3293,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3315,7 +3324,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3345,7 +3355,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -3375,7 +3386,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C/C++",
+        "C",
+        "C++",
         "Fortran",
         "Python"
       ],
@@ -5041,7 +5053,8 @@
             "Debug"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5059,7 +5072,8 @@
             "Debug + sanitizers"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5077,7 +5091,8 @@
             "Release"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5095,7 +5110,8 @@
             "Release + sanitizers"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5113,7 +5129,8 @@
             "Debug"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5131,7 +5148,8 @@
             "Debug + sanitizers"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5149,7 +5167,8 @@
             "Release"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5167,7 +5186,8 @@
             "Release + sanitizers"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5185,7 +5205,8 @@
             "Debug"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5203,7 +5224,8 @@
             "Debug + sanitizers"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5221,7 +5243,8 @@
             "Release"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],
@@ -5239,7 +5262,8 @@
             "Release + sanitizers"
           ],
           "ecosystems": [
-            "C/C++",
+            "C",
+            "C++",
             "Fortran",
             "Python"
           ],

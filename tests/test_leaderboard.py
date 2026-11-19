@@ -7,6 +7,8 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import math
+import re
 import shutil
 import subprocess
 import tempfile
@@ -21,12 +23,12 @@ import yaml
 
 from leaderboard import SEED, Entry, ManifestError, by_name, entries, parse
 from leaderboard.__main__ import PREVIEW_MARKER, check, main
-from leaderboard.evaluation import evaluate, failed, fetch, write
+from leaderboard.evaluation import REPORT, evaluate, failed, fetch, write
 from leaderboard.history import movement, ranked, read_history, record
 from leaderboard.rules import BOARDS, MOST_KB, Repository, changed, duplicates, problems
 from leaderboard.site import badge, build, sparkline
 from project_validator.core import Context, ExtractionError
-from project_validator.score import SCORE_VERSION
+from project_validator.score import LEVEL_NAMES, SCORE_VERSION
 from tests.support import FIXTURES
 
 WORKFLOWS = Path(__file__).resolve().parent.parent / ".github" / "workflows"
@@ -42,14 +44,14 @@ class ManifestTests(unittest.TestCase):
         self.entries = entries()
 
     def test_the_seed_list_has_one_project_per_language(self) -> None:
-        self.assertEqual(len(self.entries), 26)
+        self.assertEqual(len(self.entries), 28)
         languages = [entry.language for entry in self.entries]
         self.assertEqual(sorted(set(languages)), sorted(languages))
         self.assertLessEqual(set(languages), BOARDS)
 
     def test_compiler_explorer_is_the_typescript_seed(self) -> None:
         (entry,) = by_name(["compiler-explorer/compiler-explorer"], self.entries)
-        self.assertEqual(entry.language, "JavaScript/TypeScript")
+        self.assertEqual(entry.language, "TypeScript")
 
     def test_every_entry_is_well_formed_and_listed_once(self) -> None:
         self.assertEqual(duplicates(self.entries), [])
@@ -160,7 +162,8 @@ def _git(directory: Path, *arguments: str) -> str:
     ).stdout.strip()
 
 
-def _result(name: str, level: int, completeness: float, depth: int, **extra: object) -> dict[str, object]:
+def _result(name: str, level: int, percent: float, **extra: object) -> dict[str, object]:
+    """A night's result, scored `percent` at `level`, as `evaluate` writes it."""
     cells = extra.pop("cells", [])
     return {
         "name": name,
@@ -170,27 +173,29 @@ def _result(name: str, level: int, completeness: float, depth: int, **extra: obj
         "evaluated": "2026-11-18T03:17:00Z",
         "score": {
             "version": SCORE_VERSION,
+            "percent": percent,
             "level": level,
-            "completeness": completeness,
-            "depth": depth,
-            "locked_depth": 0,
+            "level_name": LEVEL_NAMES[level],
+            "filled": 3,
+            "slots": 4,
+            "summary": extra.pop("summary", f"{math.floor(percent)}% · Level {level} {LEVEL_NAMES[level]}"),
             "cells": cells,
-            "opportunities": extra.pop("opportunities", []),
+            "next_steps": extra.pop("next_steps", []),
         },
         **extra,
     }
 
 
-def _line(date: str, commit: str, level: int, completeness: float, depth: int) -> dict[str, object]:
+def _line(date: str, commit: str, level: int, percent: float) -> dict[str, object]:
     """A night's history line."""
-    numbers = {"version": SCORE_VERSION, "level": level, "completeness": completeness, "depth": depth}
+    numbers = {"version": SCORE_VERSION, "percent": percent, "level": level, "filled": 3, "slots": 4}
     return {"date": date, "commit": commit, "validator": "v" * 40, **numbers}
 
 
-def _opportunity(**overrides: object) -> dict[str, object]:
-    """An opportunity as the score's JSON has it: a project cell of coverage, unless overridden."""
+def _step(**overrides: object) -> dict[str, object]:
+    """A next step as the score's JSON has it: the project's own coverage slot, unless overridden."""
     defaults: dict[str, object] = {"check": "coverage", "ecosystem": "", "unit": "", "tier": "project"}
-    defaults |= {"status": "FAIL", "level": 2, "completeness": 0.01, "depth": 0, "blocks": None, "unlocks": None}
+    defaults |= {"status": "FAIL", "level": 2, "points": 1.0, "needed_for": None, "completes": False}
     return defaults | overrides
 
 
@@ -203,8 +208,9 @@ def _cell(check: str, *tools: str) -> dict[str, object]:
         "tier": "core",
         "status": "PASS",
         "tools": list(tools),
-        "points": 10,
-        "counted": True,
+        "weight": 1.0,
+        "filled": 1.0,
+        "extra": 0,
     }
 
 
@@ -235,11 +241,21 @@ class EvaluationTests(unittest.TestCase):
         self.assertIn({"check": "license", "status": "PASS", "message": "the project is licensed under MIT"}, checks)
         self.assertNotIn("error", result)
 
+    def test_the_full_html_report_is_written_beside_the_result(self) -> None:
+        with _directory() as root:
+            shutil.copytree(FIXTURES / "well_configured_python", root / "p")
+            result = evaluate(self.ENTRY, root / "p", commit="c" * 40, validator="v" * 40, now=NOW)
+            self.assertTrue(str(result[REPORT]).startswith("<!DOCTYPE html>"))
+            path = write(result, root / "out")
+            self.assertNotIn(REPORT, json.loads(path.read_text()))
+            self.assertIn("project_validator", path.with_suffix(".html").read_text())
+            self.assertFalse(write(failed(self.ENTRY, "x", validator="v"), root / "bare").with_suffix(".html").exists())
+
     def test_the_entry_s_auxiliary_and_exclude_reach_the_validator(self) -> None:
         with _directory() as root:
             shutil.copytree(FIXTURES / "well_configured_python", root / "p")
-            shutil.copytree(FIXTURES / "bare_c_cpp", root / "p" / "examples" / "c")
-            completeness = {}
+            shutil.copytree(FIXTURES / "bare_cpp", root / "p" / "examples" / "c")
+            percents = {}
             for label, entry in (
                 ("plain", self.ENTRY),
                 ("auxiliary", Entry(name="o/well", language="Python", consent=SEED, auxiliary=("example",))),
@@ -248,9 +264,9 @@ class EvaluationTests(unittest.TestCase):
                 scored = evaluate(entry, root / "p", commit="c", validator="v")["score"]
                 if not isinstance(scored, dict):
                     self.fail(scored)
-                completeness[label] = scored["completeness"]
-        self.assertLess(completeness["plain"], completeness["auxiliary"])
-        self.assertLess(completeness["auxiliary"], completeness["excluded"])
+                percents[label] = scored["percent"]
+        self.assertLess(percents["plain"], percents["auxiliary"])
+        self.assertLess(percents["auxiliary"], percents["excluded"])
 
     def test_an_extraction_failure_is_recorded_without_the_checkout_s_path(self) -> None:
         with _directory() as root:
@@ -331,25 +347,32 @@ class HistoryTests(unittest.TestCase):
 
     def test_each_night_is_one_history_line_and_the_last_becomes_previous(self) -> None:
         with _directory() as data:
-            self.assertEqual(self._night(data, "2026-11-17", _result("o/r", 1, 0.5, 30)), ["o/r"])
+            self.assertEqual(self._night(data, "2026-11-17", _result("o/r", 1, 50)), ["o/r"])
             self.assertFalse((data / "previous" / "o--r.json").exists())
-            self._night(data, "2026-11-18", _result("o/r", 2, 0.75, 45, commit="b" * 40))
+            self._night(data, "2026-11-18", _result("o/r", 2, 75, commit="b" * 40))
             history = read_history(data / "history" / "o--r.jsonl")
-            self.assertEqual(
-                history, [_line("2026-11-17", "a" * 40, 1, 0.5, 30), _line("2026-11-18", "b" * 40, 2, 0.75, 45)]
-            )
+            self.assertEqual(history, [_line("2026-11-17", "a" * 40, 1, 50), _line("2026-11-18", "b" * 40, 2, 75)])
             previous = json.loads((data / "previous" / "o--r.json").read_text())
             self.assertEqual(previous["score"]["level"], 1)
             self.assertEqual(json.loads((data / "latest" / "o--r.json").read_text())["score"]["level"], 2)
 
     def test_a_rerun_of_a_night_replaces_it(self) -> None:
         with _directory() as data:
-            self._night(data, "2026-11-17", _result("o/r", 1, 0.5, 30))
-            self._night(data, "2026-11-18", _result("o/r", 1, 0.6, 30))
-            self._night(data, "2026-11-18", _result("o/r", 1, 0.7, 30))
+            self._night(data, "2026-11-17", _result("o/r", 1, 50))
+            self._night(data, "2026-11-18", _result("o/r", 1, 60))
+            self._night(data, "2026-11-18", _result("o/r", 1, 70))
             history = read_history(data / "history" / "o--r.jsonl")
-            self.assertEqual([line["completeness"] for line in history], [0.5, 0.7])
-            self.assertEqual(json.loads((data / "previous" / "o--r.json").read_text())["score"]["completeness"], 0.5)
+            self.assertEqual([line["percent"] for line in history], [50, 70])
+            self.assertEqual(json.loads((data / "previous" / "o--r.json").read_text())["score"]["percent"], 50)
+
+    def test_the_latest_report_alone_is_kept(self) -> None:
+        with _directory() as data:
+            with _directory() as results:
+                write({**_result("o/r", 1, 50), REPORT: "<!DOCTYPE html>night one"}, results)
+                record(results, data, "2026-11-17")
+            self.assertEqual((data / "reports" / "o--r.html").read_text(), "<!DOCTYPE html>night one")
+            self._night(data, "2026-11-18", _result("o/r", 1, 50))
+            self.assertFalse((data / "reports" / "o--r.html").exists())
 
     def test_an_unscored_night_is_kept(self) -> None:
         with _directory() as data:
@@ -363,37 +386,72 @@ class HistoryTests(unittest.TestCase):
 
 class MovementTests(unittest.TestCase):
     def test_tools_that_arrived_or_left_and_the_numbers(self) -> None:
-        before = _result("o/r", 1, 0.5, 30, cells=[_cell("static-analysis", "clippy"), _cell("coverage", "grcov")])
-        after = _result("o/r", 2, 0.625, 35, commit="b" * 40, cells=[_cell("static-analysis", "clippy", "cargo-deny")])
+        before = _result("o/r", 1, 50, cells=[_cell("static-analysis", "clippy"), _cell("coverage", "grcov")])
+        after = _result("o/r", 2, 62.5, commit="b" * 40, cells=[_cell("static-analysis", "clippy", "cargo-deny")])
         self.assertEqual(
             movement(before, after),
-            ["+cargo-deny (static-analysis)", "-grcov (coverage)", "Level 1 → 2", "+12.5% completeness", "+5 depth"],
+            ["+cargo-deny (static-analysis)", "-grcov (coverage)", "Level 1 → 2", "+12.5 points"],
         )
 
     def test_a_change_without_a_new_commit_is_the_validator_s(self) -> None:
         self.assertEqual(
-            movement(_result("o/r", 1, 0.5, 30), _result("o/r", 1, 0.5, 20)),
-            ["-10 depth", "same commit: the validator changed"],
+            movement(_result("o/r", 1, 50), _result("o/r", 1, 40)),
+            ["-10.0 points", "same commit: the validator changed"],
         )
 
     def test_no_change_and_a_first_night(self) -> None:
-        self.assertEqual(movement(_result("o/r", 1, 0.5, 30), _result("o/r", 1, 0.5, 30)), [])
-        self.assertEqual(movement(None, _result("o/r", 1, 0.5, 30)), ["new on the board"])
-        self.assertEqual(movement(failed(EvaluationTests.ENTRY, "x", validator="v"), _result("o/r", 1, 0.5, 30)), [])
+        self.assertEqual(movement(_result("o/r", 1, 50), _result("o/r", 1, 50)), [])
+        self.assertEqual(movement(None, _result("o/r", 1, 50)), ["new on the board"])
+        self.assertEqual(movement(failed(EvaluationTests.ENTRY, "x", validator="v"), _result("o/r", 1, 50)), [])
 
 
 class RankingTests(unittest.TestCase):
-    def test_level_then_completeness_then_depth_and_the_unscored_last(self) -> None:
+    def test_the_score_then_the_level_then_the_name_and_the_unscored_last(self) -> None:
         results = [
             failed(EvaluationTests.ENTRY, "x", validator="v"),
-            _result("a/deep", 1, 0.9, 500),
-            _result("b/high", 2, 0.4, 10),
-            _result("c/complete", 1, 0.95, 5),
-            _result("d/tie", 1, 0.9, 600),
+            _result("a/tie", 1, 90),
+            _result("b/high", 2, 40),
+            _result("c/extra", 4, 104),
+            _result("d/tie", 2, 90),
+            _result("e/tie", 1, 90),
         ]
         self.assertEqual(
-            [result["name"] for result in ranked(results)], ["b/high", "c/complete", "d/tie", "a/deep", "o/well"]
+            [result["name"] for result in ranked(results)], ["c/extra", "d/tie", "a/tie", "e/tie", "b/high", "o/well"]
         )
+
+
+class EarlierScoreVersionTests(unittest.TestCase):
+    """A night scored by an earlier version of the score (the data branch before the score changed) holds other
+    numbers: it is not compared, ranked or shown as this version's."""
+
+    OLD = _result("o/old", 0, 0) | {"score": {"version": "0", "completeness": 0.47, "depth": 50, "level": 0}}
+
+    def test_it_ranks_with_the_unscored_and_moves_nothing(self) -> None:
+        self.assertEqual([result["name"] for result in ranked([self.OLD, _result("o/new", 1, 10)])], ["o/new", "o/old"])
+        self.assertEqual(movement(self.OLD, _result("o/old", 1, 50)), [])
+
+    def test_the_board_and_its_page_say_it_awaits_tonight(self) -> None:
+        with _directory() as data:
+            with _directory() as results:
+                write(self.OLD, results)
+                record(results, data, "2026-11-18")
+            pages, files = build((Entry(name="o/old", language="Rust", consent=SEED),), data, "https://o.github.io/p/")
+        self.assertIn("Not scored tonight: scored by score version 0", pages["leaderboard/projects/o--old.html"])
+        self.assertIn('<span class="muted">-</span>', pages["leaderboard/index.html"])
+        self.assertEqual(json.loads(files["leaderboard/badges/o--old.json"])["message"], "error")
+
+    def test_its_night_is_left_out_of_the_history_drawn(self) -> None:
+        entry = Entry(name="o/old", language="Rust", consent=SEED)
+        with _directory() as data:
+            for date, result in (
+                ("2026-11-17", self.OLD | {"score": {"version": "0", "percent": 5}}),
+                ("2026-11-18", _result("o/old", 1, 50)),
+            ):
+                with _directory() as results:
+                    write(result, results)
+                    record(results, data, date)
+            pages, _ = build((entry,), data, "https://o.github.io/p/")
+        self.assertIn("The history starts after a second night.", pages["leaderboard/projects/o--old.html"])
 
 
 class SiteTests(unittest.TestCase):
@@ -407,36 +465,38 @@ class SiteTests(unittest.TestCase):
     FIRST = _result(
         "o/first",
         2,
-        0.75,
-        40,
+        75,
         commit="b" * 40,
         seed=True,
         unknowns=2,
         cells=[_cell("static-analysis", "clippy | lint")],
-        opportunities=[
-            _opportunity(check="fuzz-testing", ecosystem="Rust", unit=".", tier="core", status="WARN", level=3)
-            | {"completeness": 0.0625, "depth": 5, "blocks": 3, "unlocks": 3}
+        next_steps=[
+            _step(check="fuzz-testing", ecosystem="Rust", unit=".", tier="core", status="WARN", level=3)
+            | {"points": 6.25, "needed_for": 3, "completes": True}
         ],
     )
 
     def _data(self, data: Path) -> None:
-        second = _result("o/second", 1, 0.5, 30, language="Go")
+        second = _result("o/second", 1, 50, language="Go")
         with _directory() as results:
-            write(_result("o/first", 1, 0.5, 30), results)
+            write(_result("o/first", 1, 50), results)
             write(second, results)
             record(results, data, "2026-11-17")
         with _directory() as results:
             write(self.FIRST, results)
             write(second, results)
             write(failed(self.LISTED[2], "git fetch failed", validator="v"), results)
-            write(_result("gone/away", 4, 1.0, 999), results)  # recorded once, since removed from the list
+            write(_result("gone/away", 4, 100), results)  # recorded once, since removed from the list
             record(results, data, "2026-11-18")
 
     def test_before_the_first_night_the_board_lists_the_projects(self) -> None:
         pages, files = build(self.LISTED, None, "https://o.github.io/p/")
         self.assertEqual(set(pages), {"leaderboard/index.html"})
         self.assertIn("No nightly results yet", pages["leaderboard/index.html"])
-        self.assertIn("- [o/first](https://github.com/o/first) (Rust)", pages["leaderboard/index.html"])
+        self.assertIn(
+            '<a href="https://github.com/o/first"><strong>o/first</strong></a>', pages["leaderboard/index.html"]
+        )
+        self.assertIn("[how the score works](../docs/score.md)", pages["leaderboard/index.html"])
         self.assertEqual(files, {"leaderboard/data/latest.json": "[]\n"})
 
     def test_the_boards_rank_every_listed_project(self) -> None:
@@ -444,17 +504,22 @@ class SiteTests(unittest.TestCase):
             self._data(data)
             pages, _ = build(self.LISTED, data, "https://o.github.io/p/")
         board = pages["leaderboard/index.html"]
-        self.assertIn(
-            "| 1 | [o/first](projects/o--first.md) | Rust | 2 | 75% | 40 "
-            "| +clippy \\| lint (static-analysis), Level 1 → 2, +25.0% completeness, +10 depth |",
-            board,
+        rows = re.findall(r"<tr data-language=.*?</tr>", board)
+        self.assertEqual(
+            [re.search(r"<strong>(.*?)</strong>", row).group(1) for row in rows],  # type: ignore[union-attr]
+            ["o/first", "o/second", "o/broken"],
         )
-        self.assertIn("| 2 | [o/second](projects/o--second.md) | Go | 1 | 50% | 30 | - |", board)
-        self.assertIn("| 3 | [o/broken](projects/o--broken.md) | Go | - | - | - | error: git fetch failed |", board)
+        first, second, broken = rows
+        self.assertIn('<td class="rank">1</td>', first)
+        self.assertIn('href="projects/o--first.html"', first)
+        self.assertIn('<span class="chip">seed</span>', first)
+        self.assertIn("<strong>75%</strong>", first)
+        self.assertIn("Level 2 · Analysis", first)
+        self.assertIn("+clippy | lint (static-analysis), Level 1 → 2, +25.0 points", first)
+        self.assertIn('data-language="Go"', second)
+        self.assertIn('error</span> <span class="muted">git fetch failed', broken)
         self.assertNotIn("gone/away", board)
-        go_board = board.split("### Go", 1)[1]
-        self.assertIn("| 1 | [o/second](projects/o--second.md) | 1 | 50% | 30 | - |", go_board)
-        self.assertLess(board.index("### Go"), board.index("### Rust"))
+        self.assertIn('<button class="tab" data-language="Go">Go <span class="n">2</span></button>', board)
 
     def test_a_project_page(self) -> None:
         with _directory() as data:
@@ -463,46 +528,59 @@ class SiteTests(unittest.TestCase):
         page = pages["leaderboard/projects/o--first.html"]
         self.assertTrue(page.startswith("# o/first\n"))
         for expected in (
-            "- A seed: awaiting a maintainer's confirmation",
-            f"- Commit evaluated: [bbbbbbbbbbbb](https://github.com/o/first/commit/{'b' * 40})",
+            "a seed, awaiting a maintainer's confirmation",
+            f'commit <a href="https://github.com/o/first/commit/{"b" * 40}"><code>bbbbbbbbbbbb</code></a>',
             f"score version {SCORE_VERSION}",
-            "- 2 check(s) judged by what could be read",
-            "**Level 2 · 75% complete · 40 depth**",
+            "2 check(s) judged by what could be read",
+            "Level 2 · Analysis",
             "<svg ",
-            "| `fuzz-testing` | Rust in . | core | WARN | +6.2% | +5 | unlocks 3 |",
-            "| `static-analysis` | 2 | Rust | . | core | PASS | clippy \\| lint | 10 |",
+            '<td><code>fuzz-testing</code> <span class="chip level">completes Level 3</span></td>',
+            "+6.2</strong>",
+            '<span class="tool">clippy | lint</span>',
+            "1.0 of 1.0",
             "https://img.shields.io/endpoint?url=https://o.github.io/p/leaderboard/badges/o--first.json",
         ):
             with self.subTest(expected=expected):
                 self.assertIn(expected, page)
+        self.assertNotIn("the full report", page)
         self.assertIn("Not scored tonight: git fetch failed", pages["leaderboard/projects/o--broken.html"])
-        self.assertIn("Every applicable cell is covered.", pages["leaderboard/projects/o--second.html"])
+        self.assertIn("Every quality gate that applies is in place.", pages["leaderboard/projects/o--second.html"])
         self.assertEqual(
             json.loads(files["leaderboard/badges/o--first.json"]),
-            {"schemaVersion": 1, "label": "project_validator", "message": "Level 2 · 75%", "color": "yellow"},
+            {"schemaVersion": 1, "label": "project_validator", "message": "75% · Level 2", "color": "yellow"},
         )
         latest = json.loads(files["leaderboard/data/latest.json"])
         self.assertEqual([entry["name"] for entry in latest], ["o/first", "o/second", "o/broken"])
 
-    def test_a_long_list_of_next_steps_is_cut(self) -> None:
-        opportunity = _opportunity()
+    def test_a_project_s_full_report_is_published_and_linked(self) -> None:
         with _directory() as data:
             with _directory() as results:
-                write(_result("o/first", 1, 0.5, 30, opportunities=[opportunity] * 12), results)
+                write({**_result("o/first", 1, 50), REPORT: "<!DOCTYPE html>report"}, results)
+                record(results, data, "2026-11-18")
+            pages, files = build(self.LISTED, data, "https://o.github.io/p/")
+        self.assertEqual(files["leaderboard/reports/o--first.html"], "<!DOCTYPE html>report")
+        self.assertIn('<a href="../reports/o--first.html">', pages["leaderboard/projects/o--first.html"])
+
+    def test_a_long_list_of_next_steps_is_cut(self) -> None:
+        step = _step()
+        with _directory() as data:
+            with _directory() as results:
+                write(_result("o/first", 1, 50, next_steps=[step] * 12), results)
                 record(results, data, "2026-11-18")
             pages, _ = build(self.LISTED, data, "https://o.github.io/p/")
         page = pages["leaderboard/projects/o--first.html"]
-        self.assertIn("| `coverage` | the project | project | FAIL | +1.0% | +0 |  |", page)
+        self.assertIn("<td><code>coverage</code></td><td>the project</td>", page)
         self.assertIn("And 2 more.", page)
 
     def test_badges(self) -> None:
-        self.assertEqual(badge(_result("o/r", 4, 1.0, 9))["color"], "brightgreen")
-        self.assertEqual(badge(_result("o/r", 0, 0.123, 9))["message"], "Level 0 · 12%")
+        self.assertEqual(badge(_result("o/r", 4, 100))["color"], "brightgreen")
+        self.assertEqual(badge(_result("o/r", 0, 12.3))["message"], "12% · Level 0")
         self.assertEqual(badge(failed(EvaluationTests.ENTRY, "x", validator="v"))["message"], "error")
 
     def test_sparkline(self) -> None:
-        self.assertEqual(sparkline([0.5]), "")
-        self.assertIn('points="0.0,20.0 120.0,10.0 240.0,0.0"', sparkline([0.5, 0.75, 1.0]))
+        self.assertEqual(sparkline([50]), "")
+        self.assertIn('points="0.0,20.0 120.0,10.0 240.0,0.0"', sparkline([50, 75, 100]))
+        self.assertIn('points="0.0,20.0 240.0,0.0"', sparkline([60, 120]))
 
 
 class PreviewTests(unittest.TestCase):
@@ -512,12 +590,8 @@ class PreviewTests(unittest.TestCase):
         return _result(
             entry.name,
             1,
-            0.5,
-            30,
-            opportunities=[
-                {"check": "coverage", "ecosystem": "Rust", "unit": ".", "tier": "core"},
-                {"check": "license", "ecosystem": "", "unit": "", "tier": "project"},
-            ],
+            50,
+            next_steps=[_step(ecosystem="Rust", unit=".", tier="core", points=25), _step(check="license", points=12.5)],
         )
 
     def test_a_new_entry_is_previewed_with_its_score_and_next_steps(self) -> None:
@@ -525,8 +599,8 @@ class PreviewTests(unittest.TestCase):
         self.assertTrue(ok)
         self.assertTrue(preview.startswith(PREVIEW_MARKER + "\n## Leaderboard preview\n"))
         self.assertIn("### [new/one](https://github.com/new/one) on the Rust board", preview)
-        self.assertIn("**Level 1 · 50% complete · 30 depth**", preview)
-        self.assertIn("- `coverage` (Rust in .)\n- `license`\n", preview)
+        self.assertIn("**50% · Level 1 Foundations**", preview)
+        self.assertIn("- `coverage` (Rust): +25.0 points\n- `license`: +12.5 points\n", preview)
         self.assertNotIn("owner/repo", preview)
 
     def test_problems_fail_the_check_and_skip_the_evaluation(self) -> None:
@@ -546,10 +620,10 @@ class PreviewTests(unittest.TestCase):
 
     def test_an_entry_without_next_steps_and_one_rounded_down(self) -> None:
         def complete(entry: Entry) -> dict[str, object]:
-            return _result(entry.name, 4, 0.996, 300)
+            return _result(entry.name, 3, 99.6)
 
         _, preview = check([], [self.NEW], lambda _: PUBLIC, complete)
-        self.assertIn("**Level 4 · 99% complete · 300 depth**\n\nScored by", preview)
+        self.assertIn("**99% · Level 3 Hardening**\n\nScored by", preview)
 
     def test_nothing_changed(self) -> None:
         self.assertIn("No entry is added or changed.", check([ENTRY], [ENTRY], lambda _: PUBLIC, self._scored)[1])
@@ -569,7 +643,7 @@ class CommandTests(unittest.TestCase):
 
     def test_record_adds_the_results(self) -> None:
         with _directory() as root:
-            write(_result("o/r", 1, 0.5, 30), root / "results")
+            write(_result("o/r", 1, 50), root / "results")
             code, output, _ = self._run("record", str(root / "results"), str(root / "data"), "--date", "2026-11-18")
             self.assertEqual((code, output), (0, "o/r\n"))
             self.assertTrue((root / "data" / "history" / "o--r.jsonl").is_file())

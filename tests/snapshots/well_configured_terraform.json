@@ -93,6 +93,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Terraform",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -151,13 +158,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Terraform",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -812,6 +812,11 @@
       "message": "not applicable to Terraform",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Terraform",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to Terraform",
@@ -823,11 +828,6 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "not applicable to Terraform",
-      "status": "SKIP"
-    },
-    "cxx-extensions": {
       "details": [],
       "message": "not applicable to Terraform",
       "status": "SKIP"

@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "C#",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -134,13 +141,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "C#",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -747,6 +747,11 @@
       "message": "not applicable to C#",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to C#",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no .NET analyzer settings found; enable at least AnalysisMode Recommended or All, EnforceCodeStyleInBuild, Nullable enable",
@@ -765,11 +770,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to C#",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

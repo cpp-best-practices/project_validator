@@ -19,7 +19,12 @@ consent = "seed"
 
 [[project]]
 name = "uber/h3"
-language = "C/C++"
+language = "C"
+consent = "seed"
+
+[[project]]
+name = "catchorg/Catch2"
+language = "C++"
 consent = "seed"
 
 [[project]]
@@ -59,12 +64,9 @@ consent = "seed"
 license = "BSD-3-Clause"
 
 [[project]]
-name = "compiler-explorer/compiler-explorer"
-language = "JavaScript/TypeScript"
+name = "expressjs/express"
+language = "JavaScript"
 consent = "seed"
-# Its examples/ and test inputs hold programs in about 100 languages, which would otherwise count as its own code
-# (upstream #182).
-auxiliary = ["example", "test"]
 
 [[project]]
 name = "jump-dev/JuMP.jl"
@@ -138,6 +140,14 @@ consent = "seed"
 name = "Alamofire/Alamofire"
 language = "Swift"
 consent = "seed"
+
+[[project]]
+name = "compiler-explorer/compiler-explorer"
+language = "TypeScript"
+consent = "seed"
+# Its examples/ and test inputs hold programs in about 100 languages, which would otherwise count as its own code
+# (upstream #182).
+auxiliary = ["example", "test"]
 
 [[project]]
 name = "zigtools/zls"

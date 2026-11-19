@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -131,13 +138,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Go",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -748,6 +748,11 @@
       "message": "not applicable to Go",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Go linters found; enable at least go vet, staticcheck",
@@ -766,11 +771,6 @@
       ],
       "message": "no statement coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Go",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

@@ -67,4 +67,4 @@ The same, each of those the project's build systems write; `.nrepl-port` for eve
 Clojure is dynamically typed (`type-checking`); lizard does not parse it (`function-limits`); `deps.edn` and
 `project.clj` pin every version and have no lock file (`dependency-management`); no fuzzer or mutation testing tool
 the validator knows runs Clojure tests; the JVM builds no debug or release configuration (`ci-build-types`,
-`hardening`, `cxx-extensions`).
+`hardening`, `compiler-extensions`).

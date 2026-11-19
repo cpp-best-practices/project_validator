@@ -52,6 +52,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Clojure",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -130,13 +137,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Clojure",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -653,6 +653,11 @@
       "message": "not applicable to Clojure",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Clojure",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no Clojure lints found; enable at least clj-kondo, *warn-on-reflection*",
@@ -671,11 +676,6 @@
       ],
       "message": "no statement coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Clojure",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

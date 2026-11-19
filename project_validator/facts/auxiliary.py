@@ -40,7 +40,7 @@ def _languages_named(name: str) -> frozenset[str]:
 class Selectors:
     """What `--auxiliary` named, resolved: each role, language (as the ecosystems spell it) and directory (without
     its trailing slash) to the name it was given as. A name is a role or a language before it is a directory
-    (`c/c++` is the ecosystem); a directory is anything else with a slash in it (`scripts/`, `tools/legacy`)."""
+    (`c++` is the language); a directory is anything else with a slash in it (`scripts/`, `tools/legacy`)."""
 
     roles: Mapping[str, str]
     languages: Mapping[str, str]

@@ -103,6 +103,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Rust",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -215,13 +222,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Rust",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -1039,6 +1039,11 @@
       "message": "not applicable to Rust",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Rust",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Rust lint settings are enabled: cargo clippy -D warnings clippy::pedantic",
@@ -1055,11 +1060,6 @@
       ],
       "message": "branch coverage is reported with cargo-llvm-cov; path coverage bonus: reported with cargo-llvm-cov",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Rust",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

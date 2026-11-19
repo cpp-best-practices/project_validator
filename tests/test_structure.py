@@ -38,7 +38,7 @@ def _check(name: str, languages: frozenset[str] = frozenset()) -> Check:
 
 class ProjectStructureTests(unittest.TestCase):
     def test_a_cmake_project_builds_the_languages_it_enables(self) -> None:
-        structure = make_context(FIXTURES / "well_configured_c_cpp").structure
+        structure = make_context(FIXTURES / "well_configured_cpp").structure
         self.assertEqual(structure.languages, frozenset({"C++"}))
         self.assertEqual(structure.build_systems, frozenset({"CMake"}))
         self.assertEqual(structure.ci_providers, ("GitHub Actions",))
@@ -117,7 +117,7 @@ class ProjectStructureTests(unittest.TestCase):
                 self.assertEqual(mapped["ci"], {"providers": [], "files": [], "jobs": []})
 
     def test_map_is_serialisable(self) -> None:
-        mapped = make_context(FIXTURES / "well_configured_c_cpp").structure.as_dict()
+        mapped = make_context(FIXTURES / "well_configured_cpp").structure.as_dict()
         self.assertEqual(mapped["languages"], ["C++"])
         self.assertEqual(mapped["build_systems"], ["CMake"])
         ci = cast(dict[str, Any], mapped["ci"])
@@ -184,7 +184,7 @@ class LanguageApplicabilityTests(unittest.TestCase):
                     self.assertEqual(run_check(found, context).status == Status.SKIP, skipped, found.name)
 
     def test_matching_checks_run(self) -> None:
-        context = make_context(FIXTURES / "well_configured_c_cpp")
+        context = make_context(FIXTURES / "well_configured_cpp")
         self.assertEqual(run_check(_check("cpp", frozenset({"C++"})), context).status, Status.PASS)
 
     def test_a_check_of_a_format_runs_in_a_project_of_data_files_alone(self) -> None:

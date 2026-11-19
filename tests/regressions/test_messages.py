@@ -11,8 +11,8 @@ from collections.abc import Mapping
 
 from project_validator.checks.action_pinning import action_pinning
 from project_validator.checks.code_formatting import code_formatting
+from project_validator.checks.compiler_extensions import compiler_extensions
 from project_validator.checks.compiler_warnings import compiler_warnings
-from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.data_wellformed import data_wellformed
 from project_validator.checks.function_limits import function_limits
 from project_validator.checks.security_scanning import security_scanning
@@ -45,19 +45,6 @@ PERL_DISTRIBUTION = {
     "Makefile.PL": "use ExtUtils::MakeMaker;\nWriteMakefile(NAME => 'Shop');\n",
     "lib/Shop.pm": "package Shop;\n1;\n",
     ".gitignore": "blib/\nMYMETA.*\n",
-}
-# zod's layout: workspace packages, one with JavaScript and TypeScript sources, each with a biome.jsonc CI never runs
-# (with one package alone the identical results fold into one clause; with two, each language has its own).
-JS_TS_WORKSPACE = {
-    "package.json": '{"name": "zod", "private": true, "workspaces": ["packages/*"]}',
-    "packages/mini/package.json": '{"name": "mini"}',
-    "packages/mini/src/a.js": "",
-    "packages/mini/src/b.ts": "",
-    "packages/mini/biome.jsonc": "{}",
-    "packages/core/package.json": '{"name": "core"}',
-    "packages/core/src/a.ts": "",
-    "packages/core/biome.jsonc": "{}",
-    **RUNS("ubuntu-latest", "npx jest"),
 }
 LANGUAGE_PREFIX = re.compile(r"^[\w+#/ ]+?(?P<unit> in \S+)?: ")
 
@@ -218,12 +205,10 @@ def _repeated(check: Check, files: Mapping[str, str]) -> list[str]:
 class RepeatedDetailTests(unittest.TestCase):
     def test_each_unread_subject_and_each_clause_is_said_once(self) -> None:
         """An unread local action is one detail line, not one per matrix OS (actions/checkout, build-push-action); a
-        distribution's unignored cover_db is one clause (mojo, perl-code-tidyall); a unit's clause is said once for
-        the JavaScript/TypeScript ecosystem, not per language (zod, axios)."""
+        distribution's unignored cover_db is one clause (mojo, perl-code-tidyall)."""
         cases = (
             ("matrix OS", static_analysis, MATRIX_LOCAL_ACTION),
             ("Perl distribution", vcs_ignore, PERL_DISTRIBUTION),
-            ("JavaScript and TypeScript", code_formatting, JS_TS_WORKSPACE),
         )
         for name, check, files in cases:
             with self.subTest(name):
@@ -279,7 +264,7 @@ class SmallMessageTests(unittest.TestCase):
         (terraform-null-label)."""
         with self.subTest("c_std"):
             meson = {"meson.build": "project('x', 'c', default_options: ['c_std=c11'])\n", "a.c": ""}
-            self.assertIn("c_std=c11", _run(cxx_extensions, meson).message)
+            self.assertIn("c_std=c11", _run(compiler_extensions, meson).message)
         with self.subTest("raco fmt"):
             hints = [detail for detail in _run(code_formatting, RACKET).details if detail.startswith("consider")]
             self.assertTrue(hints and "raco fmt" in hints[0], hints)

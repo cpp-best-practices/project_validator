@@ -4,10 +4,10 @@ import unittest
 
 from project_validator.checks.fuzz_testing import fuzz_testing
 from project_validator.core import Options, Result, Status
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.dotnet import DOTNET
 from project_validator.ecosystems.go import GO
-from project_validator.ecosystems.javascript import JAVASCRIPT_AND_TYPESCRIPT
+from project_validator.ecosystems.javascript import JAVASCRIPT_ECOSYSTEM
 from project_validator.ecosystems.jvm import JVM
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
@@ -46,8 +46,8 @@ class FuzzTestingTests(unittest.TestCase):
         result = run_as(self, fuzz_testing, WELL_CONFIGURED_PYTHON, PYTHON)
         self.assertEqual(result, Result.passed("fuzz targets in 1 file(s), run by atheris"))
 
-    def test_the_well_configured_c_cpp_project_passes_through_ctest(self) -> None:
-        result = run_as(self, fuzz_testing, fixture_files("well_configured_c_cpp"), C_AND_CXX)
+    def test_the_well_configured_cxx_project_passes_through_ctest(self) -> None:
+        result = run_as(self, fuzz_testing, fixture_files("well_configured_cpp"), CXX)
         self.assertEqual(
             result,
             Result.passed("fuzz targets in 1 file(s), run by CTest (fuzz_test/CMakeLists.txt): fuzz_tester_run"),
@@ -66,7 +66,7 @@ class FuzzTestingTests(unittest.TestCase):
         self.assertEqual(result, Result.passed("fuzz targets in 1 file(s), run by Jazzer"))
 
     def test_the_well_configured_javascript_project_passes(self) -> None:
-        result = run_as(self, fuzz_testing, fixture_files("well_configured_javascript"), JAVASCRIPT_AND_TYPESCRIPT)
+        result = run_as(self, fuzz_testing, fixture_files("well_configured_javascript"), JAVASCRIPT_ECOSYSTEM)
         self.assertEqual(result, Result.passed("fuzz targets in 1 file(s), run by Jazzer.js"))
 
     def test_the_well_configured_dotnet_project_passes(self) -> None:
@@ -79,11 +79,11 @@ class FuzzTestingTests(unittest.TestCase):
 
     def test_the_bare_projects_fail(self) -> None:
         bare = (
-            ("bare_c_cpp", C_AND_CXX),
+            ("bare_cpp", CXX),
             ("bare_rust", RUST),
             ("bare_go", GO),
             ("bare_jvm", JVM),
-            ("bare_javascript", JAVASCRIPT_AND_TYPESCRIPT),
+            ("bare_javascript", JAVASCRIPT_ECOSYSTEM),
             ("bare_dotnet", DOTNET),
             ("bare_swift", SWIFT),
         )

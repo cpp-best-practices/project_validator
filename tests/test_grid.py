@@ -33,9 +33,9 @@ def coverage_and_formatting() -> list[Report]:
         check=cxx("coverage"),
         result=Result(
             status=Status.FAIL,
-            message="C/C++: fine; Python: none",
+            message="C++: fine; Python: none",
             places=(
-                Placed(ecosystem="C/C++", unit=".", result=Result.passed("fine"), tools=("gcovr",)),
+                Placed(ecosystem="C++", unit=".", result=Result.passed("fine"), tools=("gcovr",)),
                 Placed(ecosystem="Python", unit="tools", result=Result.failed("none")),
             ),
         ),
@@ -45,7 +45,7 @@ def coverage_and_formatting() -> list[Report]:
         result=Result(
             status=Status.PASS,
             message="ok",
-            places=(Placed(ecosystem="C/C++", unit=".", result=Result.passed("ok"), tools=("clang-format",)),),
+            places=(Placed(ecosystem="C++", unit=".", result=Result.passed("ok"), tools=("clang-format",)),),
         ),
     )
     return [coverage, formatting]
@@ -57,10 +57,10 @@ class RenderGridTests(unittest.TestCase):
             render_grid(coverage_and_formatting()),
             "# project_validator results\n\n✅ pass · ⚠️ warn · ❌ fail · ❗ error · ⏭️ skip · — does not apply\n\n"
             "## Results by ecosystem\n\n"
-            "| Check | C/C++ in the root | Python in tools |\n|---|---|---|\n"
+            "| Check | C++ in the root | Python in tools |\n|---|---|---|\n"
             "| `coverage` | ✅ gcovr | ❌ |\n"
             "| `code-formatting` | ✅ clang-format | — |\n\n"
-            "## Findings\n\n- ❌ `coverage`: C/C++: fine; Python: none\n",
+            "## Findings\n\n- ❌ `coverage`: C++: fine; Python: none\n",
         )
 
     def test_one_unit_heads_columns_by_ecosystem_alone(self) -> None:
@@ -72,12 +72,12 @@ class RenderGridTests(unittest.TestCase):
                     message="ok",
                     places=(
                         Placed(ecosystem="Python", unit=".", result=Result.passed("ok")),
-                        Placed(ecosystem="C/C++", unit=".", result=Result.passed("ok")),
+                        Placed(ecosystem="C++", unit=".", result=Result.passed("ok")),
                     ),
                 ),
             )
         ]
-        self.assertIn("| Check | C/C++ | Python |\n|---|---|---|\n| `a` | ✅ | ✅ |\n", render_grid(reports))
+        self.assertIn("| Check | C++ | Python |\n|---|---|---|\n| `a` | ✅ | ✅ |\n", render_grid(reports))
 
     def test_no_ecosystem_recognised_is_said(self) -> None:
         # A project of no recognised ecosystem: the language checks skip without a place, so the grid has no column.
@@ -96,13 +96,13 @@ class RenderGridTests(unittest.TestCase):
             result=Result(
                 status=Status.SKIP,
                 message="n/a",
-                places=(Placed(ecosystem="C/C++", unit=".", result=Result.skipped("n/a")),),
+                places=(Placed(ecosystem="C++", unit=".", result=Result.skipped("n/a")),),
             ),
         )
         self.assertEqual(
             render_grid([ci, skipped]),
             "# project_validator results\n\n✅ pass · ⚠️ warn · ❌ fail · ❗ error · ⏭️ skip · — does not apply\n\n"
-            "## Results by ecosystem\n\n| Check | C/C++ |\n|---|---|\n| `hardening` | ⏭️ |\n\n"
+            "## Results by ecosystem\n\n| Check | C++ |\n|---|---|\n| `hardening` | ⏭️ |\n\n"
             "## Whole project\n\n| Check | Result |\n|---|---|\n| `ci-present` | ✅ found |\n",
         )
 
@@ -123,7 +123,7 @@ class RenderGridTests(unittest.TestCase):
             result=Result(
                 status=Status.PASS,
                 message="ok",
-                places=(Placed(ecosystem="C/C++", unit=".", result=Result.passed("ok"), tools=("a|b",)),),
+                places=(Placed(ecosystem="C++", unit=".", result=Result.passed("ok"), tools=("a|b",)),),
             ),
         )
         self.assertIn("| `p` | ✅ a\\|b |", render_grid([piped]))
@@ -136,7 +136,7 @@ class RenderGridTests(unittest.TestCase):
                 status=Status.WARN,
                 message="git rm -r --cached <path>",
                 details=("consider ignoring __pycache__/",),
-                places=(Placed(ecosystem="C/C++", unit=".", result=Result.warned("w"), tools=("![a](b)",)),),
+                places=(Placed(ecosystem="C++", unit=".", result=Result.warned("w"), tools=("![a](b)",)),),
             ),
         )
         out = render_grid([report])
@@ -155,12 +155,12 @@ class RenderGridTests(unittest.TestCase):
         )
         formatting = placed_report(
             cxx("code-formatting"),
-            Placed(ecosystem="C/C++", unit=".", result=Result.passed("ok")),
+            Placed(ecosystem="C++", unit=".", result=Result.passed("ok")),
             Placed(ecosystem="Python", unit="py", result=Result.passed("ok")),
         )
         out = render_grid([matrix, formatting])
         self.assertIn(
-            "| Check | C/C++ in the root | Python in py |\n|---|---|---|\n| `platform-matrix` | — | ✅ |\n", out
+            "| Check | C++ in the root | Python in py |\n|---|---|---|\n| `platform-matrix` | — | ✅ |\n", out
         )
         self.assertNotIn("Python in the root", out)
 
@@ -171,13 +171,13 @@ class RenderGridTests(unittest.TestCase):
                 status=Status.FAIL,
                 message="no",
                 places=(
-                    Placed(ecosystem="C/C++", unit=".", result=Result.passed("ok")),
+                    Placed(ecosystem="C++", unit=".", result=Result.passed("ok")),
                     Placed(ecosystem="Rust", unit="", result=Result.failed("no")),
                 ),
             ),
         )
         self.assertIn(
-            "| Check | Rust | C/C++ in the root |\n|---|---|---|\n| `platform-matrix` | ❌ | ✅ |\n",
+            "| Check | Rust | C++ in the root |\n|---|---|---|\n| `platform-matrix` | ❌ | ✅ |\n",
             render_grid([matrix]),
         )
 

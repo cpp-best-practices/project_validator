@@ -4,6 +4,9 @@ top-level package the tests import, and the workflow must fail when mutmut does.
 from __future__ import annotations
 
 import ast
+import re
+import subprocess
+import sys
 import tomllib
 import unittest
 from pathlib import Path
@@ -57,6 +60,35 @@ class MutationSetupTests(unittest.TestCase):
         self.assertTrue(running)
         for script in running:
             self.assertRegex(script, r"\bulimit -[vd] \d+")
+
+    @unittest.skipIf(
+        sys.platform == "win32",
+        "the mutation workflow runs on Linux; the bash Windows finds first is the WSL launcher, with no Linux",
+    )
+    def test_running_out_of_budget_is_reported_not_failed(self) -> None:
+        # timeout sends INT at the budget's end and KILL two minutes later: mutmut busy in its stats pass ignores the
+        # INT, so a pull request with too much to mutate ends in 137, which is the budget running out, as 124 is.
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        script = next(
+            step["run"] for step in workflow["jobs"]["mutmut"]["steps"] if "budget_minutes" in step.get("run", "")
+        )
+        check = next(line.strip() for line in script.splitlines() if line.strip().startswith('[ "$status" -eq 0 ]'))
+        for status, code in (("0", 0), ("124", 0), ("137", 0), ("1", 1)):
+            with self.subTest(status=status):
+                ran = subprocess.run(  # noqa: S603 - bash with the workflow's own line
+                    ["bash", "-c", f"status={status}; {check}"],  # noqa: S607 - bash from PATH
+                    check=False,
+                )
+                self.assertEqual(min(ran.returncode, 1), code)
+
+    def test_the_budget_and_its_kill_fit_in_the_job_s_timeout(self) -> None:
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        job = workflow["jobs"]["mutmut"]
+        script = next(step["run"] for step in job["steps"] if "budget_minutes" in step.get("run", ""))
+        budget = int(re.search(r"budget_minutes=(\d+)", script)[1])  # type: ignore[index]
+        # The priming run's 5 minutes, the budget, timeout's 2 minutes before KILL, and setup and the report.
+        self.assertLessEqual(5 + budget + 2 + 5, job["timeout-minutes"])
+        self.assertGreaterEqual(budget, 30)
 
     def test_the_fresh_import_test_is_left_out_of_mutation_runs(self) -> None:
         # It imports every module afresh, so mutmut maps every import-time function to it, yet it only fails on a

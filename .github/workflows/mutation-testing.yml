@@ -14,7 +14,7 @@ jobs:
   mutmut:
     name: mutmut
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -55,12 +55,12 @@ jobs:
           git -C mutants add -A
           # A budget below the job's timeout: a pull request that changes many functions still gets a report
           # of the mutants checked so far, instead of a cancelled job and no report at all. The budget covers
-          # the whole run: the stats pass that maps tests to functions (the full suite, 8 to 14 minutes), the
+          # the whole run: the stats pass that maps tests to functions (the full suite, 15 to 20 minutes), the
           # clean run of the tests covering the changed functions (up to the full suite again for a change to
           # a central function), then the mutants at about two seconds each. A pull request that changes a few
           # functions finishes well inside it; one that changes central ones gets the mutants of the fastest
           # tests first.
-          budget_minutes=20
+          budget_minutes=30
           status=0
           timeout --signal=INT --kill-after=2m "${budget_minutes}m" mutmut run "${patterns[@]}" 2>&1 | tee run.log || status=$?
           if grep -q 'Filtered for specific mutants, but nothing matches' run.log; then
@@ -68,7 +68,9 @@ jobs:
             echo "The changed functions have no mutants: nothing to mutate." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          [ "$status" -eq 0 ] || [ "$status" -eq 124 ] || exit "$status"
+          # 124 is the budget's end; 137 is the KILL two minutes after it, when mutmut ignored the INT (its stats pass
+          # does): both are the budget running out, reported below, not a failure.
+          [ "$status" -eq 0 ] || [ "$status" -eq 124 ] || [ "$status" -eq 137 ] || exit "$status"
           # The results also list every mutant not run (the other functions'), which would fill the summary.
           survivors=$(mktemp)
           mutmut results | grep -v ': not checked$' > "$survivors" || true
@@ -78,7 +80,7 @@ jobs:
             echo
             echo 'Mutants of: `'"${patterns[*]}"'`'
             echo
-            if [ "$status" -eq 124 ]; then
+            if [ "$status" -ne 0 ]; then
               echo "Stopped after $budget_minutes minutes with $checked mutants checked: the results below cover those."
               echo
             fi

@@ -1,0 +1,1055 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "TypeScript",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "TypeScript",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "coverage/"
+            ],
+            "language": "TypeScript",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "eslint"
+                ]
+              }
+            ],
+            "language": "TypeScript",
+            "practice": "compiler-warnings",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "branch": {
+              "answer": "no",
+              "gated": [],
+              "known": [
+                "c8",
+                "nyc",
+                "jest --coverage",
+                "vitest --coverage",
+                "deno test --coverage",
+                "node --test --experimental-test-coverage"
+              ],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "language": "TypeScript",
+            "line": {
+              "answer": "no",
+              "gated": [],
+              "known": [
+                "c8",
+                "nyc",
+                "jest --coverage",
+                "vitest --coverage",
+                "deno test --coverage",
+                "node --test --experimental-test-coverage",
+                "bun test --coverage"
+              ],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "bun audit": {
+                "can": {
+                  "runs": "bun audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "npm audit": {
+                "can": {
+                  "runs": "npm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "pnpm audit": {
+                "can": {
+                  "runs": "pnpm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yarn audit": {
+                "can": {
+                  "runs": "yarn audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yarn npm audit": {
+                "can": {
+                  "runs": "yarn npm audit"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "declared": [
+              {
+                "manager": "npm packages",
+                "manifest": "package.json"
+              }
+            ],
+            "language": "TypeScript",
+            "lock_required": true,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "biome": {
+                "can": {
+                  "apply": "biome format --write",
+                  "check": "biome ci"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "deno fmt": {
+                "can": {
+                  "apply": "deno fmt",
+                  "check": "deno fmt --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "dprint": {
+                "can": {
+                  "apply": "dprint fmt",
+                  "check": "dprint check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "oxfmt": {
+                "can": {
+                  "apply": "oxfmt",
+                  "check": "oxfmt --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "prettier": {
+                "can": {
+                  "apply": "prettier --write .",
+                  "check": "prettier --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "eslint's max-lines-per-function": {
+                "can": {
+                  "limits": "eslint with max-lines-per-function on"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "language": "TypeScript",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "answer": "no",
+              "defined": {},
+              "known": {
+                "Jazzer.js": {
+                  "can": {
+                    "runs": "npx jazzer <target> -- -max_total_time=30 (or jest with JAZZER_FUZZ=1)"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
+              "language": "TypeScript",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "TypeScript",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "TypeScript",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "TypeScript",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "StrykerJS": {
+                "can": {
+                  "incremental": "stryker run --incremental",
+                  "runs": "stryker run"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "axis": "runtime version",
+            "language": "TypeScript",
+            "notes": [],
+            "platforms": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "TypeScript",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "TypeScript",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "TypeScript",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "TypeScript",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "eslint-plugin-security": {
+                "can": {
+                  "scans": "eslint with eslint-plugin-security"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "biome": {
+                "can": {
+                  "checks": "biome lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "deno lint": {
+                "can": {
+                  "checks": "deno lint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "eslint": {
+                "can": {
+                  "checks": "eslint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "oxlint": {
+                "can": {
+                  "checks": "oxlint"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "xo": {
+                "can": {
+                  "checks": "xo"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "a JavaScript test runner": {
+                "can": {
+                  "runs": "jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": []
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "deno check": {
+                "can": {
+                  "checks": "deno check",
+                  "strict": "deno check (strict by default)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "tsc": {
+                "can": {
+                  "checks": "tsc --noEmit",
+                  "strict": "\"strict\": true in the compilerOptions of tsconfig.json"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "TypeScript",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "TypeScript",
+            "outputs": {
+              "node_modules": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "TypeScript",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "eslint --max-warnings 0",
+                  "biome ci",
+                  "deno lint"
+                ]
+              }
+            ],
+            "language": "TypeScript",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "JSON",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "JSON",
+            "parsed": [
+              "package.json"
+            ],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for GitHub Actions, GitLab CI, Azure Pipelines, AppVeyor, CircleCI, Travis CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs prettier --check . (or deno fmt --check, oxfmt --check, dprint check or biome ci)"
+      ],
+      "message": "CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "coverage/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "no JavaScript linters found; enable at least eslint",
+      "status": "FAIL"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [
+        "known to measure branch coverage: c8, nyc, jest --coverage, vitest --coverage, deno test --coverage, node --test --experimental-test-coverage"
+      ],
+      "message": "no branch coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "1 JSON file parses",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [
+        "consider running in CI: npm audit, pnpm audit, yarn npm audit, bun audit, yarn audit, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test"
+      ],
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    "dependency-management": {
+      "details": [
+        "commit the package manager's lockfile (package-lock.json, pnpm-lock.yaml, yarn.lock, bun.lock or deno.lock) and install from it in CI (npm ci, pnpm install --frozen-lockfile, yarn install --immutable)"
+      ],
+      "message": "dependencies are declared in package.json (npm packages) but not locked",
+      "status": "WARN"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [
+        "consider running in CI: eslint with max-lines-per-function on or lizard --length 30"
+      ],
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    "fuzz-testing": {
+      "details": [
+        "consider adding npx jazzer <target> -- -max_total_time=30 (or jest with JAZZER_FUZZ=1)"
+      ],
+      "message": "no fuzz targets found (Jazzer.js fuzz targets (an exported fuzz function or .fuzz()))",
+      "status": "FAIL"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "mutation-testing": {
+      "details": [
+        "consider running stryker run in CI"
+      ],
+      "message": "no mutation testing runs",
+      "status": "WARN"
+    },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [
+        "consider running in CI: eslint with eslint-plugin-security, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci"
+      ],
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "static-analysis": {
+      "details": [
+        "consider running eslint, xo, oxlint, deno lint or biome lint in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (*.test.*, *.spec.*, __tests__/ or test/ files)",
+      "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to TypeScript",
+      "status": "SKIP"
+    },
+    "type-checking": {
+      "details": [
+        "consider running a type checker in CI: tsc --noEmit or deno check"
+      ],
+      "message": "no type checker runs",
+      "status": "FAIL"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [
+        "run eslint with --max-warnings 0 (or biome ci, or deno lint), so that a lint warning fails CI"
+      ],
+      "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+      "status": "FAIL"
+    }
+  }
+}

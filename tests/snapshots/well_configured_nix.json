@@ -93,6 +93,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Nix",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -173,13 +180,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Nix",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -759,6 +759,11 @@
       "message": "not applicable to Nix",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Nix",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Nix lints are enabled: statix, deadnix",
@@ -770,11 +775,6 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "not applicable to Nix",
-      "status": "SKIP"
-    },
-    "cxx-extensions": {
       "details": [],
       "message": "not applicable to Nix",
       "status": "SKIP"

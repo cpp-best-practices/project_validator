@@ -17,7 +17,7 @@ from project_validator.ecosystems import (
     register,
     registered,
 )
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.model import runs, subcommands, toolchain_patterns
 from project_validator.ecosystems.perl import PERL_ECOSYSTEM
 from project_validator.ecosystems.php import PHP
@@ -30,8 +30,8 @@ from tests.support import FORMAT_ECOSYSTEM, evidence, make_context, temp_project
 
 class EcosystemsForTests(unittest.TestCase):
     def test_the_supported_ecosystems_of_the_languages(self) -> None:
-        self.assertEqual(ecosystems_for(frozenset({"C++", "Python"}), BUILT_IN), (C_AND_CXX, PYTHON))
-        self.assertEqual(ecosystems_for(frozenset({"Rust", "Python"}), (C_AND_CXX, RUST)), (RUST,))
+        self.assertEqual(ecosystems_for(frozenset({"C++", "Python"}), BUILT_IN), (CXX, PYTHON))
+        self.assertEqual(ecosystems_for(frozenset({"Rust", "Python"}), (CXX, RUST)), (RUST,))
 
     def test_no_ecosystem_for_unknown_languages(self) -> None:
         self.assertEqual(ecosystems_for(frozenset(), BUILT_IN), ())
@@ -42,7 +42,7 @@ class EcosystemsForTests(unittest.TestCase):
 
 class CheckEachEcosystemTests(unittest.TestCase):
     RESULTS: ClassVar[dict[Ecosystem, Result]] = {
-        C_AND_CXX: Result.warned("c warned", "c detail"),
+        CXX: Result.warned("c warned", "c detail"),
         PYTHON: Result.passed("python passed", "python detail"),
         RUST: Result.failed("rust failed"),
         FORMAT_ECOSYSTEM: Result.passed("data passed"),
@@ -54,7 +54,7 @@ class CheckEachEcosystemTests(unittest.TestCase):
 
     def test_a_single_ecosystem_result_is_unchanged(self) -> None:
         self.assertEqual(self._judge({"Cargo.toml": ""}), self.RESULTS[RUST])
-        self.assertEqual(self._judge({"main.c": ""}), self.RESULTS[C_AND_CXX])
+        self.assertEqual(self._judge({"main.cpp": ""}), self.RESULTS[CXX])
 
     def test_a_project_of_no_recognised_ecosystem_is_skipped(self) -> None:
         self.assertEqual(
@@ -64,7 +64,7 @@ class CheckEachEcosystemTests(unittest.TestCase):
     def test_several_ecosystems_combine_into_the_worst_result_with_labelled_findings(self) -> None:
         self.assertEqual(
             self._judge({"main.cpp": "", "setup.py": ""}),
-            Result.warned("C/C++: c warned; Python: python passed", "C/C++: c detail", "Python: python detail"),
+            Result.warned("C++: c warned; Python: python passed", "C++: c detail", "Python: python detail"),
         )
         self.assertEqual(self._judge({"main.c": "", "Cargo.toml": "", "setup.py": ""}).status, Status.FAIL)
 
@@ -94,10 +94,10 @@ class CombinedTests(unittest.TestCase):
     SKIPPED = Result(status=Status.SKIP, message="not applicable")
 
     def test_skipped_ecosystems_are_left_out(self) -> None:
-        self.assertEqual(by_ecosystem({C_AND_CXX: self.SKIPPED, PYTHON: Result.failed("no")}), Result.failed("no"))
+        self.assertEqual(by_ecosystem({CXX: self.SKIPPED, PYTHON: Result.failed("no")}), Result.failed("no"))
 
     def test_a_skip_only_when_every_ecosystem_is_skipped(self) -> None:
-        result = by_ecosystem({C_AND_CXX: self.SKIPPED, PYTHON: self.SKIPPED})
+        result = by_ecosystem({CXX: self.SKIPPED, PYTHON: self.SKIPPED})
         self.assertEqual(result.status, Status.SKIP)
         # The same result for every ecosystem is said once.
         self.assertEqual(result.message, "not applicable")
@@ -115,7 +115,7 @@ class RegistryTests(unittest.TestCase):
             return Result.passed("")
 
         self.assertEqual(
-            applies_to(Check(name="c", description="", run=run, languages_from=lambda: frozenset({"C"}))), ("C/C++",)
+            applies_to(Check(name="c", description="", run=run, languages_from=lambda: frozenset({"C"}))), ("C",)
         )
         self.assertEqual(applies_to(Check(name="any", description="", run=run)), ())
 

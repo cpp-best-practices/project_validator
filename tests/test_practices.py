@@ -52,7 +52,7 @@ def _command(line: str) -> Command:
 
 class TextsTests(unittest.TestCase):
     def test_hints_narrow_what_is_searched_for_each_requirement(self) -> None:
-        """Two requirements may share a pattern but search different commands (`-Werror` for C/C++ and for
+        """Two requirements may share a pattern but search different commands (`-Werror` for C and C++ and for
         Fortran, found by different hints): each gets its own matches, whichever asks first."""
         cmake, fpm = _command("cmake -DWERROR=ON"), _command("fpm build --flag -DWERROR")
         texts = Texts(found=((cmake, cmake.line), (fpm, fpm.line)))

@@ -83,6 +83,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Racket",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -147,13 +154,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Racket",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -691,6 +691,11 @@
       "message": "not applicable to Racket",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Racket",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to Racket",
@@ -707,11 +712,6 @@
       ],
       "message": "statement coverage is reported with raco cover",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Racket",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

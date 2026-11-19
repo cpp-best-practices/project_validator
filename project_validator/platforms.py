@@ -34,7 +34,7 @@ COMPILERS = (
 
 RUNNER_DEFAULT_COMPILERS = {"linux": "gcc", "macos": "appleclang", "windows": "msvc"}
 # The ecosystems whose jobs compile with the runner's default compiler when they name none.
-COMPILING_ECOSYSTEMS = frozenset({"C/C++", "Fortran"})
+COMPILING_ECOSYSTEMS = frozenset({"C", "C++", "Fortran"})
 
 
 def detect_operating_systems(text: str) -> list[str]:

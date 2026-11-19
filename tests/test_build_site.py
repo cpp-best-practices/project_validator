@@ -101,11 +101,14 @@ class RenderPageTests(unittest.TestCase):
         self.assertIn("<title>T - project_validator</title>", page)
         self.assertIn("<p>body</p>", page)
 
-    def test_the_navigation_is_relative_and_skips_the_current_page(self) -> None:
+    def test_the_navigation_is_relative_and_marks_the_current_section(self) -> None:
         page = render_page("# E\n", "docs/ecosystems/index.html", SITE, "2026-11-10")
         self.assertIn('<a href="../../index.html">Overview</a>', page)
         self.assertIn('<a href="../../docs/support-matrix.html">Support matrix</a>', page)
-        self.assertIn("<a>Ecosystems</a>", page)
+        self.assertIn('<a href="../../docs/ecosystems/index.html" class="active">Ecosystems</a>', page)
+        board = render_page("# P\n", "leaderboard/projects/o--r.html", SITE, "2026-11-10")
+        self.assertIn('<a href="../../leaderboard/index.html" class="active">Leaderboard</a>', board)
+        self.assertIn('class="page wrap wide"', board)
         self.assertIn('<link rel="stylesheet" href="../../style.css">', page)
 
     def test_headings_get_the_ids_github_gives_them_and_tables_render(self) -> None:
@@ -132,8 +135,31 @@ class PagesTests(unittest.TestCase):
     def test_the_ecosystems_index_links_every_ecosystem_page_by_its_title(self) -> None:
         index = pages(ROOT)["docs/ecosystems/index.html"]
         self.assertIn("- [Fortran](fortran.md)", index)
-        self.assertIn("- [C/C++](c_cpp.md)", index)
+        self.assertIn("- [C](c.md)", index)
+        self.assertIn("- [C++](cpp.md)", index)
         self.assertEqual(index.count("\n- ["), len(PROFILES))
+
+
+def _nightly(name: str, language: str) -> dict[str, object]:
+    """A night's result for a project, as `leaderboard evaluate` writes it."""
+    return {
+        "name": name,
+        "language": language,
+        "commit": "c" * 40,
+        "validator": "v" * 40,
+        "evaluated": "2026-11-18T03:17:00Z",
+        "score": {
+            "version": "1",
+            "percent": 50.0,
+            "level": 1,
+            "level_name": "Foundations",
+            "filled": 1,
+            "slots": 2,
+            "summary": "50% · Level 1 Foundations · 1 of 2 gates in place",
+            "cells": [],
+            "next_steps": [],
+        },
+    }
 
 
 class BuildTests(unittest.TestCase):
@@ -146,22 +172,7 @@ class BuildTests(unittest.TestCase):
 
     def test_the_leaderboard_is_built_from_the_nightly_results(self) -> None:
         listed = entries(ROOT / "leaderboard" / "projects.toml")
-        result: dict[str, object] = {
-            "name": listed[0].name,
-            "language": listed[0].language,
-            "commit": "c" * 40,
-            "validator": "v" * 40,
-            "evaluated": "2026-11-18T03:17:00Z",
-            "score": {
-                "version": "0",
-                "level": 1,
-                "completeness": 0.5,
-                "depth": 20,
-                "locked_depth": 0,
-                "cells": [],
-                "opportunities": [],
-            },
-        }
+        result = _nightly(listed[0].name, listed[0].language)
         with tempfile.TemporaryDirectory() as tmp:
             results, data, output = Path(tmp) / "results", Path(tmp) / "data", Path(tmp) / "site"
             write(result, results)

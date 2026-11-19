@@ -118,7 +118,7 @@ MIXED_PROJECT = MappingProxyType(
 
 
 class JobAttributionTests(unittest.TestCase):
-    """A job naming no compiler counts as a C/C++ build on its runner's default compiler, unless it only runs
+    """A job naming no compiler counts as a C or C++ build on its runner's default compiler, unless it only runs
     another ecosystem's tools."""
 
     def _jobs(self, *jobs: tuple[str, str]) -> dict[str, str]:
@@ -160,7 +160,7 @@ class JobAttributionTests(unittest.TestCase):
             {**MIXED_PROJECT, **self._jobs(("ubuntu-latest", "pip install gcovr && cmake -B b"))}
         ) as root:
             [job] = make_context(root).structure.as_dict()["ci"]["jobs"]  # type: ignore[index]
-            self.assertEqual(job["ecosystems"], ["C/C++", "Python"])
+            self.assertEqual(job["ecosystems"], ["C++", "Python"])
 
 
 class PlatformQuestionTests(unittest.TestCase):

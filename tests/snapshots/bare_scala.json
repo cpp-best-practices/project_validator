@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Scala",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -135,13 +142,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Scala",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -677,6 +677,11 @@
       "message": "not applicable to Scala",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Scala",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no scalac warning options found; enable at least -deprecation, -feature, -Xlint or -Wunused",
@@ -695,11 +700,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Scala",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

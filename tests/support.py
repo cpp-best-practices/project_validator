@@ -11,14 +11,15 @@ from contextlib import contextmanager
 from pathlib import Path
 from types import MappingProxyType
 
-from project_validator import pretty
 from project_validator.core import Check, Context, Options, Project, Result
 from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.c import C
+from project_validator.ecosystems.cpp import CXX
 from project_validator.facts import Command, Origin, resolved
 from project_validator.facts.expansion import script_facts
 from project_validator.facts.jobs import Job
 from project_validator.plugins import discover
+from project_validator.views import console as console_view
 from tests import layouts
 from tests.layouts.model import ProjectLayout
 
@@ -29,7 +30,7 @@ FORMAT_ECOSYSTEM = Ecosystem(
     label="Widget data", kind="format", languages=frozenset({"WDATA"}), source_suffixes={".wdata": "WDATA"}
 )
 
-requires_rich = unittest.skipUnless(pretty.available(), "rich is not installed")
+requires_rich = unittest.skipUnless(console_view.available(), "rich is not installed")
 
 NO_FILES: Mapping[str, str] = MappingProxyType({})
 
@@ -83,15 +84,20 @@ def layouts_checked_as(selected: Check, *ecosystems: Ecosystem) -> tuple[Project
     return tuple(layout for layout in PROJECT_LAYOUTS if checked_ecosystems(selected, layout) == ecosystems)
 
 
-def c_family_layouts_built_with(selected: Check, build_system: str) -> tuple[ProjectLayout, ...]:
-    """The layouts in which `selected` judges only C/C++, by the rules of `build_system`.
+def c_family_layouts(selected: Check) -> tuple[ProjectLayout, ...]:
+    """The layouts in which `selected` judges only C, or only C++."""
+    return (*layouts_checked_as(selected, C), *layouts_checked_as(selected, CXX))
 
-    A layout without a C/C++ build system is judged as a CMake project.
+
+def c_family_layouts_built_with(selected: Check, build_system: str) -> tuple[ProjectLayout, ...]:
+    """The layouts in which `selected` judges only C or only C++, by the rules of `build_system`.
+
+    A layout without a C or C++ build system is judged as a CMake project.
     """
     return tuple(
         layout
-        for layout in layouts_checked_as(selected, C_AND_CXX)
-        if C_AND_CXX.used_build_systems(layout.build_systems)[0].name == build_system
+        for layout in c_family_layouts(selected)
+        if CXX.used_build_systems(layout.build_systems)[0].name == build_system
     )
 
 
@@ -136,10 +142,10 @@ def run_in_every_layout(
 ) -> Result:
     """The result of `selected` in a project of each layout with `files` added, which must not depend on the layout.
 
-    By default the layouts are every one in which `selected` judges only C/C++.
+    By default the layouts are every one in which `selected` judges only C, or only C++.
     """
     if layouts is None:
-        layouts = layouts_checked_as(selected, C_AND_CXX)
+        layouts = c_family_layouts(selected)
     results: dict[str, Result] = {}
     for layout in layouts:
         with temp_project({**layout.files, **files}) as root:
@@ -151,8 +157,8 @@ def run_in_every_layout(
     return expected
 
 
-WELL_CONFIGURED = fixture_files("well_configured_c_cpp")
-BARE_PROJECT = fixture_files("bare_c_cpp")
+WELL_CONFIGURED = fixture_files("well_configured_cpp")
+BARE_PROJECT = fixture_files("bare_cpp")
 
 
 def well_configured(layout: ProjectLayout) -> dict[str, str]:

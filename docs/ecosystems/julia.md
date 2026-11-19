@@ -66,6 +66,6 @@ left to `dependency-management`.
 
 ## Not judged
 
-Julia compiles memory-safe code (`hardening`, `cxx-extensions`, `ci-build-types`); no static analyzer besides Aqua
+Julia compiles memory-safe code (`hardening`, `compiler-extensions`, `ci-build-types`); no static analyzer besides Aqua
 and JET, dependency auditor, function length limiter (lizard does not parse Julia), fuzzer or mutation testing tool
 the validator knows reads Julia.

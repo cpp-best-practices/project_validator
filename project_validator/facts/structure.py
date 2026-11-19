@@ -8,12 +8,12 @@ from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Callable, Iterable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator.core import Project
-from project_validator.ecosystems import Ecosystem, Kind, build_systems, formats, registered
+from project_validator.ecosystems import Ecosystem, Kind, build_systems, families, formats, registered
 from project_validator.facts import Fact, Facts, Origin
 from project_validator.facts.auxiliary import AuxiliaryCode, Selectors
 from project_validator.facts.roles import role
@@ -189,13 +189,53 @@ def source_signal(path: str) -> str:
     return found[0]
 
 
-def _ambiguous(files: list[str], confirmed: list[Ecosystem]) -> Iterator[SourceFile]:
+def _ambiguous(
+    files: list[str], confirmed: list[Ecosystem], sources: Iterable[SourceFile], declared: frozenset[str]
+) -> Iterator[SourceFile]:
+    """The sources with a suffix the `confirmed` ecosystems claim ambiguously. A file several of them claim for
+    different languages (a `.h` header, C's or C++'s) is the language of the sources around it (see `_neighbours`)."""
+    claims: dict[str, list[str | None]] = {}
     for ecosystem in confirmed:
         for suffix, language in sorted((ecosystem.ambiguous_suffixes or {}).items()):
             for path in files:
                 if PurePosixPath(path).suffix == suffix:
-                    origin = Origin(path=path)
-                    yield SourceFile(origin=origin, language=language, ambiguous=True, role=role(path))
+                    claims.setdefault(path, []).append(language)
+    neighbours = _Neighbours(sources)
+    for path, candidates in claims.items():
+        named = list(dict.fromkeys(language for language in candidates if language is not None))
+        language = named[0] if len(named) == 1 else neighbours.language(path, named, declared) if named else None
+        yield SourceFile(origin=Origin(path=path), language=language, ambiguous=True, role=role(path))
+
+
+class _Neighbours:
+    """How many of the project's own sources of each language are below each directory."""
+
+    def __init__(self, sources: Iterable[SourceFile]) -> None:
+        self._below: dict[str, Counter[str]] = {}
+        for source in sources:
+            if source.language is not None and not source.vendored:
+                for directory in _ancestors(source.path):
+                    self._below.setdefault(directory, Counter())[source.language] += 1
+
+    def language(self, path: str, candidates: list[str], declared: frozenset[str]) -> str:
+        """Of `candidates`, the language of most sources below the nearest ancestor of `path` that has any of them
+        (the first candidate on a tie); with none anywhere, the one candidate the build files `declared`, else the
+        first."""
+        for directory in _ancestors(path):
+            counts = self._below.get(directory, Counter())
+            if found := [language for language in candidates if counts[language]]:
+                return max(found, key=lambda language: counts[language])
+        only = [language for language in candidates if language in declared]
+        return only[0] if len(only) == 1 else candidates[0]
+
+
+def _ancestors(path: str) -> Iterator[str]:
+    """The directories `path` is in, nearest first, ending with the project's root (".")."""
+    parent = PurePosixPath(path).parent
+    while str(parent) != ".":
+        yield str(parent)
+        parent = parent.parent
+    yield "."
 
 
 def _own_sources(facts: Facts) -> Iterator[str]:
@@ -208,13 +248,44 @@ def project_languages(facts: Facts) -> frozenset[str]:
     """The languages the project uses: those its build files build, its own sources are written in, or its content
     shows; not its formats."""
     known = formats()
-    return frozenset(
-        {
-            *(language for build in facts.of(BuildFile) for language in build.languages),
-            *(name for name in _own_sources(facts) if name not in known),
-            *(name for name in _content_names(facts) if name not in known),
-        }
-    )
+    own = {name for name in _own_sources(facts) if name not in known}
+    built = {language for build in facts.of(BuildFile) for language in build.languages}
+    return frozenset({*given_way(built, own), *own, *(name for name in _content_names(facts) if name not in known)})
+
+
+def given_way(declared: Iterable[str], sources: Iterable[str]) -> set[str]:
+    """The languages build files `declared`, but the languages of a family give way to the `sources` when there are
+    sources of the family (see `Ecosystem.family`): CMake's project() enables C and C++ unless told otherwise, and a
+    package.json's `main` names the JavaScript a TypeScript package publishes, neither of which says which language
+    the code is written in."""
+    declared, sources = set(declared), set(sources)
+    for family in families():
+        if sources & family:
+            declared -= family - sources
+    return declared
+
+
+def _tool_configuration(sources: list[SourceFile]) -> Iterator[SourceFile]:
+    """`sources`, with the tool configuration of a family's language (`eslint.config.js`) adding no language where
+    the family's other languages have sources of their own (a TypeScript project's)."""
+    patterns = {
+        language: (ecosystem.tool_configuration, family)
+        for ecosystem in registered()
+        if ecosystem.tool_configuration and ecosystem.family
+        for family in families()
+        if ecosystem.languages <= family
+        for language in ecosystem.languages
+    }
+
+    def configuration(source: SourceFile) -> bool:
+        found = patterns.get(source.language or "")
+        return found is not None and any(fnmatchcase(PurePosixPath(source.path).name, glob) for glob in found[0])
+
+    own = {source.language for source in sources if not source.vendored and not configuration(source)}
+    for source in sources:
+        family = patterns[source.language or ""][1] if configuration(source) else frozenset()
+        given = configuration(source) and bool(own & (family - {source.language}))
+        yield replace(source, language=None) if given else source
 
 
 def _content_names(facts: Facts) -> Iterator[str]:
@@ -339,7 +410,8 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
     # What a build file builds counts for its unit too, unless the build file only declares a workspace.
     for build in facts.of(BuildFile):
         if (directory := _directory(build)) not in workspaces or languages.get(directory):
-            languages.setdefault(owner(directory, roots), set()).update(_own(build.languages, build.origin.path, named))
+            unit = languages.setdefault(owner(directory, roots), set())
+            unit.update(given_way(_own(build.languages, build.origin.path, named), unit))
     known = formats()
     for content in facts.of(ContentLanguages):
         names = _own(content.languages, ".", named, directory=True)
@@ -364,10 +436,13 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     named = Selectors.parse(project.auxiliary)
     yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary))
     found = list(_build_files(project, files))
-    plain = Facts((*(fact for fact, _ in found if fact is not None), *_sources(project), *_content(project)))
+    found_sources = list(_tool_configuration(list(_sources(project))))
+    plain = Facts((*(fact for fact, _ in found if fact is not None), *found_sources, *_content(project)))
     yield from plain
     names = project_languages(plain) | project_formats(plain)
-    ambiguous = list(_ambiguous(files, [ecosystem for ecosystem in registered() if ecosystem.languages & names]))
+    confirmed = [ecosystem for ecosystem in registered() if ecosystem.languages & names]
+    declared = frozenset(language for build in plain.of(BuildFile) for language in build.languages)
+    ambiguous = list(_ambiguous(files, confirmed, plain.of(SourceFile), declared))
     yield from ambiguous
     sources = (*plain.of(SourceFile), *ambiguous)
     recognised = {signal for source in sources if (signal := source_signal(source.path)).startswith(".")}

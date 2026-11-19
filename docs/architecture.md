@@ -18,7 +18,7 @@ This document describes the design as it is. How the code got here, one pull req
 Before this design, each language profile supplied a typed rule to each practice: the regular expressions that
 recognised its tools, where to look for them, and what counted as passing. Detection and requirements were mixed in
 one object, so adding a language touched about 25 shared files and the snapshot of every other fixture; knowledge
-that was not about one language had to live in one (CMake in the C/C++ profile, although it also builds Fortran;
+that was not about one language had to live in one (CMake in the C and C++ profile, although it also builds Fortran;
 gcov, lizard and the sanitizers copied per profile); and a profile that could not meet a requirement (Go has no
 branch coverage) needed a special case in the profile and in the tests.
 
@@ -163,7 +163,7 @@ below one, `src/test/resources`): `product`, `test`,
 data file there is noted, not parsed), or `vendored` (below a vendor directory anywhere, or a minified bundle).
 A role names code; it judges none: every source outside vendored directories is the product's, whatever its role,
 and adds its language to its unit. `--auxiliary` dials that back (`project_validator/facts/auxiliary.py`): what it
-names, by role (`tooling`), by language or ecosystem (`python`, `c/c++`) or by directory (`scripts/`), is recorded as
+names, by role (`tooling`), by language or ecosystem (`python`, `c++`) or by directory (`scripts/`), is recorded as
 a fact (`AuxiliaryCode`) and resolved once per project (`selectors`). Code it names adds no language to its unit; a
 language only such code is written in is still judged by every practice, in the units that code is in, but the
 judging layer makes its failures warnings that say so and name the dial, and labels them `(auxiliary: tooling)`.
@@ -220,7 +220,7 @@ build system registers for a test runner) applies to the units at or below its d
 
 Build-wired tools are claims on the build: CMake's `CMAKE_<LANG>_CLANG_TIDY`, JVM analyzers bound to a build's
 verification, .NET analyzer packages, SwiftLint's build tool plugin, a restore with `NuGetAuditMode`. Probes
-(`Probe`) run the project's own tools when asked (`--build`): the C/C++ profile builds the project and counts what
+(`Probe`) run the project's own tools when asked (`--build`): the C and C++ profiles build the project and count what
 ctest lists.
 
 Shared tools (`project_validator/tools`) serve every language whose files they read: gcov, gcovr, lcov and llvm-cov
@@ -311,6 +311,18 @@ support matrix is not committed (a generated file would be, against `committed-a
 changes it): the `pages` workflow renders it, the README and the pages under docs/ to HTML (`tests/build_site.py`)
 and publishes them to GitHub Pages from `main` on every push.
 
+### Views
+
+Every output renders one `Analysis` (`project_validator/analysis.py`): the project, the structure, the facts, each
+check's report, the score, the extraction stages with how long each took and what it found, the code in each role,
+and the git checkout the project is in. `analyse` extracts the facts first, then runs the checks, and tells the
+context's observers what it does (`Progress`: a stage or a check, starting or done), so the console and the TUI can
+show it while it works. The views are in `project_validator/views`: plain text, the console (rich), the HTML report
+(one self-contained file, its stylesheet and scripts in `views/assets`, shared with the documentation site and the
+leaderboard) and the TUI (textual, imported only when installed). What they share, how a place is named, how the
+checks are grouped by category, what was detected in words, is in `views/common.py`, so that every view says the same
+thing. Why each check matters, and its category, is in `project_validator/explanations.py`, which `--explain` prints.
+
 ### Worked example: branch coverage in this repository
 
 1. The GitHub Actions extractor records the job `coverage` and its command
@@ -335,6 +347,15 @@ settings readers, `practices.py` its practices. A profile's fixtures (`tests/fix
 are named after its module, and the ecosystem contract (`tests/test_ecosystem_contract.py`) checks that each
 profile has them and that its well-configured fixture passes every check that applies to it.
 `python -m project_validator.scaffold` starts one with everything the contract asks for.
+
+Separate languages that share their build systems and tools are separate profiles of one **family**
+(`Ecosystem.family`): C and C++ (what they share is the `project_validator/c_family` package, each judged by its own
+flags: `CMAKE_CXX_FLAGS` does not count for C), JavaScript and TypeScript (TypeScript uses the JavaScript profile's
+platform and tools, and adds type checking). A build file that declares a language of a family (CMake's default
+`project()` languages, package.json's `main`) adds it only where no source of the family says otherwise; a header
+claimed by several of a family (`.h`) is the language of most sources below its nearest directory that has any; and
+a family's tool configuration (`eslint.config.js`) is no source of its language where the family's other languages
+have sources.
 
 A plugin (`--plugin-dir`) is a directory of modules read the same way: its ecosystems are registered (an ecosystem
 may not claim another one's build file or source suffix), and its components are found beside the built-in ones.

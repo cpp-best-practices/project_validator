@@ -103,6 +103,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Go",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -195,13 +202,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Go",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -959,6 +959,11 @@
       "message": "not applicable to Go",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Go",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Go linters are enabled: go vet, staticcheck",
@@ -975,11 +980,6 @@
       ],
       "message": "statement coverage is reported with go test -cover",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Go",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

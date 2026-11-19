@@ -67,11 +67,12 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Install PyYAML
+      - name: Install the test dependencies
         run: python -m pip install --require-hashes -r .github/requirements/test.txt
 
+      # The unittest suite, run by pytest-xdist on every core; warnings are errors in each worker.
       - name: Test
-        run: python -W error -m unittest
+        run: python -W error -m pytest -W error -n auto -p no:cacheprovider
 
   formatting:
     name: formatting
@@ -235,8 +236,12 @@ jobs:
       # the job summary first; the strict run decides the step.
       - name: Validate project_validator with itself
         run: |
-          project-validator --format markdown --exclude tests/fixtures . >> "$GITHUB_STEP_SUMMARY" || true
-          project-validator --strict --exclude tests/fixtures .
+          # The HTML report's script (views/assets) is JavaScript without a JavaScript toolchain of its own yet: it is
+          # left out until it has one, rather than hidden from the validator. build/ is what `pip install .` left
+          # (a copy of the package, that script included).
+          exclude=(--exclude tests/fixtures --exclude project_validator/views/assets --exclude build)
+          project-validator --format markdown "${exclude[@]}" . >> "$GITHUB_STEP_SUMMARY" || true
+          project-validator --strict "${exclude[@]}" .
 
       # What a pull request changes in the support matrix (the rows a profile or a check adds), against main's.
       - name: Show the support matrix changes

@@ -8,7 +8,7 @@ from typing import ClassVar
 from project_validator.checks.code_formatting import code_formatting
 from project_validator.core import Options, Result, Status
 from project_validator.ecosystems import C_FAMILY
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 from project_validator.facts import Facts
@@ -308,11 +308,11 @@ class UnitCodeFormattingTests(unittest.TestCase):
 
 class MixedLanguageCodeFormattingTests(unittest.TestCase):
     def test_every_language_needs_a_formatter_and_findings_are_labelled(self) -> None:
-        result = run_as(self, code_formatting, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        result = run_as(self, code_formatting, dict(WELL_CONFIGURED), CXX, PYTHON)
         self.assertEqual(
             result,
             Result.failed(
-                "C/C++: .clang-format is defined and CI runs clang-format; "
+                "C++: .clang-format is defined and CI runs clang-format; "
                 "Python: CI never runs ruff format or black; its formatting is not enforced",
                 "Python: consider a CI job that runs ruff format --check (or black --check)",
             ),
@@ -320,7 +320,7 @@ class MixedLanguageCodeFormattingTests(unittest.TestCase):
 
     def test_passes_when_every_language_is_formatted(self) -> None:
         workflow = WELL_CONFIGURED[GITHUB_WORKFLOW] + "      - run: ruff format --check\n"
-        result = run_as(self, code_formatting, {**WELL_CONFIGURED, GITHUB_WORKFLOW: workflow}, C_AND_CXX, PYTHON)
+        result = run_as(self, code_formatting, {**WELL_CONFIGURED, GITHUB_WORKFLOW: workflow}, CXX, PYTHON)
         self.assertEqual(result.status, Status.PASS)
 
 
@@ -343,7 +343,7 @@ class AnswerTests(unittest.TestCase):
             result = code_formatting.run(context)
         self.assertEqual(result.status, Status.WARN)
         self.assertIn(
-            "C/C++: .clang-format is defined and CI runs clang-format; Python (auxiliary: docs): CI never runs ",
+            "C++: .clang-format is defined and CI runs clang-format; Python (auxiliary: docs): CI never runs ",
             result.message,
         )
         self.assertIn(

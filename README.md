@@ -28,7 +28,9 @@ The validator itself is pure Python and has no build step; it only inspects
 - Python 3.12+ (the system Python on Ubuntu 24.04 LTS and later; no installation step,
   run with `python3 -m project_validator <path>`)
 - [PyYAML](https://pyyaml.org/) 6.0+ (`python3-yaml` on Ubuntu, or `python3 -m pip install PyYAML`)
-- Optionally [rich](https://github.com/Textualize/rich) 13.0+ for colored output
+- Optionally [rich](https://github.com/Textualize/rich) 13.0+ for the console report (`pip install
+  project_validator[pretty]`), and [textual](https://github.com/Textualize/textual) for the TUI (`[tui]`; `[all]` for
+  both). The HTML report needs nothing more
 - CMake / CTest, only for `--build` (already required by any CMake project being validated)
 
 On a machine without Python 3.12, `uv run` or a distro backport will work.
@@ -43,7 +45,23 @@ python3 -m project_validator --map path/to/project
 python3 -m project_validator --facts path/to/project
 python3 -m project_validator --answers path/to/project
 python3 -m project_validator --only coverage,platform-matrix --format json path/to/project
+python3 -m project_validator --html report.html --score path/to/project
+python3 -m project_validator --explain fuzz-testing
+python3 -m project_validator --tui path/to/project
 ```
+
+What you see:
+- **In a terminal** (with rich): a header with the score, then what was detected (each language and what recognised
+  it, the units, the code in each role and how it is judged, the CI, how much was read), the results grouped by
+  category with a line per language where they differ, and the score's breakdown and next steps. Progress is shown
+  while the project is read. `--verbose` shows every detail and the checks that do not apply.
+- **Elsewhere** (CI logs, or without rich): the same detection, then one greppable `[STATUS] check: message` line per
+  check, each detail said once.
+- **The HTML report** (`--html FILE`, or `--format html`): one self-contained file, light and dark, with the score,
+  what was detected, every result with why it matters, a matrix of checks by language, the next steps, a searchable
+  browser of every fact the validator read (linked to the file on GitHub for a checkout) and how long each stage took.
+- **The TUI** (`--tui`, with textual): the stages as they are read, then a tree of the overview, what was detected,
+  the results, the next steps and the facts by kind.
 
 | Option | Meaning |
 |---|---|
@@ -53,13 +71,17 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 | `--facts` | print the facts found about the project as JSON, each with where it was found: the source and build files with their languages, the settings the configuration files hold (per tool), the CI jobs (one per matrix combination), the commands and actions each runs, the commands those run in turn (package scripts, Deno tasks, Composer scripts, Make targets, pre-commit hooks), what the coverage tools CI runs measure, and what could not be read (see [docs/architecture.md](docs/architecture.md)) |
 | `--answers` | print the answers to every question about the project as JSON, per language in each unit of the project: each `yes`, `no`, `unknown` (something that could answer it was not read) or `impossible` (no known tool provides it for the language), with what shows it (the tools CI runs and the files that define them, the coverage at each granularity, the settings met, the platforms, the manifests and lockfiles, …) and what the known tools could do |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
-| `--format text\|json\|markdown` | output format; `json` gives each check's result and, in `places`, its result for each ecosystem in each unit (status, message, details, the tools that ran, what `--auxiliary` named); `markdown` lays those places out as a grid of checks against ecosystems, for a CI job summary (and says so when no ecosystem was recognised) |
-| `--score` | also score the project's tooling (a preview, [docs/score.md](docs/score.md)): its **level** (a gated tech tree: foundations, analysis, hardening, excellence), **completeness** (covered cells over applicable ones, averaged across units; auxiliary code weighs half) and **depth** (each tool in a covered cell by its rank), and the next steps that raise them most. Text and markdown end with the summary and the top five next steps; JSON becomes `{"results": [...], "score": {...}}`. The statuses and the exit code do not change |
+| `--format text\|json\|markdown\|html` | output format; `text` is the console report on a terminal with rich, plain text otherwise; `html` prints the HTML report; `json` gives each check's result and, in `places`, its result for each ecosystem in each unit (status, message, details, the tools that ran, what `--auxiliary` named); `markdown` lays those places out as a grid of checks against ecosystems, for a CI job summary (and says so when no ecosystem was recognised) |
+| `--score` | also print the tooling score ([docs/score.md](docs/score.md)) in the plain text, markdown and JSON outputs (the console and HTML reports always show it): **100% means every quality gate that applies to each part of the project is in place**, with extra credit above it for complementary tools once every gate is; its **level** (Foundations, Analysis, Hardening, Complete); and the next steps worth the most. JSON becomes `{"results": [...], "score": {...}}`. The statuses and the exit code do not change |
+| `--html FILE` | also write the self-contained HTML report to `FILE`, whatever `--format` prints |
+| `-v`, `--verbose` | in the console report, show every detail, the checks that do not apply, and each stage of the reading |
+| `--explain CHECK` | explain a check: what it looks for, why it matters, the level it counts for, and the tools it recognises for each language |
+| `--tui` | browse the analysis in the terminal (needs textual) |
 | `--color auto\|always\|never` | color the text output (needs rich); `auto` colors only on a terminal when `NO_COLOR` is unset |
 | `--exclude DIR` | leave `DIR`, relative to the project, out of the validation (e.g. test fixtures); may be repeated |
 | `--build` | configure and build the project in a temporary directory and ask `ctest` for its tests; a build that cannot run makes whether there are tests unknown |
 | `--strict` | treat warnings as failures |
-| `--auxiliary WHAT` | judge this code as auxiliary, not the product's: by role (`tooling`, `docs`, `example`, `benchmark`, `test`), by language or ecosystem (`python`, `c/c++`), or by directory (`scripts/`); may be repeated. Every check still judges it in full, but its failures are warnings, labelled `(auxiliary: tooling)` and saying in a detail what named the code. Without it, every source outside vendored directories is the product's: a C++ project's `scripts/release.py` makes Python one of its languages, held to every check |
+| `--auxiliary WHAT` | judge this code as auxiliary, not the product's: by role (`tooling`, `docs`, `example`, `benchmark`, `test`), by language or ecosystem (`python`, `c++`), or by directory (`scripts/`); may be repeated. Every check still judges it in full, but its failures are warnings, labelled `(auxiliary: tooling)` and saying in a detail what named the code. Without it, every source outside vendored directories is the product's: a C++ project's `scripts/release.py` makes Python one of its languages, held to every check |
 | `--max-file-size MIB` | committed files larger than this belong in Git LFS or DVC (default: 5) |
 | `--allow-official-tags` | let the actions GitHub publishes (`actions/`, `github/`) be pinned to tags |
 | `--allow-unknown` | judge by what could be read when an answer depends on CI configuration that could not be (a provider scanned heuristically, a matrix computed by an expression, a reusable workflow in another repository). Without it, such an answer is an `ERROR`: a gap in the validator's tooling, not a finding about the project |
@@ -80,17 +102,17 @@ Every language is judged in each unit (build root or workspace member) of the pr
 | `coverage` | A coverage tool CI runs measures branch coverage, or the finest coverage any known tool can measure for the language when none measures branches. The result says how far CI takes it: measured, reported (a report shows the numbers; an upload to Codecov or Coveralls counts) or gated (CI fails under a threshold; a Codecov status target counts), and suggests the next rung. Path or MC/DC coverage is a bonus. A setting counts when CI runs the tool that reads it |
 | `platform-matrix` | CI covers at least 2 operating systems, 2 toolchains (compilers, or the ecosystem's language versions) and 3 OS/toolchain combinations; for SQL, 2 database engine versions (the service containers CI runs: `postgres:16`), whatever the OS |
 | `ci-build-types` | every OS/toolchain combination in CI builds Debug and Release, each with and without sanitizers |
-| `sanitizers` | sanitizers are used in some configuration: for C/C++, AddressSanitizer and UndefinedBehaviorSanitizer (`-fsanitize=address,undefined`, MSVC's `/fsanitize=address`, cmake_template's `ENABLE_SANITIZER_*` options, Meson's `b_sanitize`), warning when only one of the two is; for Rust, `cargo miri test` or a nightly `-Zsanitizer` build; for Go, `go test -race` (the race detector; `-asan` and `-msan` count too). Fails when none is used; `ci-build-types` asks that each platform builds with and without them |
+| `sanitizers` | sanitizers are used in some configuration: for C and C++, AddressSanitizer and UndefinedBehaviorSanitizer (`-fsanitize=address,undefined`, MSVC's `/fsanitize=address`, cmake_template's `ENABLE_SANITIZER_*` options, Meson's `b_sanitize`), warning when only one of the two is; for Rust, `cargo miri test` or a nightly `-Zsanitizer` build; for Go, `go test -race` (the race detector; `-asan` and `-msan` count too). Fails when none is used; `ci-build-types` asks that each platform builds with and without them |
 | `compiler-warnings` | a strict warning set is enabled. Warns listing what is missing |
 | `warnings-as-errors` | warnings fail the build, the lint or the tests |
-| `cxx-extensions` | compiler extensions to the language standard are turned off, so `-std=c++NN` is used rather than `-std=gnu++NN` (for Fortran, `-std=f2018` rather than the GNU dialect) |
+| `compiler-extensions` | compiler extensions to the language standard are turned off, so `-std=c++NN` (C: `-std=cNN`) is used rather than `-std=gnu++NN` (`-std=gnuNN`); for Fortran, `-std=f2018` rather than the GNU dialect. `cxx-extensions`, its old name, still selects it |
 | `out-of-source-build` | the build prevents in-source builds: a CMake file compares `CMAKE_SOURCE_DIR` with `CMAKE_BINARY_DIR` (and stops with `message(FATAL_ERROR)` when they are equal), or sets `CMAKE_DISABLE_IN_SOURCE_BUILD`; Meson always builds out of source. Warns otherwise |
 | `compile-commands` | the build exports `compile_commands.json`, so clang-based tooling (clang-tidy, clangd, IDEs) can read it: `CMAKE_EXPORT_COMPILE_COMMANDS` on in the CMake files, a preset or on the command line; Meson always writes it. Warns otherwise |
 | `top-level-guard` | tests and developer-only settings are conditioned on the project being built on its own (`PROJECT_IS_TOP_LEVEL`, `CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR`; Meson: `meson.is_subproject()`), so that it works as a subproject through FetchContent, CPM or `add_subdirectory`. Warns otherwise |
 | `hardening` | binary hardening is enabled: exploit mitigations that the build inserts into the binary (static analysis and dependency audits are judged by `security-scanning` and `dependency-audit`). Ecosystems that build no native binary are not judged. Warns listing what is missing |
 | `code-formatting` | CI enforces each language's formatting in each unit: a formatter run that fails on unformatted code, or one that rewrites it where the job fails on the change or commits it (a pre-commit hook, `git diff --exit-code`). Its style is defined (e.g. `.clang-format`) or the tool's own. Warns when the style is defined but CI does not enforce it |
 | `function-limits` | function length is limited: lizard runs with a length limit (`lizard --length 30`), or one of the ecosystem's own tools limits it |
-| `static-analysis` | CI runs a static analyzer on each language in each unit (and every analyzer a language requires: clang-tidy and cppcheck for C/C++), with its checks defined where it has no defaults worth running. Warns when an analyzer is configured but does not run, or runs short; fails when none runs |
+| `static-analysis` | CI runs a static analyzer on each language in each unit (and every analyzer a language requires: clang-tidy and cppcheck for C and C++), with its checks defined where it has no defaults worth running. Warns when an analyzer is configured but does not run, or runs short; fails when none runs |
 | `type-checking` | CI (or a pre-commit hook CI runs) runs a static type checker on each dynamically typed language in each unit. Strict mode is a bonus; without it the result suggests it. Warns when a type checker is configured but does not run; fails when none runs. Compiled languages, whose compilers check types, are not judged |
 | `mutation-testing` | CI runs a mutation testing tool on each language in each unit (mutmut, cosmic-ray, Mull, cargo-mutants, gremlins, StrykerJS, PIT, Stryker.NET, Infection, mutant, Muter); running it on a pull request's changes only is a bonus (heuristic: the mutant names are taken as the pull request's changes). Warns when a tool is configured but does not run, or when none is found |
 | `action-pinning` | every action and reusable workflow CI uses from another repository is pinned to a full commit SHA (`actions/checkout@<SHA> # v4.2.2`), and every `docker://` image to a digest. Fails when one is pinned to a branch or not at all; warns when one is pinned to a tag or an abbreviated commit (`--allow-official-tags` accepts tags for `actions/` and `github/`). Skipped without GitHub Actions |
@@ -137,7 +159,7 @@ Known limitations:
   values unknown.
 - Evidence is found by scanning text, so every file under the project is considered;
   use `--exclude` to leave out test fixtures or vendored code.
-- A CI job that names no compiler counts as a C/C++ build with its runner's default compiler,
+- A CI job that names no compiler counts as a C or C++ build with its runner's default compiler,
   unless it only runs another ecosystem's tools (e.g. pytest, but no CMake, Meson or compiler).
 
 ## Writing a Plugin
@@ -302,7 +324,8 @@ with as little setup as possible. To keep it that way:
 | Dependency | Kind | Why |
 |---|---|
 | [PyYAML](https://pyyaml.org/) `>=6.0` | required | The standard library has no YAML parser, and CI configuration is YAML. PyYAML is mature, MIT licensed, has no dependencies, and is packaged by every major distro (`python3-yaml` on Ubuntu). It is required rather than optional because scanning CI files as text cannot tell which compiler runs on which OS, nor apply a matrix's `include`/`exclude`, so it over-counts platform combinations and can pass `platform-matrix` for a project that should fail. Without PyYAML the validator exits with an error that says how to install it. |
-| [rich](https://github.com/Textualize/rich) `>=13.0` | optional (`pretty` extra) | Colored, aligned text output with a per-status summary. MIT licensed and widely used. Without it the validator prints plain text and says so. |
+| [rich](https://github.com/Textualize/rich) `>=13.0` | optional (`pretty`, `tui` and `all` extras) | The console report: colour, tables, progress while the project is read. MIT licensed and widely used. Without it the validator prints plain text and says so. |
+| [textual](https://github.com/Textualize/textual) `>=1.0` | optional (`tui` and `all` extras) | The TUI (`--tui`), built on rich by its authors. MIT licensed. Without it `--tui` says how to install it. |
 | [coverage.py](https://coverage.readthedocs.io/) `>=7.10` | development only (`coverage` extra) | Measures the branch coverage of the test suite; the standard library's `trace` module does not measure branches. coverage.py is the de facto Python coverage tool, Apache 2.0 licensed and has no required dependencies. The validator itself never imports it. |
 | [ruff](https://docs.astral.sh/ruff/), [mypy](https://mypy-lang.org/), [lizard](https://github.com/terryyin/lizard), [jscpd](https://github.com/kucherenko/jscpd), [mutmut](https://mutmut.readthedocs.io/), [pytest](https://docs.pytest.org/), [atheris](https://github.com/google/atheris) | CI only | The lint, typing, function-limits and copy-paste-detection quality gates, the mutation-testing gate (mutmut needs pytest to run the suite) and atheris, the fuzz-testing gate. They are installed by their CI jobs and are never imported by the validator. |
 

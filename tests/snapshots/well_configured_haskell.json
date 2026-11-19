@@ -98,6 +98,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Haskell",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -196,13 +203,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Haskell",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -817,6 +817,11 @@
       "message": "not applicable to Haskell",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Haskell",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict GHC warning flags are enabled: -Wall -Wcompat -Widentities -Wredundant-constraints",
@@ -833,11 +838,6 @@
       ],
       "message": "branch coverage is reported with HPC",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Haskell",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

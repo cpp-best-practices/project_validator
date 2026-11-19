@@ -2,7 +2,7 @@
 compilers that take GCC's flags (GCC, Clang, Apple Clang, Intel) and for MSVC.
 
 Build systems translate their own settings into these flags (CMake's `COMPILE_WARNING_AS_ERROR`, Meson's `werror`
-and `warning_level`), and the C/C++ practices ask for them per compiler.
+and `warning_level`), and the C and C++ practices ask for them per compiler.
 """
 
 from __future__ import annotations

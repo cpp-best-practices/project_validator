@@ -103,6 +103,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Swift",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -193,13 +200,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Swift",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -992,6 +992,11 @@
       "message": "not applicable to Swift",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Swift",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Swift warning settings are enabled: SwiftLint, complete concurrency checking",
@@ -1009,11 +1014,6 @@
       ],
       "message": "region coverage is measured with swift test",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Swift",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

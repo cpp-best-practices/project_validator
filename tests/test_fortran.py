@@ -9,8 +9,8 @@ from project_validator.build_systems.cmake.build import cmake_declared_languages
 from project_validator.checks.ci_build_types import ci_build_types
 from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.committed_artifacts import committed_artifacts
+from project_validator.checks.compiler_extensions import compiler_extensions
 from project_validator.checks.compiler_warnings import compiler_warnings
-from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.hardening import hardening
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.static_analysis import static_analysis
@@ -110,9 +110,9 @@ class FortranTests(unittest.TestCase):
         self.assertEqual(intel, Result.passed("warnings are treated as errors with -warn errors"))
 
     def test_a_standard_disables_the_dialects(self) -> None:
-        self.assertEqual(self._run(cxx_extensions, _ci("gfortran -std=f2018 -c a.f90")).status, Status.PASS)
-        self.assertEqual(self._run(cxx_extensions, _ci("gfortran -std=gnu -c a.f90")).status, Status.FAIL)
-        self.assertEqual(self._run(cxx_extensions, _ci("ifx -stand f18 -c a.f90")).status, Status.PASS)
+        self.assertEqual(self._run(compiler_extensions, _ci("gfortran -std=f2018 -c a.f90")).status, Status.PASS)
+        self.assertEqual(self._run(compiler_extensions, _ci("gfortran -std=gnu -c a.f90")).status, Status.FAIL)
+        self.assertEqual(self._run(compiler_extensions, _ci("ifx -stand f18 -c a.f90")).status, Status.PASS)
 
     def test_hardening_asks_for_the_back_end_protections(self) -> None:
         self.assertEqual(self._run(hardening, _ci("gfortran -fhardened -c a.f90")).status, Status.PASS)
@@ -185,10 +185,10 @@ class SharedBuildSystemTests(unittest.TestCase):
             ),
         )
         self.assertEqual(
-            run_in_layout(self, "Meson Fortran", cxx_extensions, {"meson.build": meson}).status, Status.PASS
+            run_in_layout(self, "Meson Fortran", compiler_extensions, {"meson.build": meson}).status, Status.PASS
         )
         legacy = "project('app', 'fortran', default_options: ['fortran_std=legacy'])\n"
-        result = run_in_layout(self, "Meson Fortran", cxx_extensions, {"meson.build": legacy})
+        result = run_in_layout(self, "Meson Fortran", compiler_extensions, {"meson.build": legacy})
         self.assertEqual(result.status, Status.FAIL)
 
 

@@ -83,6 +83,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "LaTeX",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -160,13 +167,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "LaTeX",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -687,6 +687,11 @@
       "message": "not applicable to LaTeX",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to LaTeX",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict LaTeX lints are enabled: chktex",
@@ -698,11 +703,6 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "not applicable to LaTeX",
-      "status": "SKIP"
-    },
-    "cxx-extensions": {
       "details": [],
       "message": "not applicable to LaTeX",
       "status": "SKIP"

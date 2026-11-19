@@ -7,8 +7,8 @@ import unittest
 from collections.abc import Mapping
 
 from project_validator.build_systems.meson import syntax
+from project_validator.checks.compiler_extensions import compiler_extensions
 from project_validator.checks.compiler_warnings import compiler_warnings
-from project_validator.checks.cxx_extensions import cxx_extensions
 from project_validator.checks.out_of_source_build import out_of_source_build
 from project_validator.checks.sanitizers import sanitizers
 from project_validator.checks.static_analysis import static_analysis
@@ -143,7 +143,7 @@ class SkippedConstructTests(unittest.TestCase):
             "if(UNIX AND BUILD_SHARED_LIBS)\n  set(GLFW_LIB_NAME glfw)\nelse()\n  set(GLFW_LIB_NAME glfw3)\nendif()\n"
             "set_target_properties(glfw PROPERTIES OUTPUT_NAME ${GLFW_LIB_NAME} C_STANDARD 99 C_EXTENSIONS OFF)\n"
         )
-        result = _run(cxx_extensions, {"CMakeLists.txt": C_PROJECT + build, "a.c": ""})
+        result = _run(compiler_extensions, {"CMakeLists.txt": C_PROJECT + build, "a.c": ""})
         self.assertEqual(result.status, Status.PASS, result)
 
     def test_a_wrapper_around_add_custom_command_runs_its_linter(self) -> None:

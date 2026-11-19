@@ -30,5 +30,5 @@ class ProjectLayout:
 
     @property
     def gets_c_family_checks(self) -> bool:
-        """C/C++ checks run for C and C++ projects only."""
+        """The C-family checks run for C and C++ projects only."""
         return bool(self.languages & C_FAMILY)

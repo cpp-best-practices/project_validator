@@ -54,7 +54,7 @@ class DependencyManagementTests(unittest.TestCase):
 
     def test_the_fixtures(self) -> None:
         cases = {
-            "well_configured_c_cpp": _declared("cmake/Dependencies.cmake", "FetchContent"),
+            "well_configured_cpp": _declared("cmake/Dependencies.cmake", "FetchContent"),
             "well_configured_python": _declared("pyproject.toml", "Python packages", "uv.lock"),
             "well_configured_rust": _declared("fuzz/Cargo.toml", "Cargo", "fuzz/Cargo.lock"),
             "well_configured_go": NO_DEPENDENCIES,
@@ -62,7 +62,7 @@ class DependencyManagementTests(unittest.TestCase):
         for fixture, expected in cases.items():
             with self.subTest(fixture):
                 self.assertEqual(dependency_management.run(make_context(FIXTURES / fixture)), expected)
-        for fixture in ("bare_c_cpp", "bare_python", "bare_rust", "bare_go"):
+        for fixture in ("bare_cpp", "bare_python", "bare_rust", "bare_go"):
             with self.subTest(fixture):
                 self.assertEqual(dependency_management.run(make_context(FIXTURES / fixture)).status, Status.WARN)
 

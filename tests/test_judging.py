@@ -6,7 +6,7 @@ import unittest
 from collections.abc import Callable
 
 from project_validator.core import Check, Options, Placed, Result, Status
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.facts import Facts
 from project_validator.facts.coverage import Granularity
@@ -229,12 +229,12 @@ class PlacesTests(unittest.TestCase):
             message="ok",
             places=(Placed(ecosystem="", unit="lib", result=Result.passed("ok"), tools=("t",)),),
         )
-        result = by_ecosystem({C_AND_CXX: inner, PYTHON: Result.skipped("n/a")})
+        result = by_ecosystem({CXX: inner, PYTHON: Result.skipped("n/a")})
         self.assertEqual(result, Result.passed("ok"))
         self.assertEqual(
             result.places,
             (
-                Placed(ecosystem="C/C++", unit="lib", result=Result.passed("ok"), tools=("t",)),
+                Placed(ecosystem="C++", unit="lib", result=Result.passed("ok"), tools=("t",)),
                 Placed(ecosystem="Python", unit="", result=Result.skipped("n/a")),
             ),
         )

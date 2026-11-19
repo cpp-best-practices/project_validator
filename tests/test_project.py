@@ -101,6 +101,14 @@ class TrackedFilesTests(unittest.TestCase):
             with mock.patch("shutil.which", return_value=None):
                 self.assertEqual(Project(root).tracked_files(), ["src/main.c"])
 
+    def test_lists_every_file_of_a_directory_git_ignores(self) -> None:
+        """A copy in an ignored directory (mutmut's mutants/) is not part of the checkout around it: git tracks none of
+        its files, yet they are the project being validated."""
+        with temp_project({".gitignore": "copy/\n", "copy/src/main.c": "", "copy/main.o": ""}) as root:
+            git(root, "init", "-q")
+            git(root, "add", ".gitignore")
+            self.assertEqual(Project(root / "copy").tracked_files(), ["main.o", "src/main.c"])
+
     def test_a_dangling_symlink_is_skipped_not_read(self) -> None:
         """A symlink to nothing (jekyll's test/source/_includes/tmp, argo-cd's testdata/link-to-nowhere) is listed as
         a file and crashes the extraction with FileNotFoundError; it has no content to read and must be skipped."""

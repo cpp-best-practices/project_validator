@@ -140,6 +140,15 @@ def isolated_registry() -> Iterator[None]:
         forget()
 
 
+def families() -> tuple[frozenset[str], ...]:
+    """The languages of each family of ecosystems (see `Ecosystem.family`)."""
+    found: dict[str, frozenset[str]] = {}
+    for ecosystem in _registered:
+        if ecosystem.family is not None:
+            found[ecosystem.family] = found.get(ecosystem.family, frozenset()) | ecosystem.languages
+    return tuple(found.values())
+
+
 def build_systems() -> tuple[BuildSystem, ...]:
     return tuple(system for ecosystem in _registered for system in ecosystem.build_systems)
 
@@ -170,6 +179,7 @@ __all__ = [
     "build_systems",
     "claim_conflicts",
     "ecosystems_for",
+    "families",
     "formats",
     "is_build_tree",
     "isolated_registry",

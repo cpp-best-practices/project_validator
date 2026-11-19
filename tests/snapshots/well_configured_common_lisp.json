@@ -88,6 +88,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Common Lisp",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -171,13 +178,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Common Lisp",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -727,6 +727,11 @@
       "message": "not applicable to Common Lisp",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Lisp compiler lints are enabled: sblint",
@@ -743,11 +748,6 @@
       ],
       "message": "branch coverage is reported with sb-cover",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Common Lisp",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

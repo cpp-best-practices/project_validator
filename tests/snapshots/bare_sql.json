@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "SQL",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -109,13 +116,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "SQL",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -701,6 +701,11 @@
       "message": "not applicable to SQL",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to SQL",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to SQL",
@@ -714,11 +719,6 @@
       "status": "WARN"
     },
     "coverage": {
-      "details": [],
-      "message": "not applicable to SQL",
-      "status": "SKIP"
-    },
-    "cxx-extensions": {
       "details": [],
       "message": "not applicable to SQL",
       "status": "SKIP"

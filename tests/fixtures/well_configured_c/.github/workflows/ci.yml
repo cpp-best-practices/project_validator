@@ -1,0 +1,44 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        compiler: [gcc, clang]
+        build_type: [Release, Debug]
+        sanitizers: ["ON", "OFF"]
+        include:
+          - os: windows-latest
+            compiler: msvc
+            build_type: Release
+            sanitizers: "ON"
+          - os: windows-latest
+            compiler: msvc
+            build_type: Release
+            sanitizers: "OFF"
+          - os: windows-latest
+            compiler: msvc
+            build_type: Debug
+            sanitizers: "ON"
+          - os: windows-latest
+            compiler: msvc
+            build_type: Debug
+            sanitizers: "OFF"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: cmake -S . -B build -DCMAKE_C_COMPILER=${{ matrix.compiler }} -DENABLE_COVERAGE=ON
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DENABLE_SANITIZERS=${{ matrix.sanitizers }}
+      - run: cmake --build build
+      - run: mull-runner build/tests
+      - run: ctest --test-dir build --output-on-failure
+      - run: gcovr --fail-under-branch 80
+      - run: run-clang-tidy -p build
+      - run: cppcheck --project=build/compile_commands.json --error-exitcode=1
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: find . -name '*.c' | xargs clang-format --dry-run -Werror

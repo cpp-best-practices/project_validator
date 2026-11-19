@@ -83,6 +83,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "OCaml",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -166,13 +173,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "OCaml",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -742,6 +742,11 @@
       "message": "not applicable to OCaml",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict OCaml warning settings are enabled: dune's dev profile warning set (or -w +a)",
@@ -758,11 +763,6 @@
       ],
       "message": "branch coverage is reported with bisect_ppx",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to OCaml",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

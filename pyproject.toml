@@ -11,7 +11,12 @@ requires-python = ">=3.12"
 dependencies = ["PyYAML>=6.0"]
 
 [project.optional-dependencies]
+# The console report: colour, tables and progress while the project is read.
 pretty = ["rich>=13.0"]
+# The TUI (--tui): browse the results and the facts in the terminal.
+tui = ["rich>=13.0", "textual>=1.0"]
+# Every optional view.
+all = ["rich>=13.0", "textual>=1.0"]
 coverage = ["coverage>=7.10"]
 
 [project.scripts]
@@ -19,6 +24,10 @@ project-validator = "project_validator.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["project_validator*"]
+
+[tool.setuptools.package-data]
+# The HTML report's stylesheet and scripts.
+"project_validator.views" = ["assets/*"]
 
 [tool.ruff]
 line-length = 120
@@ -55,6 +64,15 @@ relative_files = true
 [tool.coverage.report]
 fail_under = 99
 show_missing = true
+
+[tool.pytest.ini_options]
+# CI runs the unittest suite under pytest-xdist (`pytest -n auto`); `python -m unittest` runs the same tests.
+# Collect only the unittest classes (pytest always collects those): not the helper functions named test/tested
+# the test modules import, nor product classes named Test* (TestFiles), and not the fixture projects' own tests.
+testpaths = ["tests"]
+python_classes = ["__never__"]
+python_functions = ["__never__"]
+norecursedirs = [".*", "*.egg", "build", "dist", "venv", "fixtures"]
 
 [tool.mutmut]
 source_paths = ["project_validator/"]

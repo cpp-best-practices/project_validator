@@ -88,6 +88,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Emacs Lisp",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -174,13 +181,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Emacs Lisp",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -763,6 +763,11 @@
       "message": "not applicable to Emacs Lisp",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Emacs Lisp",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Emacs Lisp lints are enabled: package-lint, checkdoc",
@@ -779,11 +784,6 @@
       ],
       "message": "line coverage is reported with undercover.el",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Emacs Lisp",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

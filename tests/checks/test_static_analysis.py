@@ -5,7 +5,7 @@ import unittest
 from project_validator.checks.static_analysis import static_analysis
 from project_validator.core import Result, Status
 from project_validator.ecosystems import C_FAMILY
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.go import GO
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
@@ -44,7 +44,7 @@ class StaticAnalysisTests(unittest.TestCase):
 
     def test_well_configured_projects_pass(self) -> None:
         cases = (
-            (WELL_CONFIGURED, (C_AND_CXX,), "clang-tidy (.clang-tidy) and cppcheck run"),
+            (WELL_CONFIGURED, (CXX,), "clang-tidy (.clang-tidy) and cppcheck run"),
             (WELL_CONFIGURED_PYTHON, (PYTHON,), "ruff check runs"),
             (WELL_CONFIGURED_RUST, (RUST,), "clippy (Cargo.toml) runs"),
             (WELL_CONFIGURED_GO, (GO,), "golangci-lint (.golangci.yml) runs"),

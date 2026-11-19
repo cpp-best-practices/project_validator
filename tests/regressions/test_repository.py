@@ -21,7 +21,7 @@ from project_validator.project_map import ProjectStructure
 from tests.support import CMAKE_PROJECT, FIXTURES, github_job, make_context, temp_project
 from tests.test_project import git
 
-MIT = (FIXTURES / "well_configured_c_cpp" / "LICENSE").read_text(encoding="utf-8")
+MIT = (FIXTURES / "well_configured_cpp" / "LICENSE").read_text(encoding="utf-8")
 GPL_2 = "GNU GENERAL PUBLIC LICENSE\n   Version 2, June 1991\n"
 CC0 = "Creative Commons Legal Code\n\nCC0 1.0 Universal\n\nStatement of Purpose\n"
 GO_MODULE = {"go.mod": "module example.com/x\n", "main.go": "package main\n", "go.sum": ""}

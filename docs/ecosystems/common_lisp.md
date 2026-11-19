@@ -51,4 +51,4 @@ Compiled files: SBCL's `*.fasl`, CCL's `*.lx64fsl` and `*.dx64fsl`, ECL's and CL
 Common Lisp has no standard formatter (`code-formatting`), and no type checker, code security scanner, dependency
 auditor, fuzzer or mutation testing tool the validator knows; lizard does not parse it (`function-limits`); Qlot's
 `qlfile.lock` is left to `dependency-management`; a Lisp image builds no debug or release configuration
-(`ci-build-types`, `hardening`, `cxx-extensions`).
+(`ci-build-types`, `hardening`, `compiler-extensions`).

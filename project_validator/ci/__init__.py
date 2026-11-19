@@ -233,11 +233,31 @@ def job_facts(facts: Facts, project: Project) -> Iterator[Job]:
             by_job.setdefault(fact.job, []).append(fact)
     pinned = pinned_versions(project)
     compiled = _compiles(facts)
+    within = _project_families(facts)
     return (
-        _job(job, tuple(by_job.get(job.id, ())), project, pinned, compiled=compiled)
+        _within(_job(job, tuple(by_job.get(job.id, ())), project, pinned, compiled=compiled), within)
         for job in facts.of(CiJob)
         if job.builds
     )
+
+
+def _project_families(facts: Facts) -> frozenset[str]:
+    """The labels of the ecosystems of a family (C and C++) that are not the project's while another of the family
+    is: a job that runs cmake in a C++ project builds C++, not C."""
+    from project_validator.facts.structure import project_languages  # structure reads the profiles
+
+    languages = project_languages(facts)
+    return frozenset(
+        ecosystem.label
+        for ecosystem in registered()
+        if ecosystem.family is not None
+        and not ecosystem.languages & languages
+        and any(other.family == ecosystem.family and other.languages & languages for other in registered())
+    )
+
+
+def _within(job: Job, others: frozenset[str]) -> Job:
+    return replace(job, ecosystems=job.ecosystems - others) if job.ecosystems & others else job
 
 
 def _compiles(facts: Facts) -> bool:

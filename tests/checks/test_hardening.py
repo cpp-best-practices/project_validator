@@ -6,6 +6,8 @@ import unittest
 from project_validator.checks.hardening import hardening
 from project_validator.core import Result, Status
 from project_validator.ecosystems import C_FAMILY
+from project_validator.ecosystems.c import C
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.rust import RUST
 from tests.support import (
     BARE_PROJECT,
@@ -17,6 +19,7 @@ from tests.support import (
     WELL_CONFIGURED_RUST,
     ci_running,
     github_job,
+    layouts_checked_as,
     run_as,
     run_in_every_layout,
 )
@@ -57,8 +60,23 @@ class HardeningTests(unittest.TestCase):
 
 
 class CAndCxxHardeningTests(unittest.TestCase):
+    """C++'s hardening, in every C++ layout (C is asked for the same but the C++ standard library's assertions)."""
+
     def _run(self, files: dict[str, str]) -> Result:
-        return run_in_every_layout(self, hardening, files)
+        return run_in_every_layout(self, hardening, files, layouts_checked_as(hardening, CXX))
+
+    def test_c_is_not_asked_for_the_cxx_standard_library_s_assertions(self) -> None:
+        c_options = "_FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection"
+        result = run_in_every_layout(self, hardening, BARE_PROJECT, layouts_checked_as(hardening, C))
+        self.assertEqual(result.message, f"no hardening options found; enable {c_options}")
+        flags = "-D_FORTIFY_SOURCE=3 -fstack-protector-strong -fcf-protection -fstack-clash-protection"
+        passed = run_in_every_layout(
+            self,
+            hardening,
+            LINUX | github_job("ubuntu-latest", f"gcc {flags} main.c"),
+            layouts_checked_as(hardening, C),
+        )
+        self.assertEqual(passed.status, Status.PASS, passed.message)
 
     def test_fails_when_no_hardening_options_are_found(self) -> None:
         self.assertEqual(
@@ -260,7 +278,7 @@ class RustHardeningTests(unittest.TestCase):
 
 class MixedLanguageHardeningTests(unittest.TestCase):
     def test_only_the_languages_that_build_binaries_are_judged(self) -> None:
-        [layout] = [layout for layout in PROJECT_LAYOUTS if layout.languages == C_FAMILY | {"Python"}]
+        [layout] = [layout for layout in PROJECT_LAYOUTS if layout.languages == {"C++", "Python"}]
         result = run_in_every_layout(self, hardening, dict(WELL_CONFIGURED), (layout,))
         self.assertEqual(result.status, Status.PASS)
         self.assertTrue(result.message.startswith("hardening options are enabled: _FORTIFY_SOURCE"))

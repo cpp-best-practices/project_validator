@@ -1,4 +1,4 @@
-"""Kinds of JavaScript/TypeScript project, for tests that run a check in every layout."""
+"""Kinds of JavaScript project, for tests that run a check in every layout."""
 
 from __future__ import annotations
 
@@ -10,11 +10,5 @@ LAYOUTS = (
         files={"package.json": '{"main": "index.js"}\n', "index.js": ""},
         languages=frozenset({"JavaScript"}),
         build_systems=frozenset({"npm"}),
-    ),
-    ProjectLayout(
-        name="Deno TypeScript",
-        files={"deno.json": "{}\n", "main.ts": ""},
-        languages=frozenset({"TypeScript"}),
-        build_systems=frozenset({"Deno"}),
     ),
 )

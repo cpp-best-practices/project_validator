@@ -93,6 +93,45 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Fortran",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": "gcc",
+                "found": {
+                  "-std=f2018": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": [
+                  "fortran_std=f2018"
+                ]
+              },
+              {
+                "compiler": "intel",
+                "found": {
+                  "-stand f18": [
+                    "CI (.github/workflows/ci.yml)"
+                  ]
+                },
+                "missing": [
+                  "fortran_std=f2018"
+                ]
+              }
+            ],
+            "language": "Fortran",
+            "practice": "compiler-extensions",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -210,45 +249,6 @@
               "rung": null,
               "tools": []
             },
-            "unit": ".",
-            "unknowns": []
-          }
-        ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Fortran",
-        "units": [
-          {
-            "answer": "yes",
-            "compilers": [
-              {
-                "compiler": "gcc",
-                "found": {
-                  "-std=f2018": [
-                    "CI (.github/workflows/ci.yml)"
-                  ]
-                },
-                "missing": [
-                  "fortran_std=f2018"
-                ]
-              },
-              {
-                "compiler": "intel",
-                "found": {
-                  "-stand f18": [
-                    "CI (.github/workflows/ci.yml)"
-                  ]
-                },
-                "missing": [
-                  "fortran_std=f2018"
-                ]
-              }
-            ],
-            "language": "Fortran",
-            "practice": "cxx-extensions",
             "unit": ".",
             "unknowns": []
           }
@@ -936,6 +936,11 @@
       "message": "not applicable to Fortran",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "Fortran is compiled to a standard, without the compilers' extensions, with -std=f2018, -stand f18",
+      "status": "PASS"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict Fortran compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wimplicit-interface for gcc; -warn all for intel",
@@ -951,11 +956,6 @@
         "consider adding path coverage (e.g. lcov --mcdc-coverage, gcov --conditions)"
       ],
       "message": "branch coverage is gated with gcovr",
-      "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "Fortran is compiled to a standard, without the compilers' extensions, with -std=f2018, -stand f18",
       "status": "PASS"
     },
     "data-wellformed": {

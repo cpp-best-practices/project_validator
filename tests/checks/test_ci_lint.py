@@ -20,7 +20,7 @@ class CiLintTests(unittest.TestCase):
         self.assertEqual(ci_lint.languages, frozenset())
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
-        result = ci_lint.run(make_context(FIXTURES / "well_configured_c_cpp"))
+        result = ci_lint.run(make_context(FIXTURES / "well_configured_cpp"))
         self.assertEqual(result, Result.passed("CI lints its configuration (GitHub Actions: actionlint, zizmor)"))
 
     def test_is_skipped_without_ci(self) -> None:

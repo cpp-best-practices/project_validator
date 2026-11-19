@@ -6,7 +6,7 @@ import unittest
 from project_validator.checks.compiler_warnings import compiler_warnings
 from project_validator.core import Result, Status
 from project_validator.ecosystems import C_FAMILY
-from project_validator.ecosystems.c_cpp import C_AND_CXX
+from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
 from tests.support import (
@@ -180,7 +180,7 @@ class CompilerWarningsTests(unittest.TestCase):
     def test_meson_warning_levels_pass_their_flags(self) -> None:
         build = (
             "project('app', 'cpp', default_options: ['warning_level=3'])\n"
-            "add_project_arguments('-Wshadow', '-Wconversion', language: 'cpp')\n"
+            "add_project_arguments('-Wshadow', '-Wconversion', language: ['c', 'cpp'])\n"
         )
         layouts = c_family_layouts_built_with(compiler_warnings, "Meson")
         result = run_in_every_layout(self, compiler_warnings, {"meson.build": build}, layouts)
@@ -258,7 +258,7 @@ class RustCompilerWarningsTests(unittest.TestCase):
 
 class MixedLanguageCompilerWarningsTests(unittest.TestCase):
     def test_every_language_needs_strict_warnings_and_findings_are_labelled(self) -> None:
-        result = run_as(self, compiler_warnings, dict(WELL_CONFIGURED), C_AND_CXX, PYTHON)
+        result = run_as(self, compiler_warnings, dict(WELL_CONFIGURED), CXX, PYTHON)
         self.assertEqual(result.status, Status.FAIL)
-        self.assertTrue(result.message.startswith("C/C++: strict compiler warning flags are enabled: -Wall"))
+        self.assertTrue(result.message.startswith("C++: strict compiler warning flags are enabled: -Wall"))
         self.assertTrue(result.message.endswith("; Python: no Python warning settings found; enable at least -W error"))

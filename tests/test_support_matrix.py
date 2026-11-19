@@ -50,7 +50,7 @@ class SupportMatrixTests(unittest.TestCase):
 
     def test_a_check_that_does_not_apply_has_no_cell(self) -> None:
         self.assertIsNone(self._cell("ci-build-types", "Python"))
-        self.assertEqual(self._cell("ci-build-types", "C/C++"), ())
+        self.assertEqual(self._cell("ci-build-types", "C++"), ())
 
     def test_checks_of_every_project_are_listed_apart(self) -> None:
         self.assertIn("ci-present", self.matrix.everywhere)

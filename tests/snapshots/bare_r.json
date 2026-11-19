@@ -51,6 +51,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "R",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -129,13 +136,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "R",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -634,6 +634,11 @@
       "message": "not applicable to R",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to R",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no R lints found; enable at least lintr, failing on lints (LINTR_ERROR_ON_LINT)",
@@ -652,11 +657,6 @@
       ],
       "message": "no line coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to R",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

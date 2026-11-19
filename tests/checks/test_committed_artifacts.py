@@ -5,10 +5,10 @@ import unittest
 from collections.abc import Mapping
 from pathlib import PurePosixPath
 
+from project_validator.c_family.build import BUILD_DIRECTORY
 from project_validator.checks.committed_artifacts import committed_artifacts
 from project_validator.core import Context, Options, Project, Result, Status
 from project_validator.ecosystems import C_FAMILY
-from project_validator.ecosystems.c_cpp import BUILD_DIRECTORY
 from project_validator.ecosystems.go import BUILD_OUTPUTS
 from project_validator.ecosystems.python import BYTECODE
 from project_validator.ecosystems.rust import TARGET_DIRECTORY
@@ -57,7 +57,7 @@ class CommittedArtifactsTests(unittest.TestCase):
 
     def test_passes_with_the_well_configured_fixtures(self) -> None:
         for fixture in (
-            "well_configured_c_cpp",
+            "well_configured_cpp",
             "well_configured_python",
             "well_configured_rust",
             "well_configured_go",
@@ -66,7 +66,7 @@ class CommittedArtifactsTests(unittest.TestCase):
                 self.assertEqual(committed_artifacts.run(make_context(FIXTURES / fixture)), PASSED)
 
     def test_fails_with_the_bare_fixtures(self) -> None:
-        for fixture in ("bare_c_cpp", "bare_python", "bare_rust", "bare_go"):
+        for fixture in ("bare_cpp", "bare_python", "bare_rust", "bare_go"):
             with self.subTest(fixture=fixture):
                 self.assertEqual(committed_artifacts.run(make_context(FIXTURES / fixture)).status, Status.FAIL)
 

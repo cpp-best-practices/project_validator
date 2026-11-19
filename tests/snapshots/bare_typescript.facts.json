@@ -1,0 +1,150 @@
+{
+  "facts": [
+    {
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_system": "npm",
+      "kind": "BuildFile",
+      "languages": [
+        "JavaScript"
+      ],
+      "origin": "package.json"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "package.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TypeScript",
+      "origin": "src/index.ts",
+      "role": "product"
+    },
+    {
+      "files": 1,
+      "kind": "UnrecognisedSuffix",
+      "origin": ".",
+      "suffix": ".info"
+    },
+    {
+      "build_systems": [
+        "npm"
+      ],
+      "formats": [
+        "JSON"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "TypeScript"
+      ],
+      "origin": ".",
+      "role": "product"
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "package.json",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "origin": "coverage/",
+      "output": "node_modules"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "graphql-eslint"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json prettier"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "Jest"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "npm packages",
+      "origin": "package.json"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "package.json license"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "eslint rules"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "npm"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Data": [
+        ".json files"
+      ],
+      "TypeScript": [
+        ".ts files"
+      ]
+    },
+    "formats": [
+      "JSON"
+    ],
+    "languages": [
+      "TypeScript"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "npm"
+        ],
+        "directory": ".",
+        "formats": [
+          "JSON"
+        ],
+        "languages": [
+          "TypeScript"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": [
+      {
+        "files": 1,
+        "suffix": ".info"
+      }
+    ]
+  }
+}

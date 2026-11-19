@@ -52,6 +52,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Java",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -133,13 +140,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "Java",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -783,6 +783,11 @@
       "message": "not applicable to Java",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Java",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "no JVM compiler warnings found; enable at least -Xlint:all",
@@ -801,11 +806,6 @@
       ],
       "message": "no branch coverage measurement found in what CI runs",
       "status": "FAIL"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to Java",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

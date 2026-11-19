@@ -88,6 +88,13 @@
         "units": []
       }
     ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "PHP",
+        "units": []
+      }
+    ],
     "compiler-warnings": [
       {
         "auxiliary": {},
@@ -183,13 +190,6 @@
             "unknowns": []
           }
         ]
-      }
-    ],
-    "cxx-extensions": [
-      {
-        "auxiliary": {},
-        "language": "PHP",
-        "units": []
       }
     ],
     "dependency-audit": [
@@ -997,6 +997,11 @@
       "message": "not applicable to PHP",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "strict PHP error reporting settings are enabled: error_reporting = E_ALL",
@@ -1013,11 +1018,6 @@
       ],
       "message": "branch coverage is reported with PHPUnit; path coverage bonus: reported with PHPUnit",
       "status": "PASS"
-    },
-    "cxx-extensions": {
-      "details": [],
-      "message": "not applicable to PHP",
-      "status": "SKIP"
     },
     "data-wellformed": {
       "details": [],

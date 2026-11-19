@@ -49,6 +49,10 @@ class ParserDefaultsTests(unittest.TestCase):
             "allow_official_tags": False,
             "allow_unknown": False,
             "score": False,
+            "html": None,
+            "verbose": False,
+            "tui": False,
+            "explain": None,
             "list": False,
             "support_matrix": False,
         }

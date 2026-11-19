@@ -4,9 +4,9 @@
     "ci-lint": [],
     "committed-artifacts": [],
     "compile-commands": [],
+    "compiler-extensions": [],
     "compiler-warnings": [],
     "coverage": [],
-    "cxx-extensions": [],
     "dependency-audit": [],
     "dependency-management": [],
     "formatting": [],
@@ -196,6 +196,11 @@
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
     },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to a project of no recognised language",
+      "status": "SKIP"
+    },
     "compiler-warnings": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
@@ -207,11 +212,6 @@
       "status": "PASS"
     },
     "coverage": {
-      "details": [],
-      "message": "not applicable to a project of no recognised language",
-      "status": "SKIP"
-    },
-    "cxx-extensions": {
       "details": [],
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
