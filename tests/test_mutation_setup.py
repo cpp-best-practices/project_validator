@@ -6,6 +6,7 @@ from __future__ import annotations
 import ast
 import re
 import subprocess
+import sys
 import tomllib
 import unittest
 from pathlib import Path
@@ -60,6 +61,10 @@ class MutationSetupTests(unittest.TestCase):
         for script in running:
             self.assertRegex(script, r"\bulimit -[vd] \d+")
 
+    @unittest.skipIf(
+        sys.platform == "win32",
+        "the mutation workflow runs on Linux; the bash Windows finds first is the WSL launcher, with no Linux",
+    )
     def test_running_out_of_budget_is_reported_not_failed(self) -> None:
         # timeout sends INT at the budget's end and KILL two minutes later: mutmut busy in its stats pass ignores the
         # INT, so a pull request with too much to mutate ends in 137, which is the budget running out, as 124 is.
