@@ -28,6 +28,11 @@ The toolchains are Swift or Xcode versions.
 Every OS/toolchain combination builds debug and release (SwiftPM's `-c release` or its debug default, or
 xcodebuild's `-configuration`), each with and without sanitizers.
 
+## `sanitizers`
+
+A CI job runs SwiftPM with a sanitizer (`swift test --sanitize=address`, or `thread`, `undefined`), or xcodebuild with
+`-enableAddressSanitizer YES` (or `-enableThreadSanitizer YES`). `ci-build-types` counts those builds as sanitized.
+
 ## `compiler-warnings`
 
 SwiftLint runs and concurrency is checked completely: Swift 6 language mode, `-strict-concurrency=complete`,

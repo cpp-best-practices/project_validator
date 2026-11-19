@@ -809,6 +809,7 @@
               ".github/workflows/function-limits.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1017,7 +1018,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "munit, ScalaTest, specs2, utest or ZIO Test suites under src/test/scala (or Mill's test/src): 1 file(s), run by sbt test",
       "status": "PASS"
     },
     "top-level-guard": {

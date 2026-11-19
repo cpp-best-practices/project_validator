@@ -33,13 +33,16 @@ class WordingTests(unittest.TestCase):
             return PracticeAnswer(language="Fortran", unit=".", practice=practice, answer=verdict, compiled=(compiled,))
 
         met = answer(Answer.YES, (("-std=f2018", ("CI (ci.yml)",)),))
-        self.assertEqual(judge_any_one(met), Result.passed("Fortran is compiled to a standard, with -std=f2018"))
         self.assertEqual(
-            judge_any_one(answer(Answer.NO, ())),
+            judge_any_one(met, allow_unknown=False), Result.passed("Fortran is compiled to a standard, with -std=f2018")
+        )
+        self.assertEqual(
+            judge_any_one(answer(Answer.NO, ()), allow_unknown=False),
             Result.failed("Fortran is never compiled to a standard", "compile to a standard"),
         )
         self.assertIn(
-            "whether Fortran is compiled to a standard is unknown", judge_any_one(answer(Answer.UNKNOWN, ())).message
+            "whether Fortran is compiled to a standard is unknown",
+            judge_any_one(answer(Answer.UNKNOWN, ()), allow_unknown=False).message,
         )
 
 

@@ -122,7 +122,8 @@ COMPOSER_DEPENDENCIES = manifest_reader(
     manager="Composer",
     files=(COMPOSER_JSON,),
     declares=_composer_declares,
-    library=lambda _path, text: _composer(text).get("type") == "library",
+    # Composer's default type is `library`.
+    library=lambda _path, text: _composer(text).get("type", "library") == "library",
 )
 
 

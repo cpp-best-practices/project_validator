@@ -150,7 +150,7 @@
       "origin": "tests/fuzz/fuzz_app.py"
     },
     {
-      "kind": "test_*.py or *_test.py files",
+      "kind": "test_*.py, *_test.py or tests/*_tests.py files",
       "language": "Python",
       "origin": "tests/test_app.py"
     },
@@ -1907,11 +1907,9 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -1923,11 +1921,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Python"
       ],
@@ -1946,11 +1942,9 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Python"
       ],
@@ -1969,11 +1963,9 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Python"
       ],
@@ -1992,11 +1984,9 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Python"
       ],
@@ -2015,11 +2005,9 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Python"
       ],
@@ -2038,11 +2026,9 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Python"
       ],
@@ -2061,11 +2047,9 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/codeql.yml:analyze",
@@ -2077,11 +2061,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -3548,9 +3530,7 @@
       ],
       "jobs": [
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [],
           "name": ".github/workflows/ci-lint.yml: ci-lint",
@@ -3558,9 +3538,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Python"
@@ -3572,9 +3550,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Python"
@@ -3586,9 +3562,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Python"
@@ -3600,9 +3574,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Python"
@@ -3614,9 +3586,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Python"
@@ -3628,9 +3598,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Python"
@@ -3642,9 +3610,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [],
           "name": ".github/workflows/codeql.yml: analyze",
@@ -3652,9 +3618,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [],
           "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",

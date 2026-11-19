@@ -15,11 +15,13 @@ from project_validator.facts import Command, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.fuzzing import FuzzTargets, fuzzed, fuzzer
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
+from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import defined_by
+from project_validator.facts.tools import Run, defined_by
 from project_validator.text import pattern
 from project_validator.tools.kcov import kcov_tool
 from project_validator.tools.limits import function_length_limiters
@@ -119,10 +121,18 @@ PROGRAMS = "Zig programs"
 _EXECUTABLE = re.compile(r"\baddExecutable\s*\(")
 
 
+# The source an addExecutable builds, in the text after it (`.root_source_file = b.path("examples/x.zig")`).
+_ROOT_SOURCE = re.compile(r'\.root_source_file\s*=\s*b\.path\(\s*"([^"]+)"')
+
+
 def _read_programs(path: str, text: str) -> Iterator[Setting]:
-    """Whether the build defines an executable: a library has no binary to harden."""
-    if _EXECUTABLE.search(text):
-        yield Setting(origin=Origin(path=path), tool=PROGRAMS, key="executable", value=True)
+    """Whether the build defines an executable other than an example (http.zig's examples/*.zig): a library has no
+    binary to harden."""
+    for match in _EXECUTABLE.finditer(text):
+        source = _ROOT_SOURCE.search(text, match.end(), match.end() + 400)
+        if source is None or role(source[1]) != "example":
+            yield Setting(origin=Origin(path=path), tool=PROGRAMS, key="executable", value=True)
+            return
 
 
 ZIG_PROGRAMS = SettingsReader(name=PROGRAMS, files=(BUILD_FILE,), read=_read_programs)
@@ -199,7 +209,36 @@ ZIG_ECOSYSTEM = Ecosystem(
         ),
         programs=(*subcommands("zig", "build", "test", "fmt", "run", "cc", "c++", "translate-c"), "zigup"),
         setup=("zig",),
+        # mlugg/setup-zig with no `version` installs the manifest's minimum Zig.
+        pinned_by=(("build.zig.zon", re.compile(r"\.minimum_zig_version\s*=\s*\"([^\"]+)\"")),),
     ),
 )
 
 ZIG_VERSIONS = versions_axis("Zig version", "Zig", ZIG, compiled=True)
+
+
+# --- Fuzzing: std.testing.fuzz in a test block, run by `zig build test --fuzz`, or a `fuzz` step build.zig defines,
+# run by `zig build fuzz` (tigerbeetle).
+ZIG_FUZZ_TARGETS = FuzzTargets(
+    name="std.testing.fuzz tests (or a fuzz step in build.zig)",
+    languages=ZIG,
+    path=re.compile(r"(?:^|/)(?:[^/]+\.zig)$"),
+    contains=re.compile(r"\bstd\.testing\.fuzz\s*\(|\bb\.step\(\s*\"fuzz\""),
+)
+
+
+def _zig_fuzzes(command: Command, _facts: Facts) -> Run | None:
+    argv = resolved(command)
+    if starts_with(argv, ("zig", "build")) is None:
+        return None
+    steps = [word for word in argv[2:] if not word.startswith("-")]
+    return fuzzed() if "--fuzz" in argv or steps[:1] == ["fuzz"] else None
+
+
+ZIG_FUZZ = fuzzer(
+    name="zig build fuzz",
+    languages=ZIG,
+    how="zig build test --fuzz (or a fuzz step: zig build fuzz)",
+    runs=_zig_fuzzes,
+    targets=(ZIG_FUZZ_TARGETS,),
+)

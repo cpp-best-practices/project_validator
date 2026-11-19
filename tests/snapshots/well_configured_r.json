@@ -223,7 +223,7 @@
         "language": "R",
         "units": [
           {
-            "answer": "impossible",
+            "answer": "yes",
             "declared": [],
             "language": "R",
             "lock_required": false,
@@ -622,6 +622,7 @@
             "answer": "yes",
             "defined": {
               "R CMD check": [
+                "tests/testthat.R",
                 "tests/testthat/test-shop.R"
               ]
             },
@@ -746,6 +747,7 @@
               ".github/workflows/function-limits.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -829,8 +831,8 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "not applicable to R",
-      "status": "SKIP"
+      "message": "no dependencies are declared",
+      "status": "PASS"
     },
     "dependency-updates": {
       "details": [
@@ -899,7 +901,7 @@
         ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no R version",
         ".github/workflows/function-limits.yml: function-limits: linux / no R version"
       ],
-      "message": "CI covers 3 OS(es) (linux, macos, windows), 4 R version(s) (default, devel, oldrel-1, release), 6 combination(s)",
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 3 R version(s) (devel, oldrel-1, release), 5 combination(s)",
       "status": "PASS"
     },
     "sanitizers": {
@@ -954,7 +956,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "testthat (tests/testthat/test-*.R) or tinytest (inst/tinytest/test_*.R) files and test scripts (tests/*.R): 2 file(s), run by R CMD check",
       "status": "PASS"
     },
     "top-level-guard": {

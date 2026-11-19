@@ -12,7 +12,8 @@ when CI runs it that way (`:test`, `:kaocha`, `:cloverage`, `:cljfmt`, `:nvd`), 
 
 `deftest` (clojure.test), `defspec` or speclj `describe` under `test/` or `spec/` (or `*_test.clj`, `*_spec.clj`),
 run by `clojure -M:test` (an alias named for the tests, kaocha or coverage), `lein test`, `lein kaocha`, `kaocha`,
-`bb test`, or `shadow-cljs compile test`.
+`bb test`, or `shadow-cljs compile test`; `lein with-profile P <task>` and project.clj's `:aliases` run the task
+they name.
 
 ## `coverage`
 

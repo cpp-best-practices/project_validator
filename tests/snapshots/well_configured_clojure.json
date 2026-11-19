@@ -761,6 +761,7 @@
               ".github/workflows/copy-paste-detection.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -967,7 +968,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "deftest (clojure.test) or describe (speclj) under test/: 1 file(s), run by clojure.test",
       "status": "PASS"
     },
     "top-level-guard": {

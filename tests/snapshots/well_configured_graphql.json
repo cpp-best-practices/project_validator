@@ -204,6 +204,7 @@
             "language": "GraphQL",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -225,6 +226,7 @@
               ".graphqlrc.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}

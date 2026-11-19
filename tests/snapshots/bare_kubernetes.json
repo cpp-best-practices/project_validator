@@ -265,6 +265,7 @@
             "language": "Kubernetes",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -282,6 +283,7 @@
               "k8s/deployment.yaml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -487,7 +489,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (helm-unittest tests (tests/*_test.yaml) or Helm test hooks (templates/tests/*.yaml))",
+      "message": "no tests found (helm-unittest tests (tests/*_test.yaml or unittests/) or Helm test hooks (templates/tests/*.yaml))",
       "status": "FAIL"
     },
     "top-level-guard": {

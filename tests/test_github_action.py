@@ -52,7 +52,12 @@ class GitHubActionTests(unittest.TestCase):
         return run_in_layout(self, LAYOUT, selected, files)
 
     def test_a_workflow_using_the_action_is_its_test(self) -> None:
-        self.assertEqual(self._run(tests_run, {GITHUB_WORKFLOW: SELF_TEST}), Result.passed("tests found in 1 file(s)"))
+        self.assertEqual(
+            self._run(tests_run, {GITHUB_WORKFLOW: SELF_TEST}),
+            Result.passed(
+                "workflows that use the action itself (uses: ./): 1 file(s), run by the action's own workflow"
+            ),
+        )
         quoted = SELF_TEST.replace("uses: ./", 'uses: "./"')
         self.assertEqual(self._run(tests_run, {GITHUB_WORKFLOW: quoted}).status, Status.PASS)
         # A local action below the root is not the action itself; a workflow without the step is no self-test.

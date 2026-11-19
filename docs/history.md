@@ -455,7 +455,7 @@ except where a step deliberately changes results and says so.
     from the service containers CI runs, now facts); a build system's outputs add to the language's own; the support
     matrix lists a shared tool once and the grid says when no ecosystem was recognised.
 15. **The project corpus** (`corpus/`, one change). The fixtures are small and written to be judged; the corpus is the
-    other half of the regression suite: 233 real repositories, one or more for every ecosystem profile, pinned to a
+    other half of the regression suite: 235 real repositories, one or more for every ecosystem profile, pinned to a
     commit. Nothing is recorded in the repository: `python -m corpus record` writes what the validator says about each
     (the project map, the results judged with `--allow-unknown`, and what strict judging adds: each check's status
     and the distinct reasons something could not be read) and `python -m corpus diff` compares two recordings; CI
@@ -467,6 +467,6 @@ except where a step deliberately changes results and says so.
     (fixtures, tooling, docs assets) becoming a product ecosystem whose failures decide the project; commands the
     readers cannot resolve (Make variables, `[[ ]]` tests, heredocs, custom shells, unknown composite actions) dropped
     silently instead of recorded as unknown; and per-ecosystem gaps in what counts as a test, a license or a coverage
-    report. Two performance problems kept haskell/cabal and rust-lang/cargo out of the manifest until fixed.
+    report. haskell/cabal and rust-lang/cargo joined once unit ownership stopped being quadratic in the units.
 
 `--facts` and `--answers` expose the database and the answers.

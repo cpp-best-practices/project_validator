@@ -192,15 +192,22 @@ def _env_scripts(path: str, text: str, names: list[str] | None, factors: list[st
             yield from (Script(text=_substituted(line), origin=origin, directory=directory) for line in lines)
 
 
+def _selected(options: Mapping[str, str], command: Command) -> str | None:
+    """The environments `-e` names, or, as tox 4 reads its options from TOX_<OPTION>, TOX_ENV (or TOXENV)."""
+    named = options.get("-e") or options.get("--env")
+    return named or command.env.get("TOX_ENV") or command.env.get("TOXENV")
+
+
 def _tox(command: Command, context: Context) -> Iterator[Expansion] | None:
     """`tox -e lint`, `tox run -e 3.12-mypy`, `tox p`, or `tox` (its env_list): the commands each environment runs."""
     argv = resolved(command)
     if program(argv) != "tox":
         return None
-    words, options = positional(argv, _OPTIONS)
+    # What follows `--` is the environments' {posargs}, not tox's own arguments.
+    words, options = positional(argv[: argv.index("--")] if "--" in argv else argv, _OPTIONS)
     if words and words[0] not in _RUNS:
         return iter(())  # another subcommand (`tox list`, `tox config`) runs no environment
-    envs = options.get("-e") or options.get("--env")
+    envs = _selected(options, command)
     named = options.get("-c") or options.get("--conf")
     path = found_at(context, command.directory, [named] if named else _FILES)
     if path is None or (

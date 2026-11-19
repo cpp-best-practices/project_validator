@@ -9,6 +9,7 @@ counts only when CI runs the tool that reads it. Questions read the runs of an a
 
 from __future__ import annotations
 
+import functools
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
@@ -131,15 +132,22 @@ class ToolRun(Fact):
 
 
 def owner(directory: str, units: Iterable[str]) -> str:
-    """The unit (among `units`) that `directory` belongs to: the deepest one that contains it ("." when none does)."""
+    """The unit (among `units`) that `directory` belongs to: the deepest one that contains it ("." when none does).
+    Asked for every run and unit of a monorepo, so the answer is kept per directory and set of units."""
+    return _owner(directory, units if isinstance(units, tuple) else tuple(units))
+
+
+@functools.lru_cache(maxsize=65536)
+def _owner(directory: str, units: tuple[str, ...]) -> str:
     return max(
         (unit for unit in units if within(directory, unit)), key=lambda unit: (unit != ".", len(unit)), default="."
     )
 
 
 def within(path: str, directory: str) -> bool:
-    """Whether `path` is `directory` or below it (both relative to the project, "." for its root)."""
-    return directory == "." or path == directory or PurePosixPath(path).is_relative_to(directory)
+    """Whether `path` is `directory` or below it (both relative to the project, "." for its root, as the facts write
+    them: normalised, `/`-separated)."""
+    return directory == "." or path == directory or path.startswith(directory.rstrip("/") + "/")
 
 
 type Condition = Callable[[Command], bool]

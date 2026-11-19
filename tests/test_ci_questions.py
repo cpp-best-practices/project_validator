@@ -61,14 +61,16 @@ class PinningTests(unittest.TestCase):
     def test_the_policy_may_allow_official_tags(self) -> None:
         with temp_project({GITHUB_WORKFLOW: _workflow("actions/setup-go@v5")}) as root:
             answer = pinning_answer(make_context(root).facts)
-        self.assertEqual(judge_pinning(answer).status, Status.WARN)
-        self.assertEqual(judge_pinning(answer, allow_official_tags=True).status, Status.PASS)
+        self.assertEqual(judge_pinning(answer, allow_unknown=False).status, Status.WARN)
+        self.assertEqual(judge_pinning(answer, allow_official_tags=True, allow_unknown=False).status, Status.PASS)
 
     def test_no_provider_with_reusable_steps_is_impossible(self) -> None:
         with temp_project({CI_FILES["Travis CI"]: "script: make\n"}) as root:
             answer = pinning_answer(make_context(root).facts)
         self.assertEqual(answer.answer, Answer.IMPOSSIBLE)
-        self.assertEqual(judge_pinning(answer), Result.skipped("no CI configuration with reusable steps"))
+        self.assertEqual(
+            judge_pinning(answer, allow_unknown=False), Result.skipped("no CI configuration with reusable steps")
+        )
 
 
 class CiLintTests(unittest.TestCase):
@@ -82,7 +84,8 @@ class CiLintTests(unittest.TestCase):
             [("GitHub Actions", ("actionlint",), True), ("Jenkins", (), False)],
         )
         self.assertEqual(
-            judge_ci_lint(answer), Result.passed("CI lints its configuration (GitHub Actions: actionlint)")
+            judge_ci_lint(answer, allow_unknown=False),
+            Result.passed("CI lints its configuration (GitHub Actions: actionlint)"),
         )
 
     def test_without_ci_or_without_a_known_linter_the_question_is_impossible(self) -> None:
@@ -91,7 +94,9 @@ class CiLintTests(unittest.TestCase):
         with temp_project({CI_FILES["Jenkins"]: "sh 'make'"}) as root:
             answer = ci_lint_answer(make_context(root).facts)
         self.assertEqual(answer.answer, Answer.IMPOSSIBLE)
-        self.assertEqual(judge_ci_lint(answer), Result.skipped("no configuration linter is known for Jenkins"))
+        self.assertEqual(
+            judge_ci_lint(answer, allow_unknown=False), Result.skipped("no configuration linter is known for Jenkins")
+        )
 
 
 class SecretScanningTests(unittest.TestCase):
@@ -102,14 +107,16 @@ class SecretScanningTests(unittest.TestCase):
         self.assertEqual(
             (answer.answer, answer.scanners, answer.configured), (Answer.YES, ("gitleaks",), ("detect-secrets",))
         )
-        self.assertEqual(judge_secret_scanning(answer), Result.passed("secrets are scanned for with gitleaks"))
+        self.assertEqual(
+            judge_secret_scanning(answer, allow_unknown=False), Result.passed("secrets are scanned for with gitleaks")
+        )
 
     def test_configured_but_not_run_warns(self) -> None:
         with temp_project({".gitleaks.toml": ""}) as root:
             answer = secret_scanning_answer(make_context(root).facts)
         self.assertEqual((answer.answer, answer.scanners, answer.configured), (Answer.NO, (), ("gitleaks",)))
-        self.assertEqual(judge_secret_scanning(answer).status, Status.WARN)
+        self.assertEqual(judge_secret_scanning(answer, allow_unknown=False).status, Status.WARN)
         self.assertIn(
             "gitleaks is configured, but neither CI nor a pre-commit hook runs it",
-            judge_secret_scanning(answer).message,
+            judge_secret_scanning(answer, allow_unknown=False).message,
         )

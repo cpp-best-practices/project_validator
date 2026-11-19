@@ -90,7 +90,13 @@ class TestAndCoverageTests(unittest.TestCase):
             with self.subTest(files=files):
                 self.assertEqual(run_as(self, TESTS_RUN, {**files, **_ci("vendor/bin/pest")}, PHP).status, Status.PASS)
         result = run_as(self, TESTS_RUN, {**PHPUNIT_TEST, **_scripts(test="phpunit"), **_ci("composer test")}, PHP)
-        self.assertEqual(result, Result.passed("tests found in 1 file(s)"))
+        self.assertEqual(
+            result,
+            Result.passed(
+                "*Test.php files with PHPUnit test cases or Pest tests: 1 file(s), "
+                "run by phpunit, pest or composer test"
+            ),
+        )
         self.assertEqual(
             run_as(self, TESTS_RUN, {"tests/Helper.php": "<?php class Helper extends TestCase {}"}, PHP).status,
             Status.FAIL,
@@ -220,7 +226,7 @@ class DependencyTests(unittest.TestCase):
         return run_in_layout(self, "Composer PHP", DEPENDENCY_MANAGEMENT, files)
 
     def test_an_application_locks_its_dependencies(self) -> None:
-        declared = _composer(require={"php": ">=8.3", "ext-json": "*", "psr/log": "^3"})
+        declared = _composer(type="project", require={"php": ">=8.3", "ext-json": "*", "psr/log": "^3"})
         expected = Result.warned(
             "dependencies are declared in composer.json (Composer) but not locked", COMPOSER_PACKAGES.lock_hint
         )
@@ -298,6 +304,8 @@ class ScriptExpansionTests(unittest.TestCase):
                     [
                         ("composer", "run-script", "lint"),
                         ("php", "vendor/bin/phpstan", "analyse"),
+                        # `php` runs the script that follows it.
+                        ("vendor/bin/phpstan", "analyse"),
                         ("phpunit", "--path-coverage"),
                     ],
                 )

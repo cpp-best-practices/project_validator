@@ -40,8 +40,10 @@ _ROLES = {
 AUXILIARY = frozenset({"test", "example", "docs", "tooling", "benchmark"})
 
 
-# Directories that hold a unit's sources: below them, directory names are the code's own (`com/example/App.java`).
+# Directories that hold a unit's sources: below them, directory names are the code's own (`com/example/App.java`),
+# but for the ones only tests and their data are kept in (`src/test/resources`, `pkg/x/testdata`).
 _SOURCE_ROOTS = frozenset({"src", "lib", "source", "sources", "main", "include", "pkg", "internal", "app"})
+_TESTS_BELOW_SOURCE_ROOTS = frozenset({"test", "tests", "testdata", "test-data", "test_data", "__tests__", "fixtures"})
 
 
 def _named_role(part: str) -> str | None:
@@ -62,7 +64,8 @@ def role(path: str, *, directory: bool = False) -> str:
     """What the code at `path` is for: `vendored` code of other projects (below a vendor directory anywhere, or a
     minified bundle), else by the outermost directory that tells, above any source root (`src`, `lib`): the
     `product`, its `test`s (test fixtures, fuzz and stress tests too), an `example`, `docs`, `tooling`, a
-    `benchmark` or a `template`. A directory's own name tells first, below a source root too (`internal/tools`)."""
+    `benchmark` or a `template`; below a source root only a test directory tells (`src/test/resources`). A
+    directory's own name tells first, below a source root too (`internal/tools`)."""
     posix = PurePosixPath(path)
     parts = [part.lower() for part in (posix.parts if directory else posix.parts[:-1])]
     if _vendored(posix, parts, directory):
@@ -70,9 +73,9 @@ def role(path: str, *, directory: bool = False) -> str:
     # A directory that is a unit of its own is told by its own name first (`internal/tools`, a Go tools module).
     if directory and parts and (own := _named_role(parts[-1])):
         return own
-    for part in parts:
+    for index, part in enumerate(parts):
         if part in _SOURCE_ROOTS:
-            break
+            return "test" if _TESTS_BELOW_SOURCE_ROOTS.intersection(parts[index + 1 :]) else "product"
         if found := _named_role(part):
             return found
     return "product"

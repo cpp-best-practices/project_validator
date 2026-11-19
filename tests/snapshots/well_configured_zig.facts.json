@@ -154,6 +154,11 @@
       "origin": "src/shop.zig"
     },
     {
+      "kind": "std.testing.fuzz tests (or a fuzz step in build.zig)",
+      "language": "Zig",
+      "origin": "src/shop.zig"
+    },
+    {
       "kind": "CiConfiguration",
       "origin": ".github/workflows/ci-lint.yml",
       "provider": "GitHub Actions"
@@ -2378,6 +2383,91 @@
       "builds": true,
       "env": {},
       "heuristic": false,
+      "id": ".github/workflows/ci.yml:fuzz",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "fuzz",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz",
+      "os": "linux",
+      "provider": "GitHub Actions",
+      "services": []
+    },
+    {
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[0]",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "condition": null,
+      "inputs": {
+        "version": "0.14.1"
+      },
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[1]",
+      "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
+    },
+    {
+      "argv": [
+        "timeout",
+        "60",
+        "zig",
+        "build",
+        "test",
+        "--fuzz"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "Command",
+      "line": "timeout 60 zig build test --fuzz || [ $? -eq 124 ]",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "via": []
+    },
+    {
+      "argv": [
+        "zig",
+        "build",
+        "test",
+        "--fuzz"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "Command",
+      "line": "timeout 60 zig build test --fuzz || [ $? -eq 124 ]",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "via": [
+        ".github/workflows/ci.yml:jobs.fuzz.steps[2].run"
+      ]
+    },
+    {
+      "argv": [
+        "[",
+        "$?",
+        "-eq",
+        "124",
+        "]"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "Command",
+      "line": "timeout 60 zig build test --fuzz || [ $? -eq 124 ]",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "via": []
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
       "id": ".github/workflows/ci.yml:coverage",
       "image": null,
       "kind": "CiJob",
@@ -2615,11 +2705,9 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -2631,16 +2719,14 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2659,16 +2745,14 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2687,16 +2771,14 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2715,16 +2797,14 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2743,16 +2823,14 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2771,16 +2849,14 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2799,16 +2875,14 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2827,16 +2901,14 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2855,16 +2927,14 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2883,16 +2953,14 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2911,16 +2979,14 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2939,16 +3005,14 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2967,16 +3031,14 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -2995,16 +3057,14 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3023,16 +3083,14 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3051,16 +3109,14 @@
       ]
     },
     {
-      "compilers": [
-        "appleclang"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3079,16 +3135,14 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3107,16 +3161,14 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3135,16 +3187,14 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3163,16 +3213,14 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3191,16 +3239,14 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3219,16 +3265,14 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3247,16 +3291,14 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3275,16 +3317,14 @@
       ]
     },
     {
-      "compilers": [
-        "msvc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "release",
           "sanitizers": true
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3303,16 +3343,40 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [
         {
           "build_type": "debug",
           "sanitizers": false
         }
       ],
-      "default_compiler": true,
+      "default_compiler": false,
+      "ecosystems": [
+        "Zig"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: fuzz",
+      "origin": ".github/workflows/ci.yml:jobs.fuzz",
+      "os": "linux",
+      "services": [],
+      "toolchains": [
+        {
+          "language": "Zig",
+          "version": "0.14.1"
+        }
+      ]
+    },
+    {
+      "compilers": [],
+      "configurations": [
+        {
+          "build_type": "debug",
+          "sanitizers": false
+        }
+      ],
+      "default_compiler": false,
       "ecosystems": [
         "Zig"
       ],
@@ -3331,11 +3395,9 @@
       ]
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [],
       "heuristic": false,
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -3347,11 +3409,9 @@
       "toolchains": []
     },
     {
-      "compilers": [
-        "gcc"
-      ],
+      "compilers": [],
       "configurations": [],
-      "default_compiler": true,
+      "default_compiler": false,
       "ecosystems": [
         "Python"
       ],
@@ -4395,6 +4455,50 @@
     },
     {
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build test",
+      "via": [
+        ".github/workflows/ci.yml:jobs.fuzz.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:fuzz",
+      "kind": "ToolRun",
+      "languages": [
+        "Zig"
+      ],
+      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "provides": {
+        "fuzz": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "zig build fuzz",
+      "via": [
+        ".github/workflows/ci.yml:jobs.fuzz.steps[2].run"
+      ]
+    },
+    {
+      "heuristic": false,
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ToolRun",
       "languages": [
@@ -4469,9 +4573,7 @@
       ],
       "jobs": [
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [],
           "name": ".github/workflows/ci-lint.yml: ci-lint",
@@ -4479,9 +4581,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug"
           ],
@@ -4495,9 +4595,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug + sanitizers"
           ],
@@ -4511,9 +4609,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [
             "Release"
           ],
@@ -4527,9 +4623,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [
             "Release + sanitizers"
           ],
@@ -4543,9 +4637,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug"
           ],
@@ -4559,9 +4651,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug + sanitizers"
           ],
@@ -4575,9 +4665,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [
             "Release"
           ],
@@ -4591,9 +4679,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [
             "Release + sanitizers"
           ],
@@ -4607,9 +4693,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug"
           ],
@@ -4623,9 +4707,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug + sanitizers"
           ],
@@ -4639,9 +4721,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [
             "Release"
           ],
@@ -4655,9 +4735,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [
             "Release + sanitizers"
           ],
@@ -4671,9 +4749,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug"
           ],
@@ -4687,9 +4763,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug + sanitizers"
           ],
@@ -4703,9 +4777,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [
             "Release"
           ],
@@ -4719,9 +4791,7 @@
           ]
         },
         {
-          "compilers": [
-            "appleclang"
-          ],
+          "compilers": [],
           "configurations": [
             "Release + sanitizers"
           ],
@@ -4735,9 +4805,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug"
           ],
@@ -4751,9 +4819,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug + sanitizers"
           ],
@@ -4767,9 +4833,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [
             "Release"
           ],
@@ -4783,9 +4847,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [
             "Release + sanitizers"
           ],
@@ -4799,9 +4861,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug"
           ],
@@ -4815,9 +4875,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [
             "Debug + sanitizers"
           ],
@@ -4831,9 +4889,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [
             "Release"
           ],
@@ -4847,9 +4903,7 @@
           ]
         },
         {
-          "compilers": [
-            "msvc"
-          ],
+          "compilers": [],
           "configurations": [
             "Release + sanitizers"
           ],
@@ -4863,9 +4917,21 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
+          "compilers": [],
+          "configurations": [
+            "Debug"
           ],
+          "ecosystems": [
+            "Zig"
+          ],
+          "name": ".github/workflows/ci.yml: fuzz",
+          "os": "linux",
+          "toolchains": [
+            "Zig 0.14.1"
+          ]
+        },
+        {
+          "compilers": [],
           "configurations": [
             "Debug"
           ],
@@ -4879,9 +4945,7 @@
           ]
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [],
           "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
@@ -4889,9 +4953,7 @@
           "toolchains": []
         },
         {
-          "compilers": [
-            "gcc"
-          ],
+          "compilers": [],
           "configurations": [],
           "ecosystems": [
             "Python"

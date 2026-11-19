@@ -756,6 +756,7 @@
               "pyproject.toml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -976,7 +977,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (test_*.py or *_test.py files)",
+      "message": "no tests found (test_*.py, *_test.py or tests/*_tests.py files)",
       "status": "FAIL"
     },
     "top-level-guard": {

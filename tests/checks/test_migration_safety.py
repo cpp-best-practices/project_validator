@@ -111,10 +111,10 @@ class MigrationSafetyTests(unittest.TestCase):
 
         # Whether there are migrations, when a source could not be read; whether CI checks them, when CI could not be.
         unread = answer(answer=Answer.NO, unknown_definitions=("db/: not read",))
-        self.assertEqual(judge_migration_safety(unread).status, Status.ERROR)
+        self.assertEqual(judge_migration_safety(unread, allow_unknown=False).status, Status.ERROR)
         self.assertEqual(judge_migration_safety(unread, allow_unknown=True), Result.skipped("no migrations to judge"))
         unknown = answer(
             answer=Answer.UNKNOWN, defined=(("squawk", ("migrations/V1__orders.sql",)),), unknowns=("ci.yml",)
         )
-        self.assertEqual(judge_migration_safety(unknown).status, Status.ERROR)
+        self.assertEqual(judge_migration_safety(unknown, allow_unknown=False).status, Status.ERROR)
         self.assertEqual(judge_migration_safety(unknown, allow_unknown=True).status, Status.WARN)

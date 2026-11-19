@@ -10,7 +10,7 @@ declares the fixture's license, not the project's).
 from __future__ import annotations
 
 import re
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
@@ -20,7 +20,7 @@ from project_validator.facts.licenses import DeclaredLicense, LicenseFile
 from project_validator.facts.roles import role
 from project_validator.facts.structure import Unit
 from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict
-from project_validator.tools.licenses import REUSE_DIRECTORY, identifiers_in
+from project_validator.tools.licenses import DECLARED_IN_PLACE_OF_A_FILE, REUSE_DIRECTORY, identifiers_in
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -44,9 +44,18 @@ class LicenseAnswer:
     mismatches: tuple[Mismatch, ...] = ()
     # Where there is no license file at the root: those of the project's units (the packages of a monorepo).
     packages: tuple[tuple[str, frozenset[str]], ...] = ()
+    # The licenses the project's manifests declare (`GPL-2.0-or-later`, a text only saying GPL-2.0).
+    declared: frozenset[str] = frozenset()
+    # Those declared where the ecosystem declares a license in place of a license file (a Data Package's descriptor).
+    in_place: frozenset[str] = frozenset()
 
     def licenses(self) -> frozenset[str]:
-        return frozenset().union(*(licenses for _, licenses in self.files))
+        """The licenses of the license files, each as a manifest refines it (`GPL-2.0-or-later`) where one does."""
+        found = frozenset().union(*(licenses for _, licenses in self.files))
+        return frozenset(
+            next((declared for declared in self.declared if _comparable(frozenset({declared})) == {spdx}), spdx)
+            for spdx in found
+        )
 
     def packages_licenses(self) -> frozenset[str]:
         return frozenset().union(*(licenses for _, licenses in self.packages))
@@ -99,24 +108,35 @@ def license_answer(facts: Facts, language: str | None = None) -> LicenseAnswer:
         and _comparable(identifiers_in(fact.expression)) != _comparable(licenses)
     )
     licensed = bool(own) and all(licenses for _, licenses in own) and not mismatches
+    declared = _declared(facts, lambda path: True)
+    in_place = _declared(facts, lambda path: PurePosixPath(path).name in DECLARED_IN_PLACE_OF_A_FILE)
     return LicenseAnswer(
         language=language or "",
         answer=Answer.YES if licensed else Answer.NO,
         files=own,
         mismatches=mismatches,
         packages=_packages(facts, files, own),
+        declared=declared,
+        in_place=in_place,
+    )
+
+
+def _declared(facts: Facts, where: Callable[[str], bool]) -> frozenset[str]:
+    """The identifiers the compared manifests (of every language) whose path satisfies `where` declare."""
+    return frozenset(
+        spdx for fact in _compared(facts, None) if where(fact.origin.path) for spdx in identifiers_in(fact.expression)
     )
 
 
 def _compared(facts: Facts, language: str | None) -> Iterator[DeclaredLicense]:
     """The manifests (of `language`, or every language's) whose declared license is compared: those outside vendored
-    code and outside the code `--auxiliary` names."""
+    code, test fixtures and the code `--auxiliary` names."""
     named = selectors(facts)
     return (
         fact
         for fact in facts.of(DeclaredLicense)
         if (language is None or language in fact.languages)
-        and role(fact.origin.path) != "vendored"
+        and role(fact.origin.path) not in ("vendored", "test")
         and not named.matching(fact.origin.path, None)
     )
 

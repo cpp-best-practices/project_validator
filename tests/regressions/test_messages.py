@@ -74,7 +74,7 @@ TESTS_RUN_WORDING = (
     (
         "mkdocs",
         {"mkdocs.yml": "site_name: x\n", "docs/index.md": "# x\n", **RUNS("ubuntu-latest", "mkdocs build")},
-        "mkdocs build",
+        "MkDocs build",
         "tests found",
     ),
     ("jekyll", {"_config.yml": "theme: jekyll-theme-slate\n", "docs/a.md": "# a\n"}, "", "tests found"),
@@ -216,7 +216,6 @@ def _repeated(check: Check, files: Mapping[str, str]) -> list[str]:
 
 
 class RepeatedDetailTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #219: one unread subject or clause is repeated per OS, per language
     def test_each_unread_subject_and_each_clause_is_said_once(self) -> None:
         """An unread local action is one detail line, not one per matrix OS (actions/checkout, build-push-action); a
         distribution's unignored cover_db is one clause (mojo, perl-code-tidyall); a unit's clause is said once for
@@ -232,7 +231,6 @@ class RepeatedDetailTests(unittest.TestCase):
 
 
 class TestsRunWordingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #229: a passing tests-run part says only "tests found in N file(s)"
     def test_the_message_says_what_was_found_and_that_ci_runs_it(self) -> None:
         """A pass names the runner CI uses (fmt, googletest: ctest; terraform-aws-eks: mkdocs build); a site's
         configuration (monolog, kubespray: a one-line _config.yml) and notebooks (fivethirtyeight/data) are not
@@ -247,7 +245,6 @@ class TestsRunWordingTests(unittest.TestCase):
 
 
 class DataWellformedSummaryTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #231: every template is a detail line; "no X file" contradicts the map
     def test_a_pass_summarises_and_agrees_with_the_detection(self) -> None:
         """A chart's templates are counted, not listed one per line (prometheus-community/helm-charts: 577 lines);
         a format detected from test data alone is not "no XML file to parse" (community.general, Open-XML-SDK,
@@ -263,7 +260,6 @@ class DataWellformedSummaryTests(unittest.TestCase):
 
 
 class FunctionLimitsWordingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #234: "CI runs X's rule, but without a limit" when the rule is off
     def test_a_rule_that_is_not_enabled_is_not_said_to_run(self) -> None:
         """When the host tool runs without the length rule (checkout's eslint, cli/cli's and protovalidate's
         golangci-lint, petclinic's Checkstyle, data.table's and h3's clang-tidy), the message names the tool and says
@@ -277,7 +273,6 @@ class FunctionLimitsWordingTests(unittest.TestCase):
 
 
 class SmallMessageTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #250: example value printed, empty raco fmt hint, workflows as actions
     def test_the_fact_found_the_hint_and_the_kind_of_reference_are_right(self) -> None:
         """cxx-extensions prints the c_std found (dbus-broker: c11), not the requirement's example; the raco fmt hint
         names a command (every Racket repo); a job-level `uses:` is a reusable workflow, not an action
@@ -293,7 +288,6 @@ class SmallMessageTests(unittest.TestCase):
 
 
 class ConfiguredClaimTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #249: a tool is "configured" or passes from a file's existence alone
     def test_a_tool_is_credited_only_when_its_section_enables_it(self) -> None:
         """buf lint is not "configured" by a buf.yaml with only `breaking:` (opentelemetry-proto); Checkstyle with only
         NoHttpCheck is no static analysis (spring-petclinic); staticcheck is not enabled under `default: none`

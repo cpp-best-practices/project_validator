@@ -76,7 +76,11 @@ class FuzzAspectTests(unittest.TestCase):
             [
                 TestFile(origin=Origin(path="tests/fuzz/fuzz_x.py"), language="Python", kind="python fuzz targets"),
                 TestFile(origin=Origin(path="tests/fuzz/fuzz_x.py"), language="Python", kind="python fuzz targets"),
-                TestFile(origin=Origin(path="tests/test_x.py"), language="Python", kind="test_*.py or *_test.py files"),
+                TestFile(
+                    origin=Origin(path="tests/test_x.py"),
+                    language="Python",
+                    kind="test_*.py, *_test.py or tests/*_tests.py files",
+                ),
             ]
         )
         self.assertEqual(tool.defined(FUZZ, facts), ("tests/fuzz/fuzz_x.py",))
@@ -258,7 +262,7 @@ class CFuzzingTests(unittest.TestCase):
         }
         [answer] = fuzzing("C++", facts_of(files)).units
         self.assertEqual(answer.other_runs, ())
-        self.assertIn("no CI configuration runs", judge_fuzzing(answer).message)
+        self.assertIn("no CI configuration runs", judge_fuzzing(answer, allow_unknown=False).message)
 
 
 def _ctest_entries(files: dict[str, str]) -> tuple[str, ...]:
@@ -279,7 +283,9 @@ MIXED_FILES = {
 class CTestLanguageTests(unittest.TestCase):
     def test_a_ctest_registration_is_evidence_only_for_the_languages_cmake_builds(self) -> None:
         facts = facts_of(MIXED_FILES)
-        results = {language: judge_fuzzing(_only_unit(language, facts)) for language in ("C++", "Rust")}
+        results = {
+            language: judge_fuzzing(_only_unit(language, facts), allow_unknown=False) for language in ("C++", "Rust")
+        }
         self.assertEqual(
             results["C++"],
             Result.passed("fuzz targets in 1 file(s), run by CTest (CMakeLists.txt): fuzz_tester_run"),
@@ -428,7 +434,7 @@ class SwiftFuzzingTests(unittest.TestCase):
 def _verdicts(files: dict[str, str], *languages: str) -> dict[str, str]:
     """What the fuzz-testing policy says for each of `languages`, as its message."""
     facts = facts_of(files)
-    return {language: judge_fuzzing(_only_unit(language, facts)).message for language in languages}
+    return {language: judge_fuzzing(_only_unit(language, facts), allow_unknown=False).message for language in languages}
 
 
 JAVA_TARGET = {

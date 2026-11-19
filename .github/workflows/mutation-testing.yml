@@ -29,6 +29,8 @@ jobs:
         run: python -m pip install --require-hashes -r .github/requirements/mutation.txt
 
       - name: Mutate the functions this pull request changes
+        # Explicit, so that GitHub adds pipefail: "mutmut run | tee" then fails when mutmut does.
+        shell: bash
         env:
           BASE: ${{ github.base_ref }}
         run: |
@@ -39,6 +41,10 @@ jobs:
             echo "No function with mutants changed: nothing to mutate." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
+          # A mutant that breaks a loop's progress while it appends grows without bound, faster than mutmut's CPU-time
+          # limit stops it (the full run saw 14 GB in minutes): capping each process's address space at 4 GiB makes it
+          # fail as a kill instead of exhausting the runner.
+          ulimit -v 4194304
           # mutmut copies the tree into mutants/, which is not a git repository, so the tests that call
           # "git ls-files" fail there. The first run only creates the copy (its stats pass stops at the
           # first failures); make the copy a repository, then run for real. The priming run is expected to fail

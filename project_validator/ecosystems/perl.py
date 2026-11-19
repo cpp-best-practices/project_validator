@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterator
+from pathlib import PurePosixPath
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
@@ -64,11 +65,33 @@ def _runs_tests(command: Command) -> bool:
     return program(argv) == "cover" and "-test" in argv
 
 
+# A Module::Build subclass's action that runs the tests first (Perl-Critic's `ACTION_authortest`, which
+# `depends_on('test')`), as `./Build authortest` runs it.
+ACTIONS = "Module::Build actions"
+_ACTION = re.compile(r"^sub\s+ACTION_(\w+)\s*\{(.*?)^\}", re.MULTILINE | re.DOTALL)
+_DEPENDS_ON_TEST = re.compile(r"depends_on\(\s*['\"]test['\"]")
+
+
+def _read_actions(path: str, text: str) -> Iterator[Setting]:
+    found = ((name, True) for name, body in _ACTION.findall(text) if _DEPENDS_ON_TEST.search(body))
+    return settings(ACTIONS, path, found, heuristic=True)
+
+
+MODULE_BUILD_ACTIONS = SettingsReader(name=ACTIONS, files=("*.pm",), read=_read_actions)
+
+
+def _runs_test_action(command: Command, facts: Facts) -> bool:
+    argv = resolved(command)
+    action = argv[2] if argv[:2] == ("perl", "Build") and len(argv) > 2 else argv[1] if len(argv) > 1 else ""
+    built = argv[:1] in (("./Build",), ("Build",)) or argv[:2] == ("perl", "Build")
+    return built and any(setting.key == action for setting in facts.where(Setting, tool=ACTIONS))
+
+
 PROVE = test_runner(
     name="prove",
     languages=PERL,
     how="prove -l t (or make test, ./Build test, dzil test)",
-    runs=lambda command, _facts: tested() if _runs_tests(command) else None,
+    runs=lambda command, facts: tested() if _runs_tests(command) or _runs_test_action(command, facts) else None,
     tests=tests_of(PERL_TEST_FILES.name),
 )
 
@@ -130,8 +153,16 @@ _IMPLIES_BOTH = re.compile(
 _IMPLIES_STRICT = re.compile(rf"{_USE}v5\.(?:1[2-9]|[2-9]\d)\b", re.MULTILINE)
 
 
+# Directories of modules that are not the product's: Dist::Zilla's test distributions (corpus/) and bundled build
+# code (inc/).
+_NOT_THE_PRODUCTS = frozenset({"corpus", "inc"})
+
+
 def _read_modules(path: str, text: str) -> Iterator[Setting]:
-    """Whether a module (or script) starts with `use strict` and `use warnings`, or something that implies them."""
+    """Whether a module (or script) starts with `use strict` and `use warnings`, or something that implies them; not
+    a module under corpus/ or inc/."""
+    if PurePosixPath(path).parts[0] in _NOT_THE_PRODUCTS:
+        return iter(())
     both = _IMPLIES_BOTH.search(text) is not None
     strict = both or _STRICT.search(text) is not None or _IMPLIES_STRICT.search(text) is not None
     warnings = both or _WARNINGS.search(text) is not None
@@ -162,7 +193,8 @@ TEST_WARNINGS = Requirement(
     name="Test::Warnings in the tests",
     pattern=re.compile(rf"{_USE}Test::(?:Warnings|NoWarnings|FailWarnings)\b", re.MULTILINE),
 )
-PERL_PRAGMAS = requirement_reader("Perl pragmas", ("*.pm", "*.pl", "*.psgi"), (FATAL_WARNINGS,))
+# A test class under t/lib that uses Test::Warnings fails every test that loads it on a warning (perl-code-tidyall).
+PERL_PRAGMAS = requirement_reader("Perl pragmas", ("*.pm", "*.pl", "*.psgi"), (FATAL_WARNINGS, TEST_WARNINGS))
 PERL_TEST_SETTINGS = requirement_reader("Perl tests", ("*.t",), (PERLCRITIC, TEST_WARNINGS))
 
 WARNINGS = Practice(
@@ -191,12 +223,25 @@ WARNINGS_AS_ERRORS = Practice(
     ),
 )
 
+
+def _runs_perlcritic(command: Command, facts: Facts) -> bool:
+    """perlcritic or tidyall, or prove running a test that uses Test::Perl::Critic (an author test in xt/)."""
+    if starts(("perlcritic",), ("tidyall",))(command):
+        return True
+    argv = resolved(command)
+    if program(argv) != "prove":
+        return False
+    directories = [word.rstrip("/") for word in argv[1:] if not word.startswith("-")] or ["t"]
+    critics = facts.where(Setting, tool=PERL_TEST_SETTINGS.name, key=PERLCRITIC.name)
+    return any(PurePosixPath(setting.path).parts[0] in directories for setting in critics)
+
+
 PERLCRITIC_SETTINGS = file_reader("perlcritic", (".perlcriticrc", "perlcriticrc"))
 PERLCRITIC_ANALYZER = analyzer(
     name="perlcritic",
     languages=PERL,
     how="perlcritic lib t",
-    analyses=when(starts(("perlcritic",), ("tidyall",)), analysed),
+    analyses=lambda command, facts: analysed() if _runs_perlcritic(command, facts) else None,
     rules=defined_by(files=(PERLCRITIC_SETTINGS.name,)),
 )
 

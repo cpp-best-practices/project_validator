@@ -146,18 +146,53 @@ lint:
         files = {"Makefile": self.MAKEFILE, **github_job("ubuntu-latest", "make check")}
         self.assertEqual(
             _expanded(_facts(files)),
-            [("$(CC)", "-o", "app", "src/a.c"), ("./app", "--selftest"), ("make", "-C", "docs", "lint")],
+            [("gcc", "-o", "app", "src/a.c"), ("./app", "--selftest"), ("make", "-C", "docs", "lint")],
         )
 
     def test_without_a_target_make_runs_the_default_goal(self) -> None:
         files = {"Makefile": self.MAKEFILE, **github_job("ubuntu-latest", "make -j4 CC=clang")}
-        self.assertEqual(_expanded(_facts(files)), [("$(CC)", "-o", "app", "src/a.c")])
+        self.assertEqual(_expanded(_facts(files)), [("clang", "-o", "app", "src/a.c")])
 
     def test_the_makefile_is_found_where_make_runs(self) -> None:
         files = {"docs/GNUmakefile": "lint:\n\tvale .\n", **github_job("ubuntu-latest", "make -C docs lint")}
         self.assertEqual(_expanded(_facts(files)), [("vale", ".")])
         named = {"build.mk": "test:\n\tctest\n", **github_job("ubuntu-latest", "make -f build.mk test")}
         self.assertEqual(_expanded(_facts(named)), [("ctest",)])
+
+    def test_comments_and_blank_lines_keep_a_recipe_open_and_other_lines_close_it(self) -> None:
+        makefile = parse_makefile("a:\n\techo 1\n# note\n\n\techo 2\nvpath %.c src\n\techo 3\n")
+        self.assertEqual(makefile.rules["a"].recipe, [(2, "echo 1"), (5, "echo 2")])
+
+    def test_assignments_append_default_and_drop_comments(self) -> None:
+        makefile = parse_makefile("A = x\nA += y\nB ?= 1\nB ?= 2\nC += z\nD = a b # note # more\nE := e\n")
+        variables = makefile.variables
+        self.assertEqual(
+            (variables["A"], variables["B"], variables["C"], variables["D"], variables["E"]),
+            ("x y", "1", "z", "a b", "e"),
+        )
+
+    def test_includes_and_prerequisites_accumulate(self) -> None:
+        makefile = parse_makefile("include a.mk\ninclude b.mk c.mk\nx: a\nx: b c\n")
+        self.assertEqual(makefile.includes, ["a.mk", "b.mk", "c.mk"])
+        self.assertEqual(makefile.rules["x"].prerequisites, ["a", "b", "c"])
+
+    def test_continued_lines_are_numbered_by_their_first_line(self) -> None:
+        makefile = parse_makefile("a: \\\n  b \\\n  c\n\techo \\\n\t  done\n")
+        self.assertEqual(makefile.rules["a"].prerequisites, ["b", "c"])
+        self.assertEqual([number for number, _ in makefile.rules["a"].recipe], [4])
+
+    def test_recipe_prefixes_are_not_part_of_the_command(self) -> None:
+        files = {"Makefile": "all:\n\t@echo a\n\t-echo b\n\t+echo c\n\t@-echo d\n", **github_job("x", "make")}
+        self.assertEqual(_expanded(_facts(files)), [("echo", "a"), ("echo", "b"), ("echo", "c"), ("echo", "d")])
+
+    def test_a_pattern_rule_covers_the_goals_it_matches_with_their_stem(self) -> None:
+        makefile = "lint-%:\n\techo $* $@\n%.check: %.src\n\ttest -f $<\n"
+        files = {"Makefile": makefile, **github_job("x", "make lint-docs")}
+        self.assertEqual(_expanded(_facts(files)), [("echo", "docs", "lint-docs")])
+        for goal in ("lint-", "lintdocs", "other"):
+            with self.subTest(goal=goal):
+                facts = _facts({"Makefile": makefile, **github_job("x", f"make {goal}")})
+                self.assertEqual(_expanded(facts), [])
 
     def test_a_missing_makefile_is_unknown(self) -> None:
         facts = _facts(github_job("ubuntu-latest", "make check"))
@@ -374,7 +409,6 @@ class CiEnvironmentTests(unittest.TestCase):
         [unknown] = facts.of(Unknown)
         self.assertIn("$CABAL", unknown.reason)
 
-    @unittest.expectedFailure  # upstream #190: `[[ "$X" ... ]]` is read as a command whose program is $X
     def test_a_conditional_expression_is_not_a_command(self) -> None:
         """`[[ ... ]]` is a shell keyword, not a command: nothing in it runs, so a variable in it (set by an `eval`
         nothing can read, as in uutils/coreutils' GnuTests.yml) is not an unknown program."""
@@ -385,6 +419,14 @@ class CiEnvironmentTests(unittest.TestCase):
         ):
             with self.subTest(script=script):
                 self.assertFalse(self._facts(f"run: {script}").of(Unknown))
+
+    def test_a_loop_header_is_not_a_command(self) -> None:
+        """`for x in a b; do …; done` and `case $x in` assign and branch; nothing runs a program called `for` or `case`
+        (the GitHub Action fixture's composite action)."""
+        facts = self._facts(
+            "run: for price in 1 2; do total=$((total + price)); done", "run: case $X in a) echo a;; esac"
+        )
+        self.assertFalse([fact.argv for fact in facts.of(Command) if fact.argv[0] in ("for", "case", "a)")])
 
     def test_a_program_the_script_sets_is_known(self) -> None:
         for script in ("CC=gcc; $CC -c a.c", "for f in a b; do $f; done", "read -r TOOL; ${TOOL} x"):

@@ -918,6 +918,13 @@
                 },
                 "needs_definition": true,
                 "required": false
+              },
+              "zunit": {
+                "can": {
+                  "runs": "zunit"
+                },
+                "needs_definition": true,
+                "required": false
               }
             },
             "language": "Shell",
@@ -1251,7 +1258,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "PowerShell: no tests found (Pester tests (*.Tests.ps1)); Shell: no tests found (bats tests (*.bats), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+      "message": "PowerShell: no tests found (Pester tests (*.Tests.ps1)); Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
       "status": "FAIL"
     },
     "top-level-guard": {

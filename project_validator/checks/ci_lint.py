@@ -9,4 +9,4 @@ from project_validator.questions.ci_lint import ci_lint_answer
 
 @check(name="ci-lint", description="CI lints its own configuration (e.g. actionlint or zizmor)")
 def ci_lint(context: Context) -> Result:
-    return judge_ci_lint(ci_lint_answer(context.facts))
+    return judge_ci_lint(ci_lint_answer(context.facts), allow_unknown=context.options.allow_unknown)

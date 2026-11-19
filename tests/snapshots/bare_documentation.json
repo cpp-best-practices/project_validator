@@ -233,6 +233,7 @@
             "language": "MkDocs",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -250,6 +251,7 @@
               "mkdocs.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -456,7 +458,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s), but no CI configuration runs mkdocs build --strict",
+      "message": "the MkDocs site's configuration: 1 file(s), but no CI configuration runs mkdocs build --strict",
       "status": "WARN"
     },
     "top-level-guard": {

@@ -14,7 +14,8 @@ C_FUZZ_TARGETS = FuzzTargets(
     name="libFuzzer or AFL++ fuzz targets (LLVMFuzzerTestOneInput, __AFL_LOOP)",
     languages=C_AND_CXX.languages,
     path=re.compile(r"\.(?:c|cc|cpp|cxx|C)$"),
-    contains=re.compile(r"\bLLVMFuzzerTestOneInput\b|__AFL_LOOP|__AFL_FUZZ_TESTCASE_BUF"),
+    # On a line where no `//` comment comes first (ghostty's shim names __AFL_LOOP in a comment only).
+    contains=re.compile(r"^[^/\n]*(?:\bLLVMFuzzerTestOneInput\b|__AFL_LOOP|__AFL_FUZZ_TESTCASE_BUF)", re.MULTILINE),
 )
 C_PROPERTY_TESTS = PropertyTests(
     name="RapidCheck tests",
@@ -26,10 +27,11 @@ C_PROPERTY_TESTS = PropertyTests(
 
 def _libfuzzer_binary(command: Command, facts: Facts) -> Run | None:
     """A fuzz target binary run with a libFuzzer option (`./build/fuzz_tester -max_total_time=30`): a heuristic, for
-    a program given as a path (a bare program is a launcher's, `npx jazzer`) that is not Swift's product (under
-    `.build/`) and not a known tool (which claims its own commands)."""
+    a program given as a path or a variable (`for f in bin/fuzz*; do $f -max_total_time=60; done`; a bare program is
+    a launcher's, `npx jazzer`) that is not Swift's product (under `.build/`) and not a known tool (which claims its
+    own commands)."""
     argv = resolved(command)
-    if not argv or "/" not in argv[0] or argv[0].removeprefix("./").startswith(".build/"):
+    if not argv or not ("/" in argv[0] or argv[0].startswith("$")) or argv[0].removeprefix("./").startswith(".build/"):
         return None
     if not any(LIBFUZZER_OPTION.fullmatch(word) for word in argv[1:]):
         return None
@@ -41,7 +43,7 @@ def _libfuzzer_binary(command: Command, facts: Facts) -> Run | None:
 LIBFUZZER = fuzzer(
     name="libFuzzer",
     languages=C_AND_CXX.languages,
-    how="a fuzz target binary with -max_total_time= (or ClusterFuzzLite)",
+    how="a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz)",
     runs=_libfuzzer_binary,
     targets=(C_FUZZ_TARGETS,),
 )

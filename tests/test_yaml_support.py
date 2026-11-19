@@ -51,3 +51,10 @@ class TaggedTests(unittest.TestCase):
                 "c": yaml_support.Tagged(tag="!Sub", value={"x": 1}),
             },
         )
+
+    def test_a_flow_entry_may_start_with_a_colon_and_json_keys_keep_their_values(self) -> None:
+        text = 'a: [:x, :y]\nb: {"k":1, :z: 2}\nc: [ x:y ]\n'
+        self.assertEqual(yaml_support.load(text), {"a": [":x", ":y"], "b": {"k": 1, ":z": 2}, "c": ["x:y"]})
+        yaml_support.check_documents(text)
+        with self.assertRaises(yaml_support.YamlError):
+            yaml_support.check_documents("a: [: x]\n")

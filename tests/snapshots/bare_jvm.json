@@ -732,6 +732,7 @@
               "pom.xml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -953,7 +954,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (@Test methods or Kotest specs under src/test/java or src/test/kotlin)",
+      "message": "no tests found (@Test methods, JUnit 3 TestCase classes or Kotest specs under src/test (or another test source set))",
       "status": "FAIL"
     },
     "top-level-guard": {

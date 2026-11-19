@@ -83,7 +83,7 @@ class XsltTests(unittest.TestCase):
         for line in ("xspec.sh -t tests/total.xspec", "xspec -t tests/total.xspec", "xspec.bat -t tests/total.xspec"):
             with self.subTest(line=line):
                 result = run_in_layout(self, "XSLT stylesheet", tests_run, {**XSPEC, **_ci(line)})
-                self.assertEqual(result, Result.passed("tests found in 1 file(s)"))
+                self.assertEqual(result, Result.passed("XSpec suites (*.xspec): 1 file(s), run by XSpec"))
         self.assertEqual(
             run_in_layout(self, "XSLT stylesheet", tests_run, {**XSPEC, **_ci("prettier --check .")}).status,
             Status.WARN,

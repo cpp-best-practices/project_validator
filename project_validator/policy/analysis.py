@@ -27,7 +27,7 @@ def _analysis_hint(answer: ToolAnswer) -> str:
     return f"consider running {joined} in CI"
 
 
-def judge_analysis(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_analysis(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """Static analysis passes when CI runs an analyzer, and every required one, with its checks defined where it has
     no defaults of its own; defined but not run warns. An unknown answer is an error unless `allow_unknown`."""
     hint = _analysis_hint(answer)
@@ -53,7 +53,7 @@ def judge_analysis(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result
     return Result.failed("no static analyzer runs", hint)
 
 
-def judge_type_checking(answer: ToolAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_type_checking(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """Type checking passes when CI runs a type checker, and strict mode is a bonus; configured but not run warns. An
     unknown answer is an error unless `allow_unknown`."""
     hint = f"consider running a type checker in CI: {either(answer.how(Strictness.CHECKS))}"

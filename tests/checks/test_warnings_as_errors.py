@@ -54,6 +54,10 @@ class WarningsAsErrorsTests(unittest.TestCase):
             SEARCHED,
         )
 
+    def test_w_leaves_no_warning_to_treat_as_an_error(self) -> None:
+        result = self._run({"CMakeLists.txt": "add_compile_options(-Werror)\nadd_compile_options(-w)\n"})
+        self.assertEqual(result.status, Status.FAIL)
+
     def test_passes_with_werror_in_an_optional_configuration(self) -> None:
         result = self._run(WELL_CONFIGURED)
         self.assertEqual(result.status, Status.PASS)

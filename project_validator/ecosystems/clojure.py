@@ -8,15 +8,18 @@ alias when it is the alias's name (`:test`, `:kaocha`, `:cloverage`), and by its
 from __future__ import annotations
 
 import re
+import shlex
 from pathlib import Path
 
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
-from project_validator.facts import Command, Facts, resolved
+from project_validator.facts import Command, Facts, Origin, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
+from project_validator.facts.expansion import CommandExpander, Expansion, Launched, Script, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
@@ -132,6 +135,31 @@ def _cli_formatter(name: str, command: Command, facts: Facts) -> Run | None:
     if "check" in words:
         return formatted(command, facts, checks=True)
     return formatted(command, facts, checks=False) if "fix" in words else None
+
+
+# Leiningen's `with-profile P <task>` runs the task under the profiles, and an alias in project.clj's `:aliases`
+# (`"test-all" ["with-profile" "default:+1.12" "test"]`, compojure) runs the task it names.
+_LEIN_ALIAS = re.compile(r'"([\w.-]+)"\s*\[((?:\s*"[^"]*")+)\s*\]')
+
+
+def _lein_tasks(command: Command, context: Context) -> list[Expansion] | None:
+    argv = resolved(command)
+    if program(argv) != "lein" or len(argv) < 2:
+        return None
+    if argv[1] == "with-profile" and len(argv) > 3:
+        return [Launched(argv=("lein", *argv[3:]))]
+    path = joined(command.directory, "project.clj")
+    if not context.project.exists(path):
+        return None
+    aliases = {
+        name: re.findall(r'"([^"]*)"', words) for name, words in _LEIN_ALIAS.findall(context.project.read_text(path))
+    }
+    if argv[1] not in aliases:
+        return None
+    return [Script(text=shlex.join(("lein", *aliases[argv[1]], *argv[2:])), origin=Origin(path=path, at=(":aliases",)))]
+
+
+LEIN_TASKS = CommandExpander(name="Leiningen profiles and aliases", expand=_lein_tasks)
 
 
 # cljfmt (`cljfmt check`/`fix`, `lein cljfmt check`), cljstyle (`cljstyle check`/`fix`) and zprint (`-c`/`--check`

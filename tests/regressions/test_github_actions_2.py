@@ -244,7 +244,6 @@ VERSION_COUNTS: dict[str, tuple[dict[str, str], dict[str, object], str]] = {
 
 
 class SetupActionVersionInputTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #216: block-scalar version lists, version files, pnpm runtime not read
     def test_every_version_a_setup_action_installs_is_a_toolchain(self) -> None:
         """setup-dotnet and setup-java install every version of a multi-line `*-version: |` (FluentValidation,
         Open-XML-SDK, guava, okhttp); setup-node reads `node-version-file: .tool-versions` (action-gh-release);
@@ -255,7 +254,6 @@ class SetupActionVersionInputTests(unittest.TestCase):
 
 
 class CiLintUnknownTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #217: an unread reusable workflow makes ci-lint WARN, not ERROR
     def test_an_unread_reusable_workflow_leaves_ci_lint_unknown(self) -> None:
         """docker/build-push-action and opentelemetry-proto: zizmor.yml's only job calls another repository's reusable
         workflow, which is not read; whether CI lints its workflows is unknown, an ERROR without --allow-unknown."""
@@ -267,7 +265,6 @@ class CiLintUnknownTests(unittest.TestCase):
 
 
 class ToolchainFreeTextTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #218: toolchain patterns match cache keys, SHAs, linker names, '> 0'
     def test_toolchain_patterns_do_not_match_free_text(self) -> None:
         """A toolchain is read from a setup action's inputs or an install command, not from any text of the job:
         hledger has no Rust, pydantic no Python 17, cowboy no OTP 0, tinymist/ripgrep/bat no Nix system or gcc; ecto's
@@ -282,7 +279,6 @@ class ToolchainFreeTextTests(unittest.TestCase):
 
 
 class JobNameRenderingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #220: job names keep ${{ }} ternaries and newlines; uses: | keeps newline
     def test_job_and_action_names_are_rendered_as_github_shows_them(self) -> None:
         """Job names evaluate (or elide) `${{ a && 'b' || '' }}` with absent matrix keys empty (serde, prettier) and
         fold a block scalar to one line (sinatra); a `uses: |` block loses its trailing newline (magit)."""
@@ -297,7 +293,6 @@ class JobNameRenderingTests(unittest.TestCase):
 
 
 class PreCommitRunnerTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #221: pre-commit.ci needs a ci: section; prek-action is not a runner
     def test_pre_commit_ci_by_badge_and_prek_action_run_the_hooks(self) -> None:
         """pytest and pre-commit run their hooks on pre-commit.ci with no `ci:` section (the README badge shows it);
         Bash-it runs them with j178/prek-action: the ruff-format hook enforces formatting in both."""
@@ -308,7 +303,6 @@ class PreCommitRunnerTests(unittest.TestCase):
 
 
 class ToolchainVersionCountingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #222: "default" counted as a version; 3 vs 3.x, 1.27 vs 1.27.0 twice
     def test_versions_are_normalised_and_unpinned_jobs_not_counted(self) -> None:
         """One version spelled two ways (3/3.x, 1.27/1.27.0, ~1.27/~1.27.0) counts once (devguide, golangci-lint,
         caddy); a job pinning no version adds none (flask, Penlight, metals); 3.14t stays distinct from 3.14."""

@@ -10,7 +10,7 @@ from collections.abc import Iterator
 from fnmatch import fnmatchcase
 from pathlib import Path
 
-from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
+from project_validator.ecosystems.model import BuildSystem, Ecosystem, input_named, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
@@ -66,10 +66,11 @@ _BUILDS = frozenset({"build", "test", "pack", "publish", "run", "msbuild"})
 
 
 def builds_project(command: Command) -> bool:
-    """Whether a command builds a project, and so runs the analyzers it references."""
+    """Whether a command builds a project, and so runs the analyzers it references; `--no-build` runs what an
+    earlier step built."""
     argv = resolved(command)
     return program(argv) in ("msbuild", "MSBuild") or (
-        program(argv) == "dotnet" and argv[1:2] != () and argv[1] in _BUILDS
+        program(argv) == "dotnet" and argv[1:2] != () and argv[1] in _BUILDS and "--no-build" not in argv
     )
 
 
@@ -176,6 +177,7 @@ DOTNET = Ecosystem(
         images=("mcr.microsoft.com/dotnet/sdk",),
         programs=subcommands("dotnet", "build", "test", "restore", "publish", "pack", "run", "format"),
         setup=("dotnet",),
+        steps=(("actions/setup-dotnet", input_named("dotnet-version")),),
     ),
 )
 

@@ -39,6 +39,31 @@
       ],
       "origin": ".Rhistory",
       "output": "the .Rhistory session file"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".Rprofile",
+      "reader": "renv projects"
+    },
+    {
+      "kind": "Application",
+      "manager": "R packages",
+      "origin": ".Rprofile"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "DESCRIPTION",
+      "reader": "R package dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "R packages",
+      "origin": "DESCRIPTION"
+    },
+    {
+      "kind": "Library",
+      "manager": "R packages",
+      "origin": "DESCRIPTION"
     }
   ],
   "map": {

@@ -90,7 +90,6 @@ def _said(result: Result) -> str:
 
 
 class HardeningTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #243: forbids practice unknown under --allow-unknown fails with empty evidence
     def test_nothing_forbidden_found_passes_when_unrelated_jobs_are_unread(self) -> None:
         """With --allow-unknown a `forbids` practice judges what was read: nothing forbidden found passes, as drift
         gets. swift-argument-parser, swift-nio, vapor, SwiftLint, dart-lang/http and bloc all got FAIL "...: "."""
@@ -99,7 +98,6 @@ class HardeningTests(unittest.TestCase):
 
 
 class SwiftSettingsTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #244: Swift settings matched by regex over comments, file names, tools version
     def test_settings_are_read_from_code_not_from_any_text(self) -> None:
         """A commented-out `.treatAllWarnings(as: .error)` (vapor) and a patch *file name* (SwiftLint) set nothing;
         `swift-tools-version: 6` with `swiftLanguageModes: [.v5]` (Alamofire) is not complete concurrency checking."""
@@ -114,7 +112,6 @@ class SwiftSettingsTests(unittest.TestCase):
             self.assertNotEqual(result.status, Status.PASS, result)
             self.assertIn("complete concurrency checking", result.message)
 
-    @unittest.expectedFailure  # upstream #244: ci-build-types demands Swift sanitizers the sanitizers check skips
     def test_ci_build_types_and_sanitizers_take_one_position_on_swift(self) -> None:
         """ci-build-types must not demand "+ sanitizers" of a language whose sanitizers check is skipped (every Swift
         project, Alamofire among them): either both see `swift build --sanitize=`, or neither asks."""
@@ -124,7 +121,6 @@ class SwiftSettingsTests(unittest.TestCase):
 
 
 class CompilerWarningsTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #247: -Wshadow=global, -Weverything, -Wno-pedantic and found/missing wording
     def test_equivalent_spellings_negations_and_conditions_of_the_flags(self) -> None:
         """`-Wshadow=global` is `-Wshadow` and more, `-Weverything` includes every warning (nlohmann/json);
         `-Wno-pedantic` takes back Meson's `-Wpedantic` (glib); "found -Wshadow" must not contradict "missing
@@ -148,7 +144,6 @@ class CompilerWarningsTests(unittest.TestCase):
 
 
 class CoverageTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #226: Codecov/Coveralls uploads and threshold configurations are not read
     def test_uploads_and_thresholds_reach_the_reported_and_gated_rungs(self) -> None:
         """A Codecov or Coveralls upload step reports coverage (DataFrames.jl, JuMP.jl, Documenter.jl, PostgREST,
         deno std, uber/h3, mockito); vitest and codecov.yml thresholds gate it (action-gh-release, PostgREST)."""
@@ -172,7 +167,6 @@ class CoverageTests(unittest.TestCase):
 
 
 class FuzzTestingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #225: CIFuzz (OSS-Fuzz) actions and shell loops over fuzzers are not runs
     def test_cifuzz_and_a_shell_loop_over_fuzzer_binaries_run_the_targets(self) -> None:
         """The OSS-Fuzz CIFuzz actions run the project's fuzzers in CI (fmt, nlohmann/json, dbus-broker, h3), as does
         h3's `for f in bin/fuzz*; do $f -max_total_time=60; done`."""
@@ -191,7 +185,6 @@ class FuzzTestingTests(unittest.TestCase):
 
 
 class StaticAnalysisTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #251: Error Prone regex holds literal backspaces where \b was meant
     def test_error_prone_in_a_maven_compiler_configuration_runs(self) -> None:
         """Error Prone on maven-compiler-plugin's processor path with `-Xplugin:ErrorProne` runs on every compile of
         `mvn verify` (google/guava); the regex meant to match it holds literal backspaces where `\\b` was meant."""

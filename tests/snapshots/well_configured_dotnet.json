@@ -901,6 +901,10 @@
               "stryker-config.json"
             ],
             "problems": [],
+            "test_data": [
+              "fuzz/App.Fuzz/packages.lock.json",
+              "tests/App.Tests/packages.lock.json"
+            ],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -922,6 +926,7 @@
               ".github/workflows/function-limits.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1130,7 +1135,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "[Fact], [Test] or [TestMethod] methods in a test project (one referencing the test SDK or a test framework): 1 file(s), run by dotnet test",
       "status": "PASS"
     },
     "top-level-guard": {

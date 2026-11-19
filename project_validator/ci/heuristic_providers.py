@@ -9,7 +9,10 @@ AZURE_PIPELINES = CiProvider(
     name="Azure Pipelines",
     files=("azure-pipelines.yml", ".azure-pipelines.yml"),
     badges=(
-        pattern("Azure Pipelines", r"dev\.azure\.com/\S+/_apis/build/status|img\.shields\.io/azure-devops/build/"),
+        pattern(
+            "Azure Pipelines",
+            r"(?:dev\.azure\.com|\w+\.visualstudio\.com)/\S+/_apis/build/status|img\.shields\.io/azure-devops/build/",
+        ),
     ),
 )
 APPVEYOR = CiProvider(
@@ -31,12 +34,12 @@ CIRCLECI = CiProvider(
 TRAVIS_CI = CiProvider(
     name="Travis CI",
     files=(".travis.yml",),
-    badges=(pattern("Travis CI", r"travis-ci\.(?:org|com)/\S+\.svg|img\.shields\.io/travis/"),),
+    badges=(pattern("Travis CI", r"travis-ci\.com/\S+\.svg|img\.shields\.io/travis/"),),
 )
 JENKINS = CiProvider(
     name="Jenkins",
     files=("Jenkinsfile",),
-    badges=(pattern("Jenkins", r"/buildStatus/icon\b|/badge/icon\b|img\.shields\.io/jenkins/build"),),
+    badges=(pattern("Jenkins", r"/buildStatus/icon\b|/job/\S+/badge/icon\b|img\.shields\.io/jenkins/build"),),
 )
 BUILDKITE = CiProvider(
     name="Buildkite",

@@ -454,12 +454,22 @@
             "defined": {
               "typst compile": [
                 "main.typ"
+              ],
+              "tytanic": [
+                "main.typ"
               ]
             },
             "known": {
               "typst compile": {
                 "can": {
                   "runs": "typst compile main.typ"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "tytanic": {
+                "can": {
+                  "runs": "tt run (tytanic)"
                 },
                 "needs_definition": true,
                 "required": false
@@ -717,7 +727,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s), but no CI configuration runs typst compile main.typ",
+      "message": "documents (*.typ): 1 file(s), but no CI configuration runs typst compile main.typ or tt run (tytanic)",
       "status": "WARN"
     },
     "top-level-guard": {

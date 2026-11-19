@@ -30,8 +30,9 @@ RUBY_LINTER = pattern("RuboCop or Standard", rf"{RUNS_RUBOCOP}|{RUNS_STANDARD}")
 
 
 # Ruby warns only when asked to; a linter reports what other compilers warn about.
+# A Rakefile's `Rake::TestTask` (`t.warning = true`, fluentd) runs the tests with warnings on.
 RUBY_WARNING_SETTINGS = requirement_reader(
-    "Ruby warning settings", (".rspec", *TEST_HELPERS), (required(RUBY_WARNINGS),)
+    "Ruby warning settings", (".rspec", "Rakefile", "*.rake", *TEST_HELPERS), (required(RUBY_WARNINGS),)
 )
 
 

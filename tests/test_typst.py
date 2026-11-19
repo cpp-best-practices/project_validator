@@ -33,7 +33,9 @@ class TypstTests(unittest.TestCase):
     def test_the_documents_compile_and_are_formatted(self) -> None:
         for line in ("typst compile main.typ", "typst c main.typ main.pdf"):
             with self.subTest(line=line):
-                self.assertEqual(self._run(tests_run, _ci(line)), Result.passed("tests found in 1 file(s)"))
+                self.assertEqual(
+                    self._run(tests_run, _ci(line)), Result.passed("documents (*.typ): 1 file(s), run by typst compile")
+                )
         self.assertEqual(self._run(tests_run, _ci("typst watch main.typ")).status, Status.WARN)
         for line, tool in (("typstyle --check main.typ", "typstyle"), ("typstfmt --check main.typ", "typstfmt")):
             with self.subTest(line=line):

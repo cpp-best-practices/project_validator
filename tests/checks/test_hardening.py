@@ -153,7 +153,7 @@ class CAndCxxHardeningTests(unittest.TestCase):
     def test_fhardened_is_gcc_only(self) -> None:
         result = self._run({"CMakeLists.txt": "add_compile_options(-fhardened)\n", **GCC_AND_CLANG})
         self.assertEqual(
-            result, Result.warned(f"missing hardening options: {GCC_OPTIONS} for clang", f"found {GCC_OPTIONS}")
+            result, Result.warned(f"missing hardening options: {GCC_OPTIONS} for clang", f"found {GCC_OPTIONS} for gcc")
         )
 
     def test_fhardened_for_gcc_and_explicit_options_for_clang_pass(self) -> None:
@@ -174,7 +174,7 @@ class CAndCxxHardeningTests(unittest.TestCase):
     def test_msvc_in_ci_requires_msvc_options(self) -> None:
         result = self._run({"CMakeLists.txt": f"add_compile_options({GCC_FLAGS})\n", **LINUX_AND_WINDOWS})
         self.assertEqual(
-            result, Result.warned(f"missing hardening options: {MSVC_OPTIONS} for msvc", f"found {GCC_OPTIONS}")
+            result, Result.warned(f"missing hardening options: {MSVC_OPTIONS} for msvc", f"found {GCC_OPTIONS} for gcc")
         )
 
     def test_msvc_in_ci_passes_with_msvc_options(self) -> None:
@@ -203,7 +203,7 @@ class CAndCxxHardeningTests(unittest.TestCase):
             }
         )
         self.assertEqual(
-            result, Result.warned(f"missing hardening options: {MSVC_OPTIONS} for msvc", f"found {GCC_OPTIONS}")
+            result, Result.warned(f"missing hardening options: {MSVC_OPTIONS} for msvc", f"found {GCC_OPTIONS} for gcc")
         )
 
     def test_msvc_options_are_not_required_without_msvc_in_ci(self) -> None:

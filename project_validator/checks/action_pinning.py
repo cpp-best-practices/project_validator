@@ -9,4 +9,8 @@ from project_validator.questions.pinning import pinning_answer
 
 @check(name="action-pinning", description="The actions CI uses are pinned to full commit SHAs")
 def action_pinning(context: Context) -> Result:
-    return judge_pinning(pinning_answer(context.facts), allow_official_tags=context.options.allow_official_tags)
+    return judge_pinning(
+        pinning_answer(context.facts),
+        allow_unknown=context.options.allow_unknown,
+        allow_official_tags=context.options.allow_official_tags,
+    )

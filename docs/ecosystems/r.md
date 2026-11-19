@@ -9,7 +9,8 @@ CI runs R code in three ways, read alike: `Rscript -e "covr::codecov()"` (or `R 
 
 ## `tests-run`
 
-testthat's files (`test_that()` in `tests/testthat/test-*.R`) or tinytest's (`inst/tinytest/test_*.R`), run by
+testthat's files (`test_that()` in `tests/testthat/test-*.R`), tinytest's (`inst/tinytest/test_*.R`) or test scripts
+(`tests/*.R`, which R CMD check runs), run by
 `R CMD check` (which runs the tests), `rcmdcheck::rcmdcheck()` or `r-lib/actions/check-r-package`, `devtools::test()`
 or `devtools::check()`, `testthat::test_local()` and its kin, or `tinytest::test_package()`.
 
@@ -48,6 +49,11 @@ lintr, with the linters `.lintr` names (its defaults without).
 
 lizard parses R, so CI runs it with a length limit.
 
+## `dependency-management`
+
+A `DESCRIPTION`'s `Imports`, `Depends` (beyond R itself) and `LinkingTo` declare the packages. A package's users
+resolve them; a project whose `.Rprofile` activates renv is an analysis that commits `renv.lock`.
+
 ## `committed-artifacts`
 
 `.Rhistory`, `.RData`, `.Rproj.user/` and `*.Rcheck/`.
@@ -59,6 +65,5 @@ lizard parses R, so CI runs it with a length limit.
 ## Not judged
 
 R is interpreted, so `hardening`, `cxx-extensions` and `ci-build-types` do not apply, and nor does `type-checking`;
-no code security scanner or dependency auditor the validator knows reads R, and a lock file (`renv.lock`) belongs to
-an analysis or an application rather than a package (`dependency-management`); no fuzzer or mutation testing tool
-the validator knows runs R tests.
+no code security scanner or dependency auditor the validator knows reads R; no fuzzer or mutation testing tool the
+validator knows runs R tests.

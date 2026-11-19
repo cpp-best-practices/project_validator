@@ -106,7 +106,6 @@ def _module_at(directory: str) -> dict[str, str]:
 
 
 class DataWellformedTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #232: JSONC-by-convention files fail the plain JSON parser
     def test_json_files_that_are_jsonc_by_their_tools_specification_parse(self) -> None:
         """A JSON file its tool documents as accepting `//` comments and trailing commas (pyright, Turborepo, the Lua
         language server, Nerdbank.GitVersioning, asv) parses: llama.cpp, graphql-eslint, koreader, Humanizer and
@@ -116,7 +115,6 @@ class DataWellformedTests(unittest.TestCase):
                 result = _run(data_wellformed, {path: text})
                 self.assertEqual(result.status, Status.PASS, result.details)
 
-    @unittest.expectedFailure  # upstream #233: PyYAML rejects `[:a]` flow scalars; `@TOKEN@` templates are judged
     def test_yaml_flow_scalars_may_start_with_a_colon_and_templates_are_not_judged(self) -> None:
         """A plain scalar starting with `:` inside `[...]` is valid YAML 1.2 (drift's build.yaml, read by build_runner
         in every CI run) and parses; a file of `@TOKEN@` placeholders is a template (junit5's antora-playbook.yml),
@@ -130,7 +128,6 @@ class DataWellformedTests(unittest.TestCase):
 
 
 class ApiDescriptionTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #272: the detection regex matches `"openapi":` property keys and redocly.yaml
     def test_schemas_about_descriptions_and_the_redocly_configuration_are_not_descriptions(self) -> None:
         """A JSON Schema that describes OpenAPI or AsyncAPI documents (SchemaStore, asyncapi/spec-json-schemas, OAI's
         archived schema.json) is not an API description; Redocly's `redocly.yaml` has a theme section called `openapi:`

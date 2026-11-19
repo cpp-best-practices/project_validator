@@ -6,10 +6,10 @@ import itertools
 import json
 import re
 import shlex
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, replace
 
-from project_validator.ci import CiProvider, Load, strings
+from project_validator.ci import REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.expansion import script_facts
@@ -61,9 +61,18 @@ def custom_shell(shell: str | None) -> tuple[str, ...] | None:
         words = shlex.split(shell)
     except ValueError:
         words = shell.split()
-    if not words or words[0] in _SHELLS:
+    if not words or words[0] in _SHELLS or _runs_a_shell(words):
         return None
     return tuple(words) if "{0}" in words else (*words, "{0}")
+
+
+# A wrapper that runs the script with a shell GitHub knows: msys2's shell (setup-msys2), or a word that is such a
+# shell running `{0}` (`script -q -e -c "bash {0}"`, which gives the script a terminal).
+_SHELL_OF_SCRIPT = re.compile(r"(?:ba|z|da|k)?sh(?:\s+-\w+)*\s+\{0\}")
+
+
+def _runs_a_shell(words: list[str]) -> bool:
+    return words[0] == "msys2" or any(_SHELL_OF_SCRIPT.fullmatch(word) for word in words)
 
 
 def _is_subset(entry: Mapping[str, object], combination: Combination) -> bool:
@@ -109,6 +118,9 @@ def _runner_os(job: Mapping[str, object], combination: Combination) -> str:
     if "container" in job:
         return "linux"
     runner = substitute_matrix(json.dumps(job.get("runs-on", "")), combination)
+    # What is left is an expression over the matrix (`matrix.os || 'ubuntu-latest'`): its value names the runner.
+    known = Known(os="unknown", matrix=combination, env={})
+    runner = EXPRESSION.sub(lambda match: rendered(match[0][3:-2], known) or match[0], runner)
     found = detect_operating_systems(runner)
     return found[0] if found else "unknown"
 
@@ -117,11 +129,13 @@ def _combination_label(combination: Combination) -> str:
     return ", ".join(value if isinstance(value, str) else json.dumps(value) for value in combination.values())
 
 
-def _job_label(name: str, combination: Combination) -> str:
-    substituted = substitute_matrix(name, combination)
-    if substituted != name or not combination:
-        return substituted
-    return f"{name} ({_combination_label(combination)})"
+def _job_label(name: str, combination: Combination, substitute: Callable[[str], str]) -> str:
+    """The job's name as GitHub shows it: its expressions evaluated and its lines folded into one; a name with no
+    expression in it is followed by the matrix combination's values."""
+    shown = " ".join(substitute(name).split())
+    if EXPRESSION.search(name) or not combination:
+        return shown
+    return f"{shown} ({_combination_label(combination)})"
 
 
 _EXPORT = re.compile(
@@ -140,6 +154,8 @@ def _exported(script: str) -> dict[str, str]:
     variables the script assigns before in place (`HC=/opt/ghc/bin/ghc` then `echo "HC=$HC" >> "$GITHUB_ENV"`)."""
     exported: dict[str, str] = {}
     for match in _EXPORT.finditer(script):
+        if _conditional(script, match.start() + match[0].index(match[0].lstrip(";& \t\n"))):
+            continue  # set only sometimes (zls's `if …; then echo "SKIP=true" >> $GITHUB_ENV; fi`): not known
         assigned = {
             found["name"]: found["value"].strip("\"'") for found in _ASSIGNMENT.finditer(script, 0, match.start())
         }
@@ -147,12 +163,29 @@ def _exported(script: str) -> dict[str, str]:
     return exported
 
 
+_OPENS = re.compile(r"(?:^|[;&|]\s*)\s*(?:if|case|while|until|for)\b", re.MULTILINE)
+_CLOSES = re.compile(r"(?:^|[;&|]\s*)\s*(?:fi|esac|done)\b", re.MULTILINE)
+
+
+def _conditional(script: str, at: int) -> bool:
+    """Whether the command at `at` runs only sometimes: inside an `if`, `case` or loop, or after `&&` or `||`."""
+    before = script[:at]
+    if re.search(r"(?:&&|\|\|)\s*$", before):
+        return True
+    return len(_OPENS.findall(before)) > len(_CLOSES.findall(before))
+
+
 def _substituted(value: str, assigned: Mapping[str, str]) -> str:
     return _REFERENCE.sub(lambda reference: assigned.get(reference[1] or reference[2], reference[0]), value)
 
 
 def _job_facts(
-    path: str, job_id: str, job: Mapping[str, object], workflow_env: object, caller: str = "", load: Load | None = None
+    path: str,
+    job_id: str,
+    job: Mapping[str, object],
+    workflow: Mapping[str, object],
+    caller: str = "",
+    load: Load | None = None,
 ) -> Iterator[Fact]:
     """The facts of one job; `caller` names the job that calls the workflow, for a reusable workflow's jobs. `load`
     reads the local actions its steps use."""
@@ -168,11 +201,11 @@ def _job_facts(
             hides="matrix",
         )
         unknown = _Combination(origin, f"{caller}{path}:{job_id}", {}, load=load, matrix_known=False)
-        yield from unknown.facts(job, workflow_env)
+        yield from unknown.facts(job, workflow)
         return
     for index, combination in enumerate(combinations):
         identity = f"{caller}{path}:{job_id}" + ("" if len(combinations) == 1 else f"[{index}]")
-        yield from _Combination(origin, identity, combination, load=load).facts(job, workflow_env)
+        yield from _Combination(origin, identity, combination, load=load).facts(job, workflow)
 
 
 @dataclass(frozen=True, slots=True)
@@ -189,6 +222,8 @@ class _Combination:
     matrix_known: bool = True
     # The shell the job's steps run in unless a step names its own (`defaults: run: shell:`).
     shell: str | None = None
+    # The directory the job's `run` steps run in unless a step names its own (`defaults: run: working-directory:`).
+    working_directory: str | None = None
 
     def substitute(self, text: str) -> str:
         """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
@@ -223,16 +258,17 @@ class _Combination:
             return True
         return evaluate(condition, known) if isinstance(condition, str) else bool(condition)
 
-    def facts(self, job: Mapping[str, object], workflow_env: object) -> Iterator[Fact]:
-        env = {**self.substituted(workflow_env), **self.substituted(job.get("env"))}
+    def facts(self, job: Mapping[str, object], workflow: Mapping[str, object]) -> Iterator[Fact]:
+        env = {**self.substituted(workflow.get("env")), **self.substituted(job.get("env"))}
         os = _runner_os(job, self.combination)
         known = Known(os=os, matrix=self.combination, env=env, matrix_known=self.matrix_known)
         if self.runs(job.get("if"), known) is False:
             return
-        defaults = job.get("defaults")
-        run = defaults.get("run") if isinstance(defaults, Mapping) else None
-        shell = run.get("shell") if isinstance(run, Mapping) else None
-        yield from replace(self, known=known, shell=str(shell) if shell else None).job_facts(job, known)
+        # `defaults: run:` of the workflow, then of the job.
+        run = {**_run_defaults(workflow), **_run_defaults(job)}
+        shell, directory = run.get("shell"), run.get("working-directory")
+        context = replace(self, known=known, shell=str(shell) if shell else None)
+        yield from replace(context, working_directory=self.optional(directory)).job_facts(job, known)
 
     def job_facts(self, job: Mapping[str, object], known: Known) -> Iterator[Fact]:
         container = job.get("container")
@@ -240,7 +276,7 @@ class _Combination:
             origin=self.origin,
             id=self.identity,
             provider=GITHUB_ACTIONS.name,
-            name=_job_label(str(job.get("name", self.origin.at[-1])), self.combination)
+            name=_job_label(str(job.get("name", self.origin.at[-1])), self.combination, self.substitute)
             + ("" if self.matrix_known else " (matrix computed by an expression)"),
             os=known.os,
             matrix={
@@ -271,7 +307,7 @@ class _Combination:
         condition = None if runs else self.optional(step.get("if"))
         if "uses" in step:
             inputs = self.substituted(step.get("with"))
-            uses = str(step["uses"])
+            uses = str(step["uses"]).strip()
             yield ActionStep(origin=origin, job=self.identity, uses=uses, inputs=inputs, condition=condition)
             if (local := _local_action(uses)) is not None:
                 yield from self.composite_facts(origin, local, inputs, known, (*via, origin))
@@ -289,9 +325,9 @@ class _Combination:
     ) -> Iterator[Fact]:
         """The commands of a step's script: split as its shell would, or, under a custom shell (`shell: Rscript {0}`),
         the one command of that program given the script, with the script's text where its file would be."""
-        at = Origin(path=origin.path, at=(*origin.at, "run"))
-        env = {**known.env, **self.substituted(step.get("env"))}
-        directory = self.optional(step.get("working-directory"))
+        at, env = Origin(path=origin.path, at=(*origin.at, "run")), {**known.env, **self.substituted(step.get("env"))}
+        directory = self.optional(step.get("working-directory")) or self.working_directory
+        yield from _computed_directory(at, directory)
         if (custom := custom_shell(self.optional(step.get("shell")) or self.shell)) is not None:
             argv = tuple(script if word == "{0}" else word for word in custom)
             command = Command(origin=at, job=self.identity, argv=argv, line=script, env=env, directory=directory)
@@ -342,7 +378,8 @@ class _Combination:
 
     def _action(self, directory: str) -> tuple[str, Mapping[str, object]] | None:
         for name in ("action.yml", "action.yaml"):
-            path = f"{directory}/{name}"
+            # `uses: ./` is the repository's own action, at its root.
+            path = f"{directory}/{name}" if directory else name
             if self.load is not None and isinstance(document := self.load(path), Mapping):
                 return path, document
         return None
@@ -391,6 +428,20 @@ def _only_called(document: Mapping[object, object]) -> bool:
     return names == ["workflow_call"]
 
 
+def _computed_directory(origin: Origin, directory: str | None) -> Iterator[Unknown]:
+    """A working directory computed by an expression (`packages/${{ matrix.package }}` of a computed matrix): where the
+    commands run, and so what they cover, is not known."""
+    if directory is not None and "${{" in directory:
+        subject = f"the working directory {directory}"
+        yield Unknown(origin=origin, subject=subject, reason="it is computed by an expression", hides="commands")
+
+
+def _run_defaults(scope: Mapping[str, object]) -> dict[str, object]:
+    defaults = scope.get("defaults")
+    run = defaults.get("run") if isinstance(defaults, Mapping) else None
+    return dict(run) if isinstance(run, Mapping) else {}
+
+
 def _local(uses: object) -> str | None:
     """The path of a reusable workflow or action in the same repository (`./.github/workflows/build.yml`,
     `$/.github/actions/build`), else None."""
@@ -413,9 +464,10 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
         if not isinstance(job, Mapping):
             continue
         if "uses" not in job:
-            yield from _job_facts(path, str(job_id), job, document.get("env"), caller, load)
+            yield from _job_facts(path, str(job_id), job, document, caller, load)
             continue
-        called = _local(job["uses"])
+        uses = str(job["uses"]).strip()
+        called = _local(uses) or _own(uses, load)
         within_depth = caller.count(" → ") < _CALL_DEPTH
         if called is not None and load is not None and within_depth and (target := load(called)) is not None:
             yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id} → ")
@@ -423,15 +475,25 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
         yield Unknown(
             origin=Origin(path=path, at=("jobs", str(job_id))),
             subject=f"job {job_id}",
-            reason=f"it calls the reusable workflow {job['uses']}, which is not read",
+            reason=f"it calls the reusable workflow {uses}, which is not read",
             hides="jobs",
         )
+
+
+def _own(uses: object, load: Load | None) -> str | None:
+    """The path of a reusable workflow of this repository referenced by its full name
+    (`apple/swift-nio/.github/workflows/unit_tests.yml@main` in swift-nio's own checkout), else None."""
+    text, _, _ref = str(uses).partition("@")
+    owner, _, rest = text.partition("/")
+    name, _, path = rest.partition("/")
+    repository = load(REPOSITORY) if load is not None and path else None
+    return path if isinstance(repository, str) and repository.lower() == f"{owner}/{name}".lower() else None
 
 
 def _uses(entries: object) -> list[str]:
     if not isinstance(entries, list):
         return []
-    return [str(entry["uses"]) for entry in entries if isinstance(entry, Mapping) and "uses" in entry]
+    return [str(entry["uses"]).strip() for entry in entries if isinstance(entry, Mapping) and "uses" in entry]
 
 
 def action_references(document: object) -> list[str]:
@@ -451,7 +513,8 @@ GITHUB_ACTIONS = CiProvider(
     badges=(
         pattern(
             "GitHub Actions",
-            r"/actions/workflows/[^/\s]+/badge\.svg|/workflows/[^/\s]+/badge\.svg|img\.shields\.io/github/actions/workflow/status/",
+            r"/actions/workflows/[^/\s]+/badge\.svg|/workflows/[^/\s]+/badge\.svg|img\.shields\.io/github/actions/workflow/status/"
+            r"|badgen\.net/github/(?:checks|status)/",
         ),
     ),
     step_references=action_references,

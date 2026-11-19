@@ -165,6 +165,7 @@
             "problems": [
               "notebooks/prices.ipynb: not a notebook: no cells"
             ],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -373,7 +374,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s), but no CI configuration runs pytest --nbmake notebooks (or --nbval, jupyter nbconvert --execute, papermill)",
+      "message": "notebooks (*.ipynb): 1 file(s), but no CI configuration runs pytest --nbmake notebooks (or --nbval, jupyter nbconvert --execute, papermill)",
       "status": "WARN"
     },
     "top-level-guard": {

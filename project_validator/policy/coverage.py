@@ -47,7 +47,7 @@ def _next_rungs(granularity: Granularity, found: GranularityAnswer) -> tuple[str
     return tuple(hint for next_rung, hint in hints.items() if next_rung.rank > rung.rank)
 
 
-def judge_coverage(answer: CoverageAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_coverage(answer: CoverageAnswer, *, allow_unknown: bool) -> Result:
     """Required coverage passes, and path coverage is a bonus where a known tool measures it; a language no known
     tool measures is skipped. An unknown answer is an error unless `allow_unknown`."""
     required = required_coverage(answer)

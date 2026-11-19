@@ -226,6 +226,20 @@ PGTAP_TESTS = TestFiles(
     path=re.compile(r"(?:^|/)tests?/(?:.*/)?[^/]+\.sql$"),
     contains=re.compile(r"\bSELECT\s+plan\s*\(", re.IGNORECASE),
 )
+# A PostgreSQL extension's pg_regress tests: `test/sql/*.sql` with their expected output, which PGXS's `make
+# installcheck` runs (pgvector, pgaudit).
+PG_REGRESS_TESTS = TestFiles(
+    name="pg_regress tests (test/sql/*.sql)",
+    languages=SQL_LANGUAGE,
+    path=re.compile(r"(?:^|/)test/sql/[^/]+\.sql$"),
+)
+PG_REGRESS = test_runner(
+    name="pg_regress",
+    languages=SQL_LANGUAGE,
+    how="make installcheck (PGXS's pg_regress)",
+    runs=when(starts(("make", "installcheck"), ("make", "check")), tested),
+    tests=tests_of(PG_REGRESS_TESTS.name),
+)
 PG_PROVE = test_runner(
     name="pg_prove",
     languages=SQL_LANGUAGE,
@@ -291,10 +305,19 @@ def _has_pgtap_tests(project: Project, sql: list[str]) -> bool:
 def sql_project(project: Project) -> frozenset[str]:
     """Whether the project works in SQL: SQL tooling configured, a migration tool or a migrations directory, or SQL
     tests. A dbt project is recognised by its build file before this is asked."""
-    if _tooling_configured(project):
+    if _tooling_configured(project) or _postgresql_extension(project):
         return SQL_LANGUAGE
     sql = [path for path in project.files() if path.endswith(".sql")]
     return SQL_LANGUAGE if _has_migrations(sql) or _has_pgtap_tests(project, sql) else frozenset()
+
+
+_CONTROL = re.compile(r"^\s*(?:default_version|module_pathname)\s*=", re.MULTILINE)
+
+
+def _postgresql_extension(project: Project) -> bool:
+    """A PostgreSQL extension (pgvector, pgaudit): a `*.control` file that declares it, beside its SQL scripts."""
+    controls = (path for path in project.files() if "/" not in path and path.endswith(".control"))
+    return any(_CONTROL.search(project.read_head(path)) for path in controls)
 
 
 # What shows a CI job works on the SQL.
@@ -354,7 +377,8 @@ SQL_ECOSYSTEM = Ecosystem(
     label=SQL,
     languages=SQL_LANGUAGE,
     build_systems=(DBT,),
-    ambiguous_suffixes={".sql": SQL},
+    # An extension's control file is the SQL ecosystem's, with no language of its own.
+    ambiguous_suffixes={".sql": SQL, ".control": None},
     detect=sql_project,
     ci_programs=CI_PROGRAMS,
     ci_usage=re.compile(r"(?<![\w-])(?:sbdchd/squawk-action|ariga/atlas-action)\b"),

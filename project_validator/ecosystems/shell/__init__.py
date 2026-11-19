@@ -44,6 +44,8 @@ SHELL_ECOSYSTEM = Ecosystem(
         ".sh": SHELL,
         ".bash": SHELL,
         ".zsh": SHELL,
+        ".zsh-theme": SHELL,
+        ".zunit": SHELL,
         ".bats": SHELL,
         ".ps1": POWERSHELL,
         ".psm1": POWERSHELL,

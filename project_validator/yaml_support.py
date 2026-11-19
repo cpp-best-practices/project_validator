@@ -43,11 +43,40 @@ class Tagged:
 
 
 @cache
+def _yaml_1_2() -> type:
+    """The safe loader, reading a plain scalar that starts with `:` in a flow collection (`[:a, :b]`) as YAML 1.2
+    does: `:` starts a scalar when what follows it is not a space or a flow indicator."""
+    yaml: Any = _yaml
+
+    class Loader(yaml.SafeLoader):  # type: ignore[misc]
+        def colon_scalar(self) -> bool:
+            """Whether the `:` here starts a plain scalar: in a flow collection, at the start of an entry (after `[`,
+            `{` or `,`, so not the value of a JSON-like key, `{"a":1}`), and followed by a safe character."""
+            if not self.flow_level or self.peek() != ":" or self.peek(1) in _NOT_PLAIN_SAFE:
+                return False
+            at = self.pointer - 1
+            while at >= 0 and self.buffer[at] in " \t\r\n":
+                at -= 1
+            return at >= 0 and self.buffer[at] in "[{,"
+
+        def check_value(self) -> bool:
+            return not self.colon_scalar() and bool(super().check_value())
+
+        def check_plain(self) -> bool:
+            return self.colon_scalar() or bool(super().check_plain())
+
+    return Loader
+
+
+_NOT_PLAIN_SAFE = "\0 \t\r\n\x85\u2028\u2029,[]{}"
+
+
+@cache
 def _loader() -> type:
     """A safe loader that keeps values with local tags as `Tagged` instead of rejecting them."""
     yaml: Any = _yaml
 
-    class Loader(yaml.SafeLoader):  # type: ignore[misc]
+    class Loader(_yaml_1_2()):  # type: ignore[misc]
         pass
 
     def tagged(loader: Any, suffix: str, node: Any) -> Tagged:
@@ -79,7 +108,7 @@ def check_documents(text: str) -> None:
     if _yaml is None:
         raise YamlError(MISSING_MESSAGE)
     try:
-        for _ in _yaml.compose_all(text, Loader=_yaml.SafeLoader):
+        for _ in _yaml.compose_all(text, Loader=_yaml_1_2()):
             pass
     except _yaml.MarkedYAMLError as error:
         mark = error.problem_mark or error.context_mark

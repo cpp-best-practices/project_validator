@@ -1,4 +1,4 @@
-"""clang-tidy and cppcheck: the C and C++ static analyzers, which find different bugs, so both must run.
+"""clang-tidy and cppcheck: the C and C++ static analyzers; either one running is enough.
 
 Each runs directly, through a launcher or action, or within the build: a CMake configuration that sets
 `CMAKE_<LANG>_CLANG_TIDY` or `CMAKE_<LANG>_CPPCHECK` (or the target property) runs it on every file it compiles.
@@ -57,7 +57,6 @@ CLANG_TIDY = analyzer(
     analyses=_analyzer(re.compile(r"(?:run-)?clang-tidy(?:-\d+)?(?:\.py)?"), "CLANG_TIDY"),
     rules=defined_by(files=("clang-tidy",), default=False),
     reads=("CMake",),
-    required=True,
 )
 CPPCHECK = analyzer(
     name="cppcheck",
@@ -65,7 +64,6 @@ CPPCHECK = analyzer(
     how="cppcheck (CMAKE_CXX_CPPCHECK)",
     analyses=_analyzer(re.compile(r"cppcheck(?:-htmlreport)?"), "CPPCHECK"),
     reads=("CMake",),
-    required=True,
 )
 
 

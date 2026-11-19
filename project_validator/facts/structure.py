@@ -7,7 +7,7 @@ The project map (`--map`, `project_validator.project_map`) is a view over these 
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
@@ -34,8 +34,21 @@ NOT_SOURCE_SUFFIXES = frozenset(
         *(".log", ".diff", ".patch", ".orig", ".bak", ".swp"),
         # Templates (config.h.in, MANIFEST.in) can belong to any language.
         ".in",
+        # Lock files, test plans and data the profiles' tools write or read (cabal.project.freeze, Package.resolved,
+        # Xcode test plans, R's data and Windows Makevars), templates (EEx, Terraform's templatefile, `.tpl`),
+        # cheatsheets and AsciiDoc.
+        *(".freeze", ".resolved", ".xctestplan", ".rda", ".rds", ".rdata", ".win"),
+        *(".eex", ".heex", ".leex", ".tftpl", ".tpl", ".cheatmd", ".asciidoc"),
     }
 )
+# Java's service-provider files are named after the interface they implement (`com.example.Spi`).
+_SERVICE_PROVIDERS = "META-INF/services/"
+# The suffixes of the languages build files name that no profile reads (CMake's `LANGUAGES CUDA OBJC`).
+BUILT_LANGUAGE_SUFFIXES = {
+    "CUDA": (".cu", ".cuh"),
+    "Objective-C": (".m",),
+    "Objective-C++": (".mm",),
+}
 # Hidden top-level directories that hold configuration. A format's files are read there too (CI workflows and
 # editor settings are data); a language's are not (a helper script in `.github/scripts` makes no language the
 # project's).
@@ -154,6 +167,19 @@ def _by_name(path: str) -> tuple[str, str, Kind] | None:
     return next((found for found in _source_names() if fnmatchcase(name, found[0])), None)
 
 
+def source_languages() -> Callable[[str], str | None]:
+    """A lookup of the language or format the file at a path is a source of (by suffix, else by name), or None."""
+    suffixes = _source_suffixes()
+
+    def language(path: str) -> str | None:
+        if (found := suffixes.get(PurePosixPath(path).suffix)) is not None:
+            return found[0]
+        named = _by_name(path)
+        return named[1] if named is not None else None
+
+    return language
+
+
 def source_signal(path: str) -> str:
     """What recognises the source at `path`: its suffix, or, for a source with no telling suffix, the name pattern
     (`Dockerfile.*`)."""
@@ -206,11 +232,17 @@ def _configuration(path: str) -> bool:
     return PurePosixPath(path).parts[0] in CONFIGURATION_DIRECTORIES
 
 
+# Editor settings written in a language's syntax (Emacs' per-directory variables): settings, not sources.
+_EDITOR_SETTINGS = frozenset({".dir-locals.el", ".dir-locals-2.el"})
+
+
 def _sources(project: Project) -> Iterator[SourceFile]:
     """The sources of each language among the project's files, and of each format among those and the configuration
-    directories' files."""
+    directories' files; not editor settings."""
     known = _source_suffixes()
     for path in project.files(hidden=CONFIGURATION_DIRECTORIES):
+        if PurePosixPath(path).name in _EDITOR_SETTINGS:
+            continue
         found = known.get(PurePosixPath(path).suffix)
         if found is None and (named := _by_name(path)) is not None:
             found = named[1:]
@@ -234,6 +266,7 @@ def _unrecognised(files: list[str], accounted: set[str], recognised: set[str]) -
         and suffix not in recognised
         and suffix.lower() not in NOT_SOURCE_SUFFIXES
         and not suffix.endswith("~")
+        and _SERVICE_PROVIDERS not in path
     )
     for suffix, count in sorted(counts.items(), key=lambda item: (-item[1], item[0])):
         yield UnrecognisedSuffix(origin=Origin(path="."), suffix=suffix, files=count)
@@ -338,6 +371,7 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     yield from ambiguous
     sources = (*plain.of(SourceFile), *ambiguous)
     recognised = {signal for source in sources if (signal := source_signal(source.path)).startswith(".")}
+    recognised |= {suffix for name in names for suffix in BUILT_LANGUAGE_SUFFIXES.get(name, ())}
     yield from _unrecognised(files, {*(path for _, path in found), *(source.path for source in sources)}, recognised)
     yield from _units(project, Facts((*plain, *ambiguous)), named)
 
@@ -352,6 +386,7 @@ __all__ = [
     "UnrecognisedSuffix",
     "project_formats",
     "project_languages",
+    "source_languages",
     "source_signal",
     "structure_facts",
 ]

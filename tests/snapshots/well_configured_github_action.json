@@ -54,11 +54,7 @@
             },
             "unit": ".",
             "unknown_definitions": [],
-            "unknowns": [
-              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
-              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
-              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])"
-            ]
+            "unknowns": []
           }
         ]
       }
@@ -92,11 +88,7 @@
             },
             "unit": ".",
             "unknown_definitions": [],
-            "unknowns": [
-              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
-              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
-              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])"
-            ]
+            "unknowns": []
           }
         ]
       }
@@ -134,11 +126,7 @@
             },
             "unit": ".",
             "unknown_definitions": [],
-            "unknowns": [
-              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
-              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])",
-              "the action ./: its action.yml is not read (.github/workflows/ci.yml:jobs.test.steps[1])"
-            ]
+            "unknowns": []
           }
         ]
       }
@@ -157,6 +145,7 @@
             "language": "GitHub Action",
             "parsed": [],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -178,6 +167,7 @@
               "action.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -372,7 +362,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "workflows that use the action itself (uses: ./): 1 file(s), run by the action's own workflow",
       "status": "PASS"
     },
     "top-level-guard": {

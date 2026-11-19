@@ -911,6 +911,7 @@
               "pom.xml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -932,6 +933,7 @@
               ".github/workflows/function-limits.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1141,7 +1143,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "@Test methods, JUnit 3 TestCase classes or Kotest specs under src/test (or another test source set): 1 file(s), run by mvn test or gradle test",
       "status": "PASS"
     },
     "top-level-guard": {

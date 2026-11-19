@@ -31,11 +31,14 @@ from project_validator.tools.audits import multi_ecosystem_audits
 
 # JUnit and TestNG annotate tests; Kotest specs extend a spec style.
 JVM_TEST_FILES = TestFiles(
-    name="@Test methods or Kotest specs under src/test/java or src/test/kotlin",
+    name="@Test methods, JUnit 3 TestCase classes or Kotest specs under src/test (or another test source set)",
     languages=frozenset({JAVA, KOTLIN}),
-    path=re.compile(r"(?:^|/)src/test/(?:java|kotlin)/.+\.(?:java|kt)$"),
+    # src/test/java, a Kotlin multiplatform source set (src/jvmTest/kotlin, core/jvm/test), or a test directory a
+    # build names as its test sources (guava's `<testSourceDirectory>test</testSourceDirectory>`).
+    path=re.compile(r"(?:^|/)(?:src/\w*[Tt]est/(?:java|kotlin)|test)/.+\.(?:java|kt)$"),
     contains=re.compile(
-        r"@(?:org\.junit\.(?:jupiter\.api\.)?)?Test\b"
+        r"@(?:org\.junit\.(?:jupiter\.api\.)?)?(?:Test|TestFactory|ParameterizedTest|RepeatedTest|TestTemplate)\b"
+        r"|\bextends\s+(?:junit\.framework\.)?TestCase\b"
         r"|:\s*(?:Fun|String|Describe|Behavior|Should|Free|Word|Feature|Expect|Annotation)Spec\b"
     ),
 )

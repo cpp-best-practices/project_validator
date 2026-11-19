@@ -64,6 +64,21 @@
       ],
       "origin": "src/Shop.jl.cov",
       "output": "the coverage files (*.jl.cov)"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Project.toml",
+      "reader": "Pkg dependencies"
+    },
+    {
+      "kind": "Declared",
+      "manager": "Pkg",
+      "origin": "Project.toml"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Project.toml",
+      "reader": "Pkg compat bounds"
     }
   ],
   "map": {

@@ -945,6 +945,7 @@
               "pyproject.toml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -966,6 +967,7 @@
               ".github/workflows/copy-paste-detection.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1176,7 +1178,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "test_*.py, *_test.py or tests/*_tests.py files: 1 file(s), run by pytest",
       "status": "PASS"
     },
     "top-level-guard": {

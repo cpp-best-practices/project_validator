@@ -16,7 +16,7 @@ def _skipped(language: str) -> Result:
     return Result.skipped(f"no known build output of {language}")
 
 
-def judge_ignored(answer: IgnoreAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_ignored(answer: IgnoreAnswer, *, allow_unknown: bool) -> Result:
     """Passes when every ignore file ignores every build output; warns, with how, for each one some file does not."""
     if answer.answer is Answer.IMPOSSIBLE:
         return _skipped(answer.language)
@@ -27,12 +27,12 @@ def judge_ignored(answer: IgnoreAnswer, *, allow_unknown: bool = False) -> Resul
             for output in missing
             if (files := output.unignored())
         )
-        return Result.warned("; ".join(messages), *dict.fromkeys(output.hint for output in missing))
+        return Result.warned("; ".join(dict.fromkeys(messages)), *dict.fromkeys(output.hint for output in missing))
     found = (f"{path} ignores {entry}" for output in answer.outputs for path, entry in output.entries)
     return Result.passed("; ".join(dict.fromkeys(found)))
 
 
-def judge_committed(answer: CommittedAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_committed(answer: CommittedAnswer, *, allow_unknown: bool) -> Result:
     """Fails when a build output is committed, listing the first few."""
     if answer.answer is Answer.IMPOSSIBLE:
         return _skipped(answer.language)

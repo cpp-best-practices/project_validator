@@ -642,6 +642,7 @@
               ".github/workflows/copy-paste-detection.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -849,7 +850,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 1 file(s)",
+      "message": "rackunit tests (module+ test) in .rkt files: 1 file(s), run by raco test",
       "status": "PASS"
     },
     "top-level-guard": {

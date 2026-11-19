@@ -462,7 +462,7 @@
                 },
                 "libFuzzer": {
                   "can": {
-                    "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite)"
+                    "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz)"
                   },
                   "needs_definition": true,
                   "required": false
@@ -924,14 +924,14 @@
                   "checks": "clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy)"
                 },
                 "needs_definition": true,
-                "required": true
+                "required": false
               },
               "cppcheck": {
                 "can": {
                   "checks": "cppcheck (CMAKE_CXX_CPPCHECK)"
                 },
                 "needs_definition": false,
-                "required": true
+                "required": false
               }
             },
             "language": "C++",
@@ -1020,6 +1020,7 @@
                 },
                 "missing": [
                   "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR",
+                  "CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME",
                   "meson.is_subproject()"
                 ]
               }
@@ -1129,6 +1130,7 @@
               ".github/workflows/copy-paste-detection.yml"
             ],
             "problems": [],
+            "test_data": [],
             "test_problems": [],
             "unit": ".",
             "unread": {}
@@ -1349,7 +1351,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "tests found in 2 file(s)",
+      "message": "tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call): 2 file(s), run by ctest",
       "status": "PASS"
     },
     "top-level-guard": {

@@ -5,6 +5,7 @@ Flutter SDK count wherever their Dart counterparts do."""
 from __future__ import annotations
 
 import re
+import shlex
 from collections.abc import Mapping
 from pathlib import Path
 
@@ -12,10 +13,11 @@ from project_validator import yaml_support
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import has_option, program, starts_with
+from project_validator.facts.arguments import has_option, option_values, program, starts_with
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
@@ -68,9 +70,9 @@ def _dart(*subcommands: str) -> Condition:
 # --- Tests and coverage -------------------------------------------------------------------------------------------
 
 DART_TEST_FILES = TestFiles(
-    name="test(), testWidgets() or group() calls in test/**/*_test.dart",
+    name="test(), testWidgets() or group() calls in test/**/*_test.dart (or integration_test/)",
     languages=DART,
-    path=re.compile(r"(?:^|/)test/.+_test\.dart$"),
+    path=re.compile(r"(?:^|/)(?:integration_)?test/.+_test\.dart$"),
     contains=re.compile(r"\b(?:test|testWidgets|testGoldens|group)\s*\("),
 )
 
@@ -121,7 +123,7 @@ def _dart_format(command: Command, facts: Facts) -> Run | None:
         return None
     if has_option(argv, "--set-exit-if-changed"):
         return formatted(command, facts, checks=True)
-    if has_option(argv, "--output", "-o") and any(word in ("none", "show", "json") for word in argv[2:]):
+    if any(value in ("none", "show", "json") for value in option_values(argv, "--output", "-o")):
         return None
     return formatted(command, facts, checks=False)
 
@@ -144,10 +146,12 @@ def _setting(name: str, regex: str) -> Pattern:
 
 
 # The analyzer reports what other compilers warn about; a lint set turns on the lints worth the name.
+# Included as a value or (Dart 3) as a list, or rules spelled out under `linter: rules:` (bloc).
 LINT_SET = _setting(
     "a lint set in analysis_options.yaml",
-    r"^include:\s*package:(?:lints/recommended|flutter_lints/flutter|very_good_analysis/analysis_options"
-    r"|lint/(?:strict|analysis_options|package)|pedantic/analysis_options)",
+    r"^include:\s*(?:\n\s*-\s*)?package:(?:lints/recommended|flutter_lints/flutter|very_good_analysis/analysis_options"
+    r"|lint/(?:strict|analysis_options|package)|pedantic/analysis_options|dart_flutter_team_lints/analysis_options)"
+    r"|^linter:\s*\n\s+rules:\s*\n\s+-\s*\w",
 )
 ANALYZE = _setting("dart analyze", r"\b(?:dart|flutter)\s+analyze\b")
 # `dart analyze` fails on warnings already; `--fatal-infos` makes the infos (the lints' level) fatal too.
@@ -291,3 +295,12 @@ DART_ECOSYSTEM = Ecosystem(
 )
 
 DART_VERSIONS = versions_axis("Dart or Flutter SDK version", "Dart", DART)
+
+
+def _emulator_script(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
+    """reactivecircus/android-emulator-runner runs its `script` input, line by line, in the emulator."""
+    commands = (part for line in inputs.get("script", "").splitlines() for part in line.split("&&"))
+    return tuple(argv for part in commands if (argv := tuple(shlex.split(part, comments=True))))
+
+
+ANDROID_EMULATOR = Action(name="reactivecircus/android-emulator-runner", runs=_emulator_script)

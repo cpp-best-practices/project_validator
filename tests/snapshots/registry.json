@@ -1,0 +1,7018 @@
+{
+  "checks": {
+    "action-pinning": {
+      "aliases": [],
+      "description": "The actions CI uses are pinned to full commit SHAs"
+    },
+    "ci-build-types": {
+      "aliases": [],
+      "description": "CI builds Debug and Release, with and without sanitizers, everywhere"
+    },
+    "ci-lint": {
+      "aliases": [],
+      "description": "CI lints its own configuration (e.g. actionlint or zizmor)"
+    },
+    "ci-present": {
+      "aliases": [],
+      "description": "The project has continuous integration configured"
+    },
+    "code-formatting": {
+      "aliases": [],
+      "description": "Formatting is defined (e.g. .clang-format, ruff, rustfmt) and CI enforces it"
+    },
+    "committed-artifacts": {
+      "aliases": [],
+      "description": "No build outputs (e.g. object files, __pycache__/, target/) are committed"
+    },
+    "compile-commands": {
+      "aliases": [],
+      "description": "compile_commands.json is exported (CMAKE_EXPORT_COMPILE_COMMANDS; Meson always writes it)"
+    },
+    "compiler-warnings": {
+      "aliases": [],
+      "description": "A strict compiler warning (or lint) set is enabled"
+    },
+    "copy-paste-detection": {
+      "aliases": [],
+      "description": "CI runs copy-paste detection (e.g. PMD CPD or jscpd)"
+    },
+    "coverage": {
+      "aliases": [],
+      "description": "CI measures branch coverage (or the finest the language's tools measure), reports it where it can be seen and fails under a threshold; path coverage is a bonus"
+    },
+    "cxx-extensions": {
+      "aliases": [],
+      "description": "Compiler extensions are disabled (-std=c++NN rather than -std=gnu++NN)"
+    },
+    "data-wellformed": {
+      "aliases": [],
+      "description": "Every data file is well formed: it parses in its format (JSON, TOML, YAML and XML are built in)"
+    },
+    "dependency-audit": {
+      "aliases": [],
+      "description": "CI checks the dependencies against known vulnerabilities (e.g. pip-audit, cargo audit, govulncheck)"
+    },
+    "dependency-management": {
+      "aliases": [],
+      "description": "Dependencies come from a package manager (CPM, vcpkg, uv, Cargo) and are locked, not vendored"
+    },
+    "dependency-updates": {
+      "aliases": [],
+      "description": "Automated dependency updates are configured (Dependabot or Renovate)"
+    },
+    "function-limits": {
+      "aliases": [],
+      "description": "Function length is limited (lizard, or each language's linter rule)"
+    },
+    "fuzz-testing": {
+      "aliases": [],
+      "description": "Fuzz targets exist (e.g. libFuzzer, cargo-fuzz, atheris, Go fuzzing) and CI runs them"
+    },
+    "hardening": {
+      "aliases": [],
+      "description": "Security hardening options are enabled"
+    },
+    "large-files": {
+      "aliases": [],
+      "description": "Large files are stored with Git LFS or DVC rather than committed directly"
+    },
+    "license": {
+      "aliases": [],
+      "description": "The project has a license file of a known license"
+    },
+    "link-check": {
+      "aliases": [],
+      "description": "CI checks each documentation site's links in each unit and fails on a broken one (lychee, sphinx-build -b linkcheck, markdown-link-check, mdbook-linkcheck, linkinator, muffet, htmltest, HTMLProofer); a scheduled run counts. Warns otherwise"
+    },
+    "migration-safety": {
+      "aliases": [],
+      "description": "CI checks each language's database migrations in each unit for changes that are unsafe to apply to a live database (squawk, atlas migrate lint, liquibase checks run). Warns otherwise; a project without migrations is not judged"
+    },
+    "mutation-testing": {
+      "aliases": [],
+      "description": "CI runs mutation testing (e.g. mutmut, cargo-mutants, StrykerJS, PIT), ideally on a pull request's changes only"
+    },
+    "out-of-source-build": {
+      "aliases": [],
+      "description": "The build prevents in-source builds (CMAKE_SOURCE_DIR compared with CMAKE_BINARY_DIR; Meson always does)"
+    },
+    "platform-matrix": {
+      "aliases": [],
+      "description": "CI runs on several operating systems with several compilers (or interpreter/toolchain versions)"
+    },
+    "sanitizers": {
+      "aliases": [],
+      "description": "Sanitizers are used in some configuration: AddressSanitizer and UndefinedBehaviorSanitizer for C/C++ (one of the two warns), cargo miri test or -Zsanitizer for Rust, go test -race for Go"
+    },
+    "schema-compatibility": {
+      "aliases": [],
+      "description": "CI checks each format's schemas in each unit for breaking changes against the main branch or a registry (buf breaking, oasdiff breaking, json-schema-diff)"
+    },
+    "schema-declared": {
+      "aliases": [],
+      "description": "Every schema declares its dialect and its identifier ($schema and $id, an openapi version and info.version, a targetNamespace, a syntax and package); a superseded dialect warns"
+    },
+    "schema-examples": {
+      "aliases": [],
+      "description": "CI checks the examples that come with each format's schemas in each unit: valid ones that must pass and invalid ones that must fail (ajv test, a validator run on examples/, spectral, schemathesis)"
+    },
+    "schema-validation": {
+      "aliases": [],
+      "description": "CI validates each format's documents in each unit against their schemas (check-jsonschema, ajv, kubeconform, helm lint --strict)"
+    },
+    "secret-scanning": {
+      "aliases": [],
+      "description": "CI scans for committed secrets (e.g. gitleaks, TruffleHog)"
+    },
+    "security-policy": {
+      "aliases": [],
+      "description": "A security policy says how to report a vulnerability privately"
+    },
+    "security-scanning": {
+      "aliases": [],
+      "description": "CI scans the code for security problems (CodeQL, GitLab SAST, or each language's security lints)"
+    },
+    "static-analysis": {
+      "aliases": [],
+      "description": "Static analyzers are configured and run (e.g. clang-tidy and cppcheck, ruff check, clippy)"
+    },
+    "status-badges": {
+      "aliases": [],
+      "description": "The README shows CI status and code quality badges"
+    },
+    "tests-run": {
+      "aliases": [
+        "ctest-runs"
+      ],
+      "description": "Tests exist (registered with CTest or Meson for C/C++) and CI runs them"
+    },
+    "top-level-guard": {
+      "aliases": [],
+      "description": "Tests and developer-only settings are guarded by PROJECT_IS_TOP_LEVEL (Meson: meson.is_subproject()), so the project works as a subproject"
+    },
+    "type-checking": {
+      "aliases": [],
+      "description": "CI runs a static type checker on dynamically typed code (e.g. mypy, pyright), ideally strictly"
+    },
+    "vcs-ignore": {
+      "aliases": [],
+      "description": "A .gitignore (or .hgignore, .bzrignore, ...) keeps build outputs (e.g. build/, __pycache__/, target/) out of version control"
+    },
+    "warnings-as-errors": {
+      "aliases": [],
+      "description": "Compiler warnings are treated as errors in at least one configuration"
+    }
+  },
+  "tools": [
+    {
+      "can": {
+        "security": {
+          "scans": "<AnalysisModeSecurity>Recommended</AnalysisModeSecurity> (or Security Code Scan)"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": ".NET security analyzers",
+      "reads": [
+        "MSBuild",
+        "analyzer configuration"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "afl-fuzz -i <corpus> -o <findings> -- <target>"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "AFL++",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "csharpier format .",
+          "check": "csharpier check ."
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "CSharpier",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "Checkstyle (maven-checkstyle-plugin bound to check, or Gradle's checkstyle plugin)"
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "Checkstyle",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "Checkstyle with its MethodLength check"
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "Checkstyle's MethodLength",
+      "reads": [
+        "Maven",
+        "Gradle",
+        "Checkstyle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "CodeQL (github/codeql-action)"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "CodeQL",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "CodeQL (github/codeql-action)"
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "CodeQL",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "CodeQL (github/codeql-action)"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "CodeQL",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "CodeQL (github/codeql-action)"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "CodeQL",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "CodeQL (github/codeql-action)"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "CodeQL",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "CodeQL (github/codeql-action)"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "CodeQL",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "CodeQL (github/codeql-action)"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "CodeQL",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "CodeQL (github/codeql-action)"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "CodeQL",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "CodeQL (github/codeql-action)"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "CodeQL",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "mix credo"
+        }
+      },
+      "languages": [
+        "Elixir"
+      ],
+      "name": "Credo",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "dcm analyze lib"
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "DCM",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "cover -test",
+          "path": "cover -test (condition coverage)",
+          "statement": "cover -test"
+        }
+      },
+      "languages": [
+        "Perl"
+      ],
+      "name": "Devel::Cover",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "mix dialyzer (dialyxir) or rebar3 dialyzer",
+          "strict": "Dialyzer's optional warnings (underspecs, unmatched_returns, ...) in mix.exs or rebar.config"
+        }
+      },
+      "languages": [
+        "Elixir",
+        "Erlang"
+      ],
+      "name": "Dialyzer",
+      "reads": [
+        "Dialyzer"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "docker scout cves <image> (or docker/scout-action)"
+        }
+      },
+      "languages": [
+        "Dockerfile"
+      ],
+      "name": "Docker Scout",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "docusaurus build (npm run build)"
+        }
+      },
+      "languages": [
+        "Docusaurus"
+      ],
+      "name": "Docusaurus build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "eask test ert test/*.el (or cask exec ert-runner, emacs -batch -l test/x.el -f ert-run-tests-batch-and-exit)"
+        }
+      },
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "name": "ERT",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "Error Prone (a compiler plugin, run by every build)"
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "Error Prone",
+      "reads": [
+        "Error Prone"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "dotnet fsharplint lint"
+        }
+      },
+      "languages": [
+        "F#"
+      ],
+      "name": "FSharpLint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "fantomas .",
+          "check": "fantomas --check ."
+        }
+      },
+      "languages": [
+        "F#"
+      ],
+      "name": "Fantomas",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "Find Security Bugs (the findsecbugs-plugin of SpotBugs)"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "Find Security Bugs",
+      "reads": [
+        "Maven",
+        "Gradle",
+        "JVM security rules"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "GitLab Dependency Scanning",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Elixir"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "GitLab SAST",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "cabal test --enable-coverage",
+          "region": "cabal test --enable-coverage"
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "HPC",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "htmlproofer ./_site"
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "HTMLProofer",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "hugo --minify"
+        }
+      },
+      "languages": [
+        "Hugo"
+      ],
+      "name": "Hugo build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "incremental": "vendor/bin/infection --git-diff-lines",
+          "runs": "vendor/bin/infection"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "Infection",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "JET.test_package(YourPackage) in test/runtests.jl"
+        }
+      },
+      "languages": [
+        "Julia"
+      ],
+      "name": "JET.jl",
+      "reads": [
+        "JET"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "jacoco:report or jacocoTestReport",
+          "line": "jacoco:report or jacocoTestReport"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "JaCoCo",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "mvn test or gradle test with JAZZER_FUZZ=1 (or the jazzer CLI)"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "Jazzer",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "npx jazzer <target> -- -max_total_time=30 (or jest with JAZZER_FUZZ=1)"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "Jazzer.js",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "jekyll build (bundle exec jekyll build)"
+        }
+      },
+      "languages": [
+        "Jekyll"
+      ],
+      "name": "Jekyll build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "jest --coverage",
+          "line": "jest --coverage"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "Jest",
+      "reads": [
+        "Jest"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "julia -e 'using JuliaFormatter; format(\".\")'",
+          "check": "julia -e 'using JuliaFormatter; format(\".\") || exit(1)' (julia-actions/julia-format)"
+        }
+      },
+      "languages": [
+        "Julia"
+      ],
+      "name": "JuliaFormatter",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "kics scan -p ."
+        },
+        "security": {
+          "scans": "kics scan -p ."
+        }
+      },
+      "languages": [
+        "Ansible"
+      ],
+      "name": "KICS",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "kics scan -p ."
+        },
+        "security": {
+          "scans": "kics scan -p ."
+        }
+      },
+      "languages": [
+        "Dockerfile"
+      ],
+      "name": "KICS",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "kics scan -p ."
+        },
+        "security": {
+          "scans": "kics scan -p ."
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "KICS",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "kics scan -p ."
+        },
+        "security": {
+          "scans": "kics scan -p ."
+        }
+      },
+      "languages": [
+        "Terraform"
+      ],
+      "name": "KICS",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "koverXmlReport",
+          "line": "koverXmlReport"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "Kover",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "linkchecker site/index.html"
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "LinkChecker",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "Meziantou.Analyzer"
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "Meziantou.Analyzer",
+      "reads": [
+        "MSBuild"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "dotnet-coverage collect",
+          "line": "dotnet-coverage collect"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "Microsoft code coverage",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "mkdocs build --strict"
+        }
+      },
+      "languages": [
+        "MkDocs"
+      ],
+      "name": "MkDocs build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "runs": "mull-runner"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "Mull",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "runs": "muter"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "Muter",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "a restore with <NuGetAuditMode>all</NuGetAuditMode>"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "NuGet audit of every package",
+      "reads": [
+        "MSBuild"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze)"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "OWASP dependency-check",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "php-cs-fixer fix",
+          "check": "php-cs-fixer check"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "PHP-CS-Fixer",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "phpmd"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "PHPMD",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "phpmd with its codesize rules (ExcessiveMethodLength)"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "PHPMD's ExcessiveMethodLength",
+      "reads": [
+        "PHPMD"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "phpstan analyse"
+        },
+        "type-check": {
+          "checks": "phpstan analyse",
+          "strict": "level: 8 (or max) in phpstan.neon"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "PHPStan",
+      "reads": [
+        "PHPStan"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "phpunit --path-coverage",
+          "line": "phpunit --coverage-clover",
+          "path": "phpunit --path-coverage"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "PHPUnit",
+      "reads": [
+        "PHPUnit"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "phpcbf",
+          "check": "phpcs"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "PHP_CodeSniffer",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "incremental": "pitest:scmMutationCoverage",
+          "runs": "pitest:mutationCoverage or the pitest Gradle task"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "PIT",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "PMD (maven-pmd-plugin bound to check, or Gradle's pmd plugin)"
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "PMD",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "PMD with category/java/security.xml"
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "PMD security rules",
+      "reads": [
+        "Maven",
+        "Gradle",
+        "JVM security rules"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "Invoke-ScriptAnalyzer -Path . -Recurse -EnableExit"
+        }
+      },
+      "languages": [
+        "PowerShell"
+      ],
+      "name": "PSScriptAnalyzer",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "statement": "Invoke-Pester -CodeCoverage <scripts> (or -CI, or CodeCoverage.Enabled = $true in its configuration)"
+        },
+        "test": {
+          "runs": "Invoke-Pester -Path tests"
+        }
+      },
+      "languages": [
+        "PowerShell"
+      ],
+      "name": "Pester",
+      "reads": [
+        "Pester"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "phan"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "Phan",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "pint",
+          "check": "pint --test"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "Pint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "Pkg.test() (julia-actions/julia-runtest)"
+        }
+      },
+      "languages": [
+        "Julia"
+      ],
+      "name": "Pkg.test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "psalm"
+        },
+        "type-check": {
+          "checks": "psalm",
+          "strict": "errorLevel=\"2\" in psalm.xml"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "Psalm",
+      "reads": [
+        "Psalm"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "psalm --taint-analysis"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "Psalm taint analysis",
+      "reads": [
+        "Psalm"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "R CMD check (or rcmdcheck::rcmdcheck(), r-lib/actions/check-r-package, devtools::test())"
+        }
+      },
+      "languages": [
+        "R"
+      ],
+      "name": "R CMD check",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "reek"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "Reek",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "Roslynator"
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "Roslynator",
+      "reads": [
+        "MSBuild"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "rubocop"
+        },
+        "format": {
+          "apply": "rubocop -a",
+          "check": "rubocop"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "RuboCop",
+      "reads": [
+        "Rake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "rubocop"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "RuboCop Security cops",
+      "reads": [
+        "Rake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "rubocop"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "RuboCop's Metrics/MethodLength",
+      "reads": [
+        "Rake",
+        "RuboCop"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "runic --inplace .",
+          "check": "runic --check . (fredrikekre/runic-action)"
+        }
+      },
+      "languages": [
+        "Julia"
+      ],
+      "name": "Runic",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "schxslt -s <schema.sch> -d <document>"
+        }
+      },
+      "languages": [
+        "XML Schema"
+      ],
+      "name": "SchXslt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "libfuzzer-dotnet --target_path=<fuzz project> (or afl-fuzz -i <corpus> -o <findings> -- dotnet <fuzz>.dll)"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "SharpFuzz",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "SimpleCov enable_coverage :branch",
+          "line": "SimpleCov"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "SimpleCov",
+      "reads": [
+        "SimpleCov"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "mix sobelow --exit"
+        }
+      },
+      "languages": [
+        "Elixir"
+      ],
+      "name": "Sobelow",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "SonarAnalyzer"
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "SonarAnalyzer",
+      "reads": [
+        "MSBuild"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "srb tc (Sorbet)",
+          "strict": "# typed: strict files (Sorbet)"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "Sorbet",
+      "reads": [
+        "Sorbet"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "sphinx-build -W docs docs/_build"
+        }
+      },
+      "languages": [
+        "Sphinx"
+      ],
+      "name": "Sphinx build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "SpotBugs (spotbugs-maven-plugin bound to check, or the com.github.spotbugs Gradle plugin)"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "SpotBugs",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "spotless:apply",
+          "check": "mvn spotless:check or gradle spotlessCheck"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "Spotless",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "standardrb"
+        },
+        "format": {
+          "apply": "standardrb --fix",
+          "check": "standardrb"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "Standard",
+      "reads": [
+        "Rake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "steep check (Steep, with RBS signatures)",
+          "strict": "D::Ruby.strict in the Steepfile"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "Steep",
+      "reads": [
+        "Steep"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "incremental": "dotnet stryker --since",
+          "runs": "dotnet stryker"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "Stryker.NET",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "incremental": "stryker run --incremental",
+          "runs": "stryker run"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "StrykerJS",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "stylua .",
+          "check": "stylua --check ."
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "StyLua",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "StyleCop.Analyzers"
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "StyleCop.Analyzers",
+      "reads": [
+        "MSBuild"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "swiftformat",
+          "check": "swiftformat --lint"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "SwiftFormat",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "swiftlint --strict (or the SwiftLint build tool plugin)"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "SwiftLint",
+      "reads": [
+        "SwiftLint plugin"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "swiftlint --strict"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "SwiftLint's function_body_length",
+      "reads": [
+        "SwiftLint plugin",
+        "SwiftLint"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "vitest --coverage",
+          "line": "vitest --coverage"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "Vitest",
+      "reads": [
+        "Vitest"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "xspec.sh -t tests/*.xspec (or the XSpec Maven or Ant targets)"
+        }
+      },
+      "languages": [
+        "XSLT"
+      ],
+      "name": "XSpec",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "xcodebuild test -enableCodeCoverage YES",
+          "region": "xcodebuild test -enableCodeCoverage YES"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "Xcode",
+      "reads": [
+        "Xcode"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "a JavaScript test runner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "actionlint (or rhysd/actionlint)"
+        }
+      },
+      "languages": [
+        "GitHub Action"
+      ],
+      "name": "actionlint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "air format .",
+          "check": "air format --check ."
+        }
+      },
+      "languages": [
+        "R"
+      ],
+      "name": "air",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "examples": {
+          "checked": "ajv test -s <schema> -d 'examples/valid/*.json' --valid (and -d 'examples/invalid/*.json' --invalid)"
+        },
+        "schema": {
+          "validates": "ajv validate -s <schema> -d <documents> (ajv-cli)"
+        }
+      },
+      "languages": [
+        "JSON Schema"
+      ],
+      "name": "ajv",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "alejandra .",
+          "check": "alejandra --check ."
+        }
+      },
+      "languages": [
+        "Nix"
+      ],
+      "name": "alejandra",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "ansible-lint (or ansible/ansible-lint)"
+        },
+        "security": {
+          "scans": "ansible-lint (its risky-* and no-log rules)"
+        }
+      },
+      "languages": [
+        "Ansible"
+      ],
+      "name": "ansible-lint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "ansible-test integration (in a collection)"
+        }
+      },
+      "languages": [
+        "Ansible"
+      ],
+      "name": "ansible-test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "sbcl --non-interactive --eval \"(asdf:test-system :shop)\" (or rove shop.asd, 40ants/run-tests)"
+        }
+      },
+      "languages": [
+        "Common Lisp"
+      ],
+      "name": "asdf:test-system",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "asyncapi validate <description>"
+        },
+        "schema": {
+          "validates": "asyncapi validate <description>"
+        }
+      },
+      "languages": [
+        "AsyncAPI"
+      ],
+      "name": "asyncapi",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "python <fuzz target>.py"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "atheris",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "migrations": {
+          "linted": "atlas migrate lint --dir file://migrations --dev-url <dev database> (or ariga/atlas-action/migrate/lint)"
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "atlas migrate lint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "bandit -r ."
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "bandit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "bats tests"
+        }
+      },
+      "languages": [
+        "Shell"
+      ],
+      "name": "bats",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "biome lint"
+        },
+        "format": {
+          "apply": "biome format --write",
+          "check": "biome ci"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "biome",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "biome format --write .",
+          "check": "biome format . (or biome ci .)"
+        }
+      },
+      "languages": [
+        "JSON Schema"
+      ],
+      "name": "biome",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "dune test --instrument-with bisect_ppx, then bisect-ppx-report"
+        }
+      },
+      "languages": [
+        "OCaml"
+      ],
+      "name": "bisect_ppx",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "black",
+          "check": "black --check"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "black",
+      "reads": [
+        "black"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "brakeman"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "brakeman",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "compatibility": {
+          "breaking": "buf breaking --against .git#branch=main (or bufbuild/buf-action)"
+        }
+      },
+      "languages": [
+        "Protobuf"
+      ],
+      "name": "buf breaking",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "buf build (or bufbuild/buf-action)"
+        }
+      },
+      "languages": [
+        "Protobuf"
+      ],
+      "name": "buf build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "buf format -w",
+          "check": "buf format --diff --exit-code"
+        }
+      },
+      "languages": [
+        "Protobuf"
+      ],
+      "name": "buf format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "buf lint"
+        }
+      },
+      "languages": [
+        "Protobuf"
+      ],
+      "name": "buf lint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "bun audit"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "bun audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "bun test --coverage"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "bun test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "bundle audit check --update"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "bundler-audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "busted (or luarocks test)"
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "busted",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "c8",
+          "line": "c8"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "c8",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "cabal test (or stack test)"
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "cabal test",
+      "reads": [
+        "Haskell test suites"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "cabal-audit"
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "cabal-audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "cargo audit"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "cargo audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "cargo deny check advisories"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "cargo deny",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "cargo test"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "cargo test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "cargo fuzz run <target> -- -max_total_time=60"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "cargo-fuzz",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "cargo llvm-cov --branch",
+          "line": "cargo llvm-cov",
+          "path": "cargo llvm-cov --mcdc",
+          "region": "cargo llvm-cov"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "cargo-llvm-cov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "incremental": "cargo mutants --in-diff <changes.diff>",
+          "runs": "cargo mutants"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "cargo-mutants",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "cargo tarpaulin --branch",
+          "line": "cargo tarpaulin"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "cargo-tarpaulin",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "ct lint"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "chart-testing",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "examples": {
+          "checked": "check-jsonschema --schemafile <schema> examples/valid/*.json"
+        },
+        "schema": {
+          "validates": "check-jsonschema --schemafile <schema> <documents>"
+        }
+      },
+      "languages": [
+        "JSON Schema"
+      ],
+      "name": "check-jsonschema",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "eask lint checkdoc"
+        }
+      },
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "name": "checkdoc",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "checkov -d . --framework ansible"
+        },
+        "security": {
+          "scans": "checkov -d . --framework ansible"
+        }
+      },
+      "languages": [
+        "Ansible"
+      ],
+      "name": "checkov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "checkov -d ."
+        },
+        "security": {
+          "scans": "checkov -d ."
+        }
+      },
+      "languages": [
+        "Dockerfile"
+      ],
+      "name": "checkov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "checkov -d ."
+        },
+        "security": {
+          "scans": "checkov -d ."
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "checkov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "checkov -d ."
+        },
+        "security": {
+          "scans": "checkov -d ."
+        }
+      },
+      "languages": [
+        "Terraform"
+      ],
+      "name": "checkov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "chktex -q main.tex"
+        }
+      },
+      "languages": [
+        "LaTeX"
+      ],
+      "name": "chktex",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "path": "clang -fcoverage-mcdc"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "clang -fcoverage-mcdc",
+      "reads": [
+        "CMake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "clang-format -i",
+          "check": "clang-format --dry-run -Werror"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "clang-format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy)"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "clang-tidy",
+      "reads": [
+        "CMake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "clang-tidy with readability-function-size and a LineThreshold in .clang-tidy"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "clang-tidy's readability-function-size",
+      "reads": [
+        "CMake",
+        "clang-tidy"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "cargo clippy"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "clippy",
+      "reads": [
+        "clippy"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "clj-kondo --lint src test"
+        }
+      },
+      "languages": [
+        "Clojure"
+      ],
+      "name": "clj-kondo",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "clj-watson scan -p deps.edn"
+        }
+      },
+      "languages": [
+        "Clojure"
+      ],
+      "name": "clj-watson",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "cljfmt fix",
+          "check": "cljfmt check (or lein cljfmt check)"
+        }
+      },
+      "languages": [
+        "Clojure"
+      ],
+      "name": "cljfmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "cljstyle fix",
+          "check": "cljstyle check"
+        }
+      },
+      "languages": [
+        "Clojure"
+      ],
+      "name": "cljstyle",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "clojure -M:test (or -X:test, lein test, kaocha, bb test)"
+        }
+      },
+      "languages": [
+        "Clojure"
+      ],
+      "name": "clojure.test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "statement": "lein cloverage (or clojure -M:coverage, an alias running cloverage): form coverage"
+        }
+      },
+      "languages": [
+        "Clojure"
+      ],
+      "name": "cloverage",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "composer audit"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "composer audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "runs": "cosmic-ray exec"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "cosmic-ray",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "coverage run --branch",
+          "line": "coverage run"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "coverage.py",
+      "reads": [
+        "coverage.py"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "dotnet test --collect \"XPlat Code Coverage\"",
+          "line": "dotnet test --collect \"XPlat Code Coverage\""
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "coverlet",
+      "reads": [
+        "MSBuild",
+        "VSTest"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "covr::package_coverage() (or covr::codecov())"
+        }
+      },
+      "languages": [
+        "R"
+      ],
+      "name": "covr",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "cpan-audit deps . (CPAN::Audit)"
+        }
+      },
+      "languages": [
+        "Perl"
+      ],
+      "name": "cpan-audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "cppcheck (CMAKE_CXX_CPPCHECK)"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "cppcheck",
+      "reads": [
+        "CMake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "csvlint --schema=<table schema> <table>"
+        }
+      },
+      "languages": [
+        "Data Package"
+      ],
+      "name": "csvlint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "ctest"
+        }
+      },
+      "languages": [
+        "Assembly",
+        "C",
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
+      ],
+      "name": "ctest",
+      "reads": [
+        "CMake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "dart run custom_lint"
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "custom_lint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "dart analyze (or flutter analyze)"
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "dart analyze",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "dart format .",
+          "check": "dart format --output=none --set-exit-if-changed ."
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "dart format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "dart test (or flutter test)"
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "dart test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "dart test --coverage=coverage --branch-coverage (or flutter test --coverage --branch-coverage)",
+          "line": "dart test --coverage=coverage (or flutter test --coverage)"
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "dart test --coverage",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "dbt parse"
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "dbt parse",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "dbt test (dbt build runs the tests too)"
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "dbt test",
+      "reads": [
+        "dbt"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "deadnix --fail ."
+        }
+      },
+      "languages": [
+        "Nix"
+      ],
+      "name": "deadnix",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "deno check",
+          "strict": "deno check (strict by default)"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "deno check",
+      "reads": [
+        "Deno"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "deno fmt",
+          "check": "deno fmt --check"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "deno fmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "deno lint"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "deno lint",
+      "reads": [
+        "Deno"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "deno test --coverage",
+          "line": "deno test --coverage"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "deno test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "detekt (the io.gitlab.arturbosch.detekt Gradle plugin, run by gradle check)"
+        }
+      },
+      "languages": [
+        "Kotlin"
+      ],
+      "name": "detekt",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "detekt"
+        }
+      },
+      "languages": [
+        "Kotlin"
+      ],
+      "name": "detekt's LongMethod",
+      "reads": [
+        "Maven",
+        "Gradle",
+        "detekt"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "runs": "dextool mutate"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "dextool mutate",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "dotnet format",
+          "check": "dotnet format --verify-no-changes"
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "dotnet format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "dotnet list package --vulnerable --include-transitive"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "dotnet list package --vulnerable",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "dotnet test"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "dotnet test",
+      "reads": [
+        "MSBuild"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "dprint fmt",
+          "check": "dprint check"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "dprint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "examples": {
+          "checked": "dredd <description> <base url>"
+        }
+      },
+      "languages": [
+        "OpenAPI"
+      ],
+      "name": "dredd",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "dune test (or dune runtest, dune build @runtest)"
+        }
+      },
+      "languages": [
+        "OCaml"
+      ],
+      "name": "dune test",
+      "reads": [
+        "dune tests"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "rebar3 lint (elvis)"
+        }
+      },
+      "languages": [
+        "Erlang"
+      ],
+      "name": "elvis",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "elp eqwalize-all (eqWAlizer)"
+        }
+      },
+      "languages": [
+        "Erlang"
+      ],
+      "name": "eqWAlizer",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "rebar3 fmt",
+          "check": "rebar3 fmt --check (or erlfmt --check)"
+        }
+      },
+      "languages": [
+        "Erlang"
+      ],
+      "name": "erlfmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "eslint"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "eslint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "eslint with max-lines-per-function on"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "eslint's max-lines-per-function",
+      "reads": [
+        "eslint rules"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "eslint with eslint-plugin-security"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "eslint-plugin-security",
+      "reads": [
+        "eslint rules"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "mix coveralls (excoveralls)"
+        }
+      },
+      "languages": [
+        "Elixir",
+        "Erlang"
+      ],
+      "name": "excoveralls",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "flake8"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "flake8",
+      "reads": [
+        "flake8"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "mvn fmt:format",
+          "check": "mvn fmt:check"
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "fmt-maven-plugin",
+      "reads": [
+        "Maven"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "fortitude check"
+        }
+      },
+      "languages": [
+        "Fortran"
+      ],
+      "name": "fortitude",
+      "reads": [
+        "fortitude"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "fourmolu --mode inplace .",
+          "check": "fourmolu --mode check ."
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "fourmolu",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "fpm test"
+        }
+      },
+      "languages": [
+        "Fortran"
+      ],
+      "name": "fpm test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "fprettify --recursive .",
+          "check": "fprettify --diff --recursive ."
+        }
+      },
+      "languages": [
+        "Fortran"
+      ],
+      "name": "fprettify",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "frictionless validate datapackage.json (or frictionlessdata/frictionless-ci)"
+        }
+      },
+      "languages": [
+        "Data Package"
+      ],
+      "name": "frictionless",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "path": "gcc -fcondition-coverage"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "gcc -fcondition-coverage",
+      "reads": [
+        "CMake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "path": "gcc -fpath-coverage"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "gcc -fpath-coverage",
+      "reads": [
+        "CMake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "gcov --branch-counts",
+          "line": "gcov",
+          "path": "gcov --conditions"
+        }
+      },
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "name": "gcov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "gcovr --xml",
+          "line": "gcovr"
+        }
+      },
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "name": "gcovr",
+      "reads": [
+        "gcovr"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "go test"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "go test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "go test -cover",
+          "statement": "go test -cover"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "go test -cover",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "go test -fuzz=Fuzz -fuzztime=30s"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "go test -fuzz",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "runs": "go-mutesting ./..."
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "go-mutesting",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "gofmt -w .",
+          "check": "test -z \"$(gofmt -l .)\""
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "gofmt",
+      "reads": [
+        "golangci-lint"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "golangci-lint (with linters enabled beyond its defaults in a .golangci.yml)"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "golangci-lint",
+      "reads": [
+        "golangci-lint"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "golangci-lint with funlen enabled in .golangci.yml"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "golangci-lint's funlen",
+      "reads": [
+        "golangci-lint"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "gosec enabled in .golangci.yml"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "golangci-lint's gosec",
+      "reads": [
+        "golangci-lint"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "goodtables validate datapackage.json"
+        }
+      },
+      "languages": [
+        "Data Package"
+      ],
+      "name": "goodtables",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "google-java-format --replace",
+          "check": "google-java-format --set-exit-if-changed"
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "google-java-format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "gosec ./..."
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "gosec",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "govulncheck ./..."
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "govulncheck",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "graphql-codegen --config codegen.ts"
+        }
+      },
+      "languages": [
+        "GraphQL"
+      ],
+      "name": "graphql-codegen",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "eslint with @graphql-eslint/eslint-plugin"
+        }
+      },
+      "languages": [
+        "GraphQL"
+      ],
+      "name": "graphql-eslint",
+      "reads": [
+        "graphql-eslint"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "compatibility": {
+          "breaking": "graphql-inspector diff <main branch's schema> schema.graphql (or graphql-hive/graphql-inspector)"
+        },
+        "schema": {
+          "validates": "graphql-inspector validate 'operations/**/*.graphql' schema.graphql"
+        }
+      },
+      "languages": [
+        "GraphQL"
+      ],
+      "name": "graphql-inspector",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "graphql-schema-linter 'schema/**/*.graphql'"
+        }
+      },
+      "languages": [
+        "GraphQL"
+      ],
+      "name": "graphql-schema-linter",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "grcov --branch",
+          "line": "grcov"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "grcov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "incremental": "gremlins unleash --diff <branch>",
+          "runs": "gremlins unleash"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "gremlins",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "grype <image> (or anchore/scan-action)"
+        }
+      },
+      "languages": [
+        "Dockerfile"
+      ],
+      "name": "grype",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "hadolint Dockerfile (or hadolint/hadolint-action)"
+        },
+        "security": {
+          "scans": "hadolint Dockerfile (its security rules: a non-root USER, pinned versions)"
+        }
+      },
+      "languages": [
+        "Dockerfile"
+      ],
+      "name": "hadolint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "helm lint <chart>"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "helm lint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "helm lint --strict <chart>"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "helm lint --strict",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "helm test <release> (or ct install, which installs the chart and runs its test hooks)"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "helm test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "helm unittest <chart>"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "helm-unittest",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "hlint ."
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "hlint",
+      "reads": [
+        "hlint"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "htmltest site"
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "htmltest",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "examples": {
+          "checked": "jing <schema> examples/valid/*.xml"
+        },
+        "schema": {
+          "validates": "jing <schema> <documents> (RELAX NG, or an XSD with -c)"
+        }
+      },
+      "languages": [
+        "XML Schema"
+      ],
+      "name": "jing",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "compatibility": {
+          "breaking": "json-schema-diff <main branch's schema> <schema>"
+        }
+      },
+      "languages": [
+        "JSON Schema"
+      ],
+      "name": "json-schema-diff",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "examples": {
+          "checked": "jsonschema -i examples/valid/<document> <schema>"
+        },
+        "schema": {
+          "validates": "jsonschema -i <document> <schema>"
+        }
+      },
+      "languages": [
+        "JSON Schema"
+      ],
+      "name": "jsonschema",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "julia --code-coverage (julia-actions/julia-runtest, then julia-processcoverage)"
+        }
+      },
+      "languages": [
+        "Julia"
+      ],
+      "name": "julia --code-coverage",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "examples": {
+          "checked": "jv <schema> examples/valid/*.json"
+        },
+        "schema": {
+          "validates": "jv <schema> <documents>"
+        }
+      },
+      "languages": [
+        "JSON Schema"
+      ],
+      "name": "jv",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "kcov <report directory> bats tests (or shellspec --kcov)"
+        }
+      },
+      "languages": [
+        "Shell"
+      ],
+      "name": "kcov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "zig test src/main.zig --test-cmd kcov --test-cmd kcov-output --test-cmd-bin"
+        }
+      },
+      "languages": [
+        "Zig"
+      ],
+      "name": "kcov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "ktfmt",
+          "check": "ktfmt --set-exit-if-changed"
+        }
+      },
+      "languages": [
+        "Kotlin"
+      ],
+      "name": "ktfmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "ktlint --format",
+          "check": "ktlint or gradle ktlintCheck"
+        }
+      },
+      "languages": [
+        "Kotlin"
+      ],
+      "name": "ktlint",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "kube-linter lint <manifests> (or stackrox/kube-linter-action)"
+        },
+        "security": {
+          "scans": "kube-linter lint <manifests>"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "kube-linter",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "kube-score score <manifests>"
+        },
+        "security": {
+          "scans": "kube-score score <manifests>"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "kube-score",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "kubeconform -strict <manifests> (helm template <chart> | kubeconform -strict)"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "kubeconform",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "kubeval <manifests>"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "kubeval",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "kyverno apply <policies> --resource <manifests>"
+        },
+        "security": {
+          "scans": "kyverno apply <policies> --resource <manifests>"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "kyverno",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "lacheck main.tex"
+        }
+      },
+      "languages": [
+        "LaTeX"
+      ],
+      "name": "lacheck",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "latexindent -w main.tex",
+          "check": "latexindent --check main.tex"
+        }
+      },
+      "languages": [
+        "LaTeX"
+      ],
+      "name": "latexindent",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "latexmk -pdf main.tex (or pdflatex, xelatex, lualatex, tectonic; xu-cheng/latex-action)"
+        }
+      },
+      "languages": [
+        "LaTeX"
+      ],
+      "name": "latexmk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "lcov --rc branch_coverage=1",
+          "line": "lcov",
+          "path": "lcov --mcdc-coverage"
+        }
+      },
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "name": "lcov",
+      "reads": [
+        "lcov"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz)"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "libFuzzer",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "a product built with -sanitize=fuzzer, run as .build/debug/<product> -max_total_time=30"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "libFuzzer",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "linkinator site --recurse"
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "linkinator",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "lintr::lint_package()"
+        }
+      },
+      "languages": [
+        "R"
+      ],
+      "name": "lintr",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "migrations": {
+          "linted": "liquibase checks run --changelog-file <changelog>"
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "liquibase checks",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Erlang"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Fortran"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Perl"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "R"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "function-length": {
+          "limits": "lizard --length 30"
+        }
+      },
+      "languages": [
+        "Zig"
+      ],
+      "name": "lizard",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "llvm-cov report",
+          "line": "llvm-cov report",
+          "path": "llvm-cov show -show-mcdc",
+          "region": "llvm-cov report"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "llvm-cov",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "lua-language-server --check . (with LuaCATS annotations)"
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "lua-language-server",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "luacheck ."
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "luacheck",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "busted --coverage (luacov)"
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "luacov",
+      "reads": [
+        "busted"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "luau-analyze ."
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "luau-analyze",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action)"
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "lychee",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "markdown-link-check docs/*.md (or gaurav-nelson/github-action-markdown-link-check)"
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "markdown-link-check",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action)"
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "markdownlint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "mdbook build (and mdbook test)"
+        }
+      },
+      "languages": [
+        "mdBook"
+      ],
+      "name": "mdBook build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "mdbook build with [output.linkcheck] in book.toml (mdbook-linkcheck installed)"
+        }
+      },
+      "languages": [
+        "mdBook"
+      ],
+      "name": "mdbook-linkcheck",
+      "reads": [
+        "mdbook"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "meson test"
+        }
+      },
+      "languages": [
+        "Assembly",
+        "C",
+        "C++",
+        "CUDA",
+        "Fortran",
+        "Objective-C",
+        "Objective-C++"
+      ],
+      "name": "meson test",
+      "reads": [
+        "Meson"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "mill __.test"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "mill __.test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "mix format",
+          "check": "mix format --check-formatted"
+        }
+      },
+      "languages": [
+        "Elixir"
+      ],
+      "name": "mix format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "mix test"
+        }
+      },
+      "languages": [
+        "Elixir",
+        "Erlang"
+      ],
+      "name": "mix test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "mix test --cover"
+        }
+      },
+      "languages": [
+        "Elixir",
+        "Erlang"
+      ],
+      "name": "mix test --cover",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "mix deps.audit (mix_audit)"
+        }
+      },
+      "languages": [
+        "Elixir"
+      ],
+      "name": "mix_audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "mkdocs build with htmlproofer in mkdocs.yml's plugins"
+        }
+      },
+      "languages": [
+        "MkDocs"
+      ],
+      "name": "mkdocs-htmlproofer-plugin",
+      "reads": [
+        "mkdocs plugins"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "molecule test"
+        }
+      },
+      "languages": [
+        "Ansible"
+      ],
+      "name": "molecule",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "muffet http://localhost:8000 (the served site)"
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "muffet",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "incremental": "mutant run --since <branch>",
+          "runs": "mutant run"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "mutant",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "runs": "mutatest"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "mutatest",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "mutation": {
+          "incremental": "mutmut run <module>.* for the changed modules",
+          "runs": "mutmut run"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "mutmut",
+      "reads": [
+        "mutmut"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "mvn test or gradle test"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "mvn test or gradle test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "mypy",
+          "strict": "strict = true in [tool.mypy] (or mypy --strict)"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "mypy",
+      "reads": [
+        "mypy"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "nbqa black notebooks",
+          "check": "nbqa black --check notebooks"
+        }
+      },
+      "languages": [
+        "Jupyter"
+      ],
+      "name": "nbqa black",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "nix flake check (or nix build .#checks.<system>.<check>)"
+        }
+      },
+      "languages": [
+        "Nix"
+      ],
+      "name": "nix flake check",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "nix fmt",
+          "check": "nix fmt -- --check ."
+        }
+      },
+      "languages": [
+        "Nix"
+      ],
+      "name": "nix fmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "nixfmt .",
+          "check": "nixfmt --check ."
+        }
+      },
+      "languages": [
+        "Nix"
+      ],
+      "name": "nixfmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "node --test --experimental-test-coverage",
+          "line": "node --test --experimental-test-coverage"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "node --test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "pytest --nbmake notebooks (or --nbval, jupyter nbconvert --execute, papermill)"
+        }
+      },
+      "languages": [
+        "Jupyter"
+      ],
+      "name": "notebook execution",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "nox"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "nox",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "npm audit"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "npm audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "clojure -M:nvd (or lein nvd check)"
+        }
+      },
+      "languages": [
+        "Clojure"
+      ],
+      "name": "nvd-clojure",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "nyc",
+          "line": "nyc"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "nyc",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "compatibility": {
+          "breaking": "oasdiff breaking <main branch's description> <description> (or oasdiff/oasdiff-action/breaking)"
+        }
+      },
+      "languages": [
+        "OpenAPI"
+      ],
+      "name": "oasdiff",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "dune fmt",
+          "check": "dune build @fmt (or ocamlformat --check)"
+        }
+      },
+      "languages": [
+        "OCaml"
+      ],
+      "name": "ocamlformat",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "compatibility": {
+          "breaking": "openapi-diff <main branch's description> <description> --fail-on-incompatible"
+        }
+      },
+      "languages": [
+        "OpenAPI"
+      ],
+      "name": "openapi-diff",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "openapi-generator-cli validate -i <description>"
+        },
+        "schema": {
+          "validates": "openapi-generator-cli validate -i <description>"
+        }
+      },
+      "languages": [
+        "OpenAPI"
+      ],
+      "name": "openapi-generator",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "ormolu --mode inplace",
+          "check": "ormolu --mode check $(git ls-files '*.hs')"
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "ormolu",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "Elixir"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "osv-scanner"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "osv-scanner",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "oxfmt",
+          "check": "oxfmt --check"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "oxfmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "oxlint"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "oxlint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "eask lint package"
+        }
+      },
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "name": "package-lint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "perlcritic lib t"
+        }
+      },
+      "languages": [
+        "Perl"
+      ],
+      "name": "perlcritic",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "perltidy -b",
+          "check": "perltidy --assert-tidy (or tidyall --check-only)"
+        }
+      },
+      "languages": [
+        "Perl"
+      ],
+      "name": "perltidy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "pg_prove tests/*.sql"
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "pg_prove",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "make installcheck (PGXS's pg_regress)"
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "pg_regress",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "phpcs with phpcs-security-audit"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "phpcs-security-audit",
+      "reads": [
+        "PHP_CodeSniffer security"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "phpunit, pest or composer test"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "phpunit, pest or composer test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "pip-audit"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "pip-audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "pnpm audit"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "pnpm audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "polaris audit --audit-path <manifests>"
+        },
+        "security": {
+          "scans": "polaris audit --audit-path <manifests>"
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "polaris",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "prettier --write .",
+          "check": "prettier --check ."
+        }
+      },
+      "languages": [
+        "GraphQL"
+      ],
+      "name": "prettier",
+      "reads": [
+        "prettier",
+        "package.json prettier"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "prettier --write .",
+          "check": "prettier --check ."
+        }
+      },
+      "languages": [
+        "JSON Schema"
+      ],
+      "name": "prettier",
+      "reads": [
+        "prettier",
+        "package.json prettier"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "prettier --write .",
+          "check": "prettier --check ."
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "prettier",
+      "reads": [
+        "prettier",
+        "package.json prettier"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "prettier --write .",
+          "check": "prettier --check ."
+        }
+      },
+      "languages": [
+        "XML Schema",
+        "XSLT"
+      ],
+      "name": "prettier",
+      "reads": [
+        "prettier",
+        "package.json prettier"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "protoc --proto_path=proto proto/**/*.proto"
+        }
+      },
+      "languages": [
+        "Protobuf"
+      ],
+      "name": "protoc",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "prove -l t (or make test, ./Build test, dzil test)"
+        }
+      },
+      "languages": [
+        "Perl"
+      ],
+      "name": "prove",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "pylint"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "pylint",
+      "reads": [
+        "pylint"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "pyrefly check"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "pyrefly",
+      "reads": [
+        "pyrefly"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "pyright (or basedpyright)",
+          "strict": "pyright's typeCheckingMode = strict"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "pyright",
+      "reads": [
+        "pyright"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "pytest"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "pytest",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "pytest --cov --cov-branch",
+          "line": "pytest --cov"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "pytest-cov",
+      "reads": [
+        "pytest",
+        "coverage.py"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "statement": "raco cover . (expression coverage; -f codecov or coveralls to upload)"
+        }
+      },
+      "languages": [
+        "Racket"
+      ],
+      "name": "raco cover",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "raco fmt -i $(git ls-files '*.rkt'), with the job failing on git diff --exit-code"
+        }
+      },
+      "languages": [
+        "Racket"
+      ],
+      "name": "raco fmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "raco test ."
+        }
+      },
+      "languages": [
+        "Racket"
+      ],
+      "name": "raco test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "rebar3 cover (after eunit or ct with --cover)"
+        }
+      },
+      "languages": [
+        "Erlang"
+      ],
+      "name": "rebar3 cover",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "rebar3 eunit (or rebar3 ct)"
+        }
+      },
+      "languages": [
+        "Erlang"
+      ],
+      "name": "rebar3 eunit or rebar3 ct",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "rebar3 xref"
+        }
+      },
+      "languages": [
+        "Erlang"
+      ],
+      "name": "rebar3 xref",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "redocly lint <description>"
+        },
+        "examples": {
+          "checked": "redocly lint <description>"
+        },
+        "schema": {
+          "validates": "redocly lint <description>"
+        }
+      },
+      "languages": [
+        "OpenAPI"
+      ],
+      "name": "redocly",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "requiring roave/security-advisories"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "roave/security-advisories",
+      "reads": [
+        "Composer"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "compatibility": {
+          "breaking": "rover graph check <graph>@<variant> --schema schema.graphql (or rover subgraph check)"
+        }
+      },
+      "languages": [
+        "GraphQL"
+      ],
+      "name": "rover",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "rspec, rake test or rails test"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "rspec, rake test or rails test",
+      "reads": [
+        "Rake"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "ruff check notebooks (or nbqa ruff, nbqa flake8, nbqa pylint)"
+        }
+      },
+      "languages": [
+        "Jupyter"
+      ],
+      "name": "ruff check",
+      "reads": [
+        "ruff"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "ruff check"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "ruff check",
+      "reads": [
+        "ruff"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "ruff format notebooks",
+          "check": "ruff format --check notebooks"
+        }
+      },
+      "languages": [
+        "Jupyter"
+      ],
+      "name": "ruff format",
+      "reads": [
+        "ruff"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "ruff format",
+          "check": "ruff format --check"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "ruff format",
+      "reads": [
+        "ruff"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "ruff check with S selected"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "ruff's bandit rules",
+      "reads": [
+        "ruff"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "path": "RUSTFLAGS=-Zcoverage-options=mcdc"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "rustc MC/DC",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "cargo fmt",
+          "check": "cargo fmt --check"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "rustfmt",
+      "reads": [
+        "rustfmt"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "safety scan"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "safety",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "(require :sb-cover) before the tests, with (sb-cover:report \"coverage/\") after"
+        }
+      },
+      "languages": [
+        "Common Lisp"
+      ],
+      "name": "sb-cover",
+      "reads": [
+        "sb-cover"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "sblint shop.asd"
+        }
+      },
+      "languages": [
+        "Common Lisp"
+      ],
+      "name": "sblint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "sbt test"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "sbt test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "sbt dependencyCheck (OWASP dependency-check)"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "sbt-dependency-check",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "sbt jacoco",
+          "line": "sbt jacoco"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "sbt-jacoco",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "scala-cli test ."
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "scala-cli test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "sbt \"scalafixAll --check\" (or mill __.fix --check)"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "scalafix",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "sbt scalafmtAll",
+          "check": "sbt scalafmtCheckAll (or scalafmt --check, mill __.checkFormat, scala-cli fmt --check)"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "scalafmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "examples": {
+          "checked": "schemathesis run <description> --url <base url> (or st run)"
+        }
+      },
+      "languages": [
+        "OpenAPI"
+      ],
+      "name": "schemathesis",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "branch": "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)",
+          "statement": "sbt coverage test coverageReport (or mill __.scoverage.xmlReport)"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "scoverage",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "selene ."
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "selene",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Clojure"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Elixir"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Julia"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "OCaml"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "semgrep ci"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "semgrep",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "shellcheck <scripts> (or ludeeus/action-shellcheck)"
+        }
+      },
+      "languages": [
+        "Shell"
+      ],
+      "name": "shellcheck",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "shellspec"
+        }
+      },
+      "languages": [
+        "Shell"
+      ],
+      "name": "shellspec",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "shfmt -w .",
+          "check": "shfmt -d ."
+        }
+      },
+      "languages": [
+        "Shell"
+      ],
+      "name": "shfmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "./tests/shop_test.sh (a script that sources shunit2)"
+        }
+      },
+      "languages": [
+        "Shell"
+      ],
+      "name": "shunit2",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "Elixir"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "Scala"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "snyk test"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "snyk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)"
+        },
+        "examples": {
+          "checked": "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)"
+        },
+        "schema": {
+          "validates": "spectral lint <description> (with a .spectral.yaml ruleset; or stoplightio/spectral-action)"
+        }
+      },
+      "languages": [
+        "AsyncAPI",
+        "OpenAPI"
+      ],
+      "name": "spectral",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "links": {
+          "checked": "sphinx-build -b linkcheck docs docs/_build/linkcheck"
+        }
+      },
+      "languages": [
+        "Sphinx"
+      ],
+      "name": "sphinx linkcheck",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "sqlc vet"
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "sqlc vet",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "sqlfluff lint (dialect and rules in .sqlfluff or [tool.sqlfluff])"
+        },
+        "format": {
+          "apply": "sqlfluff fix .",
+          "check": "sqlfluff lint ."
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "sqlfluff",
+      "reads": [
+        "sqlfluff"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "sqlfmt .",
+          "check": "sqlfmt --check ."
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "sqlfmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "squawk migrations/*.sql"
+        },
+        "migrations": {
+          "linted": "squawk migrations/*.sql (or sbdchd/squawk-action with fail-on-violations: true)"
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "squawk",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "stan"
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "stan",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "statix check ."
+        }
+      },
+      "languages": [
+        "Nix"
+      ],
+      "name": "statix",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "styler::style_pkg(), with the job failing on git diff --exit-code"
+        }
+      },
+      "languages": [
+        "R"
+      ],
+      "name": "styler",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "stylish-haskell --inplace --recursive ."
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "stylish-haskell",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "swagger-cli validate <description>"
+        },
+        "schema": {
+          "validates": "swagger-cli validate <description>"
+        }
+      },
+      "languages": [
+        "OpenAPI"
+      ],
+      "name": "swagger-cli",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "swift test --enable-code-coverage",
+          "region": "swift test --enable-code-coverage"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "swift test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "swift test or xcodebuild test"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "swift test or xcodebuild test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "swift format -i",
+          "check": "swift format lint --strict"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "swift-format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "stree write",
+          "check": "stree check"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "syntax_tree",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "terraform fmt -recursive",
+          "check": "terraform fmt -check -recursive"
+        }
+      },
+      "languages": [
+        "Terraform"
+      ],
+      "name": "terraform fmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "terraform test"
+        }
+      },
+      "languages": [
+        "Terraform"
+      ],
+      "name": "terraform test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "terraform init -backend=false && terraform validate"
+        }
+      },
+      "languages": [
+        "Terraform"
+      ],
+      "name": "terraform validate",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "terrascan scan"
+        },
+        "security": {
+          "scans": "terrascan scan"
+        }
+      },
+      "languages": [
+        "Terraform"
+      ],
+      "name": "terrascan",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "tflint (rulesets in .tflint.hcl)"
+        }
+      },
+      "languages": [
+        "Terraform"
+      ],
+      "name": "tflint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "tfsec . (now trivy)"
+        },
+        "security": {
+          "scans": "tfsec . (now trivy)"
+        }
+      },
+      "languages": [
+        "Terraform"
+      ],
+      "name": "tfsec",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "a workflow step `uses: ./`, which runs the action from the checkout"
+        }
+      },
+      "languages": [
+        "GitHub Action"
+      ],
+      "name": "the action's own workflow",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "trivy config ."
+        },
+        "security": {
+          "scans": "trivy config ."
+        }
+      },
+      "languages": [
+        "Dockerfile"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "trivy config ."
+        },
+        "security": {
+          "scans": "trivy config ."
+        }
+      },
+      "languages": [
+        "Kubernetes"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "trivy config ."
+        },
+        "security": {
+          "scans": "trivy config ."
+        }
+      },
+      "languages": [
+        "Terraform"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "C#",
+        "F#"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "Dart"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "Elixir"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "Java",
+        "Kotlin"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy fs"
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "trivy image <image> (or aquasecurity/trivy-action, which scans an image unless told otherwise)"
+        }
+      },
+      "languages": [
+        "Dockerfile"
+      ],
+      "name": "trivy",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "tsc --noEmit (JavaScript is checked with checkJs in a jsconfig.json)",
+          "strict": "\"strict\": true in the compilerOptions of tsconfig.json"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "tsc",
+      "reads": [
+        "TypeScript"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "tsqllint ."
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "tsqllint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "ty check"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "ty",
+      "reads": [
+        "ty"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "typst compile main.typ"
+        }
+      },
+      "languages": [
+        "Typst"
+      ],
+      "name": "typst compile",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "typstfmt main.typ",
+          "check": "typstfmt --check main.typ"
+        }
+      },
+      "languages": [
+        "Typst"
+      ],
+      "name": "typstfmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "typstyle -i main.typ",
+          "check": "typstyle --check main.typ"
+        }
+      },
+      "languages": [
+        "Typst"
+      ],
+      "name": "typstyle",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "tt run (tytanic)"
+        }
+      },
+      "languages": [
+        "Typst"
+      ],
+      "name": "tytanic",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "(undercover \"*.el\") in the test files, run by eask test ert"
+        }
+      },
+      "languages": [
+        "Emacs Lisp"
+      ],
+      "name": "undercover.el",
+      "reads": [
+        "undercover"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "unittest"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "unittest",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "unsafe_code = \"forbid\" in [lints.rust]"
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "unsafe_code forbidden",
+      "reads": [
+        "Rust lints"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "vacuum lint <description>"
+        },
+        "examples": {
+          "checked": "vacuum lint <description>"
+        },
+        "schema": {
+          "validates": "vacuum lint <description>"
+        }
+      },
+      "languages": [
+        "OpenAPI"
+      ],
+      "name": "vacuum",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "vale docs (or errata-ai/vale-action)"
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "vale",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "weeder"
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "weeder",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "examples": {
+          "checked": "xmllint --noout --schema <schema> examples/valid/*.xml"
+        },
+        "schema": {
+          "validates": "xmllint --noout --schema <schema> <documents> (or --relaxng, --schematron)"
+        }
+      },
+      "languages": [
+        "XML Schema"
+      ],
+      "name": "xmllint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "xo"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "xo",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "yarn audit"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "yarn audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "audit": {
+          "runs": "yarn npm audit"
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "yarn npm audit",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "fuzz": {
+          "runs": "zig build test --fuzz (or a fuzz step: zig build fuzz)"
+        }
+      },
+      "languages": [
+        "Zig"
+      ],
+      "name": "zig build fuzz",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "zig build test (or zig test src/main.zig)"
+        }
+      },
+      "languages": [
+        "Zig"
+      ],
+      "name": "zig build test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "zig fmt .",
+          "check": "zig fmt --check ."
+        }
+      },
+      "languages": [
+        "Zig"
+      ],
+      "name": "zig fmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": "zizmor . (or zizmorcore/zizmor-action)"
+        }
+      },
+      "languages": [
+        "GitHub Action"
+      ],
+      "name": "zizmor",
+      "reads": [
+        "zizmor"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "zprint --write src/**/*.clj",
+          "check": "zprint --check src/**/*.clj"
+        }
+      },
+      "languages": [
+        "Clojure"
+      ],
+      "name": "zprint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "zunit"
+        }
+      },
+      "languages": [
+        "Shell"
+      ],
+      "name": "zunit",
+      "reads": [],
+      "required": []
+    }
+  ]
+}

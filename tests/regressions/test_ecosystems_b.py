@@ -68,7 +68,6 @@ JUMP_FORMAT_CHECK = (
 
 
 class JuliaTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #267: only the literal `|| exit(1)` makes JuliaFormatter a check
     def test_formatting_then_exiting_non_zero_on_a_git_diff_is_a_gate(self) -> None:
         """A julia step that runs `format(".")`, reads `git diff` and `exit(1)`s when it is not empty fails on a file
         it changed: JuliaFormatter enforces the style (jump-dev/JuMP.jl)."""
@@ -88,7 +87,6 @@ TEAL_SOURCES = {"tlconfig.lua": 'return { source_dir = "src" }\n', "src/shop.tl"
 
 
 class LuaAndLatexTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #268: nvim's `-c <command>` is taken for busted's `-c` coverage flag
     def test_nvims_c_option_is_not_busteds_coverage_flag(self) -> None:
         """Plenary's busted inside Neovim (`nvim --headless -c "PlenaryBustedDirectory tests"`) collects no coverage:
         without luacov anywhere, coverage FAILs (nvim-telescope/telescope.nvim)."""
@@ -150,7 +148,6 @@ TEST_CLASS = {
 
 
 class PerlTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #269: `./Build authortest`, defined under inc/, is not a test run
     def test_a_build_action_that_depends_on_test_runs_the_tests(self) -> None:
         """`./Build authortest` runs the tests when `inc/**/*.pm` defines `sub ACTION_authortest` that
         `depends_on('test')` (Perl-Critic/Perl-Critic)."""
@@ -158,7 +155,6 @@ class PerlTests(unittest.TestCase):
         result = _run(tests_run, "Perl modules", {**PERL_TEST, **BUILD_ACTION, **ci})
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #269: Test::Perl::Critic in the author tests is not perlcritic running
     def test_test_perl_critic_in_the_tests_is_perlcritic(self) -> None:
         """An author test that uses Test::Perl::Critic, run by `prove -l xt`, runs perlcritic over the code
         (Perl-Critic/Perl-Critic; the profile doc says so)."""
@@ -166,14 +162,12 @@ class PerlTests(unittest.TestCase):
         result = _run(static_analysis, "Perl modules", {**critic, **github_job(CI, "prove -l xt")})
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #269: Test::Warnings in a test class under t/lib is not read
     def test_test_warnings_in_a_test_class_counts(self) -> None:
         """`use Test::Warnings` in `t/lib/TestFor/*.pm`, loaded by the `t/*.t` files, fails every test on a
         warning (houseabsolute/perl-code-tidyall)."""
         result = _run(warnings_as_errors, "Perl modules", TEST_CLASS)
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #269: corpus/ and inc/ are not auxiliary roles, their modules are judged
     def test_corpus_and_inc_hold_no_modules_of_the_product(self) -> None:
         """A module under `corpus/` (Dist::Zilla's test distributions) or `inc/` (bundled build code) is not one of
         the product's modules that must `use strict` (Perl-Critic, perl-code-tidyall)."""
@@ -202,14 +196,12 @@ SETUP_JAVA = "actions/setup-java@v4"
 
 
 class ScalaTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #274: sbt command aliases defined in build.sbt are not resolved
     def test_an_sbt_alias_for_scalafix_check_runs_scalafix(self) -> None:
         """`sbt scalafixCheck` runs scalafix when build.sbt's `addCommandAlias("scalafixCheck", "; scalafix --check
         ...")` says so (scalameta/metals)."""
         result = _run(static_analysis, SBT, {**SCALAFIX_ALIAS, **github_job(CI, "sbt scalafixCheck")})
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #274: scalacOptions set in project/*.scala are never read
     def test_scalac_options_in_the_build_definitions_scala_code_count(self) -> None:
         """`scalacOptions ++= Seq("-Werror", "-Wunused:all", ...)` in `project/*.scala` are the build's warning
         settings and make warnings fatal (scalameta/scalafmt)."""
@@ -218,7 +210,6 @@ class ScalaTests(unittest.TestCase):
                 result = _run(check, SBT, PROJECT_OPTIONS)
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #274: -Werror in a string literal and the meta-build's options credited
     def test_text_that_is_not_a_compiler_setting_is_not_credited(self) -> None:
         """`-Werror` inside a string literal (an sbt command text) is no setting, and `project/build.sbt` sets the
         options of the build definition's own compilation, not the product's (http4s/http4s)."""
@@ -228,7 +219,6 @@ class ScalaTests(unittest.TestCase):
                 result = _run(check, SBT, files)
                 self.assertEqual(result.status, Status.FAIL, result)
 
-    @unittest.expectedFailure  # upstream #274: sbt-typelevel bundles sbt-tpolecat, which is not known
     def test_sbt_typelevel_brings_tpolecats_strict_warning_set(self) -> None:
         """`addSbtPlugin("org.typelevel" % "sbt-typelevel" % ...)` enables the whole strict scalac set, as
         sbt-tpolecat (which it bundles) does (typelevel/cats)."""
@@ -236,7 +226,6 @@ class ScalaTests(unittest.TestCase):
         result = _run(compiler_warnings, SBT, plugin)
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #274: `'++ ${{ matrix.scala }}'` with binary versions reads as default
     def test_a_matrix_scala_version_switched_to_with_a_space_is_counted(self) -> None:
         """`sbt '++ ${{ matrix.scala }}' test` over `scala: [2.12, 2.13, 3]` builds each Scala version on each JDK:
         6 combinations, not 2 "Scala default" ones (typelevel/cats, http4s/http4s)."""
@@ -246,7 +235,6 @@ class ScalaTests(unittest.TestCase):
         self.assertIn("JDK 8 / Scala 2.12", result.message)
         self.assertIn("6 combination(s)", result.message)
 
-    @unittest.expectedFailure  # upstream #274: `${{ matrix.java || '17' }}` as java-version is "JDK default"
     def test_a_jdk_version_from_a_fallback_expression_is_read(self) -> None:
         """`java-version: ${{ matrix.java || '17' }}` over `java: ['17', '21']` names JDK 17 and JDK 21
         (scalameta/scalafmt)."""
@@ -279,16 +267,16 @@ class ShellTests(unittest.TestCase):
                 result = _run(tests_run, SHELL, {**URCHIN_TESTS, **files})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #275: .zsh-theme scripts and .zunit tests are unrecognised suffixes
     def test_zsh_themes_are_shell_scripts_and_zunit_files_are_tests(self) -> None:
         """`themes/*.zsh-theme` are zsh scripts and `tests/*.zunit` are zunit tests: neither is an unrecognised suffix,
-        and with the tests never run, tests-run FAILs without saying "no tests found" (ohmyzsh/ohmyzsh)."""
+        and with the tests never run, tests-run warns that CI does not run them rather than "no tests found"
+        (ohmyzsh/ohmyzsh)."""
         for files in ({"themes/robbyrussell.zsh-theme": "PROMPT='%n'\n"}, ZUNIT_TEST):
             with self.subTest(files=files):
                 languages, unrecognised = _recognised(files)
                 self.assertEqual((languages, unrecognised), (frozenset({"Shell"}), frozenset()))
         result = _run(tests_run, SHELL, {**ZUNIT_TEST, **github_job(CI, "shellcheck src/shop.sh")})
-        self.assertEqual(result.status, Status.FAIL)
+        self.assertEqual(result.status, Status.WARN)
         self.assertNotIn("no tests found", result.message)
 
     @unittest.expectedFailure  # upstream #275: bash versions in a matrix are no toolchain axis for Shell
@@ -321,7 +309,6 @@ C_MAKEFILE = {"Makefile": "all:\n\t$(CC) -o shop src/shop.c\n", "src/shop.c": "i
 
 
 class SqlTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #276: a PGXS extension (control file, sql/, test/sql) is plain C
     def test_a_postgresql_extension_is_an_sql_project(self) -> None:
         """A `*.control` file, a PGXS Makefile (`EXTENSION =`, `DATA = sql/*.sql`) and `test/sql` + `test/expected`
         make SQL one of the project's languages; `.sql` and `.control` are not unrecognised (pgvector, pgaudit)."""
@@ -329,10 +316,17 @@ class SqlTests(unittest.TestCase):
         self.assertIn("SQL", languages)
         self.assertFalse(unrecognised & {".sql", ".control"}, unrecognised)
 
-    @unittest.expectedFailure  # upstream #276: pg_regress (REGRESS) and TAP tests run by installcheck are unknown
-    def test_installcheck_runs_the_pg_regress_and_tap_tests(self) -> None:
-        """`make installcheck` runs the `REGRESS` tests under test/sql and `make prove_installcheck` the TAP tests
-        under test/t: the extension's tests run (pgvector/pgvector, pgaudit/pgaudit)."""
+    def test_installcheck_runs_the_pg_regress_tests(self) -> None:
+        """`make installcheck` runs the `REGRESS` tests under test/sql: the extension's SQL tests run
+        (pgvector/pgvector, pgaudit/pgaudit)."""
+        result = _result(tests_run, {**PGXS_EXTENSION, **github_job(CI, "make", "make installcheck")})
+        [clause] = (clause for clause in result.message.split("; ") if clause.startswith("SQL:"))
+        self.assertIn("run by pg_regress", clause, result)
+
+    @unittest.expectedFailure  # upstream #276: the TAP tests and an extension's C tests are unread
+    def test_an_extensions_tests_cover_its_c_and_its_tap_tests_run(self) -> None:
+        """`make prove_installcheck` runs the TAP tests under test/t, and the extension's C code is tested by its SQL
+        tests, not "no tests found" for C (pgvector/pgvector, pgaudit/pgaudit)."""
         for target in ("installcheck", "prove_installcheck"):
             with self.subTest(target=target):
                 result = _result(tests_run, {**PGXS_EXTENSION, **github_job(CI, "make", f"make {target}")})
@@ -362,7 +356,6 @@ RUST_TEST = {"src/lib.rs": "#[cfg(test)]\nmod tests {\n    #[test]\n    fn total
 
 
 class NixTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #285: treefmt's `--ci` (fail-on-change) is not a checking flag
     def test_treefmts_ci_flag_makes_nix_fmt_a_check(self) -> None:
         """`nix fmt -- --ci` (treefmt's `--fail-on-change --no-cache`) fails on an unformatted file: CI enforces the
         style (ryantm/agenix, nix-community/home-manager)."""
@@ -378,7 +371,6 @@ class NixTests(unittest.TestCase):
         result = _run(code_formatting, NIX, github_job(CI, "nix fmt all-maintainers.nix", BOT_COMMIT))
         self.assertNotEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #285: treefmt.toml, which says what `nix fmt` runs, is never read
     def test_treefmt_toml_says_which_lints_nix_fmt_runs(self) -> None:
         """With `treefmt.toml` naming statix and deadnix, `nix fmt -- --ci` runs them: the Nix lints are enabled and
         a static analyzer runs (nix-community/home-manager, nix-community/disko)."""
@@ -411,7 +403,6 @@ FIXTURE_ENV = {
 
 
 class OCamlTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #286: ocamllex `(flags -ml)` and fixture `(env …)` drop :standard
     def test_lexer_flags_and_test_fixtures_are_not_the_products_compiler_flags(self) -> None:
         """An `(ocamllex ... (flags -ml))` stanza's flags are the lexer generator's, and an `(env ...)` inside a cram
         test's fixture is the fixture's: neither drops the dev profile's warnings (ocaml/dune)."""
@@ -425,7 +416,6 @@ class OCamlTests(unittest.TestCase):
                 result = _run(check, DUNE, {**files, **github_job(CI, "dune build")})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #286: a matrix variable `ocamlv` of compiler versions reads as default
     def test_a_matrix_of_compiler_versions_built_by_a_script_is_counted(self) -> None:
         """`ocamlv: [4.14.4, 5.5.0]` passed to the script that builds the compiler (`.github/scripts/main/ocaml-cache.sh
         ${{ matrix.ocamlv }}`) is 2 OCaml versions, not "1 (default)" (ocaml/opam)."""
@@ -436,7 +426,6 @@ class OCamlTests(unittest.TestCase):
         result = _run(platform_matrix, DUNE, _matrix({"ocamlv": ["4.14.4", "5.5.0"]}, *steps))
         self.assertIn("2 OCaml version(s) (4.14.4, 5.5.0)", result.message)
 
-    @unittest.expectedFailure  # upstream #286: ocaml/setup-ocaml/lint-fmt, which runs `dune build @fmt`, unknown
     def test_setup_ocamls_lint_fmt_action_is_the_format_check(self) -> None:
         """`uses: ocaml/setup-ocaml/lint-fmt@v3` runs `dune build @fmt` and fails on unformatted files: with an
         `.ocamlformat`, CI runs ocamlformat (ocsigen/lwt)."""
@@ -459,7 +448,6 @@ INHERITED_PROFILE = {"Cargo.toml": '[package]\nname = "shop"\n\n[profile.fast]\n
 
 
 class RustTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #287: `cargo --config <file> clippy` is not read as clippy
     def test_cargo_options_before_the_clippy_subcommand_are_skipped(self) -> None:
         """`cargo --config .cargo/ci.toml clippy ...` runs clippy: the analyzer runs and `cargo clippy` is among the
         lint settings (nushell/nushell)."""
@@ -468,20 +456,17 @@ class RustTests(unittest.TestCase):
                 result = _run(check, RUST, github_job(CI, CONFIG_CLIPPY))
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #287: `-Dclippy::pedantic` without a space misses the pedantic regex
     def test_pedantic_denied_without_a_space_after_d_counts(self) -> None:
         """`cargo clippy -- -Dwarnings -Dclippy::pedantic` enables every lint setting (serde-rs/serde)."""
         result = _run(compiler_warnings, RUST, github_job(CI, "cargo clippy -- -Dwarnings -Dclippy::pedantic"))
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #287: one member crate's forbid(unsafe_code) is credited workspace-wide
     def test_a_workspace_that_only_warns_on_unsafe_code_does_not_forbid_it(self) -> None:
         """With `[workspace.lints.rust] unsafe_code = "warn"` and `unsafe {` in one crate, one other crate's
         `#![forbid(unsafe_code)]` does not make the build forbid unsafe code (astral-sh/ruff)."""
         result = _result(security_scanning, {**UNSAFE_WORKSPACE, **github_job(CI, "cargo build --workspace")})
         self.assertNotEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #287: warnings-as-errors is "not applicable to Rust", RUSTFLAGS ignored
     def test_rustflags_denying_warnings_is_warnings_as_errors(self) -> None:
         """`RUSTFLAGS: -Dwarnings` in the job's environment makes every warning fail the build: Rust is judged and
         PASSes, not skipped (tokio-rs/tokio, serde-rs/serde)."""
@@ -489,7 +474,6 @@ class RustTests(unittest.TestCase):
         result = _run(warnings_as_errors, RUST, _workflow(job))
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #287: `-D warnings` in RUSTDOCFLAGS is credited as a rustc setting
     def test_rustdocflags_are_not_the_compilers_lint_settings(self) -> None:
         """`RUSTDOCFLAGS: -D warnings` on a `cargo doc` step denies rustdoc's lints only: no Rust lint setting is found
         (BurntSushi/ripgrep)."""
@@ -497,14 +481,12 @@ class RustTests(unittest.TestCase):
         result = _run(compiler_warnings, RUST, _workflow({"steps": [step]}))
         self.assertEqual(result.status, Status.FAIL, result)
 
-    @unittest.expectedFailure  # upstream #287: a custom profile inheriting release yields no build type
     def test_a_profile_that_inherits_release_builds_release(self) -> None:
         """`cargo build --profile fast` with `[profile.fast] inherits = "release"` is a Release build: the job misses
         Debug and the sanitizer builds, not Release (BurntSushi/ripgrep's release-lto)."""
         result = _run(ci_build_types, RUST, {**INHERITED_PROFILE, **github_job(CI, "cargo build --profile fast")})
         self.assertEqual(result.details, ("linux / default: missing Debug, Debug + sanitizers, Release + sanitizers",))
 
-    @unittest.expectedFailure  # upstream #287: rust-toolchain.toml's channel is not the jobs' toolchain
     def test_rust_toolchain_toml_pins_the_toolchain_plain_cargo_uses(self) -> None:
         """With `rust-toolchain.toml` saying `channel = "1.80"`, a job running `cargo test` runs Rust 1.80, not the
         runner's default (nushell/nushell, astral-sh/ruff)."""
@@ -536,21 +518,18 @@ FUZZ_STEP = {
 
 
 class ZigTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #288: any addExecutable, examples included, means a binary to harden
     def test_a_library_whose_only_executables_are_examples_has_no_binary_to_harden(self) -> None:
         """A build.zig whose only `addExecutable` builds `examples/*.zig` is a library: hardening is skipped, not
         failed for a missing ReleaseSafe build (karlseguin/http.zig, mitchellh/libxev)."""
         result = _run(hardening, ZIG, EXAMPLES_ONLY)
         self.assertEqual(result.status, Status.SKIP, result)
 
-    @unittest.expectedFailure  # upstream #288: an __AFL_LOOP in a comment makes a C file a fuzz target
     def test_an_afl_macro_named_in_a_comment_is_not_a_fuzz_target(self) -> None:
         """A `.c` file whose only `__AFL_LOOP` is in a comment (ghostty's AFL++ packaging shim) holds no fuzz
         target: "no fuzz targets found" (ghostty-org/ghostty)."""
         result = _run(fuzz_testing, "CMake C", AFL_SHIM)
         self.assertIn("no fuzz targets found", result.message)
 
-    @unittest.expectedFailure  # upstream #288: setup-zig without `version` installs the manifest's minimum
     def test_setup_zig_without_a_version_installs_the_manifests_minimum(self) -> None:
         """`mlugg/setup-zig` with no `version` input installs `build.zig.zon`'s `minimum_zig_version`: the job's Zig
         is 0.14.0, not "default" (Hejsil/zig-clap, zls, libxev, ghostty)."""
@@ -558,7 +537,6 @@ class ZigTests(unittest.TestCase):
         result = _run(platform_matrix, ZIG, files)
         self.assertIn("1 Zig version(s) (0.14.0)", result.message)
 
-    @unittest.expectedFailure  # upstream #288: fuzz-testing is "not applicable to Zig"; zig build fuzz unknown
     def test_zig_build_fuzz_and_test_fuzz_run_the_fuzzers(self) -> None:
         """`zig build fuzz` (a fuzz step in build.zig) and `zig build test --fuzz` (std.testing.fuzz) run the
         project's fuzzers: Zig is judged and PASSes (tigerbeetle/tigerbeetle)."""

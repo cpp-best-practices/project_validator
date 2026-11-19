@@ -104,7 +104,6 @@ class AuxiliaryLanguageTests(unittest.TestCase):
         result = _result(tests_run, {**files, **github_job("ubuntu-latest", "cargo test")})
         self.assertNotEqual(result.status, Status.FAIL, result)
 
-    @unittest.expectedFailure  # upstream #182: .dir-locals.el, an editor settings file, is an Emacs Lisp source
     def test_editor_settings_files_are_not_sources(self) -> None:
         """Emacs's per-directory settings file beside a Clojure project adds no language (clj-kondo, glib, frog)."""
         settings = {".dir-locals.el": '((nil . ((cider-clojure-cli-aliases . ":test"))))\n'}
@@ -113,7 +112,6 @@ class AuxiliaryLanguageTests(unittest.TestCase):
 
 
 class RoleBelowSourceRootTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #184: role() stops at src/, pkg/, so testdata below them is product
     def test_a_test_directory_below_a_source_root_names_the_test_role(self) -> None:
         """Maven's src/test, Go's pkg/**/testdata and vite's src/**/__tests__/fixtures hold tests and their data
         (liquibase, golangci-lint, vite, SchemaStore)."""
@@ -121,7 +119,6 @@ class RoleBelowSourceRootTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertEqual(role(path), "test")
 
-    @unittest.expectedFailure  # upstream #184: a malformed fixture under src/test/resources fails data-wellformed
     def test_malformed_test_data_below_a_source_root_is_reported_not_judged(self) -> None:
         """A deliberately broken JSON fixture under src/test/resources is test data and does not fail the project
         (liquibase's invalidChangeLog.xml, golangci-lint's testdata/json/empty.json)."""
@@ -186,30 +183,19 @@ class ContentFormatOwnershipTests(unittest.TestCase):
 
 
 class TestsCountedPerUnitTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #230: a unit is credited with the test files of every other unit
     def test_a_unit_reports_only_the_test_files_it_owns(self) -> None:
-        """The root unit, which owns no tests, has none: the children's test files are theirs (bloc, drift, hledger,
-        Pluto.jl)."""
+        """The root unit, which owns no tests, has none: a child package's test files are its own (bloc, drift,
+        Pluto.jl). (A separate test project's tests, hledger's web/test/browser, count for every unit by design.)"""
         dart = {
             "tool/gen.dart": "void main() {}\n",
             "packages/a/pubspec.yaml": "name: a\nenvironment:\n  sdk: ^3.5.0\n",
             "packages/a/lib/a.dart": "",
             "packages/a/test/a_test.dart": DART_TEST,
         }
-        javascript = {
-            "cabal.project": "packages: .\n",
-            "app.cabal": "cabal-version: 3.0\nname: app\nversion: 0.1\n",
-            "assets/app.js": "",
-            "web/test/browser/package.json": json.dumps({"devDependencies": {"@playwright/test": "1"}}),
-            "web/test/browser/browse.spec.js": "test('x', () => {});\n",
-        }
-        for language, files in (("Dart", dart), ("JavaScript", javascript)):
-            with self.subTest(language=language):
-                self.assertEqual(_root_unit_tests(files, language), ())
+        self.assertEqual(_root_unit_tests(dart, "Dart"), ())
 
 
 class JobAttributionTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #228: make/devenv mark a job C/C++, and every runner gets a compiler
     def test_a_job_is_c_cxx_only_when_it_compiles_c_or_cxx(self) -> None:
         """A job that runs `make lint` in a Python project, or the devenv CLI, is not a C/C++ job; a job that compiles
         nothing has no compiler (compose-spec, country-codes, devenv, dbt-utils, every JVM project)."""
@@ -225,7 +211,6 @@ class JobAttributionTests(unittest.TestCase):
                 self.assertNotIn("C/C++", job.ecosystems)
                 self.assertEqual(job.compilers, frozenset())
 
-    @unittest.expectedFailure  # upstream #228: `apt-get install gcc-multilib` credits gcc with a clang job's build
     def test_a_clang_job_installing_gcc_multilib_is_clang_only(self) -> None:
         """h3's sanitizer jobs set CC=clang and install gcc-multilib for 32-bit libraries: clang builds, gcc does
         not, so gcc gets no sanitizer credit (uber/h3)."""

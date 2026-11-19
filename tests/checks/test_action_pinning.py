@@ -101,7 +101,7 @@ class ActionPinningTests(unittest.TestCase):
             }
         )
         self.assertEqual(result.status, Status.FAIL)
-        self.assertEqual(result.message, "3 of 3 actions are not pinned to a commit")
+        self.assertEqual(result.message, "3 of 3 actions and reusable workflows are not pinned to a commit")
         self.assertEqual(
             result.details[:3],
             (

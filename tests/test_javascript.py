@@ -117,7 +117,12 @@ class JavaScriptTests(unittest.TestCase):
         for path in ("src/app.test.ts", "app.spec.jsx", "lib/app_test.mjs", "src/__tests__/app.js"):
             with self.subTest(path=path):
                 result = self._run(tests_run, {path: "", **_ci("npx vitest run")})
-                self.assertEqual(result, Result.passed("tests found in 1 file(s)"))
+                self.assertEqual(
+                    result,
+                    Result.passed(
+                        "*.test.*, *.spec.*, __tests__/ or test/ files: 1 file(s), run by a JavaScript test runner"
+                    ),
+                )
         for path in ("src/latest.js", "test.md", "app.test.py"):
             with self.subTest(path=path):
                 self.assertEqual(self._run(tests_run, {path: ""}).status, Status.FAIL)
@@ -252,6 +257,17 @@ class TypeCheckingTests(unittest.TestCase):
             with self.subTest(extends=extends):
                 files = {"jsconfig.json": f'{{"extends": {extends}}}', **_ci("npx tsc -p jsconfig.json")}
                 self.assertIn("strict mode bonus: tsc (jsconfig.json)", self._npm(files).message)
+
+    def test_a_local_base_configuration_that_is_strict_makes_tsc_strict(self) -> None:
+        base = {"tsconfig.base.json": '{"compilerOptions": {"strict": true}}'}
+        for config, extends, command in (
+            ("tsconfig.json", "./tsconfig.base.json", "npx tsc --noEmit"),
+            ("tsconfig.json", "./tsconfig.base", "npx tsc --noEmit"),
+            ("app/tsconfig.json", "../tsconfig.base.json", "npx tsc -p app"),
+        ):
+            with self.subTest(config=config, extends=extends):
+                files = {**base, config: f'{{"extends": "{extends}"}}', **_ci(command)}
+                self.assertIn("; strict mode bonus: tsc (", self._npm(files).message)
 
     def test_without_strict_mode_it_is_suggested(self) -> None:
         files = {"tsconfig.json": '{"extends": "./base.json"}', **_ci("npx vue-tsc --noEmit")}

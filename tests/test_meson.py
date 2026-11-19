@@ -378,3 +378,74 @@ class GuardTests(unittest.TestCase):
         )
         guards = [(fact.tool, fact.value) for fact in found if isinstance(fact, Setting) and fact.key == "guard"]
         self.assertEqual(guards, [("Meson", "not meson.is_subproject()"), ("Meson", "get_option('tests')")])
+
+
+class OperationEdgeTests(unittest.TestCase):
+    def test_in_needs_an_array(self) -> None:
+        self.assertEqual(binary("in", "a", "abc", "a in abc"), Unknown("a in abc"))
+        self.assertEqual(binary("in", "a", Array((("a", ALWAYS),)), ""), TRUE)
+
+    def test_adding_to_an_array_appends_an_item_or_each_item(self) -> None:
+        self.assertEqual(binary("+", Array(((1, ALWAYS),)), 2, ""), Array(((1, ALWAYS), (2, ALWAYS))))
+        self.assertEqual(binary("+", Array(((1, ALWAYS),)), Array(((2, MSVC),)), ""), Array(((1, ALWAYS), (2, MSVC))))
+
+    def test_comparing_with_a_truth_takes_its_condition_from_either_side(self) -> None:
+        self.assertEqual(equal(Truth(MSVC), TRUE), MSVC)
+        self.assertEqual(equal(TRUE, Truth(MSVC)), MSVC)
+        self.assertEqual(equal(FALSE, Truth(MSVC)), negated(MSVC))
+
+    def test_indexing_needs_a_matching_container_and_key(self) -> None:
+        self.assertEqual(indexed(Dictionary((("k", 1),)), "k", "d"), 1)
+        self.assertEqual(indexed(Array(((1, ALWAYS),)), "k", "a"), Unknown("a[...]"))
+        self.assertEqual(indexed("text", 0, "s"), Unknown("s[...]"))
+
+    def test_expressions_are_written_as_they_read(self) -> None:
+        for text in ("a ? b : c", "not a", "a not in b", "a in b", "true", "false", "a or b and c"):
+            with self.subTest(text=text):
+                [statement] = syntax.parse(f"x = {text}\n")
+                if not isinstance(statement, syntax.Assignment):
+                    self.fail(f"not an assignment: {statement}")
+                self.assertEqual(written(statement.value), text)
+
+
+class EvaluationEdgeTests(unittest.TestCase):
+    def test_is_variable_holds_only_for_an_assigned_variable(self) -> None:
+        found = _facts(
+            "project('app')",
+            "x = 1",
+            "if is_variable('x')",
+            "  add_global_arguments('-set')",
+            "endif",
+            "if is_variable('y')",
+            "  add_global_arguments('-unset')",
+            "endif",
+        )
+        options = [option for option, *_ in _options(found)]
+        self.assertIn("-set", options)
+        self.assertNotIn("-unset", options)
+
+    def test_a_subdirectory_reached_twice_is_evaluated_once(self) -> None:
+        found = meson._evaluated(
+            {
+                "meson.build": _lines("project('app')", "subdir('src')", "subdir('src')"),
+                "src/meson.build": _lines("add_global_arguments('-src')"),
+            }
+        ).facts
+        self.assertEqual([option for option, *_ in _options(found)].count("-src"), 1)
+
+    def test_a_subdirectory_keeps_the_condition_it_is_reached_under(self) -> None:
+        found = meson._evaluated(
+            {
+                "meson.build": _lines(
+                    "project('app')", "if meson.get_compiler('cpp').get_id() == 'msvc'", "  subdir('src')", "endif"
+                ),
+                "src/meson.build": _lines("add_global_arguments('-src')"),
+            }
+        ).facts
+        [applies] = [applies for option, _, applies, _ in _options(found) if option == "-src"]
+        self.assertEqual(applies.compilers, frozenset({"msvc"}))
+
+
+class RunTargetEdgeTests(unittest.TestCase):
+    def test_a_run_target_without_a_command_runs_nothing(self) -> None:
+        self.assertEqual(_expanded("ninja -C build empty"), [])

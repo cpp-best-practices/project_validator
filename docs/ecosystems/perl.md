@@ -8,7 +8,8 @@ distribution without being Perl.
 ## `tests-run`
 
 Test::More or Test2 tests in `t/*.t` (or `xt/`), run by `prove`, `make test`, `./Build test`, `dzil test`,
-`minil test`, `yath test`, or Devel::Cover's `cover -test`, which runs them instrumented.
+`minil test`, `yath test`, a Module::Build action that `depends_on('test')` (`./Build authortest`), or Devel::Cover's
+`cover -test`, which runs them instrumented.
 
 ## `coverage`
 
@@ -24,12 +25,13 @@ The toolchains are Perl versions: shogo82148/actions-setup-perl's `perl-version`
 
 Perl's pragmas and lints: every module, script and `.psgi` starts with `use strict` and `use warnings` (or a module
 that implies them: Moose, Moo, Mouse, Modern::Perl, Mojo::Base, Test2::V0, `use v5.36`; `use v5.12` implies strict
-alone), and perlcritic runs in CI (or Test::Perl::Critic in the tests).
+alone), and perlcritic runs in CI (or Test::Perl::Critic in the tests). Modules under `corpus/` (Dist::Zilla's test
+distributions) and `inc/` (bundled build code) are not the product's.
 
 ## `warnings-as-errors`
 
-`use warnings FATAL => 'all'` in the modules, or Test::Warnings (Test::NoWarnings, Test::FailWarnings) in the tests,
-which fail on a warning.
+`use warnings FATAL => 'all'` in the modules, or Test::Warnings (Test::NoWarnings, Test::FailWarnings) in the tests
+(or a test class under `t/lib` they load), which fail on a warning.
 
 ## `code-formatting`
 
@@ -38,7 +40,8 @@ checks, `tidyall -a` rewrites. `.perltidyrc` holds the style; perltidy has a def
 
 ## `static-analysis`
 
-perlcritic (or tidyall), with the policies `.perlcriticrc` names (severity 5 without).
+perlcritic (or tidyall, or prove running a test that uses Test::Perl::Critic), with the policies `.perlcriticrc`
+names (severity 5 without).
 
 ## `dependency-audit`
 

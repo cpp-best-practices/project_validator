@@ -106,4 +106,4 @@ class DependencyAuditTests(unittest.TestCase):
 class AnswerTests(unittest.TestCase):
     def test_a_language_no_known_auditor_handles_is_skipped(self) -> None:
         answer = tool_answer(AUDIT, RUNS, "Lang", Facts(()), ())
-        self.assertEqual(judge_audit(answer).status, Status.SKIP)
+        self.assertEqual(judge_audit(answer, allow_unknown=False).status, Status.SKIP)

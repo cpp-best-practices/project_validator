@@ -1,7 +1,8 @@
 name: pages
 
 # The documentation site: the README, docs/ and the generated support matrix, as HTML, built from main on every push
-# and published to GitHub Pages. Each page says which commit it was built from.
+# and published to GitHub Pages, with the leaderboard from its nightly results (the `leaderboard-data` branch; the
+# leaderboard workflow calls this one after each night). Each page says which commit it was built from.
 on:
   push:
     branches: [main]
@@ -10,6 +11,8 @@ on:
       - .github/workflows/pages.yml
       - .github/requirements/pages.txt
       - tests/build_site.py
+      - leaderboard/**
+  workflow_call:
   workflow_dispatch:
 
 # One deployment at a time, and never cancelled: a cancelled deployment leaves the site in an unknown state.
@@ -36,13 +39,23 @@ jobs:
       - name: Install the site's dependencies
         run: python -m pip install --require-hashes -r .github/requirements/pages.txt
 
+      # Before the first night there is no data branch: the leaderboard then lists its projects.
+      - name: Fetch the leaderboard's results
+        env:
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          git clone --quiet --depth 1 --branch leaderboard-data "https://github.com/${REPOSITORY}.git" \
+            "${RUNNER_TEMP}/leaderboard" || mkdir -p "${RUNNER_TEMP}/leaderboard"
+
       - name: Build the site
         env:
           PYTHONPATH: ${{ github.workspace }}
           REPOSITORY: ${{ github.repository }}
           REF: ${{ github.ref_name }}
           REVISION: ${{ github.sha }}
-        run: python tests/build_site.py _site --repository "$REPOSITORY" --ref "$REF" --revision "$REVISION"
+        run: |
+          python tests/build_site.py _site --repository "$REPOSITORY" --ref "$REF" --revision "$REVISION" \
+            --leaderboard "${RUNNER_TEMP}/leaderboard"
 
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

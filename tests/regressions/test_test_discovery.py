@@ -76,7 +76,6 @@ def _tests_run_in(test: unittest.TestCase, layout: str, files: dict[str, str]) -
 
 
 class JvmTestDiscoveryTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #252: the `@Test\b` regex misses @TestFactory and the other JUnit 5 markers
     def test_junit_5_annotations_other_than_test_mark_test_methods(self) -> None:
         """A class whose only tests are @TestFactory (CycloneDX/specification), @ParameterizedTest, @RepeatedTest or
         @TestTemplate methods under src/test/java holds tests, as one with @Test does."""
@@ -85,14 +84,12 @@ class JvmTestDiscoveryTests(unittest.TestCase):
                 files = {"src/test/java/ATest.java": JUNIT_5_IMPORT.format(annotation=annotation), **_ci("mvn test")}
                 _tests_run_in(self, "Maven Java", files)
 
-    @unittest.expectedFailure  # upstream #252: Maven's testSourceDirectory and JUnit 3 TestCase classes are unread
     def test_junit_3_test_cases_in_the_poms_test_source_directory_are_tests(self) -> None:
         """guava's `<testSourceDirectory>test</testSourceDirectory>` puts 1107 `extends TestCase` classes (no @Test)
         under guava-tests/test; `mvn verify` runs them."""
         files = {"pom.xml": MAVEN_TEST_DIRECTORY, "test/FooTest.java": JUNIT_3_CASE, **_ci("./mvnw -B verify")}
         _tests_run_in(self, "Maven Java", files)
 
-    @unittest.expectedFailure  # upstream #252: Kotlin multiplatform test source sets are not test paths
     def test_kotlin_multiplatform_test_source_sets_hold_tests(self) -> None:
         """okhttp's src/jvmTest and src/commonTest (117 + 12 of 199 files) and kotlinx.coroutines' jvm/test and
         common/test are test source sets, like src/test/kotlin."""
@@ -110,7 +107,6 @@ class JvmTestDiscoveryTests(unittest.TestCase):
 
 
 class DotnetTestProjectTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #253: only a Microsoft.NET.Test.Sdk reference makes a test project
     def test_a_project_referencing_a_test_framework_is_a_test_project(self) -> None:
         """A .csproj referencing xunit.v3 (Humanizer, on Microsoft.Testing.Platform) or one under the Arcade SDK
         (dotnet/command-line-api, where the test SDK is implicit) is a test project; its [Fact] methods are tests."""
@@ -126,7 +122,6 @@ class DotnetTestProjectTests(unittest.TestCase):
 
 
 class JavaScriptTestLayoutTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #254: test files are found by file name only, never by directory
     def test_a_test_directory_run_by_a_known_runner_holds_the_tests(self) -> None:
         """mocha's and node's classic layout, `test/*.js` without `.test.` in the name, holds the tests when `npm test`
         runs mocha on it (express, mime-db), `node --test 'test/*.ts'` (got) or `node test` (octokit/graphql-schema)."""
@@ -139,7 +134,6 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
             with self.subTest(runner=name):
                 _tests_run_in(self, "npm JavaScript", {**tests, **_scripts(test=script), **_ci("npm test")})
 
-    @unittest.expectedFailure  # upstream #254: `node <path>/jest/bin/jest.js` is not matched as jest
     def test_jest_launched_through_node_is_jest(self) -> None:
         """`node --experimental-vm-modules ./node_modules/jest/bin/jest.js` (Jest's documented ESM invocation: phoenix,
         actions/checkout) runs the tests, as `jest` does."""
@@ -148,7 +142,6 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
                 script = JEST_THROUGH_NODE.format(path=path)
                 _tests_run_in(self, "npm JavaScript", {"a.test.js": "", **_scripts(test=script), **_ci("npm test")})
 
-    @unittest.expectedFailure  # upstream #254: borp (node:test runner) is an unknown runner
     def test_borp_runs_the_node_test_files_it_is_configured_with(self) -> None:
         """fastify's `npm run unit` runs borp, a node:test runner, on the files of .borp.yaml."""
         files = {
@@ -159,7 +152,6 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
         }
         _tests_run_in(self, "npm JavaScript", files)
 
-    @unittest.expectedFailure  # upstream #254: `nub run <script>` is unknown yet judged a confident miss, not unread
     def test_an_unknown_runner_of_a_package_script_is_not_a_confident_miss(self) -> None:
         """zod's `nub run test` runs the `test` package script (`vitest run`): the tests are run, or at worst the
         answer is unknown; a confident "no CI runs the tests" is wrong."""
@@ -167,13 +159,11 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
         result = run_in_layout(self, "npm JavaScript", TESTS_RUN, files)
         self.assertIn(result.status, (Status.PASS, Status.ERROR), result)
 
-    @unittest.expectedFailure  # upstream #254: xo (eslint wrapper) is an unknown linter
     def test_xo_is_an_eslint_wrapper_that_lints(self) -> None:
         """got's `npm test` runs xo (eslint configured in package.json's `xo` key): a static analyzer runs."""
         package = {"package.json": json.dumps({"main": "index.js", "scripts": {"test": "xo"}, "xo": {}})}
         _passes(self, "npm JavaScript", STATIC_ANALYSIS, {**package, **_ci("npm test")})
 
-    @unittest.expectedFailure  # upstream #254: the strict hint ignores an `extends` base that may be strict
     def test_a_tsconfig_extending_a_base_is_not_told_to_enable_strict(self) -> None:
         """got's tsconfig extends @sindresorhus/tsconfig (strict): whether strict is on is not visible, so the hint
         "consider enabling strict mode" is wrong; the result may say strict is not visible instead."""
@@ -184,7 +174,6 @@ class JavaScriptTestLayoutTests(unittest.TestCase):
 
 
 class PythonTestFilePatternTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #255: `*_tests.py` under tests/ is not a Python test file pattern
     def test_tests_py_files_under_a_tests_directory_are_test_files(self) -> None:
         """mkdocs' `mkdocs/tests/build_tests.py` (12 such files), discovered by CI with
         `unittest discover -s mkdocs -p "*tests.py"`, holds tests."""
@@ -206,7 +195,6 @@ class LispTestRunnerTests(unittest.TestCase):
         }
         _tests_run_in(self, "ASDF system", files)
 
-    @unittest.expectedFailure  # upstream #265: project.clj :aliases and `lein with-profile X test` are not resolved
     def test_leiningen_aliases_and_with_profile_run_the_tests(self) -> None:
         """compojure's `lein test-all` is a project.clj alias for `lein with-profile ... test`: both run the tests."""
         for line in ("lein test-all", "lein with-profile default:+1.12 test"):
@@ -216,7 +204,6 @@ class LispTestRunnerTests(unittest.TestCase):
 
 
 class EaskCommandTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #279: `eask run command <name>` running ert is not a test run
     def test_an_eask_command_that_runs_ert_is_a_test_run(self) -> None:
         """evil's `eask run command test` runs an Eask-defined command whose body requires the test file and calls
         ert-run-tests-batch-and-exit: the tests run (or, the body being Elisp, the answer is unknown), not "no CI

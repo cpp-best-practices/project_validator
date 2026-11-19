@@ -9,4 +9,4 @@ from project_validator.questions.license import license_answer
 
 @check(name="license", description="The project has a license file of a known license")
 def license_(context: Context) -> Result:
-    return judge_license(license_answer(context.facts))
+    return judge_license(license_answer(context.facts), allow_unknown=context.options.allow_unknown)

@@ -38,7 +38,7 @@ def _required(answer: PracticeAnswer) -> dict[str, None]:
     return dict.fromkeys(name for compiled in answer.compiled for name in compiled.missing)
 
 
-def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
     """Every setting on passes; some on warns, naming those missing; none fails. Unknown is an error unless
     `allow_unknown`."""
     words = answer.practice.words
@@ -50,10 +50,10 @@ def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     if not answer.found():
         return Result.failed(f"no {words.kind} found; enable at least {joined(_required(answer))}")
     missing = _described(answer.compiled, _missing, ", ".join)
-    return Result.warned(f"missing {words.kind}: {missing}", f"found {joined(answer.found())}")
+    return Result.warned(f"missing {words.kind}: {missing}", f"found {_described(answer.compiled, _found, joined)}")
 
 
-def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
     """Every setting on passes (any one, for a practice met by any; or, for a practice that forbids settings, none
     found); some on warns; none fails. A language the practice skips (one whose project builds no binary) is skipped.
     Unknown is an error unless `allow_unknown`. The hardening and sanitizers policies."""
@@ -61,7 +61,9 @@ def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     joined = words.separator.join
     if answer.skipped is not None:
         return Result.skipped(answer.skipped)
-    if answer.answer is Answer.YES:
+    # Judged by what could be read, a practice that forbids settings is met when none of them was found.
+    nothing_forbidden = practice.forbids and answer.answer is Answer.UNKNOWN and allow_unknown and not answer.found()
+    if answer.answer is Answer.YES or nothing_forbidden:
         found = _described(answer.compiled, _found, joined)
         return Result.passed(words.passed.format(found=found) if words.passed else f"{words.kind} are enabled: {found}")
     if answer.answer is Answer.UNKNOWN and not allow_unknown:
@@ -72,14 +74,14 @@ def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Re
     if not answer.found():
         return Result.failed(words.failed or f"no {words.kind} found; enable {joined(_required(answer))}", words.hint)
     missing = _described(answer.compiled, _missing, ", ".join)
-    return Result.warned(f"missing {words.kind}: {missing}", f"found {joined(answer.found())}")
+    return Result.warned(f"missing {words.kind}: {missing}", f"found {_described(answer.compiled, _found, joined)}")
 
 
-def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool = False) -> Result:
+def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
     """A setting met in some configuration passes (with advice when only one that is not preferred is); none fails,
     or warns for a practice whose wording `warns`. Unknown is an error unless `allow_unknown`."""
     words = answer.practice.words
-    found = ", ".join(answer.found())
+    found = ", ".join(answer.shown())
     if answer.skipped is not None:
         return Result.skipped(answer.skipped)
     if answer.answer is Answer.YES:
