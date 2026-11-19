@@ -16,10 +16,15 @@ from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 
 from leaderboard import Entry
+from project_validator.analysis import from_reports
 from project_validator.core import Context, Options, Project, Status
 from project_validator.plugins import discover
 from project_validator.runner import Report, run_checks
 from project_validator.score import score
+from project_validator.views.html import render as html_report
+
+# The key of a result that holds its HTML report, which `write` puts beside the JSON rather than in it.
+REPORT = "report"
 
 
 def _git(directory: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
@@ -92,6 +97,7 @@ def evaluate(
     if (failure := context.extraction_error) is not None:
         result["error"] = str(failure).replace(str(directory.resolve()), "<checkout>")
     result["score"] = score(judged, every_check).as_dict()
+    result[REPORT] = html_report(from_reports(context, judged, every_check))
     return result
 
 
@@ -101,7 +107,12 @@ def failed(entry: Entry, error: str, *, validator: str, now: datetime | None = N
 
 
 def write(result: dict[str, object], directory: Path) -> Path:
+    """Write the result as `<slug>.json` in `directory`, and its HTML report, if any, beside it as `<slug>.html`."""
     directory.mkdir(parents=True, exist_ok=True)
+    result = dict(result)
+    report = result.pop(REPORT, None)
     path = directory / f"{str(result['name']).replace('/', '--')}.json"
     path.write_text(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+    if isinstance(report, str):
+        path.with_suffix(".html").write_text(report, encoding="utf-8")
     return path

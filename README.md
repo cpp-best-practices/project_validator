@@ -28,7 +28,9 @@ The validator itself is pure Python and has no build step; it only inspects
 - Python 3.12+ (the system Python on Ubuntu 24.04 LTS and later; no installation step,
   run with `python3 -m project_validator <path>`)
 - [PyYAML](https://pyyaml.org/) 6.0+ (`python3-yaml` on Ubuntu, or `python3 -m pip install PyYAML`)
-- Optionally [rich](https://github.com/Textualize/rich) 13.0+ for colored output
+- Optionally [rich](https://github.com/Textualize/rich) 13.0+ for the console report (`pip install
+  project_validator[pretty]`), and [textual](https://github.com/Textualize/textual) for the TUI (`[tui]`; `[all]` for
+  both). The HTML report needs nothing more
 - CMake / CTest, only for `--build` (already required by any CMake project being validated)
 
 On a machine without Python 3.12, `uv run` or a distro backport will work.
@@ -43,7 +45,23 @@ python3 -m project_validator --map path/to/project
 python3 -m project_validator --facts path/to/project
 python3 -m project_validator --answers path/to/project
 python3 -m project_validator --only coverage,platform-matrix --format json path/to/project
+python3 -m project_validator --html report.html --score path/to/project
+python3 -m project_validator --explain fuzz-testing
+python3 -m project_validator --tui path/to/project
 ```
+
+What you see:
+- **In a terminal** (with rich): a header with the score, then what was detected (each language and what recognised
+  it, the units, the code in each role and how it is judged, the CI, how much was read), the results grouped by
+  category with a line per language where they differ, and the score's breakdown and next steps. Progress is shown
+  while the project is read. `--verbose` shows every detail and the checks that do not apply.
+- **Elsewhere** (CI logs, or without rich): the same detection, then one greppable `[STATUS] check: message` line per
+  check, each detail said once.
+- **The HTML report** (`--html FILE`, or `--format html`): one self-contained file, light and dark, with the score,
+  what was detected, every result with why it matters, a matrix of checks by language, the next steps, a searchable
+  browser of every fact the validator read (linked to the file on GitHub for a checkout) and how long each stage took.
+- **The TUI** (`--tui`, with textual): the stages as they are read, then a tree of the overview, what was detected,
+  the results, the next steps and the facts by kind.
 
 | Option | Meaning |
 |---|---|
@@ -53,8 +71,12 @@ python3 -m project_validator --only coverage,platform-matrix --format json path/
 | `--facts` | print the facts found about the project as JSON, each with where it was found: the source and build files with their languages, the settings the configuration files hold (per tool), the CI jobs (one per matrix combination), the commands and actions each runs, the commands those run in turn (package scripts, Deno tasks, Composer scripts, Make targets, pre-commit hooks), what the coverage tools CI runs measure, and what could not be read (see [docs/architecture.md](docs/architecture.md)) |
 | `--answers` | print the answers to every question about the project as JSON, per language in each unit of the project: each `yes`, `no`, `unknown` (something that could answer it was not read) or `impossible` (no known tool provides it for the language), with what shows it (the tools CI runs and the files that define them, the coverage at each granularity, the settings met, the platforms, the manifests and lockfiles, …) and what the known tools could do |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
-| `--format text\|json\|markdown` | output format; `json` gives each check's result and, in `places`, its result for each ecosystem in each unit (status, message, details, the tools that ran, what `--auxiliary` named); `markdown` lays those places out as a grid of checks against ecosystems, for a CI job summary (and says so when no ecosystem was recognised) |
-| `--score` | also score the project's tooling (a preview, [docs/score.md](docs/score.md)): its **level** (a gated tech tree: foundations, analysis, hardening, excellence), **completeness** (covered cells over applicable ones, averaged across units; auxiliary code weighs half) and **depth** (each tool in a covered cell by its rank), and the next steps that raise them most. Text and markdown end with the summary and the top five next steps; JSON becomes `{"results": [...], "score": {...}}`. The statuses and the exit code do not change |
+| `--format text\|json\|markdown\|html` | output format; `text` is the console report on a terminal with rich, plain text otherwise; `html` prints the HTML report; `json` gives each check's result and, in `places`, its result for each ecosystem in each unit (status, message, details, the tools that ran, what `--auxiliary` named); `markdown` lays those places out as a grid of checks against ecosystems, for a CI job summary (and says so when no ecosystem was recognised) |
+| `--score` | also print the tooling score ([docs/score.md](docs/score.md)) in the plain text, markdown and JSON outputs (the console and HTML reports always show it): **100% means every quality gate that applies to each part of the project is in place**, with extra credit above it for complementary tools once every gate is; its **level** (Foundations, Analysis, Hardening, Complete); and the next steps worth the most. JSON becomes `{"results": [...], "score": {...}}`. The statuses and the exit code do not change |
+| `--html FILE` | also write the self-contained HTML report to `FILE`, whatever `--format` prints |
+| `-v`, `--verbose` | in the console report, show every detail, the checks that do not apply, and each stage of the reading |
+| `--explain CHECK` | explain a check: what it looks for, why it matters, the level it counts for, and the tools it recognises for each language |
+| `--tui` | browse the analysis in the terminal (needs textual) |
 | `--color auto\|always\|never` | color the text output (needs rich); `auto` colors only on a terminal when `NO_COLOR` is unset |
 | `--exclude DIR` | leave `DIR`, relative to the project, out of the validation (e.g. test fixtures); may be repeated |
 | `--build` | configure and build the project in a temporary directory and ask `ctest` for its tests; a build that cannot run makes whether there are tests unknown |
@@ -302,7 +324,8 @@ with as little setup as possible. To keep it that way:
 | Dependency | Kind | Why |
 |---|---|
 | [PyYAML](https://pyyaml.org/) `>=6.0` | required | The standard library has no YAML parser, and CI configuration is YAML. PyYAML is mature, MIT licensed, has no dependencies, and is packaged by every major distro (`python3-yaml` on Ubuntu). It is required rather than optional because scanning CI files as text cannot tell which compiler runs on which OS, nor apply a matrix's `include`/`exclude`, so it over-counts platform combinations and can pass `platform-matrix` for a project that should fail. Without PyYAML the validator exits with an error that says how to install it. |
-| [rich](https://github.com/Textualize/rich) `>=13.0` | optional (`pretty` extra) | Colored, aligned text output with a per-status summary. MIT licensed and widely used. Without it the validator prints plain text and says so. |
+| [rich](https://github.com/Textualize/rich) `>=13.0` | optional (`pretty`, `tui` and `all` extras) | The console report: colour, tables, progress while the project is read. MIT licensed and widely used. Without it the validator prints plain text and says so. |
+| [textual](https://github.com/Textualize/textual) `>=1.0` | optional (`tui` and `all` extras) | The TUI (`--tui`), built on rich by its authors. MIT licensed. Without it `--tui` says how to install it. |
 | [coverage.py](https://coverage.readthedocs.io/) `>=7.10` | development only (`coverage` extra) | Measures the branch coverage of the test suite; the standard library's `trace` module does not measure branches. coverage.py is the de facto Python coverage tool, Apache 2.0 licensed and has no required dependencies. The validator itself never imports it. |
 | [ruff](https://docs.astral.sh/ruff/), [mypy](https://mypy-lang.org/), [lizard](https://github.com/terryyin/lizard), [jscpd](https://github.com/kucherenko/jscpd), [mutmut](https://mutmut.readthedocs.io/), [pytest](https://docs.pytest.org/), [atheris](https://github.com/google/atheris) | CI only | The lint, typing, function-limits and copy-paste-detection quality gates, the mutation-testing gate (mutmut needs pytest to run the suite) and atheris, the fuzz-testing gate. They are installed by their CI jobs and are never imported by the validator. |
 

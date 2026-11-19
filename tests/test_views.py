@@ -12,6 +12,7 @@ import tempfile
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import ClassVar
 from unittest import mock
 
 from project_validator.analysis import Analysis, analyse
@@ -183,6 +184,10 @@ class ConsoleTests(unittest.TestCase):
 
 
 class HtmlTests(unittest.TestCase):
+    analysis: ClassVar[Analysis]
+    document: ClassVar[str]
+    tags: ClassVar[_Tags]
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.analysis = _analysis()

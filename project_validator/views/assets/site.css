@@ -1,0 +1,43 @@
+/* The documentation site and the leaderboard, on top of theme.css. */
+.page { padding: 2rem 0 1rem; }
+.prose { max-width: 50rem; }
+.prose h1 { font-size: 2rem; margin: .5rem 0 1rem; }
+.prose h2 { padding-top: .5rem; border-top: 1px solid var(--border); }
+.prose table { margin: 1rem 0; display: block; overflow-x: auto; }
+.prose img { max-width: 100%; }
+.prose li + li { margin-top: .2rem; }
+.prose blockquote { margin: 1rem 0; padding: .6rem 1rem; border-left: 4px solid var(--accent);
+  background: var(--accent-soft); border-radius: 0 9px 9px 0; }
+.page.wide .prose { max-width: none; }
+.built { color: var(--muted); font-size: .82rem; white-space: nowrap; }
+
+/* the support matrix: sticky headers, centred cells */
+.support table { font-size: .8rem; display: block; overflow: auto; max-height: 80vh; }
+.support th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.support td:first-child, .support th:first-child { position: sticky; left: 0; background: var(--surface);
+  font-family: var(--mono); white-space: nowrap; z-index: 2; }
+.support td { text-align: center; white-space: nowrap; }
+.support td.none { color: var(--border); }
+.support td.applies { background: color-mix(in srgb, var(--accent-soft) 60%, transparent); }
+.support td:first-child { text-align: left; }
+
+/* the leaderboard */
+.lead { font-size: 1.05rem; color: var(--muted); }
+.tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0; }
+.tab { border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 999px;
+  padding: .3rem .85rem; cursor: pointer; font: inherit; font-size: .88rem; }
+.tab .n { color: var(--muted); font-size: .8rem; margin-left: .2rem; }
+.tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tab.active .n { color: rgba(255, 255, 255, .8); }
+.ranking td.rank { font-weight: 800; color: var(--muted); width: 2.5rem; font-variant-numeric: tabular-nums; }
+.ranking tbody tr:nth-child(1) td.rank { color: #c99a06; }
+.ranking tbody tr:nth-child(2) td.rank { color: #8a96a3; }
+.ranking tbody tr:nth-child(3) td.rank { color: #b0702c; }
+.scorebar { display: grid; grid-template-columns: minmax(6rem, 10rem) 3.2rem; gap: .6rem; align-items: center; }
+.scorebar strong { text-align: right; font-variant-numeric: tabular-nums; }
+.project-hero { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: center; }
+.facts-list { margin: .6rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+.facts-list a { font-weight: 500; }
+.sparkline { color: var(--accent); width: 100%; height: auto; }
+.plus { color: var(--pass); }
+@media (max-width: 760px) { .project-hero { grid-template-columns: 1fr; justify-items: center; } }

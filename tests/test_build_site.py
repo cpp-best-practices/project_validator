@@ -101,11 +101,14 @@ class RenderPageTests(unittest.TestCase):
         self.assertIn("<title>T - project_validator</title>", page)
         self.assertIn("<p>body</p>", page)
 
-    def test_the_navigation_is_relative_and_skips_the_current_page(self) -> None:
+    def test_the_navigation_is_relative_and_marks_the_current_section(self) -> None:
         page = render_page("# E\n", "docs/ecosystems/index.html", SITE, "2026-11-10")
         self.assertIn('<a href="../../index.html">Overview</a>', page)
         self.assertIn('<a href="../../docs/support-matrix.html">Support matrix</a>', page)
-        self.assertIn("<a>Ecosystems</a>", page)
+        self.assertIn('<a href="../../docs/ecosystems/index.html" class="active">Ecosystems</a>', page)
+        board = render_page("# P\n", "leaderboard/projects/o--r.html", SITE, "2026-11-10")
+        self.assertIn('<a href="../../leaderboard/index.html" class="active">Leaderboard</a>', board)
+        self.assertIn('class="page wrap wide"', board)
         self.assertIn('<link rel="stylesheet" href="../../style.css">', page)
 
     def test_headings_get_the_ids_github_gives_them_and_tables_render(self) -> None:

@@ -103,9 +103,10 @@ jobs:
           path: ${{ runner.temp }}/results
           merge-multiple: true
 
-      # The data branch holds only the results (an orphan branch, created on the first night). The token is used for
-      # this push alone, not kept in the checkout.
-      - name: Add the night to the leaderboard-data branch
+      # The data branch holds only the results, as one commit: each night replaces it, so that the projects' full
+      # HTML reports (the latest only) never grow its history; history/ keeps every night's numbers. The token is
+      # used for this push alone, not kept in the checkout.
+      - name: Record the night as the leaderboard-data branch
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
@@ -119,10 +120,11 @@ jobs:
           fi
           python -m leaderboard record "${RUNNER_TEMP}/results" "$data" --date "$(date -u +%F)"
           cd "$data"
+          git checkout --quiet --orphan night
           git add --all
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
             commit --quiet --allow-empty -m "Leaderboard for $(date -u +%F)"
-          git push --quiet "$remote" HEAD:leaderboard-data
+          git push --quiet --force "$remote" HEAD:leaderboard-data
 
   publish:
     name: publish the site

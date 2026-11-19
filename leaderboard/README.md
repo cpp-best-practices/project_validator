@@ -3,13 +3,14 @@
 An opt-in list of open-source projects. Every night, each project is scored by the latest validator with `--score`
 (see [docs/score.md](../docs/score.md)), and the results are published to the
 [project site](https://cpp-best-practices.github.io/project_validator/leaderboard/):
-- one board per language, plus an all-languages view;
-- a page per project, with its history and next steps;
+- one board, with a tab per language;
+- a page per project, with its history and next steps, and its full HTML report;
 - a badge per project.
 
 The design is upstream issue #295.
 
-Boards rank by **level**, then **completeness**. **Depth** only breaks ties, since it is the least comparable number.
+Boards rank by the score: **100% means every quality gate that applies to the project is in place**, and
+complementary tools earn extra credit above it. The level breaks ties.
 Every project is scored by the same validator version on the same night, and the page prints the scoring version. The
 score measures tooling coverage, not code quality. The board is a showcase, not a wall of shame.
 
@@ -44,8 +45,8 @@ The `leaderboard-check` workflow checks each entry the pull request adds or chan
 - it has consent;
 - it is not already listed.
 
-It then scores the project. The `leaderboard-comment` workflow posts the preview on the pull request: the level,
-completeness and depth, and the top next steps, so the submitter sees where the project will land.
+It then scores the project. The `leaderboard-comment` workflow posts the preview on the pull request: the score,
+the level, and the top next steps, so the submitter sees where the project will land.
 
 ## Every night
 
@@ -62,9 +63,11 @@ The `leaderboard` workflow runs at 03:17 UTC, and on demand.
 2. **Record.** Adds the night to the `leaderboard-data` branch:
    - `latest/` holds tonight's full results;
    - `previous/` holds the night before's;
+   - `reports/` holds each project's full HTML report, tonight's only;
    - `history/` holds one line per night per project.
 
-   This is the only job that can write, and it writes only to that branch.
+   The branch is one commit, replaced each night, so the reports never grow its history; `history/` keeps every
+   night's numbers. This is the only job that can write, and it writes only to that branch.
 3. **Publish.** Calls the `pages` workflow, which builds the documentation site with the leaderboard
    (`tests/build_site.py --leaderboard DATA`) and deploys it.
 
@@ -75,7 +78,7 @@ file, just as the corpus is used.
 ## Running it locally
 
 ```sh
-python -m leaderboard evaluate out/results                  # every project; or name some: ... uber/h3
+python -m leaderboard evaluate out/results                  # every project (and its HTML report); or: ... uber/h3
 python -m leaderboard record out/results out/data --date 2026-11-18
 python tests/build_site.py out/site --leaderboard out/data  # the site, leaderboard included
 python -m leaderboard check --base old-projects.toml --out preview.md

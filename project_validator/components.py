@@ -1,9 +1,10 @@
 """Components (command expanders, actions, settings readers, tools, questions) are found in the modules that define
 them, never listed.
 
-A built-in component lives in a module of the shared build systems (`project_validator.build_systems`), the shared
-tools (`project_validator.tools`), the questions (`project_validator.questions`), or the profile of the only language
-that uses it (see docs/architecture.md). A plugin's components live in its own module (see `add_plugin_modules`).
+A built-in component lives in a module of the shared build systems (`project_validator.build_systems`), the C family
+(`project_validator.c_family`: what C and C++ share), the shared tools (`project_validator.tools`), the questions
+(`project_validator.questions`), or the profile of the only language that uses it (see docs/architecture.md). A plugin's
+components live in its own module (see `add_plugin_modules`).
 """
 
 from __future__ import annotations

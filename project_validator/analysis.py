@@ -258,9 +258,26 @@ def _finished(
     )
 
 
+def from_reports(context: Context, reports: Sequence[Report], every_check: Iterable[str]) -> Analysis:
+    """The analysis of reports already run on `context` (the stages are not known then)."""
+    return _finished(context, tuple(reports), (), score_of=list(every_check), started=time.perf_counter())
+
+
 def _record(event: Progress, stages: list[Stage]) -> None:
     if event.kind == "stage" and event.done:
         stages.append(Stage(name=event.name, seconds=event.seconds, found=event.found))
 
 
-__all__ = ["Analysis", "Git", "Progress", "RoleSummary", "Stage", "analyse", "file_url", "git_of", "roles", "web_url"]
+__all__ = [
+    "Analysis",
+    "Git",
+    "Progress",
+    "RoleSummary",
+    "Stage",
+    "analyse",
+    "file_url",
+    "from_reports",
+    "git_of",
+    "roles",
+    "web_url",
+]

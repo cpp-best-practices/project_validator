@@ -3,6 +3,7 @@ changed since the night before.
 
     latest/<owner>--<repo>.json    tonight's full result (score, cells, next steps, each check's status)
     previous/<owner>--<repo>.json  the night before's, for what changed
+    reports/<owner>--<repo>.html   tonight's full HTML report (the latest only)
     history/<owner>--<repo>.jsonl  one line per night: the date, commit, validator, score version, percent and level
 
 A project whose numbers change while its commit does not was changed by the validator, not by its maintainers: the
@@ -48,9 +49,19 @@ def record(results: Path, data: Path, date: str) -> list[str]:
             previous.write_bytes(latest.read_bytes())
         lines.append(_summary(result, date))
         latest.write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+        _keep_report(path.with_suffix(".html"), data / "reports" / f"{path.stem}.html")
         history.write_text("".join(json.dumps(line, sort_keys=True) + "\n" for line in lines), encoding="utf-8")
         recorded.append(str(result["name"]))
     return recorded
+
+
+def _keep_report(report: Path, kept: Path) -> None:
+    """Keep tonight's HTML report of a project (the latest only), or none when tonight has none."""
+    if report.is_file():
+        kept.parent.mkdir(parents=True, exist_ok=True)
+        kept.write_bytes(report.read_bytes())
+    else:
+        kept.unlink(missing_ok=True)
 
 
 def read_history(path: Path) -> list[dict[str, object]]:

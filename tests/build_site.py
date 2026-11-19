@@ -28,6 +28,7 @@ from leaderboard import entries
 from leaderboard.site import build as build_leaderboard
 from project_validator.plugins import discover
 from project_validator.support_matrix import render, support_matrix
+from project_validator.views.theme import STYLESHEET, THEME_SCRIPT, asset
 
 ROOT = Path(__file__).resolve().parent.parent
 EXTENSIONS = ("tables", "fenced_code", "toc")  # toc gives headings the ids GitHub gives them, for `#anchor` links
@@ -41,19 +42,8 @@ NAVIGATION = (
 )
 _LINK = re.compile(r"\]\((?P<target>[^)\s]+)(?P<title>\s+\"[^\"]*\")?\)")
 _HEADING = re.compile(r"^# (?P<title>.+)$", re.MULTILINE)
-STYLE = """\
-body { max-width: 60rem; margin: 0 auto; padding: 0 1.5rem 3rem; font: 16px/1.5 system-ui, sans-serif; color: #222; }
-header { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; align-items: baseline; padding: 1rem 0; }
-header { border-bottom: 1px solid #ddd; }
-header nav a { margin-right: 1rem; }
-header .built { margin-left: auto; font-size: 0.875rem; color: #555; }
-table { border-collapse: collapse; display: block; overflow-x: auto; font-size: 0.9375rem; }
-th, td { border: 1px solid #ccc; padding: 0.25rem 0.5rem; text-align: left; vertical-align: top; }
-th { background: #f3f3f3; }
-pre { background: #f6f8fa; padding: 0.75rem 1rem; overflow-x: auto; }
-code { font-size: 0.9375em; }
-a { color: #0550ae; }
-"""
+# The design the HTML report has, with the site's own additions.
+STYLE = STYLESHEET + "\n" + asset("site.css")
 TEMPLATE = """\
 <!DOCTYPE html>
 <html lang="en">
@@ -62,18 +52,23 @@ TEMPLATE = """\
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} - project_validator</title>
 <link rel="stylesheet" href="{to_root}style.css">
+<script>{theme}</script>
 </head>
 <body>
-<header>
-<nav>{navigation}</nav>
-<span class="built">Built from <code>{ref}</code> at <a href="{commit_url}">{short}</a> on {date}</span>
-</header>
-<main>
+<header class="topbar"><div class="wrap">
+<a class="brand" href="{to_root}index.html"><span class="logo">pv</span>project_validator</a>
+<nav aria-label="Site">{navigation}</nav>
+<button class="theme-toggle" type="button" aria-label="Switch between light and dark">Theme</button>
+</div></header>
+<main class="page wrap{wide}"><div class="prose{kind}">
 {body}
-</main>
+</div></main>
+<footer>Built from <code>{ref}</code> at <a href="{commit_url}">{short}</a> on {date}.</footer>
 </body>
 </html>
 """
+# The pages laid out at the full width: the tables are wide.
+WIDE = ("docs/support-matrix.html", "leaderboard/")
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -154,19 +149,43 @@ def render_page(source: str, page: str, site: Site, date: str) -> str:
     directory = posixpath.dirname(page)
     to_root = "../" * directory.count("/") + ("../" if directory else "")
     navigation = "".join(
-        f'<a href="{to_root}{target}">{label}</a>' if target != page else f"<a>{label}</a>"
-        for target, label in NAVIGATION
+        f'<a href="{to_root}{target}"{_active(target, page)}>{label}</a>' for target, label in NAVIGATION
     )
+    body = markdown.markdown(source, extensions=list(EXTENSIONS))
+    support = page == "docs/support-matrix.html"
     return TEMPLATE.format(
         title=html.escape(title_of(source)),
         to_root=to_root,
+        theme=THEME_SCRIPT,
         navigation=navigation,
+        wide=" wide" if page.startswith(WIDE) else "",
+        kind=" support" if support else "",
         ref=html.escape(site.ref),
         commit_url=site.commit_url,
         short=site.revision[:7],
         date=date,
-        body=markdown.markdown(source, extensions=list(EXTENSIONS)),
+        body=_mark_support_cells(body) if support else body,
     )
+
+
+def _active(target: str, page: str) -> str:
+    """The navigation link of `page`, or of the section it is in (`leaderboard/` for a project's page), marked."""
+    section = target.removesuffix("index.html") if "/" in target and target.endswith("/index.html") else target
+    return ' class="active"' if target == page or page.startswith(section) else ""
+
+
+_CELL = re.compile(r"<td>(?P<text>[^<]*)</td>")
+
+
+def _mark_support_cells(body: str) -> str:
+    """The support matrix's cells, marked as applying (tools, a tick or an arrow) or not (a dash)."""
+
+    def mark(found: re.Match[str]) -> str:
+        text = found.group("text").strip()
+        kind = "none" if text in ("—", "") else "applies"
+        return f'<td class="{kind}">{found.group("text")}</td>'
+
+    return _CELL.sub(mark, body)
 
 
 def build(root: Path, output: Path, site: Site, leaderboard: Path | None = None) -> list[str]:

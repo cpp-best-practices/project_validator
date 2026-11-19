@@ -76,11 +76,11 @@ def _anchor(name: str) -> str:
     return "check-" + "".join(character if character.isalnum() else "-" for character in name)
 
 
-def _pill(status: Status) -> str:
+def pill(status: Status) -> str:
     return f'<span class="pill s-{status}">{SYMBOLS[status]} {status}</span>'
 
 
-def _ring(percent: float, label: str) -> str:
+def ring(percent: float, label: str) -> str:
     radius, width = 52, 12
     circumference = 2 * math.pi * radius
     shown = min(percent, 100.0)
@@ -95,7 +95,7 @@ def _ring(percent: float, label: str) -> str:
     )
 
 
-def _bar(percent: float) -> str:
+def bar(percent: float) -> str:
     return f'<div class="bar"><span style="width:{max(0.0, min(percent, 100.0)):.1f}%"></span></div>'
 
 
@@ -135,10 +135,10 @@ def _commit(analysis: Analysis) -> str:
 
 def _hero(analysis: Analysis) -> str:
     scored = analysis.score
-    ring = _ring(scored.percent, f"score {scored.percent:.0f} percent") if scored is not None else ""
+    drawn = ring(scored.percent, f"score {scored.percent:.0f} percent") if scored is not None else ""
     chips = (_score_chips(scored) if scored is not None else "") + _status_chips(analysis)
     return (
-        f'<section class="hero wrap" id="overview"><div class="card">{ring}<div>'
+        f'<section class="hero wrap" id="overview"><div class="card">{drawn}<div>'
         f"<h1>{e(analysis.name)}</h1>"
         f'<div class="where">{e(analysis.project)}{_commit(analysis)}</div>'
         f'<div class="chips">{chips}</div>'
@@ -152,7 +152,7 @@ def _breakdown(scored: Score) -> str:
     for name, (filled, slots) in sorted(scored.breakdown().items()):
         percent = 100.0 * filled / slots if slots else 100.0
         rows.append(
-            f"<div>{e(name or 'The whole project')}</div>{_bar(percent)}"
+            f"<div>{e(name or 'The whole project')}</div>{bar(percent)}"
             f'<div class="muted" style="text-align:right">{math.floor(round(percent, 6))}%</div>'
         )
     return f'<div class="breakdown">{"".join(rows)}</div>'
@@ -193,7 +193,7 @@ def _overview(analysis: Analysis) -> str:
     )
 
 
-def _table(headers: Sequence[str], rows: Iterable[Sequence[str]]) -> str:
+def table(headers: Sequence[str], rows: Iterable[Sequence[str]]) -> str:
     head = "".join(f"<th>{e(header)}</th>" for header in headers)
     body = "".join("<tr>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>" for row in rows)
     return f'<div class="table-wrap"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
@@ -203,8 +203,8 @@ def _languages_card(analysis: Analysis) -> str:
     rows = ((f"<strong>{e(label)}</strong>", e(signals)) for label, signals in ecosystems(analysis))
     found = unrecognised(analysis)
     extra = f'<p class="muted">Not recognised: {e(found)}</p>' if found else ""
-    table = _table(("Language or format", "Recognised by"), rows)
-    return f'<div class="card"><h3>Languages and formats</h3>{table}{extra}</div>'
+    listed = table(("Language or format", "Recognised by"), rows)
+    return f'<div class="card"><h3>Languages and formats</h3>{listed}{extra}</div>'
 
 
 def _units_card(analysis: Analysis) -> str:
@@ -212,7 +212,7 @@ def _units_card(analysis: Analysis) -> str:
         (f"<code>{e(directory)}</code>", e(role), e(systems), e(names))
         for directory, role, systems, names in units(analysis)
     )
-    return f'<div class="card"><h3>Units</h3>{_table(UNIT_HEADERS, rows)}</div>'
+    return f'<div class="card"><h3>Units</h3>{table(UNIT_HEADERS, rows)}</div>'
 
 
 ROLES_EXPLAINED = (
@@ -238,7 +238,7 @@ def _roles_card(analysis: Analysis, vendored: Sequence[str]) -> str:
     return (
         f'<div class="card" style="margin-top:1rem"><h3>Code by role</h3>'
         f'<p class="muted" style="margin-top:0">{ROLES_EXPLAINED}</p>'
-        f"{_table(('Role', 'Where', 'Files', 'Languages', 'Judged'), rows)}{listed}</div>"
+        f"{table(('Role', 'Where', 'Files', 'Languages', 'Judged'), rows)}{listed}</div>"
     )
 
 
@@ -284,10 +284,10 @@ def _jobs(rows: Iterable[Sequence[str]], count: int) -> str:
     rows = list(rows)
     if not rows:
         return ""
-    shown = _table(JOB_HEADERS, rows[:JOBS_SHOWN])
+    shown = table(JOB_HEADERS, rows[:JOBS_SHOWN])
     if count <= JOBS_SHOWN:
         return shown
-    rest = _table(JOB_HEADERS, rows[JOBS_SHOWN:])
+    rest = table(JOB_HEADERS, rows[JOBS_SHOWN:])
     return f'{shown}<details><summary class="muted">{count - JOBS_SHOWN} more jobs</summary>{rest}</details>'
 
 
@@ -303,12 +303,12 @@ def _places_table(analysis: Analysis, report: Report) -> str:
         rows.append(
             (
                 e(place_label(place) or "the whole project"),
-                _pill(place.result.status),
+                pill(place.result.status),
                 e(place.result.message) + (f'<ul class="details">{listed}</ul>' if listed else ""),
                 f'<span class="tools">{tools}</span>' if tools else '<span class="muted">-</span>',
             )
         )
-    return f'<div class="places">{_table(("Where", "Status", "Result", "Tools"), rows)}</div>'
+    return f'<div class="places">{table(("Where", "Status", "Result", "Tools"), rows)}</div>'
 
 
 def _check(analysis: Analysis, report: Report) -> str:
@@ -319,7 +319,7 @@ def _check(analysis: Analysis, report: Report) -> str:
     return (
         f'<details class="check s-{status}" id="{_anchor(report.check.name)}" data-status="{status}" '
         f'data-search="{search}">'
-        f'<summary>{_pill(status)}<span class="name">{e(report.check.name)}</span>'
+        f'<summary>{pill(status)}<span class="name">{e(report.check.name)}</span>'
         f'<span class="message">{e(report.result.message)}</span></summary>'
         f'<div class="body">{why_html}'
         f'<p class="muted" style="margin-top:0">Looks for: {e(report.check.description)}</p>'
@@ -416,7 +416,7 @@ def _next_steps(scored: Score | None) -> str:
                 else ""
             ),
             e(step.where or "the whole project"),
-            _pill(step.status),
+            pill(step.status),
             e(step.message) + (f'<br><span class="muted">{e(step.hint)}</span>' if step.hint else ""),
         )
         for step in scored.next_steps
@@ -425,7 +425,7 @@ def _next_steps(scored: Score | None) -> str:
         '<section class="wrap" id="next"><h2>Next steps</h2><div class="card">'
         '<p class="muted" style="margin-top:0">Each gate not yet in place, with the points filling it is worth; the '
         "next level's gates first.</p>"
-        f"{_table(('Points', 'Gate', 'Where', 'Now', 'What was found'), rows)}</div></section>"
+        f"{table(('Points', 'Gate', 'Where', 'Now', 'What was found'), rows)}</div></section>"
     )
 
 
@@ -468,7 +468,7 @@ def _facts(analysis: Analysis) -> str:
 def _run(analysis: Analysis) -> str:
     total = sum(stage.seconds for stage in analysis.stages) or 1.0
     stages = "".join(
-        f'<div class="stage"><div>{e(stage.name)}</div>{_bar(100.0 * stage.seconds / total)}'
+        f'<div class="stage"><div>{e(stage.name)}</div>{bar(100.0 * stage.seconds / total)}'
         f'<div class="n">{stage.found:,} · {stage.seconds:.2f} s</div></div>'
         for stage in analysis.stages
     )
@@ -516,4 +516,4 @@ def render(analysis: Analysis, *, generated: datetime | None = None) -> str:
     )
 
 
-__all__ = ["SECTIONS", "render"]
+__all__ = ["SECTIONS", "bar", "e", "pill", "render", "ring", "table"]

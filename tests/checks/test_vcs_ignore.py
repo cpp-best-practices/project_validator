@@ -69,7 +69,9 @@ class VcsIgnoreTests(unittest.TestCase):
         self.assertEqual(run_in_every_layout(self, vcs_ignore, WELL_CONFIGURED).status, Status.PASS)
 
     def test_this_project_ignores_its_own_build_outputs(self) -> None:
-        project = Project(ROOT, frozenset({PurePosixPath("tests/fixtures")}))
+        # As CI validates this project: the HTML report's script has no JavaScript toolchain of its own yet.
+        excluded = frozenset({PurePosixPath("tests/fixtures"), PurePosixPath("project_validator/views/assets")})
+        project = Project(ROOT, excluded)
         result = vcs_ignore.run(Context(project, discover().providers, Options()))
         self.assertEqual(result.status, Status.PASS, result)
 

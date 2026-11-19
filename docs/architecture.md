@@ -311,6 +311,18 @@ support matrix is not committed (a generated file would be, against `committed-a
 changes it): the `pages` workflow renders it, the README and the pages under docs/ to HTML (`tests/build_site.py`)
 and publishes them to GitHub Pages from `main` on every push.
 
+### Views
+
+Every output renders one `Analysis` (`project_validator/analysis.py`): the project, the structure, the facts, each
+check's report, the score, the extraction stages with how long each took and what it found, the code in each role,
+and the git checkout the project is in. `analyse` extracts the facts first, then runs the checks, and tells the
+context's observers what it does (`Progress`: a stage or a check, starting or done), so the console and the TUI can
+show it while it works. The views are in `project_validator/views`: plain text, the console (rich), the HTML report
+(one self-contained file, its stylesheet and scripts in `views/assets`, shared with the documentation site and the
+leaderboard) and the TUI (textual, imported only when installed). What they share, how a place is named, how the
+checks are grouped by category, what was detected in words, is in `views/common.py`, so that every view says the same
+thing. Why each check matters, and its category, is in `project_validator/explanations.py`, which `--explain` prints.
+
 ### Worked example: branch coverage in this repository
 
 1. The GitHub Actions extractor records the job `coverage` and its command
@@ -335,6 +347,15 @@ settings readers, `practices.py` its practices. A profile's fixtures (`tests/fix
 are named after its module, and the ecosystem contract (`tests/test_ecosystem_contract.py`) checks that each
 profile has them and that its well-configured fixture passes every check that applies to it.
 `python -m project_validator.scaffold` starts one with everything the contract asks for.
+
+Separate languages that share their build systems and tools are separate profiles of one **family**
+(`Ecosystem.family`): C and C++ (what they share is the `project_validator/c_family` package, each judged by its own
+flags: `CMAKE_CXX_FLAGS` does not count for C), JavaScript and TypeScript (TypeScript uses the JavaScript profile's
+platform and tools, and adds type checking). A build file that declares a language of a family (CMake's default
+`project()` languages, package.json's `main`) adds it only where no source of the family says otherwise; a header
+claimed by several of a family (`.h`) is the language of most sources below its nearest directory that has any; and
+a family's tool configuration (`eslint.config.js`) is no source of its language where the family's other languages
+have sources.
 
 A plugin (`--plugin-dir`) is a directory of modules read the same way: its ecosystems are registered (an ecosystem
 may not claim another one's build file or source suffix), and its components are found beside the built-in ones.
