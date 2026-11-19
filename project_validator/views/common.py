@@ -7,9 +7,8 @@ from __future__ import annotations
 
 import math
 from collections import Counter
-from collections.abc import Iterable, Iterator, Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
-from pathlib import PurePosixPath
 
 from project_validator.analysis import Analysis, Git, RoleSummary
 from project_validator.core import Placed, Status
@@ -169,18 +168,10 @@ def unrecognised(analysis: Analysis) -> str:
     return ", ".join(f"{suffix} ({count})" for suffix, count in analysis.structure.unrecognised_suffixes[:8])
 
 
-def short_path(path: str) -> str:
-    return PurePosixPath(path).name or path
-
-
 def fact_kinds(analysis: Analysis) -> list[tuple[str, int]]:
     """Each kind of fact found, with how many, most first."""
     found = Counter(type(fact).__name__ for fact in analysis.facts.all)
     return sorted(found.items(), key=lambda item: (-item[1], item[0]))
-
-
-def iter_details(report: Report) -> Iterator[str]:
-    yield from dedupe(report.result.details)
 
 
 __all__ = [

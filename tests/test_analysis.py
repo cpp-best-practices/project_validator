@@ -9,7 +9,7 @@ import subprocess
 import unittest
 from pathlib import Path
 
-from project_validator.analysis import Analysis, Progress, RoleSummary, analyse, file_url
+from project_validator.analysis import Analysis, Progress, RoleSummary, analyse, file_url, git_of
 from project_validator.core import Options
 from project_validator.plugins import discover
 from tests.support import FIXTURES, make_context, temp_project
@@ -143,6 +143,12 @@ class GitTests(unittest.TestCase):
             analysis = analyse(make_context(root), ())
         self.assertIsNone(analysis.git.commit)
         self.assertIsNone(file_url(analysis.git, "main.py"))
+
+    def test_a_git_that_can_not_run_gives_no_commit(self) -> None:
+        from unittest import mock
+
+        with temp_project({"main.py": ""}) as root, mock.patch("subprocess.run", side_effect=OSError("no git")):
+            self.assertIsNone(git_of(root).commit)
 
     def test_https_remotes_and_the_fixture_name(self) -> None:
         from project_validator.analysis import web_url

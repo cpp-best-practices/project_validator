@@ -101,6 +101,16 @@ class CommonTests(unittest.TestCase):
         self.assertEqual(common.branch_label(Git(branch="HEAD")), "detached")
         self.assertEqual(common.branch_label(Git(branch="main")), "main")
 
+    def test_a_project_that_could_not_be_read_has_no_languages_or_units(self) -> None:
+        unread = dataclasses.replace(_analysis(), structure=None)
+        self.assertEqual((common.ecosystems(unread), common.units(unread)), ([], []))
+
+    def test_code_named_auxiliary_is_judged_so(self) -> None:
+        from project_validator.analysis import RoleSummary
+
+        found = RoleSummary(role="test", directories=("tests",), files=1, languages=("C++",), auxiliary=True)
+        self.assertEqual(common.role_judgement(found), "judged as auxiliary code (--auxiliary)")
+
 
 class TextTests(unittest.TestCase):
     def test_the_report_says_what_was_detected_before_the_results(self) -> None:
@@ -175,6 +185,22 @@ class ConsoleTests(unittest.TestCase):
             context._extracted = ExtractionError("the CI configuration", ValueError("broken"))
             output = self._render(analyse(context, discover().checks))
         self.assertIn("could not be read", output)
+
+    def test_the_score_is_coloured_by_how_much_is_in_place(self) -> None:
+        styles = [console_view.score_style(percent) for percent in (100, 80, 60, 10)]
+        self.assertEqual(styles, ["bold green", "green", "yellow", "red"])
+
+    def test_a_checkout_shows_its_branch_and_commit_and_unknown_suffixes_are_listed(self) -> None:
+        from project_validator.analysis import Git
+
+        analysis = _analysis({**MIXED, "data/a.zyx": "", "data/b.zyx": ""})
+        output = self._render(dataclasses.replace(analysis, git=Git(commit="c" * 40, branch="main")))
+        self.assertIn(f"main @ {'c' * 10}", output)
+        self.assertRegex(output, r"Not recognised +\.zyx \(2\)")
+
+    def test_without_rich_installed_nothing_is_imported(self) -> None:
+        with mock.patch("importlib.import_module", side_effect=ImportError("rich")):
+            self.assertIsNone(console_view._import_rich())
 
     def test_without_rich_it_is_an_error(self) -> None:
         with mock.patch.object(console_view, "_rich", None):
@@ -262,6 +288,7 @@ class ProgressViewTests(unittest.TestCase):
             view(Progress(kind="stage", name="the CI jobs", done=False))
             view(Progress(kind="stage", name="the CI jobs", done=True, seconds=0.25, found=12))
             view(Progress(kind="check", name="coverage", done=False, index=3, total=40))
+            view(Progress(kind="check", name="coverage", done=True, index=3, total=40))
         output = re.sub(r"\x1b\[[0-9;?]*[a-zA-Z]", "", stream.getvalue())
         self.assertIn("Working out what each CI job builds, and on what 12 facts, 0.25 s", output)
 
@@ -287,6 +314,34 @@ class TuiPageTests(unittest.TestCase):
         self.assertIn("SourceFile", tui.facts_page(analysis, "SourceFile"))
         self.assertIn("matching", tui.facts_page(analysis, None, "release.py"))
         self.assertIn("1 of", tui.facts_page(analysis, None, "release.py"))
+
+    def test_a_project_that_could_not_be_read_says_why(self) -> None:
+        error = ExtractionError("the CI configuration", ValueError("broken"))
+        unread = dataclasses.replace(_analysis(), structure=None, error=error)
+        self.assertIn(f"could not be read:[/] {tui.markup(error)}", tui.detected(unread))
+
+    def test_the_ci_jobs_are_listed_with_their_os(self) -> None:
+        workflow = "on: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: cmake --build b\n"
+        detected = tui.detected(_analysis({**MIXED, ".github/workflows/ci.yml": workflow}))
+        self.assertRegex(detected, r"build \[dim\]linux")
+
+    def test_a_result_of_the_whole_project_lists_its_details(self) -> None:
+        report = next(report for report in _analysis().reports if report.check.name == "ci-present")
+        page = tui.report_page(dataclasses.replace(report, result=Result.failed("none", "detail one")))
+        self.assertIn("[dim]detail one[/]", page)
+
+    def test_with_nothing_left_to_do_the_next_steps_say_so(self) -> None:
+        analysis = _analysis()
+        score = analysis.score
+        self.assertIsNotNone(score)
+        done = dataclasses.replace(analysis, score=dataclasses.replace(score, next_steps=()))  # type: ignore[type-var]
+        self.assertEqual(tui.next_steps(done), "Every quality gate that applies is in place.")
+
+    def test_only_the_first_facts_are_listed(self) -> None:
+        with mock.patch.object(tui, "FACTS_SHOWN", 2):
+            page = tui.facts_page(_analysis(), None)
+        self.assertIn("more; search to narrow them", page)
+        self.assertEqual(page.count("\n  [dim]"), 2)
 
     def test_markup_in_the_project_s_text_is_escaped(self) -> None:
         self.assertEqual(tui.markup("[bold]x"), r"\[bold]x")
@@ -317,13 +372,27 @@ class TuiAppTests(unittest.TestCase):
                     await pilot.press("escape", "down", "down", "enter")
                     await pilot.pause(0.1)
                     seen.append(str(app.query_one("#pane").render()))
+                    analysis = app.analysis  # type: ignore[attr-defined]
+                    report = next(report for report in analysis.reports if report.check.name == "static-analysis")
+                    for page, value in (("facts", "SourceFile"), ("next", None), ("report", report)):
+                        app._page(page, value)  # type: ignore[attr-defined]
+                        seen.append(str(app.query_one("#pane").render()))
                     await pilot.press("q")
                 return seen
 
-        title, facts, detected = asyncio.run(drive())
+        title, facts, detected, kind, steps, report = asyncio.run(drive())
         self.assertRegex(title, r"\d+% · Level")
         self.assertIn("release", facts)
         self.assertIn("Languages and formats", detected)
+        self.assertIn("SourceFile", kind)
+        self.assertIn("Next steps", steps)
+        self.assertIn("Static analysers find", report)
+
+    def test_its_exit_code_is_the_app_s_or_0(self) -> None:
+        app = mock.Mock()
+        app.run.return_value = None
+        with mock.patch.object(tui, "build_app", return_value=app):
+            self.assertEqual(tui.run(make_context(FIXTURES / "bare_python"), (), ()), 0)
 
 
 class CliTests(unittest.TestCase):
@@ -334,6 +403,10 @@ class CliTests(unittest.TestCase):
             self.assertEqual(code, EXIT_FAILURE)
             self.assertIsInstance(json.loads(output), list)
             self.assertTrue(path.read_text(encoding="utf-8").startswith("<!DOCTYPE html>"))
+
+    def test_markdown_ends_with_the_score_when_asked(self) -> None:
+        _, output, _ = run_cli("--format", "markdown", "--score", str(FIXTURES / "bare_python"))
+        self.assertRegex(output, r"\*\*Score:\*\* \d+% · Level \d")
 
     def test_format_html_prints_the_report(self) -> None:
         _, output, _ = run_cli("--format", "html", str(FIXTURES / "bare_python"))

@@ -6,7 +6,7 @@ from __future__ import annotations
 import unittest
 
 from project_validator.cli import EXIT_SUCCESS, EXIT_USAGE
-from project_validator.explanations import CATEGORIES, WHY, category, explain
+from project_validator.explanations import CATEGORIES, WHY, Explanation, category, explain
 from project_validator.plugins import discover
 from tests.test_cli import run_cli
 
@@ -37,6 +37,14 @@ class ExplanationTests(unittest.TestCase):
         lines = explain(next(c for c in checks if c.name == "status-badges"), checks).lines()
         self.assertIn("reported but not scored", "\n".join(lines))
         self.assertIn("Applies to: every project.", lines)
+
+    def test_a_check_without_a_rationale_says_what_it_looks_for_only(self) -> None:
+        found = Explanation(
+            name="x", description="looks", why="", category="Other", level=4, scored=True, applies_to=(), tools={}
+        )
+        self.assertEqual(found.lines()[:3], ["x", "", "What it looks for: looks"])
+        self.assertNotIn("Why it matters", "\n".join(found.lines()))
+        self.assertIn("Category: Other. Needed for Level 4 (Complete).", found.lines())
 
 
 class ExplainOptionTests(unittest.TestCase):
