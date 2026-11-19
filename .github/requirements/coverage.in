@@ -2,3 +2,6 @@
 coverage==7.17.2
 PyYAML==6.0.3
 Markdown==3.11.3
+# The optional console report and TUI, so that their tests run and count.
+rich==15.0.0
+textual==8.2.8

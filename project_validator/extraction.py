@@ -67,8 +67,8 @@ def _data_facts(project: Project, found: Facts) -> Facts:
     return found + declaration.declaration_facts(project, found, declaration.known_declarers())
 
 
-def extract_facts(context: Context) -> Facts:
-    """Every fact about the project `context` reads, in the stages above; an `ExtractionError` when a stage fails."""
+def _project_facts(context: Context) -> Facts:
+    """The stages that read the project's own files: its structure, data, repository, tests (and build probes)."""
     project = context.project
     found = _stage(context, "the project's structure", lambda: Facts(structure.structure_facts(project)))
     found = _stage(context, "the data files", lambda: _data_facts(project, found), before=found)
@@ -86,6 +86,13 @@ def extract_facts(context: Context) -> Facts:
     if context.options.build:
         probed = (fact for probe in testing.known_probes() for fact in probe.run(project, context.options))
         found = _stage(context, "the build probes", lambda: found + probed, before=found)
+    return found
+
+
+def extract_facts(context: Context) -> Facts:
+    """Every fact about the project `context` reads, in the stages above; an `ExtractionError` when a stage fails."""
+    project = context.project
+    found = _project_facts(context)
     jobs = _stage(context, "the CI configuration", lambda: ci.ci_facts(project, context.ci_files))
     expanders, actions = expansion.known_expanders(), expansion.known_actions()
     found = _stage(
@@ -100,6 +107,7 @@ def extract_facts(context: Context) -> Facts:
     )
     # Only the tools of the project's languages and formats can run on it: a run of another language's tool answers
     # nothing a question asks, and would only grow the facts with every profile that shares the tool.
+    names = structure.project_languages(found) | structure.project_formats(found)
     used = tuple(tool for tool in tools.known_tools() if tool.languages & names)
     return _stage(context, "the tool runs", lambda: found + tools.tool_runs(found, used), before=found)
 

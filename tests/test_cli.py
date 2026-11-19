@@ -11,13 +11,14 @@ from typing import Any
 from unittest import mock
 from unittest.mock import patch
 
-from project_validator import pretty, yaml_support
+from project_validator import yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
 from project_validator.ecosystems import applies_to
 from project_validator.facts import Fact
 from project_validator.facts.wellformed import parsed_formats
 from project_validator.plugins import discover
 from project_validator.support_matrix import render, support_matrix
+from project_validator.views import console as console_view
 from tests.layouts.model import ProjectLayout
 from tests.support import (
     BARE_PROJECT,
@@ -42,9 +43,7 @@ LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.l
 # The checks that apply to the C++ fixture: those of every project, and of its languages and the formats its CI
 # configuration is in (YAML); the fixture passes them all.
 _CXX_FIXTURE_NAMES = make_context(FIXTURES / "well_configured_cpp").structure.languages_and_formats
-PASSING_IN_C_CPP = [
-    found for found in discover().checks if not found.languages or found.languages & _CXX_FIXTURE_NAMES
-]
+PASSING_IN_C_CPP = [found for found in discover().checks if not found.languages or found.languages & _CXX_FIXTURE_NAMES]
 COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
 NOT_APPLICABLE = {
@@ -218,9 +217,8 @@ class CliTests(unittest.TestCase):
 
     def test_max_file_size_sets_the_large_file_limit(self) -> None:
         code, output, _ = run_cli("--only", "large-files", "--max-file-size", "0.5", str(FIXTURES / "bare_cpp"))
-        self.assertEqual(
-            (code, output.strip()), (EXIT_SUCCESS, "[PASS] large-files: no committed file is larger than 512 KiB")
-        )
+        self.assertEqual(code, EXIT_SUCCESS)
+        self.assertIn("\n[PASS] large-files: no committed file is larger than 512 KiB\n", output)
 
     @requires_rich
     def test_color_always_beautifies_the_output(self) -> None:
@@ -237,14 +235,14 @@ class CliTests(unittest.TestCase):
             self.assertEqual(output.count("[PASS] "), len(PASSING_IN_C_CPP))
 
     def test_color_auto_is_used_for_a_terminal_unless_no_color_is_set(self) -> None:
-        with mock.patch.object(pretty, "available", return_value=False):
+        with mock.patch.object(console_view, "available", return_value=False):
             with mock.patch.dict("os.environ", {}, clear=True):
                 self.assertIn("install rich", run_cli(str(FIXTURES / "well_configured_cpp"), terminal=True)[2])
             with mock.patch.dict("os.environ", {"NO_COLOR": "1"}):
                 self.assertEqual(run_cli(str(FIXTURES / "well_configured_cpp"), terminal=True)[2], "")
 
     def test_color_without_rich_falls_back_to_plain_text_and_says_so(self) -> None:
-        with mock.patch.object(pretty, "_rich", None):
+        with mock.patch.object(console_view, "_rich", None):
             code, output, errors = run_cli("--color", "always", str(FIXTURES / "well_configured_cpp"))
         self.assertEqual(code, EXIT_SUCCESS, output)
         self.assertIn("[PASS] coverage:", output)

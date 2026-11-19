@@ -3,20 +3,12 @@ recognises for each language."""
 
 from __future__ import annotations
 
-import contextlib
-import io
 import unittest
 
-from project_validator.cli import EXIT_SUCCESS, EXIT_USAGE, main
+from project_validator.cli import EXIT_SUCCESS, EXIT_USAGE
 from project_validator.explanations import CATEGORIES, WHY, category, explain
 from project_validator.plugins import discover
-
-
-def _run(*arguments: str) -> tuple[int, str, str]:
-    out, err = io.StringIO(), io.StringIO()
-    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-        code = main(list(arguments))
-    return code, out.getvalue(), err.getvalue()
+from tests.test_cli import run_cli
 
 
 class ExplanationTests(unittest.TestCase):
@@ -49,7 +41,7 @@ class ExplanationTests(unittest.TestCase):
 
 class ExplainOptionTests(unittest.TestCase):
     def test_explain_prints_what_why_and_the_tools(self) -> None:
-        code, output, _ = _run("--explain", "fuzz-testing")
+        code, output, _ = run_cli("--explain", "fuzz-testing")
         self.assertEqual(code, EXIT_SUCCESS)
         self.assertTrue(output.startswith("fuzz-testing\n"))
         self.assertIn("Why it matters: Fuzzers find", output)
@@ -57,10 +49,10 @@ class ExplainOptionTests(unittest.TestCase):
         self.assertIn("  Rust: cargo-fuzz", output)
 
     def test_an_old_name_is_explained_too(self) -> None:
-        self.assertTrue(_run("--explain", "cxx-extensions")[1].startswith("compiler-extensions\n"))
+        self.assertTrue(run_cli("--explain", "cxx-extensions")[1].startswith("compiler-extensions\n"))
 
     def test_an_unknown_check_is_a_usage_error(self) -> None:
-        code, _, errors = _run("--explain", "nonsense")
+        code, _, errors = run_cli("--explain", "nonsense")
         self.assertEqual(code, EXIT_USAGE)
         self.assertIn("unknown check(s): nonsense", errors)
 

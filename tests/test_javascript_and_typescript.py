@@ -22,8 +22,9 @@ def _structure(files: Mapping[str, str]) -> tuple[list[str], list[str]]:
 
 class EcosystemTests(unittest.TestCase):
     def test_javascript_sources_make_a_javascript_project(self) -> None:
-        self.assertEqual(_structure({"package.json": '{"main": "index.js"}\n', "index.js": ""}), (["JavaScript"],
-                                                                                                    ["JavaScript"]))
+        self.assertEqual(
+            _structure({"package.json": '{"main": "index.js"}\n', "index.js": ""}), (["JavaScript"], ["JavaScript"])
+        )
 
     def test_typescript_sources_make_a_typescript_project(self) -> None:
         self.assertEqual(_structure({"package.json": PACKAGE, "src/index.ts": ""}), (["TypeScript"], ["TypeScript"]))
@@ -45,8 +46,9 @@ class EcosystemTests(unittest.TestCase):
         self.assertEqual(_structure(files), (["TypeScript"], ["TypeScript"]))
 
     def test_tool_configuration_of_a_javascript_project_is_javascript(self) -> None:
-        self.assertEqual(_structure({"package.json": "{}\n", "eslint.config.js": "", "index.js": ""})[0],
-                         ["JavaScript"])
+        self.assertEqual(
+            _structure({"package.json": "{}\n", "eslint.config.js": "", "index.js": ""})[0], ["JavaScript"]
+        )
 
     def test_both_languages_make_both(self) -> None:
         self.assertEqual(_structure({"src/index.ts": "", "scripts/build.js": ""})[1], ["JavaScript", "TypeScript"])

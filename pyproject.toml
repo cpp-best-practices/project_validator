@@ -11,7 +11,12 @@ requires-python = ">=3.12"
 dependencies = ["PyYAML>=6.0"]
 
 [project.optional-dependencies]
+# The console report: colour, tables and progress while the project is read.
 pretty = ["rich>=13.0"]
+# The TUI (--tui): browse the results and the facts in the terminal.
+tui = ["rich>=13.0", "textual>=1.0"]
+# Every optional view.
+all = ["rich>=13.0", "textual>=1.0"]
 coverage = ["coverage>=7.10"]
 
 [project.scripts]
@@ -19,6 +24,10 @@ project-validator = "project_validator.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["project_validator*"]
+
+[tool.setuptools.package-data]
+# The HTML report's stylesheet and scripts.
+"project_validator.views" = ["assets/*"]
 
 [tool.ruff]
 line-length = 120

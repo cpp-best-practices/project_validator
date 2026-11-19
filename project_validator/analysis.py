@@ -18,6 +18,7 @@ from pathlib import Path, PurePosixPath
 
 from project_validator import __version__
 from project_validator.core import Check, Context, ExtractionError, Observer, Progress
+from project_validator.ecosystems import formats
 from project_validator.facts import Facts
 from project_validator.facts.auxiliary import selectors
 from project_validator.facts.roles import AUXILIARY
@@ -123,10 +124,12 @@ def _top(path: str) -> str:
 
 
 def roles(facts: Facts, named: Iterable[str] = ()) -> tuple[RoleSummary, ...]:
-    """The project's sources by role, the product first; `named` are the roles `--auxiliary` names."""
+    """The project's sources by role (its code, not its data files), the product first; `named` are the roles
+    `--auxiliary` names."""
     by_role: dict[str, list[SourceFile]] = {}
+    known = formats()
     for source in facts.of(SourceFile):
-        if source.language is not None or source.vendored:
+        if (source.language is not None and source.language not in known) or source.vendored:
             by_role.setdefault(source.role, []).append(source)
     named = set(named)
     order = sorted(by_role, key=lambda role: (role != "product", role == "vendored", role))
@@ -224,19 +227,30 @@ def analyse(
     with contextlib.suppress(ExtractionError):
         _ = context.facts  # first, so that the stages are told before the checks; a failure is kept for the checks
     reports = tuple(run_checks(checks, context))
+    names = [check.name for check in checks] if every_check is None else list(every_check)
+    return _finished(context, reports, tuple(stages), score_of=names if scored else None, started=started)
+
+
+def _finished(
+    context: Context,
+    reports: tuple[Report, ...],
+    stages: tuple[Stage, ...],
+    *,
+    score_of: list[str] | None,
+    started: float,
+) -> Analysis:
+    """The analysis of a run: scored against `score_of` (every check's name), unless it is None."""
     error = context.extraction_error
     facts = Facts(()) if error is not None else context.facts
-    structure = None if error is not None else context.structure
-    names = [check.name for check in checks] if every_check is None else list(every_check)
     return Analysis(
         project=context.project.root,
         validator=__version__,
         options=_options(context),
-        structure=structure,
+        structure=None if error is not None else context.structure,
         facts=facts,
         reports=reports,
-        score=score(reports, names) if scored and error is None else None,
-        stages=tuple(stages),
+        score=score(reports, score_of) if score_of is not None and error is None else None,
+        stages=stages,
         roles=roles(facts, selectors(facts).roles if error is None else ()),
         seconds=time.perf_counter() - started,
         git=git_of(context.project.root),

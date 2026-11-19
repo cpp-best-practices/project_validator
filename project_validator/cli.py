@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import sys
@@ -10,17 +11,22 @@ import traceback
 from collections.abc import Sequence
 from pathlib import Path, PurePosixPath
 
-from project_validator import pretty, yaml_support
-from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, ExtractionError, Options, Project
+from project_validator import yaml_support
+from project_validator.analysis import Analysis, analyse
+from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, ExtractionError, Observer, Options, Project
 from project_validator.ecosystems import applies_to
 from project_validator.explanations import explain
 from project_validator.facts.auxiliary import Selectors
 from project_validator.grid import render_grid
 from project_validator.plugins import PluginError, discover
 from project_validator.questions.answers import answers
-from project_validator.runner import Report, SelectionError, run_checks, select, succeeded
-from project_validator.score import Score, score
+from project_validator.runner import Report, SelectionError, select, succeeded
 from project_validator.support_matrix import as_dict, render, support_matrix
+from project_validator.views import console as console_view
+from project_validator.views import html as html_view
+from project_validator.views import text as text_view
+from project_validator.views import tui as tui_view
+from project_validator.views.progress import ProgressView
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
@@ -118,9 +124,19 @@ def _add_output_options(parser: argparse.ArgumentParser) -> None:
     """The options that choose how the results are printed."""
     parser.add_argument(
         "--format",
-        choices=("text", "json", "markdown"),
+        choices=("text", "json", "markdown", "html"),
         default="text",
-        help="output format (markdown: a grid of checks by ecosystem, for a job summary)",
+        help="output format (text: in color with rich on a terminal; markdown: a grid of checks by language, for a "
+        "job summary; html: the self-contained HTML report)",
+    )
+    parser.add_argument(
+        "--html", type=Path, metavar="FILE", help="also write the self-contained HTML report of the findings to FILE"
+    )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="show every detail, the checks that do not apply and the stages"
+    )
+    parser.add_argument(
+        "--tui", action="store_true", help="browse the results and the facts interactively (needs textual)"
     )
     parser.add_argument(
         "--color", choices=("auto", "always", "never"), default="auto", help="color the text output (needs rich)"
@@ -167,14 +183,6 @@ def _options(arguments: argparse.Namespace) -> Options:
     )
 
 
-def _format_text(reports: list[Report]) -> str:
-    lines: list[str] = []
-    for report in reports:
-        lines.append(f"[{report.result.status}] {report.check.name}: {report.result.message}")
-        lines.extend(f"    {detail}" for detail in report.result.details)
-    return "\n".join(lines)
-
-
 def report_dicts(reports: list[Report]) -> list[dict[str, object]]:
     """The reports as `--format json` prints them: each check's result, and one result per ecosystem in each unit
     (the places), as the markdown grid lays them out."""
@@ -209,15 +217,6 @@ def _use_color(choice: str) -> bool:
     if choice == "auto":
         return sys.stdout.isatty() and "NO_COLOR" not in os.environ
     return choice == "always"
-
-
-def _print_text(reports: list[Report], color: bool) -> None:
-    if color and pretty.available():
-        pretty.print_reports(reports, sys.stdout)
-        return
-    if color:
-        print("note: install rich for colored output", file=sys.stderr)
-    print(_format_text(reports))
 
 
 def _format_list(checks: Sequence[Check]) -> str:
@@ -257,32 +256,34 @@ def _usage_error(parser: argparse.ArgumentParser, message: str) -> int:
     return EXIT_USAGE
 
 
-NEXT_STEPS = 5  # how many opportunities the text and markdown reports list
-
-
-def _score_lines(scored: Score, *, markdown: bool) -> list[str]:
-    title = "Score:"
-    lines = [f"**{title}** {scored.summary()}" if markdown else f"{title} {scored.summary()}"]
-    if scored.next_steps:
-        lines.append("Next steps:")
-        lines.extend(f"  - {step.describe()}" for step in scored.next_steps[:NEXT_STEPS])
-    return lines
-
-
-def _print_reports(reports: list[Report], arguments: argparse.Namespace, every_check: Sequence[str]) -> None:
-    scored = score(reports, every_check) if arguments.score else None
+def _print_analysis(analysis: Analysis, arguments: argparse.Namespace) -> None:
+    """Print the analysis in the format asked for, and write the HTML report when `--html` asks for one."""
+    if arguments.html is not None:
+        arguments.html.write_text(html_view.render(analysis), encoding="utf-8")
+    reports = list(analysis.reports)
     if arguments.format == "json":
-        if scored is None:
-            print(_format_json(reports))
-        else:
-            print(json.dumps({"results": report_dicts(reports), "score": scored.as_dict()}, indent=2))
-        return
-    if arguments.format == "markdown":
+        results = report_dicts(reports)
+        scored = analysis.score.as_dict() if arguments.score and analysis.score else None
+        print(json.dumps(results if scored is None else {"results": results, "score": scored}, indent=2))
+    elif arguments.format == "html":
+        print(html_view.render(analysis), end="")
+    elif arguments.format == "markdown":
         print(render_grid(reports), end="")
+        if arguments.score and analysis.score is not None:
+            print("\n" + "\n".join(text_view.score_lines(analysis.score, markdown=True)))
+    elif _use_color(arguments.color) and console_view.available():
+        console_view.render(analysis, sys.stdout, verbose=arguments.verbose)
     else:
-        _print_text(reports, _use_color(arguments.color))
-    if scored is not None:
-        print("\n" + "\n".join(_score_lines(scored, markdown=arguments.format == "markdown")))
+        if _use_color(arguments.color):
+            print("note: install rich for colored output (pip install project_validator[pretty])", file=sys.stderr)
+        print(text_view.render(analysis, scored=arguments.score))
+
+
+def _progress(arguments: argparse.Namespace) -> contextlib.AbstractContextManager[Observer | None]:
+    """Progress on stderr while the validator works, when stderr is a terminal and rich is installed."""
+    if arguments.tui or not sys.stderr.isatty() or not console_view.available() or arguments.color == "never":
+        return contextlib.nullcontext(None)
+    return ProgressView(sys.stderr)
 
 
 def _dump(context: Context, arguments: argparse.Namespace) -> object:
@@ -332,7 +333,7 @@ def _run(
     selected: list[Check],
     every_check: Sequence[str],
 ) -> int:
-    """Print what was asked (a dump, or the reports) and say how it went; `every_check` names every check there is,
+    """Print what was asked (a dump, or the analysis) and say how it went; `every_check` names every check there is,
     for the score."""
     if arguments.facts or arguments.map or arguments.answers:
         try:
@@ -340,11 +341,14 @@ def _run(
         except ExtractionError as failed:
             return _extraction_failed(parser, failed)
         return EXIT_SUCCESS
-    reports = run_checks(selected, context)
-    _print_reports(reports, arguments, every_check)
-    if (cause := context.extraction_error) is not None:
+    if arguments.tui:
+        return tui_view.run(context, selected, every_check)
+    with _progress(arguments) as progress:
+        analysis = analyse(context, selected, every_check=every_check, progress=progress)
+    _print_analysis(analysis, arguments)
+    if (cause := analysis.error) is not None:
         return _extraction_failed(parser, cause)
-    return EXIT_SUCCESS if succeeded(reports, strict=arguments.strict) else EXIT_FAILURE
+    return EXIT_SUCCESS if succeeded(list(analysis.reports), strict=arguments.strict) else EXIT_FAILURE
 
 
 def _extraction_failed(parser: argparse.ArgumentParser, failed: ExtractionError) -> int:

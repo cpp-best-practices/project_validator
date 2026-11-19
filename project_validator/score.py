@@ -25,7 +25,7 @@ import math
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, field
 
-from project_validator.core import Status
+from project_validator.core import Result, Status
 from project_validator.runner import Report
 
 SCORE_VERSION = "1"
@@ -241,9 +241,9 @@ class Score:
         head = f"{_floor(self.percent)}% · Level {self.level} {self.level_name}"
         if self.complete:
             gates = f"all {len(self.cells)} gates in place"
-            return f"{head} · {gates}, +{_floor(self.extra)} extra credit" if self.extra else f"{head} · {gates}"
+            return f"{head} · {gates}, +{_credit(self.extra)} extra credit" if self.extra else f"{head} · {gates}"
         gates = f"{self.gates} of {len(self.cells)} gates in place"
-        held = f" (+{_floor(self.held)} extra credit held until every gate is in place)" if self.held else ""
+        held = f" (+{_credit(self.held)} extra credit held until every gate is in place)" if self.held else ""
         return f"{head} · {gates}{held}"
 
     def breakdown(self) -> dict[str, tuple[float, float]]:
@@ -280,12 +280,28 @@ def _floor(value: float) -> int:
     return math.floor(round(value, 6))
 
 
+def _credit(value: float) -> str:
+    """Extra credit, in percent: a tenth below one point, whole points above."""
+    return f"{value:.1f}" if value < 1 else str(_floor(value))
+
+
 def _points(value: float) -> str:
     return str(_number(round(value, 1)))
 
 
+# The first words of a detail that says what to do, rather than what was found (a file, a job).
+_ADVICE = frozenset(
+    {"consider", "add", "remove", "commit", "run", "set", "enable", "pin", "fetch", "compare", "condition", "use"}
+)
+
+
 def _hint(details: Sequence[str]) -> str:
-    return details[0] if details else ""
+    """The first detail that says what to do (`consider running gcovr in CI`), else ""."""
+    for detail in details:
+        words = detail.split(maxsplit=1)
+        if words and words[0].lower() in _ADVICE:
+            return detail
+    return ""
 
 
 def _report_cells(report: Report) -> Iterator[Cell]:
@@ -297,33 +313,27 @@ def _report_cells(report: Report) -> Iterator[Cell]:
     result = report.result
     if not result.places:
         if result.status is not Status.SKIP:
-            yield Cell(
-                check=name,
-                level=level,
-                ecosystem="",
-                unit="",
-                tier=PROJECT,
-                status=result.status,
-                tools=(),
-                message=result.message,
-                hint=_hint(result.details),
-            )
+            yield _cell(name, level, "", "", PROJECT, result, ())
         return
     for place in result.places:
         tier = AUXILIARY if place.auxiliary else CORE
         if place.result.status is Status.SKIP or (tier == AUXILIARY and name in NOT_FOR_AUXILIARY):
             continue
-        yield Cell(
-            check=name,
-            level=level,
-            ecosystem=place.ecosystem,
-            unit=place.unit,
-            tier=tier,
-            status=place.result.status,
-            tools=place.tools,
-            message=place.result.message,
-            hint=_hint(place.result.details),
-        )
+        yield _cell(name, level, place.ecosystem, place.unit, tier, place.result, place.tools)
+
+
+def _cell(check: str, level: int, ecosystem: str, unit: str, tier: str, result: Result, tools: tuple[str, ...]) -> Cell:
+    return Cell(
+        check=check,
+        level=level,
+        ecosystem=ecosystem,
+        unit=unit,
+        tier=tier,
+        status=result.status,
+        tools=tools,
+        message=result.message,
+        hint=_hint(result.details),
+    )
 
 
 def _blocking(cells: Iterable[Cell], level: int) -> list[Cell]:

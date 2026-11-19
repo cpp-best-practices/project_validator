@@ -11,7 +11,6 @@ from contextlib import contextmanager
 from pathlib import Path
 from types import MappingProxyType
 
-from project_validator import pretty
 from project_validator.core import Check, Context, Options, Project, Result
 from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for
 from project_validator.ecosystems.c import C
@@ -20,6 +19,7 @@ from project_validator.facts import Command, Origin, resolved
 from project_validator.facts.expansion import script_facts
 from project_validator.facts.jobs import Job
 from project_validator.plugins import discover
+from project_validator.views import console as console_view
 from tests import layouts
 from tests.layouts.model import ProjectLayout
 
@@ -30,7 +30,7 @@ FORMAT_ECOSYSTEM = Ecosystem(
     label="Widget data", kind="format", languages=frozenset({"WDATA"}), source_suffixes={".wdata": "WDATA"}
 )
 
-requires_rich = unittest.skipUnless(pretty.available(), "rich is not installed")
+requires_rich = unittest.skipUnless(console_view.available(), "rich is not installed")
 
 NO_FILES: Mapping[str, str] = MappingProxyType({})
 

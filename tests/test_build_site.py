@@ -137,6 +137,28 @@ class PagesTests(unittest.TestCase):
         self.assertEqual(index.count("\n- ["), len(PROFILES))
 
 
+def _nightly(name: str, language: str) -> dict[str, object]:
+    """A night's result for a project, as `leaderboard evaluate` writes it."""
+    return {
+        "name": name,
+        "language": language,
+        "commit": "c" * 40,
+        "validator": "v" * 40,
+        "evaluated": "2026-11-18T03:17:00Z",
+        "score": {
+            "version": "1",
+            "percent": 50.0,
+            "level": 1,
+            "level_name": "Foundations",
+            "filled": 1,
+            "slots": 2,
+            "summary": "50% · Level 1 Foundations · 1 of 2 gates in place",
+            "cells": [],
+            "next_steps": [],
+        },
+    }
+
+
 class BuildTests(unittest.TestCase):
     def test_the_site_builds_from_the_repository_and_every_link_and_anchor_resolves(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -147,24 +169,7 @@ class BuildTests(unittest.TestCase):
 
     def test_the_leaderboard_is_built_from_the_nightly_results(self) -> None:
         listed = entries(ROOT / "leaderboard" / "projects.toml")
-        result: dict[str, object] = {
-            "name": listed[0].name,
-            "language": listed[0].language,
-            "commit": "c" * 40,
-            "validator": "v" * 40,
-            "evaluated": "2026-11-18T03:17:00Z",
-            "score": {
-                "version": "1",
-                "percent": 50.0,
-                "level": 1,
-                "level_name": "Foundations",
-                "filled": 1,
-                "slots": 2,
-                "summary": "50% · Level 1 Foundations · 1 of 2 gates in place",
-                "cells": [],
-                "next_steps": [],
-            },
-        }
+        result = _nightly(listed[0].name, listed[0].language)
         with tempfile.TemporaryDirectory() as tmp:
             results, data, output = Path(tmp) / "results", Path(tmp) / "data", Path(tmp) / "site"
             write(result, results)

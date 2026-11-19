@@ -2,3 +2,6 @@
 PyYAML==6.0.3
 # tests/build_site.py renders the documentation site.
 Markdown==3.11.3
+# The optional console report and TUI, so that their tests run and count.
+rich==15.0.0
+textual==8.2.8

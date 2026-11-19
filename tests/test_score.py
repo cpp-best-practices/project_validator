@@ -291,7 +291,9 @@ class SummaryTests(unittest.TestCase):
         self.assertEqual(data["percent"], 100)
         self.assertEqual((data["level"], data["level_name"]), (1, "Foundations"))
         self.assertEqual((data["filled"], data["slots"], data["extra"], data["held"]), (7, 7, 0, 0))
-        self.assertEqual(len(data["cells"]), 7)
+        cells = data["cells"]
+        self.assertIsInstance(cells, list)
+        self.assertEqual(len(cells) if isinstance(cells, list) else 0, 7)
         json.dumps(data)
 
 

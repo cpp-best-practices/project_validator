@@ -32,6 +32,8 @@ def _analysis(files: dict[str, str], **options: object) -> Analysis:
 class AnalysisTests(unittest.TestCase):
     def test_it_holds_the_structure_facts_reports_and_score(self) -> None:
         analysis = _analysis(MIXED)
+        if analysis.structure is None:
+            self.fail("not read")
         self.assertEqual(sorted(analysis.structure.languages), ["C++", "Python"])
         self.assertTrue(analysis.facts.all)
         self.assertEqual({report.check.name for report in analysis.reports}, {c.name for c in discover().checks})
