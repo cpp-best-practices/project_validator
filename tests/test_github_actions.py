@@ -250,6 +250,27 @@ class AdvisoryStepTests(unittest.TestCase):
         commands = self._commands({"steps": [{"run": "pytest", "continue-on-error": False}]})
         self.assertEqual([command.advisory for command in commands], [""])
 
+    def _triggered(self, on: object) -> list[str]:
+        workflow = {"on": on, "jobs": {"style": {"runs-on": "ubuntu-latest", "steps": [{"run": "ruff format ."}]}}}
+        with temp_project({GITHUB_WORKFLOW: json.dumps(workflow)}) as root:
+            return [command.advisory for command in make_context(root).facts.of(Command)]
+
+    def test_a_workflow_that_runs_only_when_someone_comments_gates_nothing(self) -> None:
+        """r-lib's pr-commands.yaml restyles a pull request when a maintainer comments `/style`: no push or pull
+        request runs it, so its commands only advise (upstream #256)."""
+        for on in ("issue_comment", ["issue_comment"], {"issue_comment": {"types": ["created"]}}):
+            with self.subTest(on=on):
+                self.assertEqual(self._triggered(on), ["on: issue_comment"])
+        self.assertEqual(
+            self._triggered(["issue_comment", "pull_request_review_comment"]),
+            ["on: issue_comment, pull_request_review_comment"],
+        )
+
+    def test_a_workflow_that_also_runs_on_pushes_is_a_gate(self) -> None:
+        for on in (["issue_comment", "push"], {"pull_request": None, "issue_comment": None}, "push"):
+            with self.subTest(on=on):
+                self.assertEqual(self._triggered(on), [""])
+
     def test_an_unknown_continue_on_error_is_advisory_and_unknown(self) -> None:
         workflow = {
             "jobs": {

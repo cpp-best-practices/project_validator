@@ -91,18 +91,19 @@ class RTests(unittest.TestCase):
         result = run_in_layout(self, R_PACKAGE, TESTS_RUN, files)
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #256: sanitizer images and issue_comment styler jobs are unread
-    def test_sanitizer_images_sanitize_and_a_comment_job_enforces_nothing(self) -> None:
-        """A job in a `rocker/r-devel-san` image runs under ASan and UBSan (data.table); styler in an `issue_comment`
-        job gates no push (testthat)."""
+    @unittest.expectedFailure  # upstream #256: sanitizer images are unread
+    def test_sanitizer_images_sanitize(self) -> None:
+        """A job in a `rocker/r-devel-san` image runs under ASan and UBSan (data.table)."""
         files = {
             "src/shop.c": "",
             **_gitlab("R CMD build .", "R CMD check shop_0.1.0.tar.gz", image="rocker/r-devel-san"),
         }
         _all_pass(self, {"sanitizer image": (R_PACKAGE, SANITIZERS, files)})
-        with self.subTest(case="styler on issue_comment"):
-            result = run_in_layout(self, R_PACKAGE, CODE_FORMATTING, _workflow(STYLE_ON_COMMENT))
-            self.assertNotEqual(result.status, Status.PASS, result)
+
+    def test_a_comment_job_enforces_nothing(self) -> None:
+        """styler in an `issue_comment` job gates no push (testthat)."""
+        result = run_in_layout(self, R_PACKAGE, CODE_FORMATTING, _workflow(STYLE_ON_COMMENT))
+        self.assertNotEqual(result.status, Status.PASS, result)
 
 
 # --- Ruby (#257) -----------------------------------------------------------------------------------------------------

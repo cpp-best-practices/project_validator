@@ -8,6 +8,7 @@ import re
 import shlex
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, replace
+from functools import partial
 
 from project_validator.ci import REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
@@ -200,26 +201,24 @@ def _job_facts(
     caller: str = "",
     load: Load | None = None,
     inputs: Mapping[str, str] = NOTHING,
+    advisory: str = "",
 ) -> Iterator[Fact]:
     """The facts of one job; `caller` names the job that calls the workflow, for a reusable workflow's jobs, and
-    `inputs` are what it passes. `load` reads the local actions its steps use."""
+    `inputs` are what it passes. `load` reads the local actions its steps use; `advisory` says why none of its steps
+    can fail a push or pull request, when none can."""
     origin = Origin(path=path, at=("jobs", job_id))
+    combine = partial(_Combination, origin, load=load, inputs=inputs, advisory=advisory)
     strategy = job.get("strategy")
     combinations = expand_matrix(strategy.get("matrix") if isinstance(strategy, Mapping) else None)
     if combinations is None:
         # Its steps still run, in combinations that are not known: their matrix values stay as written.
-        yield Unknown(
-            origin=origin,
-            subject=f"the matrix of job {job_id}",
-            reason="it is computed by an expression",
-            hides="matrix",
-        )
-        unknown = _Combination(origin, f"{caller}{path}:{job_id}", {}, load=load, matrix_known=False, inputs=inputs)
-        yield from unknown.facts(job, workflow)
+        reason = "it is computed by an expression"
+        yield Unknown(origin=origin, subject=f"the matrix of job {job_id}", reason=reason, hides="matrix")
+        yield from combine(f"{caller}{path}:{job_id}", {}, matrix_known=False).facts(job, workflow)
         return
     for index, combination in enumerate(combinations):
         identity = f"{caller}{path}:{job_id}" + ("" if len(combinations) == 1 else f"[{index}]")
-        yield from _Combination(origin, identity, combination, load=load, inputs=inputs).facts(job, workflow)
+        yield from combine(identity, combination).facts(job, workflow)
 
 
 # A step that fails the job when an earlier one failed: `if: steps.<id>.outcome == 'failure'`, `run: exit 1`.
@@ -506,11 +505,29 @@ def _with_inputs[T](value: T, inputs: Mapping[str, str]) -> T:
 _CALL_DEPTH = 4
 
 
-def _only_called(document: Mapping[object, object]) -> bool:
-    """Whether a workflow runs only when another calls it (`on: workflow_call`)."""
+def _triggers(document: Mapping[object, object]) -> list[str]:
+    """The events a workflow runs on."""
     triggers = document.get("on", document.get(True))  # YAML 1.1 reads a bare `on` as true
     names = [triggers] if isinstance(triggers, str) else list(triggers) if isinstance(triggers, (list, Mapping)) else []
-    return names == ["workflow_call"]
+    return [str(name) for name in names]
+
+
+def _only_called(document: Mapping[object, object]) -> bool:
+    """Whether a workflow runs only when another calls it (`on: workflow_call`)."""
+    return _triggers(document) == ["workflow_call"]
+
+
+# The events someone's comment or issue triggers: a workflow run only by them (a `/style` command) checks no push.
+_CONVERSATION_EVENTS = frozenset(
+    {"issue_comment", "issues", "pull_request_review_comment", "discussion", "discussion_comment"}
+)
+
+
+def _conversational(document: Mapping[object, object]) -> str:
+    """Why no step of a workflow can fail a push or pull request when it runs only on comments and issues
+    (`on: issue_comment`), else ""."""
+    names = _triggers(document)
+    return f"on: {', '.join(names)}" if names and set(names) <= _CONVERSATION_EVENTS else ""
 
 
 def _computed_directory(origin: Origin, directory: str | None) -> Iterator[Unknown]:
@@ -547,11 +564,12 @@ def workflow_facts(
         return
     if not caller and _only_called(document):
         return  # its jobs run where another workflow calls it
+    advisory = "" if caller else _conversational(document)
     for job_id, job in jobs.items():
         if not isinstance(job, Mapping):
             continue
         if "uses" not in job:
-            yield from _job_facts(path, str(job_id), job, document, caller, load, inputs)
+            yield from _job_facts(path, str(job_id), job, document, caller, load, inputs, advisory)
             continue
         uses = str(job["uses"]).strip()
         called = _local(uses) or _own(uses, load)
