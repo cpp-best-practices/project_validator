@@ -91,11 +91,15 @@ class StatusBadgesTests(unittest.TestCase):
 
     def test_a_badge_of_a_ci_configured_outside_the_repository_counts(self) -> None:
         """AppVeyor, Jenkins, Buildkite and Azure Pipelines can be set up in their own settings, and OCaml-CI
-        builds every opam package without configuration (ocamlformat): their badges show the project's CI."""
+        builds every opam package without configuration (ocamlformat), as Read the Docs builds a documentation site
+        (devguide): their badges show the project's CI."""
         for provider, url in (
             ("AppVeyor", "https://ci.appveyor.com/api/projects/status/abc"),
             ("Jenkins", "https://ci.example.com/buildStatus/icon?job=r"),
             ("OCaml-CI", "https://img.shields.io/endpoint?url=https://ocaml.ci.dev/badge/o/r/main&logo=ocaml"),
+            # Read the Docs builds the documentation site on its own service: devguide's build status (#240).
+            ("Read the Docs", "https://readthedocs.org/projects/cpython-devguide/badge/"),
+            ("Read the Docs", "https://img.shields.io/readthedocs/pip"),
         ):
             with self.subTest(provider):
                 result = _run({"README.md": f'<img src="{url}" alt="build"> {QUALITY_BADGE}'}, ci={})

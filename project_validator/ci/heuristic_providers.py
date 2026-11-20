@@ -73,3 +73,10 @@ OCAML_CI = CiProvider(
     badges=(pattern("OCaml-CI", r"ocaml\.ci\.dev/badge/|ci\.ocamllabs\.io/badge/"),),
     configured_elsewhere=True,
 )
+# Read the Docs builds a project's documentation site on its own service (set up in `.readthedocs.yaml` or its
+# dashboard): its badge is the site's build status (devguide).
+READ_THE_DOCS = CiProvider(
+    name="Read the Docs",
+    badges=(pattern("Read the Docs", r"readthedocs\.org/projects/\S+/badge|img\.shields\.io/readthedocs/"),),
+    configured_elsewhere=True,
+)
