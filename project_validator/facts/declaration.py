@@ -31,13 +31,15 @@ class Declaration:
 class Declares:
     """How the schemas of one format declare themselves: `find(project)` yields the paths of the format's schemas,
     `read(text)` what one declares (None when the text is not a schema that can be read: `data-wellformed` says so).
-    `what` names the declarations asked for (`dialect ($schema) and $id`), for the policy's messages. A profile
+    `what` names the declarations asked for (`dialect ($schema) and $id`), for the policy's messages; `waived(project,
+    path)`, those the file's own configuration does not ask of it (a buf module without `PACKAGE_DEFINED`). A profile
     defines one per format; they are found, not listed."""
 
     format: str
     what: str
     find: Callable[[Project], Iterable[str]]
     read: Callable[[str], Declaration | None]
+    waived: Callable[[Project, str], Iterable[str]] | None = None
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -84,9 +86,14 @@ def declaration_facts(project: Project, facts: Facts, declarers: Iterable[Declar
                 what=declares.what,
                 role=found,
                 declared=read.declared,
-                missing=read.missing,
+                missing=_asked(read.missing, () if declares.waived is None else declares.waived(project, path)),
                 outdated=read.outdated,
             )
+
+
+def _asked(missing: tuple[str, ...], waived: Iterable[str]) -> tuple[str, ...]:
+    waived = frozenset(waived)
+    return tuple(name for name in missing if name not in waived)
 
 
 def declaring(names: Mapping[str, object], *, outdated: str | None = None) -> Declaration:

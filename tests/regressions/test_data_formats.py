@@ -156,15 +156,17 @@ class JsonSchemaAndOpenApiGapTests(unittest.TestCase):
 
 
 class ProtobufTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #271: buf.yaml's PACKAGE_DEFINED exception ignored; Markdown docs invisible
-    def test_modules_without_the_package_rule_and_markdown_docs_with_a_link_checker(self) -> None:
+    def test_a_module_without_the_package_rule_is_not_failed_for_its_missing_package(self) -> None:
         """A `.proto` file in a buf module whose `buf.yaml` excepts `PACKAGE_DEFINED` is not failed for its missing
-        package (protovalidate's examples/ and e2e/bzlmod/); plain Markdown documentation that lychee checks in CI is
-        a documentation unit the link check judges (opentelemetry-proto), not "no recognised language"."""
+        package (protovalidate's examples/ and e2e/bzlmod/)."""
         for directory in ("examples", "e2e/bzlmod"):
             with self.subTest(module=directory):
                 result = _run(schema_declared, _module_at(directory))
                 self.assertNotEqual(result.status, Status.FAIL, result.details)
-        with self.subTest(check="link-check"):
-            result = _run(link_check, MARKDOWN_DOCS_WITH_LYCHEE)
-            self.assertNotEqual(result.status, Status.SKIP, result.message)
+
+    @unittest.expectedFailure  # upstream #271: plain Markdown documentation is invisible to link-check
+    def test_markdown_docs_with_a_link_checker_are_judged(self) -> None:
+        """Plain Markdown documentation that lychee checks in CI is a documentation unit the link check judges
+        (opentelemetry-proto), not "no recognised language"."""
+        result = _run(link_check, MARKDOWN_DOCS_WITH_LYCHEE)
+        self.assertNotEqual(result.status, Status.SKIP, result.message)
