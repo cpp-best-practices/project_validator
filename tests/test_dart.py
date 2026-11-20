@@ -77,6 +77,47 @@ class RecognitionTests(unittest.TestCase):
         self.assertFalse(uses(DART_ECOSYSTEM, "npm test"))
 
 
+class FlutterPlatformTests(unittest.TestCase):
+    """The platform runners `flutter create` writes beside a Flutter pubspec are the Flutter build's own (#185)."""
+
+    def _languages(self, files: dict[str, str]) -> frozenset[str]:
+        with temp_project(files) as root:
+            return make_context(root).structure.languages
+
+    def test_a_plugins_example_app_runners_are_its_own(self) -> None:
+        files = {
+            "pubspec.yaml": "name: plugin\nflutter:\n  plugin: {}\n",
+            "lib/plugin.dart": "",
+            "example/pubspec.yaml": "name: example\nflutter:\n  uses-material-design: true\n",
+            "example/lib/main.dart": "",
+            "example/ios/Runner/AppDelegate.swift": "",
+            "example/linux/CMakeLists.txt": "project(runner LANGUAGES CXX)\n",
+        }
+        self.assertEqual(self._languages(files), frozenset({"Dart"}))
+
+    def test_an_app_that_depends_on_the_flutter_sdk_is_a_flutter_app(self) -> None:
+        """dart-lang/http's ios_test app: no `flutter:` section, but the Flutter SDK among its dependencies."""
+        files = {
+            "pubspec.yaml": "name: ios_test\ndependencies:\n  flutter:\n    sdk: flutter\n",
+            "lib/main.dart": "",
+            "ios/Runner/AppDelegate.swift": "",
+        }
+        self.assertEqual(self._languages(files), frozenset({"Dart"}))
+
+    def test_a_dart_package_without_flutter_keeps_its_platform_named_code(self) -> None:
+        files = {"pubspec.yaml": "name: native\n", "lib/native.dart": "", "linux/native.c": "int f(void);\n"}
+        self.assertIn("C", self._languages(files))
+
+    def test_code_beside_the_runners_is_still_the_projects(self) -> None:
+        files = {
+            "pubspec.yaml": "name: app\nflutter:\n",
+            "lib/main.dart": "",
+            "android/app/src/main/kotlin/MainActivity.kt": "",
+            "tool/generate.py": "",
+        }
+        self.assertEqual(self._languages(files), frozenset({"Dart", "Python"}))
+
+
 class DartTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
         return run_as(self, selected, files, DART_ECOSYSTEM)

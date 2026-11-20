@@ -157,8 +157,11 @@ def ci_summary(analysis: Analysis) -> str:
 
 
 def reading(analysis: Analysis) -> str:
-    """`1,500 facts in 0.31 s`: how much was read."""
-    return f"{len(analysis.facts.all):,} facts in {analysis.seconds:.2f} s"
+    """`1,500 facts in 0.31 s`: how much was read, and how many paths git ignores were left out."""
+    read = f"{len(analysis.facts.all):,} facts in {analysis.seconds:.2f} s"
+    if count := len(analysis.ignored):
+        return f"{read}; {count} path{'s' if count != 1 else ''} git ignores left out"
+    return read
 
 
 def unrecognised(analysis: Analysis) -> str:

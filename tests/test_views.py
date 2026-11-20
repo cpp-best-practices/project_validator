@@ -105,6 +105,12 @@ class CommonTests(unittest.TestCase):
         unread = dataclasses.replace(_analysis(), structure=None)
         self.assertEqual((common.ecosystems(unread), common.units(unread)), ([], []))
 
+    def test_what_git_ignores_is_said_to_be_left_out(self) -> None:
+        """#316: the files git ignores are not read; the report says how many paths were left out, when any were."""
+        self.assertNotIn("ignore", common.reading(_analysis()))
+        left_out = dataclasses.replace(_analysis(), ignored=("generated/", "debug.log"))
+        self.assertRegex(common.reading(left_out), r"facts in \d+\.\d\d s; 2 paths git ignores left out$")
+
     def test_code_named_auxiliary_is_judged_so(self) -> None:
         from project_validator.analysis import RoleSummary
 

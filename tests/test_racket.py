@@ -13,6 +13,7 @@ from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems import is_build_tree
 from project_validator.ecosystems.racket import RACKET_ECOSYSTEM
+from project_validator.facts.structure import Unit
 from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, run_as, temp_project, uses
 
 RACKET = frozenset({"Racket"})
@@ -37,6 +38,32 @@ RACKET_MATRIX = """\
 
 def _ci(*steps: str) -> dict[str, str]:
     return github_job("ubuntu-latest", *steps)
+
+
+class TestPackageTests(unittest.TestCase):
+    """Racket's X-test package (in the `tests` collection, or described as tests for X) is a unit of tests (#189)."""
+
+    def _roles(self, info: str) -> dict[str, str]:
+        files = {
+            "foo-lib/info.rkt": '#lang info\n(define collection "foo")\n',
+            "foo-lib/foo.rkt": "#lang racket/base\n",
+            "foo-test/info.rkt": info,
+            "foo-test/foo.rkt": "#lang racket/base\n(module+ test)\n",
+        }
+        with temp_project(files) as root:
+            return {unit.directory: unit.role for unit in make_context(root).facts.of(Unit)}
+
+    def test_a_package_of_the_tests_collection_or_described_as_tests_is_a_test_unit(self) -> None:
+        for info in (
+            '#lang info\n(define collection "tests")\n',
+            '#lang info\n(define collection \'multi)\n(define pkg-desc "tests for \\"foo\\"")\n',
+        ):
+            with self.subTest(info=info):
+                self.assertEqual(self._roles(info)["foo-test"], "test")
+
+    def test_a_library_for_testing_is_the_product(self) -> None:
+        """A package named -test that is a library (rackunit-style helpers) is told by what it says, not its name."""
+        self.assertEqual(self._roles('#lang info\n(define collection "foo-test")\n')["foo-test"], "product")
 
 
 class RecognitionTests(unittest.TestCase):

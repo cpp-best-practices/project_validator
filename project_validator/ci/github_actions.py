@@ -11,7 +11,7 @@ from dataclasses import dataclass, replace
 
 from project_validator.ci import REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
-from project_validator.facts import ActionStep, CiJob, Command, Fact, Origin, Unknown
+from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.expansion import advised, script_facts
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
@@ -114,14 +114,27 @@ def _with_includes(originals: list[Combination], includes: list[Mapping[str, obj
     return expanded + additions
 
 
-def _runner_os(job: Mapping[str, object], combination: Combination) -> str:
-    if "container" in job:
+def _rendered_or_written(expression: str, known: Known) -> str:
+    """What `${{ expression }}` renders as (`""` too), or the expression as written when that is not known."""
+    value = rendered(expression[3:-2], known)
+    return expression if value is None else value
+
+
+def _runner_os(job: Mapping[str, object], combination: Combination, inputs: Mapping[str, str] = NOTHING) -> str:
+    """The OS a job runs on in a combination: Linux in a container (one whose image is not empty: googletest's and
+    Homebrew's off-Linux entries leave it so), else what `runs-on` names, its expressions over the matrix and the
+    called workflow's `inputs` evaluated (`matrix.os || 'ubuntu-latest'`, `fromJSON(inputs.runs-on)`)."""
+    known = Known(os="unknown", matrix=combination, env={}, inputs=inputs)
+
+    def evaluated(value: object) -> str:
+        text = substitute_matrix(value if isinstance(value, str) else json.dumps(value), combination, missing="")
+        return EXPRESSION.sub(lambda match: _rendered_or_written(match[0], known), text)
+
+    container = job.get("container")
+    image = container.get("image") if isinstance(container, Mapping) else container
+    if container is not None and (not isinstance(image, str) or evaluated(image).strip()):
         return "linux"
-    runner = substitute_matrix(json.dumps(job.get("runs-on", "")), combination)
-    # What is left is an expression over the matrix (`matrix.os || 'ubuntu-latest'`): its value names the runner.
-    known = Known(os="unknown", matrix=combination, env={})
-    runner = EXPRESSION.sub(lambda match: rendered(match[0][3:-2], known) or match[0], runner)
-    found = detect_operating_systems(runner)
+    found = detect_operating_systems(evaluated(job.get("runs-on", "")))
     return found[0] if found else "unknown"
 
 
@@ -186,9 +199,10 @@ def _job_facts(
     workflow: Mapping[str, object],
     caller: str = "",
     load: Load | None = None,
+    inputs: Mapping[str, str] = NOTHING,
 ) -> Iterator[Fact]:
-    """The facts of one job; `caller` names the job that calls the workflow, for a reusable workflow's jobs. `load`
-    reads the local actions its steps use."""
+    """The facts of one job; `caller` names the job that calls the workflow, for a reusable workflow's jobs, and
+    `inputs` are what it passes. `load` reads the local actions its steps use."""
     origin = Origin(path=path, at=("jobs", job_id))
     strategy = job.get("strategy")
     combinations = expand_matrix(strategy.get("matrix") if isinstance(strategy, Mapping) else None)
@@ -200,12 +214,12 @@ def _job_facts(
             reason="it is computed by an expression",
             hides="matrix",
         )
-        unknown = _Combination(origin, f"{caller}{path}:{job_id}", {}, load=load, matrix_known=False)
+        unknown = _Combination(origin, f"{caller}{path}:{job_id}", {}, load=load, matrix_known=False, inputs=inputs)
         yield from unknown.facts(job, workflow)
         return
     for index, combination in enumerate(combinations):
         identity = f"{caller}{path}:{job_id}" + ("" if len(combinations) == 1 else f"[{index}]")
-        yield from _Combination(origin, identity, combination, load=load).facts(job, workflow)
+        yield from _Combination(origin, identity, combination, load=load, inputs=inputs).facts(job, workflow)
 
 
 @dataclass(frozen=True, slots=True)
@@ -227,6 +241,8 @@ class _Combination:
     # Why the steps cannot fail the workflow, when the job (or the step that uses a composite action) continues on
     # error (see `Command.advisory`).
     advisory: str = ""
+    # A called workflow's inputs (see `Known.inputs`).
+    inputs: Mapping[str, str] = NOTHING
 
     def substitute(self, text: str) -> str:
         """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
@@ -276,8 +292,8 @@ class _Combination:
 
     def facts(self, job: Mapping[str, object], workflow: Mapping[str, object]) -> Iterator[Fact]:
         env = {**self.substituted(workflow.get("env")), **self.substituted(job.get("env"))}
-        os = _runner_os(job, self.combination)
-        known = Known(os=os, matrix=self.combination, env=env, matrix_known=self.matrix_known)
+        os = _runner_os(job, self.combination, self.inputs)
+        known = Known(os=os, matrix=self.combination, env=env, matrix_known=self.matrix_known, inputs=self.inputs)
         if self.runs(job.get("if"), known) is False:
             return
         # `defaults: run:` of the workflow, then of the job.
@@ -498,10 +514,12 @@ def _local(uses: object) -> str | None:
     return None
 
 
-def workflow_facts(path: str, document: object, load: Load | None = None, caller: str = "") -> Iterator[Fact]:
+def workflow_facts(
+    path: str, document: object, load: Load | None = None, caller: str = "", inputs: Mapping[str, str] = NOTHING
+) -> Iterator[Fact]:
     """The jobs of a workflow, one per matrix combination, with the commands and actions each one runs. A job that
-    calls a reusable workflow of the same repository runs that workflow's jobs (read with `load`); one in another
-    repository is unknown."""
+    calls a reusable workflow of the same repository runs that workflow's jobs (read with `load`), once per matrix
+    combination of the calling job, with the `inputs` it passes; one in another repository is unknown."""
     if not isinstance(document, Mapping) or not isinstance(jobs := document.get("jobs"), Mapping):
         return
     if not caller and _only_called(document):
@@ -510,13 +528,14 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
         if not isinstance(job, Mapping):
             continue
         if "uses" not in job:
-            yield from _job_facts(path, str(job_id), job, document, caller, load)
+            yield from _job_facts(path, str(job_id), job, document, caller, load, inputs)
             continue
         uses = str(job["uses"]).strip()
         called = _local(uses) or _own(uses, load)
         within_depth = caller.count(" → ") < _CALL_DEPTH
         if called is not None and load is not None and within_depth and (target := load(called)) is not None:
-            yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id} → ")
+            for label, passed in _calls(job, target, inputs):
+                yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id}{label} → ", passed)
             continue
         yield Unknown(
             origin=Origin(path=path, at=("jobs", str(job_id))),
@@ -524,6 +543,29 @@ def workflow_facts(path: str, document: object, load: Load | None = None, caller
             reason=f"it calls the reusable workflow {uses}, which is not read",
             hides="jobs",
         )
+
+
+def _calls(
+    job: Mapping[str, object], called: object, inputs: Mapping[str, str]
+) -> Iterator[tuple[str, dict[str, str]]]:
+    """Each call a job makes of a reusable workflow: one per combination of its matrix (labelled `[index]` when there
+    are several), with the inputs it passes in `with:`, evaluated there, over the called workflow's declared defaults;
+    an input whose value is not known is left out. A matrix computed by an expression makes one call."""
+    strategy = job.get("strategy")
+    combinations = expand_matrix(strategy.get("matrix") if isinstance(strategy, Mapping) else None) or [{}]
+    triggers = called.get("on", called.get(True)) if isinstance(called, Mapping) else None
+    declared = triggers.get("workflow_call") if isinstance(triggers, Mapping) else None
+    defaults = _input_defaults(declared.get("inputs") if isinstance(declared, Mapping) else None)
+    for index, combination in enumerate(combinations):
+        context = _Combination(
+            Origin(path=""), "", combination, known=Known(os="unknown", matrix=combination, env={}, inputs=inputs)
+        )
+        label = "" if len(combinations) == 1 else f"[{index}]"
+        passed = context.substituted(job.get("with"))
+        # A value that is not known (`github.event_name == 'workflow_dispatch' && inputs.x || '24'`) is not the
+        # default either: that input is not known.
+        known = {name: value for name, value in {**defaults, **passed}.items() if "${{" not in passed.get(name, "")}
+        yield label, known
 
 
 def _own(uses: object, load: Load | None) -> str | None:

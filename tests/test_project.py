@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import unittest
 from pathlib import Path, PurePosixPath
+from types import MappingProxyType
 from unittest import mock
 
 from project_validator.checks.data_wellformed import data_wellformed
@@ -157,3 +158,52 @@ class TrackedFilesTests(unittest.TestCase):
         with self.subTest("data yaml"):
             status, _ = self._read("data.yaml", "[" * 3000 + "]" * 3000 + "\n")
             self.assertEqual(status, Status.FAIL)
+
+
+@unittest.skipUnless(shutil.which("git"), "git is not installed")
+class IgnoredFilesTests(unittest.TestCase):
+    """In a git checkout, the files git ignores are not the project's: generated code, a downloaded SDK, mutmut's
+    mutants/ copy. Untracked files git does not ignore (new work) are, and so is an ignored file git tracks (#316)."""
+
+    FILES = MappingProxyType(
+        {
+            ".gitignore": "generated/\n*.log\n",
+            "pyproject.toml": "[project]\nname = 'app'\n",
+            "src/app.py": "",
+            "src/new.py": "",
+            "generated/CMakeLists.txt": "project(gen CXX)\n",
+            "generated/broken.json": '{"broken":',
+            "kept.log": "",
+            "debug.log": "",
+        }
+    )
+
+    def _checkout(self, root: Path) -> None:
+        git(root, "init", "-q")
+        git(root, "add", ".gitignore", "pyproject.toml", "src/app.py")
+        git(root, "add", "-f", "kept.log")
+
+    def test_ignored_files_are_not_listed_but_new_and_tracked_ones_are(self) -> None:
+        with temp_project(self.FILES) as root:
+            self._checkout(root)
+            project = Project(root)
+            self.assertEqual(project.files(), [".gitignore", "kept.log", "pyproject.toml", "src/app.py", "src/new.py"])
+            self.assertEqual(project.files_in("generated", (".json", ".txt")), [])
+            self.assertFalse(project.exists("generated/CMakeLists.txt"))
+            self.assertFalse(project.exists("debug.log"))
+            self.assertTrue(project.exists("kept.log"))
+            self.assertEqual(project.ignored(), ("debug.log", "generated/"))
+
+    def test_an_ignored_directory_adds_no_ecosystem_unit_or_finding(self) -> None:
+        with temp_project(self.FILES) as root:
+            self._checkout(root)
+            context = make_context(root)
+            self.assertNotIn("C++", context.structure.languages)
+            self.assertNotEqual(data_wellformed.run(context).status, Status.FAIL)
+
+    def test_a_project_in_a_directory_of_a_checkout_asks_the_checkout(self) -> None:
+        """A project below the checkout's root (a monorepo member, a corpus fixture) leaves out what git ignores."""
+        files = {f"member/{path}": text for path, text in self.FILES.items() if path != ".gitignore"}
+        with temp_project({".gitignore": "member/generated/\n", **files}) as root:
+            git(root, "init", "-q")
+            self.assertNotIn("generated/CMakeLists.txt", Project(root / "member").files())

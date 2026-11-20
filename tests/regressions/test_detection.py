@@ -127,7 +127,6 @@ class RoleBelowSourceRootTests(unittest.TestCase):
 
 
 class FlutterScaffoldingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #185: Flutter's generated runners make C, C++, Swift and JVM units
     def test_flutter_platform_directories_are_the_flutter_builds_own(self) -> None:
         """The android/, ios/ and linux/ runners beside a pubspec with a `flutter:` section make the project neither
         C, C++, Swift nor JVM, and add no CMake or Xcode build (dart-lang/http, bloc, drift)."""
@@ -137,7 +136,6 @@ class FlutterScaffoldingTests(unittest.TestCase):
 
 
 class NixDevShellTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #187: a dev-shell flake or shell.nix is judged as a Nix build
     def test_a_dev_shell_is_not_a_nix_build_of_the_product(self) -> None:
         """A flake whose only outputs are devShells, or a lone shell.nix, is a developer environment: the Nix checks
         do not fail a project whose real tests run (http4s, cats, dune)."""
@@ -152,7 +150,6 @@ class NixDevShellTests(unittest.TestCase):
 
 
 class RacketMultiPackageTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #189: sibling packages fail "no tests found" when X-test has the tests
     def test_the_test_package_tests_its_siblings(self) -> None:
         """In Racket's X, X-lib, X-test layout the -test package holds the suite CI runs with raco test, so the
         meta-package and the library are tested (typed-racket, koyo, scribble)."""

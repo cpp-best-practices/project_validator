@@ -96,6 +96,8 @@ class Analysis:
     seconds: float
     git: Git = field(default_factory=Git)
     error: ExtractionError | None = None
+    # The paths git ignores, left out of the project (see `Project.ignored`).
+    ignored: tuple[str, ...] = ()
 
     @property
     def name(self) -> str:
@@ -255,6 +257,7 @@ def _finished(
         seconds=time.perf_counter() - started,
         git=git_of(context.project.root),
         error=error,
+        ignored=context.project.ignored(),
     )
 
 

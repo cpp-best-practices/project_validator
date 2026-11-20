@@ -4,8 +4,9 @@ commands it runs: `raco test`, `raco cover` and `raco fmt`."""
 from __future__ import annotations
 
 import re
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
+from project_validator.core import Project
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
@@ -94,10 +95,25 @@ _VARIANTS = (
     (re.compile(r"\"variant\":\s*\"(CS|BC)\""), "variant {}"),
 )
 
+# A package of tests, as Racket's multi-package convention writes it: in the `tests` collection (koyo-test), or
+# described as tests for another package (typed-racket-test, scribble-test).
+_TEST_PACKAGE = re.compile(r'\(define\s+collection\s+"tests"\s*\)|\(define\s+pkg-desc\s+"tests\s+for\b')
+
+
+def _test_packages(project: Project) -> frozenset[str]:
+    """The directories of the project's Racket packages of tests."""
+    return frozenset(
+        str(PurePosixPath(path).parent)
+        for path in project.files()
+        if PurePosixPath(path).name == "info.rkt" and _TEST_PACKAGE.search(project.read_text(path))
+    )
+
+
 RACKET_ECOSYSTEM = Ecosystem(
     label="Racket",
     languages=RACKET,
     build_systems=(RACO_PKG,),
+    test_units=_test_packages,
     source_suffixes={".rkt": "Racket"},
     # Scribble documents and `.rktd` data are files of the ecosystem with no language of their own; `.rktl` is Racket.
     ambiguous_suffixes={".rktl": "Racket", ".scrbl": None, ".rktd": None},

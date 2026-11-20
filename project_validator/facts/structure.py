@@ -307,11 +307,55 @@ def _configuration(path: str) -> bool:
 _EDITOR_SETTINGS = frozenset({".dir-locals.el", ".dir-locals-2.el"})
 
 
-def _sources(project: Project) -> Iterator[SourceFile]:
+def _generated(project: Project) -> frozenset[str]:
+    """The directories an ecosystem's own build generates and builds (see `Ecosystem.generated_directories`)."""
+    return frozenset(
+        directory
+        for ecosystem in registered()
+        if ecosystem.generated_directories is not None
+        for directory in ecosystem.generated_directories(project)
+    )
+
+
+def _environments(project: Project, sources: list[SourceFile]) -> frozenset[str]:
+    """The files that only set up a developer's environment (see `Ecosystem.environment_files`), when the sources
+    of other languages are the project's; none when the environment's language is all there is."""
+    found = {
+        (path, language)
+        for ecosystem in registered()
+        if ecosystem.environment_files is not None
+        for path in ecosystem.environment_files(project)
+        for language in ecosystem.languages
+    }
+    paths = {path for path, _ in found}
+    languages = {language for _, language in found}
+    others = {
+        source.language
+        for source in sources
+        if source.language and not source.vendored and source.path not in paths and source.language not in languages
+    }
+    return frozenset(paths) if others else frozenset()
+
+
+def _test_units(project: Project) -> frozenset[str]:
+    """The units an ecosystem's build files say are units of tests (see `Ecosystem.test_units`)."""
+    return frozenset(
+        directory
+        for ecosystem in registered()
+        if ecosystem.test_units is not None
+        for directory in ecosystem.test_units(project)
+    )
+
+
+def _outside(paths: Iterable[str], directories: frozenset[str]) -> list[str]:
+    return [path for path in paths if not any(within(path, directory) for directory in directories)]
+
+
+def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile]:
     """The sources of each language among the project's files, and of each format among those and the configuration
-    directories' files; not editor settings."""
+    directories' files; not editor settings, nor what an ecosystem's build generates (`generated`)."""
     known = _source_suffixes()
-    for path in project.files(hidden=CONFIGURATION_DIRECTORIES):
+    for path in _outside(project.files(hidden=CONFIGURATION_DIRECTORIES), generated):
         if PurePosixPath(path).name in _EDITOR_SETTINGS:
             continue
         found = known.get(PurePosixPath(path).suffix)
@@ -417,9 +461,11 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
         names = _own(content.languages, ".", named, directory=True)
         languages["."].update(names - known)
         formats_.setdefault(".", set()).update(names & known)
+    tests = _test_units(project)
     for directory in sorted(languages, key=lambda root: (root != ".", root)):
         if (purpose := role(directory, directory=True)) == "vendored":
             continue
+        purpose = "test" if directory in tests else purpose
         yield Unit(
             role=purpose,
             origin=Origin(path=directory),
@@ -429,14 +475,28 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
         )
 
 
+type _Found = list[tuple[BuildFile | None, str]]
+
+
+def _builds_and_sources(
+    project: Project, files: list[str], generated: frozenset[str]
+) -> tuple[_Found, list[SourceFile]]:
+    """The build files and the sources among `files` (see `_build_files`, `_sources`); a developer environment's
+    files (see `_environments`) are neither builds nor sources of a language."""
+    sources = list(_tool_configuration(list(_sources(project, generated))))
+    environments = _environments(project, sources)
+    found = [(build, path) for build, path in _build_files(project, files) if path not in environments]
+    return found, [replace(source, language=None) if source.path in environments else source for source in sources]
+
+
 def structure_facts(project: Project) -> Iterator[Fact]:
     """The build files, the source files with their languages, what the content shows, the ambiguous sources of the
     ecosystems those show, and the unrecognised suffixes."""
-    files = project.files()
+    generated = _generated(project)
+    files = _outside(project.files(), generated)
     named = Selectors.parse(project.auxiliary)
     yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary))
-    found = list(_build_files(project, files))
-    found_sources = list(_tool_configuration(list(_sources(project))))
+    found, found_sources = _builds_and_sources(project, files, generated)
     plain = Facts((*(fact for fact, _ in found if fact is not None), *found_sources, *_content(project)))
     yield from plain
     names = project_languages(plain) | project_formats(plain)

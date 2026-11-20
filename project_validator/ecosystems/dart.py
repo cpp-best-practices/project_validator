@@ -7,9 +7,10 @@ from __future__ import annotations
 import re
 import shlex
 from collections.abc import Mapping
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from project_validator import yaml_support
+from project_validator.core import Project
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
@@ -275,11 +276,29 @@ def _flutter_action(inputs: Mapping[str, str]) -> str | None:
     return f"Flutter {channel if channel in _CHANNELS else 'stable'}"
 
 
+# A pubspec of a Flutter app or plugin (its top-level `flutter:` section, or the Flutter SDK among its dependencies),
+# and the platform runners `flutter create` writes beside it: C++ and CMake, Swift and Xcode, Kotlin and Gradle that
+# the Flutter build owns.
+_FLUTTER_SECTION = re.compile(r"^flutter:|^\s+sdk:\s*flutter\s*$", re.MULTILINE)
+_FLUTTER_PLATFORMS = ("android", "ios", "linux", "macos", "windows", "web")
+
+
+def _flutter_platforms(project: Project) -> frozenset[str]:
+    """The platform runner directories of each Flutter app or plugin in the project."""
+    found: set[str] = set()
+    for path in project.files():
+        pubspec = PurePosixPath(path)
+        if pubspec.name == "pubspec.yaml" and _FLUTTER_SECTION.search(project.read_text(path)):
+            found.update(str(pubspec.parent / platform) for platform in _FLUTTER_PLATFORMS)
+    return frozenset(found)
+
+
 DART_ECOSYSTEM = Ecosystem(
     label="Dart",
     languages=DART,
     build_systems=(PUB,),
     source_suffixes={".dart": "Dart"},
+    generated_directories=_flutter_platforms,
     toolchain=toolchain_patterns(
         "Dart",
         programs=(
