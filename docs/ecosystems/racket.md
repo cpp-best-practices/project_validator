@@ -26,6 +26,10 @@ version, `8.14`.
 `raco fmt -i` rewrites the files, which enforces the style where the job fails on `git diff --exit-code` or commits
 the changes; `raco fmt` without `-i` only prints the formatted code. The formatter has one style.
 
+## `license`
+
+The `license` an `info.rkt` declares, an SPDX expression (`(define license '(Apache-2.0 OR MIT))`).
+
 ## `committed-artifacts`
 
 The `compiled/` directories (`.zo` and `.dep` files) raco writes beside each module.

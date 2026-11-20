@@ -12,6 +12,7 @@ from project_validator.facts.axes import ToolchainAxis, toolchain_versions
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.jobs import Job
+from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import defined_by, starts, when
@@ -26,6 +27,21 @@ def _is_compiled_directory(directory: Path) -> bool:
 
 RACO_PKG = BuildSystem(name="raco pkg", files=("info.rkt",), languages=RACKET, is_build_tree=_is_compiled_directory)
 
+
+# `(define license 'MIT)`, or a list for a compound expression: `(define license '(Apache-2.0 OR MIT))`.
+_LICENSE = re.compile(r"\(define\s+license\s+'(?:\((?P<list>[^()]*(?:\([^()]*\)[^()]*)*)\)|(?P<one>[^\s()]+))")
+
+
+def _info_license(text: str) -> str | None:
+    """The SPDX expression a package's info.rkt declares as its `license`."""
+    if (match := _LICENSE.search(text)) is None:
+        return None
+    return match["one"] or " ".join(match["list"].split()) or None
+
+
+INFO_LICENSE = declared_license_reader(
+    name="info.rkt license", files=("info.rkt",), languages=RACKET, declared=_info_license
+)
 
 # --- Tests and coverage ---------------------------------------------------------------------------------------------
 

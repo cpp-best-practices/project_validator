@@ -7,6 +7,7 @@ from pathlib import Path
 
 from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.coverage import coverage
+from project_validator.checks.license import license_
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.tests_run import tests_run
 from project_validator.checks.vcs_ignore import vcs_ignore
@@ -89,6 +90,11 @@ class RecognitionTests(unittest.TestCase):
         self.assertFalse(uses(RACKET_ECOSYSTEM, "npm test"))
 
 
+def _license(files: dict[str, str]) -> Result:
+    with temp_project(files) as root:
+        return license_.run(make_context(root))
+
+
 class RacketTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
         return run_as(self, selected, files, RACKET_ECOSYSTEM)
@@ -101,6 +107,29 @@ class RacketTests(unittest.TestCase):
         self.assertEqual(self._run(tests_run, {**required, **_ci("raco test tests")}).status, Status.PASS)
         self.assertEqual(self._run(tests_run, {**TESTS, **_ci("raco make main.rkt")}).status, Status.WARN)
         self.assertEqual(self._run(tests_run, _ci("raco test .")).status, Status.FAIL)
+
+    def test_info_rkt_declares_the_license_as_an_spdx_expression(self) -> None:
+        """typed-racket, scribble and koyo declare their license in each package's info.rkt (upstream #189)."""
+        mit = "Permission is hereby granted, free of charge, to any person obtaining a copy\n"
+        apache = (
+            "                                 Apache License\n                           Version 2.0, January 2004\n"
+        )
+        both = {"LICENSE-MIT": mit, "LICENSE-APACHE": apache}
+        cases = {
+            "(define license 'MIT)": ({"LICENSE": mit}, ""),
+            "(define license\n  '(Apache-2.0 OR MIT))": (both, ""),
+            "(define license '(MIT AND (Apache-2.0 OR BSD-3-Clause)))": (both, "MIT AND (Apache-2.0 OR BSD-3-Clause)"),
+            "(define license 'BSD-3-Clause)": ({"LICENSE": mit}, "BSD-3-Clause"),
+            '(define deps \'("base"))': ({"LICENSE": mit}, ""),
+        }
+        for declaration, (licenses, declared) in cases.items():
+            with self.subTest(declaration):
+                result = _license({"info.rkt": f"#lang info\n{declaration}\n", **licenses})
+                if declared:
+                    self.assertEqual(result.status, Status.WARN, result)
+                    self.assertIn(f"info.rkt declares {declared}, but", result.details[0])
+                else:
+                    self.assertEqual(result.status, Status.PASS, result)
 
     def test_raco_cover_measures_expressions(self) -> None:
         for line in ("raco cover .", "raco cover -f codecov -d coverage ."):
