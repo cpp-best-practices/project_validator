@@ -38,6 +38,8 @@ def repository_facts(project: Project, outputs: Iterable[BuildOutput]) -> Iterat
 # Roles whose files are kept on purpose: a test's fixtures (an egg-info, a node_modules tree), docs' samples. (Not
 # examples: a Java package `com/example/` reads as one.)
 _KEPT = frozenset({"test", "docs"})
+# Files that only keep a directory in git (an output directory a tool expects to exist).
+_PLACEHOLDERS = frozenset({".keep", ".gitkeep", ".gitignore", ".keepme", ".placeholder", ".empty"})
 # Documents a directory of sources may hold beside them (a packaging directory's README).
 _DOCUMENTS = frozenset({".md", ".markdown", ".rst", ".txt", ".adoc"})
 # Outputs that are binaries: a file of one of these that is text (a shell wrapper named dune.exe, a Java module
@@ -77,9 +79,11 @@ class _Judge:
 
     def _generated(self, directory: str, languages: frozenset[str]) -> bool:
         """A directory is a build output unless it holds only documents and sources of other languages (a bin/ of
-        shell scripts beside a Go module, Cloud Build's build/*.yaml, an mdBook's book/)."""
+        shell scripts beside a Go module, Cloud Build's build/*.yaml, an mdBook's book/), or only the placeholders
+        that keep it in git (cmake_template's out/coverage/.keep)."""
         inside = [path for path in self.tracked if path.startswith(directory)]
-        return not inside or any(self._owned(path, languages) for path in inside)
+        kept = [path for path in inside if PurePosixPath(path).name not in _PLACEHOLDERS]
+        return not inside or any(self._owned(path, languages) for path in kept)
 
     def _owned(self, path: str, languages: frozenset[str]) -> bool:
         if PurePosixPath(path).suffix.lower() in _DOCUMENTS:
