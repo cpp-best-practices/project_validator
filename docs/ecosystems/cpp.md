@@ -50,7 +50,8 @@ Every OS/compiler combination builds Debug and Release, each with and without sa
 AddressSanitizer and UndefinedBehaviorSanitizer are used in some configuration, whatever the compiler:
 `-fsanitize=address,undefined` (MSVC's `/fsanitize=address`) among the build files' options or on a CI command line,
 cmake_template's `ENABLE_SANITIZER_ADDRESS` and `ENABLE_SANITIZER_UNDEFINED_BEHAVIOR` options (with or without the
-project's prefix) on by default or turned on by CI, or Meson's `b_sanitize`. One of the two warns; neither fails.
+project's prefix) on by default or turned on by CI, Meson's `b_sanitize`, or a job in an R image built with them
+(`rocker/r-devel-san` or a project's own `r-devel-<compiler>-san`: both; `rocker/r-devel-ubsan-clang`: UBSan). One of the two warns; neither fails.
 ThreadSanitizer and MemorySanitizer are not asked, since they exclude the other two in one build.
 
 ## `compiler-warnings`

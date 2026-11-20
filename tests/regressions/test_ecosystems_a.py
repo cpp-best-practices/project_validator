@@ -91,14 +91,19 @@ class RTests(unittest.TestCase):
         result = run_in_layout(self, R_PACKAGE, TESTS_RUN, files)
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #256: sanitizer images are unread
     def test_sanitizer_images_sanitize(self) -> None:
-        """A job in a `rocker/r-devel-san` image runs under ASan and UBSan (data.table)."""
-        files = {
-            "src/shop.c": "",
-            **_gitlab("R CMD build .", "R CMD check shop_0.1.0.tar.gz", image="rocker/r-devel-san"),
-        }
-        _all_pass(self, {"sanitizer image": (R_PACKAGE, SANITIZERS, files)})
+        """A job in a `rocker/r-devel-san` image, or a project's own `r-devel-<compiler>-san` image, runs under ASan
+        and UBSan (data.table)."""
+        for image in ("rocker/r-devel-san", "registry.gitlab.com/rdatatable/dockerfiles/r-devel-clang-san"):
+            files = {"src/shop.c": "", **_gitlab("R CMD build .", "R CMD check shop_0.1.0.tar.gz", image=image)}
+            _all_pass(self, {image: (R_PACKAGE, SANITIZERS, files)})
+        # The plain image builds without sanitizers; the UBSan image with UBSan alone.
+        for image, status in (("rocker/r-devel", Status.FAIL), ("rocker/r-devel-ubsan-clang", Status.WARN)):
+            with self.subTest(image=image):
+                plain = {"src/shop.c": "", **_gitlab("R CMD check .", image=image)}
+                result = run_in_layout(self, R_PACKAGE, SANITIZERS, plain)
+                self.assertEqual(result.status, status, result)
+                self.assertIn("AddressSanitizer", result.message)
 
     def test_a_comment_job_enforces_nothing(self) -> None:
         """styler in an `issue_comment` job gates no push (testthat)."""

@@ -11,7 +11,7 @@ from collections.abc import Iterator
 
 from project_validator.build_systems.cmake.conditions import constant
 from project_validator.ecosystems.model import C_FAMILY
-from project_validator.facts import Facts
+from project_validator.facts import CiJob, Facts
 from project_validator.facts.build import BuildSetting
 from project_validator.facts.flags import flag_requirement
 from project_validator.facts.practices import Evidence, Found, Practice, PracticeName, Wording, always
@@ -55,6 +55,27 @@ def _settings(flag: Flag) -> tuple[Found]:
     return (found,)
 
 
+# The R images whose R and compilers build packages' native code with sanitizers, as CRAN's checks do: rocker's
+# r-devel-san with ASan and UBSan and r-devel-ubsan-clang with UBSan alone, and a project's own built the same way
+# (data.table's `r-devel-clang-san` and `r-devel-gcc-san`).
+_IMAGES = {
+    ASAN.name: re.compile(r"(?:^|/)r-devel(?:-(?:gcc|clang))?-san(?::|$)"),
+    UBSAN.name: re.compile(r"(?:^|/)r-devel(?:-(?:gcc|clang))?-(?:san|ubsan-clang)(?::|$)"),
+}
+
+
+def _images(flag: Flag) -> Found:
+    """The CI jobs that run in an image whose compilers build with the sanitizer."""
+    image = _IMAGES[flag.name]
+
+    def found(facts: Facts, _compiler: str | None) -> Iterator[Evidence]:
+        for job in facts.of(CiJob):
+            if job.image and image.search(job.image):
+                yield Evidence(f"CI ({job.origin.path}: {job.image})")
+
+    return found
+
+
 SANITIZERS = Practice(
     name=PracticeName.SANITIZERS,
     languages=C_FAMILY,
@@ -65,7 +86,7 @@ SANITIZERS = Practice(
                 C_FAMILY,
                 configured=_configured(flag),
                 configured_hints=("SANITIZER", "b_sanitize"),
-                also=_settings(flag),
+                also=(*_settings(flag), _images(flag)),
             )
             for flag in (ASAN, UBSAN)
         )
