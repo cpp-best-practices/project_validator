@@ -19,7 +19,8 @@ _JOBS = "the jobs and commands"
 @dataclass(frozen=True, slots=True, kw_only=True)
 class PlatformAnswer:
     """The language's CI jobs (each described), the platforms (OS, toolchain) they run on with the build
-    configurations each builds, and what of CI was read only heuristically."""
+    configurations each builds, the OSes of the jobs that name no toolchain, how many jobs name one on a runner of
+    unknown OS, and what of CI was read only heuristically."""
 
     language: str
     unit: str
@@ -28,6 +29,8 @@ class PlatformAnswer:
     jobs: tuple[str, ...]
     platforms: tuple[tuple[Platform, frozenset[BuildConfiguration]], ...]
     notes: tuple[str, ...]
+    unversioned: tuple[str, ...] = ()
+    unplaced: int = 0
 
     def as_dict(self) -> dict[str, object]:
         return answer_dict(
@@ -42,16 +45,33 @@ class PlatformAnswer:
         )
 
 
+def _placed(
+    jobs: tuple[Job, ...], axis: ToolchainAxis, facts: Facts
+) -> tuple[dict[Platform, set[BuildConfiguration]], set[str], int]:
+    """The configurations each platform builds, the OSes of the jobs that name no toolchain, and how many jobs name
+    one on a runner of unknown OS."""
+    found: defaultdict[Platform, set[BuildConfiguration]] = defaultdict(set)
+    unversioned: set[str] = set()
+    unplaced = 0
+    for job in jobs:
+        toolchains = axis.toolchains(job, facts)
+        if job.os == "unknown":
+            unplaced += bool(toolchains)
+            continue
+        if not toolchains:
+            unversioned.add(job.os)
+        for toolchain in toolchains:
+            found[(job.os, toolchain)] |= job.configurations
+    return found, unversioned, unplaced
+
+
 def platform_answer(language: str, facts: Facts) -> PlatformAnswer | None:
     """Where CI runs `language`; None when no axis covers it. No CI at all is the answer NO."""
     axis = axis_of(language)
     if axis is None:
         return None
     jobs = facts.of(Job)
-    found: defaultdict[Platform, set[BuildConfiguration]] = defaultdict(set)
-    for job in jobs:
-        for toolchain in axis.toolchains(job, facts) if job.os != "unknown" else ():
-            found[(job.os, toolchain)] |= job.configurations
+    found, unversioned, unplaced = _placed(jobs, axis, facts)
     notes = tuple(
         dict.fromkeys(f"{fact.origin.path}: {fact.reason}" for fact in facts.of(Unknown) if fact.subject == _JOBS)
     )
@@ -63,6 +83,8 @@ def platform_answer(language: str, facts: Facts) -> PlatformAnswer | None:
         jobs=tuple(_described(job, axis, facts) for job in jobs),
         platforms=tuple((platform, frozenset(configurations)) for platform, configurations in sorted(found.items())),
         notes=notes,
+        unversioned=tuple(sorted(unversioned)),
+        unplaced=unplaced,
     )
 
 

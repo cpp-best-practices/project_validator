@@ -87,6 +87,45 @@ class PythonPlatformMatrixTests(unittest.TestCase):
         result = self._run(github_job("ubuntu-latest", "make docs"))
         self.assertIn(f"{GITHUB_WORKFLOW}: build: linux / no Python version", result.details)
         self.assertIn("0 Python version(s) (none)", result.message)
+        # The summary names where those jobs run rather than leave "0 OS(es)" above a detail line that says linux.
+        self.assertIn("jobs on linux set up no Python version", result.message)
+
+    def _workflow(self, **jobs: dict[str, object]) -> dict[str, str]:
+        return {GITHUB_WORKFLOW: json.dumps({"jobs": jobs})}
+
+    def test_oses_of_jobs_without_a_version_are_named_beside_the_count(self) -> None:
+        """actions/checkout: a linux job sets up Node, a three-OS matrix job only runs the action itself. The summary
+        counts linux but names the other OSes, so it does not contradict its own detail lines (upstream #227)."""
+        setup = {"uses": "actions/setup-python@v5", "with": {"python-version": "${{ matrix.python }}"}}
+        files = self._workflow(
+            lint={
+                "runs-on": "ubuntu-latest",
+                "strategy": {"matrix": {"python": ["3.12", "3.13"]}},
+                "steps": [setup, {"run": "python -m pytest"}],
+            },
+            docs={
+                "runs-on": "${{ matrix.os }}",
+                "strategy": {"matrix": {"os": ["ubuntu-latest", "macos-latest", "windows-latest"]}},
+                "steps": [{"run": "make docs"}],
+            },
+        )
+        result = self._run(files)
+        self.assertIn("1 OS(es) (linux)", result.message)
+        self.assertIn("jobs on macos, windows set up no Python version", result.message)
+
+    def test_jobs_on_runners_of_unknown_os_are_counted_in_the_summary(self) -> None:
+        """ghostty: most jobs run on a self-hosted runner whose name says no OS; the summary says how many, so a
+        reader does not conclude the project never tests where those runners are (upstream #227)."""
+        setup = {"uses": "actions/setup-python@v5", "with": {"python-version": "3.13"}}
+        steps = [setup, {"run": "python -m pytest"}]
+        files = self._workflow(
+            a={"runs-on": "namespace-profile-sm", "steps": steps},
+            b={"runs-on": "namespace-profile-lg", "steps": steps},
+            c={"runs-on": "macos-latest", "steps": steps},
+        )
+        result = self._run(files)
+        self.assertIn("1 OS(es) (macos)", result.message)
+        self.assertIn("2 job(s) run on runners of unknown OS", result.message)
 
 
 class RustPlatformMatrixTests(unittest.TestCase):
