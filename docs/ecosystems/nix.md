@@ -45,5 +45,6 @@ A `result` symlink is a build output, never committed.
 
 `coverage` has no tool for Nix expressions. `flake.lock`, committed and updated automatically (`update-flake-lock`,
 Renovate), is a dependency rule (#24). What nix runs in turn is followed (`nix run nixpkgs#statix -- check .` runs
-statix; `nix develop -c <command>` and `nix shell … -c <command>` run the command), except `nix-shell --run "…"`,
+statix; `nix develop -c <command>`, `nix shell … -c <command>` and devenv's `devenv [<options>] shell -- <command>`
+run the command), except `nix-shell --run "…"`,
 whose command is a string.

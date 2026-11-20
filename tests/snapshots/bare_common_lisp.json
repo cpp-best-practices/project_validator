@@ -773,7 +773,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (FiveAM, Parachute, Rove or Prove tests (tests/*.lisp))",
+      "message": "no tests found (FiveAM, Parachute, Rove, Prove or RT tests (tests/*.lisp))",
       "status": "FAIL"
     },
     "top-level-guard": {

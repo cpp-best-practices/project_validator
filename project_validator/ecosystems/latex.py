@@ -12,7 +12,9 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem, toolchain_patterns
+from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.analysis import analysed, analyzer
+from project_validator.facts.arguments import program
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput
@@ -20,20 +22,25 @@ from project_validator.facts.practices import Practice, PracticeName, Requiremen
 from project_validator.facts.settings import file_reader
 from project_validator.facts.shell import ShellCommand, split_script
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import defined_by, starts, when
+from project_validator.facts.tools import Run, defined_by, starts, when
 
 LATEX = "LaTeX"
 LATEX_ONLY = frozenset({LATEX})
 
 _DOCUMENT = re.compile(r"^\s*\\documentclass\b", re.MULTILINE)
 _LATEXMKRC = frozenset({".latexmkrc", "latexmkrc"})
+# l3build's configuration: a `build.lua` that names the `module` it builds (latex3/l3build, every LaTeX3 package).
+_L3BUILD_MODULE = re.compile(r"^\s*module\s*=", re.MULTILINE)
 
 
 def latex_project(project: Project) -> frozenset[str]:
-    """Whether the project holds a LaTeX document: a `.tex` that declares its class, or a latexmk configuration."""
+    """Whether the project holds a LaTeX document: a `.tex` that declares its class, a latexmk configuration, or an
+    l3build configuration (a LaTeX package)."""
     for path in project.files():
         name = PurePosixPath(path).name
         if name in _LATEXMKRC or (name.endswith(".tex") and _DOCUMENT.search(project.read_head(path))):
+            return LATEX_ONLY
+        if name == "build.lua" and _L3BUILD_MODULE.search(project.read_head(path)):
             return LATEX_ONLY
     return frozenset()
 
@@ -42,7 +49,18 @@ LATEX_ECOSYSTEM = Ecosystem(
     label="LaTeX",
     languages=LATEX_ONLY,
     # The sources count once a document is found: a `.tex` alone may be a fragment another project includes.
-    ambiguous_suffixes={".tex": LATEX, ".sty": LATEX, ".cls": LATEX, ".dtx": LATEX, ".ltx": LATEX, ".bib": None},
+    # l3build's tests are `.lvt` (`.pvt` for PDF output) files, checked against the `.tlg` logs beside them.
+    ambiguous_suffixes={
+        ".tex": LATEX,
+        ".sty": LATEX,
+        ".cls": LATEX,
+        ".dtx": LATEX,
+        ".ltx": LATEX,
+        ".lvt": LATEX,
+        ".pvt": LATEX,
+        ".bib": None,
+        ".tlg": None,
+    },
     detect=latex_project,
     toolchain=toolchain_patterns(
         LATEX,
@@ -58,6 +76,7 @@ LATEX_ECOSYSTEM = Ecosystem(
             "latexindent",
             "bibtex",
             "biber",
+            "l3build",
         ),
         actions=("latex-action", "setup-texlive-action"),
     ),
@@ -78,6 +97,32 @@ COMPILE = test_runner(
     how="latexmk -pdf main.tex (or pdflatex, xelatex, lualatex, tectonic; xu-cheng/latex-action)",
     runs=when(starts(("latexmk",), ("pdflatex",), ("xelatex",), ("lualatex",), ("tectonic",)), tested),
     tests=tests_of(DOCUMENTS.name),
+)
+
+L3BUILD_TESTS = TestFiles(
+    name="l3build tests (*.lvt, *.pvt)",
+    languages=LATEX_ONLY,
+    path=re.compile(r"\.[lp]vt$"),
+)
+
+
+def _l3build_check(command: Command, _facts: Facts) -> Run | None:
+    """`l3build check`, or the script run by its interpreter (`texlua l3build.lua check`, l3build's own CI): it runs
+    the `.lvt` tests and compares their logs with the `.tlg` files, failing on a difference."""
+    argv = resolved(command)
+    if program(argv) == "texlua" and argv[1:2] and argv[1].endswith("l3build.lua"):
+        argv = argv[1:]
+    elif program(argv) != "l3build":
+        return None
+    return tested() if argv[1:2] == ("check",) else None
+
+
+L3BUILD = test_runner(
+    name="l3build",
+    languages=LATEX_ONLY,
+    how="l3build check",
+    runs=_l3build_check,
+    tests=tests_of(L3BUILD_TESTS.name),
 )
 
 

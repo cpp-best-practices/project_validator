@@ -496,6 +496,13 @@
               ]
             },
             "known": {
+              "l3build": {
+                "can": {
+                  "runs": "l3build check"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "latexmk": {
                 "can": {
                   "runs": "latexmk -pdf main.tex (or pdflatex, xelatex, lualatex, tectonic; xu-cheng/latex-action)"
@@ -766,7 +773,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "documents (*.tex with a \\documentclass): 1 file(s), but no CI configuration runs latexmk -pdf main.tex (or pdflatex, xelatex, lualatex, tectonic; xu-cheng/latex-action)",
+      "message": "documents (*.tex with a \\documentclass): 1 file(s), but no CI configuration runs latexmk -pdf main.tex (or pdflatex, xelatex, lualatex, tectonic; xu-cheng/latex-action) or l3build check",
       "status": "WARN"
     },
     "top-level-guard": {

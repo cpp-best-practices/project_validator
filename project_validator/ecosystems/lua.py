@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import re
 import shlex
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
@@ -166,6 +166,21 @@ LUAU_ANALYZE = type_checker(
     checks=when(starts(("luau-analyze",)), lambda: type_checked(strict=False)),
 )
 
+
+# Teal, Lua with types: `tl check` type-checks `.tl` sources, and fails on an error; `tl gen --check` checks them as it
+# writes the Lua beside them (luarocks/luarocks).
+def _teal_checks(command: Command) -> bool:
+    argv = resolved(command)
+    return bool(starts_with(argv, ("tl", "check"))) or (bool(starts_with(argv, ("tl", "gen"))) and "--check" in argv)
+
+
+TEAL = type_checker(
+    name="tl",
+    languages=LUA,
+    can={Strictness.CHECKS: "tl check <file.tl> (Teal)"},
+    checks=lambda command, _facts: type_checked(strict=False) if _teal_checks(command) else None,
+)
+
 # semgrep reads Lua; CodeQL and GitLab SAST do not.
 SECURITY_SCANNERS = multi_language_scanners(LUA)
 
@@ -197,11 +212,22 @@ LUACOV_OUTPUT = BuildOutput(
 # leafo/gh-actions-lua's `luaVersion`: `5.4`, `5.1.5`, `luajit-2.1`, `luajit-openresty`.
 _LUA_VERSION = r"(5\.\d(?:\.\d)?|luajit(?:-[\w.-]+)?)"
 
+
+def _setup_neovim(inputs: Mapping[str, str]) -> str | None:
+    """rhysd/action-setup-vim with `neovim: true`: a Neovim plugin's Lua runs in the Neovim its `version` names
+    (`stable`, `nightly`, `v0.10.0`; stable when not given). Without it, the action sets up Vim, which runs no Lua."""
+    if str(inputs.get("neovim", "")).lower() != "true":
+        return None
+    version = inputs.get("version", "")
+    return f"Neovim {version if version and '${{' not in version else 'stable'}"
+
+
 LUA_ECOSYSTEM = Ecosystem(
     label="Lua",
     languages=LUA,
     build_systems=(LUAROCKS,),
-    source_suffixes={".lua": "Lua", ".luau": "Lua"},
+    # Teal's `.tl` sources are Lua with types.
+    source_suffixes={".lua": "Lua", ".luau": "Lua", ".tl": "Lua"},
     toolchain=toolchain_patterns(
         "Lua",
         version=_LUA_VERSION,
@@ -210,8 +236,9 @@ LUA_ECOSYSTEM = Ecosystem(
         # The tools that run on a Lua interpreter; StyLua, selene and the language server are binaries of their own.
         programs=("lua", "busted", "luarocks", "luacheck", "luacov"),
         actions=("gh-actions-lua",),
+        steps=(("rhysd/action-setup-vim", _setup_neovim),),
     ),
-    ci_programs=(("stylua",), ("selene",), ("lua-language-server",), ("luau-analyze",)),
+    ci_programs=(("stylua",), ("selene",), ("lua-language-server",), ("luau-analyze",), ("tl", "check")),
 )
 
 LUA_VERSIONS = versions_axis("Lua version", "Lua", LUA)

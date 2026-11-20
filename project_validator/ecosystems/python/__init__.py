@@ -383,6 +383,11 @@ SECURITY_SCANNERS = (
     ),
     *multi_language_scanners(PYTHON_ONLY),
 )
+# py-actions/flake8 runs flake8 over its `path` (the root by default) with its `args` (llama.cpp).
+FLAKE8_ACTION = Action(
+    name="py-actions/flake8",
+    runs=lambda inputs: (("flake8", *shlex.split(inputs.get("args", "")), inputs.get("path", ".")),),
+)
 BANDIT_ACTION = Action(name="PyCQA/bandit-action", runs=lambda _inputs: (("bandit", "-r", "."),))
 
 AUDITORS = (

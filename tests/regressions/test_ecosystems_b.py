@@ -99,7 +99,6 @@ class LuaAndLatexTests(unittest.TestCase):
                 result = _run(coverage, "Lua sources", {**PLENARY_SPEC, **files})
                 self.assertEqual(result.status, Status.FAIL, result)
 
-    @unittest.expectedFailure  # upstream #268: a Neovim plugin's matrix of Neovim versions counts no toolchain
     def test_neovim_versions_are_the_toolchain_axis_of_a_plugin(self) -> None:
         """`rhysd/action-setup-vim` with `neovim: true` and `version: ${{ matrix.rev }}` runs the plugin's tests on
         each Neovim version: 2 OSes x 2 versions (telescope.nvim), not "no Lua version" everywhere."""
@@ -113,25 +112,32 @@ class LuaAndLatexTests(unittest.TestCase):
             with self.subTest(version=version):
                 self.assertIn(version, result.message)
 
-    @unittest.expectedFailure  # upstream #268: l3build (`l3build check`, .lvt/.tlg) is not LaTeX's test runner
     def test_l3build_check_runs_a_latex_packages_regression_tests(self) -> None:
         """`l3build check` (or `texlua l3build.lua check`) after `zauguin/install-texlive` runs the `.lvt` tests
-        against their `.tlg` expectations (latex3/l3build)."""
+        against their `.tlg` expectations (latex3/l3build). (`build.lua` also makes a Lua unit of the package, which
+        l3build itself is: whether a tool's configuration adds its language is #182.)"""
         for line in ("run: l3build check", "run: texlua l3build.lua check -q -H --show-log-on-error"):
             with self.subTest(line=line):
                 files = {**L3BUILD_TESTS, **github_steps("uses: zauguin/install-texlive@v4", line)}
                 result = _run(tests_run, "LaTeX document", files)
-                self.assertEqual(result.status, Status.PASS, result)
+                [latex] = (place.result for place in result.places if place.ecosystem == "LaTeX")
+                self.assertEqual(latex.status, Status.PASS, result)
+        for line in ("run: l3build doc", "run: make check"):
+            with self.subTest(line=line):
+                unrun = _run(tests_run, "LaTeX document", {**L3BUILD_TESTS, **github_steps(line)})
+                [latex] = (place.result for place in unrun.places if place.ecosystem == "LaTeX")
+                self.assertNotEqual(latex.status, Status.PASS, unrun)
 
-    @unittest.expectedFailure  # upstream #268: Teal (.tl sources, `tl check`) is unknown to the Lua profile
     def test_teal_sources_are_recognised_and_tl_check_type_checks_them(self) -> None:
         """`.tl` files beside `tlconfig.lua` are the project's (Teal) sources, not an unrecognised suffix, and
         `tl check` is their type checker (luarocks/luarocks)."""
         languages, unrecognised = _recognised({**TEAL_SOURCES, "src/shop.lua": "return {}\n"})
         self.assertTrue(languages, "no language recognised")
         self.assertNotIn(".tl", unrecognised)
-        result = _run(type_checking, "Lua sources", {**TEAL_SOURCES, **github_job(CI, "tl check src/shop.tl")})
-        self.assertEqual(result.status, Status.PASS, result)
+        for line in ("tl check src/shop.tl", "tl gen --check -I types src/shop.tl -o src/shop.lua"):
+            with self.subTest(line=line):
+                result = _run(type_checking, "Lua sources", {**TEAL_SOURCES, **github_job(CI, line)})
+                self.assertEqual(result.status, Status.PASS, result)
 
 
 PERL_TEST = {"t/basic.t": "use Test::More;\nok(1);\ndone_testing;\n"}
@@ -383,16 +389,24 @@ class NixTests(unittest.TestCase):
                 result = _run(check, NIX, {**TREEFMT, **github_job(CI, "nix fmt -- --ci")})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #285: `devenv shell -- cmd` is no launcher, devenv git-hooks unknown
-    def test_devenv_shell_runs_the_command_and_its_git_hooks_are_preks(self) -> None:
-        """`devenv shell -- cargo nextest run` runs the tests, and `devenv shell -- prek run -a` runs the hooks
-        `devenv.nix` enables (rustfmt), which is the formatter checking (cachix/devenv)."""
-        tests = _run(tests_run, "Cargo Rust", {**RUST_TEST, **github_job(CI, "devenv shell -- cargo nextest run")})
-        with self.subTest(case="nextest"):
-            self.assertEqual(tests.status, Status.PASS, tests)
+    def test_devenv_shell_runs_the_command(self) -> None:
+        """`devenv shell -- cargo nextest run` (or without `--`) runs the tests in devenv's environment
+        (cachix/devenv)."""
+        for line in (
+            "devenv shell -- cargo nextest run",
+            "devenv shell cargo nextest run",
+            "${{ steps.build.outputs.path }}/bin/devenv --system x86_64-linux shell -- cargo nextest run -j 4",
+        ):
+            with self.subTest(line=line):
+                tests = _run(tests_run, "Cargo Rust", {**RUST_TEST, **github_job(CI, line)})
+                self.assertEqual(tests.status, Status.PASS, tests)
+
+    @unittest.expectedFailure  # upstream #285: devenv's git-hooks are unknown
+    def test_devenv_git_hooks_are_preks(self) -> None:
+        """`devenv shell -- prek run -a` runs the hooks `devenv.nix` enables (rustfmt), which is the formatter checking
+        (cachix/devenv)."""
         hooks = _run(code_formatting, "Cargo Rust", {**DEVENV_HOOKS, **github_job(CI, "devenv shell -- prek run -a")})
-        with self.subTest(case="prek"):
-            self.assertIn("Rust: CI enforces the rustfmt style", hooks.message)
+        self.assertIn("Rust: CI enforces the rustfmt style", hooks.message)
 
 
 DUNE = "dune project"

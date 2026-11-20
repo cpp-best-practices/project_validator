@@ -726,6 +726,13 @@
                 },
                 "needs_definition": false,
                 "required": false
+              },
+              "tl": {
+                "can": {
+                  "checks": "tl check <file.tl> (Teal)"
+                },
+                "needs_definition": false,
+                "required": false
               }
             },
             "language": "Lua",

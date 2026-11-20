@@ -91,14 +91,19 @@ class RTests(unittest.TestCase):
         result = run_in_layout(self, R_PACKAGE, TESTS_RUN, files)
         self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #256: sanitizer images are unread
     def test_sanitizer_images_sanitize(self) -> None:
-        """A job in a `rocker/r-devel-san` image runs under ASan and UBSan (data.table)."""
-        files = {
-            "src/shop.c": "",
-            **_gitlab("R CMD build .", "R CMD check shop_0.1.0.tar.gz", image="rocker/r-devel-san"),
-        }
-        _all_pass(self, {"sanitizer image": (R_PACKAGE, SANITIZERS, files)})
+        """A job in a `rocker/r-devel-san` image, or a project's own `r-devel-<compiler>-san` image, runs under ASan
+        and UBSan (data.table)."""
+        for image in ("rocker/r-devel-san", "registry.gitlab.com/rdatatable/dockerfiles/r-devel-clang-san"):
+            files = {"src/shop.c": "", **_gitlab("R CMD build .", "R CMD check shop_0.1.0.tar.gz", image=image)}
+            _all_pass(self, {image: (R_PACKAGE, SANITIZERS, files)})
+        # The plain image builds without sanitizers; the UBSan image with UBSan alone.
+        for image, status in (("rocker/r-devel", Status.FAIL), ("rocker/r-devel-ubsan-clang", Status.WARN)):
+            with self.subTest(image=image):
+                plain = {"src/shop.c": "", **_gitlab("R CMD check .", image=image)}
+                result = run_in_layout(self, R_PACKAGE, SANITIZERS, plain)
+                self.assertEqual(result.status, status, result)
+                self.assertIn("AddressSanitizer", result.message)
 
     def test_a_comment_job_enforces_nothing(self) -> None:
         """styler in an `issue_comment` job gates no push (testthat)."""
@@ -139,16 +144,18 @@ class RubyTests(unittest.TestCase):
             },
         )
 
-    @unittest.expectedFailure  # upstream #257: Cucumber features and runner scripts are unread
-    def test_cucumber_features_and_runner_scripts_are_tests(self) -> None:
-        """Cucumber features are tests (rspec); `test/runner` (puma) runs Minitest."""
-        _all_pass(
-            self,
-            {
-                "cucumber": (BUNDLER, TESTS_RUN, {**FEATURE, **_ci("bundle exec cucumber")}),
-                "test/runner": (BUNDLER, TESTS_RUN, {**RUNNER, **MINITEST, **_ci("test/runner --verbose")}),
-            },
-        )
+    def test_cucumber_features_are_tests_cucumber_runs(self) -> None:
+        """Cucumber features under `features/` are tests, and `cucumber` runs them (rspec); a `.feature` file elsewhere
+        is not one."""
+        _all_pass(self, {"cucumber": (BUNDLER, TESTS_RUN, {**FEATURE, **_ci("bundle exec cucumber")})})
+        stray = {"docs/shop.feature": FEATURE["features/shop.feature"], **_ci("bundle exec cucumber")}
+        result = run_in_layout(self, BUNDLER, TESTS_RUN, stray)
+        self.assertEqual(result.status, Status.FAIL, result)
+
+    @unittest.expectedFailure  # upstream #257: a project's runner script is unread
+    def test_a_runner_script_runs_the_tests(self) -> None:
+        """`test/runner` (puma), a Ruby script that requires minitest/autorun and the test files, runs Minitest."""
+        _all_pass(self, {"test/runner": (BUNDLER, TESTS_RUN, {**RUNNER, **MINITEST, **_ci("test/runner --verbose")})})
 
 
 # --- Dart (#258) -----------------------------------------------------------------------------------------------------
@@ -220,12 +227,19 @@ class GoTests(unittest.TestCase):
 
 
 class MoleculeVerifierTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #261: a molecule scenario's testinfra verifier is unread
     def test_molecule_runs_its_scenarios_testinfra_tests(self) -> None:
-        """A molecule scenario's `tests/test_*.py` is run by `molecule test` (kubespray)."""
-        files = {**SCENARIO, **VERIFIER, **_ci("molecule test")}
-        result = run_in_layout(self, ANSIBLE_PLAYBOOK, TESTS_RUN, files)
+        """A molecule scenario whose verifier is testinfra has its `tests/test_*.py` run by `molecule test` (kubespray);
+        with molecule's default verifier (Ansible), nothing runs them."""
+        testinfra = {"molecule/default/molecule.yml": SCENARIO_TEXT + "verifier:\n  name: testinfra\n"}
+        result = run_in_layout(self, ANSIBLE_PLAYBOOK, TESTS_RUN, {**testinfra, **VERIFIER, **_ci("molecule test")})
         self.assertEqual(result.status, Status.PASS, result)
+        # A molecule.yml outside molecule/<scenario>/ is no scenario's.
+        stray = {"docs/molecule.yml": "verifier:\n  name: testinfra\n"}
+        result = run_in_layout(
+            self, ANSIBLE_PLAYBOOK, TESTS_RUN, {**SCENARIO, **stray, **VERIFIER, **_ci("molecule test")}
+        )
+        self.assertEqual(result.status, Status.WARN, result)
+        self.assertNotIn("testinfra", result.message)  # a Python project is not told to adopt molecule
 
 
 class AntsibullNoxTests(unittest.TestCase):
@@ -266,7 +280,8 @@ UNITTESTS = {
 }
 # prometheus-community/helm-charts: chart-testing runs helm-unittest on every changed chart.
 CT_CONFIG = {"ct.yaml": "additional-commands:\n  - helm unittest --strict --file 'unittests/**/*.yaml' {{ .Path }}\n"}
-SCENARIO = {"molecule/default/molecule.yml": "driver:\n  name: docker\nplatforms:\n  - name: debian\n"}
+SCENARIO_TEXT = "driver:\n  name: docker\nplatforms:\n  - name: debian\n"
+SCENARIO = {"molecule/default/molecule.yml": SCENARIO_TEXT}
 # kubespray: molecule's verify stage runs the scenario's testinfra tests.
 VERIFIER = {
     "molecule/default/tests/test_default.py": "def test_docker_runs(host):\n"
@@ -320,7 +335,17 @@ MIN_MAX_WORKFLOW: dict[str, object] = {
                 },
                 {"run": "terraform validate"},
             ],
-        }
+        },
+        "max": {
+            "runs-on": CI,
+            "steps": [
+                {"id": "minMax", "uses": "clowdhaus/terraform-min-max@v1"},
+                {
+                    "uses": "clowdhaus/terraform-composite-actions/pre-commit@v1.14.0",
+                    "with": {"terraform-version": "${{ steps.minMax.outputs.maxVersion }}"},
+                },
+            ],
+        },
     }
 }
 
@@ -350,11 +375,12 @@ class TerraformTests(unittest.TestCase):
         ):
             self.assertEqual(make_context(root).structure.unrecognised_suffixes, ())
 
-    @unittest.expectedFailure  # upstream #262: terraform-min-max's versions are unread
-    def test_terraform_min_max_versions_are_two_versions_or_unknown(self) -> None:
-        """A terraform-min-max version is two versions or unknown, not none (terraform-aws-vpc)."""
+    def test_terraform_min_max_versions_are_two_versions(self) -> None:
+        """clowdhaus/terraform-min-max's `minVersion` and `maxVersion` outputs, given to setup-terraform or to the
+        clowdhaus pre-commit composite action, are the oldest Terraform the `required_version` constraint allows and
+        the latest: two versions, not none (terraform-aws-vpc)."""
         result = run_in_layout(self, TERRAFORM, PLATFORM_MATRIX, _workflow(MIN_MAX_WORKFLOW))
-        self.assertTrue(result.status is Status.ERROR or "2 Terraform version(s)" in result.message, result)
+        self.assertIn("2 Terraform version(s) (latest required_version, oldest required_version)", result.message)
 
 
 # --- Typst (#263) ----------------------------------------------------------------------------------------------------

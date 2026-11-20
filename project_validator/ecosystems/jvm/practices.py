@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import re
 
-from project_validator.ecosystems.jvm import GRADLE_BUILD_FILES, JAVA, JVM_LANGUAGES, KOTLIN, POM
+from project_validator.ecosystems.jvm import JAVA, JVM_LANGUAGES, KOTLIN, POM
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.text import Pattern
 
@@ -29,9 +29,11 @@ _JVM_WARNINGS_AS_ERRORS = (
 )
 
 
+# Every Gradle script: a convention plugin (`buildSrc/src/main/kotlin/my.java-conventions.gradle.kts`, junit5's
+# `gradle/plugins/`) sets the compiler options of the projects that apply it.
 JVM_WARNING_SETTINGS = requirement_reader(
     "JVM warning settings",
-    (POM, *GRADLE_BUILD_FILES),
+    (POM, "*.gradle", "*.gradle.kts"),
     (required(XLINT), required(KOTLIN_WARNINGS), *_JVM_WARNINGS_AS_ERRORS),
 )
 

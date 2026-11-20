@@ -12,6 +12,8 @@ from project_validator.checks.action_pinning import action_pinning
 from project_validator.checks.ci_lint import ci_lint
 from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.platform_matrix import platform_matrix
+from project_validator.checks.static_analysis import static_analysis
+from project_validator.checks.tests_run import tests_run
 from project_validator.core import Check, Result, Status
 from tests.support import GITHUB_WORKFLOW, ci_jobs, make_context, temp_project
 
@@ -310,3 +312,37 @@ class ToolchainVersionCountingTests(unittest.TestCase):
             with self.subTest(label):
                 result = _run(platform_matrix, {**project, **_workflow(jobs)})
                 self.assertIn(expected, result.message)
+
+
+class WrapperActionTests(unittest.TestCase):
+    """Actions that run a tool the validator knows (upstream #224)."""
+
+    def _result(self, check: Check, files: Mapping[str, str]) -> Result:
+        with temp_project(files) as root:
+            return check.run(make_context(root))
+
+    def test_actions_run_the_tools_they_wrap(self) -> None:
+        """py-actions/flake8 runs flake8 (llama.cpp), differential-shellcheck runs shellcheck on the changed scripts
+        (rbenv, bash-it), and coactions/setup-xvfb runs its `run` input under a virtual display (tinymist)."""
+        python_test = {"tests/test_x.py": "def test_x():\n    assert True\n"}
+        cases = {
+            "flake8": (
+                static_analysis,
+                {**PYTHON_PROJECT, ".flake8": "[flake8]\n"},
+                _setup("py-actions/flake8@v2", {}),
+            ),
+            "shellcheck": (
+                static_analysis,
+                {"bin/run.sh": "#!/bin/sh\necho hi\n"},
+                _setup("redhat-plumbers-in-action/differential-shellcheck@v5", {}),
+            ),
+            "xvfb": (
+                tests_run,
+                {**PYTHON_PROJECT, **python_test},
+                _setup("coactions/setup-xvfb@v1", {"run": "python -m pytest tests"}),
+            ),
+        }
+        for name, (check, files, step) in cases.items():
+            with self.subTest(action=name):
+                result = self._result(check, {**files, **_workflow({"lint": _job(step)})})
+                self.assertEqual(result.status, Status.PASS, result)

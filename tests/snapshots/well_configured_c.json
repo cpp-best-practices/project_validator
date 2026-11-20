@@ -358,10 +358,25 @@
               ]
             },
             "known": {
+              "astyle": {
+                "can": {
+                  "apply": ""
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "clang-format": {
                 "can": {
                   "apply": "clang-format -i",
                   "check": "clang-format --dry-run -Werror"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "uncrustify": {
+                "can": {
+                  "apply": "",
+                  "check": ""
                 },
                 "needs_definition": true,
                 "required": false

@@ -7,8 +7,8 @@ import re
 from collections.abc import Iterator
 from pathlib import PurePosixPath
 
-from project_validator.ecosystems.ruby import RUBY_ONLY, TEST_HELPERS
-from project_validator.facts import Command, Facts, Setting, resolved
+from project_validator.ecosystems.ruby import RUBY_LANGUAGE, RUBY_ONLY, TEST_HELPERS
+from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
@@ -18,7 +18,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, yaml_settings
-from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
+from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, combined, defined_by, either, starts, when
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
@@ -171,7 +171,7 @@ RUBY_TEST_FILES = TestFiles(
 )
 
 
-_RUBY_RUNNERS = frozenset({"rspec", "m", "turbo_tests", "parallel_rspec", "cucumber"})
+_RUBY_RUNNERS = frozenset({"rspec", "m", "turbo_tests", "parallel_rspec"})
 
 
 def _ruby_tests(command: Command, facts: Facts) -> Run | None:
@@ -194,6 +194,25 @@ RUBY_TESTS = test_runner(
     runs=_ruby_tests,
     tests=tests_of(RUBY_TEST_FILES.name),
     reads=("Rake",),
+)
+
+# Cucumber's features: Gherkin files under `features/`, whose steps the Ruby step definitions beside them implement.
+CUCUMBER_FEATURES = "Cucumber features (features/**/*.feature)"
+_GHERKIN = re.compile(r"^\s*(?:Feature|Scenario(?: Outline)?):", re.MULTILINE)
+
+
+def _read_feature(path: str, text: str) -> Iterator[Fact]:
+    if "features" in PurePosixPath(path).parts[:-1] and _GHERKIN.search(text):
+        yield TestFile(origin=Origin(path=path), language=RUBY_LANGUAGE, kind=CUCUMBER_FEATURES)
+
+
+CUCUMBER_FEATURE_FILES = SettingsReader(name="Cucumber features", files=("*.feature",), read=_read_feature)
+CUCUMBER = test_runner(
+    name="cucumber",
+    languages=RUBY_ONLY,
+    how="cucumber",
+    runs=when(starts(("cucumber",)), tested),
+    tests=tests_of(CUCUMBER_FEATURES),
 )
 
 

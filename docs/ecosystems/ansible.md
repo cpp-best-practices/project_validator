@@ -13,7 +13,8 @@ A CI job works with the ecosystem when it runs `ansible`, `ansible-playbook`, `a
 
 molecule scenarios (`molecule/<scenario>/molecule.yml`) that `molecule test` runs, or a collection's integration
 targets (`tests/integration/targets/<target>/tasks/main.yml`) that `ansible-test integration` (or `ansible-test
-units`) runs.
+units`) runs. A scenario whose verifier is testinfra (`verifier: name: testinfra`) has Python tests
+(`molecule/<scenario>/tests/test_*.py`): `molecule test` runs them, which is the Python profile's tests-run.
 
 ## `static-analysis`
 

@@ -791,6 +791,13 @@
               ]
             },
             "known": {
+              "cucumber": {
+                "can": {
+                  "runs": "cucumber"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "rspec, rake test or rails test": {
                 "can": {
                   "runs": "rspec, rake test or rails test"

@@ -53,8 +53,8 @@ lizard runs in CI with a length limit.
 
 ## `static-analysis`
 
-`ruff check`, pylint or flake8, in CI or a pre-commit hook CI runs (pre-commit.ci, or `pre-commit run` in a
-job).
+`ruff check`, pylint or flake8 (also through the `py-actions/flake8` action), in CI or a pre-commit hook CI runs
+(pre-commit.ci, or `pre-commit run` in a job).
 
 ## `security-scanning`
 

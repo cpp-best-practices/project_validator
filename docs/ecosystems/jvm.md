@@ -28,7 +28,8 @@ The toolchains are JDK versions.
 
 ## `compiler-warnings`
 
-javac's `-Xlint:all`; a Kotlin-only project passes on Kotlin's default warnings.
+javac's `-Xlint:all`; a Kotlin-only project passes on Kotlin's default warnings. The settings are read from the
+`pom.xml` and every Gradle script, convention plugins included (`buildSrc/src/main/kotlin/*.gradle.kts`).
 
 ## `warnings-as-errors`
 

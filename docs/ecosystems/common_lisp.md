@@ -10,9 +10,9 @@ read as the words of the command; 40ants/run-tests stands for the code it is giv
 
 ## `tests-run`
 
-FiveAM, Parachute, Rove or Prove tests in the test system's files (`tests/*.lisp`, `t/`, `*-tests.lisp`), run by the
-system's `test-op` (`asdf:test-system`), a framework's runner called from Lisp (`rove:run`, `fiveam:run!`), `rove
-shop.asd`, or 40ants/run-tests.
+FiveAM, Parachute, Rove, Prove or RT (`rtest:deftest`) tests in the test system's files (`tests/*.lisp`, `t/`,
+`testing/`, `*-tests.lisp`), run by the system's `test-op` (`asdf:test-system`), a framework's runner called from Lisp
+(`rove:run`, `fiveam:run!`, `rt:do-tests`), `rove shop.asd`, or 40ants/run-tests.
 
 ## `coverage`
 

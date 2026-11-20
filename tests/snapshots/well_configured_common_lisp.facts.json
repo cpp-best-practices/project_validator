@@ -117,7 +117,7 @@
       "unread": null
     },
     {
-      "kind": "FiveAM, Parachute, Rove or Prove tests (tests/*.lisp)",
+      "kind": "FiveAM, Parachute, Rove, Prove or RT tests (tests/*.lisp)",
       "language": "Common Lisp",
       "origin": "tests/main.lisp"
     },

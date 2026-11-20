@@ -6,7 +6,7 @@ import unittest
 
 from project_validator.core import Result, Status
 from project_validator.ecosystems.ruby import BUNDLE, BUNDLER_PACKAGES, RUBY
-from project_validator.ecosystems.ruby.tools import RUBY_TESTS
+from project_validator.ecosystems.ruby.tools import CUCUMBER, RUBY_TESTS
 from project_validator.facts import Facts
 from tests.support import GITHUB_WORKFLOW, checks_named, github_job, run_as, run_in_layout
 from tests.support import command as shell_command
@@ -231,7 +231,6 @@ class RubyTestRunnerClaimTests(unittest.TestCase):
             "m test/models/user_test.rb",
             "turbo_tests",
             "parallel_rspec spec",
-            "cucumber",
             "rails test",
             "ruby -Itest test/models/user_test.rb",
             "ruby test/test_user.rb",
@@ -240,6 +239,10 @@ class RubyTestRunnerClaimTests(unittest.TestCase):
                 run = RUBY_TESTS.claims(shell_command(line), Facts())
                 self.assertIsNotNone(run)
                 self.assertFalse(run and run.heuristic)
+
+    def test_cucumber_runs_the_features(self) -> None:
+        self.assertIsNotNone(CUCUMBER.claims(shell_command("cucumber --format progress"), Facts()))
+        self.assertIsNone(CUCUMBER.claims(shell_command("rspec"), Facts()))
 
     def test_rake_test_and_spec_are_heuristic_test_runs(self) -> None:
         for line in ("rake test", "rake spec", "rake test TEST=test/x_test.rb"):

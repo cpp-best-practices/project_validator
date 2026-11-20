@@ -59,3 +59,7 @@ The toolchains are Terraform or OpenTofu versions: `terraform_version` given to 
 `tofu_version` given to `opentofu/setup-opentofu`, or the tag of a `hashicorp/terraform` or `ghcr.io/opentofu/opentofu`
 image. A job that runs `terraform` (or tflint, checkov, tfsec, terrascan, KICS, `trivy config`) without naming a
 version uses the runner's. A matrix of cloud providers or environments is not a platform.
+
+clowdhaus/terraform-min-max reads the `required_version` constraint: its `minVersion` and `maxVersion` outputs, given
+to `hashicorp/setup-terraform` or to the `clowdhaus/terraform-composite-actions/pre-commit` action's
+`terraform-version`, are two versions, the oldest the constraint allows and the latest.

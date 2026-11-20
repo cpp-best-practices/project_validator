@@ -146,11 +146,21 @@ class NixTests(unittest.TestCase):
             "nix develop -c statix check .",
             "nix develop .#ci --command statix check .",
             "nix shell nixpkgs#statix -c statix check .",
+            "devenv -s x86_64-linux shell -- statix check .",
         ):
             with self.subTest(line=line):
                 self.assertEqual(self._run(static_analysis, _ci(line)), Result.passed("statix runs"))
-        # Without arguments to pass, or a command to run, nothing is claimed.
-        for line in ("nix run nixpkgs#statix", "nix run", "nix develop", "nix develop .#ci -c", "nix shell nixpkgs#x"):
+        # Without arguments to pass, or a command to run, nothing is claimed; nor is a devenv subcommand but `shell`.
+        for line in (
+            "nix run nixpkgs#statix",
+            "nix run",
+            "nix develop",
+            "nix develop .#ci -c",
+            "nix shell nixpkgs#x",
+            "devenv shell",
+            "devenv test statix check .",
+            "devenv --verbose",
+        ):
             with self.subTest(line=line):
                 self.assertEqual(self._run(static_analysis, _ci(line)).status, Status.FAIL)
 

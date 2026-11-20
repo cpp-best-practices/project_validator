@@ -569,6 +569,13 @@
                 },
                 "needs_definition": false,
                 "required": false
+              },
+              "tl": {
+                "can": {
+                  "checks": "tl check <file.tl> (Teal)"
+                },
+                "needs_definition": false,
+                "required": false
               }
             },
             "language": "Lua",
@@ -822,7 +829,7 @@
     },
     "type-checking": {
       "details": [
-        "consider running a type checker in CI: lua-language-server --check . (with LuaCATS annotations) or luau-analyze ."
+        "consider running a type checker in CI: lua-language-server --check . (with LuaCATS annotations), luau-analyze . or tl check <file.tl> (Teal)"
       ],
       "message": "no type checker runs",
       "status": "FAIL"

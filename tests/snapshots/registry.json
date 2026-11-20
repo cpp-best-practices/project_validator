@@ -1968,6 +1968,20 @@
     },
     {
       "can": {
+        "format": {
+          "apply": ""
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "astyle",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "asyncapi validate <description>"
         },
@@ -2769,6 +2783,19 @@
       "reads": [
         "CMake"
       ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "cucumber"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "cucumber",
+      "reads": [],
       "required": []
     },
     {
@@ -3915,6 +3942,19 @@
     },
     {
       "can": {
+        "test": {
+          "runs": "l3build check"
+        }
+      },
+      "languages": [
+        "LaTeX"
+      ],
+      "name": "l3build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "lacheck main.tex"
         }
@@ -4548,6 +4588,21 @@
       ],
       "name": "molecule",
       "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": ""
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "molecule's testinfra verifier",
+      "reads": [
+        "molecule"
+      ],
       "required": []
     },
     {
@@ -6495,6 +6550,19 @@
     },
     {
       "can": {
+        "type-check": {
+          "checks": "tl check <file.tl> (Teal)"
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "tl",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "trivy config ."
         },
@@ -6795,6 +6863,21 @@
         "Typst"
       ],
       "name": "tytanic",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "",
+          "check": ""
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "uncrustify",
       "reads": [],
       "required": []
     },

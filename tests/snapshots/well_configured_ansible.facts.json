@@ -694,6 +694,11 @@
       "origin": "LICENSE"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "molecule/default/molecule.yml",
+      "reader": "molecule"
+    },
+    {
       "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
