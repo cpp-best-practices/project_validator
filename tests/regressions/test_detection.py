@@ -150,7 +150,6 @@ class NixDevShellTests(unittest.TestCase):
 
 
 class RacketMultiPackageTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #189: sibling packages fail "no tests found" when X-test has the tests
     def test_the_test_package_tests_its_siblings(self) -> None:
         """In Racket's X, X-lib, X-test layout the -test package holds the suite CI runs with raco test, so the
         meta-package and the library are tested (typed-racket, koyo, scribble)."""

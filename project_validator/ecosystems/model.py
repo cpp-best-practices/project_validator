@@ -207,6 +207,9 @@ class Ecosystem:
     # development shells, a shell.nix): beside the sources of other languages they are no build and no source of the
     # ecosystem's (see `project_validator.facts.structure`).
     environment_files: Callable[[Project], frozenset[str]] | None = None
+    # The units of tests, by what their build files say rather than their directories' names (Racket's X-test
+    # package, in the `tests` collection): a unit of tests (see `project_validator.facts.roles`).
+    test_units: Callable[[Project], frozenset[str]] | None = None
 
     def __post_init__(self) -> None:
         if self.kind == "format" and self.toolchain is not None:

@@ -337,6 +337,16 @@ def _environments(project: Project, sources: list[SourceFile]) -> frozenset[str]
     return frozenset(paths) if others else frozenset()
 
 
+def _test_units(project: Project) -> frozenset[str]:
+    """The units an ecosystem's build files say are units of tests (see `Ecosystem.test_units`)."""
+    return frozenset(
+        directory
+        for ecosystem in registered()
+        if ecosystem.test_units is not None
+        for directory in ecosystem.test_units(project)
+    )
+
+
 def _outside(paths: Iterable[str], directories: frozenset[str]) -> list[str]:
     return [path for path in paths if not any(within(path, directory) for directory in directories)]
 
@@ -451,9 +461,11 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
         names = _own(content.languages, ".", named, directory=True)
         languages["."].update(names - known)
         formats_.setdefault(".", set()).update(names & known)
+    tests = _test_units(project)
     for directory in sorted(languages, key=lambda root: (root != ".", root)):
         if (purpose := role(directory, directory=True)) == "vendored":
             continue
+        purpose = "test" if directory in tests else purpose
         yield Unit(
             role=purpose,
             origin=Origin(path=directory),
