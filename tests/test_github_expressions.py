@@ -111,3 +111,20 @@ class UndecidedOperandTests(unittest.TestCase):
     def test_a_known_operand_still_renders_its_value(self) -> None:
         self.assertEqual(rendered("${{ matrix.generator || 'Ninja' }}", KNOWN), "Ninja")
         self.assertEqual(rendered("${{ (github.event.inputs.flags || 'x') && 'y' }}", KNOWN), "y")
+
+
+class InputsAndJsonTests(unittest.TestCase):
+    """A called workflow's `inputs.*` are what its caller passes; `fromJSON` reads a JSON value (#211)."""
+
+    def test_inputs_are_known_where_the_caller_passes_them(self) -> None:
+        known = Known(os="linux", matrix={}, env={}, inputs={"runner": "macos-latest", "flag": "true"})
+        self.assertEqual(rendered("${{ inputs.runner }}", known), "macos-latest")
+        self.assertIsNone(rendered("${{ inputs.other }}", known))
+        self.assertTrue(evaluate("fromJSON(inputs.flag)", known))
+
+    def test_from_json_reads_scalars_and_keeps_a_list_as_its_text(self) -> None:
+        known = Known(os="linux", matrix={"labels": '["self-hosted", "linux"]'}, env={})
+        self.assertEqual(rendered("${{ fromJSON(matrix.labels) }}", known), '["self-hosted", "linux"]')
+        self.assertFalse(evaluate("fromJSON('false')", known))
+        self.assertEqual(rendered("${{ fromJSON('3') }}", known), "3")
+        self.assertIsNone(rendered("${{ fromJSON('{') }}", known))

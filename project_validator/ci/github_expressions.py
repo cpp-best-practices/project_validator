@@ -9,9 +9,10 @@ GitHub's do. A step's status functions are judged for a run in which every step 
 
 from __future__ import annotations
 
+import json
 import re
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 type Value = str | float | bool | None
 _UNKNOWN = object()
@@ -38,6 +39,8 @@ class Known:
     env: Mapping[str, str]
     # Whether `matrix` is the combination's values; a matrix computed by an expression has values that are not seen.
     matrix_known: bool = True
+    # A called workflow's inputs: what its caller passes in `with:`, or the declared defaults.
+    inputs: Mapping[str, str] = field(default_factory=dict)
 
 
 def _tokens(text: str) -> list[str] | None:
@@ -138,6 +141,8 @@ class _Parser:
             return _lookup(self.known.matrix, rest) if self.known.matrix_known else _UNKNOWN
         if head == "env" and rest in self.known.env:
             return self.known.env[rest]
+        if head == "inputs" and rest in self.known.inputs:
+            return self.known.inputs[rest]
         return _UNKNOWN
 
 
@@ -172,21 +177,45 @@ def _both(_: str, left: Maybe, right: Maybe) -> Maybe:
 
 
 def _compare(operator: str, left: Maybe, right: Maybe) -> Maybe:
-    if left in _UNSEEN or right in _UNSEEN:
+    if left in _UNSEEN or right in _UNSEEN or isinstance(left, _Structured) or isinstance(right, _Structured):
         return _UNKNOWN
     equal = _text(left).lower() == _text(right).lower()
     return equal if operator == "==" else not equal
 
 
+class _Structured(str):
+    """A JSON list or object `fromJSON` read, as its text: it renders as that text (a runner's labels), but what it
+    holds is not compared or searched as text (`contains(fromJSON('[1]'), 1)` asks about its elements)."""
+
+
+def _from_json(text: str) -> Maybe:
+    """`fromJSON(text)`: a JSON scalar as its value; a list or an object kept as its text, for what it names (a runner's
+    labels); unknown when the text is not JSON."""
+    try:
+        value = json.loads(text)
+    except ValueError:
+        return _UNKNOWN
+    if isinstance(value, int) and not isinstance(value, bool):
+        return float(value)
+    return value if isinstance(value, (str, float, bool)) or value is None else _Structured(text)
+
+
+def _opaque(value: Maybe) -> bool:
+    """Whether a value's text is not what a test of text can ask about: not known, or a JSON list or object."""
+    return value in _UNSEEN or isinstance(value, _Structured)
+
+
 def _function(name: str, arguments: list[Maybe]) -> Maybe:
     if name in _STATUS and not arguments:
         return _STATUS[name]
+    if name == "fromjson" and len(arguments) == 1:
+        return _UNKNOWN if arguments[0] in _UNSEEN else _from_json(_text(arguments[0]))
     tests: dict[str, Callable[[str, str], bool]] = {
         "contains": lambda text, part: part in text,
         "startswith": str.startswith,
         "endswith": str.endswith,
     }
-    if name not in tests or len(arguments) != 2 or any(argument in _UNSEEN for argument in arguments):
+    if name not in tests or len(arguments) != 2 or any(_opaque(argument) for argument in arguments):
         return _UNKNOWN
     text, part = (_text(argument).lower() for argument in arguments)
     return tests[name](text, part)

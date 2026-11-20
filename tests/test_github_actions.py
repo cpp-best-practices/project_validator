@@ -266,3 +266,47 @@ class AdvisoryStepTests(unittest.TestCase):
             [(unknown.subject, unknown.hides) for unknown in facts.of(Unknown)],
             [("whether a step of job check can fail it", "commands")],
         )
+
+
+class CalledWorkflowInputTests(unittest.TestCase):
+    """A called workflow's `inputs.*` are what the caller passes, where that is known (#211)."""
+
+    def _commands(self, passed: str, default: str = "18") -> list[tuple[str, ...]]:
+        caller = {"jobs": {"call": {"uses": "./.github/workflows/w.yml", "with": {"node-version": passed}}}}
+        called = {
+            "on": {"workflow_call": {"inputs": {"node-version": {"type": "string", "default": default}}}},
+            "jobs": {"t": {"runs-on": "ubuntu-latest", "steps": [{"run": "echo ${{ inputs.node-version }}"}]}},
+        }
+        files = {GITHUB_WORKFLOW: json.dumps(caller), ".github/workflows/w.yml": json.dumps(called)}
+        with temp_project(files) as root:
+            return [command.argv for command in make_context(root).facts.of(Command)]
+
+    def test_a_known_value_is_the_input(self) -> None:
+        self.assertEqual(self._commands("24"), [("echo", "24")])
+
+    def test_a_value_that_is_not_known_leaves_the_input_unknown_not_its_default(self) -> None:
+        passed = "${{ github.event_name == 'workflow_dispatch' && inputs.node-version || '24' }}"
+        self.assertEqual(self._commands(passed), [("echo", "${{ inputs.node-version }}")])
+
+
+class ContainerImageInputTests(unittest.TestCase):
+    def test_an_image_input_that_is_empty_off_linux_is_no_container(self) -> None:
+        """googletest's cmake.yml: `container: image: ${{ inputs.container_image }}`, passed `''` for macOS and
+        Windows, so those jobs run on their runners, not in a Linux container."""
+        caller = {
+            "jobs": {
+                "cmake": {
+                    "strategy": {
+                        "matrix": {"config": [{"os": "ubuntu-24.04", "image": "gcc:14"}, {"os": "windows-2022"}]}
+                    },
+                    "uses": "./.github/workflows/w.yml",
+                    "with": {"os": "${{ matrix.config.os }}", "container_image": "${{ matrix.config.image || '' }}"},
+                }
+            }
+        }
+        called = {
+            "on": {"workflow_call": {"inputs": {"os": {"type": "string"}, "container_image": {"type": "string"}}}},
+            "jobs": {"t": {"runs-on": "${{ inputs.os }}", "container": {"image": "${{ inputs.container_image }}"}}},
+        }
+        files = {GITHUB_WORKFLOW: json.dumps(caller), ".github/workflows/w.yml": json.dumps(called)}
+        self.assertEqual(sorted(job.os for job in ci_jobs(files)), ["linux", "windows"])

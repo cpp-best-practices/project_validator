@@ -211,7 +211,6 @@ class SameRepositoryReferenceTests(unittest.TestCase):
 
 
 class CalledWorkflowInputTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #211: a called workflow's inputs.* and an empty container: are misread
     def test_inputs_come_from_the_caller_and_an_empty_container_is_none(self) -> None:
         """`inputs.*` take the caller's `with:` values, per matrix combination, or the declared defaults; `container:`
         means linux only when its image is not empty (googletest, poetry, devenv, grafana/helm-charts, Homebrew)."""
