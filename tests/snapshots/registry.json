@@ -2668,6 +2668,24 @@
     },
     {
       "can": {
+        "analysis": {
+          "checks": ""
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "mdBook"
+      ],
+      "name": "codespell",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "audit": {
           "runs": "composer audit"
         }
@@ -6279,6 +6297,19 @@
         "Sphinx"
       ],
       "name": "sphinx linkcheck",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "sphinx-lint docs"
+        }
+      },
+      "languages": [
+        "Sphinx"
+      ],
+      "name": "sphinx-lint",
       "reads": [],
       "required": []
     },

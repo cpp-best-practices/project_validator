@@ -98,7 +98,9 @@ DOCUMENTATION = Ecosystem(
         ("jekyll",),
         ("markdownlint",),
         ("markdownlint-cli2",),
+        ("markdownlint-cli",),
         ("vale",),
+        ("sphinx-lint",),
         ("lychee",),
         ("markdown-link-check",),
         ("mdbook-linkcheck",),
@@ -249,7 +251,8 @@ MARKDOWNLINT = analyzer(
     name="markdownlint",
     languages=GENERATORS,
     how="markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action)",
-    analyses=when(starts(("markdownlint",), ("markdownlint-cli2",)), analysed),
+    # markdownlint-cli is the package `npm exec` names (mkdocs: `npm exec --yes -- markdownlint-cli docs/`).
+    analyses=when(starts(("markdownlint",), ("markdownlint-cli",), ("markdownlint-cli2",)), analysed),
     rules=defined_by(files=(MARKDOWNLINT_SETTINGS.name,)),
 )
 VALE_SETTINGS = file_reader("vale", (".vale.ini", "_vale.ini", "vale.ini"))
@@ -259,6 +262,21 @@ VALE = analyzer(
     how="vale docs (or errata-ai/vale-action)",
     analyses=when(starts(("vale",)), analysed),
     rules=defined_by(files=(VALE_SETTINGS.name,), default=False),
+)
+# sphinx-lint, the reStructuredText linter Sphinx sites run (devguide, scikit-learn, CPython's docs); it has its
+# checks without configuration.
+SPHINX_LINT = analyzer(
+    name="sphinx-lint",
+    languages=_only(SPHINX),
+    how="sphinx-lint docs",
+    analyses=when(starts(("sphinx-lint",)), analysed),
+)
+# codespell checks the prose's spelling (mkdocs); recognised where a site runs it, not suggested.
+CODESPELL = analyzer(
+    name="codespell",
+    languages=GENERATORS,
+    how="",
+    analyses=when(starts(("codespell",)), analysed),
 )
 MARKDOWNLINT_ACTION = Action(
     name="DavidAnson/markdownlint-cli2-action",

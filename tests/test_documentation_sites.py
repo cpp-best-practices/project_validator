@@ -112,6 +112,20 @@ class MkDocsTests(unittest.TestCase):
         self.assertEqual(self._run(static_analysis, _ci("vale docs")).status, Status.WARN)
         self.assertEqual(self._run(static_analysis, _ci("mkdocs build")).status, Status.FAIL)
 
+    def test_spell_checkers_and_sphinx_lint_analyse(self) -> None:
+        """codespell (mkdocs) checks the prose's spelling, markdownlint-cli runs through `npm exec` (mkdocs), and
+        sphinx-lint, the reStructuredText linter, checks a Sphinx site (devguide, scikit-learn) (upstream #280)."""
+        for files, tool in (
+            (_ci("codespell docs README.md"), "codespell"),
+            (_ci("npm exec --yes -- markdownlint-cli README.md docs/"), "markdownlint"),
+        ):
+            with self.subTest(files=files):
+                self.assertEqual(self._run(static_analysis, files), Result.passed(f"{tool} runs"))
+        sphinx = _run_on(static_analysis, {**SPHINX, **_ci("sphinx-lint --enable=default-role docs")})
+        self.assertEqual(sphinx, Result.passed("sphinx-lint runs"))
+        # sphinx-lint reads reStructuredText: it checks no MkDocs site.
+        self.assertEqual(self._run(static_analysis, _ci("sphinx-lint docs")).status, Status.FAIL)
+
     def test_the_built_site_is_ignored_and_never_committed(self) -> None:
         self.assertEqual(self._run(vcs_ignore, {".gitignore": "site/\n"}).status, Status.PASS)
         result = self._run(vcs_ignore, {".gitignore": "*.log\n"})

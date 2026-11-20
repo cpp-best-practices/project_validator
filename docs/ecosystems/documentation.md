@@ -27,9 +27,10 @@ switch, so the check does not apply to it.
 
 ## `static-analysis`
 
-The prose is linted: markdownlint (`markdownlint-cli2`, or `DavidAnson/markdownlint-cli2-action`; settings in
-`.markdownlint.yaml`, `.markdownlint.json` or `.markdownlint-cli2.*`) or vale (`vale`, or `errata-ai/vale-action`;
-`.vale.ini`, which it needs).
+The prose is linted: markdownlint (`markdownlint-cli2`, `markdownlint` or `npm exec markdownlint-cli`, or
+`DavidAnson/markdownlint-cli2-action`; settings in `.markdownlint.yaml`, `.markdownlint.json` or
+`.markdownlint-cli2.*`) or vale (`vale`, or `errata-ai/vale-action`; `.vale.ini`, which it needs); a Sphinx site's
+reStructuredText by sphinx-lint. codespell, checking the spelling, counts where a site runs it.
 
 ## `link-check`
 
