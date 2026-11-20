@@ -17,7 +17,9 @@ rackunit tests, in a `(module+ test …)` submodule or a module that requires ra
 
 The toolchains are Racket versions with their variant: Bogdanp/setup-racket's `version` (`8.14`, `stable`,
 `current`) and `variant` (`CS`, `BC`), counted after its own `uses:` line only, since every action has a `version`
-input; a matrix key `racket-version` or `racket`; a `racket/racket` image. A job naming both runs `8.14 CS`.
+input; a matrix key `racket-version` or `racket`; a `racket/racket` image. A job naming both runs `8.14 BC`; the
+version's default variant (CS from Racket 8.0, BC before) is not named, so `8.14` with `CS` or with no variant is one
+version, `8.14`.
 
 ## `code-formatting`
 

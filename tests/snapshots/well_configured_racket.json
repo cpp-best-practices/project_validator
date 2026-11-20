@@ -380,12 +380,12 @@
             "notes": [],
             "platforms": [
               {
-                "Racket version": "8.12 BC",
+                "Racket version": "8.12",
                 "configurations": [],
                 "os": "linux"
               },
               {
-                "Racket version": "8.12 CS",
+                "Racket version": "8.12 BC",
                 "configurations": [],
                 "os": "linux"
               },
@@ -395,27 +395,22 @@
                 "os": "linux"
               },
               {
-                "Racket version": "stable CS",
-                "configurations": [],
-                "os": "linux"
-              },
-              {
-                "Racket version": "8.12 CS",
+                "Racket version": "8.12",
                 "configurations": [],
                 "os": "macos"
               },
               {
-                "Racket version": "stable CS",
+                "Racket version": "stable",
                 "configurations": [],
                 "os": "macos"
               },
               {
-                "Racket version": "8.12 CS",
+                "Racket version": "8.12",
                 "configurations": [],
                 "os": "windows"
               },
               {
-                "Racket version": "stable CS",
+                "Racket version": "stable",
                 "configurations": [],
                 "os": "windows"
               }
@@ -799,17 +794,17 @@
     "platform-matrix": {
       "details": [
         ".github/workflows/ci-lint.yml: ci-lint: linux / no Racket version",
-        ".github/workflows/ci.yml: test (ubuntu-latest, 8.12, CS): linux / 8.12 CS",
-        ".github/workflows/ci.yml: test (ubuntu-latest, stable, CS): linux / stable CS",
-        ".github/workflows/ci.yml: test (macos-latest, 8.12, CS): macos / 8.12 CS",
-        ".github/workflows/ci.yml: test (macos-latest, stable, CS): macos / stable CS",
-        ".github/workflows/ci.yml: test (windows-latest, 8.12, CS): windows / 8.12 CS",
-        ".github/workflows/ci.yml: test (windows-latest, stable, CS): windows / stable CS",
+        ".github/workflows/ci.yml: test (ubuntu-latest, 8.12, CS): linux / 8.12",
+        ".github/workflows/ci.yml: test (ubuntu-latest, stable, CS): linux / stable",
+        ".github/workflows/ci.yml: test (macos-latest, 8.12, CS): macos / 8.12",
+        ".github/workflows/ci.yml: test (macos-latest, stable, CS): macos / stable",
+        ".github/workflows/ci.yml: test (windows-latest, 8.12, CS): windows / 8.12",
+        ".github/workflows/ci.yml: test (windows-latest, stable, CS): windows / stable",
         ".github/workflows/ci.yml: test (ubuntu-latest, 8.12, BC): linux / 8.12 BC",
         ".github/workflows/ci.yml: coverage: linux / stable",
         ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Racket version"
       ],
-      "message": "CI covers 3 OS(es) (linux, macos, windows), 4 Racket version(s) (8.12 BC, 8.12 CS, stable, stable CS), 8 combination(s)",
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Racket version(s) (8.12, 8.12 BC, stable), 7 combination(s)",
       "status": "PASS"
     },
     "sanitizers": {

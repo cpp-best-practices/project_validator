@@ -136,13 +136,26 @@ RACKET_ECOSYSTEM = Ecosystem(
 )
 
 
+def _default_variant(version: str) -> str:
+    """The variant setup-racket installs for `version` when told none: CS from Racket 8.0 on (and for `stable`,
+    `current` and `pre-release`), BC before."""
+    major = version.partition(".")[0]
+    return "BC" if major.isdigit() and int(major) < 8 else "CS"
+
+
 def _racket_platforms(job: Job) -> frozenset[str]:
-    """A job's toolchains: each Racket version it names with the variant it names (`8.14 CS`), or the version alone."""
+    """A job's toolchains: each Racket version it names with the variant it names (`8.14 BC`), or the version alone;
+    a version's default variant is not named (`8.14 CS` is `8.14`), so a job that names it and one that does not run
+    one version."""
     found = toolchain_versions(job.toolchains, "Racket")
     variants = {name.removeprefix("variant ") for name in found if name.startswith("variant ")}
     versions = found - {f"variant {variant}" for variant in variants}
     if versions and variants:
-        return frozenset(f"{version} {variant}" for version in versions for variant in variants)
+        return frozenset(
+            version if variant == _default_variant(version) else f"{version} {variant}"
+            for version in versions
+            for variant in variants
+        )
     return versions or frozenset(variants)
 
 

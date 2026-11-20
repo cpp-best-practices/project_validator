@@ -128,9 +128,27 @@ class RacketTests(unittest.TestCase):
                 self.assertEqual(self._run(vcs_ignore, {".gitignore": ignored}).status, Status.PASS)
         self.assertEqual(self._run(vcs_ignore, {".gitignore": "*.zo\n"}).status, Status.WARN)
 
+    def test_the_default_variant_is_one_version_with_or_without_its_name(self) -> None:
+        """typed-racket names `variant: CS` in one workflow and no variant in another: `current` either way, one
+        version (#222). Before Racket 8.0 the default was BC."""
+        named = (
+            "      - uses: Bogdanp/setup-racket@v1.16\n        with:\n          version: {}\n          variant: {}\n"
+        )
+        unnamed = "      - uses: Bogdanp/setup-racket@v1.16\n        with:\n          version: {}\n"
+        for version, variant in (("current", "CS"), ("7.9", "BC")):
+            with self.subTest(version=version):
+                job = "  {}:\n    runs-on: ubuntu-latest\n    steps:\n{}      - run: raco test .\n"
+                workflow = (
+                    f"on: push\njobs:\n{job.format('a', named.format(version, variant))}"
+                    f"{job.format('b', unnamed.format(version))}"
+                )
+                result = self._run(platform_matrix, {".github/workflows/ci.yml": workflow})
+                self.assertIn(f"1 Racket version(s) ({version})", result.message)
+
     def test_the_platform_matrix_pairs_versions_with_variants(self) -> None:
         result = self._run(platform_matrix, {GITHUB_WORKFLOW: RACKET_MATRIX})
-        self.assertIn("4 Racket version(s) (8.12 BC, 8.12 CS, stable BC, stable CS)", result.message)
+        # CS is the default variant from Racket 8.0 on: only BC is named.
+        self.assertIn("4 Racket version(s) (8.12, 8.12 BC, stable, stable BC)", result.message)
         for files, version in (
             (_ci("docker run racket/racket:8.14-full raco test ."), "8.14"),
             (_ci("raco test ."), "default"),
