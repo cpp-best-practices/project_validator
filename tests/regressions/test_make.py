@@ -196,7 +196,6 @@ class JvmBuildSettingTests(unittest.TestCase):
                 result = run_in_layout(self, "Maven Java", check, files)
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #202: compiler flags in Gradle convention plugins are not read
     def test_compiler_flags_in_a_convention_plugin_are_the_build_settings(self) -> None:
         """`-Xlint:all -Werror` set in `buildSrc/.../my.java-conventions.gradle.kts` are the project's warning
         settings (junit-team/junit5's gradle/plugins)."""
