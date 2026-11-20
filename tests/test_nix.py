@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import unittest
+from collections.abc import Mapping
+from types import MappingProxyType
 
 from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.compiler_warnings import compiler_warnings
@@ -55,6 +57,48 @@ class RecognitionTests(unittest.TestCase):
         for text in ("npm test", "make check"):
             with self.subTest(text=text):
                 self.assertFalse(uses(NIX_ECOSYSTEM, text))
+
+
+RUST_CRATE = MappingProxyType({"Cargo.toml": "[package]\nname = 'app'\nversion = '0.1.0'\n", "src/main.rs": ""})
+DEV_SHELLS = """{
+  outputs = { self, nixpkgs, flake-utils }: flake-utils.lib.eachDefaultSystem (system:
+    let pkgs = nixpkgs.legacyPackages.${system}; in {
+      devShells.default = pkgs.mkShell { packages = [ pkgs.cargo pkgs.rustc ]; };
+      formatter = pkgs.nixfmt;
+    });
+}
+"""
+PACKAGES = DEV_SHELLS.replace("formatter = pkgs.nixfmt;", "packages.default = pkgs.callPackage ./. { };")
+
+
+class DeveloperEnvironmentTests(unittest.TestCase):
+    """A flake that only defines development shells, or a shell.nix, sets up a developer's environment: beside the
+    sources of other languages it is no Nix build of the product, and makes no Nix language (#187)."""
+
+    def _map(self, files: Mapping[str, str]) -> tuple[frozenset[str], frozenset[str]]:
+        with temp_project(dict(files)) as root:
+            structure = make_context(root).structure
+            return structure.languages, structure.build_systems
+
+    def test_a_dev_shell_flake_or_shell_nix_beside_a_crate_is_no_nix_build(self) -> None:
+        for environment in (
+            {"flake.nix": DEV_SHELLS},
+            {"shell.nix": "{ pkgs ? import <nixpkgs> {} }: pkgs.mkShell {}\n"},
+        ):
+            with self.subTest(files=sorted(environment)):
+                languages, systems = self._map({**RUST_CRATE, **environment})
+                self.assertEqual(languages, frozenset({"Rust"}))
+                self.assertFalse({"Nix", "Nix flake"} & systems)
+
+    def test_a_flake_that_builds_packages_is_a_nix_build(self) -> None:
+        languages, systems = self._map({**RUST_CRATE, "flake.nix": PACKAGES})
+        self.assertIn("Nix", languages)
+        self.assertIn("Nix flake", systems)
+
+    def test_a_dev_shell_is_the_projects_nix_when_nothing_else_is(self) -> None:
+        for files in ({"flake.nix": DEV_SHELLS}, {"shell.nix": "{}\n", "default.nix": "{}\n"}):
+            with self.subTest(files=sorted(files)):
+                self.assertIn("Nix", self._map(files)[0])
 
 
 class NixTests(unittest.TestCase):

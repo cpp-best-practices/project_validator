@@ -136,7 +136,6 @@ class FlutterScaffoldingTests(unittest.TestCase):
 
 
 class NixDevShellTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #187: a dev-shell flake or shell.nix is judged as a Nix build
     def test_a_dev_shell_is_not_a_nix_build_of_the_product(self) -> None:
         """A flake whose only outputs are devShells, or a lone shell.nix, is a developer environment: the Nix checks
         do not fail a project whose real tests run (http4s, cats, dune)."""

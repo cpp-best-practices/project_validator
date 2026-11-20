@@ -203,6 +203,10 @@ class Ecosystem:
     # and ios/ runners beside a pubspec with a `flutter:` section): their code is that build's, not sources or builds
     # of other languages (see `project_validator.facts.structure`).
     generated_directories: Callable[[Project], frozenset[str]] | None = None
+    # The files that only set up a developer's environment, by what they hold (a flake whose only outputs are
+    # development shells, a shell.nix): beside the sources of other languages they are no build and no source of the
+    # ecosystem's (see `project_validator.facts.structure`).
+    environment_files: Callable[[Project], frozenset[str]] | None = None
 
     def __post_init__(self) -> None:
         if self.kind == "format" and self.toolchain is not None:

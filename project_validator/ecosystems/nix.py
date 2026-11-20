@@ -12,7 +12,7 @@ import re
 import tomllib
 from pathlib import PurePosixPath
 
-from project_validator.core import Context
+from project_validator.core import Context, Project
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Facts, Origin, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
@@ -32,6 +32,31 @@ NIX = frozenset({NIX_LANGUAGE})
 FLAKE = BuildSystem(name="Nix flake", files=("flake.nix",), languages=NIX)
 EXPRESSIONS = BuildSystem(name="Nix", files=("default.nix", "shell.nix"), languages=NIX)
 BUILD_SYSTEMS = frozenset({FLAKE.name, EXPRESSIONS.name})
+
+# A flake output that builds or checks something (`packages.default`, `checks = forAllSystems ...`), as opposed to
+# development shells and the formatter; `packages = [ ... ]` inside a shell lists the shell's tools, and a name after a
+# dot is an input's (`nixpkgs.legacyPackages`, `flake-utils.lib`).
+_BUILDING_OUTPUT = re.compile(
+    r"(?<![.\w-])(?:packages|defaultPackage|checks|apps|defaultApp|overlays?|nixosModules?|nixosConfigurations|"
+    r"darwinModules|darwinConfigurations|homeManagerModules|homeConfigurations|lib|templates|hydraJobs|"
+    r"legacyPackages|bundlers)\s*(?:\.|=\s*[^\[\s])"
+)
+_DEV_SHELL = re.compile(r"\bdevShells?\b")
+
+
+def _environment(project: Project) -> frozenset[str]:
+    """The Nix files that only set up a developer's environment: every shell.nix, and a flake whose outputs are
+    development shells and nothing that builds (http4s', dune's)."""
+    found = set()
+    for path in project.files():
+        name = PurePosixPath(path).name
+        if name == "shell.nix":
+            found.add(path)
+        elif name == "flake.nix":
+            text = project.read_text(path)
+            if _DEV_SHELL.search(text) and not _BUILDING_OUTPUT.search(text):
+                found.add(path)
+    return frozenset(found)
 
 
 # --- Tests: the flake's checks ---------------------------------------------------------------------------------------
@@ -236,6 +261,7 @@ NIX_ECOSYSTEM = Ecosystem(
     languages=NIX,
     build_systems=(FLAKE, EXPRESSIONS),
     source_suffixes={".nix": NIX_LANGUAGE},
+    environment_files=_environment,
     # Nix names no version a job builds with; the systems it builds for are what varies (`system: aarch64-linux`).
     toolchain=toolchain_patterns(
         NIX_LANGUAGE,
