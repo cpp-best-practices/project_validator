@@ -1670,6 +1670,23 @@
     },
     {
       "can": {
+        "format": {
+          "apply": "",
+          "check": ""
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "Spring Java Format",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "standardrb"
         },

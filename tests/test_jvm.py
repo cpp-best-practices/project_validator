@@ -74,6 +74,11 @@ def _maven(test: unittest.TestCase, selected: Check, files: dict[str, str]) -> R
     return run_in_layout(test, "Maven Java", selected, files)
 
 
+def _gradle_java(_test: unittest.TestCase, selected: Check, files: dict[str, str]) -> Result:
+    with temp_project({"src/main/java/App.java": "class App {}\n", **files}) as root:
+        return selected.run(make_context(root))
+
+
 def _gradle_kotlin(test: unittest.TestCase, selected: Check, files: dict[str, str]) -> Result:
     return run_in_layout(test, "Gradle Kotlin", selected, files)
 
@@ -109,6 +114,23 @@ class BuildLifecycleTests(unittest.TestCase):
         build = _gradle('plugins {\n    id("com.diffplug.spotless") version "7.0.0"\n}\n')
         self.assertEqual(_gradle_kotlin(self, CODE_FORMATTING, {**build, **_ci(GRADLE_CHECK)}).status, Status.PASS)
         self.assertEqual(_gradle_kotlin(self, CODE_FORMATTING, {**build, **_ci("./gradlew test")}).status, Status.WARN)
+
+    def test_spring_java_format_validates_with_the_build(self) -> None:
+        """spring-javaformat-maven-plugin's `validate` goal, bound to the build, and the io.spring.javaformat Gradle
+        plugin, whose `checkFormat` runs with `check`, fail on unformatted code (spring-petclinic)."""
+        maven = _pom(_plugin("spring-javaformat-maven-plugin", "validate"))
+        gradle = _gradle('plugins {\n    id("io.spring.javaformat") version "0.0.47"\n}\n')
+        cases = {
+            "maven": (_maven, {**maven, **_ci(MAVEN_VERIFY)}, Status.PASS),
+            "gradle": (_gradle_java, {**gradle, **_ci("./gradlew build")}, Status.PASS),
+            "directly": (_maven, _ci("mvn spring-javaformat:validate"), Status.PASS),
+            "gradle test": (_gradle_java, {**gradle, **_ci("./gradlew test")}, Status.WARN),
+            "apply": (_maven, {**maven, **_ci("mvn spring-javaformat:apply")}, Status.FAIL),
+        }
+        for name, (run, files, status) in cases.items():
+            with self.subTest(case=name):
+                result = run(self, CODE_FORMATTING, files)
+                self.assertEqual(result.status, status, result)
 
     def test_a_convention_plugin_applies_its_plugins(self) -> None:
         convention = {

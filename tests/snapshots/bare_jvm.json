@@ -237,6 +237,14 @@
                 "needs_definition": false,
                 "required": false
               },
+              "Spring Java Format": {
+                "can": {
+                  "apply": "",
+                  "check": ""
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "fmt-maven-plugin": {
                 "can": {
                   "apply": "mvn fmt:format",

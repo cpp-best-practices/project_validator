@@ -49,6 +49,10 @@ build, run by `mvn verify` or `gradle check`) and fmt-maven-plugin for Java and 
 (`--set-exit-if-changed`) for Java; ktfmt (`--set-exit-if-changed`) and ktlint (without `-F`, or `ktlintCheck`) for
 Kotlin. They have a default style, so CI enforcement alone passes.
 
+Spring Java Format counts where a project uses it (the `spring-javaformat-maven-plugin` `validate` goal bound to the
+build, `spring-javaformat:validate`, or the `io.spring.javaformat` Gradle plugin, whose `checkFormat` runs with
+`check`), but is never suggested: it is Spring's house style.
+
 ## `function-limits`
 
 Java: lizard runs in CI with a length limit, or Checkstyle runs with a configuration that has the `MethodLength`
