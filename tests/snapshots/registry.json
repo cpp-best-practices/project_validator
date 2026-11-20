@@ -5702,6 +5702,20 @@
     },
     {
       "can": {
+        "analysis": {
+          "checks": "scan-build --status-bugs (the Clang Static Analyzer)"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "scan-build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "examples": {
           "checked": "schemathesis run <description> --url <base url> (or st run)"
         }

@@ -938,6 +938,13 @@
                 },
                 "needs_definition": false,
                 "required": false
+              },
+              "scan-build": {
+                "can": {
+                  "checks": "scan-build --status-bugs (the Clang Static Analyzer)"
+                },
+                "needs_definition": false,
+                "required": false
               }
             },
             "language": "C",
