@@ -81,6 +81,7 @@ API_ECOSYSTEM = Ecosystem(
     kind="format",
     languages=API_FORMATS,
     detect=api_descriptions,
+    locate=_described,
     ci_programs=(
         ("spectral",),
         ("spectral-cli",),

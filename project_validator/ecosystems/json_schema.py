@@ -58,6 +58,7 @@ JSON_SCHEMA_ECOSYSTEM = Ecosystem(
     kind="format",
     languages=JSON_SCHEMA_ONLY,
     detect=json_schema_project,
+    locate=lambda project: ((path, JSON_SCHEMA) for path in json_schemas(project)),
     ci_programs=(("check-jsonschema",), ("ajv",), ("jsonschema",), ("jv",), ("json-schema-diff",)),
 )
 

@@ -166,9 +166,11 @@ class Ecosystem:
     It is recognised by its build systems' files, its `source_suffixes`, its `source_names` (the names, or name
     patterns, of sources with no telling suffix: `Dockerfile`, `Dockerfile.*`), and `detect`, a probe that reads the
     project (with `Project.read_head`) and returns the ecosystem's languages it finds, for intent that file names
-    cannot show. `ambiguous_suffixes` count only once the ecosystem is recognised one of those ways, because another
-    ecosystem uses them too (`.pl`: Perl or Prolog) or they do not tell its languages apart (`.h`: C or C++); each
-    maps to the language it adds, or to None for a file of the ecosystem that adds no language.
+    cannot show; `locate`, when the probe can say where it found each (the path of each file, with its language),
+    lets the unit that holds the files have them rather than the root unit. `ambiguous_suffixes` count only once the
+    ecosystem is recognised one of those ways, because another ecosystem uses them too (`.pl`: Perl or Prolog) or
+    they do not tell its languages apart (`.h`: C or C++); each maps to the language it adds, or to None for a file
+    of the ecosystem that adds no language.
 
     A project using none of its `build_systems` is taken to use `default_build_system`.
 
@@ -187,6 +189,7 @@ class Ecosystem:
     source_names: Mapping[str, str] | None = None
     ambiguous_suffixes: Mapping[str, str | None] | None = None
     detect: Callable[[Project], frozenset[str]] | None = None
+    locate: Callable[[Project], Iterable[tuple[str, str]]] | None = None
     toolchain: ToolchainPatterns | None = None
     # How a CI job shows it builds with the ecosystem, besides naming or using its toolchain: the programs it runs
     # (`cmake`, `("dbt", "build")`), and a pattern for what else its text shows (a source suffix, a compiler it names).

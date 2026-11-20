@@ -159,7 +159,6 @@ class RacketMultiPackageTests(unittest.TestCase):
 
 
 class ContentFormatOwnershipTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #283: content-detected formats go to the root unit, not the file's owner
     def test_a_content_detected_format_belongs_to_the_unit_holding_the_files(self) -> None:
         """An XSD without targetNamespace in a Gradle sub-unit is judged there (docbook); an OpenAPI description in
         a Cabal package is judged there (hledger-web), not reported as "no file to judge" for the root."""

@@ -72,10 +72,17 @@
       "ecosystem": "XML schemas",
       "kind": "ContentLanguages",
       "languages": [
-        "XML Schema",
+        "XML Schema"
+      ],
+      "origin": "schema"
+    },
+    {
+      "ecosystem": "XML schemas",
+      "kind": "ContentLanguages",
+      "languages": [
         "XSLT"
       ],
-      "origin": "."
+      "origin": "xslt"
     },
     {
       "build_systems": [],

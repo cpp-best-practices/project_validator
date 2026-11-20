@@ -67,7 +67,7 @@
       "languages": [
         "JSON Schema"
       ],
-      "origin": "."
+      "origin": "schema"
     },
     {
       "build_systems": [],

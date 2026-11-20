@@ -365,9 +365,24 @@ def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile
             yield SourceFile(origin=Origin(path=path), language=found[0], role=role(path))
 
 
+def _located(
+    project: Project, ecosystem: Ecosystem, locate: Callable[[Project], Iterable[tuple[str, str]]]
+) -> Iterator[ContentLanguages]:
+    """What the probe finds, by the directory that holds it."""
+    found: dict[str, set[str]] = {}
+    for path, language in locate(project):
+        if language in ecosystem.languages:
+            found.setdefault(str(PurePosixPath(path).parent), set()).add(language)
+    for directory, names in sorted(found.items()):
+        yield ContentLanguages(origin=Origin(path=directory), ecosystem=ecosystem.label, languages=frozenset(names))
+
+
 def _content(project: Project) -> Iterator[ContentLanguages]:
+    """What each ecosystem's probe finds, where it says (each directory holding what it found), or for the project."""
     for ecosystem in registered():
-        if ecosystem.detect is not None and (languages := ecosystem.detect(project) & ecosystem.languages):
+        if ecosystem.locate is not None:
+            yield from _located(project, ecosystem, ecosystem.locate)
+        elif ecosystem.detect is not None and (languages := ecosystem.detect(project) & ecosystem.languages):
             yield ContentLanguages(origin=Origin(path="."), ecosystem=ecosystem.label, languages=languages)
 
 
@@ -458,9 +473,10 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
             unit.update(given_way(_own(build.languages, build.origin.path, named), unit))
     known = formats()
     for content in facts.of(ContentLanguages):
-        names = _own(content.languages, ".", named, directory=True)
-        languages["."].update(names - known)
-        formats_.setdefault(".", set()).update(names & known)
+        names = _own(content.languages, content.origin.path, named, directory=True)
+        holder = owner(content.origin.path, roots)
+        languages.setdefault(holder, set()).update(names - known)
+        formats_.setdefault(holder, set()).update(names & known)
     tests = _test_units(project)
     for directory in sorted(languages, key=lambda root: (root != ".", root)):
         if (purpose := role(directory, directory=True)) == "vendored":

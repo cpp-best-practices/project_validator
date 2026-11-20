@@ -36,10 +36,16 @@ XML = frozenset({"XML"})
 _SUFFIXES = {XML_SCHEMA: frozenset({".xsd", ".rng", ".rnc", ".sch"}), XSLT: frozenset({".xsl", ".xslt"})}
 
 
+def xml_schema_files(project: Project) -> Iterator[tuple[str, str]]:
+    """(path, format) of each of the project's schemas, by its suffix, and stylesheets, by theirs."""
+    for path in project.files():
+        suffix = PurePosixPath(path).suffix.lower()
+        yield from ((path, name) for name, own in _SUFFIXES.items() if suffix in own)
+
+
 def xml_schemas(project: Project) -> frozenset[str]:
     """The formats among the project's files: schemas by their suffixes, stylesheets by theirs."""
-    suffixes = {PurePosixPath(path).suffix.lower() for path in project.files()}
-    return frozenset(name for name, own in _SUFFIXES.items() if suffixes & own)
+    return frozenset(name for _, name in xml_schema_files(project))
 
 
 XML_SCHEMAS_ECOSYSTEM = Ecosystem(
@@ -49,6 +55,7 @@ XML_SCHEMAS_ECOSYSTEM = Ecosystem(
     # RELAX NG's compact syntax is not XML; it belongs to the schemas without being a format of its own.
     ambiguous_suffixes={".rnc": None},
     detect=xml_schemas,
+    locate=xml_schema_files,
     ci_programs=(("xmllint",), ("jing",), ("schxslt",), ("xspec",), ("xspec.sh",), ("xspec.bat",)),
 )
 
