@@ -67,6 +67,14 @@ class RakeTests(unittest.TestCase):
             run_as(self, TESTS_RUN, {**RAKEFILE, **SPEC, **_ci("bundle install")}, RUBY).status, Status.WARN
         )
 
+    def test_ruby_s_runs_the_program_it_names(self) -> None:
+        """jekyll's script/cucumber runs `ruby -S bundle exec cucumber`: ruby runs the `bundle` script it finds on
+        the PATH, which runs cucumber (#257)."""
+        files = {"features/site.feature": "Feature: site\n", **_ci("time ruby -S bundle exec cucumber --color")}
+        self.assertEqual(run_as(self, TESTS_RUN, files, RUBY).status, Status.PASS)
+        files = {**SPEC, **_ci("jruby -w -I lib -S rspec spec")}
+        self.assertEqual(run_as(self, TESTS_RUN, files, RUBY).status, Status.PASS)
+
     def test_tasks_in_rakelib_count_too(self) -> None:
         files = {"rakelib/lint.rake": "require 'standard/rake'\n", **_ci("rake standard")}
         self.assertEqual(run_as(self, CODE_FORMATTING, files, RUBY).status, Status.PASS)
