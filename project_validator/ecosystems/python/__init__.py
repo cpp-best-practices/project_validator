@@ -9,6 +9,7 @@ from collections.abc import Callable, Iterable, Iterator
 from dataclasses import replace
 from pathlib import PurePosixPath
 
+from project_validator import yaml_support
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toml_members, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
@@ -464,6 +465,32 @@ PYTHON_PACKAGE_MANAGER = PackageManager(
     "with hashes (pip-compile --generate-hashes) and install them with --require-hashes",
 )
 
+
+CONDA = "conda packages"
+
+
+def _conda_declares(_path: str, text: str) -> bool:
+    """A conda environment file declares dependencies in its `dependencies` list."""
+    try:
+        environment = yaml_support.load(text)
+    except yaml_support.YamlError as error:
+        raise ValueError(str(error)) from error
+    return isinstance(environment, dict) and bool(environment.get("dependencies"))
+
+
+CONDA_ENVIRONMENT = manifest_reader(
+    name="conda environment",
+    manager=CONDA,
+    files=("environment.yml", "environment.yaml"),
+    declares=_conda_declares,
+)
+# conda-lock's unified lockfile (`conda-lock.yml`, or `<name>.conda-lock.yml`), and its explicit per-platform ones.
+CONDA_LOCKFILES = lockfile_reader(manager=CONDA, files=("conda-lock.yml", "*.conda-lock.yml", "conda-*.lock"))
+CONDA_PACKAGES = PackageManager(
+    name=CONDA,
+    languages=PYTHON_ONLY,
+    lock_hint="lock them: commit conda-lock.yml (conda-lock) or an explicit spec (conda list --explicit)",
+)
 
 PYTHON = Ecosystem(
     label="Python",

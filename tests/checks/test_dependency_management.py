@@ -9,7 +9,7 @@ from project_validator.checks.dependency_management import VENDOR_HINT, dependen
 from project_validator.core import Options, Result, Status
 from project_validator.ecosystems import C_FAMILY
 from project_validator.ecosystems.go import GO, GO_MODULES_MANAGER
-from project_validator.ecosystems.python import PYTHON, PYTHON_PACKAGE_MANAGER
+from project_validator.ecosystems.python import CONDA_PACKAGES, PYTHON, PYTHON_PACKAGE_MANAGER
 from project_validator.ecosystems.rust import CARGO_PACKAGES, RUST
 from project_validator.facts import Facts
 from project_validator.facts.dependencies import Lock, PackageManager
@@ -193,6 +193,29 @@ class PythonTests(unittest.TestCase):
         self.assertEqual(
             several.message.rpartition(" and locked in ")[2], "requirements/dev.txt, requirements/docs.txt"
         )
+
+    def test_a_conda_environment_declares_conda_packages(self) -> None:
+        """handson-ml3 and PythonDataScienceHandbook declare their environment in environment.yml (upstream #281)."""
+        environment = "name: homl3\nchannels:\n  - conda-forge\ndependencies:\n  - python=3.10\n  - numpy\n"
+        for name in ("environment.yml", "environment.yaml"):
+            with self.subTest(name):
+                result = self._run({name: environment})
+                self.assertEqual(result, _not_locked(name, "conda packages", CONDA_PACKAGES.lock_hint))
+        both = self._run({"environment.yml": environment, "requirements.txt": "requests\n"})
+        self.assertIn("declared in environment.yml, requirements.txt", both.message)
+        self.assertIn("conda packages", both.message)
+
+    def test_a_conda_environment_without_dependencies_declares_none(self) -> None:
+        for environment in ("name: x\n", "name: x\ndependencies: []\n", "- a\n"):
+            with self.subTest(environment):
+                self.assertEqual(self._run({"environment.yml": environment}), NO_DEPENDENCIES)
+
+    def test_conda_lock_files_lock_a_conda_environment(self) -> None:
+        environment = {"environment.yml": "dependencies:\n  - numpy\n"}
+        for lockfile in ("conda-lock.yml", "environment.conda-lock.yml", "conda-linux-64.lock"):
+            with self.subTest(lockfile):
+                result = self._run({**environment, lockfile: ""})
+                self.assertEqual(result, _declared("environment.yml", "conda packages", lockfile))
 
     def test_an_unreadable_manifest_is_unknown(self) -> None:
         result = self._run({"pyproject.toml": "[project\n"})

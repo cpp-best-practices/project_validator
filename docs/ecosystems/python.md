@@ -68,6 +68,10 @@ Dependencies declared in `pyproject.toml`, `setup.py` or requirements files are 
 in `.github` are CI's own: pinned by hash, they lock what CI installs, but they declare nothing. Those of the docs and
 tooling (`docs/requirements.txt`) are theirs, not the product's.
 
+A conda environment (`environment.yml` with a `dependencies` list) declares conda packages, a second package
+manager beside pip's. conda-lock's `conda-lock.yml` (or `<name>.conda-lock.yml`) and explicit `conda-<platform>.lock`
+specs lock them.
+
 ## `dependency-audit`
 
 pip-audit (or `pypa/gh-action-pip-audit`) or `safety scan`.
