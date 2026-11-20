@@ -15,6 +15,7 @@ from project_validator.ecosystems.javascript import (
     PACKAGE_JSON,
     TYPESCRIPT,
 )
+from project_validator.ecosystems.json_schema import is_json_schema
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import option_values
@@ -30,10 +31,11 @@ from project_validator.tools.scanners import multi_language_scanners
 ESLINT_FILES = file_reader("eslint", ESLINT_CONFIG_FILES)
 OXLINT_FILES = file_reader("oxlint", (".oxlintrc.json",))
 TSCONFIG_FILES = ("tsconfig.json", "jsconfig.json")
+# A JSON Schema so named (SchemaStore's schemas of tsconfig files) is no configuration.
 TYPESCRIPT_SETTINGS = SettingsReader(
     name="TypeScript",
     files=(*TSCONFIG_FILES, "tsconfig.*.json"),
-    read=lambda path, text: json_settings("TypeScript", path, text, comments=True),
+    read=lambda path, text: () if is_json_schema(text) else json_settings("TypeScript", path, text, comments=True),
 )
 DENO_SETTINGS = SettingsReader(
     name="Deno", files=DENO_CONFIG_FILES, read=lambda path, text: json_settings("Deno", path, text, comments=True)

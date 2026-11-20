@@ -73,6 +73,7 @@ SCHEMA_STORE = {
     "package.json": json.dumps({"main": "index.js"}),
     "jsconfig.json": '{"compilerOptions": {"strict": true, "checkJs": true}}\n',
     "schemas/tsconfig.json": TSCONFIG_SCHEMA,
+    "src/types.ts": "",
     **github_job("ubuntu-latest", "npx tsc --project jsconfig.json"),
 }
 STRICT_JSCONFIG = Result.passed("tsc (jsconfig.json) runs; strict mode bonus: tsc (jsconfig.json)")
@@ -140,19 +141,20 @@ class ApiDescriptionTests(unittest.TestCase):
 
 
 class JsonSchemaAndOpenApiGapTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #273: asyncapi validate on examples/, unknown test program, tsconfig schemas
-    def test_examples_validated_unknown_test_programs_and_schemas_named_like_configs(self) -> None:
-        """The AsyncAPI CLI run over `examples/` checks the schemas' examples (asyncapi/spec); a package `test` script
-        whose program comes from a git dependency is unknown, not "no CI configuration runs ... (or npm test)"
-        (OAI/OpenAPI-Specification); a JSON Schema called tsconfig.json is not a TypeScript configuration
-        (SchemaStore)."""
-        with self.subTest(check="schema-examples"):
-            self.assertEqual(_run(schema_examples, ASYNCAPI_EXAMPLES).status, Status.PASS)
-        with self.subTest(check="tests-run"):
-            result = _run(tests_run, UNKNOWN_TEST_PROGRAM)
-            self.assertNotIn(result.status, (Status.WARN, Status.FAIL), result.message)
-        with self.subTest(check="type-checking"):
-            self.assertEqual(_run(type_checking, SCHEMA_STORE), STRICT_JSCONFIG)
+    def test_the_asyncapi_cli_run_over_examples_checks_them(self) -> None:
+        """The AsyncAPI CLI run over `examples/` checks the schemas' examples (asyncapi/spec)."""
+        self.assertEqual(_run(schema_examples, ASYNCAPI_EXAMPLES).status, Status.PASS)
+
+    @unittest.expectedFailure  # upstream #273: a test script whose program comes from a git dependency is unread
+    def test_a_test_program_from_a_git_dependency_is_unknown(self) -> None:
+        """A package `test` script whose program comes from a git dependency is unknown, not "no CI configuration
+        runs ... (or npm test)" (OAI/OpenAPI-Specification)."""
+        result = _run(tests_run, UNKNOWN_TEST_PROGRAM)
+        self.assertNotIn(result.status, (Status.WARN, Status.FAIL), result.message)
+
+    def test_a_schema_named_like_a_configuration_is_not_one(self) -> None:
+        """A JSON Schema called tsconfig.json is not a TypeScript configuration (SchemaStore)."""
+        self.assertEqual(_run(type_checking, SCHEMA_STORE), STRICT_JSCONFIG)
 
 
 class ProtobufTests(unittest.TestCase):

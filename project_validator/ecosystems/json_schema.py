@@ -39,12 +39,18 @@ _SCHEMA_NAME = re.compile(r"\.schema\.json$")
 _SCHEMA_DIALECT = re.compile(r'^(?:\{\s*)?\s{0,4}"\$schema"\s*:\s*"https?://json-schema\.org/', re.MULTILINE)
 
 
+def is_json_schema(text: str) -> bool:
+    """Whether a JSON file's top-level `$schema` names a JSON Schema dialect: the file is a schema, whatever its name
+    (SchemaStore's `tsconfig.json` is the schema of tsconfig files, not one)."""
+    return _SCHEMA_DIALECT.search(text) is not None
+
+
 def json_schemas(project: Project) -> Iterator[str]:
     """The project's JSON Schemas: each `*.schema.json`, and each JSON file whose `$schema` is a JSON Schema dialect.
     A `$schema` naming another schema (a tool's configuration, a Compose file) is an instance, not a schema."""
     for path in project.files():
         name = PurePosixPath(path).name
-        if _SCHEMA_NAME.search(name) or (name.endswith(".json") and _SCHEMA_DIALECT.search(project.read_head(path))):
+        if _SCHEMA_NAME.search(name) or (name.endswith(".json") and is_json_schema(project.read_head(path))):
             yield path
 
 
