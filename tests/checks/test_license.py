@@ -102,6 +102,24 @@ class LicenseTests(unittest.TestCase):
         self.assertEqual(result.status, Status.WARN)
         self.assertEqual(result.message, "the license in LICENSE is not recognised (the others hold MIT)")
 
+    def test_a_note_about_the_license_files_beside_them_is_no_license(self) -> None:
+        """CRAN's two-line stub for `License: MIT + file LICENSE` beside LICENSE.md's MIT text (dplyr), and a
+        short file saying which of the license files beside it apply (ripgrep's COPYING), hold no license of their
+        own: the project is licensed under what the others hold (#238)."""
+        unlicense = OPENINGS["Unlicense"]
+        cran = {"LICENSE": "YEAR: 2026\nCOPYRIGHT HOLDER: dplyr authors\n", "LICENSE.md": MIT}
+        self.assert_licensed(cran, "MIT", "LICENSE.md")
+        pointer = (
+            "This project is dual-licensed under the Unlicense and MIT licenses.\n\n"
+            "You may use this code under the terms of either license.\n"
+        )
+        ripgrep = {"COPYING": pointer, "LICENSE-MIT": MIT, "UNLICENSE": unlicense}
+        self.assert_licensed(ripgrep, "MIT, Unlicense", "LICENSE-MIT", "UNLICENSE")
+
+    def test_a_note_alone_is_not_recognised(self) -> None:
+        result = _run({"LICENSE": "YEAR: 2026\nCOPYRIGHT HOLDER: dplyr authors\n"})
+        self.assertEqual(result.message, "the license in LICENSE is not recognised")
+
 
 class DeclaredLicenseTests(unittest.TestCase):
     def test_passes_when_the_manifests_declare_the_license_of_the_files(self) -> None:

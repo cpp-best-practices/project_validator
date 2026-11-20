@@ -93,11 +93,23 @@ def recognised(path: str, text: str) -> frozenset[str]:
     return identifiers_in(min(found)[2]) if found else frozenset()
 
 
+# CRAN's stub for `License: MIT + file LICENSE`: the year and the holder the MIT text's notice names.
+_CRAN_STUB = re.compile(r"\s*YEAR:[^\n]*\n\s*COPYRIGHT HOLDER:[^\n]*\s*", re.IGNORECASE)
+# A file this short that speaks of licenses names the license files beside it rather than holding a license.
+_NOTE_SIZE = 400
+
+
+def _note(text: str) -> bool:
+    """Whether a license file holds no license but a note about the others: CRAN's stub, or a short pointer."""
+    return _CRAN_STUB.fullmatch(text) is not None or (len(text) < _NOTE_SIZE and "licens" in text.lower())
+
+
 def _read(path: str, text: str) -> Iterator[Fact]:
     file = PurePosixPath(path)
     reuse = file.parent.name == REUSE_DIRECTORY
     if reuse or (LICENSE_FILE.fullmatch(file.name) and file.suffix not in _code_suffixes()):
-        yield LicenseFile(origin=Origin(path=path), licenses=recognised(path, text))
+        found = recognised(path, text)
+        yield LicenseFile(origin=Origin(path=path), licenses=found, note=not found and _note(text))
 
 
 def _code_suffixes() -> frozenset[str]:
