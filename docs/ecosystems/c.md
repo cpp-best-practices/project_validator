@@ -108,6 +108,10 @@ the `DoozyX/clang-format-lint-action` or `jidicula/clang-format-action` action, 
 when CI runs pre-commit. `clang-format -i` enforces it only where the job then fails on a change
 (`git diff --exit-code`) or commits it.
 
+Artistic Style (with its `.astylerc`; it only rewrites, so the job must fail on the change) and uncrustify (with its
+`uncrustify.cfg`; `--check` fails on an unformatted file) count where a project uses them, but only clang-format is
+suggested.
+
 ## `security-scanning`
 
 No security lints of its own here: CodeQL, GitLab SAST or semgrep in CI.

@@ -70,6 +70,31 @@ class CodeFormattingTests(unittest.TestCase):
                 result = self._run({"_clang-format": "BasedOnStyle: LLVM\n", **_uses({"uses": action})})
                 self.assertEqual(result, Result.passed("_clang-format is defined and CI runs clang-format"))
 
+    def test_astyle_and_uncrustify_are_c_formatters(self) -> None:
+        """astyle applies its `.astylerc` style (a later `git diff --exit-code` fails on what it changed); uncrustify
+        `--check` fails on an unformatted file (neovim), `--replace` rewrites them."""
+        cases = {
+            ".astylerc is defined and CI runs astyle": (
+                {".astylerc": "style=allman\n"},
+                ("astyle --project --recursive 'src/*.cpp'", "git diff --exit-code"),
+            ),
+            "uncrustify.cfg is defined and CI runs uncrustify": (
+                {"uncrustify.cfg": "indent_columns = 4\n"},
+                ("uncrustify -c uncrustify.cfg -q --check src/a.cpp",),
+            ),
+        }
+        for message, (files, commands) in cases.items():
+            with self.subTest(message=message):
+                result = self._run({**files, **github_job("ubuntu-latest", *commands)})
+                self.assertEqual(result, Result.passed(message))
+        rewrites = self._run({"uncrustify.cfg": "", **github_job("ubuntu-latest", "uncrustify --replace src/a.cpp")})
+        self.assertEqual(rewrites.message, REWRITES.format("uncrustify"))
+        # Defined but not run: the message names it beside clang-format, which alone is suggested.
+        idle = self._run({"uncrustify.cfg": "", **github_job("ubuntu-latest", "echo build")})
+        self.assertEqual(
+            idle, Result.warned("uncrustify.cfg is defined but CI does not run clang-format or uncrustify", self.HINT)
+        )
+
     def test_checking_commands_in_any_ci_pass(self) -> None:
         commands = (
             "git clang-format --diff origin/main",

@@ -1968,6 +1968,20 @@
     },
     {
       "can": {
+        "format": {
+          "apply": ""
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "astyle",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "asyncapi validate <description>"
         },
@@ -6849,6 +6863,21 @@
         "Typst"
       ],
       "name": "tytanic",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "",
+          "check": ""
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "uncrustify",
       "reads": [],
       "required": []
     },

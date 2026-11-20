@@ -108,12 +108,15 @@ class ToolAnswer:
 
     def how(self, level: str | None = None) -> tuple[str, ...]:
         """How each known tool provides `level` (by default, the answer's); a tool with no way to give is never
-        suggested (it only provides the level as part of something else: molecule's testinfra verifier)."""
+        suggested (it only provides the level as part of something else, molecule's testinfra verifier, or is
+        recognised where a project uses it but another is recommended: uncrustify beside clang-format)."""
         wanted = self.level if level is None else level
         return tuple(tool.can[wanted] for tool in self.known if tool.can.get(wanted))
 
     def names(self) -> tuple[str, ...]:
-        return tuple(tool.name for tool in self.known)
+        """The known tools to name: those suggested (see `how`), and those the project defines."""
+        defined = {name for name, _ in self.defined}
+        return tuple(tool.name for tool in self.known if any(tool.can.values()) or tool.name in defined)
 
     def as_dict(self) -> dict[str, object]:
         return answer_dict(
