@@ -394,6 +394,7 @@ def _unrecognised(files: list[str], accounted: set[str], recognised: set[str]) -
         if path not in accounted
         and (suffix := PurePosixPath(path).suffix)
         and suffix not in recognised
+        and not suffix[1:].isdigit()  # a version (pyenv's `3.12.0`), not a file type
         and suffix.lower() not in NOT_SOURCE_SUFFIXES
         and not suffix.endswith("~")
         and _SERVICE_PROVIDERS not in path
