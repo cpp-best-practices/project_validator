@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import unittest
 from typing import ClassVar
 
@@ -408,6 +409,63 @@ class CiEnvironmentTests(unittest.TestCase):
         facts = self._facts("run: $CABAL v2-test all", "run: ${HOME}/bin/tool")
         [unknown] = facts.of(Unknown)
         self.assertIn("$CABAL", unknown.reason)
+
+    def test_a_variable_in_the_programs_name_is_unknown_but_one_in_its_directory_is_not(self) -> None:
+        """`$DIR/$TOOL` and `${PREFIX}ruff` run a program whose name is not seen; `${HOME}/bin/tool` runs `tool`."""
+        for line, unknown in (
+            ("$DIR/$TOOL --lint .", True),
+            ("${PREFIX}ruff check .", True),
+            ("$DIR/tool", False),
+            ("website/version-${{ inputs.version }}/build.sh", False),
+            ('"$0" --again', False),
+            ('"$BASH" -c true', False),
+            ("$_.Name", False),
+            ('{"with": {"approved": "${{ true }}"}}', False),
+            ("ghostty-${{ needs.setup.outputs.version }}.zip", False),
+            ("$PWD/${{ env.EXE }} --test", True),
+        ):
+            with self.subTest(line=line):
+                self.assertEqual(bool(self._facts(f"run: {line}").of(Unknown)), unknown)
+
+    def test_a_program_that_is_an_expression_not_evaluated_is_unknown(self) -> None:
+        """`run: ${{ matrix.runs.test }}` with the matrix computed at run time runs what is not seen."""
+        workflow = {
+            "jobs": {
+                "test": {
+                    "runs-on": "ubuntu-latest",
+                    "strategy": {"matrix": "${{ fromJSON(needs.generate.outputs.strategy) }}"},
+                    "steps": [{"run": "${{ matrix.runs.test }}"}],
+                }
+            }
+        }
+        with temp_project({GITHUB_WORKFLOW: json.dumps(workflow)}) as root:
+            facts = make_context(root).facts
+        [unknown] = [unknown for unknown in facts.of(Unknown) if unknown.hides == "commands"]
+        self.assertIn("${{ matrix.runs.test }}", unknown.reason)
+
+    def test_a_scripts_constant_assignment_is_resolved(self) -> None:
+        """`export PREFIX=""` then `${PREFIX}ruff check .` runs ruff: a value the script sets once, to plain text, is
+        put in place in the commands after it (encode/httpx's scripts/check)."""
+        for script in ('export PREFIX=""\n${PREFIX}ruff check .', "PREFIX=\n${PREFIX}ruff check ."):
+            with self.subTest(script=script):
+                facts = self._facts(f"run: |\n  {script.replace(chr(10), chr(10) + '  ')}")
+                self.assertIn(("ruff", "check", "."), [resolved(command) for command in facts.of(Command)])
+                self.assertFalse(facts.of(Unknown))
+
+    def test_a_variable_assigned_twice_or_from_a_command_is_not_resolved(self) -> None:
+        for script in ("T=ruff\nT=black\n$T check .", "T=$(which ruff)\n$T check ."):
+            with self.subTest(script=script):
+                facts = self._facts(f"run: |\n  {script.replace(chr(10), chr(10) + '  ')}")
+                self.assertNotIn(("ruff", "check", "."), [resolved(command) for command in facts.of(Command)])
+
+    def test_scripts_ci_runs_are_held_to_the_same_rule_unless_they_source_others(self) -> None:
+        """A repository script's unset program is unknown too; one that sources another file may be set by it."""
+        for text, unknown in (('#!/bin/sh\n"$DIR/$TOOL" --lint .\n', True), ("#!/bin/sh\n. ./env.sh\n$CC x\n", False)):
+            with self.subTest(text=text):
+                files = {"lint.sh": text, "env.sh": "export CC=gcc\n", **github_steps("run: ./lint.sh")}
+                with temp_project(files) as root:
+                    facts = make_context(root).facts
+                self.assertEqual(bool(facts.of(Unknown)), unknown, facts.of(Unknown))
 
     def test_a_conditional_expression_is_not_a_command(self) -> None:
         """`[[ ... ]]` is a shell keyword, not a command: nothing in it runs, so a variable in it (set by an `eval`

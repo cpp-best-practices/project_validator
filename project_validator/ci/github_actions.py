@@ -311,11 +311,12 @@ class _Combination:
         steps = job.get("steps")
         for number, step in enumerate(steps if isinstance(steps, list) else []):
             if isinstance(step, Mapping):
-                yield from self.step_facts(
+                # What the steps before wrote to $GITHUB_ENV is in its environment, and its expressions' too.
+                here = replace(self, known=known)
+                yield from here.step_facts(
                     Origin(path=self.origin.path, at=(*self.origin.at, "steps", number)), step, known
                 )
-                # What a step writes to $GITHUB_ENV is in the environment of the job's later steps.
-                if isinstance(run := step.get("run"), str) and (exported := _exported(self.substitute(run))):
+                if isinstance(run := step.get("run"), str) and (exported := _exported(here.substitute(run))):
                     known = replace(known, env={**known.env, **exported})
 
     def step_facts(

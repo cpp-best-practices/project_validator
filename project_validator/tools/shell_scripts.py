@@ -10,7 +10,7 @@ import re
 from pathlib import PurePosixPath
 
 from project_validator.core import Context
-from project_validator.facts import Command, Origin, resolved
+from project_validator.facts import Command, Origin, Unknown, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 
@@ -51,12 +51,20 @@ def _is_shell_script(text: str, path: str) -> bool:
 
 def _shell_script(command: Command, context: Context) -> list[Expansion] | None:
     path = _script(command)
-    if path is None or path.startswith(("/", "$", "~")):
-        return None
+    if path is None or path.startswith(("/", "$", "~", ":")) or any(character in path for character in " \t\n*?["):
+        return None  # elsewhere, a pattern, or a whole command line quoted as one word (`"bash -x ./ci/test.sh"`)
     found = joined(command.directory, path.removeprefix("./"))
-    if not context.project.exists(found) or not _is_shell_script(text := context.project.read_text(found), found):
+    if not context.project.exists(found):
+        # A program the build makes (`./build/app`) is not in the repository either; a shell script is written by CI.
+        return [_missing(command, found)] if found.endswith((".sh", ".bash")) else None
+    if not _is_shell_script(text := context.project.read_text(found), found):
         return None
-    return [Script(text=text, origin=Origin(path=str(PurePosixPath(found))))]
+    return [Script(text=text, origin=Origin(path=str(PurePosixPath(found))), whole=True)]
+
+
+def _missing(command: Command, path: str) -> Unknown:
+    reason = "it is not in the repository: a step before writes or downloads it, or it is missing"
+    return Unknown(origin=command.origin, subject=f"the script {path}", reason=reason)
 
 
 SHELL_SCRIPTS = CommandExpander(name="shell scripts", expand=_shell_script)
