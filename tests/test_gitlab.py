@@ -53,6 +53,20 @@ class PipelineJobTests(unittest.TestCase):
         jobs = parse_pipeline(pipeline)
         self.assertEqual([job.compilers for job in jobs], [frozenset({"gcc"}), frozenset({"clang"})])
 
+    def test_a_variable_naming_another_jobs_image_says_nothing_of_this_ones_compiler(self) -> None:
+        """glib's global MINGW_IMAGE, the image of its cross-mingw64 job only, made every job a gcc job: its macOS
+        job (appleclang), its vs2019 jobs (msvc) and its clang64 job (clang) (#228)."""
+        pipeline = {
+            "variables": {"MINGW_IMAGE": "registry.gitlab.gnome.org/gnome/glib/mingw:v41.4"},
+            "cross-mingw64": {"image": "${MINGW_IMAGE}", "script": ["meson setup _build"]},
+            "macos-arm64": {"tags": ["macos", "arm64"], "script": ["meson setup _build"]},
+            "vs2019-x64": {"tags": ["win32-ps"], "script": [".gitlab-ci/test-msvc.bat"]},
+        }
+        mingw, macos, msvc = parse_pipeline(pipeline)
+        self.assertEqual(mingw.compilers, frozenset({"gcc"}))
+        self.assertEqual((macos.os, macos.compilers), ("macos", frozenset({"appleclang"})))
+        self.assertEqual(msvc.compilers, frozenset({"msvc"}))
+
     def test_untagged_jobs_without_compilers_use_the_linux_default(self) -> None:
         [job] = parse_pipeline({"test": {"script": ["make test"]}})
         self.assertEqual((job.os, job.compilers, job.default_compiler), ("linux", frozenset({"gcc"}), True))

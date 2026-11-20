@@ -142,10 +142,12 @@ def _evidence(job: CiJob, facts: Iterable[Command | ActionStep]) -> str:
     """What a job shows about the tools it uses: its image, environment, the commands it runs (with the variables
     its environment defines in place) and the actions it uses with the inputs that are known and switched on.
 
-    Step names and conditions, and inputs still holding an expression, show nothing about what runs.
+    Step names and conditions, and inputs still holding an expression, show nothing about what runs; nor does a
+    variable naming an image (glib's global `MINGW_IMAGE`), which shows what the jobs whose `image` names it run on:
+    the job's own image is there already.
     """
     lines = [f"image: {job.image}"] if job.image else []
-    lines += [f"{name}: {value}" for name, value in job.env.items()]
+    lines += [f"{name}: {value}" for name, value in job.env.items() if not name.upper().endswith("IMAGE")]
     for fact in facts:
         if isinstance(fact, ActionStep):
             lines.append(f"uses: {fact.uses}")
