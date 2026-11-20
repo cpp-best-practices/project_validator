@@ -320,7 +320,17 @@ MIN_MAX_WORKFLOW: dict[str, object] = {
                 },
                 {"run": "terraform validate"},
             ],
-        }
+        },
+        "max": {
+            "runs-on": CI,
+            "steps": [
+                {"id": "minMax", "uses": "clowdhaus/terraform-min-max@v1"},
+                {
+                    "uses": "clowdhaus/terraform-composite-actions/pre-commit@v1.14.0",
+                    "with": {"terraform-version": "${{ steps.minMax.outputs.maxVersion }}"},
+                },
+            ],
+        },
     }
 }
 
@@ -350,11 +360,12 @@ class TerraformTests(unittest.TestCase):
         ):
             self.assertEqual(make_context(root).structure.unrecognised_suffixes, ())
 
-    @unittest.expectedFailure  # upstream #262: terraform-min-max's versions are unread
-    def test_terraform_min_max_versions_are_two_versions_or_unknown(self) -> None:
-        """A terraform-min-max version is two versions or unknown, not none (terraform-aws-vpc)."""
+    def test_terraform_min_max_versions_are_two_versions(self) -> None:
+        """clowdhaus/terraform-min-max's `minVersion` and `maxVersion` outputs, given to setup-terraform or to the
+        clowdhaus pre-commit composite action, are the oldest Terraform the `required_version` constraint allows and
+        the latest: two versions, not none (terraform-aws-vpc)."""
         result = run_in_layout(self, TERRAFORM, PLATFORM_MATRIX, _workflow(MIN_MAX_WORKFLOW))
-        self.assertTrue(result.status is Status.ERROR or "2 Terraform version(s)" in result.message, result)
+        self.assertIn("2 Terraform version(s) (latest required_version, oldest required_version)", result.message)
 
 
 # --- Typst (#263) ----------------------------------------------------------------------------------------------------

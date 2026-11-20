@@ -14,6 +14,7 @@ scanning: their rules are what static analysis means for infrastructure code, so
 from __future__ import annotations
 
 import re
+from collections.abc import Callable, Mapping
 
 from project_validator.core import Context
 from project_validator.ecosystems.model import Ecosystem, subcommands, toolchain_patterns
@@ -163,6 +164,24 @@ STATE_AND_PLANS = BuildOutput(
 CI_PROGRAMS = (("tflint",), ("checkov",), ("tfsec",), ("terrascan",), ("kics",), ("trivy", "config"))
 _VERBS = ("init", "validate", "plan", "apply", "fmt", "test")
 
+# clowdhaus/terraform-min-max's outputs: the oldest and the latest Terraform the `required_version` constraint allows.
+_MIN_MAX = re.compile(r"\$\{\{\s*steps\.[\w-]+\.outputs\.(minVersion|maxVersion)\s*\}\}")
+_MIN_MAX_LABELS = {"minVersion": "oldest required_version", "maxVersion": "latest required_version"}
+
+
+def _version_input(name: str) -> Callable[[Mapping[str, str]], str | None]:
+    """A setup action's version input `name`: a terraform-min-max output as what it stands for; another expression is
+    left to the patterns."""
+
+    def read(inputs: Mapping[str, str]) -> str | None:
+        value = inputs.get(name, "")
+        if (found := _MIN_MAX.fullmatch(value.strip())) is not None:
+            return _MIN_MAX_LABELS[found[1]]
+        return None
+
+    return read
+
+
 TERRAFORM_ECOSYSTEM = Ecosystem(
     label=TERRAFORM,
     languages=TERRAFORM_LANGUAGE,
@@ -178,6 +197,10 @@ TERRAFORM_ECOSYSTEM = Ecosystem(
         images=("hashicorp/terraform", "ghcr.io/opentofu/opentofu"),
         programs=(*subcommands("terraform", *_VERBS), *subcommands("tofu", *_VERBS)),
         setup=("terraform", "opentofu"),
+        steps=(
+            ("hashicorp/setup-terraform", _version_input("terraform_version")),
+            ("clowdhaus/terraform-composite-actions/pre-commit", _version_input("terraform-version")),
+        ),
     ),
 )
 TERRAFORM_VERSIONS = versions_axis("Terraform version", TERRAFORM, TERRAFORM_LANGUAGE)
