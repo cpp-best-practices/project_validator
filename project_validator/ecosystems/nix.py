@@ -16,7 +16,7 @@ from project_validator.core import Context, Project
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Facts, Origin, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.arguments import starts_with
+from project_validator.facts.arguments import program, starts_with
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
 from project_validator.facts.expansion import CommandExpander, Expansion, Invocation, Launched, joined
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
@@ -246,6 +246,29 @@ def _nix_launched(command: Command, _context: Context) -> list[Expansion] | None
 
 
 NIX_LAUNCHERS = CommandExpander(name="nix run", expand=_nix_launched)
+_DEVENV_VALUED = frozenset({"--system", "-s", "--option", "-O", "--max-jobs", "-j", "--cores", "-u", "--profile"})
+
+
+def _devenv_shell(command: Command, _context: Context) -> list[Expansion] | None:
+    """`devenv [<options>] shell [--] <command>` runs the command in devenv.nix's environment (cachix/devenv, whose CI
+    runs its own build: `<path>/bin/devenv --system x86_64-linux shell -- cargo nextest run`)."""
+    argv = resolved(command)
+    if program(argv) != "devenv":
+        return None
+    words = iter(argv[1:])
+    for word in words:
+        if word in _DEVENV_VALUED:
+            next(words, None)
+        elif not word.startswith("-"):
+            if word != "shell":
+                return None
+            rest = tuple(words)
+            launched = rest[1:] if rest[:1] == ("--",) else rest
+            return [Launched(argv=launched)] if launched else []
+    return None
+
+
+DEVENV_SHELL = CommandExpander(name="devenv shell", expand=_devenv_shell)
 
 
 # --- Recognition, toolchain and the systems axis ---------------------------------------------------------------------

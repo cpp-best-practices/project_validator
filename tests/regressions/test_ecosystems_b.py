@@ -389,16 +389,24 @@ class NixTests(unittest.TestCase):
                 result = _run(check, NIX, {**TREEFMT, **github_job(CI, "nix fmt -- --ci")})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #285: `devenv shell -- cmd` is no launcher, devenv git-hooks unknown
-    def test_devenv_shell_runs_the_command_and_its_git_hooks_are_preks(self) -> None:
-        """`devenv shell -- cargo nextest run` runs the tests, and `devenv shell -- prek run -a` runs the hooks
-        `devenv.nix` enables (rustfmt), which is the formatter checking (cachix/devenv)."""
-        tests = _run(tests_run, "Cargo Rust", {**RUST_TEST, **github_job(CI, "devenv shell -- cargo nextest run")})
-        with self.subTest(case="nextest"):
-            self.assertEqual(tests.status, Status.PASS, tests)
+    def test_devenv_shell_runs_the_command(self) -> None:
+        """`devenv shell -- cargo nextest run` (or without `--`) runs the tests in devenv's environment
+        (cachix/devenv)."""
+        for line in (
+            "devenv shell -- cargo nextest run",
+            "devenv shell cargo nextest run",
+            "${{ steps.build.outputs.path }}/bin/devenv --system x86_64-linux shell -- cargo nextest run -j 4",
+        ):
+            with self.subTest(line=line):
+                tests = _run(tests_run, "Cargo Rust", {**RUST_TEST, **github_job(CI, line)})
+                self.assertEqual(tests.status, Status.PASS, tests)
+
+    @unittest.expectedFailure  # upstream #285: devenv's git-hooks are unknown
+    def test_devenv_git_hooks_are_preks(self) -> None:
+        """`devenv shell -- prek run -a` runs the hooks `devenv.nix` enables (rustfmt), which is the formatter checking
+        (cachix/devenv)."""
         hooks = _run(code_formatting, "Cargo Rust", {**DEVENV_HOOKS, **github_job(CI, "devenv shell -- prek run -a")})
-        with self.subTest(case="prek"):
-            self.assertIn("Rust: CI enforces the rustfmt style", hooks.message)
+        self.assertIn("Rust: CI enforces the rustfmt style", hooks.message)
 
 
 DUNE = "dune project"
