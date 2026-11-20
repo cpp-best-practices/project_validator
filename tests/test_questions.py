@@ -4,10 +4,13 @@ from __future__ import annotations
 
 import time
 import unittest
+from collections.abc import Iterator
+from contextlib import contextmanager
 from typing import cast
 from unittest import mock
 
 from project_validator.checks.coverage import coverage
+from project_validator.components import forget
 from project_validator.core import Result, Status
 from project_validator.ecosystems import isolated_registry, register
 from project_validator.facts import Command, Facts, Origin, Unknown
@@ -203,6 +206,21 @@ class CoveragePolicyTests(unittest.TestCase):
         )
 
 
+@contextmanager
+def _known_tools(*tools: Tool) -> Iterator[None]:
+    """The known tools replaced by `tools`, with every cache computed from them forgotten on entering and leaving: a
+    cache filled inside (the tools of an aspect, the languages a check judges) must not outlive the replacement."""
+    forget()
+    try:
+        with (
+            mock.patch("project_validator.questions.coverage.known_tools", return_value=tools),
+            mock.patch("project_validator.facts.tools.known_tools", return_value=tools),
+        ):
+            yield
+    finally:
+        forget()
+
+
 class LanguagesOfOneEcosystemTests(unittest.TestCase):
     def test_languages_judged_differently_are_labelled(self) -> None:
         c_only = coverage_tool(
@@ -212,22 +230,14 @@ class LanguagesOfOneEcosystemTests(unittest.TestCase):
             name="xxcov", languages=frozenset({"C++"}), can={LINE: "xxcov"}, measures=lambda *_: measured(LINE)
         )
         files = {"main.c": "", "app.cpp": "", **github_job("ubuntu-latest", "ccov")}
-        with (
-            mock.patch("project_validator.questions.coverage.known_tools", return_value=(c_only, cxx_lines)),
-            mock.patch("project_validator.facts.tools.known_tools", return_value=(c_only, cxx_lines)),
-            temp_project(files) as root,
-        ):
+        with _known_tools(c_only, cxx_lines), temp_project(files) as root:
             result = coverage.run(make_context(root))
         self.assertEqual(
             result.message,
             "C: branch coverage is measured with ccov; C++: line coverage is measured with xxcov",
         )
         # A language no known tool handles is not judged by the check at all.
-        with (
-            mock.patch("project_validator.questions.coverage.known_tools", return_value=(c_only,)),
-            mock.patch("project_validator.facts.tools.known_tools", return_value=(c_only,)),
-            temp_project(files) as root,
-        ):
+        with _known_tools(c_only), temp_project(files) as root:
             self.assertEqual(coverage.run(make_context(root)).message, "branch coverage is measured with ccov")
 
 
