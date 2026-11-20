@@ -5,7 +5,8 @@ Recognised by `.rb` sources and Bundler (`Gemfile`). The Rakefile counts as CI c
 ## `tests-run`
 
 `spec/**/*_spec.rb` or `test/**/*_test.rb` files run by rspec, `rake test` / `spec`, `rails test` or ruby running a
-test file (`ruby test/test_x.rb`), or by the Rakefile's test tasks when CI runs rake.
+test file (`ruby test/test_x.rb`), or by the Rakefile's test tasks when CI runs rake; or Cucumber features
+(`features/**/*.feature`) run by `cucumber`.
 
 ## `coverage`
 

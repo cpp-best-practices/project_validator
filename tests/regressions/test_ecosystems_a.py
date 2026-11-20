@@ -139,16 +139,18 @@ class RubyTests(unittest.TestCase):
             },
         )
 
-    @unittest.expectedFailure  # upstream #257: Cucumber features and runner scripts are unread
-    def test_cucumber_features_and_runner_scripts_are_tests(self) -> None:
-        """Cucumber features are tests (rspec); `test/runner` (puma) runs Minitest."""
-        _all_pass(
-            self,
-            {
-                "cucumber": (BUNDLER, TESTS_RUN, {**FEATURE, **_ci("bundle exec cucumber")}),
-                "test/runner": (BUNDLER, TESTS_RUN, {**RUNNER, **MINITEST, **_ci("test/runner --verbose")}),
-            },
-        )
+    def test_cucumber_features_are_tests_cucumber_runs(self) -> None:
+        """Cucumber features under `features/` are tests, and `cucumber` runs them (rspec); a `.feature` file elsewhere
+        is not one."""
+        _all_pass(self, {"cucumber": (BUNDLER, TESTS_RUN, {**FEATURE, **_ci("bundle exec cucumber")})})
+        stray = {"docs/shop.feature": FEATURE["features/shop.feature"], **_ci("bundle exec cucumber")}
+        result = run_in_layout(self, BUNDLER, TESTS_RUN, stray)
+        self.assertEqual(result.status, Status.FAIL, result)
+
+    @unittest.expectedFailure  # upstream #257: a project's runner script is unread
+    def test_a_runner_script_runs_the_tests(self) -> None:
+        """`test/runner` (puma), a Ruby script that requires minitest/autorun and the test files, runs Minitest."""
+        _all_pass(self, {"test/runner": (BUNDLER, TESTS_RUN, {**RUNNER, **MINITEST, **_ci("test/runner --verbose")})})
 
 
 # --- Dart (#258) -----------------------------------------------------------------------------------------------------

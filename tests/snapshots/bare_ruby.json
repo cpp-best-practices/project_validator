@@ -630,6 +630,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "cucumber": {
+                "can": {
+                  "runs": "cucumber"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "rspec, rake test or rails test": {
                 "can": {
                   "runs": "rspec, rake test or rails test"
@@ -927,7 +934,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (spec/**/*_spec.rb or test/**/*_test.rb files)",
+      "message": "no tests found (spec/**/*_spec.rb or test/**/*_test.rb files or Cucumber features (features/**/*.feature))",
       "status": "FAIL"
     },
     "top-level-guard": {

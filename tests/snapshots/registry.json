@@ -2773,6 +2773,19 @@
     },
     {
       "can": {
+        "test": {
+          "runs": "cucumber"
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "cucumber",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "dart run custom_lint"
         }

@@ -103,7 +103,7 @@ RUBY = Ecosystem(
     build_systems=(BUNDLER,),
     source_suffixes={".rb": RUBY_LANGUAGE, ".rake": RUBY_LANGUAGE},
     # Rack configuration and ERB templates belong to Ruby projects, but name no language on their own.
-    ambiguous_suffixes={".ru": None, ".erb": None},
+    ambiguous_suffixes={".ru": None, ".erb": None, ".feature": None},
     toolchain=toolchain_patterns(
         RUBY_LANGUAGE,
         version=_RUBY_VERSION,
