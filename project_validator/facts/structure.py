@@ -389,6 +389,12 @@ def _content(project: Project) -> tuple[list[ContentLanguages], set[str]]:
     return content, paths
 
 
+def _version(path: PurePosixPath, suffix: str) -> bool:
+    """Whether `suffix` is the end of a version the file is named for (pyenv's `3.12.0`, `3.13.0t`, `3.4-dev`), not a
+    file type: all digits, or a digit after a name that ends in one (`.4th` after `words` is a file type)."""
+    return suffix[1:].isdigit() or (suffix[1:2].isdigit() and path.stem[-1:].isdigit())
+
+
 def _unrecognised(files: list[str], accounted: set[str], recognised: set[str]) -> Iterator[UnrecognisedSuffix]:
     """The suffixes of the source-like files no ecosystem accounts for, most common first."""
     counts = Counter(
@@ -397,7 +403,7 @@ def _unrecognised(files: list[str], accounted: set[str], recognised: set[str]) -
         if path not in accounted
         and (suffix := PurePosixPath(path).suffix)
         and suffix not in recognised
-        and not suffix[1:].isdigit()  # a version (pyenv's `3.12.0`), not a file type
+        and not _version(PurePosixPath(path), suffix)
         and suffix.lower() not in NOT_SOURCE_SUFFIXES
         and not suffix.endswith("~")
         and _SERVICE_PROVIDERS not in path
