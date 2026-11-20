@@ -307,11 +307,25 @@ def _configuration(path: str) -> bool:
 _EDITOR_SETTINGS = frozenset({".dir-locals.el", ".dir-locals-2.el"})
 
 
-def _sources(project: Project) -> Iterator[SourceFile]:
+def _generated(project: Project) -> frozenset[str]:
+    """The directories an ecosystem's own build generates and builds (see `Ecosystem.generated_directories`)."""
+    return frozenset(
+        directory
+        for ecosystem in registered()
+        if ecosystem.generated_directories is not None
+        for directory in ecosystem.generated_directories(project)
+    )
+
+
+def _outside(paths: Iterable[str], directories: frozenset[str]) -> list[str]:
+    return [path for path in paths if not any(within(path, directory) for directory in directories)]
+
+
+def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile]:
     """The sources of each language among the project's files, and of each format among those and the configuration
-    directories' files; not editor settings."""
+    directories' files; not editor settings, nor what an ecosystem's build generates (`generated`)."""
     known = _source_suffixes()
-    for path in project.files(hidden=CONFIGURATION_DIRECTORIES):
+    for path in _outside(project.files(hidden=CONFIGURATION_DIRECTORIES), generated):
         if PurePosixPath(path).name in _EDITOR_SETTINGS:
             continue
         found = known.get(PurePosixPath(path).suffix)
@@ -432,11 +446,12 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
 def structure_facts(project: Project) -> Iterator[Fact]:
     """The build files, the source files with their languages, what the content shows, the ambiguous sources of the
     ecosystems those show, and the unrecognised suffixes."""
-    files = project.files()
+    generated = _generated(project)
+    files = _outside(project.files(), generated)
     named = Selectors.parse(project.auxiliary)
     yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary))
     found = list(_build_files(project, files))
-    found_sources = list(_tool_configuration(list(_sources(project))))
+    found_sources = list(_tool_configuration(list(_sources(project, generated))))
     plain = Facts((*(fact for fact, _ in found if fact is not None), *found_sources, *_content(project)))
     yield from plain
     names = project_languages(plain) | project_formats(plain)

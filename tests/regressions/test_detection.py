@@ -127,7 +127,6 @@ class RoleBelowSourceRootTests(unittest.TestCase):
 
 
 class FlutterScaffoldingTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #185: Flutter's generated runners make C, C++, Swift and JVM units
     def test_flutter_platform_directories_are_the_flutter_builds_own(self) -> None:
         """The android/, ios/ and linux/ runners beside a pubspec with a `flutter:` section make the project neither
         C, C++, Swift nor JVM, and add no CMake or Xcode build (dart-lang/http, bloc, drift)."""

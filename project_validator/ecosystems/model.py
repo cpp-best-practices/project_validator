@@ -199,6 +199,10 @@ class Ecosystem:
     # configuration (a site's conf.py). Beside a language with sources other than those, its failures are warnings
     # that say so (see `project_validator.judging.check_each_ecosystem`).
     companion: re.Pattern[str] | None = None
+    # The directories the ecosystem's own build generates and builds, by what the project shows (Flutter's android/
+    # and ios/ runners beside a pubspec with a `flutter:` section): their code is that build's, not sources or builds
+    # of other languages (see `project_validator.facts.structure`).
+    generated_directories: Callable[[Project], frozenset[str]] | None = None
 
     def __post_init__(self) -> None:
         if self.kind == "format" and self.toolchain is not None:
