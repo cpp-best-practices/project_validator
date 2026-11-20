@@ -6,7 +6,7 @@ import enum
 import os
 import shutil
 import subprocess
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Collection, Iterator
 from dataclasses import dataclass, field
 from functools import cached_property
 from pathlib import Path, PurePosixPath
@@ -101,6 +101,12 @@ def _exists(path: Path) -> bool:
     return not path.is_symlink() or path.exists()
 
 
+def _directories(relative: str) -> Iterator[str]:
+    """The directories a path is in, as git lists an ignored directory: `a/`, then `a/b/`."""
+    parts = PurePosixPath(relative).parts[:-1]
+    return ("/".join(parts[: index + 1]) + "/" for index in range(len(parts)))
+
+
 def _is_cmake_file(name: str) -> bool:
     return name == "CMakeLists.txt" or name.endswith(".cmake")
 
@@ -114,19 +120,19 @@ class Project:
     # What `--auxiliary` named as not the product's code (see `project_validator.facts.auxiliary`), as given.
     auxiliary: tuple[str, ...] = ()
     # The files listed so far, by what was asked: the tree is walked once, as it is when first asked.
-    _listed: dict[object, list[str]] = field(default_factory=dict, repr=False, compare=False)
+    _listed: dict[object, Collection[str]] = field(default_factory=dict, repr=False, compare=False)
 
     def exists(self, relative: str) -> bool:
         """Whether the file exists, with its name spelled exactly so (`makefile` is not `Makefile`, even where file
         names are compared without case, as on Windows and macOS)."""
         path = self.root / relative
-        return path.is_file() and path.name in self._entries(path.parent)
+        return path.is_file() and path.name in self._entries(path.parent) and not self._git_ignores(relative)
 
     def _entries(self, directory: Path) -> frozenset[str]:
         """The names in `directory`, listed once (`exists` is asked about many files of the same directory)."""
         key = ("entries", str(directory))
         if key not in self._listed:
-            self._listed[key] = sorted(os.listdir(directory))
+            self._listed[key] = frozenset(os.listdir(directory))
         return frozenset(self._listed[key])
 
     def read_text(self, relative: str) -> str:
@@ -144,11 +150,12 @@ class Project:
         directory = self.root / relative_directory
         if not directory.is_dir():
             return []
-        return sorted(
+        found = (
             str(PurePosixPath(relative_directory, entry.name))
             for entry in directory.iterdir()
             if entry.is_file() and entry.name.endswith(suffixes)
         )
+        return sorted(path for path in found if not self._git_ignores(path))
 
     def size(self, relative: str) -> int:
         return (self.root / relative).stat().st_size
@@ -182,6 +189,36 @@ class Project:
             return self.files()
         return sorted(path for path in paths if path and not self._excludes(path) and (self.root / path).is_file())
 
+    def ignored(self) -> tuple[str, ...]:
+        """The paths git ignores and does not track, left out of the project (a directory ends in `/`), sorted."""
+        return tuple(sorted(self._ignored_paths()))
+
+    def _git_ignores(self, relative: str) -> bool:
+        """Whether git ignores the file and does not track it: in a checkout, it is not the project's (generated code,
+        a downloaded SDK, mutmut's mutants/)."""
+        ignored = self._ignored_paths()
+        return bool(ignored) and any(path in ignored for path in (relative, *_directories(relative)))
+
+    def _ignored_paths(self) -> frozenset[str]:
+        """What git ignores in the project and does not track, files and whole directories (`generated/`)."""
+        if "ignored" not in self._listed:
+            self._listed["ignored"] = frozenset(self._git_ignored())
+        return frozenset(self._listed["ignored"])  # the set itself: frozenset() of a frozenset copies nothing
+
+    def _git_ignored(self) -> list[str]:
+        """What git lists as ignored and untracked; nothing outside a checkout, or where the checkout ignores the
+        project itself (it is no checkout of the project, see `_ignored`)."""
+        git = shutil.which("git")
+        if git is None or self._ignored(git):
+            return []
+        arguments = ("ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--directory")
+        listed = subprocess.run(  # noqa: S603 - argv list, no shell
+            [git, "-C", str(self.root), *arguments], capture_output=True, check=False
+        )
+        if listed.returncode != 0:
+            return []
+        return [path for path in listed.stdout.decode("utf-8", errors="replace").split("\0") if path]
+
     def _ignored(self, git: str) -> bool:
         """Whether the checkout around the project ignores its directory (mutmut's mutants/): then it is no checkout of
         the project, and every file counts as tracked."""
@@ -210,9 +247,11 @@ class Project:
                 and name not in _SKIPPED_DIRECTORIES
                 and relative / name not in self.excluded
                 and not is_build_tree(current / name)
+                and not self._git_ignores(f"{relative / name}/")
             ]
             # A symlink to nothing has no content to read: it is not a file of the project.
-            yield from (str(PurePosixPath(relative, name)) for name in files if _exists(current / name))
+            found = (str(PurePosixPath(relative, name)) for name in files if _exists(current / name))
+            yield from (path for path in found if not self._git_ignores(path))
 
 
 class ExtractionError(Exception):
