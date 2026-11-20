@@ -26,7 +26,8 @@ Swagger 2.0 description (`swagger: "2.0"`) warns: OpenAPI 3.0 superseded it.
 The description's examples are checked against their schemas by spectral (`oas3-valid-media-example`,
 `oas3-valid-schema-example`, in `spectral:oas`; the AsyncAPI ruleset's example rules), redocly
 (`no-invalid-media-type-examples`) or vacuum, or for real by contract tests: `schemathesis run` (or `st run`), dredd.
-Warns when CI checks none.
+An AsyncAPI CLI run over an examples directory (`asyncapi validate examples/...`) checks those examples. Warns when CI
+checks none.
 
 ## `schema-compatibility`
 

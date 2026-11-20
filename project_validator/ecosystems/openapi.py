@@ -4,9 +4,10 @@ that CI lints the description against its specification (`schema-validation`, an
 run: spectral with a ruleset, redocly, vacuum, swagger-cli, openapi-generator's validate; the AsyncAPI CLI), and that
 each description declares its version and `info.version` (`schema-declared`; Swagger 2.0 warns), and that the
 description's examples are checked (`schema-examples`: spectral's, redocly's and vacuum's rules validate them; or
-contract tests with schemathesis or dredd), and that an OpenAPI description is checked for breaking changes against
-the main branch's (`schema-compatibility`: `oasdiff breaking`, its action, openapi-diff; the AsyncAPI CLI's `diff`
-reports breaking changes without failing on them, so AsyncAPI is not asked)."""
+contract tests with schemathesis or dredd; or the AsyncAPI CLI run over an examples directory), and that an OpenAPI
+description is checked for breaking changes against the main branch's (`schema-compatibility`: `oasdiff breaking`, its
+action, openapi-diff; the AsyncAPI CLI's `diff` reports breaking changes without failing on them, so AsyncAPI is not
+asked)."""
 
 from __future__ import annotations
 
@@ -25,6 +26,7 @@ from project_validator.facts.schema import (
     compatibility_checker,
     example_checker,
     examples_checked,
+    names_examples,
     validated,
     validator,
 )
@@ -192,7 +194,17 @@ OPENAPI_GENERATOR = _linter(
     "openapi-generator-cli validate -i <description>",
     starts(("openapi-generator", "validate"), ("openapi-generator-cli", "validate")),
 )
-ASYNCAPI_CLI = _linter("asyncapi", ASYNCAPI_ONLY, "asyncapi validate <description>", starts(("asyncapi", "validate")))
+_ASYNCAPI_VALIDATE = starts(("asyncapi", "validate"))
+# Run over an examples directory, the AsyncAPI CLI checks the examples that come with the specification.
+ASYNCAPI_CLI = combined(
+    _linter("asyncapi", ASYNCAPI_ONLY, "asyncapi validate <description>", _ASYNCAPI_VALIDATE),
+    example_checker(
+        name="asyncapi",
+        languages=ASYNCAPI_ONLY,
+        how="asyncapi validate examples/<description>",
+        checks=when(all_of(_ASYNCAPI_VALIDATE, names_examples), examples_checked),
+    ),
+)
 
 # Contract tests run the described API against its description: every example, and more, is checked for real.
 SCHEMATHESIS = example_checker(
