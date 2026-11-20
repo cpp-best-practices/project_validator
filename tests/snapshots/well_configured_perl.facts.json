@@ -75,7 +75,7 @@
       "kind": "SourceFile",
       "language": "Perl",
       "origin": "t/shop.t",
-      "role": "product"
+      "role": "test"
     },
     {
       "build_systems": [
@@ -1207,6 +1207,7 @@
       "licenses": [
         "MIT"
       ],
+      "note": false,
       "origin": "LICENSE"
     },
     {

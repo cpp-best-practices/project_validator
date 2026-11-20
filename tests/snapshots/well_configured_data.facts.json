@@ -102,7 +102,7 @@
       "languages": [
         "JSON Schema"
       ],
-      "origin": "."
+      "origin": "schema"
     },
     {
       "ecosystem": "XML schemas",
@@ -110,7 +110,7 @@
       "languages": [
         "XML Schema"
       ],
-      "origin": "."
+      "origin": "schema"
     },
     {
       "build_systems": [],
@@ -903,6 +903,7 @@
       "licenses": [
         "MIT"
       ],
+      "note": false,
       "origin": "LICENSE"
     },
     {

@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import re
 
+from project_validator.ci import CiProvider
 from project_validator.core import Context, Result, check
 from project_validator.evidence import documents
 from project_validator.text import matching_names, pattern
 
-README = re.compile(r"README(?:\.(?:md|markdown|rst|txt|adoc|org))?", re.IGNORECASE)
+README = re.compile(r"README(?:\.(?:md|markdown|rst|txt|adoc|asciidoc|org|textile|pod|rdoc))?", re.IGNORECASE)
 QUALITY_BADGES = (
     pattern("Codecov", r"codecov\.io/\S+(?:badge|graph|coverage\.svg)|img\.shields\.io/codecov/|badgen\.net/codecov/"),
     pattern(
@@ -38,13 +39,30 @@ def status_badges(context: Context) -> Result:
     readmes = documents(context, README)
     if not readmes:
         return Result.failed("no README", CI_HINT, QUALITY_HINT)
-    text = _COMMENT.sub("", context.project.read_text(readmes[0]))
-    ci = matching_names((text,), (badge for provider in context.providers for badge in provider.badges))
+    readme = readmes[0]
+    text = _COMMENT.sub("", context.project.read_text(readme))
+    used = {found.provider.name for found in context.ci_files}
+    shown = {
+        provider.name: matching_names((text,), provider.badges) for provider in context.providers if provider.badges
+    }
+    ci = [name for provider in context.providers for name in shown.get(provider.name, ()) if _shows(provider, used)]
+    stale = tuple(
+        f"{readme}'s {name} badge is of a CI the project does not configure"
+        for provider in context.providers
+        if not _shows(provider, used)
+        for name in shown.get(provider.name, ())
+    )
     quality = matching_names((text,), QUALITY_BADGES)
     if not ci and not quality:
-        return Result.failed(f"{readmes[0]} shows no status badges", CI_HINT, QUALITY_HINT)
+        return Result.failed(f"{readme} shows no status badges", *stale, CI_HINT, QUALITY_HINT)
     if not quality:
-        return Result.warned(f"{readmes[0]} shows a CI badge ({', '.join(ci)}) but no quality badge", QUALITY_HINT)
+        return Result.warned(f"{readme} shows a CI badge ({', '.join(ci)}) but no quality badge", QUALITY_HINT)
     if not ci:
-        return Result.warned(f"{readmes[0]} shows a quality badge ({', '.join(quality)}) but no CI badge", CI_HINT)
-    return Result.passed(f"{readmes[0]} shows CI ({', '.join(ci)}) and quality ({', '.join(quality)}) badges")
+        return Result.warned(f"{readme} shows a quality badge ({', '.join(quality)}) but no CI badge", *stale, CI_HINT)
+    return Result.passed(f"{readme} shows CI ({', '.join(ci)}) and quality ({', '.join(quality)}) badges")
+
+
+def _shows(provider: CiProvider, used: set[str]) -> bool:
+    """Whether a badge of `provider` shows the project's CI: one the project configures, or can configure
+    elsewhere."""
+    return provider.configured_elsewhere or provider.name in used

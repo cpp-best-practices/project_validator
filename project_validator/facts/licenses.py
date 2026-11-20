@@ -16,9 +16,12 @@ from project_validator.facts.settings import SettingsReader
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class LicenseFile(Fact):
-    """A license file, and the SPDX identifiers of the licenses it holds: none when it is not recognised."""
+    """A license file, and the SPDX identifiers of the licenses it holds: none when it is not recognised. A `note`
+    holds no license but says something of the license files beside it (CRAN's `YEAR:`/`COPYRIGHT HOLDER:` stub, a
+    short file saying which of them apply)."""
 
     licenses: frozenset[str]
+    note: bool = False
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

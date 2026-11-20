@@ -46,6 +46,11 @@
       ],
       "origin": "compiled/",
       "output": "the compiled directories"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "info.rkt",
+      "reader": "info.rkt license"
     }
   ],
   "map": {

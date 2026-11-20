@@ -1213,7 +1213,21 @@
       "licenses": [
         "MIT"
       ],
+      "note": false,
       "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "info.rkt",
+      "reader": "info.rkt license"
+    },
+    {
+      "expression": "MIT",
+      "kind": "DeclaredLicense",
+      "languages": [
+        "Racket"
+      ],
+      "origin": "info.rkt"
     },
     {
       "advisory": "",

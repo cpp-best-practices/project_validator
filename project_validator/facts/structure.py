@@ -365,10 +365,28 @@ def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile
             yield SourceFile(origin=Origin(path=path), language=found[0], role=role(path))
 
 
-def _content(project: Project) -> Iterator[ContentLanguages]:
+def _located(ecosystem: Ecosystem, found: Iterable[tuple[str, str]]) -> Iterator[ContentLanguages]:
+    """What a probe found, by the directory that holds it."""
+    directories: dict[str, set[str]] = {}
+    for path, language in found:
+        directories.setdefault(str(PurePosixPath(path).parent), set()).add(language)
+    for directory, names in sorted(directories.items()):
+        yield ContentLanguages(origin=Origin(path=directory), ecosystem=ecosystem.label, languages=frozenset(names))
+
+
+def _content(project: Project) -> tuple[list[ContentLanguages], set[str]]:
+    """What each ecosystem's probe finds, where it says (each directory holding what it found) or for the project,
+    and the files it says it found (which no suffix needs to account for)."""
+    content: list[ContentLanguages] = []
+    paths: set[str] = set()
     for ecosystem in registered():
-        if ecosystem.detect is not None and (languages := ecosystem.detect(project) & ecosystem.languages):
-            yield ContentLanguages(origin=Origin(path="."), ecosystem=ecosystem.label, languages=languages)
+        if ecosystem.locate is not None:
+            found = [(path, name) for path, name in ecosystem.locate(project) if name in ecosystem.languages]
+            paths.update(path for path, _ in found)
+            content.extend(_located(ecosystem, found))
+        elif ecosystem.detect is not None and (languages := ecosystem.detect(project) & ecosystem.languages):
+            content.append(ContentLanguages(origin=Origin(path="."), ecosystem=ecosystem.label, languages=languages))
+    return content, paths
 
 
 def _unrecognised(files: list[str], accounted: set[str], recognised: set[str]) -> Iterator[UnrecognisedSuffix]:
@@ -379,6 +397,7 @@ def _unrecognised(files: list[str], accounted: set[str], recognised: set[str]) -
         if path not in accounted
         and (suffix := PurePosixPath(path).suffix)
         and suffix not in recognised
+        and not suffix[1:].isdigit()  # a version (pyenv's `3.12.0`), not a file type
         and suffix.lower() not in NOT_SOURCE_SUFFIXES
         and not suffix.endswith("~")
         and _SERVICE_PROVIDERS not in path
@@ -458,9 +477,10 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
             unit.update(given_way(_own(build.languages, build.origin.path, named), unit))
     known = formats()
     for content in facts.of(ContentLanguages):
-        names = _own(content.languages, ".", named, directory=True)
-        languages["."].update(names - known)
-        formats_.setdefault(".", set()).update(names & known)
+        names = _own(content.languages, content.origin.path, named, directory=True)
+        holder = owner(content.origin.path, roots)
+        languages.setdefault(holder, set()).update(names - known)
+        formats_.setdefault(holder, set()).update(names & known)
     tests = _test_units(project)
     for directory in sorted(languages, key=lambda root: (root != ".", root)):
         if (purpose := role(directory, directory=True)) == "vendored":
@@ -497,7 +517,8 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     named = Selectors.parse(project.auxiliary)
     yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary))
     found, found_sources = _builds_and_sources(project, files, generated)
-    plain = Facts((*(fact for fact, _ in found if fact is not None), *found_sources, *_content(project)))
+    content, located = _content(project)
+    plain = Facts((*(fact for fact, _ in found if fact is not None), *found_sources, *content))
     yield from plain
     names = project_languages(plain) | project_formats(plain)
     confirmed = [ecosystem for ecosystem in registered() if ecosystem.languages & names]
@@ -507,7 +528,8 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     sources = (*plain.of(SourceFile), *ambiguous)
     recognised = {signal for source in sources if (signal := source_signal(source.path)).startswith(".")}
     recognised |= {suffix for name in names for suffix in BUILT_LANGUAGE_SUFFIXES.get(name, ())}
-    yield from _unrecognised(files, {*(path for _, path in found), *(source.path for source in sources)}, recognised)
+    accounted = {*(path for _, path in found), *(source.path for source in sources), *located}
+    yield from _unrecognised(files, accounted, recognised)
     yield from _units(project, Facts((*plain, *ambiguous)), named)
 
 

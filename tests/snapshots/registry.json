@@ -60,7 +60,7 @@
     },
     "dependency-updates": {
       "aliases": [],
-      "description": "Automated dependency updates are configured (Dependabot or Renovate)"
+      "description": "Automated dependency updates are configured (Dependabot, Renovate or Scala Steward)"
     },
     "function-limits": {
       "aliases": [],
@@ -1970,6 +1970,9 @@
       "can": {
         "analysis": {
           "checks": "asyncapi validate <description>"
+        },
+        "examples": {
+          "checked": "asyncapi validate examples/<description>"
         },
         "schema": {
           "validates": "asyncapi validate <description>"
@@ -5694,6 +5697,20 @@
         "Scala"
       ],
       "name": "scalafmt",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "scan-build --status-bugs (the Clang Static Analyzer)"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "scan-build",
       "reads": [],
       "required": []
     },

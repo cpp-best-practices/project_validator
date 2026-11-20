@@ -49,6 +49,21 @@ class AdvisoryRunTests(unittest.TestCase):
         self.assertEqual(result.status, Status.PASS, result)
         self.assertFalse([detail for detail in result.details if "cannot fail" in detail], result)
 
+    def test_a_step_whose_failure_a_later_step_fails_the_job_on_is_no_advisory_run(self) -> None:
+        """fastapi runs prek with continue-on-error, commits what it fixed, then fails the job with `exit 1` when
+        `steps.precommit.outcome == 'failure'`: the run gates (#221). A later step that only reports does not."""
+        run = {"id": "lint", "run": "ruff check .", "continue-on-error": True}
+        for last, gates in (
+            ({"if": "steps.lint.outcome == 'failure'", "run": "exit 1"}, True),
+            ({"if": "${{ steps.lint.outcome == 'failure' }}", "run": "false"}, True),
+            ({"if": "steps.lint.outcome == 'failure'", "run": "echo lint failed"}, False),
+            ({"if": "steps.other.outcome == 'failure'", "run": "exit 1"}, False),
+        ):
+            with self.subTest(last=last), temp_project({**PYTHON, **_workflow(run, last)}) as root:
+                runs = make_context(root).facts.of(ToolRun)
+                advisory = {found.advisory for found in runs if found.tool == "ruff check"}
+                self.assertEqual(advisory, {""} if gates else {"continue-on-error"})
+
     def test_an_allow_failure_job_runs_its_tools_advisedly(self) -> None:
         pipeline = {"style": {"script": ["ruff format --check ."], "allow_failure": True}}
         result = _result(code_formatting, {**PYTHON, ".gitlab-ci.yml": json.dumps(pipeline)})

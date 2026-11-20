@@ -26,8 +26,8 @@ from tests.support import (
 )
 
 C_HINT = (
-    "consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy) or cppcheck "
-    "(CMAKE_CXX_CPPCHECK) in CI"
+    "consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy), cppcheck "
+    "(CMAKE_CXX_CPPCHECK) or scan-build --status-bugs (the Clang Static Analyzer) in CI"
 )
 PYTHON_HINT = "consider running ruff check, pylint or flake8 in CI"
 GO_HINT = "consider running golangci-lint (with linters enabled beyond its defaults in a .golangci.yml) in CI"

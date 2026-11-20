@@ -10,6 +10,7 @@ from collections.abc import Mapping
 
 from project_validator.checks.data_wellformed import data_wellformed
 from project_validator.checks.schema_declared import schema_declared
+from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
 from project_validator.core import Check, Result, Status
 from project_validator.facts.jobs import Job
@@ -159,7 +160,6 @@ class RacketMultiPackageTests(unittest.TestCase):
 
 
 class ContentFormatOwnershipTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #283: content-detected formats go to the root unit, not the file's owner
     def test_a_content_detected_format_belongs_to_the_unit_holding_the_files(self) -> None:
         """An XSD without targetNamespace in a Gradle sub-unit is judged there (docbook); an OpenAPI description in
         a Cabal package is judged there (hledger-web), not reported as "no file to judge" for the root."""
@@ -177,6 +177,25 @@ class ContentFormatOwnershipTests(unittest.TestCase):
         with self.subTest(project="hledger"):
             result = _result(schema_declared, hledger)
             self.assertEqual(result.message, "1 OpenAPI file declares its version (openapi) and info.version")
+
+
+class TestUnitRunTests(unittest.TestCase):
+    def test_a_test_units_test_run_runs_the_tests_of_every_unit(self) -> None:
+        """serde's CI runs `cd test_suite && cargo test`: the workspace's unit of tests, whose tests count for every
+        unit, runs them for every unit (#230). Its clippy run still lints only test_suite."""
+        lib = "[package]\nname = '{}'\nversion = '0.1.0'\n"
+        files = {
+            "Cargo.toml": "[workspace]\nmembers = ['serde', 'test_suite']\n",
+            "serde/Cargo.toml": lib.format("serde"),
+            "serde/src/lib.rs": "",
+            "test_suite/Cargo.toml": lib.format("test_suite"),
+            "test_suite/tests/test_de.rs": "#[test]\nfn de() {}\n",
+            **github_job(
+                "ubuntu-latest", "cd test_suite && cargo test", "cd test_suite && cargo clippy -- -D warnings"
+            ),
+        }
+        self.assertEqual(_result(tests_run, files).status, Status.PASS)
+        self.assertIn("serde: no static analyzer runs", _result(static_analysis, files).message)
 
 
 class TestsCountedPerUnitTests(unittest.TestCase):

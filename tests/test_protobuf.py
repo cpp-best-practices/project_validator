@@ -5,6 +5,7 @@ from __future__ import annotations
 import unittest
 
 from project_validator.checks.code_formatting import code_formatting
+from project_validator.checks.schema_declared import schema_declared
 from project_validator.checks.schema_validation import schema_validation
 from project_validator.checks.static_analysis import static_analysis
 from project_validator.core import Check, Result, Status
@@ -71,3 +72,46 @@ class ProtobufTests(unittest.TestCase):
         self.assertEqual(self._run(schema_validation, only_build).status, Status.PASS)
         self.assertEqual(self._run(static_analysis, only_build).status, Status.WARN)
         self.assertEqual(self._run(code_formatting, only_build).status, Status.FAIL)
+
+
+UNPACKAGED = 'syntax = "proto3";\n\nmessage A {}\n'
+
+
+class PackageRuleTests(unittest.TestCase):
+    """A `.proto` file's package is asked for as buf lint's `PACKAGE_DEFINED` rule: a module whose `buf.yaml` does not
+    have the rule does not ask it of its files (bufbuild/protovalidate's examples)."""
+
+    def _details(self, files: dict[str, str]) -> tuple[str, ...]:
+        with temp_project(files) as root:
+            return schema_declared.run(make_context(root)).details
+
+    def test_a_module_that_excepts_the_rule_does_not_ask_for_a_package(self) -> None:
+        for buf in (
+            "version: v2\nlint:\n  use: [STANDARD]\n  except: [PACKAGE_DEFINED]\n",
+            "version: v1\nlint:\n  use:\n    - FIELD_LOWER_SNAKE_CASE\n",
+            "version: v2\nmodules:\n  - path: proto\n    lint:\n      except: [PACKAGE_DEFINED]\n",
+        ):
+            with self.subTest(buf=buf):
+                details = self._details({"buf.yaml": buf, "proto/a.proto": UNPACKAGED})
+                self.assertFalse([line for line in details if "no package" in line], details)
+
+    def test_the_rule_is_asked_by_default_and_by_its_categories(self) -> None:
+        for files in (
+            {"proto/a.proto": UNPACKAGED},
+            {"buf.yaml": "version: v2\nlint:\n  use: [MINIMAL]\n", "proto/a.proto": UNPACKAGED},
+            # A configuration that cannot be read, or says nothing of the rule, leaves buf's default.
+            {"buf.yaml": "lint: [\n", "proto/a.proto": UNPACKAGED},
+            {"buf.yml": "- version\n", "proto/a.proto": UNPACKAGED},
+            {
+                "buf.yaml": "version: v2\nmodules:\n  - path: other\n    lint: {except: [PACKAGE_DEFINED]}\n",
+                "proto/a.proto": UNPACKAGED,
+            },
+            # Another module's exception is not this one's.
+            {
+                "other/buf.yaml": "version: v2\nlint:\n  except: [PACKAGE_DEFINED]\n",
+                "other/b.proto": UNPACKAGED,
+                "proto/a.proto": UNPACKAGED,
+            },
+        ):
+            with self.subTest(files=sorted(files)):
+                self.assertIn("proto/a.proto: no package", self._details(files))

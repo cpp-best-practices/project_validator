@@ -7,6 +7,7 @@ from pathlib import Path
 
 from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.coverage import coverage
+from project_validator.checks.license import license_
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.tests_run import tests_run
 from project_validator.checks.vcs_ignore import vcs_ignore
@@ -89,6 +90,11 @@ class RecognitionTests(unittest.TestCase):
         self.assertFalse(uses(RACKET_ECOSYSTEM, "npm test"))
 
 
+def _license(files: dict[str, str]) -> Result:
+    with temp_project(files) as root:
+        return license_.run(make_context(root))
+
+
 class RacketTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
         return run_as(self, selected, files, RACKET_ECOSYSTEM)
@@ -101,6 +107,29 @@ class RacketTests(unittest.TestCase):
         self.assertEqual(self._run(tests_run, {**required, **_ci("raco test tests")}).status, Status.PASS)
         self.assertEqual(self._run(tests_run, {**TESTS, **_ci("raco make main.rkt")}).status, Status.WARN)
         self.assertEqual(self._run(tests_run, _ci("raco test .")).status, Status.FAIL)
+
+    def test_info_rkt_declares_the_license_as_an_spdx_expression(self) -> None:
+        """typed-racket, scribble and koyo declare their license in each package's info.rkt (upstream #189)."""
+        mit = "Permission is hereby granted, free of charge, to any person obtaining a copy\n"
+        apache = (
+            "                                 Apache License\n                           Version 2.0, January 2004\n"
+        )
+        both = {"LICENSE-MIT": mit, "LICENSE-APACHE": apache}
+        cases = {
+            "(define license 'MIT)": ({"LICENSE": mit}, ""),
+            "(define license\n  '(Apache-2.0 OR MIT))": (both, ""),
+            "(define license '(MIT AND (Apache-2.0 OR BSD-3-Clause)))": (both, "MIT AND (Apache-2.0 OR BSD-3-Clause)"),
+            "(define license 'BSD-3-Clause)": ({"LICENSE": mit}, "BSD-3-Clause"),
+            '(define deps \'("base"))': ({"LICENSE": mit}, ""),
+        }
+        for declaration, (licenses, declared) in cases.items():
+            with self.subTest(declaration):
+                result = _license({"info.rkt": f"#lang info\n{declaration}\n", **licenses})
+                if declared:
+                    self.assertEqual(result.status, Status.WARN, result)
+                    self.assertIn(f"info.rkt declares {declared}, but", result.details[0])
+                else:
+                    self.assertEqual(result.status, Status.PASS, result)
 
     def test_raco_cover_measures_expressions(self) -> None:
         for line in ("raco cover .", "raco cover -f codecov -d coverage ."):
@@ -128,9 +157,27 @@ class RacketTests(unittest.TestCase):
                 self.assertEqual(self._run(vcs_ignore, {".gitignore": ignored}).status, Status.PASS)
         self.assertEqual(self._run(vcs_ignore, {".gitignore": "*.zo\n"}).status, Status.WARN)
 
+    def test_the_default_variant_is_one_version_with_or_without_its_name(self) -> None:
+        """typed-racket names `variant: CS` in one workflow and no variant in another: `current` either way, one
+        version (#222). Before Racket 8.0 the default was BC."""
+        named = (
+            "      - uses: Bogdanp/setup-racket@v1.16\n        with:\n          version: {}\n          variant: {}\n"
+        )
+        unnamed = "      - uses: Bogdanp/setup-racket@v1.16\n        with:\n          version: {}\n"
+        for version, variant in (("current", "CS"), ("7.9", "BC")):
+            with self.subTest(version=version):
+                job = "  {}:\n    runs-on: ubuntu-latest\n    steps:\n{}      - run: raco test .\n"
+                workflow = (
+                    f"on: push\njobs:\n{job.format('a', named.format(version, variant))}"
+                    f"{job.format('b', unnamed.format(version))}"
+                )
+                result = self._run(platform_matrix, {".github/workflows/ci.yml": workflow})
+                self.assertIn(f"1 Racket version(s) ({version})", result.message)
+
     def test_the_platform_matrix_pairs_versions_with_variants(self) -> None:
         result = self._run(platform_matrix, {GITHUB_WORKFLOW: RACKET_MATRIX})
-        self.assertIn("4 Racket version(s) (8.12 BC, 8.12 CS, stable BC, stable CS)", result.message)
+        # CS is the default variant from Racket 8.0 on: only BC is named.
+        self.assertIn("4 Racket version(s) (8.12, 8.12 BC, stable, stable BC)", result.message)
         for files, version in (
             (_ci("docker run racket/racket:8.14-full raco test ."), "8.14"),
             (_ci("raco test ."), "default"),

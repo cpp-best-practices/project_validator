@@ -791,7 +791,8 @@
                 "missing": [
                   "eslint --max-warnings 0",
                   "biome ci",
-                  "deno lint"
+                  "deno lint",
+                  "oxlint --deny-warnings"
                 ]
               }
             ],
@@ -1060,7 +1061,7 @@
     },
     "warnings-as-errors": {
       "details": [
-        "run eslint with --max-warnings 0 (or biome ci, or deno lint), so that a lint warning fails CI"
+        "run eslint with --max-warnings 0 (or biome ci, deno lint or oxlint --deny-warnings), so that a lint warning fails CI"
       ],
       "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
       "status": "FAIL"

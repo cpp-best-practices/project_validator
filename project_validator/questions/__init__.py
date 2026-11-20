@@ -19,6 +19,7 @@ from project_validator.ecosystems import Kind
 from project_validator.facts import Facts, Unknown
 from project_validator.facts.auxiliary import Selectors, selectors
 from project_validator.facts.structure import SourceFile, Unit
+from project_validator.facts.testing import TEST
 from project_validator.facts.tools import Tool, ToolRun, owner
 
 
@@ -140,15 +141,26 @@ def runs_of(
     Runs that cannot fail the pipeline enforce nothing: they are left out, or, with `advisory`, are all there is."""
     units = [found.directory for found in facts.of(Unit)] or ["."]
     concerns, named = frozenset(auxiliary), selectors(facts)
+    tests = _test_units(facts) if aspect == TEST else frozenset()
     return tuple(
         run
         for run in facts.of(ToolRun)
         if aspect in run.provides
         and language in run.languages
-        and run.covers(unit, units)
+        and (run.covers(unit, units) or _in_test_unit(run, units, tests))
         and not _auxiliary(run, language, concerns, named)
         and bool(run.advisory) == advisory
     )
+
+
+def _test_units(facts: Facts) -> frozenset[str]:
+    return frozenset(found.directory for found in facts.of(Unit) if found.role == "test")
+
+
+def _in_test_unit(run: ToolRun, units: list[str], tests: frozenset[str]) -> bool:
+    """Whether a test run is in a unit of tests (serde's test_suite), whose tests count for every unit: it runs them
+    for every unit."""
+    return bool(tests) and any(owner(scope, units) in tests for scope in run.scope)
 
 
 def unknowns_for(

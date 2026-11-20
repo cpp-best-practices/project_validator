@@ -272,8 +272,14 @@ def _output(
     )
 
 
+# Dist::Zilla builds and tests in its build directory (.build/, Name-1.0/): its blib/ and MYMETA files are there.
 BLIB = _output(
-    "the blib build directory", "blib", directories("blib"), "consider ignoring blib/", ("/blib/",), DISTRIBUTIONS
+    "the blib build directory",
+    "blib",
+    directories("blib"),
+    "consider ignoring blib/",
+    ("/blib/",),
+    frozenset({MAKEMAKER.name, MODULE_BUILD.name}),
 )
 MYMETA = _output(
     "the MYMETA files",

@@ -45,13 +45,35 @@ def _normalised(command: Command, path: str) -> str:
     return PurePosixPath(*[part for part in joined.parts if part != "."]).as_posix() or "."
 
 
-def _runs_target(command: Command, facts: Facts) -> Run | None:
-    """`python <fuzz target>.py ...`: the script is a fuzz target's file. A path holding an expression the validator
-    cannot evaluate is taken to be one, as a heuristic, only when it names fuzzing (`fuzz` in the path)."""
-    argv = resolved(command)
-    if not argv or not _PYTHON.fullmatch(program(argv)):
+# `coverage run`'s options that take a value as their own word.
+_COVERAGE_VALUES = frozenset(
+    {"--rcfile", "--source", "--omit", "--include", "--context", "--data-file", "--concurrency", "--debug"}
+)
+
+
+def _script_run(argv: tuple[str, ...]) -> str | None:
+    """The script a command runs with Python: `python <script>`, or `coverage run <script>` (black's fuzz
+    environment), which runs it with Python under coverage."""
+    if argv and _PYTHON.fullmatch(program(argv)):
+        return _script(argv)
+    if argv[:2] != ("coverage", "run"):
         return None
-    script = _script(argv)
+    words = iter(argv[2:])
+    for word in words:
+        if word in _COVERAGE_VALUES:
+            next(words, None)
+        elif word == "-m":
+            return None
+        elif not word.startswith("-"):
+            return word
+    return None
+
+
+def _runs_target(command: Command, facts: Facts) -> Run | None:
+    """`python <fuzz target>.py ...` (or `coverage run <fuzz target>.py`): the script is a fuzz target's file. A path
+    holding an expression the validator cannot evaluate is taken to be one, as a heuristic, only when it names
+    fuzzing (`fuzz` in the path)."""
+    script = _script_run(resolved(command))
     if script is None:
         return None
     if "${" in script or "$(" in script:

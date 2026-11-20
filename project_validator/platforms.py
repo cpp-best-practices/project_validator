@@ -22,9 +22,14 @@ OPERATING_SYSTEMS = (
 COMPILERS = (
     # Not a cross compiler's name (`arm-linux-gnueabihf-gcc`, a linker variable's value).
     # Nor the 32-bit libraries a clang job installs (`gcc-multilib`).
-    pattern("gcc", r"(?<![\w-])gcc\b(?!-multilib)|(?<![\w-])g\+\+(?!-multilib)|\bmingw|\bgfortran\b"),
-    # setup-cpp names clang `llvm` (`compiler: llvm-19.1.1`, `--compiler llvm`).
-    pattern("clang", r"\bclang(?![-_]?(tidy|format|d|-apply-replacements)(?:\b|_))|\bllvm-\d|\bcompiler\W+llvm\b"),
+    # MSYS2's MINGW64, MINGW32 and UCRT64 environments build with gcc (its CLANG64 with clang).
+    pattern("gcc", r"(?<![\w-])gcc\b(?!-multilib)|(?<![\w-])g\+\+(?!-multilib)|\bmingw|\bucrt64\b|\bgfortran\b"),
+    # setup-cpp names clang `llvm` (`compiler: llvm-19.1.1`, `--compiler llvm`). Emscripten's emcc is clang.
+    pattern(
+        "clang",
+        r"\bclang(?![-_]?(tidy|format|d|-apply-replacements)(?:\b|_))|\bllvm-\d|\bcompiler\W+llvm\b"
+        r"|\bemsdk\b|\bemcmake\b|\bemcc\b|(?<![\w-])em\+\+",
+    ),
     pattern("appleclang", r"\bapple-?clang\b"),
     pattern("msvc", r"\bmsvc|visual studio|\bvs20\d\d\b|\bcl\.exe\b|\bvcvars"),
     # fortran-lang/setup-fortran names Intel's compilers `intel` and `intel-classic`.

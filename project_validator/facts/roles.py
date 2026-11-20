@@ -24,7 +24,10 @@ VENDOR_DIRECTORIES = (
 # The role of the code below a directory with one of these names (see `role`).
 _ROLES = {
     **dict.fromkeys(VENDOR_DIRECTORIES, "vendored"),
-    **dict.fromkeys(("test", "tests", "testing", "testdata", "spec", "specs", "__tests__", "fixtures"), "test"),
+    # `t` and `xt` are Perl's (its tests, and its author tests).
+    **dict.fromkeys(
+        ("test", "tests", "testing", "testdata", "spec", "specs", "__tests__", "fixtures", "t", "xt"), "test"
+    ),
     **dict.fromkeys(
         ("fuzz", "fuzzing", "fuzz_test", "fuzz_tests", "fuzztest", "stress", "stress-test", "stress-tests"), "test"
     ),

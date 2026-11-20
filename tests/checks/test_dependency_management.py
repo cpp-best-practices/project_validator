@@ -9,7 +9,7 @@ from project_validator.checks.dependency_management import VENDOR_HINT, dependen
 from project_validator.core import Options, Result, Status
 from project_validator.ecosystems import C_FAMILY
 from project_validator.ecosystems.go import GO, GO_MODULES_MANAGER
-from project_validator.ecosystems.python import PYTHON, PYTHON_PACKAGE_MANAGER
+from project_validator.ecosystems.python import CONDA_PACKAGES, PYTHON, PYTHON_PACKAGE_MANAGER
 from project_validator.ecosystems.rust import CARGO_PACKAGES, RUST
 from project_validator.facts import Facts
 from project_validator.facts.dependencies import Lock, PackageManager
@@ -95,6 +95,21 @@ class VendoringTests(unittest.TestCase):
         )
         self.assertEqual(result, expected)
 
+    @unittest.skipUnless(shutil.which("git"), "git is not installed")
+    def test_a_submodule_of_the_projects_own_organisation_is_not_third_party(self) -> None:
+        """xmlunit's test-resources and cetz's common are submodules from their own organisation (#246); a relative
+        submodule URL is the project's own too. Another owner's submodule still warns."""
+        own = '[submodule "r"]\n\tpath = r\n\turl = https://github.com/acme/test-resources.git\n'
+        relative = '[submodule "c"]\n\tpath = c\n\turl = ../common.git\n'
+        other = '[submodule "x"]\n\tpath = x\n\turl = git@github.com:someone/lib.git\n'
+        for modules, warns in ((own, False), (relative, False), (own + other, True)):
+            with self.subTest(modules=modules), temp_project({**WELL_CONFIGURED, ".gitmodules": modules}) as root:
+                git(root, "init", "-q")
+                git(root, "remote", "add", "origin", "git@github.com:acme/app.git")
+                git(root, "add", ".")
+                result = dependency_management.run(make_context(root))
+                self.assertEqual("third-party code" in result.message, warns, result)
+
     def test_an_unknown_answer_stays_an_error_whatever_is_vendored(self) -> None:
         files = {"pyproject.toml": "[project\n", ".gitmodules": ""}
         self.assertEqual(run_as(self, dependency_management, files, PYTHON).status, Status.ERROR)
@@ -178,6 +193,29 @@ class PythonTests(unittest.TestCase):
         self.assertEqual(
             several.message.rpartition(" and locked in ")[2], "requirements/dev.txt, requirements/docs.txt"
         )
+
+    def test_a_conda_environment_declares_conda_packages(self) -> None:
+        """handson-ml3 and PythonDataScienceHandbook declare their environment in environment.yml (upstream #281)."""
+        environment = "name: homl3\nchannels:\n  - conda-forge\ndependencies:\n  - python=3.10\n  - numpy\n"
+        for name in ("environment.yml", "environment.yaml"):
+            with self.subTest(name):
+                result = self._run({name: environment})
+                self.assertEqual(result, _not_locked(name, "conda packages", CONDA_PACKAGES.lock_hint))
+        both = self._run({"environment.yml": environment, "requirements.txt": "requests\n"})
+        self.assertIn("declared in environment.yml, requirements.txt", both.message)
+        self.assertIn("conda packages", both.message)
+
+    def test_a_conda_environment_without_dependencies_declares_none(self) -> None:
+        for environment in ("name: x\n", "name: x\ndependencies: []\n", "- a\n"):
+            with self.subTest(environment):
+                self.assertEqual(self._run({"environment.yml": environment}), NO_DEPENDENCIES)
+
+    def test_conda_lock_files_lock_a_conda_environment(self) -> None:
+        environment = {"environment.yml": "dependencies:\n  - numpy\n"}
+        for lockfile in ("conda-lock.yml", "environment.conda-lock.yml", "conda-linux-64.lock"):
+            with self.subTest(lockfile):
+                result = self._run({**environment, lockfile: ""})
+                self.assertEqual(result, _declared("environment.yml", "conda packages", lockfile))
 
     def test_an_unreadable_manifest_is_unknown(self) -> None:
         result = self._run({"pyproject.toml": "[project\n"})

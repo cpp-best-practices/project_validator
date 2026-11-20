@@ -55,7 +55,9 @@ def _expansion(path: str, at: tuple[str | int, ...], repo: str, hook: Mapping[st
 _PROGRAMS_OF_HOOKS = {"hadolint-docker": "hadolint"}
 
 
-_OPTIONS = frozenset({"--hook-stage", "--config", "-c", "--files", "--from-ref"})
+_OPTIONS = frozenset(
+    {"--hook-stage", "--config", "-c", "--files", "--from-ref", "--to-ref", "--source", "-s", "--origin", "-o"}
+)
 
 
 def _configuration(command: Command, context: Context, options: dict[str, str]) -> tuple[str, object] | Unknown:

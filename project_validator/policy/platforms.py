@@ -65,6 +65,17 @@ def _counted(platforms: Iterable[Platform]) -> set[Platform]:
     return pinned or counted
 
 
+def _uncounted(answer: PlatformAnswer, operating_systems: set[str]) -> str:
+    """What the count leaves out that the detail lines show: the OSes whose jobs name no toolchain, and the jobs that
+    name one on a runner of unknown OS."""
+    clauses = []
+    if answer.axis.operating_systems and (idle := [os for os in answer.unversioned if os not in operating_systems]):
+        clauses.append(f"jobs on {', '.join(idle)} set up no {answer.axis.noun}")
+    if answer.unplaced:
+        clauses.append(f"{answer.unplaced} job(s) run on runners of unknown OS")
+    return "".join(f"; {clause}" for clause in clauses)
+
+
 def judge_matrix(answer: PlatformAnswer, *, allow_unknown: bool) -> Result:
     """Two OSes, two toolchains and three combinations of them pass; fewer fail. For an axis the OS is no part of (a
     database's engine versions), two toolchains pass, whatever runs them."""
@@ -82,6 +93,7 @@ def judge_matrix(answer: PlatformAnswer, *, allow_unknown: bool) -> Result:
         if answer.axis.operating_systems
         else f"{found}, whatever the OS"
     )
+    summary += _uncounted(answer, operating_systems)
     details = (*answer.notes, *answer.jobs)
     if shortfalls := _shortfalls(answer, operating_systems, toolchains):
         return Result.failed(f"CI covers {summary}; expected {', '.join(shortfalls)}", *details)

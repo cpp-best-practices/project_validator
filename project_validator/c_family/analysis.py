@@ -1,4 +1,4 @@
-"""clang-tidy and cppcheck: the C and C++ static analyzers; either one running is enough.
+"""clang-tidy, cppcheck and the Clang Static Analyzer: the C and C++ static analyzers; any one running is enough.
 
 Each runs directly, through a launcher or action, or within the build: a CMake configuration that sets
 `CMAKE_<LANG>_CLANG_TIDY` or `CMAKE_<LANG>_CPPCHECK` (or the target property) runs it on every file it compiles.
@@ -64,6 +64,23 @@ CPPCHECK = analyzer(
     how="cppcheck (CMAKE_CXX_CPPCHECK)",
     analyses=_analyzer(re.compile(r"cppcheck(?:-htmlreport)?"), "CPPCHECK"),
     reads=("CMake",),
+)
+
+_SCAN_BUILD = re.compile(r"scan-build(?:-\d+)?")
+
+
+def _scan_build(command: Command, _facts: Facts) -> Run | None:
+    """`scan-build --status-bugs <build>` runs the Clang Static Analyzer over the build and fails on any finding;
+    without --status-bugs it only reports (pgvector)."""
+    argv = resolved(command)
+    return analysed() if _SCAN_BUILD.fullmatch(program(argv)) and "--status-bugs" in argv else None
+
+
+SCAN_BUILD = analyzer(
+    name="scan-build",
+    languages=C_FAMILY,
+    how="scan-build --status-bugs (the Clang Static Analyzer)",
+    analyses=_scan_build,
 )
 
 

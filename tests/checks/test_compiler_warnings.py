@@ -201,7 +201,8 @@ class PythonCompilerWarningsTests(unittest.TestCase):
         }
         for spelling, files in spellings.items():
             with self.subTest(spelling):
-                expected = Result.passed("strict Python warning settings are enabled: -W error")
+                # Named for what it does, not as one spelling: httpx's filterwarnings is no -W error (#248).
+                expected = Result.passed("strict Python warning settings are enabled: warnings as errors")
                 self.assertEqual(self._run(files), expected)
 
     def test_warnings_as_errors_in_any_ci_passes(self) -> None:
@@ -211,7 +212,7 @@ class PythonCompilerWarningsTests(unittest.TestCase):
 
     def test_fails_when_warnings_are_not_errors(self) -> None:
         result = self._run(github_job("ubuntu-latest", "python -W ignore -m pytest && cmake -DCMAKE_CXX_FLAGS=-Werror"))
-        self.assertEqual(result, Result.failed("no Python warning settings found; enable at least -W error"))
+        self.assertEqual(result, Result.failed("no Python warning settings found; enable at least warnings as errors"))
 
     def test_c_and_cxx_flags_do_not_count(self) -> None:
         self.assertEqual(self._run(WELL_CONFIGURED).status, Status.FAIL)
@@ -261,4 +262,5 @@ class MixedLanguageCompilerWarningsTests(unittest.TestCase):
         result = run_as(self, compiler_warnings, dict(WELL_CONFIGURED), CXX, PYTHON)
         self.assertEqual(result.status, Status.FAIL)
         self.assertTrue(result.message.startswith("C++: strict compiler warning flags are enabled: -Wall"))
-        self.assertTrue(result.message.endswith("; Python: no Python warning settings found; enable at least -W error"))
+        missing = "; Python: no Python warning settings found; enable at least warnings as errors"
+        self.assertTrue(result.message.endswith(missing))

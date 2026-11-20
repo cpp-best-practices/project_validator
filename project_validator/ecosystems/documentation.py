@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import re
 import shlex
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from pathlib import PurePosixPath
 
 from project_validator.core import Project
@@ -73,14 +73,13 @@ def _configures(project: Project, generator: str, path: str, files: list[str]) -
     return True
 
 
-def documentation_sites(project: Project) -> frozenset[str]:
-    """The generators whose sites the project holds, each told by its configuration file."""
+def site_configurations(project: Project) -> Iterator[tuple[str, str]]:
+    """(path, generator) of each site's configuration file: the site is where it is."""
     files = project.files()
-    return frozenset(
-        generator
-        for generator, pattern in _CONFIGURATION.items()
-        if any(pattern.search(path) and _configures(project, generator, path, files) for path in files)
-    )
+    for generator, pattern in _CONFIGURATION.items():
+        yield from (
+            (path, generator) for path in files if pattern.search(path) and _configures(project, generator, path, files)
+        )
 
 
 DOCUMENTATION = Ecosystem(
@@ -88,7 +87,7 @@ DOCUMENTATION = Ecosystem(
     kind="format",
     companion=re.compile("|".join(pattern.pattern for pattern in _CONFIGURATION.values())),
     languages=GENERATORS,
-    detect=documentation_sites,
+    locate=site_configurations,
     ci_programs=(
         ("mkdocs",),
         ("sphinx-build",),

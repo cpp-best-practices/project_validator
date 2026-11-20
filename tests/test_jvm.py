@@ -305,8 +305,8 @@ class DependencyAndOutputTests(unittest.TestCase):
         self.assertEqual(_maven(self, VCS_IGNORE, {".gitignore": "build/\n*.class\n"}).status, Status.WARN)
         self.assertEqual(_gradle_kotlin(self, VCS_IGNORE, {".gitignore": "/build\n*.class\n"}).status, Status.PASS)
         self.assertEqual(_gradle_kotlin(self, VCS_IGNORE, {".gitignore": "target/\n*.class\n"}).status, Status.WARN)
-        # The class files are the language's output, whatever builds them.
-        self.assertEqual(_maven(self, VCS_IGNORE, {".gitignore": "target/\n"}).status, Status.WARN)
+        # Maven compiles the classes into target/: ignoring it ignores them (#236).
+        self.assertEqual(_maven(self, VCS_IGNORE, {".gitignore": "target/\n"}).status, Status.PASS)
 
     def test_class_files_are_outputs_without_a_build_system(self) -> None:
         with temp_project({"src/App.java": "", "src/App.class": ""}) as root:
@@ -333,3 +333,23 @@ class DependencyAndOutputTests(unittest.TestCase):
         }
         result = run_as(self, PLATFORM_MATRIX, files, JVM)
         self.assertIn("2 JDK version(s) (17, 21)", result.message)
+
+
+class ClassFileTests(unittest.TestCase):
+    """Maven and Gradle compile into target/ and build/: ignoring those ignores the classes (xmlunit). Classes
+    compiled any other way (javac, Ant) land beside the sources, so *.class itself must be ignored."""
+
+    def _vcs_ignore(self, files: dict[str, str]) -> Result:
+        with temp_project({"src/main/java/A.java": "class A {}\n", **files}) as root:
+            return checks_named("vcs-ignore")[0].run(make_context(root))
+
+    def test_a_maven_or_gradle_build_directory_holds_the_classes(self) -> None:
+        maven = {"pom.xml": "<project/>\n", ".gitignore": "target\n"}
+        for files in (maven, {"build.gradle": "", ".gitignore": "build/\n.gradle/\n"}):
+            with self.subTest(files=sorted(files)):
+                result = self._vcs_ignore(files)
+                self.assertNotIn("*.class", " ".join((result.message, *result.details)), result)
+
+    def test_classes_compiled_without_a_build_tool_must_be_ignored(self) -> None:
+        result = self._vcs_ignore({".gitignore": "out/\n"})
+        self.assertIn("consider ignoring *.class", result.details)

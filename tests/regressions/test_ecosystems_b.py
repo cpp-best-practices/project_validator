@@ -332,12 +332,16 @@ class SqlTests(unittest.TestCase):
                 result = _result(tests_run, {**PGXS_EXTENSION, **github_job(CI, "make", f"make {target}")})
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #276: scan-build is a transparent wrapper, never a static analyzer run
     def test_scan_build_with_status_bugs_is_a_static_analyzer_run(self) -> None:
         """`scan-build --status-bugs make` runs the Clang Static Analyzer over the build and fails the job on any
         finding (pgvector/pgvector)."""
-        result = _result(static_analysis, {**C_MAKEFILE, **github_job(CI, "scan-build --status-bugs make")})
-        self.assertEqual(result.status, Status.PASS, result)
+        for line in ("scan-build --status-bugs make", "scan-build-18 --status-bugs -o out make -j4"):
+            with self.subTest(line=line):
+                result = _result(static_analysis, {**C_MAKEFILE, **github_job(CI, line)})
+                self.assertEqual(result.status, Status.PASS, result)
+        # Without --status-bugs it reports what it finds, and the job passes whatever it finds.
+        advisory = _result(static_analysis, {**C_MAKEFILE, **github_job(CI, "scan-build make")})
+        self.assertNotEqual(advisory.status, Status.PASS, advisory)
 
 
 NIX = "Nix flake"

@@ -141,6 +141,16 @@ class PythonFuzzingTests(unittest.TestCase):
         self.assertIsNone(ATHERIS.claims(command("python tests/test_p.py"), facts))
         self.assertIsNone(ATHERIS.claims(command("ruby tests/fuzz/fuzz_x.py"), facts))
 
+    def test_coverage_running_a_fuzz_target_file_is_a_run(self) -> None:
+        """black's tox `fuzz` environment runs `coverage run {toxinidir}/scripts/fuzz.py`: coverage runs the script
+        with Python (#199)."""
+        facts = facts_of(PYTHON_PROJECT)
+        for line in ("coverage run tests/fuzz/fuzz_x.py", "coverage run --branch ./tests/fuzz/fuzz_x.py"):
+            with self.subTest(line=line):
+                self.assertIsNotNone(ATHERIS.claims(command(line), facts))
+        self.assertIsNone(ATHERIS.claims(command("coverage run -m pytest"), facts))
+        self.assertIsNone(ATHERIS.claims(command("coverage report"), facts))
+
     def test_a_path_with_an_unexpanded_shell_variable_is_a_heuristic_run_only_when_it_names_fuzzing(self) -> None:
         facts = facts_of(PYTHON_PROJECT)
         for line in ("python tests/fuzz/${TARGET}", "python tests/FUZZ/${TARGET}"):

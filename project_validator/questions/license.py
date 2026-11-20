@@ -97,10 +97,19 @@ def _nearest(path: str, files: tuple[LicenseFile, ...]) -> frozenset[str]:
     return frozenset()
 
 
+def _own(files: tuple[LicenseFile, ...]) -> tuple[tuple[str, frozenset[str]], ...]:
+    """The project's own license files (at its root) with their licenses; a note about the license files beside it
+    is none of them where they hold a license."""
+    root = [file for file in files if _directory(file) == "."]
+    if any(file.licenses for file in root):
+        root = [file for file in root if not file.note]
+    return tuple((file.origin.path, file.licenses) for file in root)
+
+
 def license_answer(facts: Facts, language: str | None = None) -> LicenseAnswer:
     """The answer for the project, comparing the manifests of `language` (every language's, by default)."""
     files = tuple(facts.of(LicenseFile))
-    own = tuple((file.origin.path, file.licenses) for file in files if _directory(file) == ".")
+    own = _own(files)
     mismatches = tuple(
         Mismatch(manifest=fact.origin.path, declared=fact.expression, licenses=licenses)
         for fact in _compared(facts, language)

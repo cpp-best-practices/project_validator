@@ -189,6 +189,23 @@ class Project:
             return self.files()
         return sorted(path for path in paths if path and not self._excludes(path) and (self.root / path).is_file())
 
+    def origin_url(self) -> str | None:
+        """The URL of the checkout's `origin` remote (where the project is published), or None."""
+        if "origin" not in self._listed:
+            git = shutil.which("git")
+            found = (
+                subprocess.run(  # noqa: S603 - argv list, no shell
+                    [git, "-C", str(self.root), "config", "--get", "remote.origin.url"],
+                    capture_output=True,
+                    check=False,
+                )
+                if git is not None
+                else None
+            )
+            url = found.stdout.decode("utf-8", errors="replace").strip() if found and found.returncode == 0 else ""
+            self._listed["origin"] = (url,) if url else ()
+        return next(iter(self._listed["origin"]), None)
+
     def ignored(self) -> tuple[str, ...]:
         """The paths git ignores and does not track, left out of the project (a directory ends in `/`), sorted."""
         return tuple(sorted(self._ignored_paths()))

@@ -73,6 +73,7 @@ SCHEMA_STORE = {
     "package.json": json.dumps({"main": "index.js"}),
     "jsconfig.json": '{"compilerOptions": {"strict": true, "checkJs": true}}\n',
     "schemas/tsconfig.json": TSCONFIG_SCHEMA,
+    "src/types.ts": "",
     **github_job("ubuntu-latest", "npx tsc --project jsconfig.json"),
 }
 STRICT_JSCONFIG = Result.passed("tsc (jsconfig.json) runs; strict mode bonus: tsc (jsconfig.json)")
@@ -140,31 +141,34 @@ class ApiDescriptionTests(unittest.TestCase):
 
 
 class JsonSchemaAndOpenApiGapTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #273: asyncapi validate on examples/, unknown test program, tsconfig schemas
-    def test_examples_validated_unknown_test_programs_and_schemas_named_like_configs(self) -> None:
-        """The AsyncAPI CLI run over `examples/` checks the schemas' examples (asyncapi/spec); a package `test` script
-        whose program comes from a git dependency is unknown, not "no CI configuration runs ... (or npm test)"
-        (OAI/OpenAPI-Specification); a JSON Schema called tsconfig.json is not a TypeScript configuration
-        (SchemaStore)."""
-        with self.subTest(check="schema-examples"):
-            self.assertEqual(_run(schema_examples, ASYNCAPI_EXAMPLES).status, Status.PASS)
-        with self.subTest(check="tests-run"):
-            result = _run(tests_run, UNKNOWN_TEST_PROGRAM)
-            self.assertNotIn(result.status, (Status.WARN, Status.FAIL), result.message)
-        with self.subTest(check="type-checking"):
-            self.assertEqual(_run(type_checking, SCHEMA_STORE), STRICT_JSCONFIG)
+    def test_the_asyncapi_cli_run_over_examples_checks_them(self) -> None:
+        """The AsyncAPI CLI run over `examples/` checks the schemas' examples (asyncapi/spec)."""
+        self.assertEqual(_run(schema_examples, ASYNCAPI_EXAMPLES).status, Status.PASS)
+
+    @unittest.expectedFailure  # upstream #273: a test script whose program comes from a git dependency is unread
+    def test_a_test_program_from_a_git_dependency_is_unknown(self) -> None:
+        """A package `test` script whose program comes from a git dependency is unknown, not "no CI configuration
+        runs ... (or npm test)" (OAI/OpenAPI-Specification)."""
+        result = _run(tests_run, UNKNOWN_TEST_PROGRAM)
+        self.assertNotIn(result.status, (Status.WARN, Status.FAIL), result.message)
+
+    def test_a_schema_named_like_a_configuration_is_not_one(self) -> None:
+        """A JSON Schema called tsconfig.json is not a TypeScript configuration (SchemaStore)."""
+        self.assertEqual(_run(type_checking, SCHEMA_STORE), STRICT_JSCONFIG)
 
 
 class ProtobufTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #271: buf.yaml's PACKAGE_DEFINED exception ignored; Markdown docs invisible
-    def test_modules_without_the_package_rule_and_markdown_docs_with_a_link_checker(self) -> None:
+    def test_a_module_without_the_package_rule_is_not_failed_for_its_missing_package(self) -> None:
         """A `.proto` file in a buf module whose `buf.yaml` excepts `PACKAGE_DEFINED` is not failed for its missing
-        package (protovalidate's examples/ and e2e/bzlmod/); plain Markdown documentation that lychee checks in CI is
-        a documentation unit the link check judges (opentelemetry-proto), not "no recognised language"."""
+        package (protovalidate's examples/ and e2e/bzlmod/)."""
         for directory in ("examples", "e2e/bzlmod"):
             with self.subTest(module=directory):
                 result = _run(schema_declared, _module_at(directory))
                 self.assertNotEqual(result.status, Status.FAIL, result.details)
-        with self.subTest(check="link-check"):
-            result = _run(link_check, MARKDOWN_DOCS_WITH_LYCHEE)
-            self.assertNotEqual(result.status, Status.SKIP, result.message)
+
+    @unittest.expectedFailure  # upstream #271: plain Markdown documentation is invisible to link-check
+    def test_markdown_docs_with_a_link_checker_are_judged(self) -> None:
+        """Plain Markdown documentation that lychee checks in CI is a documentation unit the link check judges
+        (opentelemetry-proto), not "no recognised language"."""
+        result = _run(link_check, MARKDOWN_DOCS_WITH_LYCHEE)
+        self.assertNotEqual(result.status, Status.SKIP, result.message)

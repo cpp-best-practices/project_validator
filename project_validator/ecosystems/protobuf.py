@@ -11,6 +11,7 @@ import re
 from collections.abc import Iterator, Mapping
 from pathlib import PurePosixPath
 
+from project_validator import yaml_support
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts import Facts, Setting
@@ -69,8 +70,59 @@ def _read_proto(text: str) -> Declaration:
     return declaring(names)
 
 
+_BUF_CONFIGURATIONS = ("buf.yaml", "buf.yml")
+# The rule categories that hold PACKAGE_DEFINED (buf lint's default is STANDARD).
+_PACKAGE_RULES = frozenset({"PACKAGE_DEFINED", "MINIMAL", "BASIC", "STANDARD", "DEFAULT"})
+
+
+def _module_configuration(project: Project, path: str) -> tuple[str, Mapping[str, object]] | None:
+    """The nearest `buf.yaml` above `path`, with its directory, as a mapping (None without one that parses)."""
+    for directory in PurePosixPath(path).parents:
+        for name in _BUF_CONFIGURATIONS:
+            if project.exists(found := str(directory / name)):
+                try:
+                    loaded = yaml_support.load(project.read_text(found))
+                except yaml_support.YamlError:
+                    return None
+                return (str(directory), loaded) if isinstance(loaded, Mapping) else None
+    return None
+
+
+def _lint(configuration: Mapping[str, object], module: str, path: str) -> object:
+    """The `lint` section that applies to `path`: its v2 module's (`modules: [{path, lint}]`), or the file's."""
+    modules = configuration.get("modules")
+    for entry in modules if isinstance(modules, list) else ():
+        if isinstance(entry, Mapping) and "lint" in entry and _holds(module, entry.get("path", "."), path):
+            return entry["lint"]
+    return configuration.get("lint")
+
+
+def _holds(module: str, directory: object, path: str) -> bool:
+    return PurePosixPath(path).is_relative_to(PurePosixPath(module, str(directory)))
+
+
+def _words(value: object) -> frozenset[str]:
+    return frozenset(map(str, value)) if isinstance(value, list) else frozenset()
+
+
+def _package_waived(project: Project, path: str) -> Iterator[str]:
+    """`package`, when the buf module of `path` does not lint with `PACKAGE_DEFINED`: its `lint.use` names neither the
+    rule nor a category that holds it, or its `lint.except` names the rule."""
+    found = _module_configuration(project, path)
+    lint = _lint(found[1], found[0], path) if found is not None else None
+    if not isinstance(lint, Mapping):
+        return
+    use = _words(lint.get("use"))
+    if "PACKAGE_DEFINED" in _words(lint.get("except")) or (use and not use & _PACKAGE_RULES):
+        yield "package"
+
+
 PROTOBUF_DECLARES = Declares(
-    format=PROTOBUF, what="syntax (or edition) and package", find=proto_files, read=_read_proto
+    format=PROTOBUF,
+    what="syntax (or edition) and package",
+    find=proto_files,
+    read=_read_proto,
+    waived=_package_waived,
 )
 
 # `buf build` compiles every module; protoc compiles the files it is given.

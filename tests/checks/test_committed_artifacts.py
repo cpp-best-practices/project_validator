@@ -109,3 +109,41 @@ class BinaryOutputTests(unittest.TestCase):
         self.assertEqual(binary.status, Status.FAIL)
         self.assertIn("tool.exe", binary.details)
         self.assertEqual(_run({**sources, "tool.exe": "#!/bin/sh\nexec x\n"}), PASSED)
+
+
+class PlaceholderTests(unittest.TestCase):
+    def test_a_directory_holding_only_placeholders_is_no_committed_output(self) -> None:
+        """cmake_template keeps gcovr's report directory with an empty out/coverage/.keep: nothing built is
+        committed (#235). A real output beside the placeholder still is."""
+        sources = {"CMakeLists.txt": "project(x)\n", "a.cpp": ""}
+        for placeholder in ("out/coverage/.keep", "build/.gitkeep", "out/.gitignore"):
+            with self.subTest(placeholder=placeholder):
+                self.assertEqual(_run({**sources, placeholder: ""}), PASSED)
+        result = _run({**sources, "out/.gitkeep": "", "out/app.o": "\0"})
+        self.assertEqual(result.status, Status.FAIL)
+
+
+class OwnerUnitTests(unittest.TestCase):
+    @unittest.skipUnless(shutil.which("git"), "git is not installed")
+    def test_an_output_counts_for_a_language_of_the_unit_that_holds_it(self) -> None:
+        """Humanizer's src/Humanizer.Analyzers/build/ holds NuGet's MSBuild targets in a .NET project: it is not the
+        Docusaurus site's build/, which website/ would write (#235)."""
+        files = {
+            "website/docusaurus.config.js": "module.exports = {};\n",
+            "website/docs/intro.md": "# Intro\n",
+            "website/package.json": '{"dependencies": {"@docusaurus/core": "3.0.0"}}\n',
+            "src/Foo.Analyzers/Foo.Analyzers.csproj": "<Project Sdk='Microsoft.NET.Sdk'></Project>\n",
+            "src/Foo.Analyzers/A.cs": "class A {}\n",
+            "src/Foo.Analyzers/build/Foo.targets": "<Project></Project>\n",
+        }
+        result = _run(files)
+        self.assertNotIn("src/Foo.Analyzers/build/", " ".join((result.message, *result.details)), result)
+        # A language's output counts wherever it is: tidyall's committed node_modules/ at a Perl root, though its
+        # JavaScript is a vendored PHP tool's.
+        perl = {"Makefile.PL": "", "lib/A.pm": "", "tools/js/package.json": "{}\n", "tools/js/a.js": ""}
+        vendored = {**perl, "node_modules/x/index.js": "", "node_modules/x/package.json": "{}\n"}
+        committed = _run(vendored, tracked=tuple(vendored))
+        self.assertIn("JavaScript: node_modules/", committed.details, committed)
+        site = {"docusaurus.config.js": "module.exports = {};\n", "package.json": "{}\n"}
+        built = _run({**files, **site, "build/index.html": "<html></html>\n"})
+        self.assertIn("Documentation site: build/", built.details, built)

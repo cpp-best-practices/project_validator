@@ -250,6 +250,19 @@ class PreCommitTests(unittest.TestCase):
                 files = {".pre-commit-config.yaml": self.CONFIG, **github_job("ubuntu-latest", command)}
                 self.assertEqual(_expanded(_facts(files)), expected)
 
+    def test_options_that_take_a_value_name_no_hook(self) -> None:
+        """fastapi's `prek run --from-ref origin/main --to-ref HEAD` runs every hook: HEAD is the option's value,
+        not a hook's id (#221)."""
+        every = [("ruff", "--fix"), ("ruff-format",), ("mypy", "--strict", "src")]
+        for command in (
+            "prek run --from-ref origin/main --to-ref HEAD --show-diff-on-failure",
+            "pre-commit run --source origin/main --origin HEAD",
+            "pre-commit run -s origin/main -o HEAD",
+        ):
+            with self.subTest(command=command):
+                files = {".pre-commit-config.yaml": self.CONFIG, **github_job("ubuntu-latest", command)}
+                self.assertEqual(_expanded(_facts(files)), every)
+
     def test_a_missing_or_broken_configuration_is_unknown(self) -> None:
         for files, reason in (
             ({}, "no pre-commit configuration is found"),
@@ -300,6 +313,13 @@ def _tox(files: dict[str, str], line: str) -> list[tuple[str, ...]]:
 class ToxTests(unittest.TestCase):
     def test_braces_expand_into_alternatives_and_ranges(self) -> None:
         self.assertEqual(braces("py3{11-13}-{a,b}"), [f"py3{n}-{x}" for n in (11, 12, 13) for x in "ab"])
+
+    def test_options_that_take_a_value_name_no_subcommand(self) -> None:
+        """black's fuzz workflow runs `tox -e fuzz --result-json $python_ver`: the value is the option's, not a
+        subcommand that runs no environment (#199)."""
+        for line in ("tox -e lint --result-json 3.11", "tox --hashseed 1 -e lint", "tox --skip-env x -e lint"):
+            with self.subTest(line=line):
+                self.assertEqual(_tox({"tox.ini": TOX_INI}, line), [("ruff", "check", ".")])
 
     def test_environments_run_their_own_section_or_the_lines_of_their_factors(self) -> None:
         files = {"tox.ini": TOX_INI}

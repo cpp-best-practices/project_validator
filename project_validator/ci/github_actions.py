@@ -8,6 +8,7 @@ import re
 import shlex
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, replace
+from functools import partial
 
 from project_validator.ci import REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
@@ -200,26 +201,42 @@ def _job_facts(
     caller: str = "",
     load: Load | None = None,
     inputs: Mapping[str, str] = NOTHING,
+    advisory: str = "",
 ) -> Iterator[Fact]:
     """The facts of one job; `caller` names the job that calls the workflow, for a reusable workflow's jobs, and
-    `inputs` are what it passes. `load` reads the local actions its steps use."""
+    `inputs` are what it passes. `load` reads the local actions its steps use; `advisory` says why none of its steps
+    can fail a push or pull request, when none can."""
     origin = Origin(path=path, at=("jobs", job_id))
+    combine = partial(_Combination, origin, load=load, inputs=inputs, advisory=advisory)
     strategy = job.get("strategy")
     combinations = expand_matrix(strategy.get("matrix") if isinstance(strategy, Mapping) else None)
     if combinations is None:
         # Its steps still run, in combinations that are not known: their matrix values stay as written.
-        yield Unknown(
-            origin=origin,
-            subject=f"the matrix of job {job_id}",
-            reason="it is computed by an expression",
-            hides="matrix",
-        )
-        unknown = _Combination(origin, f"{caller}{path}:{job_id}", {}, load=load, matrix_known=False, inputs=inputs)
-        yield from unknown.facts(job, workflow)
+        reason = "it is computed by an expression"
+        yield Unknown(origin=origin, subject=f"the matrix of job {job_id}", reason=reason, hides="matrix")
+        yield from combine(f"{caller}{path}:{job_id}", {}, matrix_known=False).facts(job, workflow)
         return
     for index, combination in enumerate(combinations):
         identity = f"{caller}{path}:{job_id}" + ("" if len(combinations) == 1 else f"[{index}]")
-        yield from _Combination(origin, identity, combination, load=load, inputs=inputs).facts(job, workflow)
+        yield from combine(identity, combination).facts(job, workflow)
+
+
+# A step that fails the job when an earlier one failed: `if: steps.<id>.outcome == 'failure'`, `run: exit 1`.
+_FAILED_OUTCOME = re.compile(r"\bsteps\.([\w-]+)\.outcome\s*==\s*'failure'")
+_FAILS = re.compile(r"\s*(?:exit\s+[1-9]\d*|false)\s*")
+
+
+def _rechecked(steps: list[object]) -> frozenset[str]:
+    """The ids of the steps whose failure a later step fails the job on (fastapi's prek run continues on error, then
+    the job commits the fixes and errors out on the run's outcome): their `continue-on-error` defers the failure."""
+    return frozenset(
+        found[1]
+        for step in steps
+        if isinstance(step, Mapping)
+        and isinstance(step.get("run"), str)
+        and _FAILS.fullmatch(str(step["run"]))
+        and (found := _FAILED_OUTCOME.search(str(step.get("if", ""))))
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -243,6 +260,8 @@ class _Combination:
     advisory: str = ""
     # A called workflow's inputs (see `Known.inputs`).
     inputs: Mapping[str, str] = NOTHING
+    # The ids of the job's steps whose failure a later step fails the job on (see `_rechecked`).
+    rechecked: frozenset[str] = frozenset()
 
     def substitute(self, text: str) -> str:
         """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
@@ -325,10 +344,12 @@ class _Combination:
             env=self.substituted(known.env),
         )
         steps = job.get("steps")
-        for number, step in enumerate(steps if isinstance(steps, list) else []):
+        steps = steps if isinstance(steps, list) else []
+        rechecked = _rechecked(steps)
+        for number, step in enumerate(steps):
             if isinstance(step, Mapping):
                 # What the steps before wrote to $GITHUB_ENV is in its environment, and its expressions' too.
-                here = replace(self, known=known)
+                here = replace(self, known=known, rechecked=rechecked)
                 yield from here.step_facts(
                     Origin(path=self.origin.path, at=(*self.origin.at, "steps", number)), step, known
                 )
@@ -345,7 +366,8 @@ class _Combination:
             return
         condition = None if runs else self.optional(step.get("if"))
         context = self
-        for found in self.continues(step, known, f"whether a step of job {self.origin.at[-1]} can fail it"):
+        holder = {} if step.get("id") in self.rechecked else step
+        for found in self.continues(holder, known, f"whether a step of job {self.origin.at[-1]} can fail it"):
             if isinstance(found, Unknown):
                 yield replace(found, origin=origin)
             else:
@@ -483,11 +505,29 @@ def _with_inputs[T](value: T, inputs: Mapping[str, str]) -> T:
 _CALL_DEPTH = 4
 
 
-def _only_called(document: Mapping[object, object]) -> bool:
-    """Whether a workflow runs only when another calls it (`on: workflow_call`)."""
+def _triggers(document: Mapping[object, object]) -> list[str]:
+    """The events a workflow runs on."""
     triggers = document.get("on", document.get(True))  # YAML 1.1 reads a bare `on` as true
     names = [triggers] if isinstance(triggers, str) else list(triggers) if isinstance(triggers, (list, Mapping)) else []
-    return names == ["workflow_call"]
+    return [str(name) for name in names]
+
+
+def _only_called(document: Mapping[object, object]) -> bool:
+    """Whether a workflow runs only when another calls it (`on: workflow_call`)."""
+    return _triggers(document) == ["workflow_call"]
+
+
+# The events someone's comment or issue triggers: a workflow run only by them (a `/style` command) checks no push.
+_CONVERSATION_EVENTS = frozenset(
+    {"issue_comment", "issues", "pull_request_review_comment", "discussion", "discussion_comment"}
+)
+
+
+def _conversational(document: Mapping[object, object]) -> str:
+    """Why no step of a workflow can fail a push or pull request when it runs only on comments and issues
+    (`on: issue_comment`), else ""."""
+    names = _triggers(document)
+    return f"on: {', '.join(names)}" if names and set(names) <= _CONVERSATION_EVENTS else ""
 
 
 def _computed_directory(origin: Origin, directory: str | None) -> Iterator[Unknown]:
@@ -524,11 +564,12 @@ def workflow_facts(
         return
     if not caller and _only_called(document):
         return  # its jobs run where another workflow calls it
+    advisory = "" if caller else _conversational(document)
     for job_id, job in jobs.items():
         if not isinstance(job, Mapping):
             continue
         if "uses" not in job:
-            yield from _job_facts(path, str(job_id), job, document, caller, load, inputs)
+            yield from _job_facts(path, str(job_id), job, document, caller, load, inputs, advisory)
             continue
         uses = str(job["uses"]).strip()
         called = _local(uses) or _own(uses, load)
