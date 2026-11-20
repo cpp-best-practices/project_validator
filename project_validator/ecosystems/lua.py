@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import re
 import shlex
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
@@ -197,6 +197,15 @@ LUACOV_OUTPUT = BuildOutput(
 # leafo/gh-actions-lua's `luaVersion`: `5.4`, `5.1.5`, `luajit-2.1`, `luajit-openresty`.
 _LUA_VERSION = r"(5\.\d(?:\.\d)?|luajit(?:-[\w.-]+)?)"
 
+
+def _setup_neovim(inputs: Mapping[str, str]) -> str | None:
+    """rhysd/action-setup-vim with `neovim: true`: a Neovim plugin's Lua runs in the Neovim its `version` names
+    (`stable`, `nightly`, `v0.10.0`; stable when not given). Without it, the action sets up Vim, which runs no Lua."""
+    if str(inputs.get("neovim", "")).lower() != "true":
+        return None
+    version = inputs.get("version", "")
+    return f"Neovim {version if version and '${{' not in version else 'stable'}"
+
 LUA_ECOSYSTEM = Ecosystem(
     label="Lua",
     languages=LUA,
@@ -210,6 +219,7 @@ LUA_ECOSYSTEM = Ecosystem(
         # The tools that run on a Lua interpreter; StyLua, selene and the language server are binaries of their own.
         programs=("lua", "busted", "luarocks", "luacheck", "luacov"),
         actions=("gh-actions-lua",),
+        steps=(("rhysd/action-setup-vim", _setup_neovim),),
     ),
     ci_programs=(("stylua",), ("selene",), ("lua-language-server",), ("luau-analyze",)),
 )

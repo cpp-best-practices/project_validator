@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import unittest
 
 from project_validator.checks.code_formatting import code_formatting
@@ -156,3 +157,18 @@ class LuaTests(unittest.TestCase):
         # StyLua and the language server need no Lua interpreter: a job running only them names no Lua version.
         self.assertIn("0 Lua version(s)", self._run(platform_matrix, _ci("stylua --check .")).message)
         self.assertIn("(default)", self._run(platform_matrix, _ci("busted")).message)
+
+    def test_a_neovim_plugin_runs_on_the_neovim_its_setup_names(self) -> None:
+        """rhysd/action-setup-vim with `neovim: true` names the Neovim the plugin's Lua runs in (stable when no
+        version is given); without it, the action sets up Vim, which names no Lua at all."""
+        cases = (
+            ({"neovim": True, "version": "v0.10.0"}, "(Neovim v0.10.0)"),
+            ({"neovim": True}, "(Neovim stable)"),
+            ({"version": "v9.1.0"}, "0 Lua version(s)"),
+        )
+        for inputs, expected in cases:
+            with self.subTest(inputs=inputs):
+                steps = [{"uses": "rhysd/action-setup-vim@v1", "with": inputs}, {"run": "stylua --check ."}]
+                workflow = {"jobs": {"test": {"runs-on": "ubuntu-latest", "steps": steps}}}
+                result = self._run(platform_matrix, {GITHUB_WORKFLOW: json.dumps(workflow)})
+                self.assertIn(expected, result.message)

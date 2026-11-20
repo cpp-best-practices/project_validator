@@ -21,7 +21,9 @@ luacov counts lines, the most anything measures for Lua: `busted --coverage` (or
 ## `platform-matrix`
 
 The toolchains are Lua versions and implementations (`5.1` to `5.4`, `luajit-2.1`, `luajit-openresty`), named by
-leafo/gh-actions-lua's `luaVersion` or a `lua-version` input.
+leafo/gh-actions-lua's `luaVersion` or a `lua-version` input. A Neovim plugin's Lua runs in Neovim: the version
+rhysd/action-setup-vim installs with `neovim: true` (`Neovim stable`, `Neovim nightly`, `Neovim v0.10.0`) is its
+toolchain.
 
 ## `compiler-warnings`
 

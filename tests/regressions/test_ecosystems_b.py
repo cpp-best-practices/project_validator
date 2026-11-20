@@ -99,7 +99,6 @@ class LuaAndLatexTests(unittest.TestCase):
                 result = _run(coverage, "Lua sources", {**PLENARY_SPEC, **files})
                 self.assertEqual(result.status, Status.FAIL, result)
 
-    @unittest.expectedFailure  # upstream #268: a Neovim plugin's matrix of Neovim versions counts no toolchain
     def test_neovim_versions_are_the_toolchain_axis_of_a_plugin(self) -> None:
         """`rhysd/action-setup-vim` with `neovim: true` and `version: ${{ matrix.rev }}` runs the plugin's tests on
         each Neovim version: 2 OSes x 2 versions (telescope.nvim), not "no Lua version" everywhere."""
