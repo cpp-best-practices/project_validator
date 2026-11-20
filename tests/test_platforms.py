@@ -30,6 +30,25 @@ class PlatformDetectionTests(unittest.TestCase):
         self.assertEqual(detect_compilers("ilammy/msvc-dev-cmd"), ["msvc"])
         self.assertEqual(detect_compilers("CXX=icpx"), ["intel"])
 
+    def test_an_msys2_environment_names_its_compiler(self) -> None:
+        """setup-msys2's `msystem`: MINGW64, MINGW32 and UCRT64 build with gcc, CLANG64 and CLANGARM64 with clang
+        (fmt's `sys: [mingw64, ucrt64]` matrix is gcc, not the Windows runner's MSVC)."""
+        for msystem, compiler in (
+            ("UCRT64", "gcc"),
+            ("mingw32", "gcc"),
+            ("CLANG64", "clang"),
+            ("clangarm64", "clang"),
+        ):
+            with self.subTest(msystem=msystem):
+                self.assertEqual(detect_compilers(f"msystem: {msystem}"), [compiler])
+
+    def test_emscripten_is_clang(self) -> None:
+        """Emscripten's emcc is clang (CMake's compiler id under emcmake is Clang), not the runner's gcc
+        (cmake_template's wasm job)."""
+        for text in ("uses: mymindstorm/setup-emsdk@v16", "emcmake cmake -B build", "CXX=em++", "emcc -O2 a.c"):
+            with self.subTest(text=text):
+                self.assertEqual(detect_compilers(text), ["clang"])
+
     def test_tools_named_after_compilers_are_not_compilers(self) -> None:
         self.assertEqual(detect_compilers("clang-format clang-tidy clangd gcovr llvm-cov"), [])
         self.assertEqual(detect_compilers("CLANG_TIDY_VERSION: 19.1.1"), [])
