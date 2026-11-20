@@ -318,10 +318,11 @@ def _setting(name: str, regex: str) -> Pattern:
 
 WARNING_SETTINGS_FILES = ("pyproject.toml", "setup.cfg", "tox.ini", "pytest.ini")
 
-# Python reports problems such as deprecations as warnings; the strict setting turns every one into an error.
+# Python reports problems such as deprecations as warnings; the strict setting turns every one into an error, however
+# it is spelled (`-W error`, PYTHONWARNINGS, pytest's filterwarnings), so it is named for what it does.
 PYTHON_WARNINGS = (
     _setting(
-        "-W error",
+        "warnings as errors",
         r"\bpython[\d.]*\s+(?:-\w+(?:\s+[^-\s]\S*)?\s+)*-W\s*error\b|\bpytest\b[^\n]*\s-W\s*error\b"
         r"|\bPYTHONWARNINGS\W+error\b|\bfilterwarnings\s*=\s*\[?\s*[\"']?error\b",
     ),

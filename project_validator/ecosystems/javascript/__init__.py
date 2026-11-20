@@ -536,11 +536,13 @@ ESLINT_CONFIG_FILES = (
 RUNS_ESLINT = r"(?<![\w-])eslint(?![\w-])(?!\.config)"
 RUNS_BIOME_LINT = r"\bbiome\s+(?:lint|check|ci)\b"
 RUNS_DENO_LINT = r"\bdeno\s+lint\b"
+RUNS_OXLINT = r"(?<![\w-])oxlint(?![\w-])"
 
 LINTERS = (
     pattern("eslint", RUNS_ESLINT),
     pattern("biome lint", RUNS_BIOME_LINT),
     pattern("deno lint", RUNS_DENO_LINT),
+    pattern("oxlint", RUNS_OXLINT),
 )
 
 
@@ -554,7 +556,7 @@ def _linters_required(facts: Facts, _compiler: str | None) -> tuple[Requirement,
 
 
 # The tools that run each of LINTERS.
-_LINTER_TOOLS = ("eslint", "biome", "deno lint")
+_LINTER_TOOLS = ("eslint", "biome", "deno lint", "oxlint")
 
 
 # JavaScript has no compiler warnings; its linters report what other compilers warn about.
@@ -565,7 +567,7 @@ WARNINGS = Practice(
     requirements=_linters_required,
     words=Wording(
         kind="JavaScript linters",
-        hint="run eslint (or biome lint, or deno lint) in CI",
+        hint="run eslint (or biome lint, deno lint or oxlint) in CI",
     ),
 )
 
@@ -577,12 +579,14 @@ WARNINGS_AS_ERRORS = Practice(
         required(pattern("biome ci", r"\bbiome\s+ci\b|\bbiome\b[^\n]*\s--error-on-warnings\b"), in_files=False),
         # deno lint fails on any finding.
         required(pattern("deno lint", RUNS_DENO_LINT), in_files=False),
+        required(pattern("oxlint --deny-warnings", rf"{RUNS_OXLINT}[^\n]*\s--deny-warnings\b"), in_files=False),
     ),
     any_one=True,
     words=Wording(
         kind="warnings as errors",
         searched="CI configuration or the package scripts it runs",
-        hint="run eslint with --max-warnings 0 (or biome ci, or deno lint), so that a lint warning fails CI",
+        hint="run eslint with --max-warnings 0 (or biome ci, deno lint or oxlint --deny-warnings), so that a lint "
+        "warning fails CI",
     ),
 )
 

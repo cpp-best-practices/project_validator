@@ -70,7 +70,7 @@
                 "compiler": null,
                 "found": {},
                 "missing": [
-                  "-W error"
+                  "warnings as errors"
                 ]
               }
             ],
@@ -827,7 +827,7 @@
     },
     "compiler-warnings": {
       "details": [],
-      "message": "no Python warning settings found; enable at least -W error",
+      "message": "no Python warning settings found; enable at least warnings as errors",
       "status": "FAIL"
     },
     "copy-paste-detection": {

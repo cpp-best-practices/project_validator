@@ -35,11 +35,12 @@ The toolchains are Node.js, Deno or Bun versions.
 
 ## `compiler-warnings`
 
-A linter runs: eslint, `biome lint` / `biome ci`, or `deno lint`.
+A linter runs: eslint, `biome lint` / `biome ci`, `deno lint`, or oxlint.
 
 ## `warnings-as-errors`
 
-A lint warning fails CI: `eslint --max-warnings 0`, `biome ci` or `--error-on-warnings`, or `deno lint`.
+A lint warning fails CI: `eslint --max-warnings 0`, `biome ci` or `--error-on-warnings`, `deno lint`, or
+`oxlint --deny-warnings`.
 
 ## `mutation-testing`
 

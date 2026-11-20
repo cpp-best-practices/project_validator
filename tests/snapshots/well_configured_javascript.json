@@ -948,7 +948,8 @@
                 },
                 "missing": [
                   "biome ci",
-                  "deno lint"
+                  "deno lint",
+                  "oxlint --deny-warnings"
                 ]
               }
             ],

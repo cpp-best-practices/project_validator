@@ -116,7 +116,7 @@
               {
                 "compiler": null,
                 "found": {
-                  "-W error": [
+                  "warnings as errors": [
                     "CI (.github/workflows/ci.yml)"
                   ]
                 },
@@ -1038,7 +1038,7 @@
     },
     "compiler-warnings": {
       "details": [],
-      "message": "strict Python warning settings are enabled: -W error",
+      "message": "strict Python warning settings are enabled: warnings as errors",
       "status": "PASS"
     },
     "copy-paste-detection": {

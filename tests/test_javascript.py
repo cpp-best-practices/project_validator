@@ -176,7 +176,13 @@ class JavaScriptTests(unittest.TestCase):
         self.assertEqual(lines, Result.passed("branch coverage is reported with c8", _GATE_HINT))
 
     def test_one_linter_is_enough(self) -> None:
-        for command, linter in (("npx eslint .", "eslint"), ("biome ci", "biome lint"), ("deno lint", "deno lint")):
+        # oxlint is one too: vite was told "no JavaScript linters found" while static-analysis credited it (#248).
+        for command, linter in (
+            ("npx eslint .", "eslint"),
+            ("biome ci", "biome lint"),
+            ("deno lint", "deno lint"),
+            ("oxlint .", "oxlint"),
+        ):
             with self.subTest(command=command):
                 result = self._run(compiler_warnings, _ci(command))
                 self.assertEqual(result, Result.passed(f"strict JavaScript linters are enabled: {linter}"))
@@ -184,10 +190,11 @@ class JavaScriptTests(unittest.TestCase):
         self.assertEqual(result, Result.failed("no JavaScript linters found; enable at least eslint"))
 
     def test_a_lint_warning_must_fail_ci(self) -> None:
-        for command in ("eslint --max-warnings=0 .", "biome lint --error-on-warnings", "biome ci", "deno lint"):
+        passing = ("eslint --max-warnings=0 .", "biome lint --error-on-warnings", "biome ci", "deno lint")
+        for command in (*passing, "oxlint --deny-warnings ."):
             with self.subTest(command=command):
                 self.assertEqual(self._run(warnings_as_errors, _ci(command)).status, Status.PASS)
-        for command in ("eslint .", "eslint --max-warnings 10 .", "biome lint"):
+        for command in ("eslint .", "eslint --max-warnings 10 .", "biome lint", "oxlint ."):
             with self.subTest(command=command):
                 self.assertEqual(self._run(warnings_as_errors, _ci(command)).status, Status.FAIL)
 
