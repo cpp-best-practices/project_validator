@@ -184,7 +184,6 @@ class PythonTestFilePatternTests(unittest.TestCase):
 
 
 class LispTestRunnerTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #265: testing/, (rtest:deftest and (rt:do-tests) are unknown to Common Lisp
     def test_rt_suites_under_testing_are_run_by_rt_do_tests(self) -> None:
         """ironclad's `testing/` holds `rtest:deftest` forms of the `rt` framework (137 .testvec vectors), and every
         CI job runs `(rt:do-tests)` after loading the test system."""

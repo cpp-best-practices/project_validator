@@ -45,17 +45,18 @@ def _code(command: Command) -> str:
 
 # FiveAM, Parachute, Rove and Prove tests, in the test system's files.
 LISP_TEST_FILES = TestFiles(
-    name="FiveAM, Parachute, Rove or Prove tests (tests/*.lisp)",
+    name="FiveAM, Parachute, Rove, Prove or RT tests (tests/*.lisp)",
     languages=LISP,
-    path=re.compile(r"(?:^|/)(?:tests?|t)/.+\.lisp$|-tests?\.lisp$"),
+    path=re.compile(r"(?:^|/)(?:tests?|testing|t)/.+\.lisp$|-tests?\.lisp$"),
     contains=re.compile(
         r"\((?:(?:fiveam|5am|it\.bese\.fiveam):)?(?:def-suite\*?|def-test|test)\s"
-        r"|\((?:parachute:)?define-test\s|\((?:rove:)?deftest\s|\((?:prove:)?(?:subtest|plan)\s"
+        r"|\((?:parachute:)?define-test\s|\((?:rove:|rtest:|rt:|regression-test:)?deftest\s|\((?:prove:)?(?:subtest|plan)\s"
     ),
 )
 _RUNS_TESTS = re.compile(
     r"\(asdf:test-system\b|\(asdf:oos\s+'asdf:test-op|\(asdf:operate\s+'asdf:test-op"
     r"|\((?:rove|fiveam|5am|parachute|prove):(?:run!?|run-all-tests|test|run-system-tests)\b"
+    r"|\((?:rt|rtest|regression-test):do-tests\b"
 )
 
 
