@@ -95,6 +95,21 @@ class VendoringTests(unittest.TestCase):
         )
         self.assertEqual(result, expected)
 
+    @unittest.skipUnless(shutil.which("git"), "git is not installed")
+    def test_a_submodule_of_the_projects_own_organisation_is_not_third_party(self) -> None:
+        """xmlunit's test-resources and cetz's common are submodules from their own organisation (#246); a relative
+        submodule URL is the project's own too. Another owner's submodule still warns."""
+        own = '[submodule "r"]\n\tpath = r\n\turl = https://github.com/acme/test-resources.git\n'
+        relative = '[submodule "c"]\n\tpath = c\n\turl = ../common.git\n'
+        other = '[submodule "x"]\n\tpath = x\n\turl = git@github.com:someone/lib.git\n'
+        for modules, warns in ((own, False), (relative, False), (own + other, True)):
+            with self.subTest(modules=modules), temp_project({**WELL_CONFIGURED, ".gitmodules": modules}) as root:
+                git(root, "init", "-q")
+                git(root, "remote", "add", "origin", "git@github.com:acme/app.git")
+                git(root, "add", ".")
+                result = dependency_management.run(make_context(root))
+                self.assertEqual("third-party code" in result.message, warns, result)
+
     def test_an_unknown_answer_stays_an_error_whatever_is_vendored(self) -> None:
         files = {"pyproject.toml": "[project\n", ".gitmodules": ""}
         self.assertEqual(run_as(self, dependency_management, files, PYTHON).status, Status.ERROR)

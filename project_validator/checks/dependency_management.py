@@ -44,9 +44,28 @@ def _holds_code(context: Context, directory: str) -> bool:
     return any(not _NOTICES.fullmatch(PurePosixPath(path).name) for path in inside)
 
 
+_SUBMODULE = re.compile(r"\[submodule\b[^\]]*\]([^\[]*)")
+_URL = re.compile(r"^\s*url\s*=\s*(\S+)", re.MULTILINE)
+# The host and owner of a repository URL: https://host/owner/repo, ssh://git@host/owner/repo, git@host:owner/repo.
+_OWNER = re.compile(r"^(?:[\w+]+://)?(?:[^@/]+@)?([^/:]+)[:/]+([^/]+)/")
+
+
+def _owner(url: str) -> tuple[str, str] | None:
+    found = _OWNER.match(url)
+    return (found[1].lower(), found[2].lower()) if found else None
+
+
 def _submodules(context: Context) -> bool:
-    """Whether `.gitmodules` declares a submodule (kubespray's is empty)."""
-    return context.project.exists(SUBMODULES) and "[submodule" in context.project.read_text(SUBMODULES)
+    """Whether `.gitmodules` declares a submodule of another's (kubespray's is empty): one whose URL is relative, or
+    of the same host and owner as the checkout's origin, is the project's own (xmlunit's test-resources)."""
+    if not context.project.exists(SUBMODULES):
+        return False
+    own = _owner(origin) if (origin := context.project.origin_url()) else None
+    for section in _SUBMODULE.findall(context.project.read_text(SUBMODULES)):
+        url = found[1] if (found := _URL.search(section)) else ""
+        if not url.startswith(("../", "./")) and (own is None or _owner(url) != own):
+            return True
+    return False
 
 
 def _with_vendored(managed: Check) -> Check:
