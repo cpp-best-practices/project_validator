@@ -2141,6 +2141,30 @@
       "value": true
     },
     {
+      "heuristic": true,
+      "key": "failOnWarning",
+      "kind": "Setting",
+      "origin": "phpunit.xml.dist",
+      "tool": "PHPUnit warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "failOnNotice",
+      "kind": "Setting",
+      "origin": "phpunit.xml.dist",
+      "tool": "PHPUnit warning settings",
+      "value": true
+    },
+    {
+      "heuristic": true,
+      "key": "failOnDeprecation",
+      "kind": "Setting",
+      "origin": "phpunit.xml.dist",
+      "tool": "PHPUnit warning settings",
+      "value": true
+    },
+    {
       "kind": "ConfigurationFile",
       "origin": "phpunit.xml.dist",
       "reader": "PHPUnit"

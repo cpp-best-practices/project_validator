@@ -207,6 +207,29 @@ FMT_MAVEN_PLUGIN = format_tool(
 )
 
 
+# Spring Java Format: the Maven plugin's `validate` goal (bound to the build: spring-petclinic binds it to the
+# `validate` phase) or the Gradle plugin's `checkFormat` task, which `check` runs; `apply` rewrites the sources.
+SPRING_JAVA_FORMAT = format_tool(
+    name="Spring Java Format",
+    languages=frozenset({JAVA}),
+    # Recognised where a project uses it, never suggested: it is Spring's house style.
+    can={Enforcement.CHECK: "", Enforcement.APPLY: ""},
+    formats=_build_formatter(
+        Wiring(
+            report=re.compile(
+                r"(?:io\.spring\.javaformat:)?spring-javaformat(?:-maven-plugin)?(?::[^:]+)?:validate|checkFormat"
+            ),
+            maven_plugin="spring-javaformat-maven-plugin",
+            bound_goal=re.compile("validate"),
+            gradle_plugin="io.spring.javaformat",
+        ),
+        apply=re.compile(r"(?:io\.spring\.javaformat:)?spring-javaformat(?:-maven-plugin)?(?::[^:]+)?:apply"),
+    ),
+    style=plugin_definition("spring-javaformat-maven-plugin", "io.spring.javaformat"),
+    reads=("Maven", "Gradle"),
+)
+
+
 GOOGLE_JAVA_FORMAT = format_tool(
     name="google-java-format",
     languages=frozenset({JAVA}),

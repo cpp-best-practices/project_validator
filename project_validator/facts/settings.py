@@ -38,7 +38,7 @@ class SettingsReader:
     files a command names, relative to the project.
 
     Files that are only understood together (CMake files, which include each other) are read by `read_project`
-    instead, once, when the project has one of them.
+    instead, once, when the project has one of them; a reader that names no `files` reads the project always.
     """
 
     name: str
@@ -136,7 +136,9 @@ def settings_facts(context: Context, readers: Iterable[SettingsReader], commands
     for reader, path in dict.fromkeys(wanted):
         yield ConfigurationFile(origin=Origin(path=path), reader=reader.name)
         yield from reader.read(path, project.read_text(path))
-    for reader in dict.fromkeys(reader for reader, _ in wanted):
+    # A reader of the whole project reads it once it has one of its files, or always when it names none.
+    project_readers = (*(reader for reader, _ in wanted), *(reader for reader in readers if not reader.files))
+    for reader in dict.fromkeys(project_readers):
         if reader.read_project is not None:
             yield from reader.read_project(context)
 

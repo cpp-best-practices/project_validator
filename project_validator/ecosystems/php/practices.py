@@ -42,8 +42,16 @@ _PHP_WARNINGS_AS_ERRORS = (
 )
 
 
+# Each of the three, named when only some are set.
+_PHP_ISSUES = tuple(
+    required(pattern(issue, _fails_on(issue))) for issue in ("failOnWarning", "failOnNotice", "failOnDeprecation")
+)
+
+
 PHP_WARNING_SETTINGS = requirement_reader(
-    "PHPUnit warning settings", PHPUNIT_CONFIG_FILES, (required(ERROR_REPORTING), *_PHP_WARNINGS_AS_ERRORS)
+    "PHPUnit warning settings",
+    PHPUNIT_CONFIG_FILES,
+    (required(ERROR_REPORTING), *_PHP_WARNINGS_AS_ERRORS, *_PHP_ISSUES),
 )
 
 
@@ -66,6 +74,7 @@ WARNINGS_AS_ERRORS = Practice(
     languages=PHP_ONLY,
     requirements=always(*_PHP_WARNINGS_AS_ERRORS),
     any_one=True,
+    parts=_PHP_ISSUES,
     reads=(PHP_WARNING_SETTINGS.name,),
     words=Wording(
         kind="warnings as errors",

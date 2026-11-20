@@ -147,6 +147,21 @@ class WarningTests(unittest.TestCase):
         some = {"phpunit.xml": '<phpunit failOnWarning="true" failOnNotice="true"/>'}
         self.assertEqual(run_as(self, WARNINGS_AS_ERRORS, some, PHP).status, Status.FAIL)
 
+    def test_what_is_set_of_the_three_is_named(self) -> None:
+        """guzzle sets only failOnWarning, laravel's CI passes only --fail-on-deprecation: the failure says what is set
+        and what is missing (upstream #270)."""
+        cases = {
+            "failOnWarning": ({"phpunit.xml": '<phpunit failOnWarning="true"/>'}, "failOnNotice and failOnDeprecation"),
+            "failOnDeprecation": (_ci("phpunit --fail-on-deprecation"), "failOnWarning and failOnNotice"),
+        }
+        for found, (files, missing) in cases.items():
+            with self.subTest(found=found):
+                result = run_as(self, WARNINGS_AS_ERRORS, files, PHP)
+                self.assertEqual(result.status, Status.FAIL, result)
+                self.assertEqual(
+                    result.message, f"warnings are only partly treated as errors: {found} is set, not {missing}"
+                )
+
 
 class SecurityTests(unittest.TestCase):
     def test_composer_audit_or_roave_security_advisories(self) -> None:

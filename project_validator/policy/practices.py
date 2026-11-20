@@ -7,7 +7,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable
 
 from project_validator.core import Result
-from project_validator.policy import unknown
+from project_validator.policy import both, unknown
 from project_validator.questions import Answer
 from project_validator.questions.practices import Compiled, PracticeAnswer
 
@@ -91,6 +91,10 @@ def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
     if answer.answer is Answer.UNKNOWN and not allow_unknown:
         return unknown(words.question or "whether warnings are treated as errors", answer.unknowns, words.hint)
     missed = Result.warned if words.warns else Result.failed
+    if answer.parts_found:
+        found, missing = both(answer.parts_found), both(answer.parts_missing)
+        verb = "is" if len(answer.parts_found) == 1 else "are"
+        return missed(f"warnings are only partly treated as errors: {found} {verb} set, not {missing}", words.hint)
     return missed(words.failed or f"warnings are not treated as errors in {words.searched}", words.hint)
 
 

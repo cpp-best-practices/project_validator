@@ -139,6 +139,13 @@
               ]
             },
             "known": {
+              "codespell": {
+                "can": {
+                  "checks": ""
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "markdownlint": {
                 "can": {
                   "checks": "markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action)"

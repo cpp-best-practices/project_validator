@@ -839,6 +839,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "HTMLProofer",
@@ -1071,6 +1072,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "LinkChecker",
@@ -1670,6 +1672,23 @@
     },
     {
       "can": {
+        "format": {
+          "apply": "",
+          "check": ""
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "Spring Java Format",
+      "reads": [
+        "Maven",
+        "Gradle"
+      ],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "standardrb"
         },
@@ -1805,6 +1824,19 @@
         "SwiftLint plugin",
         "SwiftLint"
       ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "vitepress build docs"
+        }
+      },
+      "languages": [
+        "VitePress"
+      ],
+      "name": "VitePress build",
+      "reads": [],
       "required": []
     },
     {
@@ -2646,6 +2678,25 @@
         "Clojure"
       ],
       "name": "cloverage",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": ""
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "VitePress",
+        "mdBook"
+      ],
+      "name": "codespell",
       "reads": [],
       "required": []
     },
@@ -3729,6 +3780,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "htmltest",
@@ -4051,6 +4103,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "linkinator",
@@ -4403,6 +4456,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "lychee",
@@ -4421,6 +4475,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "markdown-link-check",
@@ -4439,6 +4494,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "markdownlint",
@@ -4617,6 +4673,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "muffet",
@@ -6268,6 +6325,19 @@
     {
       "can": {
         "analysis": {
+          "checks": "sphinx-lint docs"
+        }
+      },
+      "languages": [
+        "Sphinx"
+      ],
+      "name": "sphinx-lint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
           "checks": "sqlc vet"
         }
       },
@@ -6955,6 +7025,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "vale",
