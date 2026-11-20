@@ -36,6 +36,13 @@ _OPTIONS = frozenset(
         "-x",
         "--override",
         "--installpkg",
+        "--result-json",
+        "--hashseed",
+        "--skip-env",
+        "--discover",
+        "--runner",
+        "--exit-and-dump-after",
+        "--skip-missing-interpreters",
     }
 )
 _RANGE = re.compile(r"^(\d+)-(\d+)$")

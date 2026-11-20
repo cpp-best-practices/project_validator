@@ -314,6 +314,13 @@ class ToxTests(unittest.TestCase):
     def test_braces_expand_into_alternatives_and_ranges(self) -> None:
         self.assertEqual(braces("py3{11-13}-{a,b}"), [f"py3{n}-{x}" for n in (11, 12, 13) for x in "ab"])
 
+    def test_options_that_take_a_value_name_no_subcommand(self) -> None:
+        """black's fuzz workflow runs `tox -e fuzz --result-json $python_ver`: the value is the option's, not a
+        subcommand that runs no environment (#199)."""
+        for line in ("tox -e lint --result-json 3.11", "tox --hashseed 1 -e lint", "tox --skip-env x -e lint"):
+            with self.subTest(line=line):
+                self.assertEqual(_tox({"tox.ini": TOX_INI}, line), [("ruff", "check", ".")])
+
     def test_environments_run_their_own_section_or_the_lines_of_their_factors(self) -> None:
         files = {"tox.ini": TOX_INI}
         cases = {
