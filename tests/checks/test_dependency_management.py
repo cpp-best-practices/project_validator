@@ -210,6 +210,11 @@ class PythonTests(unittest.TestCase):
             with self.subTest(environment):
                 self.assertEqual(self._run({"environment.yml": environment}), NO_DEPENDENCIES)
 
+    def test_an_unparsable_conda_environment_is_unknown(self) -> None:
+        result = self._run({"environment.yml": "dependencies: [numpy\n"})
+        self.assertEqual(result.status, Status.ERROR, result)
+        self.assertIn("environment.yml", " ".join((result.message, *result.details)))
+
     def test_conda_lock_files_lock_a_conda_environment(self) -> None:
         environment = {"environment.yml": "dependencies:\n  - numpy\n"}
         for lockfile in ("conda-lock.yml", "environment.conda-lock.yml", "conda-linux-64.lock"):
