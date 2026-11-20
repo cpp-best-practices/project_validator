@@ -163,7 +163,8 @@ class Project:
     def files(self, *, hidden: frozenset[str] = frozenset()) -> list[str]:
         """Every file of the project, skipping hidden, excluded and vendored directories and build trees.
 
-        `hidden` names hidden top-level directories (`.github`) to include all the same.
+        `hidden` names hidden top-level directories (`.github`) to include all the same, or, written `**/name`, hidden
+        directories at any depth (`**/.vitepress`, a VitePress site's configuration under `docs/`).
         """
         if ("files", hidden) not in self._listed:
             self._listed[("files", hidden)] = sorted(self._walk_files(hidden))
@@ -260,7 +261,7 @@ class Project:
             subdirectories[:] = [
                 name
                 for name in subdirectories
-                if (not name.startswith(".") or (current == self.root and name in hidden))
+                if (not name.startswith(".") or (current == self.root and name in hidden) or f"**/{name}" in hidden)
                 and name not in _SKIPPED_DIRECTORIES
                 and relative / name not in self.excluded
                 and not is_build_tree(current / name)

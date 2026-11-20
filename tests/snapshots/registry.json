@@ -839,6 +839,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "HTMLProofer",
@@ -1071,6 +1072,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "LinkChecker",
@@ -1822,6 +1824,19 @@
         "SwiftLint plugin",
         "SwiftLint"
       ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "vitepress build docs"
+        }
+      },
+      "languages": [
+        "VitePress"
+      ],
+      "name": "VitePress build",
+      "reads": [],
       "required": []
     },
     {
@@ -2678,6 +2693,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "codespell",
@@ -3764,6 +3780,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "htmltest",
@@ -4086,6 +4103,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "linkinator",
@@ -4438,6 +4456,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "lychee",
@@ -4456,6 +4475,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "markdown-link-check",
@@ -4474,6 +4494,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "markdownlint",
@@ -4652,6 +4673,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "muffet",
@@ -7003,6 +7025,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "name": "vale",

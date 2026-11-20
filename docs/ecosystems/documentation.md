@@ -1,13 +1,13 @@
 # Documentation site
 
-A format ecosystem of six formats, one per generator, recognised by content: MkDocs (`mkdocs.yml`), Sphinx (a
+A format ecosystem of seven formats, one per generator, recognised by content: MkDocs (`mkdocs.yml`), Sphinx (a
 `conf.py` that sets Sphinx up), Docusaurus (`docusaurus.config.js`, `.ts`, `.mjs`, `.cjs`), mdBook (`book.toml`), Hugo
-(`hugo.toml`, `.yaml`, `.json`) and Jekyll (a `_config.yml` beside `_posts/`, `_layouts/` or `_includes/`, or that
-names its theme). Prose itself, the Markdown in every repository, makes no documentation site. The site's
+(`hugo.toml`, `.yaml`, `.json`), Jekyll (a `_config.yml` beside `_posts/`, `_layouts/` or `_includes/`, or that
+names its theme) and VitePress (`.vitepress/config.ts`, `.mts`, `.js`, `.mjs`, in the site's directory). Prose itself, the Markdown in every repository, makes no documentation site. The site's
 configuration is YAML, TOML, Python or JavaScript, judged by its own profile as well.
 
 A CI job works with the ecosystem when it runs a generator (`mkdocs`, `sphinx-build`, `docusaurus`, `mdbook`, `hugo`,
-`jekyll`), a prose linter, a link checker (lychee, markdown-link-check, mdbook-linkcheck, linkinator, muffet,
+`jekyll`, `vitepress`), a prose linter, a link checker (lychee, markdown-link-check, mdbook-linkcheck, linkinator, muffet,
 htmltest, htmlproofer, linkchecker), or one of the `actions-hugo`, `actions-mdbook`, `mkdocs-deploy-gh-pages`,
 `jekyll-build-pages`, `sphinx-notes/pages`, `markdownlint-cli2-action`, `vale-action`, `lychee-action` or
 `github-action-markdown-link-check` actions.
@@ -16,14 +16,14 @@ htmltest, htmlproofer, linkchecker), or one of the `actions-hugo`, `actions-mdbo
 
 CI builds the site: `mkdocs build` (or `mkdocs gh-deploy`, `mhausenblas/mkdocs-deploy-gh-pages`), `sphinx-build`
 (or `python -m sphinx`, `sphinx-notes/pages`), `docusaurus build` (through `npm run build`), `mdbook build` or
-`mdbook test`, `hugo` or `hugo build`, `jekyll build` (through `bundle exec`, or `actions/jekyll-build-pages`). The
-generator's configuration file is what defines the site.
+`mdbook test`, `hugo` or `hugo build`, `jekyll build` (through `bundle exec`, or `actions/jekyll-build-pages`),
+`vitepress build` (through a package script). The generator's configuration file is what defines the site.
 
 ## `warnings-as-errors`
 
 The build fails on a warning: `mkdocs build --strict`, `sphinx-build -W` (`--fail-on-warning`), `onBrokenLinks:
-'throw'` in `docusaurus.config`, `hugo --panicOnWarning`, `jekyll build --strict_front_matter`. mdBook has no such
-switch, so the check does not apply to it.
+'throw'` in `docusaurus.config`, `hugo --panicOnWarning`, `jekyll build --strict_front_matter`. mdBook and VitePress have no such
+switch, so the check does not apply to them.
 
 ## `static-analysis`
 
@@ -47,7 +47,8 @@ checks nothing. Docusaurus's `onBrokenLinks: 'throw'` fails the build on a broke
 ## `vcs-ignore`
 
 The built site is ignored: `site/` (MkDocs), `_build/` (Sphinx), `build/` and `.docusaurus/` (Docusaurus), `book/`
-(mdBook), `public/` (Hugo), `_site/` and `.jekyll-cache/` (Jekyll).
+(mdBook), `public/` (Hugo), `_site/` and `.jekyll-cache/` (Jekyll), `.vitepress/dist/` and `.vitepress/cache/`
+(VitePress).
 
 ## `committed-artifacts`
 

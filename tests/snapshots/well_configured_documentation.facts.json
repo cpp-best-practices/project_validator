@@ -693,6 +693,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "origin": ".github/workflows/ci.yml:jobs.prose.steps[1]",
@@ -719,6 +720,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "origin": ".github/workflows/ci.yml:jobs.prose.steps[2]",
@@ -745,6 +747,7 @@
         "Jekyll",
         "MkDocs",
         "Sphinx",
+        "VitePress",
         "mdBook"
       ],
       "origin": ".github/workflows/ci.yml:jobs.links.steps[1]",

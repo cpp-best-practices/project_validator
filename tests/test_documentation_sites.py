@@ -9,6 +9,7 @@ from collections.abc import Mapping
 from project_validator.checks.committed_artifacts import committed_artifacts
 from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
+from project_validator.checks.type_checking import type_checking
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
@@ -20,6 +21,12 @@ SPHINX = {"docs/conf.py": "project = 'Shop'\nextensions = ['myst_parser']\n", "d
 DOCUSAURUS = {"docusaurus.config.js": "module.exports = { title: 'Shop', onBrokenLinks: 'throw' };\n"}
 HUGO = {"hugo.toml": 'baseURL = "https://shop.example.com/"\ntitle = "Shop"\n'}
 JEKYLL = {"_config.yml": "title: Shop\n", "_posts/2026-01-01-prices.md": "---\ntitle: Prices\n---\n"}
+# vite's docs/: a VitePress site, configured in .vitepress/config.ts.
+VITEPRESS = {
+    "docs/.vitepress/config.ts": "export default { title: 'Shop' }\n",
+    "docs/index.md": "# Shop\n",
+    "docs/package.json": '{"scripts": {"docs-build": "vitepress build"}}\n',
+}
 
 
 def _ci(*steps: str) -> dict[str, str]:
@@ -45,6 +52,7 @@ class RecognitionTests(unittest.TestCase):
             (HUGO, "Hugo"),
             (JEKYLL, "Jekyll"),
             ({"_config.yml": "remote_theme: just-the-docs/just-the-docs\n"}, "Jekyll"),
+            (VITEPRESS, "VitePress"),
         )
         for files, generator in cases:
             with self.subTest(generator=generator), temp_project(files) as root:
@@ -111,6 +119,31 @@ class MkDocsTests(unittest.TestCase):
         # vale needs its .vale.ini; without it, it runs nothing.
         self.assertEqual(self._run(static_analysis, _ci("vale docs")).status, Status.WARN)
         self.assertEqual(self._run(static_analysis, _ci("mkdocs build")).status, Status.FAIL)
+
+    def test_vitepress_builds_its_site_and_leaves_its_output(self) -> None:
+        """`vitepress build` (here through the docs package's script) renders a VitePress site, whose output and
+        cache under .vitepress/ are to be ignored (vite)."""
+        built = _run_on(tests_run, {**VITEPRESS, **_ci("cd docs && npm run docs-build")})
+        self.assertEqual(built.status, Status.PASS, built)
+        unbuilt = _run_on(tests_run, {**VITEPRESS, **_ci("echo docs")})
+        self.assertEqual(unbuilt.status, Status.WARN, unbuilt)
+        ignored = _run_on(vcs_ignore, {**VITEPRESS, ".gitignore": "node_modules/\n"})
+        self.assertIn(".vitepress/dist", " ".join((ignored.message, *ignored.details)))
+
+    def test_a_vitepress_theme_is_the_sites_code_not_the_products(self) -> None:
+        """The TypeScript of a VitePress site's theme (`.vitepress/theme/*.ts`) is docs code: beside a Python product,
+        its missing type checker does not fail the project (sqlfluff)."""
+        files = {
+            "pyproject.toml": "[project]\nname = 'shop'\n",
+            "shop.py": "",
+            "docsv/.vitepress/config.ts": "export default {}\n",
+            "docsv/.vitepress/theme/versions.ts": "export const v = 1\n",
+            "docsv/index.md": "# Shop\n",
+            **_ci("mypy shop.py"),
+        }
+        with temp_project(files) as root:
+            result = type_checking.run(make_context(root))
+        self.assertNotEqual(result.status, Status.FAIL, result)
 
     def test_spell_checkers_and_sphinx_lint_analyse(self) -> None:
         """codespell (mkdocs) checks the prose's spelling, markdownlint-cli runs through `npm exec` (mkdocs), and

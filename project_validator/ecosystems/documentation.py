@@ -1,13 +1,14 @@
-"""Documentation sites: MkDocs, Sphinx, Docusaurus, mdBook, Hugo and Jekyll, one format each, recognised by content
-(the generator's configuration: `mkdocs.yml`, a Sphinx `conf.py`, `docusaurus.config.*`, `book.toml`, `hugo.toml`,
-a Jekyll `_config.yml`). Prose itself (Markdown in every repository) makes no documentation site. The site's files are
-Markdown, and its configuration is YAML, TOML, Python or JavaScript, judged by their own profiles; what is asked of
-the site is that CI builds it (`tests-run`), that the build fails on a warning (`warnings-as-errors`: `mkdocs build
---strict`, `sphinx-build -W`, `onBrokenLinks: 'throw'`, `hugo --panicOnWarning`, `jekyll build --strict_front_matter`;
-mdBook has no such switch), that the prose is linted (`static-analysis`: markdownlint, vale), and that the built site
-is ignored and never committed (`vcs-ignore`, `committed-artifacts`), and that CI checks the site's links and fails
-on a broken one (`link-check`: lychee, Sphinx's `linkcheck` builder, markdown-link-check, mdbook-linkcheck, MkDocs'
-htmlproofer plugin, linkinator, muffet, htmltest, HTMLProofer, LinkChecker; a scheduled run counts)."""
+"""Documentation sites: MkDocs, Sphinx, Docusaurus, mdBook, Hugo, Jekyll and VitePress, one format each, recognised by
+content (the generator's configuration: `mkdocs.yml`, a Sphinx `conf.py`, `docusaurus.config.*`, `book.toml`,
+`hugo.toml`, a Jekyll `_config.yml`, `.vitepress/config.*`). Prose itself (Markdown in every repository) makes no
+documentation site. The site's files are Markdown, and its configuration is YAML, TOML, Python or JavaScript, judged
+by their own profiles; what is asked of the site is that CI builds it (`tests-run`), that the build fails on a
+warning (`warnings-as-errors`: `mkdocs build --strict`, `sphinx-build -W`, `onBrokenLinks: 'throw'`, `hugo
+--panicOnWarning`, `jekyll build --strict_front_matter`; mdBook and VitePress have no such switch), that the prose
+is linted (`static-analysis`: markdownlint, vale, sphinx-lint, codespell), and that the built site is ignored and
+never committed (`vcs-ignore`, `committed-artifacts`), and that CI checks the site's links and fails on a broken one
+(`link-check`: lychee, Sphinx's `linkcheck` builder, markdown-link-check, mdbook-linkcheck, MkDocs' htmlproofer
+plugin, linkinator, muffet, htmltest, HTMLProofer, LinkChecker; a scheduled run counts)."""
 
 from __future__ import annotations
 
@@ -16,9 +17,9 @@ import shlex
 from collections.abc import Callable, Iterator, Mapping
 from pathlib import PurePosixPath
 
-from project_validator.core import Project
+from project_validator.core import Context, Project
 from project_validator.ecosystems.model import Ecosystem
-from project_validator.facts import Command, Facts, Setting, resolved
+from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.expansion import Action
@@ -26,11 +27,12 @@ from project_validator.facts.links import link_checker, links_checked
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording, always, requirement_reader
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
-from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
+from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, Tool, defined_by, starts, when
 
 MKDOCS, SPHINX, DOCUSAURUS, MDBOOK, HUGO, JEKYLL = "MkDocs", "Sphinx", "Docusaurus", "mdBook", "Hugo", "Jekyll"
-GENERATORS = frozenset({MKDOCS, SPHINX, DOCUSAURUS, MDBOOK, HUGO, JEKYLL})
+VITEPRESS = "VitePress"
+GENERATORS = frozenset({MKDOCS, SPHINX, DOCUSAURUS, MDBOOK, HUGO, JEKYLL, VITEPRESS})
 
 
 def _only(generator: str) -> frozenset[str]:
@@ -46,6 +48,7 @@ _CONFIGURATION = {
     MDBOOK: re.compile(r"(?:^|/)book\.toml$"),
     HUGO: re.compile(r"(?:^|/)hugo\.(?:toml|ya?ml|json)$"),
     JEKYLL: re.compile(r"(?:^|/)_config\.ya?ml$"),
+    VITEPRESS: re.compile(r"(?:^|/)\.vitepress/config\.[cm]?[jt]s$"),
 }
 # A conf.py is Sphinx's when it sets up Sphinx; a _config.yml is Jekyll's when it says so, or the site has its layouts.
 _SPHINX_SETTINGS = re.compile(r"^\s*(?:extensions|html_theme|master_doc|root_doc|project)\s*=", re.MULTILINE)
@@ -59,6 +62,7 @@ _WRITTEN_IN = {
     MDBOOK: frozenset({"TOML"}),
     HUGO: frozenset({"TOML", "YAML", "JSON"}),
     JEKYLL: frozenset({"YAML"}),
+    VITEPRESS: frozenset({"JavaScript", "TypeScript"}),
 }
 
 
@@ -73,9 +77,13 @@ def _configures(project: Project, generator: str, path: str, files: list[str]) -
     return True
 
 
+# VitePress keeps its configuration in a hidden directory of the site (`docs/.vitepress/config.ts`).
+_HIDDEN = frozenset({"**/.vitepress"})
+
+
 def site_configurations(project: Project) -> Iterator[tuple[str, str]]:
     """(path, generator) of each site's configuration file: the site is where it is."""
-    files = project.files()
+    files = project.files(hidden=_HIDDEN)
     for generator, pattern in _CONFIGURATION.items():
         yield from (
             (path, generator) for path in files if pattern.search(path) and _configures(project, generator, path, files)
@@ -96,6 +104,7 @@ DOCUMENTATION = Ecosystem(
         ("mdbook",),
         ("hugo",),
         ("jekyll",),
+        ("vitepress",),
         ("markdownlint",),
         ("markdownlint-cli2",),
         ("markdownlint-cli",),
@@ -163,6 +172,18 @@ JEKYLL_SITE, JEKYLL_BUILD = _site(
 MKDOCS_DEPLOY_ACTION = Action(
     name="mhausenblas/mkdocs-deploy-gh-pages", runs=lambda _inputs: (("mkdocs", "gh-deploy", "--force"),)
 )
+VITEPRESS_SITE, VITEPRESS_BUILD = _site(VITEPRESS, "vitepress build docs", when(starts(("vitepress", "build")), tested))
+
+
+def _vitepress_sites(context: Context) -> Iterator[Fact]:
+    """A VitePress site's configuration, as the file that defines its site. It is in a hidden directory, whose files
+    are not the project's sources (the site's theme code adds no language), so it is found here."""
+    for path, generator in site_configurations(context.project):
+        if generator == VITEPRESS:
+            yield TestFile(origin=Origin(path=path), language=VITEPRESS, kind=VITEPRESS_SITE.name)
+
+
+VITEPRESS_SITES = SettingsReader(name="VitePress sites", files=(), read_project=_vitepress_sites)
 JEKYLL_PAGES_ACTION = Action(name="actions/jekyll-build-pages", runs=lambda _inputs: (("jekyll", "build"),))
 
 
@@ -436,3 +457,4 @@ DOCUSAURUS_OUTPUT = _built_site(DOCUSAURUS, "build", ".docusaurus")
 MDBOOK_OUTPUT = _built_site(MDBOOK, "book")
 HUGO_OUTPUT = _built_site(HUGO, "public")
 JEKYLL_OUTPUT = _built_site(JEKYLL, "_site", ".jekyll-cache")
+VITEPRESS_OUTPUT = _built_site(VITEPRESS, ".vitepress/dist", ".vitepress/cache")
