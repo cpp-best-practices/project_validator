@@ -6,7 +6,9 @@ from __future__ import annotations
 
 import unittest
 
-from project_validator.facts import Command, Unknown, resolved
+from project_validator.facts import Command, Origin, Unknown, resolved
+from project_validator.facts.expansion import Launched
+from project_validator.tools.unread_runners import DOCKER_RUN
 from tests.support import github_steps, make_context, temp_project
 
 
@@ -61,6 +63,15 @@ class DockerRunTests(unittest.TestCase):
             facts = make_context(root).facts
         [command] = [command for command in facts.of(Command) if command.argv[:1] == ("ruff",)]
         self.assertEqual(command.env.get("RUFF_OUTPUT_FORMAT"), "github")
+
+    def test_an_image_named_by_an_expression_split_at_its_spaces_is_one_image(self) -> None:
+        """sqlfluff's `docker run ${{ secrets.USER }}/sqlfluff:test lint ...`, where the expression reaches the reader
+        split into words."""
+        argv = ("docker", "run", "--env=CI=1", "${{", "secrets.USER", "}}/sqlfluff:test", "sqlfluff", "lint", ".")
+        command = Command(origin=Origin(path="ci.yml"), job="job", argv=argv, line=" ".join(argv))
+        with temp_project({}) as root:
+            expanded = DOCKER_RUN.expand(command, make_context(root))
+        self.assertEqual(list(expanded or ()), [Launched(argv=("sqlfluff", "lint", "."), env={"CI": "1"})])
 
     def test_a_container_started_without_a_command_runs_nothing_more(self) -> None:
         for line in (
