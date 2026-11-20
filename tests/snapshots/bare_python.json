@@ -645,6 +645,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "molecule's testinfra verifier": {
+                "can": {
+                  "runs": ""
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "nox": {
                 "can": {
                   "runs": "nox"

@@ -4578,6 +4578,21 @@
     },
     {
       "can": {
+        "test": {
+          "runs": ""
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "molecule's testinfra verifier",
+      "reads": [
+        "molecule"
+      ],
+      "required": []
+    },
+    {
+      "can": {
         "links": {
           "checked": "muffet http://localhost:8000 (the served site)"
         }

@@ -222,12 +222,19 @@ class GoTests(unittest.TestCase):
 
 
 class MoleculeVerifierTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #261: a molecule scenario's testinfra verifier is unread
     def test_molecule_runs_its_scenarios_testinfra_tests(self) -> None:
-        """A molecule scenario's `tests/test_*.py` is run by `molecule test` (kubespray)."""
-        files = {**SCENARIO, **VERIFIER, **_ci("molecule test")}
-        result = run_in_layout(self, ANSIBLE_PLAYBOOK, TESTS_RUN, files)
+        """A molecule scenario whose verifier is testinfra has its `tests/test_*.py` run by `molecule test` (kubespray);
+        with molecule's default verifier (Ansible), nothing runs them."""
+        testinfra = {"molecule/default/molecule.yml": SCENARIO_TEXT + "verifier:\n  name: testinfra\n"}
+        result = run_in_layout(self, ANSIBLE_PLAYBOOK, TESTS_RUN, {**testinfra, **VERIFIER, **_ci("molecule test")})
         self.assertEqual(result.status, Status.PASS, result)
+        # A molecule.yml outside molecule/<scenario>/ is no scenario's.
+        stray = {"docs/molecule.yml": "verifier:\n  name: testinfra\n"}
+        result = run_in_layout(
+            self, ANSIBLE_PLAYBOOK, TESTS_RUN, {**SCENARIO, **stray, **VERIFIER, **_ci("molecule test")}
+        )
+        self.assertEqual(result.status, Status.WARN, result)
+        self.assertNotIn("testinfra", result.message)  # a Python project is not told to adopt molecule
 
 
 class AntsibullNoxTests(unittest.TestCase):
@@ -268,7 +275,8 @@ UNITTESTS = {
 }
 # prometheus-community/helm-charts: chart-testing runs helm-unittest on every changed chart.
 CT_CONFIG = {"ct.yaml": "additional-commands:\n  - helm unittest --strict --file 'unittests/**/*.yaml' {{ .Path }}\n"}
-SCENARIO = {"molecule/default/molecule.yml": "driver:\n  name: docker\nplatforms:\n  - name: debian\n"}
+SCENARIO_TEXT = "driver:\n  name: docker\nplatforms:\n  - name: debian\n"
+SCENARIO = {"molecule/default/molecule.yml": SCENARIO_TEXT}
 # kubespray: molecule's verify stage runs the scenario's testinfra tests.
 VERIFIER = {
     "molecule/default/tests/test_default.py": "def test_docker_runs(host):\n"

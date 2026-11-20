@@ -107,9 +107,10 @@ class ToolAnswer:
         return tuple(tool.name for tool in self.known if tool.required and tool.name not in providing)
 
     def how(self, level: str | None = None) -> tuple[str, ...]:
-        """How each known tool provides `level` (by default, the answer's)."""
+        """How each known tool provides `level` (by default, the answer's); a tool with no way to give is never
+        suggested (it only provides the level as part of something else: molecule's testinfra verifier)."""
         wanted = self.level if level is None else level
-        return tuple(tool.can[wanted] for tool in self.known if wanted in tool.can)
+        return tuple(tool.can[wanted] for tool in self.known if tool.can.get(wanted))
 
     def names(self) -> tuple[str, ...]:
         return tuple(tool.name for tool in self.known)

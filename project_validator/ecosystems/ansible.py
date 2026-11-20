@@ -12,16 +12,19 @@ toolchain)."""
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
+from project_validator.ecosystems.python import PYTHON_ONLY, PYTHON_TEST_FILES
+from project_validator.facts import Command, Fact, Facts
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.expansion import Action
 from project_validator.facts.security import scanned, scanner
-from project_validator.facts.settings import file_reader
+from project_validator.facts.settings import SettingsReader, file_reader, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import combined, defined_by, starts, when
+from project_validator.facts.tools import Run, combined, defined_by, starts, when
 from project_validator.tools.misconfiguration import misconfiguration_scanner
 
 ANSIBLE = "Ansible"
@@ -97,6 +100,35 @@ MOLECULE = test_runner(
     how="molecule test",
     runs=when(starts(("molecule", "test")), tested),
     tests=tests_of(MOLECULE_SCENARIOS.name),
+)
+
+
+def _read_scenario(path: str, text: str) -> Iterator[Fact]:
+    if _MOLECULE_SCENARIO.search(path):
+        yield from yaml_settings("molecule", path, text, "verifier")
+
+
+MOLECULE_SETTINGS = SettingsReader(name="molecule", files=("molecule.yml", "molecule.yaml"), read=_read_scenario)
+
+
+def _testinfra(command: Command, facts: Facts) -> Run | None:
+    """`molecule test` where a scenario's verifier is testinfra: it runs the scenario's `tests/test_*.py` with pytest
+    against the instances it created."""
+    if not starts(("molecule", "test"))(command):
+        return None
+    read = [setting for setting in facts.settings("molecule") if setting.key == "name" and setting.value == "testinfra"]
+    return tested(read=read) if read else None
+
+
+# The Python tests of a scenario with the testinfra verifier, which molecule runs (kubespray's roles).
+TESTINFRA = test_runner(
+    name="molecule's testinfra verifier",
+    languages=PYTHON_ONLY,
+    # Never suggested: a Python project is not told to adopt molecule.
+    how="",
+    runs=_testinfra,
+    tests=tests_of(PYTHON_TEST_FILES.name),
+    reads=("molecule",),
 )
 ANSIBLE_TEST = test_runner(
     name="ansible-test",

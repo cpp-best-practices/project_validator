@@ -800,6 +800,9 @@
             "advisory": {},
             "answer": "yes",
             "defined": {
+              "molecule's testinfra verifier": [
+                "tests/test_app.py"
+              ],
               "nox": [
                 "tests/test_app.py"
               ],
@@ -811,6 +814,13 @@
               ]
             },
             "known": {
+              "molecule's testinfra verifier": {
+                "can": {
+                  "runs": ""
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "nox": {
                 "can": {
                   "runs": "nox"
