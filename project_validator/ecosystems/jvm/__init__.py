@@ -278,6 +278,8 @@ CLASS_FILES = BuildOutput(
     paths=("App.class",),
     hint="consider ignoring *.class",
     artifacts=("*.class",),
+    # Maven and Gradle compile into target/ and build/, outputs of their own.
+    contained_by=frozenset({"Maven", "Gradle"}),
 )
 
 

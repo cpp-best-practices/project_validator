@@ -92,7 +92,8 @@ class BuildOutput:
 
     A glob ignore entry ignores it when `globs` matches it whole; a regular expression when it matches one of
     `paths`. `artifacts` recognise it among the tracked files (see `artifact`), except files named one of
-    `not_artifacts` (Go's `go.mod` is not a compiled Fortran module). `hint` says how to ignore it.
+    `not_artifacts` (Go's `go.mod` is not a compiled Fortran module). `hint` says how to ignore it. A build with one of
+    `contained_by` writes it inside an output of its own (Maven compiles classes into target/), which ignores it.
     """
 
     name: str
@@ -103,6 +104,7 @@ class BuildOutput:
     artifacts: tuple[str, ...] = ()
     not_artifacts: tuple[str, ...] = ()
     build_systems: frozenset[str] = frozenset()
+    contained_by: frozenset[str] = frozenset()
 
     def ignored_by(self, entry: IgnoreEntry, units: Iterable[str] = (".",), sources: Iterable[str] = ()) -> bool:
         """Whether `entry` ignores the output: as the entry the output names (`globs`), or, read as the ignore
@@ -182,9 +184,10 @@ def known_build_outputs() -> tuple[BuildOutput, ...]:
 
 def outputs_of(language: str, build_systems: frozenset[str], outputs: Iterable[BuildOutput]) -> tuple[BuildOutput, ...]:
     """The build outputs of `language` for a project built with `build_systems`: those of the build systems it uses,
-    and the language's own (tied to no build system), which every build of the language writes. The two add up: an
-    output tied to a build system hides none."""
-    found = [output for output in outputs if language in output.languages]
+    and the language's own (tied to no build system), which every build of the language writes, but where a build
+    system it uses writes the output inside one of its own (`contained_by`). The two add up: an output tied to a build
+    system hides none."""
+    found = [output for output in outputs if language in output.languages and not output.contained_by & build_systems]
     return tuple(output for output in found if not output.build_systems or output.build_systems & build_systems)
 
 

@@ -36,8 +36,7 @@
           {
             "answer": "no",
             "committed": [
-              "target/",
-              "target/classes/com/example/App.class"
+              "target/"
             ],
             "language": "Java",
             "unit": "."
@@ -701,7 +700,6 @@
             "answer": "yes",
             "language": "Java",
             "outputs": {
-              "compiled classes": {},
               "the target directory": {}
             },
             "unit": "."
@@ -786,10 +784,9 @@
     "committed-artifacts": {
       "details": [
         "target/",
-        "target/classes/com/example/App.class",
         "remove them from version control (git rm -r --cached <path>) and ignore them"
       ],
-      "message": "2 build outputs are committed",
+      "message": "1 build output is committed",
       "status": "FAIL"
     },
     "compile-commands": {

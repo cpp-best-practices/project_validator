@@ -179,6 +179,15 @@ class PerlTests(unittest.TestCase):
         )
         self.assertEqual(run_in_layout(self, "Perl modules", vcs_ignore, {".gitignore": "blib/\n"}).status, Status.WARN)
 
+    def test_a_dist_zilla_distribution_writes_blib_in_its_build_directory(self) -> None:
+        """dzil builds and tests in .build/ (or Name-1.0/), so a distribution built only with Dist::Zilla writes no
+        blib/ or MYMETA files at its root (rjbs/Dist-Zilla); one with a Makefile.PL too does."""
+        dzil = {"dist.ini": "name = Shop\n", "lib/Shop.pm": STRICT, ".gitignore": "/.build\n/Shop-*\ncover_db/\n"}
+        with temp_project(dzil) as root:
+            self.assertEqual(vcs_ignore.run(make_context(root)).status, Status.PASS)
+        with temp_project({**dzil, "Makefile.PL": ""}) as root:
+            self.assertIn("blib", vcs_ignore.run(make_context(root)).message)
+
     def test_the_platform_matrix_counts_perl_versions(self) -> None:
         result = self._run(platform_matrix, {GITHUB_WORKFLOW: PERL_MATRIX})
         self.assertIn("2 Perl version(s) (5.38, 5.40)", result.message)
