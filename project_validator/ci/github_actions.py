@@ -222,6 +222,24 @@ def _job_facts(
         yield from _Combination(origin, identity, combination, load=load, inputs=inputs).facts(job, workflow)
 
 
+# A step that fails the job when an earlier one failed: `if: steps.<id>.outcome == 'failure'`, `run: exit 1`.
+_FAILED_OUTCOME = re.compile(r"\bsteps\.([\w-]+)\.outcome\s*==\s*'failure'")
+_FAILS = re.compile(r"\s*(?:exit\s+[1-9]\d*|false)\s*")
+
+
+def _rechecked(steps: list[object]) -> frozenset[str]:
+    """The ids of the steps whose failure a later step fails the job on (fastapi's prek run continues on error, then
+    the job commits the fixes and errors out on the run's outcome): their `continue-on-error` defers the failure."""
+    return frozenset(
+        found[1]
+        for step in steps
+        if isinstance(step, Mapping)
+        and isinstance(step.get("run"), str)
+        and _FAILS.fullmatch(str(step["run"]))
+        and (found := _FAILED_OUTCOME.search(str(step.get("if", ""))))
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class _Combination:
     """One matrix combination of a job, whose values are substituted into everything the job runs."""
@@ -243,6 +261,8 @@ class _Combination:
     advisory: str = ""
     # A called workflow's inputs (see `Known.inputs`).
     inputs: Mapping[str, str] = NOTHING
+    # The ids of the job's steps whose failure a later step fails the job on (see `_rechecked`).
+    rechecked: frozenset[str] = frozenset()
 
     def substitute(self, text: str) -> str:
         """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
@@ -325,10 +345,12 @@ class _Combination:
             env=self.substituted(known.env),
         )
         steps = job.get("steps")
-        for number, step in enumerate(steps if isinstance(steps, list) else []):
+        steps = steps if isinstance(steps, list) else []
+        rechecked = _rechecked(steps)
+        for number, step in enumerate(steps):
             if isinstance(step, Mapping):
                 # What the steps before wrote to $GITHUB_ENV is in its environment, and its expressions' too.
-                here = replace(self, known=known)
+                here = replace(self, known=known, rechecked=rechecked)
                 yield from here.step_facts(
                     Origin(path=self.origin.path, at=(*self.origin.at, "steps", number)), step, known
                 )
@@ -345,7 +367,8 @@ class _Combination:
             return
         condition = None if runs else self.optional(step.get("if"))
         context = self
-        for found in self.continues(step, known, f"whether a step of job {self.origin.at[-1]} can fail it"):
+        holder = {} if step.get("id") in self.rechecked else step
+        for found in self.continues(holder, known, f"whether a step of job {self.origin.at[-1]} can fail it"):
             if isinstance(found, Unknown):
                 yield replace(found, origin=origin)
             else:

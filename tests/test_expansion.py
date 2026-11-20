@@ -250,6 +250,19 @@ class PreCommitTests(unittest.TestCase):
                 files = {".pre-commit-config.yaml": self.CONFIG, **github_job("ubuntu-latest", command)}
                 self.assertEqual(_expanded(_facts(files)), expected)
 
+    def test_options_that_take_a_value_name_no_hook(self) -> None:
+        """fastapi's `prek run --from-ref origin/main --to-ref HEAD` runs every hook: HEAD is the option's value,
+        not a hook's id (#221)."""
+        every = [("ruff", "--fix"), ("ruff-format",), ("mypy", "--strict", "src")]
+        for command in (
+            "prek run --from-ref origin/main --to-ref HEAD --show-diff-on-failure",
+            "pre-commit run --source origin/main --origin HEAD",
+            "pre-commit run -s origin/main -o HEAD",
+        ):
+            with self.subTest(command=command):
+                files = {".pre-commit-config.yaml": self.CONFIG, **github_job("ubuntu-latest", command)}
+                self.assertEqual(_expanded(_facts(files)), every)
+
     def test_a_missing_or_broken_configuration_is_unknown(self) -> None:
         for files, reason in (
             ({}, "no pre-commit configuration is found"),
