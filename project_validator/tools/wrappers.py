@@ -4,7 +4,10 @@
 
 from __future__ import annotations
 
-from project_validator.facts.expansion import launcher
+from collections.abc import Mapping
+
+from project_validator.facts.expansion import Action, launcher
+from project_validator.facts.shell import ShellCommand, split_script
 
 WRAPPERS = launcher(
     "wrappers",
@@ -26,3 +29,11 @@ XARGS = launcher(
 TIMEOUT = launcher(
     "timeout", (("timeout",),), with_values=frozenset({"-s", "--signal", "-k", "--kill-after"}), positionals=1
 )
+
+
+def _xvfb_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
+    """coactions/setup-xvfb runs its `run` input (a command line, or several) under a virtual display."""
+    return tuple(found.argv for found in split_script(inputs.get("run", "")) if isinstance(found, ShellCommand))
+
+
+XVFB_ACTION = Action(name="coactions/setup-xvfb", runs=_xvfb_action)

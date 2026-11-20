@@ -185,6 +185,10 @@ SHELLCHECK = analyzer(
 )
 SHELLCHECK_ACTION = Action(name="ludeeus/action-shellcheck", runs=lambda _inputs: (("shellcheck",),))
 REVIEWDOG_SHELLCHECK_ACTION = Action(name="reviewdog/action-shellcheck", runs=lambda _inputs: (("shellcheck",),))
+# Runs shellcheck on the scripts a change touches, failing on the defects it adds (rbenv, bash-it).
+DIFFERENTIAL_SHELLCHECK_ACTION = Action(
+    name="redhat-plumbers-in-action/differential-shellcheck", runs=lambda _inputs: (("shellcheck",),)
+)
 
 PSSCRIPTANALYZER_SETTINGS = file_reader("PSScriptAnalyzer", ("PSScriptAnalyzerSettings.psd1",))
 PSSCRIPTANALYZER = analyzer(

@@ -34,8 +34,8 @@ check does not apply to PowerShell.
 
 ## `static-analysis`
 
-Shell: shellcheck (`shellcheck <scripts>`, or the `ludeeus/action-shellcheck` and `reviewdog/action-shellcheck`
-actions), with its settings in `.shellcheckrc`.
+Shell: shellcheck (`shellcheck <scripts>`, or the `ludeeus/action-shellcheck`, `reviewdog/action-shellcheck` and
+`redhat-plumbers-in-action/differential-shellcheck` actions), with its settings in `.shellcheckrc`.
 
 PowerShell: PSScriptAnalyzer (`Invoke-ScriptAnalyzer -Path . -Recurse`, or `microsoft/psscriptanalyzer-action`),
 with its settings in `PSScriptAnalyzerSettings.psd1`.

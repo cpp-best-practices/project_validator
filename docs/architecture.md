@@ -184,8 +184,8 @@ templates are jobs that run the template as a marker command.
 turn (package.json scripts and Deno tasks, Composer scripts, Rake tasks, Make and CMake targets, tox environments,
 pre-commit hooks, the project's own shell scripts, workspace-wide script runs), and the commands found are expanded
 again, each with `via`, the chain that led to it. Launchers and wrappers (`bundle exec`, `npx`, `python -m`,
-`uv run`, `go tool`, `sudo`, `env`, `xvfb-run`, `timeout`; `project_validator/tools/wrappers.py`) yield the command
-they run as a `Launched` command of its own. `cd` changes where the rest of a script runs; commands in a directory the
+`uv run`, `go tool`, `sudo`, `env`, `xvfb-run` and the `coactions/setup-xvfb` action, `timeout`;
+`project_validator/tools/wrappers.py`) yield the command they run as a `Launched` command of its own. `cd` changes where the rest of a script runs; commands in a directory the
 project does not contain are not expanded and cover none of the project's code; a directory a variable names is
 unknown, and a tool run there covers the whole project, heuristically.
 
