@@ -179,30 +179,36 @@ class ReaderTests(unittest.TestCase):
         self.assertEqual((unknown.subject, unknown.tools), ("the Xcode settings", ("Xcode",)))
 
 
+ROLES = (
+    ("web/coi-serviceworker.min.js", "vendored"),
+    ("lib/jquery-min.js", "vendored"),
+    ("third_party/json/json.hpp", "vendored"),
+    ("deps/jemalloc/src/arena.c", "vendored"),
+    ("tests/test_app.py", "test"),
+    ("platform-tooling-support-tests/projects/vintage/src/A.java", "test"),
+    ("examples/minimal/server.ts", "example"),
+    ("docs/mkdocs/scripts/build.py", "docs"),
+    ("tools/gen.py", "tooling"),
+    ("benches/parse.rs", "benchmark"),
+    ("src/minimal.js", "product"),
+    ("src/main.cpp", "product"),
+    ("src/main/java/com/example/App.java", "product"),
+    # Below a source root, only a test directory tells (upstream #184).
+    ("src/test/java/com/example/AppTest.java", "test"),
+    ("src/main/java/com/example/tools/Gen.java", "product"),
+    ("src/vendor/x.php", "vendored"),
+    ("tokio/fuzz/fuzz_targets/a.rs", "test"),
+    ("stress-test/src/main.rs", "test"),
+    ("tests-integration/src/lib.rs", "test"),
+    # Perl's test directories: t/ (mojo's template fixtures), and xt/ for author tests (upstream #184).
+    ("t/mojolicious/json_config_lite_app.json", "test"),
+    ("xt/author/pod.t", "test"),
+)
+
+
 class StructureTests(unittest.TestCase):
     def test_the_role_of_code_is_told_by_the_directories_it_is_in(self) -> None:
-        for path, expected in (
-            ("web/coi-serviceworker.min.js", "vendored"),
-            ("lib/jquery-min.js", "vendored"),
-            ("third_party/json/json.hpp", "vendored"),
-            ("deps/jemalloc/src/arena.c", "vendored"),
-            ("tests/test_app.py", "test"),
-            ("platform-tooling-support-tests/projects/vintage/src/A.java", "test"),
-            ("examples/minimal/server.ts", "example"),
-            ("docs/mkdocs/scripts/build.py", "docs"),
-            ("tools/gen.py", "tooling"),
-            ("benches/parse.rs", "benchmark"),
-            ("src/minimal.js", "product"),
-            ("src/main.cpp", "product"),
-            ("src/main/java/com/example/App.java", "product"),
-            # Below a source root, only a test directory tells (upstream #184).
-            ("src/test/java/com/example/AppTest.java", "test"),
-            ("src/main/java/com/example/tools/Gen.java", "product"),
-            ("src/vendor/x.php", "vendored"),
-            ("tokio/fuzz/fuzz_targets/a.rs", "test"),
-            ("stress-test/src/main.rs", "test"),
-            ("tests-integration/src/lib.rs", "test"),
-        ):
+        for path, expected in ROLES:
             with self.subTest(path=path):
                 self.assertEqual(role(path), expected)
         directories = (role("examples", directory=True), role("."), role(".", directory=True))
