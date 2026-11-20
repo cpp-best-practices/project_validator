@@ -15,6 +15,7 @@
         "language": "JSON Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "prettier": [
@@ -72,6 +73,7 @@
         "language": "JSON Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -126,6 +128,7 @@
         "language": "JSON Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -181,6 +184,7 @@
         "language": "JSON Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {

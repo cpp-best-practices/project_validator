@@ -11,7 +11,7 @@ from __future__ import annotations
 import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
@@ -34,6 +34,9 @@ class Script:
     directory: str | None = None
     # Text the shell does not split, because something else substitutes it first (a Make variable).
     opaque: re.Pattern[str] | None = None
+    # Whether the text is the whole of a shell script, so that what it sets is seen (a repository's script file,
+    # unless it sources another), as a CI step's own script is.
+    whole: bool = False
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -89,6 +92,7 @@ def action_commands(step: ActionStep, actions: Iterable[Action]) -> Iterator[Com
                     line=f"uses: {step.uses}",
                     directory=step.inputs.get("working-directory") or None,
                     condition=step.condition,
+                    advisory=step.advisory,
                 )
 
 
@@ -103,25 +107,31 @@ def script_facts(
     opaque: re.Pattern[str] | None = None,
     via: tuple[Origin, ...] = (),
     powershell: bool = False,
+    whole: bool = False,
 ) -> Iterator[Fact]:
-    """The commands of a shell script a job runs (PowerShell when `powershell`; `opaque`: see `split_script`)."""
-    assigned = None if via or powershell else _assigned(script)
+    """The commands of a shell script a job runs (`opaque`: see `split_script`; `whole`: see `Script.whole`)."""
+    assigned, constants = _seen_assigned(script, whole or not via, powershell=powershell), _Constants(script)
     for found in split_script(script, opaque, powershell=powershell):
         if isinstance(found, ShellCommand):
-            directory = _changed(directory, found.argv)
             command = Command(
                 origin=origin,
                 job=job,
                 argv=found.argv,
                 line=found.line,
-                env={**env, **dict(found.env)},
-                directory=directory,
+                env={**env, **constants.before(found.line), **dict(found.env)},
+                directory=(directory := _changed(directory, found.argv)),
                 condition=condition,
                 via=via,
             )
             yield from _with_program(command, assigned)
         else:
             yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
+
+
+def advised(facts: Iterable[Fact], advisory: str) -> Iterator[Fact]:
+    """`facts` with their commands marked `advisory` (see `Command.advisory`), when it is set."""
+    for fact in facts:
+        yield replace(fact, advisory=advisory) if advisory and isinstance(fact, Command) else fact
 
 
 _WHOLE_VARIABLE = re.compile(r"\$(?:\{\w+\}|\w+)")
@@ -139,22 +149,77 @@ def _assigned(script: str) -> frozenset[str]:
     return frozenset(name for match in _ASSIGNED.finditer(script) for name in match.groups() if name)
 
 
+def _seen_assigned(script: str, whole: bool, *, powershell: bool) -> frozenset[str] | None:
+    """The variables a script sets, when what it sets is all seen: a whole shell script that sources no other file;
+    None otherwise (a script read in part, PowerShell, a script that reads another into itself)."""
+    return _assigned(script) if whole and not powershell and not _SOURCES.search(script) else None
+
+
+# A script that reads another into itself (`. ./env.sh`, `source ci/vars`) may set what is not seen.
+_SOURCES = re.compile(r"(?:^|[;&|]\s*)\s*(?:\.|source)\s+\S", re.MULTILINE)
+# A line that only sets a variable to plain text, a value the script uses after (`export PREFIX=""`, `TOOL=ruff`).
+_CONSTANT = re.compile(
+    r"^[ \t]*(?:export[ \t]+)?(?P<name>[A-Za-z_]\w*)="
+    r"(?:\"(?P<double>[^\"$`\\]*)\"|'(?P<single>[^']*)'|(?P<bare>[^\s\"'$`;&|()\\]*))[ \t]*$",
+    re.MULTILINE,
+)
+
+
+class _Constants:
+    """The variables a script sets once, and only to plain text, each with where it does and the value; asked, line
+    by line in order, for those set before each line."""
+
+    def __init__(self, script: str) -> None:
+        counts: dict[str, int] = {}
+        for match in _ASSIGNED.finditer(script):
+            for name in filter(None, match.groups()):
+                counts[name] = counts.get(name, 0) + 1
+        self.script, self.position, self.found = script, 0, {}
+        for match in _CONSTANT.finditer(script):
+            if counts.get(match["name"]) == 1:
+                value = next(group for group in (match["double"], match["single"], match["bare"]) if group is not None)
+                self.found[match["name"]] = (match.end(), value)
+
+    def before(self, line: str) -> dict[str, str]:
+        """The constants set before `line`, the next line of the script that runs a command."""
+        self.position = max(self.position, self.script.find(line, self.position))
+        return {name: value for name, (end, value) in self.found.items() if end <= self.position}
+
+
 def _with_program(command: Command, assigned: frozenset[str] | None) -> Iterator[Fact]:
-    """The command, and, when its program is a variable neither the job nor the script (whose `assigned` variables
-    are known) sets (`$CABAL v2-test`), that what runs is unknown. Only a CI step's own shell script is known whole
-    (None: a script it runs, or PowerShell, may set what is not seen), and a line that cannot be split is unknown."""
+    """The command, and, when the name of its program holds a variable neither the job nor the script (whose
+    `assigned` variables are known) sets (`$CABAL v2-test`, `$DIR/$TOOL`, `${PREFIX}ruff`), that what runs is unknown;
+    a variable in its directory alone (`${HOME}/bin/tool`) still names the program. Only a script seen whole is known
+    (None: a script that sources another, or PowerShell, may set what is not seen)."""
     yield command
     argv = resolved(command)
-    if (
-        assigned is not None
-        and argv
-        and (match := _WHOLE_VARIABLE.fullmatch(argv[0]))
-        and match[0].strip("${}") not in assigned
-        # A variable the job sets, to a value that cannot be read, is set all the same.
-        and match[0].strip("${}") not in command.env
-    ):
-        reason = f"its program is the variable {argv[0]}, which nothing the job runs is seen to set"
+    if argv and _EXPRESSION_NAME.fullmatch(re.split(r"[/\\](?![^{]*\}\})", argv[0])[-1]):
+        reason = f"its program is the expression {argv[0]}, whose value is not known"
         yield Unknown(origin=command.origin, subject=f"the command {command.line!r}", reason=reason)
+        return
+    if assigned is None or not argv or _ASSIGNMENT_WORD.match(argv[0]):
+        return
+    # A variable the job sets, to a value that cannot be read, is set all the same; `$0` is the script itself.
+    name = PurePosixPath(argv[0]).name
+    unset = [
+        match[0]
+        for match in _WHOLE_VARIABLE.finditer(name)
+        if match[0].strip("${}") not in {*assigned, *command.env, *_SHELL_SET}
+    ]
+    if unset:
+        named = "is the variable" if unset[0] == name else "is named by the variable"
+        reason = f"its program {named} {unset[0]}, which nothing the job runs is seen to set"
+        yield Unknown(origin=command.origin, subject=f"the command {command.line!r}", reason=reason)
+
+
+# What names a program wholly by an expression (`${{ matrix.runs.test }}`), not a file named with one in it.
+_EXPRESSION_NAME = re.compile(r"\$\{\{[^{}]*\}\}")
+# Variables the shell sets itself: the script's own name, the last argument, the shell's path.
+_SHELL_SET = frozenset({"0", "_", "BASH", "SHELL"})
+
+
+# A word that sets a variable (`tag=${1:?usage: $0 <tag>}`), left whole by the split: it runs no program.
+_ASSIGNMENT_WORD = re.compile(r"[A-Za-z_]\w*=")
 
 
 # Where a CI service checks the project out, written as a variable.
@@ -196,10 +261,11 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
             env={**command.env, **expansion.env} if isinstance(expansion, Launched) else command.env,
             directory=command.directory,
             condition=command.condition,
+            advisory=command.advisory,
             via=via,
         )
     else:
-        yield from script_facts(
+        commands = script_facts(
             expansion.text,
             job=command.job,
             origin=expansion.origin,
@@ -208,7 +274,9 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
             condition=command.condition,
             opaque=expansion.opaque,
             via=via,
+            whole=expansion.whole,
         )
+        yield from advised(commands, command.advisory)
 
 
 def inside(context: Context, directory: str | None) -> bool:
@@ -333,6 +401,7 @@ __all__ = [
     "Launched",
     "Script",
     "action_commands",
+    "advised",
     "expand_command",
     "expanded",
     "found_at",

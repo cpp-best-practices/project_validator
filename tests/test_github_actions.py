@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import unittest
+from collections.abc import Mapping
 
 from project_validator.ci.github_actions import (
     Combination,
@@ -214,3 +215,54 @@ class ConditionalExportTests(unittest.TestCase):
         )
         self.assertEqual(_exported(always), {"A": "1", "B": "2"})
         self.assertEqual(_exported(sometimes), {})
+
+
+class AdvisoryStepTests(unittest.TestCase):
+    """A step that cannot fail the job (`continue-on-error`) runs, but only advises: its commands say why."""
+
+    def _commands(self, job: Mapping[str, object]) -> list[Command]:
+        workflow = {"jobs": {"check": {"runs-on": "ubuntu-latest", **job}}}
+        with temp_project({GITHUB_WORKFLOW: json.dumps(workflow)}) as root:
+            return [command for command in make_context(root).facts.of(Command) if not command.via]
+
+    def test_a_step_that_continues_on_error_is_advisory(self) -> None:
+        commands = self._commands(
+            {"steps": [{"run": "make linkcheck", "continue-on-error": True}, {"run": "make html"}]}
+        )
+        self.assertEqual(
+            [(command.argv, command.advisory) for command in commands],
+            [(("make", "linkcheck"), "continue-on-error"), (("make", "html"), "")],
+        )
+
+    def test_a_job_that_continues_on_error_makes_every_step_advisory(self) -> None:
+        commands = self._commands({"continue-on-error": True, "steps": [{"run": "ruff check ."}]})
+        self.assertEqual([command.advisory for command in commands], ["continue-on-error"])
+
+    def test_continue_on_error_is_evaluated_per_combination(self) -> None:
+        job = {
+            "strategy": {"matrix": {"python": ["3.13", "3.14-dev"], "include": [{"python": "3.14-dev", "dev": True}]}},
+            "continue-on-error": "${{ matrix.dev == true }}",
+            "steps": [{"run": "pytest"}],
+        }
+        self.assertEqual([command.advisory for command in self._commands(job)], ["", "continue-on-error"])
+
+    def test_continue_on_error_false_is_a_gate(self) -> None:
+        commands = self._commands({"steps": [{"run": "pytest", "continue-on-error": False}]})
+        self.assertEqual([command.advisory for command in commands], [""])
+
+    def test_an_unknown_continue_on_error_is_advisory_and_unknown(self) -> None:
+        workflow = {
+            "jobs": {
+                "check": {
+                    "runs-on": "ubuntu-latest",
+                    "steps": [{"run": "pytest", "continue-on-error": "${{ needs.plan.outputs.optional }}"}],
+                }
+            }
+        }
+        with temp_project({GITHUB_WORKFLOW: json.dumps(workflow)}) as root:
+            facts = make_context(root).facts
+        self.assertEqual([command.advisory for command in facts.of(Command)], ["continue-on-error"])
+        self.assertEqual(
+            [(unknown.subject, unknown.hides) for unknown in facts.of(Unknown)],
+            [("whether a step of job check can fail it", "commands")],
+        )

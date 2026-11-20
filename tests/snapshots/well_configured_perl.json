@@ -201,6 +201,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -252,6 +253,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "perltidy": [
@@ -291,6 +293,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -331,6 +334,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -378,6 +382,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -397,6 +402,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -416,6 +422,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -496,6 +503,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -516,6 +524,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -535,6 +544,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -571,6 +581,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -590,6 +601,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "perlcritic": [
@@ -628,6 +640,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "prove": [
@@ -673,6 +686,7 @@
         "language": "Perl",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

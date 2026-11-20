@@ -211,6 +211,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -247,6 +248,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "JuliaFormatter": [
@@ -294,6 +296,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -318,6 +321,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -365,6 +369,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -384,6 +389,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -403,6 +409,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -498,6 +505,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -518,6 +526,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -537,6 +546,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -573,6 +583,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -607,6 +618,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -626,6 +638,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "Pkg.test": [
@@ -671,6 +684,7 @@
         "language": "Julia",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {

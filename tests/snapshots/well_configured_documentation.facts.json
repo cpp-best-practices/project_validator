@@ -161,6 +161,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -169,6 +170,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -185,6 +187,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -201,6 +204,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -209,6 +213,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -222,6 +227,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -262,6 +268,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:build",
@@ -270,6 +277,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "python-version": "3.13"
@@ -280,6 +288,7 @@
       "uses": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -295,6 +304,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mkdocs",
         "build",
@@ -324,6 +334,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:prose",
@@ -332,6 +343,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "globs": "docs/**/*.md"
@@ -342,6 +354,7 @@
       "uses": "DavidAnson/markdownlint-cli2-action@696eb3f2509270d7b882d2aa68347bc676e7af34"
     },
     {
+      "advisory": "",
       "argv": [
         "markdownlint-cli2",
         "docs/**/*.md"
@@ -356,6 +369,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "files": "docs"
@@ -366,6 +380,7 @@
       "uses": "errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff"
     },
     {
+      "advisory": "",
       "argv": [
         "vale",
         "docs"
@@ -394,6 +409,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:links",
@@ -402,6 +418,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "args": "--no-progress 'docs/**/*.md'"
@@ -412,6 +429,7 @@
       "uses": "lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8"
     },
     {
+      "advisory": "",
       "argv": [
         "lychee",
         "--no-progress",
@@ -466,6 +484,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -474,6 +493,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -492,6 +512,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -640,6 +661,7 @@
       "reader": "mkdocs plugins"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:build",
       "kind": "ToolRun",
@@ -660,6 +682,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:prose",
       "kind": "ToolRun",
@@ -685,6 +708,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:prose",
       "kind": "ToolRun",
@@ -710,6 +734,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:links",
       "kind": "ToolRun",

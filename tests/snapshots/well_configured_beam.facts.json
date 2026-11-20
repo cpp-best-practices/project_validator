@@ -187,6 +187,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -195,6 +196,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -211,6 +213,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -227,6 +230,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -235,6 +239,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -248,6 +253,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -292,6 +298,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -300,6 +307,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "elixir-version": "1.17",
@@ -311,6 +319,7 @@
       "uses": "erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124"
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "deps.get"
@@ -325,6 +334,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "format",
@@ -340,6 +350,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "compile",
@@ -355,6 +366,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "credo",
@@ -370,6 +382,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "dialyzer"
@@ -384,6 +397,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "sobelow",
@@ -399,6 +413,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "deps.audit"
@@ -413,6 +428,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "test",
@@ -446,6 +462,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -454,6 +471,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "elixir-version": "1.18",
@@ -465,6 +483,7 @@
       "uses": "erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124"
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "deps.get"
@@ -479,6 +498,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "format",
@@ -494,6 +514,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "compile",
@@ -509,6 +530,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "credo",
@@ -524,6 +546,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "dialyzer"
@@ -538,6 +561,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "sobelow",
@@ -553,6 +577,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "deps.audit"
@@ -567,6 +592,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "test",
@@ -600,6 +626,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -608,6 +635,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "elixir-version": "1.17",
@@ -619,6 +647,7 @@
       "uses": "erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124"
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "deps.get"
@@ -633,6 +662,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "format",
@@ -648,6 +678,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "compile",
@@ -663,6 +694,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "credo",
@@ -678,6 +710,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "dialyzer"
@@ -692,6 +725,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "sobelow",
@@ -707,6 +741,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "deps.audit"
@@ -721,6 +756,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "test",
@@ -754,6 +790,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -762,6 +799,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "elixir-version": "1.18",
@@ -773,6 +811,7 @@
       "uses": "erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124"
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "deps.get"
@@ -787,6 +826,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "format",
@@ -802,6 +842,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "compile",
@@ -817,6 +858,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "credo",
@@ -832,6 +874,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "dialyzer"
@@ -846,6 +889,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "sobelow",
@@ -861,6 +905,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "deps.audit"
@@ -875,6 +920,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "test",
@@ -904,6 +950,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:erlang",
@@ -912,6 +959,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "elixir-version": "1.18",
@@ -923,6 +971,7 @@
       "uses": "erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124"
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "escript.install",
@@ -940,6 +989,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "mix",
         "escript.install",
@@ -957,6 +1007,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "erlfmt",
         "--check",
@@ -972,6 +1023,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "elvis",
         "rock"
@@ -986,6 +1038,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1005,6 +1058,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -1048,6 +1102,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1056,6 +1111,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -1074,6 +1130,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -1408,6 +1465,7 @@
       "origin": "mix.lock"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1428,6 +1486,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1448,6 +1507,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1472,6 +1532,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1492,6 +1553,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1512,6 +1574,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1533,6 +1596,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1555,6 +1619,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1575,6 +1640,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1595,6 +1661,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1619,6 +1686,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1639,6 +1707,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1659,6 +1728,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1680,6 +1750,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1702,6 +1773,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1722,6 +1794,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1742,6 +1815,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1766,6 +1840,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1786,6 +1861,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1806,6 +1882,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1827,6 +1904,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1849,6 +1927,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1869,6 +1948,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1889,6 +1969,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": true,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1913,6 +1994,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1933,6 +2015,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1953,6 +2036,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1974,6 +2058,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1996,6 +2081,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:erlang",
       "kind": "ToolRun",
@@ -2016,6 +2102,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:erlang",
       "kind": "ToolRun",
@@ -2036,6 +2123,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:erlang",
       "kind": "ToolRun",

@@ -84,6 +84,9 @@ class Command(Fact):
     directory: str | None = None
     # The condition the step runs under (GitHub's `if:`), as written after matrix values are substituted.
     condition: str | None = None
+    # Why the command cannot fail the pipeline, when it cannot (`continue-on-error`, `allow_failure`): it runs, but
+    # only advises, so it is no gate. Empty for a command whose failure fails its job.
+    advisory: str = ""
     # The commands that ran this one in turn, outermost first (CI's `npm test`, then the package's test script).
     via: tuple[Origin, ...] = ()
     # The arguments as run (see `resolved`), derived from `argv` and `env` once the command is made.
@@ -130,6 +133,8 @@ class ActionStep(Fact):
     uses: str
     inputs: Mapping[str, str] = NOTHING
     condition: str | None = None
+    # Why the step cannot fail the pipeline, when it cannot (see `Command.advisory`).
+    advisory: str = ""
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

@@ -172,6 +172,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -180,6 +181,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -196,6 +198,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -212,6 +215,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -220,6 +224,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -233,6 +238,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -276,6 +282,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -284,6 +291,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "distribution": "temurin",
@@ -295,6 +303,7 @@
       "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "cli": "1.12.0.1530"
@@ -305,6 +314,7 @@
       "uses": "DeLaGuardo/setup-clojure@6d46099eae24853c33c0482f2bb54edf4f1a4c74"
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:test"
@@ -319,6 +329,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:coverage"
@@ -350,6 +361,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -358,6 +370,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "distribution": "temurin",
@@ -369,6 +382,7 @@
       "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "cli": "1.12.0.1530"
@@ -379,6 +393,7 @@
       "uses": "DeLaGuardo/setup-clojure@6d46099eae24853c33c0482f2bb54edf4f1a4c74"
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:test"
@@ -393,6 +408,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:coverage"
@@ -424,6 +440,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -432,6 +449,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "distribution": "temurin",
@@ -443,6 +461,7 @@
       "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "cli": "1.12.0.1530"
@@ -453,6 +472,7 @@
       "uses": "DeLaGuardo/setup-clojure@6d46099eae24853c33c0482f2bb54edf4f1a4c74"
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:test"
@@ -467,6 +487,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:coverage"
@@ -498,6 +519,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -506,6 +528,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "distribution": "temurin",
@@ -517,6 +540,7 @@
       "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "cli": "1.12.0.1530"
@@ -527,6 +551,7 @@
       "uses": "DeLaGuardo/setup-clojure@6d46099eae24853c33c0482f2bb54edf4f1a4c74"
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:test"
@@ -541,6 +566,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:coverage"
@@ -572,6 +598,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
@@ -580,6 +607,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "distribution": "temurin",
@@ -591,6 +619,7 @@
       "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "cli": "1.12.0.1530"
@@ -601,6 +630,7 @@
       "uses": "DeLaGuardo/setup-clojure@6d46099eae24853c33c0482f2bb54edf4f1a4c74"
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:test"
@@ -615,6 +645,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:coverage"
@@ -646,6 +677,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
@@ -654,6 +686,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "distribution": "temurin",
@@ -665,6 +698,7 @@
       "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "cli": "1.12.0.1530"
@@ -675,6 +709,7 @@
       "uses": "DeLaGuardo/setup-clojure@6d46099eae24853c33c0482f2bb54edf4f1a4c74"
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:test"
@@ -689,6 +724,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:coverage"
@@ -717,6 +753,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -725,6 +762,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "distribution": "temurin",
@@ -736,6 +774,7 @@
       "uses": "actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "cli": "1.12.0.1530",
@@ -748,6 +787,7 @@
       "uses": "DeLaGuardo/setup-clojure@6d46099eae24853c33c0482f2bb54edf4f1a4c74"
     },
     {
+      "advisory": "",
       "argv": [
         "clj-kondo",
         "--lint",
@@ -764,6 +804,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cljfmt",
         "check"
@@ -778,6 +819,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "clojure",
         "-M:nvd"
@@ -792,6 +834,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -812,6 +855,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "semgrep",
         "scan",
@@ -861,6 +905,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -869,6 +914,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -887,6 +933,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -1191,6 +1238,7 @@
       "reader": "Clojure build settings"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1211,6 +1259,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1231,6 +1280,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1252,6 +1302,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1272,6 +1323,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1292,6 +1344,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1313,6 +1366,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1333,6 +1387,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1353,6 +1408,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1374,6 +1430,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1394,6 +1451,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1414,6 +1472,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1435,6 +1494,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1455,6 +1515,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1475,6 +1536,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1496,6 +1558,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -1516,6 +1579,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -1536,6 +1600,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -1557,6 +1622,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -1577,6 +1643,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -1597,6 +1664,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -1617,6 +1685,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",

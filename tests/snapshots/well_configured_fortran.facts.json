@@ -191,6 +191,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -199,6 +200,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -215,6 +217,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -231,6 +234,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -239,6 +243,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -252,6 +257,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -296,6 +302,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[0]",
@@ -304,6 +311,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -315,6 +323,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[0]",
@@ -323,6 +332,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -343,6 +353,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -363,6 +374,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -378,6 +390,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -392,6 +405,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -412,6 +426,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -431,6 +446,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -468,6 +484,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[1]",
@@ -476,6 +493,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -487,6 +505,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[1]",
@@ -495,6 +514,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -515,6 +535,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -535,6 +556,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -550,6 +572,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -564,6 +587,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -584,6 +608,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -603,6 +628,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -640,6 +666,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[2]",
@@ -648,6 +675,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -659,6 +687,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[2]",
@@ -667,6 +696,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -687,6 +717,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -707,6 +738,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -722,6 +754,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -736,6 +769,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -756,6 +790,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -775,6 +810,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -812,6 +848,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[3]",
@@ -820,6 +857,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -831,6 +869,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[3]",
@@ -839,6 +878,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -859,6 +899,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -879,6 +920,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -894,6 +936,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -908,6 +951,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -928,6 +972,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -947,6 +992,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -984,6 +1030,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[4]",
@@ -992,6 +1039,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -1003,6 +1051,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[4]",
@@ -1011,6 +1060,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1031,6 +1081,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -1051,6 +1102,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1066,6 +1118,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -1080,6 +1133,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -1100,6 +1154,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1119,6 +1174,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -1156,6 +1212,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[5]",
@@ -1164,6 +1221,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -1175,6 +1233,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[5]",
@@ -1183,6 +1242,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1203,6 +1263,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -1223,6 +1284,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1238,6 +1300,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -1252,6 +1315,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -1272,6 +1336,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1291,6 +1356,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -1328,6 +1394,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[6]",
@@ -1336,6 +1403,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -1347,6 +1415,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[6]",
@@ -1355,6 +1424,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1375,6 +1445,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -1395,6 +1466,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1410,6 +1482,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -1424,6 +1497,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -1444,6 +1518,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1463,6 +1538,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -1500,6 +1576,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[7]",
@@ -1508,6 +1585,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -1519,6 +1597,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[7]",
@@ -1527,6 +1606,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1547,6 +1627,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -1567,6 +1648,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1582,6 +1664,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -1596,6 +1679,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -1616,6 +1700,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1635,6 +1720,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -1672,6 +1758,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[8]",
@@ -1680,6 +1767,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -1691,6 +1779,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[8]",
@@ -1699,6 +1788,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1719,6 +1809,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -1739,6 +1830,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1754,6 +1846,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -1768,6 +1861,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -1788,6 +1882,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1807,6 +1902,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -1844,6 +1940,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[9]",
@@ -1852,6 +1949,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -1863,6 +1961,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[9]",
@@ -1871,6 +1970,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1891,6 +1991,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -1911,6 +2012,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1926,6 +2028,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -1940,6 +2043,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -1960,6 +2064,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1979,6 +2084,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -2016,6 +2122,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[10]",
@@ -2024,6 +2131,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -2035,6 +2143,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[10]",
@@ -2043,6 +2152,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -2063,6 +2173,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -2083,6 +2194,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -2098,6 +2210,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -2112,6 +2225,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2132,6 +2246,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -2151,6 +2266,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -2188,6 +2304,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[11]",
@@ -2196,6 +2313,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "gcc",
@@ -2207,6 +2325,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:gfortran[11]",
@@ -2215,6 +2334,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -2235,6 +2355,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fprettify",
         "--diff",
@@ -2255,6 +2376,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -2270,6 +2392,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fortitude",
         "check"
@@ -2284,6 +2407,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2304,6 +2428,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -2323,6 +2448,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gcovr",
         "--fail-under-branch",
@@ -2360,6 +2486,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[0]",
@@ -2368,6 +2495,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "intel",
@@ -2379,6 +2507,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[0]",
@@ -2387,6 +2516,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2425,6 +2555,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[1]",
@@ -2433,6 +2564,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "intel",
@@ -2444,6 +2576,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[1]",
@@ -2452,6 +2585,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2490,6 +2624,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[2]",
@@ -2498,6 +2633,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "intel",
@@ -2509,6 +2645,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[2]",
@@ -2517,6 +2654,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2555,6 +2693,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[3]",
@@ -2563,6 +2702,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "intel",
@@ -2574,6 +2714,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[3]",
@@ -2582,6 +2723,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2620,6 +2762,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[4]",
@@ -2628,6 +2771,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "intel",
@@ -2639,6 +2783,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[4]",
@@ -2647,6 +2792,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2685,6 +2831,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[5]",
@@ -2693,6 +2840,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "intel",
@@ -2704,6 +2852,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[5]",
@@ -2712,6 +2861,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2750,6 +2900,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[6]",
@@ -2758,6 +2909,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "intel",
@@ -2769,6 +2921,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[6]",
@@ -2777,6 +2930,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2815,6 +2969,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[7]",
@@ -2823,6 +2978,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "compiler": "intel",
@@ -2834,6 +2990,7 @@
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[7]",
@@ -2842,6 +2999,7 @@
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
+      "advisory": "",
       "argv": [
         "fpm",
         "test",
@@ -2891,6 +3049,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -2899,6 +3058,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -2917,6 +3077,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -2954,6 +3115,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
@@ -2962,6 +3124,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -2979,6 +3142,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -2996,6 +3160,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -3762,6 +3927,7 @@
       "value": true
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[0]",
       "kind": "ToolRun",
@@ -3784,6 +3950,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[0]",
       "kind": "ToolRun",
@@ -3804,6 +3971,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[0]",
       "kind": "ToolRun",
@@ -3824,6 +3992,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[0]",
       "kind": "ToolRun",
@@ -3852,6 +4021,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[1]",
       "kind": "ToolRun",
@@ -3874,6 +4044,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[1]",
       "kind": "ToolRun",
@@ -3894,6 +4065,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[1]",
       "kind": "ToolRun",
@@ -3914,6 +4086,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[1]",
       "kind": "ToolRun",
@@ -3942,6 +4115,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[2]",
       "kind": "ToolRun",
@@ -3964,6 +4138,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[2]",
       "kind": "ToolRun",
@@ -3984,6 +4159,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[2]",
       "kind": "ToolRun",
@@ -4004,6 +4180,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[2]",
       "kind": "ToolRun",
@@ -4032,6 +4209,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[3]",
       "kind": "ToolRun",
@@ -4054,6 +4232,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[3]",
       "kind": "ToolRun",
@@ -4074,6 +4253,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[3]",
       "kind": "ToolRun",
@@ -4094,6 +4274,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[3]",
       "kind": "ToolRun",
@@ -4122,6 +4303,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[4]",
       "kind": "ToolRun",
@@ -4144,6 +4326,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[4]",
       "kind": "ToolRun",
@@ -4164,6 +4347,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[4]",
       "kind": "ToolRun",
@@ -4184,6 +4368,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[4]",
       "kind": "ToolRun",
@@ -4212,6 +4397,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[5]",
       "kind": "ToolRun",
@@ -4234,6 +4420,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[5]",
       "kind": "ToolRun",
@@ -4254,6 +4441,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[5]",
       "kind": "ToolRun",
@@ -4274,6 +4462,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[5]",
       "kind": "ToolRun",
@@ -4302,6 +4491,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[6]",
       "kind": "ToolRun",
@@ -4324,6 +4514,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[6]",
       "kind": "ToolRun",
@@ -4344,6 +4535,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[6]",
       "kind": "ToolRun",
@@ -4364,6 +4556,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[6]",
       "kind": "ToolRun",
@@ -4392,6 +4585,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[7]",
       "kind": "ToolRun",
@@ -4414,6 +4608,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[7]",
       "kind": "ToolRun",
@@ -4434,6 +4629,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[7]",
       "kind": "ToolRun",
@@ -4454,6 +4650,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[7]",
       "kind": "ToolRun",
@@ -4482,6 +4679,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[8]",
       "kind": "ToolRun",
@@ -4504,6 +4702,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[8]",
       "kind": "ToolRun",
@@ -4524,6 +4723,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[8]",
       "kind": "ToolRun",
@@ -4544,6 +4744,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[8]",
       "kind": "ToolRun",
@@ -4572,6 +4773,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[9]",
       "kind": "ToolRun",
@@ -4594,6 +4796,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[9]",
       "kind": "ToolRun",
@@ -4614,6 +4817,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[9]",
       "kind": "ToolRun",
@@ -4634,6 +4838,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[9]",
       "kind": "ToolRun",
@@ -4662,6 +4867,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[10]",
       "kind": "ToolRun",
@@ -4684,6 +4890,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[10]",
       "kind": "ToolRun",
@@ -4704,6 +4911,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[10]",
       "kind": "ToolRun",
@@ -4724,6 +4932,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[10]",
       "kind": "ToolRun",
@@ -4752,6 +4961,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[11]",
       "kind": "ToolRun",
@@ -4774,6 +4984,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[11]",
       "kind": "ToolRun",
@@ -4794,6 +5005,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[11]",
       "kind": "ToolRun",
@@ -4814,6 +5026,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:gfortran[11]",
       "kind": "ToolRun",
@@ -4842,6 +5055,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:ifx[0]",
       "kind": "ToolRun",
@@ -4862,6 +5076,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:ifx[1]",
       "kind": "ToolRun",
@@ -4882,6 +5097,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:ifx[2]",
       "kind": "ToolRun",
@@ -4902,6 +5118,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:ifx[3]",
       "kind": "ToolRun",
@@ -4922,6 +5139,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:ifx[4]",
       "kind": "ToolRun",
@@ -4942,6 +5160,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:ifx[5]",
       "kind": "ToolRun",
@@ -4962,6 +5181,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:ifx[6]",
       "kind": "ToolRun",
@@ -4982,6 +5202,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:ifx[7]",
       "kind": "ToolRun",
@@ -5002,6 +5223,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ToolRun",

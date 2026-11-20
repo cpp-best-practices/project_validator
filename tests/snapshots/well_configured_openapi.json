@@ -26,6 +26,7 @@
         "language": "OpenAPI",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -87,6 +88,7 @@
         "language": "OpenAPI",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -155,6 +157,7 @@
         "language": "OpenAPI",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -225,6 +228,7 @@
         "language": "OpenAPI",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "spectral": [

@@ -206,6 +206,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -271,6 +272,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "scalafmt": [
@@ -310,6 +312,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -350,6 +353,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -397,6 +401,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -416,6 +421,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -435,6 +441,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -515,6 +522,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -535,6 +543,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -554,6 +563,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -590,6 +600,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -631,6 +642,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "scalafix": [
@@ -669,6 +681,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "mill __.test": [
@@ -734,6 +747,7 @@
         "language": "Scala",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

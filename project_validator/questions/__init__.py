@@ -43,6 +43,14 @@ class RanTools(Protocol):
         ...
 
 
+@runtime_checkable
+class AdvisedTools(Protocol):
+    def advised(self) -> tuple[tuple[str, str], ...]:
+        """The tools CI runs for the practice in this unit only where they cannot fail the pipeline, each with why
+        (`("clang-format", "allow_failure")`)."""
+        ...
+
+
 class UnitAnswer(Answered, Protocol):
     @property
     def unit(self) -> str: ...
@@ -125,10 +133,11 @@ def _auxiliary(run: ToolRun, language: str, concerns: frozenset[str], named: Sel
 
 
 def runs_of(
-    aspect: str, language: str, unit: str, facts: Facts, *, auxiliary: Iterable[str] = ()
+    aspect: str, language: str, unit: str, facts: Facts, *, auxiliary: Iterable[str] = (), advisory: bool = False
 ) -> tuple[ToolRun, ...]:
     """The runs CI makes of tools that provide `aspect` for `language` in `unit` (see `ToolRun.covers`), but runs
-    only in auxiliary code `--auxiliary` names, unless the answer is about that code (`auxiliary`: what named it)."""
+    only in auxiliary code `--auxiliary` names, unless the answer is about that code (`auxiliary`: what named it).
+    Runs that cannot fail the pipeline enforce nothing: they are left out, or, with `advisory`, are all there is."""
     units = [found.directory for found in facts.of(Unit)] or ["."]
     concerns, named = frozenset(auxiliary), selectors(facts)
     return tuple(
@@ -138,6 +147,7 @@ def runs_of(
         and language in run.languages
         and run.covers(unit, units)
         and not _auxiliary(run, language, concerns, named)
+        and bool(run.advisory) == advisory
     )
 
 
@@ -195,6 +205,7 @@ __all__ = [
     "EVERY_KIND",
     "FORMATS",
     "LANGUAGES",
+    "AdvisedTools",
     "Answer",
     "Answered",
     "LanguageAnswers",

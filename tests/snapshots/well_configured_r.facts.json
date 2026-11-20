@@ -178,6 +178,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -186,6 +187,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -202,6 +204,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -218,6 +221,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -226,6 +230,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -239,6 +244,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -281,6 +287,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[0]",
@@ -289,6 +296,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "r-version": "release",
@@ -300,6 +308,7 @@
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "extra-packages": "any::rcmdcheck",
@@ -311,6 +320,7 @@
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "error-on": "\"warning\""
@@ -321,6 +331,7 @@
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "argv": [
         "Rscript",
         "-e",
@@ -352,6 +363,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[1]",
@@ -360,6 +372,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "r-version": "release",
@@ -371,6 +384,7 @@
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "extra-packages": "any::rcmdcheck",
@@ -382,6 +396,7 @@
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "error-on": "\"warning\""
@@ -392,6 +407,7 @@
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "argv": [
         "Rscript",
         "-e",
@@ -423,6 +439,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[2]",
@@ -431,6 +448,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "r-version": "devel",
@@ -442,6 +460,7 @@
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "extra-packages": "any::rcmdcheck",
@@ -453,6 +472,7 @@
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "error-on": "\"warning\""
@@ -463,6 +483,7 @@
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "argv": [
         "Rscript",
         "-e",
@@ -494,6 +515,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[3]",
@@ -502,6 +524,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "r-version": "release",
@@ -513,6 +536,7 @@
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "extra-packages": "any::rcmdcheck",
@@ -524,6 +548,7 @@
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "error-on": "\"warning\""
@@ -534,6 +559,7 @@
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "argv": [
         "Rscript",
         "-e",
@@ -565,6 +591,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[4]",
@@ -573,6 +600,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "r-version": "oldrel-1",
@@ -584,6 +612,7 @@
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "extra-packages": "any::rcmdcheck",
@@ -595,6 +624,7 @@
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "error-on": "\"warning\""
@@ -605,6 +635,7 @@
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "argv": [
         "Rscript",
         "-e",
@@ -634,6 +665,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:coverage",
@@ -642,6 +674,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "use-public-rspm": "true"
@@ -652,6 +685,7 @@
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "extra-packages": "any::covr",
@@ -663,6 +697,7 @@
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "argv": [
         "Rscript",
         "cov <- covr::package_coverage(quiet = FALSE)\nprint(cov)\ncovr::codecov(coverage = cov)\n"
@@ -691,6 +726,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -699,6 +735,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "use-public-rspm": "true"
@@ -709,6 +746,7 @@
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "extra-packages": "any::lintr, local::.",
@@ -720,6 +758,7 @@
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
+      "advisory": "",
       "argv": [
         "Rscript",
         "lintr::lint_package()"
@@ -736,6 +775,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -744,6 +784,7 @@
       "uses": "posit-dev/setup-air@482cb5912394878ab5a63b75db0f9d19cc6df5ba"
     },
     {
+      "advisory": "",
       "argv": [
         "air",
         "format",
@@ -799,6 +840,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -807,6 +849,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -825,6 +868,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -862,6 +906,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
@@ -870,6 +915,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -887,6 +933,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -904,6 +951,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -1182,6 +1230,7 @@
       "origin": "LICENSE"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:R-CMD-check[0]",
       "kind": "ToolRun",
@@ -1202,6 +1251,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:R-CMD-check[1]",
       "kind": "ToolRun",
@@ -1222,6 +1272,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:R-CMD-check[2]",
       "kind": "ToolRun",
@@ -1242,6 +1293,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:R-CMD-check[3]",
       "kind": "ToolRun",
@@ -1262,6 +1314,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:R-CMD-check[4]",
       "kind": "ToolRun",
@@ -1282,6 +1335,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ToolRun",
@@ -1303,6 +1357,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -1323,6 +1378,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -1343,6 +1399,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ToolRun",

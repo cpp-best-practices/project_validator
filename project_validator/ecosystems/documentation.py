@@ -86,6 +86,7 @@ def documentation_sites(project: Project) -> frozenset[str]:
 DOCUMENTATION = Ecosystem(
     label="Documentation site",
     kind="format",
+    companion=re.compile("|".join(pattern.pattern for pattern in _CONFIGURATION.values())),
     languages=GENERATORS,
     detect=documentation_sites,
     ci_programs=(

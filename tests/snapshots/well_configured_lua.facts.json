@@ -202,6 +202,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -210,6 +211,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -226,6 +228,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -242,6 +245,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -250,6 +254,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -263,6 +268,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -306,6 +312,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -314,6 +321,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "luaVersion": "5.1"
@@ -324,6 +332,7 @@
       "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -332,6 +341,7 @@
       "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -347,6 +357,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -362,6 +373,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -377,6 +389,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luacheck",
         "."
@@ -391,6 +404,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "busted",
         "--coverage"
@@ -422,6 +436,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -430,6 +445,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "luaVersion": "5.4"
@@ -440,6 +456,7 @@
       "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -448,6 +465,7 @@
       "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -463,6 +481,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -478,6 +497,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -493,6 +513,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luacheck",
         "."
@@ -507,6 +528,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "busted",
         "--coverage"
@@ -538,6 +560,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -546,6 +569,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "luaVersion": "luajit-2.1"
@@ -556,6 +580,7 @@
       "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -564,6 +589,7 @@
       "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -579,6 +605,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -594,6 +621,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -609,6 +637,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luacheck",
         "."
@@ -623,6 +652,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "busted",
         "--coverage"
@@ -654,6 +684,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -662,6 +693,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "luaVersion": "5.1"
@@ -672,6 +704,7 @@
       "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -680,6 +713,7 @@
       "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -695,6 +729,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -710,6 +745,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -725,6 +761,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luacheck",
         "."
@@ -739,6 +776,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "busted",
         "--coverage"
@@ -770,6 +808,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
@@ -778,6 +817,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "luaVersion": "5.4"
@@ -788,6 +828,7 @@
       "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
@@ -796,6 +837,7 @@
       "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -811,6 +853,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -826,6 +869,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -841,6 +885,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luacheck",
         "."
@@ -855,6 +900,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "busted",
         "--coverage"
@@ -886,6 +932,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
@@ -894,6 +941,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "luaVersion": "luajit-2.1"
@@ -904,6 +952,7 @@
       "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
@@ -912,6 +961,7 @@
       "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -927,6 +977,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -942,6 +993,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -957,6 +1009,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luacheck",
         "."
@@ -971,6 +1024,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "busted",
         "--coverage"
@@ -1002,6 +1056,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[6]",
@@ -1010,6 +1065,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "luaVersion": "5.1"
@@ -1020,6 +1076,7 @@
       "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[6]",
@@ -1028,6 +1085,7 @@
       "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -1043,6 +1101,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -1058,6 +1117,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -1073,6 +1133,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luacheck",
         "."
@@ -1087,6 +1148,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "busted",
         "--coverage"
@@ -1118,6 +1180,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[7]",
@@ -1126,6 +1189,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "luaVersion": "5.4"
@@ -1136,6 +1200,7 @@
       "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[7]",
@@ -1144,6 +1209,7 @@
       "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -1159,6 +1225,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -1174,6 +1241,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -1189,6 +1257,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luacheck",
         "."
@@ -1203,6 +1272,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "busted",
         "--coverage"
@@ -1234,6 +1304,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[8]",
@@ -1242,6 +1313,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "luaVersion": "luajit-2.1"
@@ -1252,6 +1324,7 @@
       "uses": "leafo/gh-actions-lua@32909a2dea0a48c433aec79e7fcd31b4cd55800f"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[8]",
@@ -1260,6 +1333,7 @@
       "uses": "leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce"
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -1275,6 +1349,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -1290,6 +1365,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luarocks",
         "install",
@@ -1305,6 +1381,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "luacheck",
         "."
@@ -1319,6 +1396,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "busted",
         "--coverage"
@@ -1347,6 +1425,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -1355,6 +1434,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "args": "--check .",
@@ -1366,6 +1446,7 @@
       "uses": "JohnnyMorganz/stylua-action@76fd70c03e6340ceaf673366712db9b20560b402"
     },
     {
+      "advisory": "",
       "argv": [
         "stylua",
         "--check",
@@ -1381,6 +1462,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1401,6 +1483,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "semgrep",
         "scan",
@@ -1421,6 +1504,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "curl",
         "-sSL",
@@ -1436,6 +1520,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "tar",
         "xz",
@@ -1452,6 +1537,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "/tmp/bin/lua-language-server",
         "--check",
@@ -1501,6 +1587,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1509,6 +1596,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -1527,6 +1615,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -1564,6 +1653,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
@@ -1572,6 +1662,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -1589,6 +1680,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -1606,6 +1698,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -1948,6 +2041,7 @@
       "reader": "StyLua"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1968,6 +2062,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1988,6 +2083,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -2009,6 +2105,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2029,6 +2126,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2049,6 +2147,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -2070,6 +2169,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2090,6 +2190,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2110,6 +2211,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -2131,6 +2233,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2151,6 +2254,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2171,6 +2275,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -2192,6 +2297,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2212,6 +2318,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2232,6 +2339,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2253,6 +2361,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2273,6 +2382,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2293,6 +2403,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2314,6 +2425,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ToolRun",
@@ -2334,6 +2446,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ToolRun",
@@ -2354,6 +2467,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ToolRun",
@@ -2375,6 +2489,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ToolRun",
@@ -2395,6 +2510,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ToolRun",
@@ -2415,6 +2531,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ToolRun",
@@ -2436,6 +2553,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ToolRun",
@@ -2456,6 +2574,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ToolRun",
@@ -2476,6 +2595,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ToolRun",
@@ -2497,6 +2617,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -2517,6 +2638,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -2539,6 +2661,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -2559,6 +2682,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ToolRun",

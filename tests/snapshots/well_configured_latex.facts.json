@@ -142,6 +142,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -150,6 +151,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -166,6 +168,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -182,6 +185,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -190,6 +194,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -203,6 +208,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -243,6 +249,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:build",
@@ -251,6 +258,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "pre_compile": "chktex -q main.tex && latexindent --check main.tex",
@@ -262,6 +270,7 @@
       "uses": "xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b"
     },
     {
+      "advisory": "",
       "argv": [
         "chktex",
         "-q",
@@ -277,6 +286,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "latexindent",
         "--check",
@@ -292,6 +302,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "latexmk",
         "main.tex"
@@ -330,6 +341,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -338,6 +350,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -356,6 +369,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -506,6 +520,7 @@
       "origin": "LICENSE"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:build",
       "kind": "ToolRun",
@@ -526,6 +541,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:build",
       "kind": "ToolRun",
@@ -546,6 +562,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:build",
       "kind": "ToolRun",

@@ -14,9 +14,11 @@ from project_validator.components import component_cache
 from project_validator.core import Check, Context, Placed, Result, Status
 from project_validator.ecosystems import Ecosystem, ecosystems_for, registered
 from project_validator.facts import Facts
+from project_validator.facts.roles import AUXILIARY
+from project_validator.facts.structure import SourceFile, Unit
 from project_validator.facts.tools import handling
 from project_validator.policy import Judge
-from project_validator.questions import LanguageAnswers, RanTools, UnitAnswer
+from project_validator.questions import AdvisedTools, LanguageAnswers, RanTools, UnitAnswer
 
 
 def labelled(results: Mapping[str, Result]) -> Result:
@@ -54,6 +56,40 @@ def _ecosystem_label(ecosystem: Ecosystem, result: Result) -> str:
     return f"{ecosystem.label} (auxiliary: {', '.join(named)})" if named else ecosystem.label
 
 
+_COMPANION = "a warning, not a failure: the {label} is not the product"
+
+
+def _companions(results: Mapping[Ecosystem, Result], facts: Facts) -> dict[Ecosystem, Result]:
+    """The results with a companion ecosystem's failure (a documentation site's) a warning that says so, when a
+    language with sources other than the companions' own configuration (a site's conf.py) is judged: the product's
+    results decide the project."""
+    companions = [ecosystem.companion for ecosystem in results if ecosystem.companion is not None]
+    products = {
+        source.language
+        for source in facts.of(SourceFile)
+        if source.language and not any(pattern.search(source.path) for pattern in companions)
+    }
+    if not any(
+        ecosystem.kind == "language" and ecosystem.languages & products and result.status is not Status.SKIP
+        for ecosystem, result in results.items()
+    ):
+        return dict(results)
+    return {
+        ecosystem: _warned(result, _COMPANION.format(label=ecosystem.label.lower()))
+        if ecosystem.companion is not None
+        else result
+        for ecosystem, result in results.items()
+    }
+
+
+def _warned(result: Result, why: str) -> Result:
+    """A failure as a warning that says `why`, its places' failures too; any other result as it is."""
+    if result.status is not Status.FAIL:
+        return result
+    places = tuple(replace(place, result=_warned(place.result, why)) for place in result.places)
+    return replace(result, status=Status.WARN, details=(*result.details, why), places=places)
+
+
 def by_ecosystem(results: Mapping[Ecosystem, Result]) -> Result:
     """One result for several ecosystems, labelled by ecosystem where they differ; a result about an ecosystem's
     auxiliary code alone is always labelled, with what named that code."""
@@ -76,9 +112,11 @@ def by_ecosystem(results: Mapping[Ecosystem, Result]) -> Result:
 def check_each_ecosystem[Rules](
     context: Context, rules: Mapping[Ecosystem, Rules], judge: Callable[[Rules, Context], Result]
 ) -> Result:
-    """Judge each ecosystem the project uses by its rules: the worst result wins, and findings are labelled."""
+    """Judge each ecosystem the project uses by its rules: the worst result wins, and findings are labelled. A
+    companion ecosystem's failure beside a product language is a warning (`_companions`)."""
     used = ecosystems_for(context.structure.languages_and_formats, rules)
-    return by_ecosystem({ecosystem: judge(rules[ecosystem], context) for ecosystem in used})
+    results = {ecosystem: judge(rules[ecosystem], context) for ecosystem in used}
+    return by_ecosystem(_companions(results, context.facts))
 
 
 type _Place = tuple[str, str]  # (language, unit)
@@ -100,10 +138,31 @@ def _label(place: _Place, places: tuple[_Place, ...], auxiliary: _Auxiliary) -> 
 
 def _advisory(result: Result, language: str, named: tuple[str, ...]) -> Result:
     """A failure of auxiliary code alone is a warning that says so, and what named the code (`--auxiliary ...`)."""
-    if result.status is not Status.FAIL:
-        return result
     by = " ".join(f"--auxiliary {name}" for name in named)
-    return replace(result, status=Status.WARN, details=(*result.details, _ADVISORY.format(language=language, named=by)))
+    return _warned(result, _ADVISORY.format(language=language, named=by))
+
+
+_AUXILIARY_UNIT = "a warning, not a failure: {unit} is {role} code, not the product's"
+
+
+def _auxiliary_roles(facts: Facts) -> dict[str, str]:
+    """The units the map names test, benchmark, example, docs or tooling code, with that role, when the project has
+    a product unit with code of its own (a project of benchmarks alone is judged as it is)."""
+    units = facts.of(Unit)
+    if not any(unit.role == "product" and (unit.languages or unit.formats) for unit in units):
+        return {}
+    return {unit.directory: unit.role for unit in units if unit.role in AUXILIARY}
+
+
+def _advised(result: Result, answer: object) -> Result:
+    """A result that did not pass says which tools CI runs for the practice where they cannot fail the pipeline: they
+    run, but enforce nothing (`continue-on-error`, `allow_failure`)."""
+    if result.status is Status.PASS or not isinstance(answer, AdvisedTools):
+        return result
+    return result.with_details(*(_ADVISED.format(tool=tool, why=why) for tool, why in answer.advised()))
+
+
+_ADVISED = "{tool} runs in CI but cannot fail it ({why})"
 
 
 def _found[A: UnitAnswer](
@@ -130,8 +189,11 @@ def judged[A: UnitAnswer](
     found = _found(languages, context, answers)
     auxiliary: _Auxiliary = {(answer.language, answer.unit): named for answer, named in found if named}
     results: dict[_Place, Result] = {}
+    roles = _auxiliary_roles(context.facts)
     for answer, named in found:
-        result = judge(answer, allow_unknown=context.options.allow_unknown)
+        result = _advised(judge(answer, allow_unknown=context.options.allow_unknown), answer)
+        if role := roles.get(answer.unit):
+            result = _warned(result, _AUXILIARY_UNIT.format(unit=answer.unit, role=role))
         results[(answer.language, answer.unit)] = _advisory(result, answer.language, named) if named else result
     none = "no unit of the project is written in these languages"
     merged, named_merged = _merged(results, auxiliary)

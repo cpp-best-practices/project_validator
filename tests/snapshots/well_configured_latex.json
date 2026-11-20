@@ -175,6 +175,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -211,6 +212,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -246,6 +248,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -270,6 +273,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -317,6 +321,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -336,6 +341,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -355,6 +361,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -395,6 +402,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -415,6 +423,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -434,6 +443,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -470,6 +480,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -489,6 +500,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "chktex": [
@@ -534,6 +546,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "latexmk": [
@@ -579,6 +592,7 @@
         "language": "LaTeX",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

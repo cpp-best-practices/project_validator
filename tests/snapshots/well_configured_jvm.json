@@ -194,6 +194,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -282,6 +283,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "Spotless": [
@@ -339,6 +341,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -386,6 +389,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "yes",
               "defined": {
                 "Jazzer": [
@@ -452,6 +456,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -471,6 +476,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -490,6 +496,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "PIT": [
@@ -592,6 +599,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -612,6 +620,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -631,6 +640,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -667,6 +677,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -731,6 +742,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "SpotBugs": [
@@ -792,6 +804,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "mvn test or gradle test": [
@@ -837,6 +850,7 @@
         "language": "Java",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

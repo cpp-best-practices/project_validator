@@ -193,6 +193,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -201,6 +202,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -217,6 +219,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -233,6 +236,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -241,6 +245,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -254,6 +259,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -299,6 +305,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -307,6 +314,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -317,6 +325,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -333,6 +342,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -350,6 +360,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -386,6 +397,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -394,6 +406,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -404,6 +417,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -420,6 +434,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -437,6 +452,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -474,6 +490,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -482,6 +499,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -492,6 +510,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -508,6 +527,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -525,6 +545,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -561,6 +582,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -569,6 +591,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -579,6 +602,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -595,6 +619,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -612,6 +637,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -649,6 +675,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
@@ -657,6 +684,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -667,6 +695,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -683,6 +712,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -700,6 +730,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -736,6 +767,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
@@ -744,6 +776,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -754,6 +787,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -770,6 +804,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -787,6 +822,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -824,6 +860,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[6]",
@@ -832,6 +869,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -842,6 +880,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -858,6 +897,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -875,6 +915,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -911,6 +952,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[7]",
@@ -919,6 +961,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -929,6 +972,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -945,6 +989,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -962,6 +1007,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -999,6 +1045,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[8]",
@@ -1007,6 +1054,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -1017,6 +1065,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1033,6 +1082,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1050,6 +1100,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1086,6 +1137,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[9]",
@@ -1094,6 +1146,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -1104,6 +1157,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1120,6 +1174,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1137,6 +1192,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1174,6 +1230,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[10]",
@@ -1182,6 +1239,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -1192,6 +1250,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1208,6 +1267,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1225,6 +1285,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1261,6 +1322,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[11]",
@@ -1269,6 +1331,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -1279,6 +1342,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1295,6 +1359,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1312,6 +1377,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1349,6 +1415,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[12]",
@@ -1357,6 +1424,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -1367,6 +1435,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1383,6 +1452,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1400,6 +1470,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1436,6 +1507,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[13]",
@@ -1444,6 +1516,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -1454,6 +1527,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1470,6 +1544,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1487,6 +1562,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1524,6 +1600,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[14]",
@@ -1532,6 +1609,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -1542,6 +1620,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1558,6 +1637,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1575,6 +1655,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1611,6 +1692,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[15]",
@@ -1619,6 +1701,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -1629,6 +1712,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1645,6 +1729,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1662,6 +1747,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1699,6 +1785,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[16]",
@@ -1707,6 +1794,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -1717,6 +1805,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1733,6 +1822,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1750,6 +1840,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1786,6 +1877,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[17]",
@@ -1794,6 +1886,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -1804,6 +1897,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1820,6 +1914,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1837,6 +1932,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1874,6 +1970,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[18]",
@@ -1882,6 +1979,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -1892,6 +1990,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1908,6 +2007,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -1925,6 +2025,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -1961,6 +2062,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[19]",
@@ -1969,6 +2071,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.13.0"
@@ -1979,6 +2082,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -1995,6 +2099,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -2012,6 +2117,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -2049,6 +2155,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[20]",
@@ -2057,6 +2164,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -2067,6 +2175,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -2083,6 +2192,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -2100,6 +2210,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -2136,6 +2247,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[21]",
@@ -2144,6 +2256,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -2154,6 +2267,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -2170,6 +2284,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -2187,6 +2302,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -2224,6 +2340,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[22]",
@@ -2232,6 +2349,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -2242,6 +2360,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -2258,6 +2377,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -2275,6 +2395,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -2311,6 +2432,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[23]",
@@ -2319,6 +2441,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -2329,6 +2452,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "fmt",
@@ -2345,6 +2469,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -2362,6 +2487,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -2394,6 +2520,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:fuzz",
@@ -2402,6 +2529,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -2412,6 +2540,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "timeout",
         "60",
@@ -2430,6 +2559,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "build",
@@ -2448,6 +2578,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "[",
         "$?",
@@ -2479,6 +2610,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:coverage",
@@ -2487,6 +2619,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "version": "0.14.1"
@@ -2497,6 +2630,7 @@
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
+      "advisory": "",
       "argv": [
         "sudo",
         "apt-get",
@@ -2514,6 +2648,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "apt-get",
         "install",
@@ -2532,6 +2667,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "zig",
         "test",
@@ -2578,6 +2714,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -2586,6 +2723,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -2604,6 +2742,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -2641,6 +2780,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
@@ -2649,6 +2789,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "python",
         "-m",
@@ -2666,6 +2807,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "pip",
         "install",
@@ -2683,6 +2825,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "lizard",
         "--length",
@@ -3494,6 +3637,7 @@
       "value": true
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -3514,6 +3658,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -3534,6 +3679,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -3554,6 +3700,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -3574,6 +3721,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -3594,6 +3742,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -3614,6 +3763,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -3634,6 +3784,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -3654,6 +3805,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3674,6 +3826,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -3694,6 +3847,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3714,6 +3868,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -3734,6 +3889,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ToolRun",
@@ -3754,6 +3910,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ToolRun",
@@ -3774,6 +3931,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ToolRun",
@@ -3794,6 +3952,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ToolRun",
@@ -3814,6 +3973,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ToolRun",
@@ -3834,6 +3994,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ToolRun",
@@ -3854,6 +4015,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ToolRun",
@@ -3874,6 +4036,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ToolRun",
@@ -3894,6 +4057,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ToolRun",
@@ -3914,6 +4078,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ToolRun",
@@ -3934,6 +4099,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ToolRun",
@@ -3954,6 +4120,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ToolRun",
@@ -3974,6 +4141,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "ToolRun",
@@ -3994,6 +4162,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "ToolRun",
@@ -4014,6 +4183,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "ToolRun",
@@ -4034,6 +4204,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "ToolRun",
@@ -4054,6 +4225,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "ToolRun",
@@ -4074,6 +4246,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "ToolRun",
@@ -4094,6 +4267,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "ToolRun",
@@ -4114,6 +4288,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "ToolRun",
@@ -4134,6 +4309,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "ToolRun",
@@ -4154,6 +4330,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "ToolRun",
@@ -4174,6 +4351,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "ToolRun",
@@ -4194,6 +4372,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "ToolRun",
@@ -4214,6 +4393,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "ToolRun",
@@ -4234,6 +4414,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "ToolRun",
@@ -4254,6 +4435,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "ToolRun",
@@ -4274,6 +4456,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "ToolRun",
@@ -4294,6 +4477,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[20]",
       "kind": "ToolRun",
@@ -4314,6 +4498,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[20]",
       "kind": "ToolRun",
@@ -4334,6 +4519,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[21]",
       "kind": "ToolRun",
@@ -4354,6 +4540,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[21]",
       "kind": "ToolRun",
@@ -4374,6 +4561,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[22]",
       "kind": "ToolRun",
@@ -4394,6 +4582,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[22]",
       "kind": "ToolRun",
@@ -4414,6 +4603,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[23]",
       "kind": "ToolRun",
@@ -4434,6 +4624,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[23]",
       "kind": "ToolRun",
@@ -4454,6 +4645,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "ToolRun",
@@ -4476,6 +4668,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "ToolRun",
@@ -4498,6 +4691,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ToolRun",
@@ -4518,6 +4712,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ToolRun",
@@ -4539,6 +4734,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ToolRun",

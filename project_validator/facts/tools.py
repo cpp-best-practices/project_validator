@@ -122,6 +122,8 @@ class ToolRun(Fact):
     read: tuple[str, ...] = ()
     via: tuple[Origin, ...] = ()
     heuristic: bool = False
+    # Why the run cannot fail the pipeline, when it cannot (see `Command.advisory`): it provides nothing as a gate.
+    advisory: str = ""
 
     def covers(self, unit: str, units: Iterable[str] = (".",)) -> bool:
         """Whether the run covers the code of `unit`, one of the project's `units`: a run covers the units at or below
@@ -282,6 +284,7 @@ def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun]:
                     read=run.read,
                     via=command.via,
                     heuristic=run.heuristic or (command.directory or "").startswith("$"),
+                    advisory=command.advisory,
                 )
 
 

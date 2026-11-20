@@ -66,6 +66,8 @@ class ToolAnswer:
     unknowns: tuple[str, ...] = ()
     # The unknowns that may hide where a known tool is defined (settings that could not be read).
     unknown_definitions: tuple[str, ...] = ()
+    # The tools CI runs for the aspect only where they cannot fail the pipeline, each with why (see `advised`).
+    advisory: tuple[tuple[str, str], ...] = ()
 
     def providing(self, level: str | None = None) -> tuple[str, ...]:
         """The tools CI runs that provide `level` (by default, the answer's)."""
@@ -75,6 +77,10 @@ class ToolAnswer:
     def tools_ran(self) -> tuple[str, ...]:
         """The names of every tool CI ran for the aspect, each once, in order."""
         return tuple(dict.fromkeys(ran.name for ran in self.runs))
+
+    def advised(self) -> tuple[tuple[str, str], ...]:
+        """The tools CI runs for the aspect only where they cannot fail the pipeline, each with why."""
+        return self.advisory
 
     def others(self) -> tuple[str, ...]:
         """The tools CI runs that do not provide the answer's level (a formatter that only rewrites files)."""
@@ -121,6 +127,7 @@ class ToolAnswer:
             },
             unknowns=list(self.unknowns),
             unknown_definitions=list(self.unknown_definitions),
+            advisory=dict(self.advisory),
         )
 
 
@@ -149,6 +156,15 @@ def _runs(aspect: str, language: str, unit: str, facts: Facts, auxiliary: tuple[
         levels.setdefault(run.tool, set()).update(run.provides[aspect])
         read.setdefault(run.tool, {}).update(dict.fromkeys(run.read))
     return tuple(Ran(name=name, levels=frozenset(found), read=tuple(read[name])) for name, found in levels.items())
+
+
+def _advisory(
+    aspect: str, language: str, unit: str, facts: Facts, auxiliary: tuple[str, ...], ran: Iterable[Ran]
+) -> tuple[tuple[str, str], ...]:
+    """The tools whose runs of the aspect cannot fail the pipeline and that no run that can provides, with why."""
+    gating = {found.name for found in ran}
+    found = runs_of(aspect, language, unit, facts, auxiliary=auxiliary, advisory=True)
+    return tuple(dict.fromkeys((run.tool, run.advisory) for run in found if run.tool not in gating))
 
 
 def _known(tool: Tool, aspect: str) -> KnownTool:
@@ -218,6 +234,7 @@ def tool_answer(
         known=tuple(_known(tool, aspect) for tool in known),
         unknowns=unknowns,
         unknown_definitions=unknowns_for(known, facts, hiding=("settings",)),
+        advisory=_advisory(aspect, language, unit, facts, auxiliary, runs),
     )
 
 

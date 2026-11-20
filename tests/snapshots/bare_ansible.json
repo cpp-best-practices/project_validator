@@ -31,6 +31,7 @@
         "language": "Ansible",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -72,6 +73,7 @@
         "language": "Ansible",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -113,6 +115,7 @@
         "language": "Ansible",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {

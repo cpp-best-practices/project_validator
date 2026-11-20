@@ -204,6 +204,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -240,6 +241,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -282,6 +284,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -322,6 +325,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -369,6 +373,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -388,6 +393,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -407,6 +413,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -487,6 +494,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -507,6 +515,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -526,6 +535,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -562,6 +572,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -581,6 +592,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "lintr": [
@@ -619,6 +631,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "R CMD check": [
@@ -665,6 +678,7 @@
         "language": "R",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

@@ -196,6 +196,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -301,6 +302,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "dotnet format": [
@@ -348,6 +350,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -388,6 +391,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "yes",
               "defined": {
                 "SharpFuzz": [
@@ -454,6 +458,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -473,6 +478,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -492,6 +498,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "Stryker.NET": [
@@ -593,6 +600,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -613,6 +621,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -632,6 +641,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -668,6 +678,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -725,6 +736,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "Roslynator": [
@@ -786,6 +798,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "dotnet test": [
@@ -831,6 +844,7 @@
         "language": "C#",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

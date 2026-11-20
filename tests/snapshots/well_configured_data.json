@@ -15,6 +15,7 @@
         "language": "JSON Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -56,6 +57,7 @@
         "language": "XML Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -101,6 +103,7 @@
         "language": "JSON Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -175,6 +178,7 @@
         "language": "JSON Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -228,6 +232,7 @@
         "language": "XML Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -269,6 +274,7 @@
         "language": "JSON Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -328,6 +334,7 @@
         "language": "XML Schema",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {

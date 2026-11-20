@@ -15,7 +15,11 @@ from dataclasses import dataclass
 
 type Value = str | float | bool | None
 _UNKNOWN = object()
-type Maybe = Value | object  # a Value, or _UNKNOWN
+# A value that is not known whose truth is: `x || 'a'` with `x` unknown is `x` or 'a', truthy either way. It decides
+# a condition, but renders, compares and is passed to a function as unknown.
+_SOME_TRUTHY, _SOME_FALSY = object(), object()
+_UNSEEN = (_UNKNOWN, _SOME_TRUTHY, _SOME_FALSY)
+type Maybe = Value | object  # a Value, _UNKNOWN, _SOME_TRUTHY or _SOME_FALSY
 
 _TOKEN = re.compile(
     r"\s*(?:(?P<string>'(?:[^']|'')*')|(?P<number>-?\d+(?:\.\d+)?)|(?P<operator>==|!=|<=|>=|&&|\|\||[!()<>,])"
@@ -59,8 +63,8 @@ def _text(value: Maybe) -> str:
 
 
 def _truthy(value: Maybe) -> Maybe:
-    if value is _UNKNOWN:
-        return _UNKNOWN
+    if value is _UNKNOWN or value is _SOME_TRUTHY or value is _SOME_FALSY:
+        return _UNKNOWN if value is _UNKNOWN else value is _SOME_TRUTHY
     return value not in (None, False, 0.0, "")
 
 
@@ -151,24 +155,24 @@ def _lookup(values: Mapping[str, object], dotted: str) -> Maybe:
 
 def _either(_: str, left: Maybe, right: Maybe) -> Maybe:
     """`a || b` as GitHub evaluates it: `a` when it is truthy, else `b` (the operand itself, not a boolean: a ternary
-    renders its branch). When `a` is unknown only a truthy `b` decides it, for a condition: true."""
+    renders its branch). When `a` is unknown only a truthy `b` decides it, and only its truth: `a` or `b`."""
     truth = _truthy(left)
     if truth is _UNKNOWN:
-        return True if _truthy(right) is True else _UNKNOWN
+        return _SOME_TRUTHY if _truthy(right) is True else _UNKNOWN
     return left if truth else right
 
 
 def _both(_: str, left: Maybe, right: Maybe) -> Maybe:
     """`a && b` as GitHub evaluates it: `a` when it is falsy, else `b`. When `a` is unknown only a falsy `b` decides
-    it, for a condition: false."""
+    it, and only its truth: `a` or `b`."""
     truth = _truthy(left)
     if truth is _UNKNOWN:
-        return right if _truthy(right) is False else _UNKNOWN
+        return _SOME_FALSY if _truthy(right) is False else _UNKNOWN
     return right if truth else left
 
 
 def _compare(operator: str, left: Maybe, right: Maybe) -> Maybe:
-    if _UNKNOWN in (left, right):
+    if left in _UNSEEN or right in _UNSEEN:
         return _UNKNOWN
     equal = _text(left).lower() == _text(right).lower()
     return equal if operator == "==" else not equal
@@ -182,7 +186,7 @@ def _function(name: str, arguments: list[Maybe]) -> Maybe:
         "startswith": str.startswith,
         "endswith": str.endswith,
     }
-    if name not in tests or len(arguments) != 2 or _UNKNOWN in arguments:
+    if name not in tests or len(arguments) != 2 or any(argument in _UNSEEN for argument in arguments):
         return _UNKNOWN
     text, part = (_text(argument).lower() for argument in arguments)
     return tests[name](text, part)
@@ -212,4 +216,4 @@ def evaluate(condition: str, known: Known) -> bool | None:
 def rendered(expression: str, known: Known) -> str | None:
     """The text GitHub puts in place of `${{ expression }}`, or None when the checkout does not show it."""
     value = _parsed(expression, known)
-    return None if value is _UNKNOWN else _text(value)
+    return None if value in _UNSEEN else _text(value)

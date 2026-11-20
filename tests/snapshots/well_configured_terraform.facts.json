@@ -162,6 +162,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -170,6 +171,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -186,6 +188,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -202,6 +205,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -210,6 +214,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -223,6 +228,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -266,6 +272,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[0]",
@@ -274,6 +281,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "terraform_version": "1.9.8"
@@ -284,6 +292,7 @@
       "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "fmt",
@@ -300,6 +309,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "init",
@@ -315,6 +325,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "validate"
@@ -329,6 +340,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "test"
@@ -360,6 +372,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[1]",
@@ -368,6 +381,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "terraform_version": "1.10.3"
@@ -378,6 +392,7 @@
       "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "fmt",
@@ -394,6 +409,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "init",
@@ -409,6 +425,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "validate"
@@ -423,6 +440,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "test"
@@ -454,6 +472,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[2]",
@@ -462,6 +481,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "terraform_version": "1.9.8"
@@ -472,6 +492,7 @@
       "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "fmt",
@@ -488,6 +509,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "init",
@@ -503,6 +525,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "validate"
@@ -517,6 +540,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "test"
@@ -548,6 +572,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[3]",
@@ -556,6 +581,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "terraform_version": "1.10.3"
@@ -566,6 +592,7 @@
       "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "fmt",
@@ -582,6 +609,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "init",
@@ -597,6 +625,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "validate"
@@ -611,6 +640,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "test"
@@ -642,6 +672,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[4]",
@@ -650,6 +681,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "terraform_version": "1.9.8"
@@ -660,6 +692,7 @@
       "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "fmt",
@@ -676,6 +709,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "init",
@@ -691,6 +725,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "validate"
@@ -705,6 +740,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "test"
@@ -736,6 +772,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[5]",
@@ -744,6 +781,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "terraform_version": "1.10.3"
@@ -754,6 +792,7 @@
       "uses": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e"
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "fmt",
@@ -770,6 +809,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "init",
@@ -785,6 +825,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "validate"
@@ -799,6 +840,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "terraform",
         "test"
@@ -827,6 +869,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -835,6 +878,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -843,6 +887,7 @@
       "uses": "terraform-linters/setup-tflint@6ffdbaa3be476b3431f7275c26966ef32ff60337"
     },
     {
+      "advisory": "",
       "argv": [
         "tflint",
         "--init"
@@ -857,6 +902,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "tflint",
         "--recursive"
@@ -871,6 +917,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "directory": "."
@@ -881,6 +928,7 @@
       "uses": "bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf"
     },
     {
+      "advisory": "",
       "argv": [
         "checkov",
         "-d",
@@ -930,6 +978,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -938,6 +987,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -956,6 +1006,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -1243,6 +1294,7 @@
       "reader": "Terraform provider requirements"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[0]",
       "kind": "ToolRun",
@@ -1263,6 +1315,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[0]",
       "kind": "ToolRun",
@@ -1283,6 +1336,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[0]",
       "kind": "ToolRun",
@@ -1303,6 +1357,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[1]",
       "kind": "ToolRun",
@@ -1323,6 +1378,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[1]",
       "kind": "ToolRun",
@@ -1343,6 +1399,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[1]",
       "kind": "ToolRun",
@@ -1363,6 +1420,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[2]",
       "kind": "ToolRun",
@@ -1383,6 +1441,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[2]",
       "kind": "ToolRun",
@@ -1403,6 +1462,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[2]",
       "kind": "ToolRun",
@@ -1423,6 +1483,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[3]",
       "kind": "ToolRun",
@@ -1443,6 +1504,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[3]",
       "kind": "ToolRun",
@@ -1463,6 +1525,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[3]",
       "kind": "ToolRun",
@@ -1483,6 +1546,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[4]",
       "kind": "ToolRun",
@@ -1503,6 +1567,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[4]",
       "kind": "ToolRun",
@@ -1523,6 +1588,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[4]",
       "kind": "ToolRun",
@@ -1543,6 +1609,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[5]",
       "kind": "ToolRun",
@@ -1563,6 +1630,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[5]",
       "kind": "ToolRun",
@@ -1583,6 +1651,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:validate[5]",
       "kind": "ToolRun",
@@ -1603,6 +1672,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -1623,6 +1693,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -1643,6 +1714,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",

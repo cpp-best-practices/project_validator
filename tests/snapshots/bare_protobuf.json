@@ -15,6 +15,7 @@
         "language": "Protobuf",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -53,6 +54,7 @@
         "language": "Protobuf",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -101,6 +103,7 @@
         "language": "Protobuf",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -137,6 +140,7 @@
         "language": "Protobuf",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {

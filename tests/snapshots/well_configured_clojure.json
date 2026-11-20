@@ -189,6 +189,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -247,6 +248,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "cljfmt": [
@@ -302,6 +304,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -326,6 +329,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -373,6 +377,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -392,6 +397,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -411,6 +417,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -491,6 +498,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -511,6 +519,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -530,6 +539,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -566,6 +576,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {},
             "known": {
@@ -600,6 +611,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "clj-kondo": [
@@ -638,6 +650,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "yes",
             "defined": {
               "clojure.test": [
@@ -683,6 +696,7 @@
         "language": "Clojure",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

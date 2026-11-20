@@ -171,6 +171,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -179,6 +180,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -195,6 +197,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -211,6 +214,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -219,6 +223,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -232,6 +237,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -275,6 +281,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -283,6 +290,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ocaml-compiler": "4.14"
@@ -293,6 +301,7 @@
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "install",
@@ -310,6 +319,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -327,6 +337,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "build"
@@ -343,6 +354,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -363,6 +375,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "test",
@@ -382,6 +395,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -399,6 +413,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bisect-ppx-report",
         "summary"
@@ -432,6 +447,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -440,6 +456,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ocaml-compiler": "5.2"
@@ -450,6 +467,7 @@
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "install",
@@ -467,6 +485,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -484,6 +503,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "build"
@@ -500,6 +520,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -520,6 +541,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "test",
@@ -539,6 +561,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -556,6 +579,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bisect-ppx-report",
         "summary"
@@ -589,6 +613,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -597,6 +622,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ocaml-compiler": "4.14"
@@ -607,6 +633,7 @@
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "install",
@@ -624,6 +651,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -641,6 +669,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "build"
@@ -657,6 +686,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -677,6 +707,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "test",
@@ -696,6 +727,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -713,6 +745,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bisect-ppx-report",
         "summary"
@@ -746,6 +779,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -754,6 +788,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ocaml-compiler": "5.2"
@@ -764,6 +799,7 @@
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "install",
@@ -781,6 +817,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -798,6 +835,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "build"
@@ -814,6 +852,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -834,6 +873,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "test",
@@ -853,6 +893,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -870,6 +911,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bisect-ppx-report",
         "summary"
@@ -903,6 +945,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
@@ -911,6 +954,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ocaml-compiler": "4.14"
@@ -921,6 +965,7 @@
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "install",
@@ -938,6 +983,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -955,6 +1001,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "build"
@@ -971,6 +1018,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -991,6 +1039,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "test",
@@ -1010,6 +1059,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -1027,6 +1077,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bisect-ppx-report",
         "summary"
@@ -1060,6 +1111,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
@@ -1068,6 +1120,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ocaml-compiler": "5.2"
@@ -1078,6 +1131,7 @@
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "install",
@@ -1095,6 +1149,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -1112,6 +1167,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "build"
@@ -1128,6 +1184,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -1148,6 +1205,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "test",
@@ -1167,6 +1225,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -1184,6 +1243,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "bisect-ppx-report",
         "summary"
@@ -1214,6 +1274,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -1222,6 +1283,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ocaml-compiler": "5.2"
@@ -1232,6 +1294,7 @@
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "install",
@@ -1247,6 +1310,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "opam",
         "exec",
@@ -1265,6 +1329,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "dune",
         "build",
@@ -1282,6 +1347,7 @@
       ]
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -1302,6 +1368,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "semgrep",
         "scan",
@@ -1346,6 +1413,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1354,6 +1422,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -1372,6 +1441,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -1639,6 +1709,7 @@
       "reader": "dune"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1661,6 +1732,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1684,6 +1756,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1707,6 +1780,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1729,6 +1803,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1752,6 +1827,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1775,6 +1851,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1797,6 +1874,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1820,6 +1898,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1843,6 +1922,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1865,6 +1945,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1888,6 +1969,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1911,6 +1993,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1933,6 +2016,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1956,6 +2040,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1979,6 +2064,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2001,6 +2087,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2024,6 +2111,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2047,6 +2135,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -2069,6 +2158,7 @@
       ]
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",

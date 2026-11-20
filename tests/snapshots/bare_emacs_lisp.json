@@ -144,6 +144,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -180,6 +181,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -199,6 +201,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -223,6 +226,7 @@
             "other_runs": [],
             "property_files": [],
             "tools": {
+              "advisory": {},
               "answer": "impossible",
               "defined": {},
               "known": {},
@@ -266,6 +270,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -285,6 +290,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -304,6 +310,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -353,6 +360,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -373,6 +381,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -392,6 +401,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -426,6 +436,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},
@@ -445,6 +456,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -479,6 +491,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -513,6 +526,7 @@
         "language": "Emacs Lisp",
         "units": [
           {
+            "advisory": {},
             "answer": "impossible",
             "defined": {},
             "known": {},

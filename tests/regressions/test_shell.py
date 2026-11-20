@@ -135,28 +135,45 @@ class CustomShellTests(unittest.TestCase):
             self.assertEqual(run_in_layout(self, "Shell scripts", coverage, wrapped).status, Status.PASS)
 
 
+# docker-library/postgres and nginx/docker-nginx: every step runs a command the generated matrix holds.
+STEP_FROM_MATRIX = {"run": "${{ matrix.runs.test }}"}
+
+
 class UnknownCommandTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #195: commands the reader cannot resolve are dropped without an Unknown
     def test_unresolvable_commands_are_recorded_as_unknown(self) -> None:
         """A program with a variable prefix or directory, an expression program or step, a missing script, `docker run`,
-        `earthly` and an unknown composite action each yield an Unknown, as `$CABAL v2-test` does (httpx, SwiftFormat,
+        and `earthly` each yield an Unknown, as `$CABAL v2-test` does (httpx, SwiftFormat,
         fpm, docker-library/postgres, ansible-for-devops, Awesome-CV, ecto, terraform-aws-modules)."""
         cases = {
             "variable prefix": _script_run("scripts/check", '#!/bin/sh -e\nexport PREFIX=""\n${PREFIX}ruff check .\n'),
             "variable directory": _script_run("lint.sh", '#!/bin/bash\n"$DIR/$TOOL" --lint .\n', "./lint.sh"),
             "expression program": github_steps('run: echo "TOOL=./x" >> $GITHUB_ENV', "run: ${{ env.TOOL }} test"),
-            "expression step": github_steps("run: ${{ matrix.runs.test }}"),
+            "expression step": _workflow(
+                {
+                    "strategy": {"matrix": "${{ fromJSON(needs.generate.outputs.strategy) }}"},
+                    "steps": [STEP_FROM_MATRIX],
+                }
+            ),
             "missing script": github_steps("run: curl -o ci/test.sh https://example.com/x", "run: ci/test.sh"),
             "docker run": github_job(CI, 'docker run --rm -v "$PWD:/doc" img make test'),
             "earthly": {"Earthfile": "test:\n  RUN mix test\n", **github_job(CI, "earthly +test")},
-            "unknown composite action": github_steps("uses: clowdhaus/terraform-composite-actions/pre-commit@v1.14.0"),
         }
         for name, files in cases.items():
             with self.subTest(case=name):
                 facts = _facts_of(files)
-                # The expression program may instead be resolved to the value the step before exported.
+                # The expression program may instead be resolved to the value the step before exported, and the
+                # variable prefix to the value the script sets (encode/httpx's `export PREFIX=""`).
                 followed = [resolved(command) for command in facts.of(Command) if command.argv[:1] != ("echo",)]
-                self.assertTrue(facts.of(Unknown) or followed == [("./x", "test")], followed)
+                resolutions = ([("./x", "test")], [("scripts/check",), ("export", "PREFIX="), ("ruff", "check", ".")])
+                unread = [unknown for unknown in facts.of(Unknown) if unknown.hides == "commands"]
+                self.assertTrue(unread or followed in resolutions, followed)
+
+    @unittest.expectedFailure  # upstream #195: a third-party composite action that is the whole job is not unknown
+    def test_an_unknown_composite_action_that_is_the_whole_job_is_unknown(self) -> None:
+        """terraform-aws-modules' pre-commit job is one composite action the validator does not know; telling it from
+        the many actions that run nothing of the project's (checkout, setup-*) is still open."""
+        facts = _facts_of(github_steps("uses: clowdhaus/terraform-composite-actions/pre-commit@v1.14.0"))
+        self.assertTrue([unknown for unknown in facts.of(Unknown) if unknown.hides == "commands"])
 
 
 class EnvironmentTests(unittest.TestCase):

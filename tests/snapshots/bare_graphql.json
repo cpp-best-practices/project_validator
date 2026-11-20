@@ -15,6 +15,7 @@
         "language": "GraphQL",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -53,6 +54,7 @@
         "language": "GraphQL",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -89,6 +91,7 @@
         "language": "GraphQL",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {
@@ -125,6 +128,7 @@
         "language": "GraphQL",
         "units": [
           {
+            "advisory": {},
             "answer": "no",
             "defined": {},
             "known": {

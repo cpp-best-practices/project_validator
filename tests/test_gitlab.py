@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import json
 import unittest
+from collections.abc import Mapping
 
 from project_validator.build_configurations import BuildConfiguration
 from project_validator.ci.gitlab import expand_parallel
+from project_validator.facts import Command
 from project_validator.facts.jobs import Job
-from tests.support import ci_jobs
+from tests.support import ci_jobs, make_context, temp_project
 
 
 class ExpandParallelTests(unittest.TestCase):
@@ -88,3 +90,21 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(jobs["test (16)"], ["mysql:8.4", "postgres:16"])
         self.assertEqual(jobs["test (17)"], ["mysql:8.4", "postgres:17"])
         self.assertEqual(jobs["lint"], ["redis:7"])
+
+
+class AllowFailureTests(unittest.TestCase):
+    """A job with `allow_failure: true` cannot fail the pipeline: its commands are advisory."""
+
+    def _advisory(self, job: Mapping[str, object]) -> list[str]:
+        with temp_project({".gitlab-ci.yml": json.dumps({"check": job})}) as root:
+            return [command.advisory for command in make_context(root).facts.of(Command) if not command.via]
+
+    def test_allow_failure_true_is_advisory(self) -> None:
+        self.assertEqual(self._advisory({"script": ["ruff check ."], "allow_failure": True}), ["allow_failure"])
+
+    def test_allow_failure_on_some_exit_codes_is_still_a_gate(self) -> None:
+        job = {"script": ["ruff check ."], "allow_failure": {"exit_codes": [137]}}
+        self.assertEqual(self._advisory(job), [""])
+
+    def test_a_job_without_allow_failure_is_a_gate(self) -> None:
+        self.assertEqual(self._advisory({"script": ["ruff check ."]}), [""])

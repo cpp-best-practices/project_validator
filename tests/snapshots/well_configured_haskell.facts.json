@@ -171,6 +171,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -179,6 +180,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "pipx",
         "run",
@@ -195,6 +197,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "zizmor",
         ".github"
@@ -211,6 +214,7 @@
       ]
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
@@ -219,6 +223,7 @@
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "advisory": "",
       "argv": [
         "actionlint"
       ],
@@ -232,6 +237,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "gitleaks",
         "git",
@@ -275,6 +281,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
@@ -283,6 +290,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ghc-version": "9.8"
@@ -293,6 +301,7 @@
       "uses": "haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d"
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "test",
@@ -309,6 +318,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -324,6 +334,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "hpc-codecov",
         "cabal:spec"
@@ -338,6 +349,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -353,6 +365,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal-audit"
       ],
@@ -383,6 +396,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
@@ -391,6 +405,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ghc-version": "9.10"
@@ -401,6 +416,7 @@
       "uses": "haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d"
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "test",
@@ -417,6 +433,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -432,6 +449,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "hpc-codecov",
         "cabal:spec"
@@ -446,6 +464,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -461,6 +480,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal-audit"
       ],
@@ -491,6 +511,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
@@ -499,6 +520,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ghc-version": "9.8"
@@ -509,6 +531,7 @@
       "uses": "haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d"
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "test",
@@ -525,6 +548,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -540,6 +564,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "hpc-codecov",
         "cabal:spec"
@@ -554,6 +579,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -569,6 +595,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal-audit"
       ],
@@ -599,6 +626,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
@@ -607,6 +635,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ghc-version": "9.10"
@@ -617,6 +646,7 @@
       "uses": "haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d"
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "test",
@@ -633,6 +663,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -648,6 +679,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "hpc-codecov",
         "cabal:spec"
@@ -662,6 +694,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -677,6 +710,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal-audit"
       ],
@@ -707,6 +741,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
@@ -715,6 +750,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ghc-version": "9.8"
@@ -725,6 +761,7 @@
       "uses": "haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d"
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "test",
@@ -741,6 +778,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -756,6 +794,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "hpc-codecov",
         "cabal:spec"
@@ -770,6 +809,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -785,6 +825,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal-audit"
       ],
@@ -815,6 +856,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
@@ -823,6 +865,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "ghc-version": "9.10"
@@ -833,6 +876,7 @@
       "uses": "haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d"
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "test",
@@ -849,6 +893,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -864,6 +909,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "hpc-codecov",
         "cabal:spec"
@@ -878,6 +924,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal",
         "install",
@@ -893,6 +940,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "cabal-audit"
       ],
@@ -920,6 +968,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -928,6 +977,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -936,6 +986,7 @@
       "uses": "haskell-actions/run-ormolu@f15613427428a49a241fa0331881dcf4cc118121"
     },
     {
+      "advisory": "",
       "argv": [
         "ormolu",
         "--mode",
@@ -951,6 +1002,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
@@ -959,6 +1011,7 @@
       "uses": "haskell-actions/hlint-setup@fe9cd1cd1af94a23900c06738e73f6ddb092966a"
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {
         "fail-on": "warning",
@@ -970,6 +1023,7 @@
       "uses": "haskell-actions/hlint-run@eaca4cfbf4a69f4eb875df38b6bc3e1657020378"
     },
     {
+      "advisory": "",
       "argv": [
         "hlint",
         "src/",
@@ -1025,6 +1079,7 @@
       "services": []
     },
     {
+      "advisory": "",
       "condition": null,
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
@@ -1033,6 +1088,7 @@
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "advisory": "",
       "argv": [
         "npx",
         "--yes",
@@ -1051,6 +1107,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "argv": [
         "jscpd@4",
         "--threshold",
@@ -1614,6 +1671,7 @@
       "origin": "cabal.project.freeze"
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1634,6 +1692,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1657,6 +1716,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1680,6 +1740,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
@@ -1700,6 +1761,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1720,6 +1782,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1743,6 +1806,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1766,6 +1830,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
@@ -1786,6 +1851,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1806,6 +1872,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1829,6 +1896,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1852,6 +1920,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ToolRun",
@@ -1872,6 +1941,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1892,6 +1962,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1915,6 +1986,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1938,6 +2010,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ToolRun",
@@ -1958,6 +2031,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -1978,6 +2052,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2001,6 +2076,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2024,6 +2100,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ToolRun",
@@ -2044,6 +2121,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2064,6 +2142,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2087,6 +2166,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2110,6 +2190,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ToolRun",
@@ -2130,6 +2211,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
@@ -2150,6 +2232,7 @@
       "via": []
     },
     {
+      "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
