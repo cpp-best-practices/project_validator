@@ -172,6 +172,9 @@ class Practice:
     forbids: bool = False
     # Why the practice does not apply to the project (a Go library builds no binary to harden); None when it does.
     skipped: Callable[[Facts], str | None] = lambda _facts: None
+    # The parts of a requirement that asks several settings at once (PHPUnit's failOnWarning, failOnNotice and
+    # failOnDeprecation): when the practice is not met, those found are named beside those missing.
+    parts: tuple[Requirement, ...] = ()
 
 
 def known_practices() -> tuple[Practice, ...]:

@@ -50,6 +50,9 @@ class PracticeAnswer:
     compiled: tuple[Compiled, ...]
     unknowns: tuple[str, ...] = ()
     skipped: str | None = None
+    # When the practice is not met, which of its parts (see `Practice.parts`) are found, and which are not.
+    parts_found: tuple[str, ...] = ()
+    parts_missing: tuple[str, ...] = ()
 
     def found(self) -> tuple[str, ...]:
         """Every requirement met for some compiler, in order."""
@@ -118,9 +121,19 @@ def practice_answer(name: str, language: str, facts: Facts) -> PracticeAnswer | 
     texts = ci_texts(facts)
     compiled = tuple(_compiled(practice, facts, compiler, texts) for compiler in compilers)
     unknowns = unknowns_for((), facts, reads=practice.reads)
-    answer = _answer(practice, _met(practice, compiled), bool(unknowns))
+    met_ = _met(practice, compiled)
+    answer = _answer(practice, met_, bool(unknowns))
+    found = () if met_ else tuple(part.name for part in practice.parts if met(practice, part, facts, None, texts))
+    missing = tuple(part.name for part in practice.parts if found and part.name not in found)
     return PracticeAnswer(
-        language=language, unit=".", practice=practice, answer=answer, compiled=compiled, unknowns=unknowns
+        language=language,
+        unit=".",
+        practice=practice,
+        answer=answer,
+        compiled=compiled,
+        unknowns=unknowns,
+        parts_found=found,
+        parts_missing=missing,
     )
 
 

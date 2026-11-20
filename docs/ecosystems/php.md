@@ -24,7 +24,8 @@ Every error is reported while testing: `error_reporting` `-1` or `E_ALL` in `php
 
 ## `warnings-as-errors`
 
-PHPUnit's `failOnWarning`, `failOnNotice` and `failOnDeprecation` (or `failOnAllIssues`).
+PHPUnit's `failOnWarning`, `failOnNotice` and `failOnDeprecation` (or `failOnAllIssues`), in phpunit.xml or as
+`--fail-on-*` options. All three are asked: where only some are set, the failure names those set and those missing.
 
 ## `type-checking`
 
