@@ -69,11 +69,6 @@ def _described(project: Project) -> Iterator[tuple[str, str]]:
             yield from ((path, name) for name, key in _DESCRIBES.items() if key.search(head))
 
 
-def api_descriptions(project: Project) -> frozenset[str]:
-    """The API description formats among the project's YAML and JSON files, told by their top-level key."""
-    return frozenset(name for _, name in _described(project))
-
-
 def _descriptions_in(name: str) -> Callable[[Project], Iterator[str]]:
     return lambda project: (path for path, found in _described(project) if found == name)
 
@@ -82,7 +77,6 @@ API_ECOSYSTEM = Ecosystem(
     label="OpenAPI/AsyncAPI",
     kind="format",
     languages=API_FORMATS,
-    detect=api_descriptions,
     locate=_described,
     ci_programs=(
         ("spectral",),

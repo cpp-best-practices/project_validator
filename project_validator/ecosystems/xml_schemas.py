@@ -43,18 +43,12 @@ def xml_schema_files(project: Project) -> Iterator[tuple[str, str]]:
         yield from ((path, name) for name, own in _SUFFIXES.items() if suffix in own)
 
 
-def xml_schemas(project: Project) -> frozenset[str]:
-    """The formats among the project's files: schemas by their suffixes, stylesheets by theirs."""
-    return frozenset(name for _, name in xml_schema_files(project))
-
-
 XML_SCHEMAS_ECOSYSTEM = Ecosystem(
     label="XML schemas",
     kind="format",
     languages=XML_FORMATS,
     # RELAX NG's compact syntax is not XML; it belongs to the schemas without being a format of its own.
     ambiguous_suffixes={".rnc": None},
-    detect=xml_schemas,
     locate=xml_schema_files,
     ci_programs=(("xmllint",), ("jing",), ("schxslt",), ("xspec",), ("xspec.sh",), ("xspec.bat",)),
 )

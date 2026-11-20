@@ -82,17 +82,11 @@ def site_configurations(project: Project) -> Iterator[tuple[str, str]]:
         )
 
 
-def documentation_sites(project: Project) -> frozenset[str]:
-    """The generators whose sites the project holds, each told by its configuration file."""
-    return frozenset(generator for _, generator in site_configurations(project))
-
-
 DOCUMENTATION = Ecosystem(
     label="Documentation site",
     kind="format",
     companion=re.compile("|".join(pattern.pattern for pattern in _CONFIGURATION.values())),
     languages=GENERATORS,
-    detect=documentation_sites,
     locate=site_configurations,
     ci_programs=(
         ("mkdocs",),

@@ -54,16 +54,10 @@ def json_schemas(project: Project) -> Iterator[str]:
             yield path
 
 
-def json_schema_project(project: Project) -> frozenset[str]:
-    """Whether the project holds JSON Schemas (see `json_schemas`)."""
-    return JSON_SCHEMA_ONLY if next(json_schemas(project), None) is not None else frozenset()
-
-
 JSON_SCHEMA_ECOSYSTEM = Ecosystem(
     label="JSON Schema",
     kind="format",
     languages=JSON_SCHEMA_ONLY,
-    detect=json_schema_project,
     locate=lambda project: ((path, JSON_SCHEMA) for path in json_schemas(project)),
     ci_programs=(("check-jsonschema",), ("ajv",), ("jsonschema",), ("jv",), ("json-schema-diff",)),
 )
