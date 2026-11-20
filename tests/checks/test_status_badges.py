@@ -11,8 +11,22 @@ CI_BADGE = "![ci](https://github.com/o/r/actions/workflows/ci.yml/badge.svg)"
 QUALITY_BADGE = "![codecov](https://codecov.io/gh/o/r/graph/badge.svg)"
 
 
-def _run(files: Mapping[str, str]) -> Result:
-    with temp_project(files) as root:
+WORKFLOW = {
+    ".github/workflows/ci.yml": "on: push\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - run: make\n"
+}
+# The configuration of each CI provider whose configuration lives in the repository.
+CONFIGURATIONS = {
+    "GitLab CI": ".gitlab-ci.yml",
+    "CircleCI": ".circleci/config.yml",
+    "Travis CI": ".travis.yml",
+    "Drone": ".drone.yml",
+    "Cirrus CI": ".cirrus.yml",
+    "Woodpecker": ".woodpecker.yml",
+}
+
+
+def _run(files: Mapping[str, str], *, ci: Mapping[str, str] = WORKFLOW) -> Result:
+    with temp_project({**ci, **files}) as root:
         return status_badges.run(make_context(root))
 
 
@@ -29,6 +43,12 @@ class StatusBadgesTests(unittest.TestCase):
         self.assertEqual(
             _run({"README.md": "# app\n"}), Result.failed("README.md shows no status badges", CI_HINT, QUALITY_HINT)
         )
+
+    def test_a_readme_in_any_documentation_markup_is_the_readme(self) -> None:
+        """cowboy's README.asciidoc (and README.textile, README.pod) is its README: it shows no badges, not none."""
+        for name in ("README.asciidoc", "README.textile", "README.pod", "README.rdoc", "README"):
+            with self.subTest(name=name):
+                self.assertEqual(_run({name: "= cowboy\n"}).message, f"{name} shows no status badges")
 
     def test_warns_when_only_one_kind_of_badge_is_shown(self) -> None:
         self.assertEqual(
@@ -56,7 +76,29 @@ class StatusBadgesTests(unittest.TestCase):
         }
         for provider, url in badges.items():
             with self.subTest(provider):
-                result = _run({"README.md": f"![build]({url}) {QUALITY_BADGE}"})
+                configuration = {CONFIGURATIONS[provider]: "{}\n"} if provider in CONFIGURATIONS else WORKFLOW
+                result = _run({"README.md": f"![build]({url}) {QUALITY_BADGE}"}, ci=configuration)
+                self.assertEqual(result.message, f"README.md shows CI ({provider}) and quality (Codecov) badges")
+
+    def test_a_badge_of_a_ci_the_project_does_not_configure_is_stale(self) -> None:
+        """koreader's CircleCI badge, with no .circleci/ (its CI is GitHub Actions), shows no status of the CI that
+        runs: it is not a CI badge, and the result says why."""
+        circleci = "![build](https://circleci.com/gh/o/r.svg?style=shield)"
+        result = _run({"README.md": f"{circleci} {QUALITY_BADGE}"})
+        self.assertEqual(result.status, Status.WARN)
+        self.assertEqual(result.message, "README.md shows a quality badge (Codecov) but no CI badge")
+        self.assertIn("README.md's CircleCI badge is of a CI the project does not configure", result.details)
+
+    def test_a_badge_of_a_ci_configured_outside_the_repository_counts(self) -> None:
+        """AppVeyor, Jenkins, Buildkite and Azure Pipelines can be set up in their own settings, and OCaml-CI
+        builds every opam package without configuration (ocamlformat): their badges show the project's CI."""
+        for provider, url in (
+            ("AppVeyor", "https://ci.appveyor.com/api/projects/status/abc"),
+            ("Jenkins", "https://ci.example.com/buildStatus/icon?job=r"),
+            ("OCaml-CI", "https://img.shields.io/endpoint?url=https://ocaml.ci.dev/badge/o/r/main&logo=ocaml"),
+        ):
+            with self.subTest(provider):
+                result = _run({"README.md": f'<img src="{url}" alt="build"> {QUALITY_BADGE}'}, ci={})
                 self.assertEqual(result.message, f"README.md shows CI ({provider}) and quality (Codecov) badges")
 
     def test_recognises_quality_badges(self) -> None:

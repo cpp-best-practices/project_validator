@@ -64,6 +64,10 @@ class CiProvider:
     # Whether a configuration file's text shows the provider is used, for a file that may exist without it (a
     # `.pre-commit-config.yaml` is pre-commit.ci's with a `ci:` section, or when the README shows its badge).
     recognises: Callable[[str], bool] | None = None
+    # Whether the provider can be set up outside the repository (in its own settings, or with none, building every
+    # package of an ecosystem): its badge shows the project's CI though the project holds no configuration of it. Any
+    # other provider's badge is stale without its configuration (a CircleCI badge and no .circleci/).
+    configured_elsewhere: bool = False
 
     def config_files(self, project: Project) -> list[str]:
         found = [path for path in self.files if project.exists(path)]

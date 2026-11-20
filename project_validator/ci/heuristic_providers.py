@@ -14,11 +14,13 @@ AZURE_PIPELINES = CiProvider(
             r"(?:dev\.azure\.com|\w+\.visualstudio\.com)/\S+/_apis/build/status|img\.shields\.io/azure-devops/build/",
         ),
     ),
+    configured_elsewhere=True,
 )
 APPVEYOR = CiProvider(
     name="AppVeyor",
     files=("appveyor.yml", ".appveyor.yml"),
     badges=(pattern("AppVeyor", r"ci\.appveyor\.com/api/projects/status|img\.shields\.io/appveyor/"),),
+    configured_elsewhere=True,
 )
 CIRCLECI = CiProvider(
     name="CircleCI",
@@ -40,11 +42,13 @@ JENKINS = CiProvider(
     name="Jenkins",
     files=("Jenkinsfile",),
     badges=(pattern("Jenkins", r"/buildStatus/icon\b|/job/\S+/badge/icon\b|img\.shields\.io/jenkins/build"),),
+    configured_elsewhere=True,
 )
 BUILDKITE = CiProvider(
     name="Buildkite",
     files=(".buildkite/pipeline.yml", "buildkite.yml"),
     badges=(pattern("Buildkite", r"badge\.buildkite\.com/"),),
+    configured_elsewhere=True,
 )
 DRONE = CiProvider(
     name="Drone",
@@ -62,4 +66,10 @@ WOODPECKER = CiProvider(
     files=(".woodpecker.yml",),
     directories=(".woodpecker",),
     badges=(pattern("Woodpecker", r"/api/badges/\d+/status\.svg"),),
+)
+# OCaml-CI builds and tests every opam package of a GitHub repository that installs its app, with no configuration.
+OCAML_CI = CiProvider(
+    name="OCaml-CI",
+    badges=(pattern("OCaml-CI", r"ocaml\.ci\.dev/badge/|ci\.ocamllabs\.io/badge/"),),
+    configured_elsewhere=True,
 )
