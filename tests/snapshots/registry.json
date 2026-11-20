@@ -6508,6 +6508,19 @@
     },
     {
       "can": {
+        "type-check": {
+          "checks": "tl check <file.tl> (Teal)"
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "tl",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "trivy config ."
         },

@@ -1,6 +1,6 @@
 # Lua
 
-Recognised by `.lua` (and Luau's `.luau`) sources and by LuaRocks' `*.rockspec` files, the one build system; a
+Recognised by `.lua` (and Luau's `.luau`, Teal's `.tl`) sources and by LuaRocks' `*.rockspec` files, the one build system; a
 project without a rockspec (a Neovim plugin, a game's scripts) is Lua all the same. The interpreter compiles without
 warnings, so the linters stand in for a compiler's warning set.
 
@@ -43,7 +43,7 @@ library (`std = "lua54"`).
 ## `type-checking`
 
 The Lua language server checking LuaCATS annotations (`lua-language-server --check .`, with `.luarc.json`), or
-luau-analyze for Luau.
+luau-analyze for Luau, or `tl check` (or `tl gen --check`) for Teal.
 
 ## `security-scanning`
 

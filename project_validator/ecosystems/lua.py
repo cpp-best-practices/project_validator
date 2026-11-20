@@ -166,6 +166,21 @@ LUAU_ANALYZE = type_checker(
     checks=when(starts(("luau-analyze",)), lambda: type_checked(strict=False)),
 )
 
+
+# Teal, Lua with types: `tl check` type-checks `.tl` sources, and fails on an error; `tl gen --check` checks them as it
+# writes the Lua beside them (luarocks/luarocks).
+def _teal_checks(command: Command) -> bool:
+    argv = resolved(command)
+    return bool(starts_with(argv, ("tl", "check"))) or (bool(starts_with(argv, ("tl", "gen"))) and "--check" in argv)
+
+
+TEAL = type_checker(
+    name="tl",
+    languages=LUA,
+    can={Strictness.CHECKS: "tl check <file.tl> (Teal)"},
+    checks=lambda command, _facts: type_checked(strict=False) if _teal_checks(command) else None,
+)
+
 # semgrep reads Lua; CodeQL and GitLab SAST do not.
 SECURITY_SCANNERS = multi_language_scanners(LUA)
 
@@ -211,7 +226,8 @@ LUA_ECOSYSTEM = Ecosystem(
     label="Lua",
     languages=LUA,
     build_systems=(LUAROCKS,),
-    source_suffixes={".lua": "Lua", ".luau": "Lua"},
+    # Teal's `.tl` sources are Lua with types.
+    source_suffixes={".lua": "Lua", ".luau": "Lua", ".tl": "Lua"},
     toolchain=toolchain_patterns(
         "Lua",
         version=_LUA_VERSION,
@@ -222,7 +238,7 @@ LUA_ECOSYSTEM = Ecosystem(
         actions=("gh-actions-lua",),
         steps=(("rhysd/action-setup-vim", _setup_neovim),),
     ),
-    ci_programs=(("stylua",), ("selene",), ("lua-language-server",), ("luau-analyze",)),
+    ci_programs=(("stylua",), ("selene",), ("lua-language-server",), ("luau-analyze",), ("tl", "check")),
 )
 
 LUA_VERSIONS = versions_axis("Lua version", "Lua", LUA)

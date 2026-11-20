@@ -128,15 +128,16 @@ class LuaAndLatexTests(unittest.TestCase):
                 [latex] = (place.result for place in unrun.places if place.ecosystem == "LaTeX")
                 self.assertNotEqual(latex.status, Status.PASS, unrun)
 
-    @unittest.expectedFailure  # upstream #268: Teal (.tl sources, `tl check`) is unknown to the Lua profile
     def test_teal_sources_are_recognised_and_tl_check_type_checks_them(self) -> None:
         """`.tl` files beside `tlconfig.lua` are the project's (Teal) sources, not an unrecognised suffix, and
         `tl check` is their type checker (luarocks/luarocks)."""
         languages, unrecognised = _recognised({**TEAL_SOURCES, "src/shop.lua": "return {}\n"})
         self.assertTrue(languages, "no language recognised")
         self.assertNotIn(".tl", unrecognised)
-        result = _run(type_checking, "Lua sources", {**TEAL_SOURCES, **github_job(CI, "tl check src/shop.tl")})
-        self.assertEqual(result.status, Status.PASS, result)
+        for line in ("tl check src/shop.tl", "tl gen --check -I types src/shop.tl -o src/shop.lua"):
+            with self.subTest(line=line):
+                result = _run(type_checking, "Lua sources", {**TEAL_SOURCES, **github_job(CI, line)})
+                self.assertEqual(result.status, Status.PASS, result)
 
 
 PERL_TEST = {"t/basic.t": "use Test::More;\nok(1);\ndone_testing;\n"}
