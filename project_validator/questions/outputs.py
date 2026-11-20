@@ -15,7 +15,7 @@ from project_validator.facts import ConfigurationFile, Facts
 from project_validator.facts.outputs import BuildOutput, CommittedOutput, IgnoreEntry, known_build_outputs, outputs_of
 from project_validator.facts.structure import BuildFile, SourceFile, Unit
 from project_validator.facts.testing import TestFile
-from project_validator.facts.tools import within
+from project_validator.facts.tools import owner, within
 from project_validator.questions import EVERY_KIND, Answer, LanguageAnswers, Question, answer_dict
 from project_validator.tools.version_control import IGNORE_FILES
 
@@ -153,15 +153,30 @@ def committed_outputs(language: str, facts: Facts) -> LanguageAnswers[CommittedA
         answer = CommittedAnswer(language=language, answer=Answer.IMPOSSIBLE)
     else:
         names = {output.name for output in outputs}
+        units = _formats_by_unit(facts)
         committed = tuple(
             dict.fromkeys(
                 fact.origin.path
                 for fact in facts.of(CommittedOutput)
-                if fact.output in names and language in fact.languages
+                if fact.output in names and language in fact.languages and _held(fact.origin.path, language, units)
             )
         )
         answer = CommittedAnswer(language=language, answer=Answer.NO if committed else Answer.YES, committed=committed)
     return LanguageAnswers(language=language, units=(answer,))
+
+
+def _formats_by_unit(facts: Facts) -> dict[str, frozenset[str]]:
+    return {unit.directory: unit.formats for unit in facts.of(Unit)}
+
+
+def _held(path: str, language: str, units: dict[str, frozenset[str]]) -> bool:
+    """Whether a committed directory output is one of `language`'s. A format's output (a documentation site's, where
+    its configuration is) is one only in a unit that has the format: a .NET project's build/ of MSBuild targets is
+    no Docusaurus site's build/ when the site is in website/. A language's output counts wherever it is (a committed
+    node_modules/ beside no JavaScript of the unit's own), as does a file output."""
+    if not path.endswith("/") or not any(language in formats for formats in units.values()):
+        return True
+    return language in units.get(owner(path.rstrip("/"), list(units)), frozenset())
 
 
 VCS_IGNORE_QUESTION = Question(
