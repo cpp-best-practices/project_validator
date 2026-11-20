@@ -206,6 +206,7 @@ def _setup_neovim(inputs: Mapping[str, str]) -> str | None:
     version = inputs.get("version", "")
     return f"Neovim {version if version and '${{' not in version else 'stable'}"
 
+
 LUA_ECOSYSTEM = Ecosystem(
     label="Lua",
     languages=LUA,

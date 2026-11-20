@@ -554,6 +554,13 @@
               ]
             },
             "known": {
+              "l3build": {
+                "can": {
+                  "runs": "l3build check"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "latexmk": {
                 "can": {
                   "runs": "latexmk -pdf main.tex (or pdflatex, xelatex, lualatex, tectonic; xu-cheng/latex-action)"

@@ -112,15 +112,21 @@ class LuaAndLatexTests(unittest.TestCase):
             with self.subTest(version=version):
                 self.assertIn(version, result.message)
 
-    @unittest.expectedFailure  # upstream #268: l3build (`l3build check`, .lvt/.tlg) is not LaTeX's test runner
     def test_l3build_check_runs_a_latex_packages_regression_tests(self) -> None:
         """`l3build check` (or `texlua l3build.lua check`) after `zauguin/install-texlive` runs the `.lvt` tests
-        against their `.tlg` expectations (latex3/l3build)."""
+        against their `.tlg` expectations (latex3/l3build). (`build.lua` also makes a Lua unit of the package, which
+        l3build itself is: whether a tool's configuration adds its language is #182.)"""
         for line in ("run: l3build check", "run: texlua l3build.lua check -q -H --show-log-on-error"):
             with self.subTest(line=line):
                 files = {**L3BUILD_TESTS, **github_steps("uses: zauguin/install-texlive@v4", line)}
                 result = _run(tests_run, "LaTeX document", files)
-                self.assertEqual(result.status, Status.PASS, result)
+                [latex] = (place.result for place in result.places if place.ecosystem == "LaTeX")
+                self.assertEqual(latex.status, Status.PASS, result)
+        for line in ("run: l3build doc", "run: make check"):
+            with self.subTest(line=line):
+                unrun = _run(tests_run, "LaTeX document", {**L3BUILD_TESTS, **github_steps(line)})
+                [latex] = (place.result for place in unrun.places if place.ecosystem == "LaTeX")
+                self.assertNotEqual(latex.status, Status.PASS, unrun)
 
     @unittest.expectedFailure  # upstream #268: Teal (.tl sources, `tl check`) is unknown to the Lua profile
     def test_teal_sources_are_recognised_and_tl_check_type_checks_them(self) -> None:

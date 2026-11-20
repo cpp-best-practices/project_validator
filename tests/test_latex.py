@@ -32,8 +32,21 @@ class RecognitionTests(unittest.TestCase):
         with temp_project({"fragment.tex": "\\section{Alone}\n", "src/main.py": ""}) as root:
             self.assertEqual(make_context(root).structure.languages, frozenset({"Python"}))
 
+    def test_an_l3build_package_is_a_latex_project(self) -> None:
+        """A `build.lua` naming its `module` is l3build's configuration: the `.dtx` sources beside it are a LaTeX
+        package, and its `.lvt` tests and `.tlg` logs are files of it (latex3/l3build); a `build.lua` that names no
+        module is only Lua."""
+        package = {"build.lua": 'module = "shop"\n', "shop.dtx": "", "testfiles/a.lvt": "", "testfiles/a.tlg": ""}
+        with temp_project(package) as root:
+            structure = make_context(root).structure
+        self.assertIn("LaTeX", structure.languages)
+        self.assertEqual(structure.unrecognised_suffixes, ())
+        with temp_project({"build.lua": "print(1)\n", "shop.dtx": ""}) as root:
+            self.assertNotIn("LaTeX", make_context(root).structure.languages)
+
     def test_ci_usage(self) -> None:
         for text in (
+            "l3build check",
             "latexmk -pdf main.tex",
             "chktex -q main.tex",
             "uses: xu-cheng/latex-action@v4",

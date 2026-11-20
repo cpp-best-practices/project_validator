@@ -1,14 +1,17 @@
 # LaTeX
 
-Recognised by a document: a `.tex` that declares its class (`\documentclass`), or a `.latexmkrc`. The sources
-(`.tex`, `.sty`, `.cls`, `.dtx`, `.ltx`; `.bib` beside them) count once a document is found, so a stray `.tex`
-fragment makes no LaTeX project. A CI job uses LaTeX when it runs latexmk, a TeX engine, chktex, latexindent, bibtex
-or biber, or installs TeX Live with `xu-cheng/latex-action` or `TeX-Live/setup-texlive-action`.
+Recognised by a document: a `.tex` that declares its class (`\documentclass`), a `.latexmkrc`, or l3build's
+`build.lua` naming its `module` (a LaTeX package). The sources (`.tex`, `.sty`, `.cls`, `.dtx`, `.ltx`; `.bib` beside
+them; l3build's `.lvt` and `.pvt` tests and their `.tlg` logs) count once one is found, so a stray `.tex` fragment makes
+no LaTeX project. A CI job uses LaTeX when it runs latexmk, a TeX engine, chktex, latexindent, bibtex, biber or
+l3build, or installs TeX Live with `xu-cheng/latex-action` or `TeX-Live/setup-texlive-action`.
 
 ## `tests-run`
 
 CI compiles the documents: `latexmk`, `pdflatex`, `xelatex`, `lualatex` or `tectonic`, or `xu-cheng/latex-action`
-(its `root_file`). The documents themselves are what defines the tests.
+(its `root_file`). The documents themselves are what defines the tests. A package's regression tests are l3build's
+`.lvt` and `.pvt` files, which `l3build check` (or `texlua l3build.lua check`) runs, failing when a log differs from
+its `.tlg`.
 
 ## `compiler-warnings`
 

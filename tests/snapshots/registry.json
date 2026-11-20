@@ -3915,6 +3915,19 @@
     },
     {
       "can": {
+        "test": {
+          "runs": "l3build check"
+        }
+      },
+      "languages": [
+        "LaTeX"
+      ],
+      "name": "l3build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "lacheck main.tex"
         }
