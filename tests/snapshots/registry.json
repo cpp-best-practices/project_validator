@@ -60,7 +60,7 @@
     },
     "dependency-updates": {
       "aliases": [],
-      "description": "Automated dependency updates are configured (Dependabot or Renovate)"
+      "description": "Automated dependency updates are configured (Dependabot, Renovate or Scala Steward)"
     },
     "function-limits": {
       "aliases": [],

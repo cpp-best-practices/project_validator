@@ -4,7 +4,14 @@ import unittest
 
 from project_validator.checks.dependency_updates import dependency_updates
 from project_validator.core import Result, Status
-from tests.support import BARE_PROJECT, PROJECT_LAYOUTS, WELL_CONFIGURED, run_in_every_layout
+from tests.support import (
+    BARE_PROJECT,
+    GITHUB_WORKFLOW,
+    PROJECT_LAYOUTS,
+    WELL_CONFIGURED,
+    github_action,
+    run_in_every_layout,
+)
 
 
 class DependencyUpdatesTests(unittest.TestCase):
@@ -41,6 +48,20 @@ class DependencyUpdatesTests(unittest.TestCase):
                 self.assertEqual(result.status, Status.PASS)
                 self.assertEqual(result.message, f"automated dependency updates are configured with {tool}")
                 self.assertEqual(result.details, (path,))
+
+    def test_passes_with_a_scala_steward_configuration(self) -> None:
+        """Scala Steward is the Scala ecosystem's update bot; cats and http4s configure it (upstream #245)."""
+        for path in (".scala-steward.conf", ".github/.scala-steward.conf", ".config/.scala-steward.conf"):
+            with self.subTest(path=path):
+                result = self._run({path: 'updates.pin = [{ groupId = "org.scala-lang" }]\n'})
+                self.assertEqual(result.status, Status.PASS)
+                self.assertEqual(result.message, "automated dependency updates are configured with Scala Steward")
+
+    def test_passes_when_ci_runs_the_scala_steward_action(self) -> None:
+        result = self._run(github_action("scala-steward-org/scala-steward-action@v2"))
+        self.assertEqual(result.status, Status.PASS)
+        self.assertEqual(result.message, "automated dependency updates are configured with Scala Steward")
+        self.assertEqual(result.details, (GITHUB_WORKFLOW,))
 
     def test_configuration_in_the_wrong_directory_does_not_count(self) -> None:
         result = self._run({"dependabot.yml": "version: 2\n", "docs/renovate.json": "{}\n"})
