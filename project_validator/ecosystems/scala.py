@@ -10,12 +10,12 @@ from __future__ import annotations
 
 import re
 import shlex
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from pathlib import Path, PurePosixPath
 
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
-from project_validator.facts import Command, Facts, Origin, Setting, resolved
+from project_validator.facts import CiConfiguration, Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
 from project_validator.facts.audit import audited, auditor
@@ -25,7 +25,16 @@ from project_validator.facts.expansion import CommandExpander, Expansion, Script
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directory_output
-from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
+from project_validator.facts.practices import (
+    Evidence,
+    Practice,
+    PracticeName,
+    Requirement,
+    Wording,
+    always,
+    required,
+    requirement_reader,
+)
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Condition, Run, any_of, defined_by, either, when
@@ -351,6 +360,37 @@ SCALA_COMPILER_OPTIONS = requirement_reader(
     code=_options_code,
 )
 
+# sbt-typelevel (or sbt-http4s-org, which bundles it) makes warnings fatal in a GitHub Actions build (its
+# `tlFatalWarnings` defaults to `githubIsWorkflowBuild`), unless the whole build turns that off (typelevel/cats:
+# `ThisBuild / tlFatalWarnings := false`); a project that turns it off for itself (http4s's docs) leaves the rest.
+_TYPELEVEL = re.compile(r"\bsbt-typelevel(?:-settings)?\b|\bsbt-http4s-org\b")
+_TYPELEVEL_LENIENT = re.compile(
+    r"\b(?:ThisBuild|Global)\s*/\s*tlFatalWarnings\s*:=\s*false\b"
+    r"|\btlFatalWarnings\s+in\s+(?:ThisBuild|Global)\s*:=\s*false\b"
+)
+TYPELEVEL = "sbt-typelevel"
+
+
+def _read_typelevel(path: str, text: str) -> Iterator[Fact]:
+    code = _options_code(path, text)
+    if _TYPELEVEL.search(code):
+        yield Setting(origin=Origin(path=path), tool=TYPELEVEL, key="plugin", value=True, heuristic=True)
+    if _TYPELEVEL_LENIENT.search(code):
+        yield Setting(origin=Origin(path=path), tool=TYPELEVEL, key="tlFatalWarnings", value=False, heuristic=True)
+
+
+SBT_TYPELEVEL = SettingsReader(name=TYPELEVEL, files=(*SBT_FILES, "project/*.sbt"), read=_read_typelevel)
+
+
+def _typelevel_fatal(facts: Facts, _compiler: str | None) -> Iterator[Evidence]:
+    if facts.where(Setting, tool=TYPELEVEL, key="tlFatalWarnings"):
+        return
+    if any(configuration.provider == "GitHub Actions" for configuration in facts.of(CiConfiguration)):
+        yield from (Evidence(setting.origin.path) for setting in facts.where(Setting, tool=TYPELEVEL, key="plugin"))
+
+
+TYPELEVEL_FATAL_WARNINGS = Requirement(name="sbt-typelevel's fatal warnings", found=_typelevel_fatal)
+
 WARNINGS = Practice(
     name=PracticeName.WARNINGS,
     languages=SCALA,
@@ -366,9 +406,9 @@ WARNINGS = Practice(
 WARNINGS_AS_ERRORS = Practice(
     name=PracticeName.WARNINGS_AS_ERRORS,
     languages=SCALA,
-    requirements=always(*_SCALA_WARNINGS_AS_ERRORS),
+    requirements=always(*_SCALA_WARNINGS_AS_ERRORS, TYPELEVEL_FATAL_WARNINGS),
     any_one=True,
-    reads=(SCALA_COMPILER_OPTIONS.name,),
+    reads=(SCALA_COMPILER_OPTIONS.name, SBT_TYPELEVEL.name),
     words=Wording(
         kind="warnings as errors",
         searched="the build or CI configuration",

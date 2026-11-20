@@ -795,7 +795,8 @@
                   ]
                 },
                 "missing": [
-                  "sbt-tpolecat's CI mode"
+                  "sbt-tpolecat's CI mode",
+                  "sbt-typelevel's fatal warnings"
                 ]
               }
             ],

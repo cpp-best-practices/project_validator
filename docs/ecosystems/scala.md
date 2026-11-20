@@ -42,7 +42,9 @@ Mill build, or scala-cli's `//> using options`), or sbt-tpolecat, which sets the
 ## `warnings-as-errors`
 
 `-Werror` (or `-Xfatal-warnings`) in `scalacOptions`, or sbt-tpolecat's CI mode (`SBT_TPOLECAT_CI=true` in CI, or
-`tpolecatDefaultOptionsMode := CiMode`).
+`tpolecatDefaultOptionsMode := CiMode`), or sbt-typelevel (or sbt-http4s-org, which bundles it) in a project built on
+GitHub Actions, where its `tlFatalWarnings` is on unless the whole build turns it off (`ThisBuild / tlFatalWarnings :=
+false`); a project that turns it off for itself leaves the rest.
 
 ## `code-formatting`
 

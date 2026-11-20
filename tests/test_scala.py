@@ -233,6 +233,30 @@ class ScalaTests(unittest.TestCase):
         self.assertEqual(self._run(warnings_as_errors, mode).status, Status.PASS)
         self.assertEqual(self._run(warnings_as_errors, _ci("sbt test")).status, Status.FAIL)
 
+    def test_sbt_typelevel_makes_warnings_fatal_on_github_actions(self) -> None:
+        """sbt-typelevel's tlFatalWarnings is on in a GitHub Actions build unless the build turns it off: http4s keeps
+        it, cats sets `tlFatalWarnings := false` (upstream #274)."""
+        typelevel = {"project/plugins.sbt": 'addSbtPlugin("org.typelevel" % "sbt-typelevel" % "0.7.4")\n'}
+        result = self._run(warnings_as_errors, {**typelevel, **_ci("sbt test")})
+        self.assertEqual(result.status, Status.PASS, result)
+        for off in (
+            "ThisBuild / tlFatalWarnings := false\n",
+            "tlFatalWarnings in ThisBuild := false\n",
+            "Global / tlFatalWarnings := false\n",
+        ):
+            with self.subTest(off=off):
+                disabled = {**typelevel, "build.sbt": off, **_ci("sbt test")}
+                self.assertEqual(self._run(warnings_as_errors, disabled).status, Status.FAIL)
+        # http4s turns it off for its docs project only, and has sbt-typelevel through sbt-http4s-org.
+        docs_only = "lazy val docs = project.settings(\n  tlFatalWarnings := false,\n)\n"
+        http4s = {"project/plugins.sbt": 'addSbtPlugin("org.http4s" % "sbt-http4s-org" % "2.0.7")\n'}
+        for plugin in (typelevel, http4s):
+            with self.subTest(plugin=plugin):
+                kept = {**plugin, "build.sbt": docs_only, **_ci("sbt test")}
+                self.assertEqual(self._run(warnings_as_errors, kept).status, Status.PASS)
+        gitlab = {**typelevel, ".gitlab-ci.yml": "test:\n  script: [sbt test]\n"}
+        self.assertEqual(self._run(warnings_as_errors, gitlab).status, Status.FAIL)
+
     def test_scalafix_runs_the_rules_its_configuration_names(self) -> None:
         for command in ('sbt "scalafixAll --check"', "sbt scalafix", "mill __.fix --check"):
             with self.subTest(command=command):

@@ -55,6 +55,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "build.sbt",
+      "reader": "sbt-typelevel"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "build.sbt",
       "reader": "Scala build"
     }
   ],
