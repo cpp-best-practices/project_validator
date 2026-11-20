@@ -44,8 +44,9 @@ class ManifestTests(unittest.TestCase):
         self.entries = entries()
 
     def test_the_seed_list_has_one_project_per_language(self) -> None:
-        self.assertEqual(len(self.entries), 28)
-        languages = [entry.language for entry in self.entries]
+        seeds = [entry for entry in self.entries if entry.seed]
+        self.assertEqual(len(seeds), 28)
+        languages = [entry.language for entry in seeds]
         self.assertEqual(sorted(set(languages)), sorted(languages))
         self.assertLessEqual(set(languages), BOARDS)
 
@@ -58,7 +59,11 @@ class ManifestTests(unittest.TestCase):
         for entry in self.entries:
             with self.subTest(entry=entry.name):
                 self.assertEqual(problems(entry, PUBLIC), [])
-                self.assertTrue(entry.seed)
+
+    def test_every_entry_beyond_the_seeds_links_to_its_consent(self) -> None:
+        for entry in self.entries:
+            with self.subTest(entry=entry.name):
+                self.assertTrue(entry.seed or entry.consent.startswith("https://github.com/"), entry.consent)
 
     def test_entries_are_sorted_by_language(self) -> None:
         languages = [entry.language.lower() for entry in self.entries]

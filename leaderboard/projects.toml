@@ -6,6 +6,11 @@
 #
 # The seeds are one project per language, taken from the corpus (Compiler Explorer excepted): each stands for its
 # ecosystem alone and has the fewest open validator issues against it. Sorted by language.
+#
+# Beside the seeds, at their maintainer's request: this project and the most-starred repositories of Jason Turner
+# (lefticus) and of cpp-best-practices with code, an OSI-approved licence and a board (30 stars or more;
+# cppbestpractices, presentations and travels have no such licence, game_jam no code), each after its language's
+# seed, by stars.
 
 [[project]]
 name = "serilog/serilog"
@@ -26,6 +31,56 @@ consent = "seed"
 name = "catchorg/Catch2"
 language = "C++"
 consent = "seed"
+
+[[project]]
+name = "cpp-best-practices/cmake_template"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
+name = "lefticus/cpp_weekly"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
+name = "lefticus/cpp_box"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
+name = "lefticus/json2cpp"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
+name = "lefticus/6502-cpp"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
+name = "lefticus/constexpr_all_the_things"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
+name = "lefticus/tools"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
+name = "lefticus/cpp_weekly_game_project"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
+name = "lefticus/cons_expr"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
+name = "lefticus/lambda_coroutines"
+language = "C++"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "metosin/malli"
@@ -85,6 +140,11 @@ language = "Lua"
 consent = "seed"
 
 [[project]]
+name = "lefticus/cppstdmd"
+language = "Lua"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+
+[[project]]
 name = "ocaml-community/yojson"
 language = "OCaml"
 consent = "seed"
@@ -103,6 +163,13 @@ consent = "seed"
 name = "psf/requests"
 language = "Python"
 consent = "seed"
+
+[[project]]
+name = "cpp-best-practices/project_validator"
+language = "Python"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
+# Its own test fixtures (deliberately bare projects) and vendored assets, as its self-validation excludes them.
+exclude = ["tests/fixtures", "project_validator/views/assets"]
 
 [[project]]
 name = "tidyverse/ggplot2"
@@ -135,6 +202,11 @@ license = "MIT"
 name = "acmesh-official/acme.sh"
 language = "Shell"
 consent = "seed"
+
+[[project]]
+name = "cpp-best-practices/setup-cpp"
+language = "Shell"
+consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "Alamofire/Alamofire"
