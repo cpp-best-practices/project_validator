@@ -147,6 +147,18 @@ class UnrecognisedSuffixTests(unittest.TestCase):
         with _structure(files) as structure:
             self.assertEqual(structure.unrecognised_suffixes, ((".nim", 1),))
 
+    def test_a_suffix_an_ecosystem_reads_in_any_case_is_recognised(self) -> None:
+        """ISO-TC211's schemas are `.XSD`, which the XML schemas profile reads as it reads `.xsd` (#241)."""
+        with _structure({"schemas/a.XSD": "<xs:schema/>\n", "schemas/b.xsd": "<xs:schema/>\n"}) as structure:
+            self.assertEqual(structure.unrecognised_suffixes, ())
+
+    def test_erlang_term_files_are_the_beam_ecosystems(self) -> None:
+        """An Erlang project's application resource file (`ebin/cowboy.app`) and relx's `relx.config` are Erlang
+        terms, files of the ecosystem that add no language (#241)."""
+        files = {"rebar.config": "{deps, []}.\n", "src/a.erl": "-module(a).\n", "ebin/a.app": "", "relx.config": ""}
+        with _structure(files) as structure:
+            self.assertEqual(structure.unrecognised_suffixes, ())
+
 
 class ClaimConflictTests(unittest.TestCase):
     def test_built_in_ecosystems_claim_no_file_twice(self) -> None:

@@ -365,25 +365,28 @@ def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile
             yield SourceFile(origin=Origin(path=path), language=found[0], role=role(path))
 
 
-def _located(
-    project: Project, ecosystem: Ecosystem, locate: Callable[[Project], Iterable[tuple[str, str]]]
-) -> Iterator[ContentLanguages]:
-    """What the probe finds, by the directory that holds it."""
-    found: dict[str, set[str]] = {}
-    for path, language in locate(project):
-        if language in ecosystem.languages:
-            found.setdefault(str(PurePosixPath(path).parent), set()).add(language)
-    for directory, names in sorted(found.items()):
+def _located(ecosystem: Ecosystem, found: Iterable[tuple[str, str]]) -> Iterator[ContentLanguages]:
+    """What a probe found, by the directory that holds it."""
+    directories: dict[str, set[str]] = {}
+    for path, language in found:
+        directories.setdefault(str(PurePosixPath(path).parent), set()).add(language)
+    for directory, names in sorted(directories.items()):
         yield ContentLanguages(origin=Origin(path=directory), ecosystem=ecosystem.label, languages=frozenset(names))
 
 
-def _content(project: Project) -> Iterator[ContentLanguages]:
-    """What each ecosystem's probe finds, where it says (each directory holding what it found), or for the project."""
+def _content(project: Project) -> tuple[list[ContentLanguages], set[str]]:
+    """What each ecosystem's probe finds, where it says (each directory holding what it found) or for the project,
+    and the files it says it found (which no suffix needs to account for)."""
+    content: list[ContentLanguages] = []
+    paths: set[str] = set()
     for ecosystem in registered():
         if ecosystem.locate is not None:
-            yield from _located(project, ecosystem, ecosystem.locate)
+            found = [(path, name) for path, name in ecosystem.locate(project) if name in ecosystem.languages]
+            paths.update(path for path, _ in found)
+            content.extend(_located(ecosystem, found))
         elif ecosystem.detect is not None and (languages := ecosystem.detect(project) & ecosystem.languages):
-            yield ContentLanguages(origin=Origin(path="."), ecosystem=ecosystem.label, languages=languages)
+            content.append(ContentLanguages(origin=Origin(path="."), ecosystem=ecosystem.label, languages=languages))
+    return content, paths
 
 
 def _unrecognised(files: list[str], accounted: set[str], recognised: set[str]) -> Iterator[UnrecognisedSuffix]:
@@ -514,7 +517,8 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     named = Selectors.parse(project.auxiliary)
     yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary))
     found, found_sources = _builds_and_sources(project, files, generated)
-    plain = Facts((*(fact for fact, _ in found if fact is not None), *found_sources, *_content(project)))
+    content, located = _content(project)
+    plain = Facts((*(fact for fact, _ in found if fact is not None), *found_sources, *content))
     yield from plain
     names = project_languages(plain) | project_formats(plain)
     confirmed = [ecosystem for ecosystem in registered() if ecosystem.languages & names]
@@ -524,7 +528,8 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     sources = (*plain.of(SourceFile), *ambiguous)
     recognised = {signal for source in sources if (signal := source_signal(source.path)).startswith(".")}
     recognised |= {suffix for name in names for suffix in BUILT_LANGUAGE_SUFFIXES.get(name, ())}
-    yield from _unrecognised(files, {*(path for _, path in found), *(source.path for source in sources)}, recognised)
+    accounted = {*(path for _, path in found), *(source.path for source in sources), *located}
+    yield from _unrecognised(files, accounted, recognised)
     yield from _units(project, Facts((*plain, *ambiguous)), named)
 
 
