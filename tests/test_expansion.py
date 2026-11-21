@@ -231,6 +231,17 @@ class PreCommitTests(unittest.TestCase):
                 stages: [manual]
         """
 
+    def test_a_configuration_named_by_either_option_is_read(self) -> None:
+        for line in ("pre-commit run --config ci/hooks.yaml", "pre-commit run -c ci/hooks.yaml", "pre-commit run"):
+            with self.subTest(line=line):
+                facts = _facts({"ci/hooks.yaml": self.CONFIG, **github_job("ubuntu-latest", line)})
+                expected = (
+                    []
+                    if line == "pre-commit run"
+                    else [("ruff", "--fix"), ("ruff-format",), ("mypy", "--strict", "src")]
+                )
+                self.assertEqual(_expanded(facts), expected)
+
     def test_pre_commit_run_runs_each_hook(self) -> None:
         files = {".pre-commit-config.yaml": self.CONFIG, **github_job("ubuntu-latest", "pre-commit run --all-files")}
         facts = _facts(files)

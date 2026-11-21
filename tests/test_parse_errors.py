@@ -35,7 +35,8 @@ def _dockerfile_error(text: str) -> tuple[str, int | None, int | None]:
 
 class JsonPositionTests(unittest.TestCase):
     def test_the_line_and_column_of_the_token_that_breaks_it(self) -> None:
-        for text, line, column in (("[1,\n  ]", 2, 3), ('{\n  "a" 1\n}', 2, 7), ("[1,\n2,\n\n   ,3]", 4, 4)):
+        cases = (("[1,\n  ]", 2, 3), ('{\n  "a" 1\n}', 2, 7), ("[1,\n2,\n\n   ,3]", 4, 4), ("\n}", 2, 1))
+        for text, line, column in cases:
             with self.subTest(text=text):
                 self.assertEqual(_json_error(text), ("malformed JSON", line, column))
 
@@ -45,6 +46,12 @@ class JsonPositionTests(unittest.TestCase):
     def test_content_after_the_value_breaks_where_it_starts(self) -> None:
         self.assertEqual(_json_error("[1]\n x"), ("malformed JSON", 2, 2))
         self.assertEqual(_json_error('{"a": 1}  ,'), ("malformed JSON", 1, 11))
+
+    def test_a_value_left_open_at_the_top_level_is_malformed(self) -> None:
+        # A comma or colon after a complete value continues it: the text is not one value.
+        for text, column in ((",", 1), ('"a":', 4), ("1,", 2), ('"a" :', 5)):
+            with self.subTest(text=text):
+                self.assertEqual(_json_error(text), ("malformed JSON", 1, column))
 
     def test_deep_json_keeps_the_position(self) -> None:
         with self.assertRaises(ParseError) as raised:

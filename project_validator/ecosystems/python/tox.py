@@ -147,7 +147,8 @@ def _toml_tables(path: str, text: str) -> Mapping[str, object] | None:
     except tomllib.TOMLDecodeError:
         return None
     if PurePosixPath(path).name == "pyproject.toml":
-        document = document.get("tool", {}).get("tox") if isinstance(document, Mapping) else None
+        tool = document.get("tool") if isinstance(document, Mapping) else None
+        document = tool.get("tox") if isinstance(tool, Mapping) else None
     return document if isinstance(document, Mapping) and document else None
 
 

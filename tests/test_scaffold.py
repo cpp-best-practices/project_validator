@@ -117,3 +117,5 @@ class ScaffoldTests(unittest.TestCase):
             self.assertEqual(main(["nim", "Nim", ".nim", "--root", str(self.root)]), 2)
         self.assertIn("tests/layouts/nim.py", out.getvalue())
         self.assertIn("already there", err.getvalue())
+        profile = (self.root / "project_validator/ecosystems/nim/__init__.py").read_text(encoding="utf-8")
+        self.assertIn('"Nim"', profile)
