@@ -14,6 +14,7 @@ from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.shell import SHELL_ECOSYSTEM
 from project_validator.ecosystems.shell.tools import PESTER_SETTINGS
 from project_validator.facts import Setting
+from project_validator.facts.structure import Unit
 from tests.support import github_job, github_steps, make_context, run_in_layout, temp_project, uses
 
 SCRIPTS, MODULE = "Shell scripts", "PowerShell module"
@@ -55,6 +56,20 @@ class RecognitionTests(unittest.TestCase):
                 structure = make_context(root).structure
                 self.assertEqual(structure.languages, frozenset(languages))
                 self.assertEqual(structure.unrecognised_suffixes, ())
+
+    def test_a_script_without_a_suffix_is_its_directorys_unit(self) -> None:
+        """docbook moved its Gradle build under `MovedToCodeberg/`; its `gradlew` is that unit's Shell, and the root
+        (only README.md) has no language (#283)."""
+        files = {
+            "README.md": "# Moved\n",
+            "MovedToCodeberg/build.gradle": "plugins { id 'java' }\n",
+            "MovedToCodeberg/gradlew": "#!/bin/sh\nexec java -jar gradle/wrapper/gradle-wrapper.jar\n",
+            "MovedToCodeberg/src/main/java/A.java": "class A {}\n",
+        }
+        with temp_project(files) as root:
+            units = {unit.directory: unit.languages for unit in make_context(root).facts.of(Unit)}
+        self.assertEqual(units.get("."), frozenset(), units)
+        self.assertIn("Shell", units["MovedToCodeberg"])
 
     def test_ci_usage(self) -> None:
         used = (

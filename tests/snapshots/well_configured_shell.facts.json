@@ -67,7 +67,7 @@
       "languages": [
         "Shell"
       ],
-      "origin": "."
+      "origin": "bin"
     },
     {
       "ambiguous": true,

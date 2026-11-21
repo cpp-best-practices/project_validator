@@ -9,6 +9,7 @@ in; `--auxiliary` (by language, `shell`, or by directory, `scripts/`) dials that
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.core import Project
@@ -22,19 +23,17 @@ POWERSHELL_ONLY = frozenset({POWERSHELL})
 SHELL_LANGUAGES = SHELL_ONLY | POWERSHELL_ONLY
 
 
-def shebang_scripts(project: Project) -> frozenset[str]:
-    """The languages of the project's scripts without a suffix (`bin/shop`), told by their shebang: a shell's
+def shebang_scripts(project: Project) -> Iterator[tuple[str, str]]:
+    """Each of the project's scripts without a suffix (`bin/shop`) with its language, told by its shebang: a shell's
     (`#!/usr/bin/env bash`) or `pwsh`."""
-    found: set[str] = set()
     for path in project.files():
         if PurePosixPath(path).suffix:
             continue
         named = interpreter(project.read_head(path, 160))
         if named in SHELLS:
-            found.add(SHELL)
+            yield path, SHELL
         elif named == "pwsh":
-            found.add(POWERSHELL)
-    return frozenset(found)
+            yield path, POWERSHELL
 
 
 SHELL_ECOSYSTEM = Ecosystem(
@@ -52,7 +51,7 @@ SHELL_ECOSYSTEM = Ecosystem(
     },
     # A module manifest describes a module in data, so it is not a program.
     ambiguous_suffixes={".psd1": None},
-    detect=shebang_scripts,
+    locate=shebang_scripts,
     # Shells have no version CI names; a job uses the shell toolchain when it runs a shell or one of its tools.
     toolchain=toolchain_patterns(
         SHELL,
