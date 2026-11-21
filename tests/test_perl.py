@@ -8,6 +8,7 @@ from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.compiler_warnings import compiler_warnings
 from project_validator.checks.coverage import coverage
 from project_validator.checks.dependency_audit import dependency_audit
+from project_validator.checks.license import license_
 from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
@@ -16,10 +17,11 @@ from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.perl import ACTIONS, PERL_ECOSYSTEM, PERL_MODULES, PROVE
 from project_validator.facts import Facts, Origin, Setting
-from tests.support import GITHUB_WORKFLOW, github_job, make_context, run_as, run_in_layout, temp_project, uses
+from tests.support import FIXTURES, GITHUB_WORKFLOW, github_job, make_context, run_as, run_in_layout, temp_project, uses
 from tests.support import command as shell_command
 
 PERL = frozenset({"Perl"})
+MIT_TEXT = (FIXTURES / "well_configured_cpp" / "LICENSE").read_text(encoding="utf-8")
 TEST = {"t/shop.t": "use Test::More;\nok(1, 'works');\ndone_testing;\n"}
 STRICT = "package Shop;\nuse strict;\nuse warnings;\n1;\n"
 PERL_MATRIX = """\
@@ -80,6 +82,11 @@ class RecognitionTests(unittest.TestCase):
                 self.assertFalse(uses(PERL_ECOSYSTEM, text))
 
 
+def _license(files: dict[str, str]) -> Result:
+    with temp_project(files) as root:
+        return license_.run(make_context(root))
+
+
 class PerlTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
         return run_as(self, selected, files, PERL_ECOSYSTEM)
@@ -92,6 +99,18 @@ class PerlTests(unittest.TestCase):
         self.assertEqual(self._run(tests_run, test2).status, Status.PASS)
         self.assertEqual(self._run(tests_run, {**TEST, **_ci("perl Makefile.PL")}).status, Status.WARN)
         self.assertEqual(self._run(tests_run, _ci("prove -l t")).status, Status.FAIL)
+
+    def test_dist_ini_declares_the_license_dzil_writes(self) -> None:
+        """Dist::Zilla writes LICENSE at build time from dist.ini's `license = Perl_5` (rjbs/Dist-Zilla, #238): the
+        declaration stands in for the file, as a Data Package descriptor's does; beside a license file, it is compared
+        with the file."""
+        dist = {"dist.ini": "name = Shop\nlicense = Perl_5\ncopyright_holder = A\n", "lib/Shop.pm": STRICT}
+        result = _license(dist)
+        self.assertEqual(result.message, "no license file; the manifest declares Artistic-1.0-Perl, GPL-1.0-or-later")
+        mit = {**dist, "dist.ini": "name = Shop\nlicense = MIT\n", "LICENSE": MIT_TEXT}
+        self.assertEqual(_license(mit).status, Status.PASS)
+        apache = {**mit, "dist.ini": "name = Shop\nlicense = Apache_2_0\n"}
+        self.assertIn("dist.ini declares Apache-2.0", _license(apache).details[0])
 
     def test_devel_cover_counts_branches_and_conditions(self) -> None:
         for files in (

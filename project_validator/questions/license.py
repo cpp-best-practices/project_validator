@@ -46,7 +46,8 @@ class LicenseAnswer:
     packages: tuple[tuple[str, frozenset[str]], ...] = ()
     # The licenses the project's manifests declare (`GPL-2.0-or-later`, a text only saying GPL-2.0).
     declared: frozenset[str] = frozenset()
-    # Those declared where the ecosystem declares a license in place of a license file (a Data Package's descriptor).
+    # Those declared where the ecosystem declares a license in place of a license file (a Data Package's descriptor,
+    # Dist::Zilla's dist.ini).
     in_place: frozenset[str] = frozenset()
 
     def licenses(self) -> frozenset[str]:

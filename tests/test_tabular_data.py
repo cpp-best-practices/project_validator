@@ -104,4 +104,4 @@ class TabularDataTests(unittest.TestCase):
         for path, text in licenses.items():
             with self.subTest(path=path), temp_project({path: text, "data/codes.csv": "code\nAD\n"}) as root:
                 result = license_check.run(make_context(root))
-                self.assertEqual(result.message, "no license file; the descriptor declares ODC-PDDL-1.0")
+                self.assertEqual(result.message, "no license file; the manifest declares ODC-PDDL-1.0")
