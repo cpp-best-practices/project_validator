@@ -9,9 +9,11 @@ CI runs Julia code in three ways, which `julia_code` reads alike: `julia -e 'usi
 from __future__ import annotations
 
 import re
+import shlex
 import tomllib
 from collections.abc import Iterator, Mapping
 
+from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import Strictness, type_checked, type_checker
@@ -19,7 +21,7 @@ from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Locked, PackageManager, lockfile_reader, manifest_reader
-from project_validator.facts.expansion import Action
+from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
@@ -51,6 +53,27 @@ def julia_code(command: Command) -> str:
         return ""
     expressions = option_values(argv, "-e", "-E", "--eval")
     return "\n".join(expressions or [word for word in argv[1:] if not word.startswith("-")])
+
+
+# A JLL package wraps a program built for Julia: `using biome_jll` then `` run(`$(biome_jll.biome()) check`) `` runs
+# Biome (Documenter's `make check-js`).
+_JLL_COMMAND = re.compile(r"`\$\(\s*(?:(\w+)_jll\.)?(\w+)\(\)\s*\)([^`]*)`")
+_USING_JLL = re.compile(r"\b(?:using|import)\s+(\w+)_jll\b")
+
+
+def _jll_commands(command: Command, _context: Context) -> list[Expansion] | None:
+    """The programs of the JLL packages a `julia` command's code uses that its backtick commands run."""
+    code = julia_code(command)
+    wrapped = set(_USING_JLL.findall(code))
+    found: list[Expansion] = [
+        Launched(argv=(name, *shlex.split(rest)))
+        for package, name, rest in _JLL_COMMAND.findall(code)
+        if (package or name) in wrapped and (not package or package == name)
+    ]
+    return found or None
+
+
+JLL_COMMANDS = CommandExpander(name="JLL commands", expand=_jll_commands)
 
 
 # --- Tests, coverage and what the tests run ------------------------------------------------------------------------

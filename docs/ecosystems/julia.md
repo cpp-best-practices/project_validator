@@ -45,6 +45,9 @@ JuliaFormatter: `format(".")` rewrites, and checks when the script fails on a fi
 `.JuliaFormatter.toml` picks a style other than the default. Runic: `runic --check .` (or `fredrikekre/runic-action`)
 checks, `runic --inplace .` rewrites.
 
+A program a JLL package wraps, run from Julia code that uses the package (`using biome_jll` then a backtick command
+whose program is `biome_jll.biome()`), is read as that program, for every profile's checks (Documenter's Biome).
+
 ## `security-scanning`
 
 semgrep, which reads Julia; CodeQL and GitLab SAST do not.
