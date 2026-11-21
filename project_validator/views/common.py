@@ -173,20 +173,30 @@ def reading(analysis: Analysis) -> str:
 PLACES_SHOWN = 4  # folders listed for a language before the rest are counted
 
 
-def _place(place: Place) -> str:
-    return f"{folder(place.directory)} ({place.files}{'' if place.role == 'product' else f', {place.role}'})"
+def place_count(place: Place) -> str:
+    """`(3)`, `(1, test)`: how many of a language's files a folder holds, and their role when not the product's."""
+    return f"({place.files}{'' if place.role == 'product' else f', {place.role}'})"
+
+
+def shown_places(found: LanguageFiles) -> tuple[tuple[Place, ...], str]:
+    """The folders of a language listed, and what is said of the rest (` and 2 more folders (5 files)`, else "")."""
+    shown, rest = found.places[:PLACES_SHOWN], found.places[PLACES_SHOWN:]
+    if not rest:
+        return shown, ""
+    return shown, f" and {counted(len(rest), 'more folder')} ({counted(sum(place.files for place in rest), 'file')})"
+
+
+def file_count(found: LanguageFiles) -> str:
+    """`4 files (44%)`: how many files a language has, and its share of the project's own files."""
+    share = "<1" if found.share < 0.01 else str(round(found.share * 100))
+    return f"{counted(found.files, 'file')} ({share}%)"
 
 
 def language_files(found: LanguageFiles) -> tuple[str, str]:
-    """(`4 files (44%)`, `pkg/ (3), tests/ (1, test)`): how many files a language has, its share of the project's
-    own files, and the folders that hold them, past `PLACES_SHOWN` counted."""
-    share = "<1" if found.share < 0.01 else str(round(found.share * 100))
-    count = f"{counted(found.files, 'file')} ({share}%)"
-    shown, rest = found.places[:PLACES_SHOWN], found.places[PLACES_SHOWN:]
-    where = ", ".join(_place(place) for place in shown)
-    if rest:
-        where += f" and {counted(len(rest), 'more folder')} ({counted(sum(place.files for place in rest), 'file')})"
-    return count, where
+    """(`4 files (44%)`, `pkg/ (3), tests/ (1, test)`): how many files a language has, its share, and the folders
+    that hold them, past `PLACES_SHOWN` counted."""
+    shown, rest = shown_places(found)
+    return file_count(found), ", ".join(f"{folder(place.directory)} {place_count(place)}" for place in shown) + rest
 
 
 def files_by_language(analysis: Analysis) -> list[tuple[str, str, str]]:
@@ -223,16 +233,19 @@ __all__ = [
     "dedupe",
     "ecosystems",
     "fact_kinds",
+    "file_count",
     "files_by_language",
     "grouped",
     "is_skipped",
     "judged_places",
     "language_files",
+    "place_count",
     "place_label",
     "reading",
     "role_directories",
     "role_judgement",
     "role_line",
+    "shown_places",
     "summary",
     "units",
     "unrecognised",

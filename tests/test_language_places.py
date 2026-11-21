@@ -3,11 +3,12 @@ and the language's share of the project's own files; in the map, its JSON and ev
 
 from __future__ import annotations
 
+import dataclasses
 import io
 import json
 import unittest
 
-from project_validator.analysis import Analysis, analyse
+from project_validator.analysis import Analysis, Git, analyse, folder_url
 from project_validator.plugins import discover
 from project_validator.project_map import LanguageFiles, Place
 from project_validator.views import common, html, text, tui
@@ -123,6 +124,17 @@ class WordsTests(unittest.TestCase):
         self.assertTrue(common.language_files(one)[1].endswith(" and 1 more folder (1 file)"))
 
 
+class FolderUrlTests(unittest.TestCase):
+    def test_a_folder_is_seen_on_the_web_at_the_commit_analysed(self) -> None:
+        git = Git(web="https://github.com/o/r", commit="c" * 40)
+        tree = f"https://github.com/o/r/tree/{'c' * 40}"
+        self.assertEqual((folder_url(git, "src/app"), folder_url(git, ".")), (f"{tree}/src/app", tree))
+
+    def test_without_a_web_address_or_commit_there_is_no_link(self) -> None:
+        self.assertIsNone(folder_url(Git(commit="c" * 40), "src"))
+        self.assertIsNone(folder_url(Git(web="https://github.com/o/r"), "src"))
+
+
 class ViewTests(unittest.TestCase):
     analysis: Analysis
 
@@ -140,6 +152,12 @@ class ViewTests(unittest.TestCase):
         self.assertIn("<h3>Where the files are</h3>", page)
         self.assertIn("<td>4 files (44%)</td>", page)
         self.assertIn("pkg/ (3), tests/ (1, test)", page)
+
+    def test_the_html_report_links_each_folder_to_the_forge_at_the_commit(self) -> None:
+        git = Git(web="https://github.com/o/r", commit="c" * 40)
+        page = html.render(dataclasses.replace(self.analysis, git=git))
+        tree = f"https://github.com/o/r/tree/{'c' * 40}"
+        self.assertIn(f'<a href="{tree}/pkg">pkg/</a> (3), <a href="{tree}/tests">tests/</a> (1, test)', page)
 
     @requires_rich
     def test_the_console_has_a_table_of_where_each_language_is(self) -> None:

@@ -198,6 +198,14 @@ def file_url(git: Git, origin: str) -> str | None:
     return f"{git.web}/blob/{git.commit}/{path}{f'#L{line}' if line else ''}"
 
 
+def folder_url(git: Git, directory: str) -> str | None:
+    """Where a folder of the project ("." for the root) can be seen on the web, at the commit analysed."""
+    if git.web is None or git.commit is None:
+        return None
+    tree = f"{git.web}/tree/{git.commit}"
+    return tree if directory == "." else f"{tree}/{directory}"
+
+
 def _options(context: Context) -> dict[str, object]:
     options = context.options
     return {
