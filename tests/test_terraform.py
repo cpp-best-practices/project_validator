@@ -121,7 +121,10 @@ class TerraformTests(unittest.TestCase):
 
     def test_providers_are_locked_by_the_lockfile(self) -> None:
         self.assertEqual(self._run(dependency_management, {**PROVIDERS, **LOCKFILE}).status, Status.PASS)
-        self.assertEqual(self._run(dependency_management, PROVIDERS).status, Status.WARN)
+        unlocked = self._run(dependency_management, PROVIDERS)
+        self.assertEqual(unlocked.status, Status.WARN)
+        # A shared module (terraform-aws-modules) commits no lockfile: the configurations that use it lock (#246).
+        self.assertIn("a shared module leaves the lock to the root configurations that use it", unlocked.details[-1])
         implied = {"main.tf": 'provider "aws" {\n  region = "eu-west-1"\n}\n'}
         self.assertEqual(self._run(dependency_management, implied).status, Status.WARN)
         no_providers = {"main.tf": 'variable "name" {\n  type = string\n}\n'}
