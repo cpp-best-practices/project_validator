@@ -21,12 +21,17 @@ def judge_tests(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
         # The kinds, not the runners' descriptions: two runners of the same kinds say them once.
         kinds = dict.fromkeys(kind for tool in answer.known for kind in (tool.kinds or (tool.describe,)) if kind)
         return Result.failed(f"no tests found ({either(kinds)})" if kinds else "no tests found")
-    found = f"{_kinds(answer) or 'tests'}: {len(files)} file(s)"
+    found = f"{_kinds(answer) or 'tests'}: {len(files)} file(s){_lent(answer)}"
     if answer.answer is Answer.YES:
         return Result.passed(f"{found}, run by {both(answer.providing())}")
     if answer.answer is Answer.UNKNOWN and not allow_unknown:
         return unknown("whether CI runs the tests", answer.unknowns)
     return Result.warned(f"{found}, but no CI configuration runs {either(answer.how(RUNS))}")
+
+
+def _lent(answer: ToolAnswer) -> str:
+    """Whose the files are, when units of tests lend them all (tokio's benches have none of their own)."""
+    return f" in {', '.join(answer.lent_by)}" if answer.lent_by else ""
 
 
 def _kinds(answer: ToolAnswer) -> str:

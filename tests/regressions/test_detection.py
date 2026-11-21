@@ -196,6 +196,10 @@ class TestUnitRunTests(unittest.TestCase):
         }
         self.assertEqual(_result(tests_run, files).status, Status.PASS)
         self.assertIn("serde: no static analyzer runs", _result(static_analysis, files).message)
+        # serde owns no test of its own: the message says whose they are (tokio's benches, #230).
+        self.assertIn(
+            "serde: #[test] functions: 1 file(s) in test_suite, run by cargo test", _result(tests_run, files).message
+        )
 
 
 class TestsCountedPerUnitTests(unittest.TestCase):

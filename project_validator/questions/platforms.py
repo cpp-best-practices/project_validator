@@ -48,15 +48,15 @@ class PlatformAnswer:
 def _placed(
     jobs: tuple[Job, ...], axis: ToolchainAxis, facts: Facts
 ) -> tuple[dict[Platform, set[BuildConfiguration]], set[str], int]:
-    """The configurations each platform builds, the OSes of the jobs that name no toolchain, and how many jobs name
-    one on a runner of unknown OS."""
+    """The configurations each platform builds, the OSes of the jobs that name no toolchain, and how many jobs run on
+    a runner of unknown OS (ghostty's namespace-profile runners, with a toolchain or without)."""
     found: defaultdict[Platform, set[BuildConfiguration]] = defaultdict(set)
     unversioned: set[str] = set()
     unplaced = 0
     for job in jobs:
         toolchains = axis.toolchains(job, facts)
         if job.os == "unknown":
-            unplaced += bool(toolchains)
+            unplaced += 1
             continue
         if not toolchains:
             unversioned.add(job.os)

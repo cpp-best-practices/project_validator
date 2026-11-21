@@ -16,6 +16,7 @@ from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.julia import JULIA_ECOSYSTEM, julia_code
+from project_validator.facts import Command
 from tests.support import GITHUB_WORKFLOW, command, github_job, github_steps, make_context, run_as, temp_project, uses
 
 JULIA = frozenset({"Julia"})
@@ -184,3 +185,34 @@ class JuliaTests(unittest.TestCase):
         # An input called `version` names a Julia version under setup-julia only.
         other = _steps({"uses": "fortran-lang/setup-fortran@v1", "with": {"version": "14"}}, {"run": PKG_TEST})
         self.assertIn("1 Julia version(s) (default)", self._run(platform_matrix, other).message)
+
+
+class JllTests(unittest.TestCase):
+    def test_a_jll_wrappers_command_in_julia_code_runs_its_program(self) -> None:
+        """Documenter's `make check-js` runs Biome through biome_jll in a `julia -e` one-liner, exiting with Biome's
+        status (#267): that is a `biome check` run."""
+        check = (
+            "julia --project=@biome -e "
+            "'using biome_jll; exit(run(ignorestatus(`$(biome_jll.biome()) check`)).exitcode)'"
+        )
+        files = {
+            "package.json": '{"name": "assets"}\n',
+            "assets/app.js": "",
+            "biome.jsonc": "{}\n",
+            **github_job("ubuntu-latest", check),
+        }
+        with temp_project(files) as root:
+            facts = make_context(root).facts
+        launched = [fact.argv for fact in facts.of(Command) if fact.argv[:1] == ("biome",)]
+        self.assertEqual(launched, [("biome", "check")])
+
+    def test_a_command_julia_code_runs_is_run(self) -> None:
+        """Pluto's frontend tests run as ``run(`npm run test`)`` inside a `julia -e` script that starts a server
+        first (#230); a backtick command that is only built, never run, is not."""
+        code = "julia -e 'import Pluto\nserver = Pluto.run!(s)\nrun(`npm run test`)\nclose(server)'"
+        built = "julia -e 'cmd = `npm publish`; println(cmd)'"
+        files = {"Project.toml": 'name = "P"\n', "package.json": '{"scripts": {"test": "jest --verbose"}}\n'}
+        with temp_project({**files, **github_job("ubuntu-latest", code, built)}) as root:
+            facts = make_context(root).facts
+        launched = [fact.argv for fact in facts.of(Command) if fact.argv[:1] in (("npm",), ("jest",))]
+        self.assertEqual(launched, [("npm", "run", "test"), ("jest", "--verbose")])

@@ -2059,6 +2059,20 @@
     },
     {
       "can": {
+        "format": {
+          "apply": "autopep8 -i",
+          "check": "autopep8 --diff --exit-code"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "autopep8",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "security": {
           "scans": "bandit -r ."
         }
@@ -7072,6 +7086,20 @@
         "TypeScript"
       ],
       "name": "xo",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "yapf -i",
+          "check": "yapf --diff"
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "yapf",
       "reads": [],
       "required": []
     },

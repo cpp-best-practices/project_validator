@@ -155,6 +155,20 @@ PER_UNIT_IGNORES: dict[str, tuple[dict[str, str], dict[str, str]]] = {
         {**NPM_UNIT, ".gitignore": "compiled\n", "web/.gitignore": "node_modules/\ndist/\ncoverage/\n"},
         {**NPM_UNIT, ".gitignore": "compiled\nnode_modules/\ndist/\ncoverage/\n"},
     ),
+    "Sphinx's separate build/ beside source/ (evil, #327)": (
+        {
+            "doc/source/conf.py": "project = 'x'\n",
+            "doc/source/index.rst": "",
+            "a.py": "",
+            ".gitignore": "*.pyc\n/doc/build/*/\n",
+        },
+        {
+            "doc/source/conf.py": "project = 'x'\n",
+            "doc/source/index.rst": "",
+            "a.py": "",
+            ".gitignore": "*.pyc\n_build/\n",
+        },
+    ),
     "the Gradle unit's own .gitignore (guava)": (
         {**GRADLE_UNIT, ".gitignore": "target/\n", "sub/.gitignore": ".gradle\nbuild\n*.class\n"},
         {**GRADLE_UNIT, ".gitignore": "target/\n.gradle/\nbuild/\n*.class\n"},
@@ -411,6 +425,12 @@ class VcsIgnoreTests(unittest.TestCase):
         self.assertEqual(expected.status, Status.PASS, expected)
         result = _run(vcs_ignore, variant)
         self.assertEqual(result.status, Status.PASS, result)
+
+    def test_a_build_directory_beside_the_docs_is_not_sphinxs_output(self) -> None:
+        """Sphinx builds into build/ beside its sources only when they are a source/ directory (#327): beside docs/,
+        a build/ entry leaves its _build/ unignored."""
+        files = {"docs/conf.py": "project = 'x'\n", "docs/index.rst": "", "a.py": "", ".gitignore": "*.pyc\nbuild/\n"}
+        self.assertEqual(_run(vcs_ignore, files).status, Status.WARN)
 
     def test_ignore_entries_are_matched_with_gitignore_semantics(self) -> None:
         """An anchored path (/lisp/*.elc), a glob covering the output (site*/, *.pyc*, blib*, *.gz), a unit's own

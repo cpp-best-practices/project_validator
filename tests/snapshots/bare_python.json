@@ -236,6 +236,14 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "autopep8": {
+                "can": {
+                  "apply": "autopep8 -i",
+                  "check": "autopep8 --diff --exit-code"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "black": {
                 "can": {
                   "apply": "black",
@@ -248,6 +256,14 @@
                 "can": {
                   "apply": "ruff format",
                   "check": "ruff format --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yapf": {
+                "can": {
+                  "apply": "yapf -i",
+                  "check": "yapf --diff"
                 },
                 "needs_definition": false,
                 "required": false
@@ -809,9 +825,9 @@
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that runs ruff format --check (or black --check)"
+        "consider a CI job that runs ruff format --check (or black --check, autopep8 --diff --exit-code or yapf --diff)"
       ],
-      "message": "CI never runs ruff format or black; its formatting is not enforced",
+      "message": "CI never runs ruff format, black, autopep8 or yapf; its formatting is not enforced",
       "status": "FAIL"
     },
     "committed-artifacts": {

@@ -67,7 +67,8 @@ class RecognitionTests(unittest.TestCase):
     def test_the_pragmas_a_module_starts_with(self) -> None:
         self.assertEqual(_pragmas(STRICT), {"strict": True, "warnings": True})
         self.assertEqual(_pragmas("package Shop;\nuse strict;\n1;\n"), {"strict": True, "warnings": False})
-        self.assertEqual(_pragmas("package Shop;\nuse Moose;\n1;\n"), {"strict": True, "warnings": True})
+        moose = {"strict": True, "warnings": True, "uses": ("Moose",)}
+        self.assertEqual(_pragmas("package Shop;\nuse Moose;\n1;\n"), moose)
         self.assertEqual(_pragmas("use v5.36;\npackage Shop;\n1;\n"), {"strict": True, "warnings": True})
         self.assertEqual(_pragmas("use v5.12;\npackage Shop;\n1;\n"), {"strict": True, "warnings": False})
         self.assertEqual(_pragmas("package Shop;\n1;\n"), {"strict": False, "warnings": False})

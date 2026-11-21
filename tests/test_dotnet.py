@@ -116,7 +116,9 @@ class TestAndCoverageTests(unittest.TestCase):
         self.assertEqual(
             run_in_layout(self, CSHARP, TESTS_RUN, files),
             Result.passed(
-                "[Fact], [Test] or [TestMethod] methods in a test project "
+                "src/App: [Fact], [Test] or [TestMethod] methods in a test project "
+                "(one referencing the test SDK or a test framework): 1 file(s) in tests/App.Tests, run by dotnet test; "
+                "tests/App.Tests: [Fact], [Test] or [TestMethod] methods in a test project "
                 "(one referencing the test SDK or a test framework): 1 file(s), run by dotnet test"
             ),
         )

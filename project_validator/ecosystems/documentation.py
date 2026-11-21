@@ -15,6 +15,7 @@ from __future__ import annotations
 import re
 import shlex
 from collections.abc import Callable, Iterator, Mapping
+from dataclasses import replace
 from pathlib import PurePosixPath
 
 from project_validator.core import Context, Project
@@ -452,7 +453,8 @@ def _built_site(generator: str, *names: str) -> tuple[BuildOutput, ...]:
 
 
 MKDOCS_OUTPUT = _built_site(MKDOCS, "site")
-SPHINX_OUTPUT = _built_site(SPHINX, "_build")
+# sphinx-quickstart's separate layout (`--sep`) builds from source/ into the build/ beside it; make fills its html/.
+SPHINX_OUTPUT = tuple(replace(output, separate_build=("build/html/",)) for output in _built_site(SPHINX, "_build"))
 DOCUSAURUS_OUTPUT = _built_site(DOCUSAURUS, "build", ".docusaurus")
 MDBOOK_OUTPUT = _built_site(MDBOOK, "book")
 HUGO_OUTPUT = _built_site(HUGO, "public")

@@ -44,8 +44,8 @@ changes only.
 ruff format (`ruff format --check`, `--diff` or `--exit-non-zero-on-format`; settings in `[tool.ruff]` of
 pyproject.toml, ruff.toml or .ruff.toml) or black (`--check` or `--diff`; settings in `[tool.black]`), run directly,
 through a launcher or tox, as the `psf/black` or `astral-sh/ruff-action` action, or as a pre-commit hook CI runs
-(`ruff-format`, `black`). Both have a default style, so CI enforcement alone passes; `black .` alone only rewrites
-files.
+(`ruff-format`, `black`). autopep8 (`--exit-code`) and yapf (`--diff`) count the same way. Each has a default
+style, so CI enforcement alone passes; `black .` (or `autopep8 -i`, `yapf -i`) alone only rewrites files.
 
 ## `function-limits`
 

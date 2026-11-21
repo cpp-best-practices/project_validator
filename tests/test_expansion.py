@@ -186,6 +186,12 @@ lint:
         files = {"Makefile": "all:\n\t@echo a\n\t-echo b\n\t+echo c\n\t@-echo d\n", **github_job("x", "make")}
         self.assertEqual(_expanded(_facts(files)), [("echo", "a"), ("echo", "b"), ("echo", "c"), ("echo", "d")])
 
+    def test_a_doubled_dollar_is_a_dollar_the_shell_sees(self) -> None:
+        """Documenter's `$$(biome_jll.biome())` reaches Julia as `$(…)` (#267); `$$(CC)` is no reference to CC."""
+        makefile = "CC = gcc\nall:\n\techo $$HOME $$(CC) $(CC)\n"
+        files = {"Makefile": makefile, **github_job("x", "make")}
+        self.assertEqual(_expanded(_facts(files)), [("echo", "$HOME", "$(CC)", "gcc")])
+
     def test_a_pattern_rule_covers_the_goals_it_matches_with_their_stem(self) -> None:
         makefile = "lint-%:\n\techo $* $@\n%.check: %.src\n\ttest -f $<\n"
         files = {"Makefile": makefile, **github_job("x", "make lint-docs")}

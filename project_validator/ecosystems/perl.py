@@ -7,6 +7,7 @@ from __future__ import annotations
 import re
 from collections.abc import Iterator
 from pathlib import PurePosixPath
+from typing import cast
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
@@ -27,6 +28,7 @@ from project_validator.facts.practices import (
     always,
     requirement_reader,
 )
+from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader, file_reader, settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, starts, when
@@ -182,7 +184,8 @@ _STRICT = re.compile(rf"{_USE}strict\b", re.MULTILINE)
 _WARNINGS = re.compile(rf"{_USE}warnings\b", re.MULTILINE)
 _IMPLIES_BOTH = re.compile(
     rf"{_USE}(?:Moose|Moo|Mouse|Moose::Role|Moo::Role|Mouse::Role|Modern::Perl|common::sense|strictures|Mojo::Base"
-    r"|Mojolicious::Lite|Role::Tiny|Test2::V0|Object::Pad|Dancer2?|v5\.(?:3[5-9]|[4-9]\d)|experimental)\b",
+    r"|Mojolicious::Lite|Role::Tiny|Test2::V0|Test::Most|Test::Class::Most|Test::Class::Moose|Object::Pad|Dancer2?"
+    r"|v5\.(?:3[5-9]|[4-9]\d)|experimental)\b",
     re.MULTILINE,
 )
 # `use v5.12` and later turn strict on; warnings only from v5.35.
@@ -194,25 +197,46 @@ _IMPLIES_STRICT = re.compile(rf"{_USE}v5\.(?:1[2-9]|[2-9]\d)\b", re.MULTILINE)
 _NOT_THE_PRODUCTS = frozenset({"corpus", "inc"})
 
 
+# A module that imports strict and warnings into its user (Dist::Zilla::Pragmas), and the modules a module uses.
+_IMPORTS_BOTH = (re.compile(r"\bstrict->import\b"), re.compile(r"\bwarnings->import\b"))
+_PACKAGE = re.compile(r"^\s*package\s+([\w:]+)", re.MULTILINE)
+_USED = re.compile(rf"{_USE}([A-Z][\w:]*)", re.MULTILINE)
+BUNDLE, USES = "bundle", "uses"
+
+
 def _read_modules(path: str, text: str) -> Iterator[Setting]:
-    """Whether a module (or script) starts with `use strict` and `use warnings`, or something that implies them; not
-    a module under corpus/ or inc/."""
-    if PurePosixPath(path).parts[0] in _NOT_THE_PRODUCTS:
+    """Whether a module (or script) of the product starts with `use strict` and `use warnings`, or something that
+    implies them, the modules it uses, and the package it is when it imports both into its user (a pragma bundle);
+    not a test module, nor one under corpus/ or inc/."""
+    if PurePosixPath(path).parts[0] in _NOT_THE_PRODUCTS or role(path) == "test":
         return iter(())
     both = _IMPLIES_BOTH.search(text) is not None
     strict = both or _STRICT.search(text) is not None or _IMPLIES_STRICT.search(text) is not None
     warnings = both or _WARNINGS.search(text) is not None
-    return settings(MODULES, path, (("strict", strict), ("warnings", warnings)))
+    found: list[tuple[str, object]] = [("strict", strict), ("warnings", warnings)]
+    if used := tuple(_USED.findall(text)):
+        found.append((USES, used))
+    if all(pattern.search(text) for pattern in _IMPORTS_BOTH) and (package := _PACKAGE.search(text)):
+        found.append((BUNDLE, package[1]))
+    return settings(MODULES, path, found)
 
 
 PERL_MODULES = SettingsReader(name=MODULES, files=("*.pm", "*.pl", "*.psgi"), read=_read_modules)
 
 
 def _every_module(facts: Facts, _compiler: str | None) -> Iterator[Evidence]:
-    """Every module read uses strict and warnings: one that does not fails all of them."""
+    """Every module read uses strict and warnings, itself or through a pragma bundle of the project's: one that does
+    not fails all of them."""
     found = facts.where(Setting, tool=MODULES)
-    paths = {setting.path for setting in found}
-    if paths and all(setting.value for setting in found):
+    bundles = {setting.value for setting in found if setting.key == BUNDLE}
+    bundled = {
+        setting.path
+        for setting in found
+        if setting.key == USES and bundles & set(cast("tuple[str, ...]", setting.value))
+    }
+    pragmas = [setting for setting in found if setting.key in ("strict", "warnings")]
+    paths = {setting.path for setting in pragmas}
+    if paths and all(setting.value or setting.path in bundled for setting in pragmas):
         yield Evidence(f"{len(paths)} module(s), every one")
 
 

@@ -68,6 +68,9 @@ class ToolAnswer:
     unknown_definitions: tuple[str, ...] = ()
     # The tools CI runs for the aspect only where they cannot fail the pipeline, each with why (see `advised`).
     advisory: tuple[tuple[str, str], ...] = ()
+    # When every file that defines the aspect here is a unit of tests' (tokio's benches have no test of their own;
+    # tests-integration's count for them), those units.
+    lent_by: tuple[str, ...] = ()
 
     def providing(self, level: str | None = None) -> tuple[str, ...]:
         """The tools CI runs that provide `level` (by default, the answer's)."""
@@ -206,6 +209,16 @@ def _defined(aspect: str, known: tuple[Tool, ...], facts: Facts, unit: str, auxi
     return tuple((name, paths) for name, paths in found if paths)
 
 
+def _lent_by(defined: _Defined, facts: Facts, unit: str) -> tuple[str, ...]:
+    """The units of tests whose files are every file in `defined`, when none is `unit`'s own; not for the root, which
+    such a unit tests as a matter of course (an OCaml project's test/)."""
+    units = {found.directory: found.role for found in facts.of(Unit)}
+    owners = {owner(path, units) for _, paths in defined for path in paths}
+    if unit == "." or not owners or unit in owners or any(units.get(found) != "test" for found in owners):
+        return ()
+    return tuple(sorted(owners))
+
+
 def _verdict(level: str, runs: tuple[Ran, ...], unknowns: tuple[str, ...]) -> Answer:
     return Answer.YES if any(level in ran.levels for ran in runs) else Answer.UNKNOWN if unknowns else Answer.NO
 
@@ -220,8 +233,7 @@ def tool_answer(
     *,
     auxiliary: tuple[str, ...] = (),
 ) -> ToolAnswer:
-    """Whether CI provides `aspect` at `level` for `language` in `unit` (for the auxiliary code `auxiliary` names,
-    when the answer is about that), by the facts, and what the known `tools` could."""
+    """Whether CI provides `aspect` at `level` for `language` in `unit` (or its `auxiliary` code); what `tools` can."""
     known = tuple(tool for tool in tools if aspect in tool.can and language in tool.languages)
     answer = ToolAnswer(
         aspect=aspect, language=language, unit=unit, level=level, answer=Answer.IMPOSSIBLE, auxiliary=auxiliary
@@ -234,7 +246,8 @@ def tool_answer(
         answer,
         answer=_verdict(level, runs, unknowns),
         runs=runs,
-        defined=_defined(aspect, known, facts, unit, auxiliary),
+        defined=(defined := _defined(aspect, known, facts, unit, auxiliary)),
+        lent_by=_lent_by(defined, facts, unit),
         known=tuple(_known(tool, aspect) for tool in known),
         unknowns=unknowns,
         unknown_definitions=unknowns_for(known, facts, hiding=("settings",)),

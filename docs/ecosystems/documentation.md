@@ -48,7 +48,8 @@ checks nothing. Docusaurus's `onBrokenLinks: 'throw'` fails the build on a broke
 
 The built site is ignored: `site/` (MkDocs), `_build/` (Sphinx), `build/` and `.docusaurus/` (Docusaurus), `book/`
 (mdBook), `public/` (Hugo), `_site/` and `.jekyll-cache/` (Jekyll), `.vitepress/dist/` and `.vitepress/cache/`
-(VitePress).
+(VitePress). A Sphinx site whose `conf.py` is in a `source/` directory (sphinx-quickstart's separate layout) builds
+into the `build/` beside it instead.
 
 ## `committed-artifacts`
 

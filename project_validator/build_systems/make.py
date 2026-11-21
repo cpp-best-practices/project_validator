@@ -149,6 +149,9 @@ def _rule(makefile: Makefile, target: str) -> tuple[Rule, str] | None:
     return None
 
 
+_ESCAPED_DOLLAR = "\0"
+
+
 def _recipes(makefile: Makefile, path: str, target: str, visited: set[str]) -> Iterator[Script | Unknown]:
     if target in visited or (found := _rule(makefile, target)) is None:
         return
@@ -160,8 +163,9 @@ def _recipes(makefile: Makefile, path: str, target: str, visited: set[str]) -> I
     for number, line in rule.recipe:
         origin = Origin(path=path, at=(target, number))
         # A variable may hold the recipe's prefixes (`Q = @`, then `$(Q)$(CC) …`).
-        line = line.replace("$@", target).replace("$*", stem)
-        text = expand_variables(line, automatic).lstrip("@-+ ")
+        # `$$` is a `$` the shell sees, never a reference (Documenter's `$$(biome_jll.biome())`).
+        line = line.replace("$$", _ESCAPED_DOLLAR).replace("$@", target).replace("$*", stem)
+        text = expand_variables(line, automatic).lstrip("@-+ ").replace(_ESCAPED_DOLLAR, "$")
         if (program := _REFERENCE.match(text)) is not None:
             name = program["paren"] or program["brace"]
             yield Unknown(

@@ -66,8 +66,8 @@ def _counted(platforms: Iterable[Platform]) -> set[Platform]:
 
 
 def _uncounted(answer: PlatformAnswer, operating_systems: set[str]) -> str:
-    """What the count leaves out that the detail lines show: the OSes whose jobs name no toolchain, and the jobs that
-    name one on a runner of unknown OS."""
+    """What the count leaves out that the detail lines show: the OSes whose jobs name no toolchain, and the jobs on a
+    runner of unknown OS."""
     clauses = []
     if answer.axis.operating_systems and (idle := [os for os in answer.unversioned if os not in operating_systems]):
         clauses.append(f"jobs on {', '.join(idle)} set up no {answer.axis.noun}")
