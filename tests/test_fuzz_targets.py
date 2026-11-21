@@ -11,6 +11,8 @@ from types import ModuleType
 from unittest import mock
 
 FUZZ_DIRECTORY = Path(__file__).parent / "fuzz"
+CORPUS = FUZZ_DIRECTORY / "corpus"
+CRASHES = FUZZ_DIRECTORY / "crashes"
 
 
 def stubbed_atheris() -> mock.MagicMock:
@@ -26,6 +28,12 @@ def load_module(path: Path) -> ModuleType:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def replayed_inputs(target: str) -> list[Path]:
+    """The committed seeds of `target` and the crash inputs kept from its fixed crashes (`.gitkeep` aside)."""
+    folders = (CORPUS / target, CRASHES / target)
+    return [path for folder in folders if folder.is_dir() for path in folder.iterdir() if not path.name.startswith(".")]
 
 
 class FuzzTargetTests(unittest.TestCase):
@@ -45,6 +53,25 @@ class FuzzTargetTests(unittest.TestCase):
         for text in ("NaN", "[NaN, -Infinity]", "9" * 5000, "Infinity"):
             with self.subTest(text=text[:20]):
                 module.TestOneInput(text.encode())
+
+    def test_every_seed_and_saved_crash_replays_without_an_error(self) -> None:
+        # The seeds and the minimised crash inputs a fixed fuzz crash leaves behind are replayed here, on every OS the
+        # unit tests run on: atheris has Linux wheels only, so the fuzzing job alone would never run them elsewhere.
+        # A target raises only on a bug (its parser's own errors are caught inside), the rule the fuzzer applies.
+        for path in sorted(FUZZ_DIRECTORY.glob("fuzz_*.py")):
+            target = path.stem.removeprefix("fuzz_")
+            inputs = sorted(replayed_inputs(target))
+            with mock.patch.dict(sys.modules, {"atheris": stubbed_atheris()}):
+                module = load_module(path)
+            self.assertTrue(inputs, target)
+            for found in inputs:
+                with self.subTest(found.relative_to(FUZZ_DIRECTORY).as_posix()):
+                    module.TestOneInput(found.read_bytes())
+
+    def test_each_target_has_a_folder_for_its_crash_inputs(self) -> None:
+        for path in sorted(FUZZ_DIRECTORY.glob("fuzz_*.py")):
+            with self.subTest(path.name):
+                self.assertTrue((CRASHES / path.stem.removeprefix("fuzz_")).is_dir())
 
     def test_unittest_discovers_nothing_under_tests_fuzz(self) -> None:
         self.assertEqual(unittest.defaultTestLoader.discover(str(FUZZ_DIRECTORY)).countTestCases(), 0)
