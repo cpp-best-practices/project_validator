@@ -98,6 +98,57 @@ class MutationSetupTests(unittest.TestCase):
         test = "tests/test_architecture.py::ArchitectureTests::test_every_module_imports_on_its_own"
         self.assertIn(test, [arguments[index + 1] for index, word in enumerate(arguments[:-1]) if word == "--deselect"])
 
+    def test_verdicts_are_restored_before_mutmut_tests_and_saved_after_it(self) -> None:
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        steps = workflow["jobs"]["mutmut"]["steps"]
+        uses = [step.get("uses", "").split("@")[0] for step in steps]
+        restore, save = uses.index("actions/cache/restore"), uses.index("actions/cache/save")
+        mutating = [index for index, step in enumerate(steps) if "mutmut " in step.get("run", "")]
+        saving = next(index for index, step in enumerate(steps) if "mutation_cache.py save" in step.get("run", ""))
+        self.assertTrue(mutating)
+        self.assertLess(restore, min(mutating))
+        self.assertLess(max(mutating), saving)
+        self.assertLess(saving, save)
+        key = "mutmut-${{ github.run_id }}-${{ github.run_attempt }}"
+        self.assertEqual(steps[restore]["with"]["key"], key)
+        self.assertEqual(steps[restore]["with"]["restore-keys"], "mutmut-")
+        self.assertEqual(steps[save]["with"]["key"], key)
+        # A run stopped by its budget still keeps the verdicts it reached.
+        self.assertIn("always()", steps[saving]["if"])
+        self.assertIn("always()", steps[save]["if"])
+
+    def test_the_cached_verdicts_are_merged_after_the_copy_is_made_and_before_the_mutants_run(self) -> None:
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        for step in workflow["jobs"]["mutmut"]["steps"]:
+            lines = [line.strip() for line in step.get("run", "").splitlines()]
+            if not any("mutation_cache.py restore" in line for line in lines):
+                continue
+            with self.subTest(step["name"]):
+                restoring = next(index for index, line in enumerate(lines) if "mutation_cache.py restore" in line)
+                copied = lines.index("git -C mutants add -A")
+                testing = [index for index, line in enumerate(lines) if "mutmut run" in line or "mutmut print" in line]
+                self.assertLess(copied, restoring)
+                self.assertLess(restoring, max(testing))
+
+    def test_a_push_to_main_collects_the_stats_a_new_pull_request_starts_from(self) -> None:
+        # A pull request reads the caches of its own branch and of its base branch only.
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        self.assertEqual(workflow[True]["push"], {"branches": ["main"]})
+        stats = [step for step in workflow["jobs"]["mutmut"]["steps"] if "mutmut print-time-estimates" in step.get("run", "")]
+        self.assertEqual([step["if"] for step in stats], ["github.event_name == 'push'"])
+
+    def test_the_summary_lists_only_the_survivors_of_the_changed_functions(self) -> None:
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        script = next(step["run"] for step in workflow["jobs"]["mutmut"]["steps"] if "budget_minutes" in step.get("run", ""))
+        self.assertIn("mutation_cache.py survivors patterns.txt", script)
+
+    def test_a_change_to_the_requirements_tests_every_mutant_again(self) -> None:
+        config = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["tool"]["mutmut"]
+        self.assertEqual(config["on_dependency_change"], "rerun")
+        # Through git, every tracked file that is not Python would reset everything: fixtures and snapshots too.
+        self.assertFalse(config["use_git_change_detection"])
+        self.assertIn(".github/requirements/mutation.txt", config["cache_invalidation_files"])
+
 
 if __name__ == "__main__":
     unittest.main()

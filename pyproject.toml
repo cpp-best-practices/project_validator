@@ -90,6 +90,12 @@ pytest_add_cli_args = [
     "--deselect",
     "tests/test_architecture.py::ArchitectureTests::test_every_module_imports_on_its_own",
 ]
+# A change to pyproject.toml or the mutation requirements tests every mutant again. Not through git, which would count
+# every changed file that is not Python (fixtures, snapshots): tests/mutation_cache.py resets the verdicts of the
+# functions whose tests such a change affects, in the CI job's cache.
+on_dependency_change = "rerun"
+use_git_change_detection = false
+cache_invalidation_files = [".github/requirements/mutation.txt"]
 # The self-referential tests read these files from the repository root; tests/test_corpus.py imports corpus.
 also_copy = [
     ".github/",
