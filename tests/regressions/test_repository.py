@@ -33,7 +33,24 @@ NOT_BUILD_OUTPUTS: dict[str, dict[str, str]] = {
     "a Dart source directory named build/ (drift)": {"pubspec.yaml": "name: drift\n", "lib/src/build/a.dart": ""},
     "Cloud Build pipelines in build/ (terraform-google)": {"scripts/x.py": "", "build/ci.yaml": "steps: []\n"},
     "a packaging-source dist/ (ghostty)": {"tool.py": "", "dist/README.md": "# packaging\n"},
+    "packaging scripts and assets in dist/ (ghostty)": {
+        "tool.py": "",
+        "dist/macos/update_appcast.py": "import sys\n",
+        "dist/doxygen/favicon.png": "\x89PNG",
+        "dist/doxygen/header.html": "<html/>\n",
+        "dist/cmake/config.cmake.in": "set(X 1)\n",
+    },
     "tracked shell scripts in bin/ (fzf)": {**GO_MODULE, "bin/tool.sh": "#!/bin/sh\n"},
+    "a shell script without a suffix in bin/ (fzf)": {
+        **GO_MODULE,
+        "bin/fzf-tmux": "#!/usr/bin/env bash\necho\n",
+        "bin/fzf-preview.sh": "#!/usr/bin/env bash\n",
+    },
+    "Bundler settings kept on purpose (Homebrew)": {
+        "Library/Homebrew/Gemfile": "source 'https://rubygems.org'\n",
+        "Library/Homebrew/x.rb": "",
+        "Library/Homebrew/.bundle/config": 'BUNDLE_PATH: "vendor/bundle"\n',
+    },
     "a Julia environment named coverage/ (Documenter)": {
         "Project.toml": 'name = "D"\n',
         "src/D.jl": "",
@@ -55,6 +72,13 @@ NOT_BUILD_OUTPUTS: dict[str, dict[str, str]] = {
         "scripts/build/build.js": "",
     },
     "the mdBook source directory (polylux)": {"book/book.toml": '[book]\nsrc = "src"\n', "book/src/SUMMARY.md": ""},
+    "the mdBook source directory with images (polylux)": {
+        "book/book.toml": '[book]\nsrc = "src"\n',
+        "book/src/SUMMARY.md": "",
+        "book/src/a.typ": "#set page()\n",
+        "book/src/a.png": "\x89PNG",
+        "book/.gitignore": "book\n",
+    },
     "a shell wrapper named .exe (dune)": {**C_PROJECT, "dune.exe": "#!/usr/bin/env sh\nexec _boot/dune.exe\n"},
     "a zero-byte fixture .exe (glib)": {**C_PROJECT, "tests/fixtures/autorun.exe": ""},
     "a sample presets file under docs/ (llama.cpp)": {**C_PROJECT, "docs/x/CMakeUserPresets.json": '{"version": 5}'},
