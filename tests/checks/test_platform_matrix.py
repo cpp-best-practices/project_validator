@@ -127,6 +127,17 @@ class PythonPlatformMatrixTests(unittest.TestCase):
         self.assertIn("1 OS(es) (macos)", result.message)
         self.assertIn("2 job(s) run on runners of unknown OS", result.message)
 
+    def test_jobs_on_runners_of_unknown_os_without_a_toolchain_are_counted(self) -> None:
+        """ghostty's C jobs on its namespace-profile runners name no compiler: the summary counts them too (#227)."""
+        jobs = {
+            name: {"runs-on": runner, "steps": [{"run": "cmake -B build && cmake --build build"}]}
+            for name, runner in (("a", "namespace-profile-sm"), ("b", "namespace-profile-lg"), ("c", "ubuntu-latest"))
+        }
+        workflow = {GITHUB_WORKFLOW: json.dumps({"on": "push", "jobs": jobs})}
+        with temp_project({**WELL_CONFIGURED, **workflow}) as root:
+            result = platform_matrix.run(make_context(root))
+        self.assertIn("2 job(s) run on runners of unknown OS", result.message)
+
 
 class RustPlatformMatrixTests(unittest.TestCase):
     def _run(self, files: dict[str, str]) -> Result:
