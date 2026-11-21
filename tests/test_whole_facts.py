@@ -6,18 +6,26 @@ from __future__ import annotations
 import json
 import unittest
 
+from project_validator.build_systems.make import VARIABLE, _make_targets
 from project_validator.ci import gitlab, pre_commit_ci
 from project_validator.ecosystems import emacs_lisp, ocaml, zig
-from project_validator.ecosystems.javascript import _in_workspaces
+from project_validator.ecosystems.beam import _bracketed
+from project_validator.ecosystems.dotnet.tools import _read_run_settings
+from project_validator.ecosystems.haskell.options import ghc_options
+from project_validator.ecosystems.javascript import _in_workspaces, _named_config
+from project_validator.ecosystems.jvm.analysis import _read_checkstyle
 from project_validator.ecosystems.perl import _read_actions
 from project_validator.ecosystems.php.tools import _read_phpmd
 from project_validator.ecosystems.python.tox import _env_scripts
+from project_validator.ecosystems.r import _renv_project
 from project_validator.ecosystems.ruby.tools import _read_rake_tasks, _read_simplecov_settings
 from project_validator.ecosystems.shell.tools import _read_pester
 from project_validator.facts import CiJob, Command, Origin, Setting, Unknown
 from project_validator.facts.analysis import analysed, type_checked
 from project_validator.facts.audit import audited
+from project_validator.facts.build import Applies, CompilerOption
 from project_validator.facts.coverage import Granularity, measured, reported
+from project_validator.facts.dependencies import Application
 from project_validator.facts.expansion import Script
 from project_validator.facts.fuzzing import fuzzed
 from project_validator.facts.limits import limited
@@ -314,6 +322,172 @@ class SmallExtractorTests(unittest.TestCase):
         path = "packages/a/package.json"
         self.assertEqual(
             found, [Script(text="vitest a", origin=Origin(path=path, at=("scripts", "test")), directory="packages/a")]
+        )
+
+
+class XmlAndProfileReaderTests(unittest.TestCase):
+    def test_a_runsettings_file_s_data_collectors_by_friendly_name(self) -> None:
+        text = (
+            "<RunSettings><DataCollectionRunSettings><DataCollectors>"
+            '<DataCollector friendlyName="XPlat Code Coverage"/><DataCollector/>'
+            "</DataCollectors></DataCollectionRunSettings></RunSettings>"
+        )
+        origin = Origin(path="a.runsettings", at=("DataCollector",))
+        self.assertEqual(
+            list(_read_run_settings("a.runsettings", text)),
+            [
+                Setting(origin=origin, tool="VSTest", key="DataCollector", value="XPlat Code Coverage"),
+                Setting(origin=origin, tool="VSTest", key="DataCollector", value=""),
+            ],
+        )
+        # A file that does not parse is matched heuristically.
+        broken = '<RunSettings><DataCollector friendlyName="XPlat Code Coverage">'
+        self.assertEqual(
+            list(_read_run_settings("a.runsettings", broken)),
+            [Setting(origin=origin, tool="VSTest", key="DataCollector", value="XPlat Code Coverage", heuristic=True)],
+        )
+
+    def test_a_checkstyle_configuration_s_modules(self) -> None:
+        self.assertEqual(
+            list(_read_checkstyle("c.xml", '<module name="Checker"><module/></module>')),
+            [
+                Setting(
+                    origin=Origin(path="c.xml", at=("modules",)),
+                    tool="Checkstyle",
+                    key="modules",
+                    value=("Checker", ""),
+                )
+            ],
+        )
+        self.assertEqual(
+            list(_read_checkstyle("c.xml", "<module")),
+            [
+                Unknown(
+                    origin=Origin(path="c.xml"),
+                    subject="the Checkstyle settings",
+                    reason="unclosed token: line 1, column 0",
+                    hides="settings",
+                    tools=("Checkstyle",),
+                )
+            ],
+        )
+
+    def test_an_rprofile_activating_renv_makes_an_application(self) -> None:
+        self.assertEqual(
+            list(_renv_project(".Rprofile", 'source("renv/activate.R")\n')),
+            [Application(origin=Origin(path=".Rprofile"), manager="R packages")],
+        )
+        self.assertEqual(list(_renv_project(".Rprofile", "options(repos = 'x')\n")), [])
+
+
+class MoreReaderTests(unittest.TestCase):
+    def test_each_rake_test_task_by_its_name_or_its_kind_s_default(self) -> None:
+        text = (
+            "RSpec::Core::RakeTask.new\nRake::TestTask.new(:unit)\n"
+            "Minitest::TestTask.create\nRSpec::Core::RakeTask.new :fast\n"
+        )
+        origin = Origin(path="Rakefile", at=("task", "tests"))
+        self.assertEqual(
+            list(_read_rake_tasks("Rakefile", text)),
+            [
+                Setting(origin=origin, tool="Rake", key="task.tests", value=name, heuristic=True)
+                for name in ("spec", "unit", "test", "fast")
+            ],
+        )
+
+    def test_ghc_options_hold_for_ghc_and_haskell_where_their_conditions_do(self) -> None:
+        found = list(
+            ghc_options("x.cabal", "Cabal", "library", ("-Wall",), frozenset({"flag(dev)", "not impl(ghc < 9)"}))
+        )
+        applies = Applies(
+            compilers=frozenset({"ghc"}),
+            languages=frozenset({"Haskell"}),
+            requires=frozenset({"flag(dev)", "NOT impl(ghc < 9)"}),
+        )
+        self.assertEqual(
+            found,
+            [
+                CompilerOption(
+                    origin=Origin(path="x.cabal"),
+                    build_system="Cabal",
+                    option="-Wall",
+                    applies=applies,
+                    target="library",
+                )
+            ],
+        )
+
+    def test_a_runner_s_named_configuration_relative_to_where_it_runs(self) -> None:
+        named = _named_config("vitest")
+        in_web = Command(origin=Origin(path="ci.yml"), job="j", argv=("vitest", "-c", "v.ts"), line="", directory="web")
+        self.assertEqual(named(in_web), ["web/v.ts"])
+        self.assertEqual(named(command("vitest --config a.ts")), ["a.ts"])
+        self.assertEqual(named(command("jest --config a.ts")), [])
+        self.assertEqual(named(command("vitest run")), [])
+
+    def test_a_bracketed_list_with_its_nested_lists(self) -> None:
+        self.assertEqual(_bracketed("x [a, [b], c] y", 2), "[a, [b], c]")
+        self.assertEqual(_bracketed("[a, [b", 0), "[a, [b")
+        self.assertEqual(_bracketed("a]b[c]", 3), "[c]")
+
+
+def _make(files: dict[str, str], line: str) -> list[object]:
+    with temp_project(files) as root:
+        return list(_make_targets(command(line), make_context(root)))
+
+
+class MakeExpansionTests(unittest.TestCase):
+    CI = Origin(path="ci.yml")
+
+    def test_make_where_cmake_configured_in_place_builds_its_targets(self) -> None:
+        lists = "build/CMakeLists.txt"
+        self.assertEqual(
+            _make({lists: "project(x)\n"}, "make -C build test lint"),
+            [
+                Script(text="cmake --build build --target test", origin=Origin(path=lists, at=("test",))),
+                Script(text="cmake --build build --target lint", origin=Origin(path=lists, at=("lint",))),
+            ],
+        )
+        self.assertEqual(
+            _make({"CMakeLists.txt": "project(x)\n"}, "make"),
+            [Script(text="cmake --build . --target all", origin=Origin(path="CMakeLists.txt", at=("all",)))],
+        )
+
+    def test_make_without_a_makefile_or_a_rule_is_unknown(self) -> None:
+        self.assertEqual(
+            _make({"a.c": ""}, "make"),
+            [Unknown(origin=self.CI, subject="the makefile", reason="none is found where make runs", hides="commands")],
+        )
+        reason = "no rule of the makefile (or of the makefiles it includes) builds it"
+        self.assertEqual(
+            _make({"Makefile": "all:\n\techo\n"}, "make missing other"),
+            [
+                Unknown(origin=self.CI, subject=f"the make target {goal}", reason=reason, hides="commands")
+                for goal in ("missing", "other")
+            ],
+        )
+
+    def test_each_recipe_is_placed_at_its_rule_and_line(self) -> None:
+        makefile = "t:\n\t$(TOOL) x\n\t@-+${OTHER} y\n%.o: %.c\n\tcc -c $*.c -o $@\n%.c:\n\tgen $@\n"
+        unset = "which neither the makefile nor the command line sets"
+        self.assertEqual(
+            _make({"Makefile": makefile}, "make t a.o"),
+            [
+                Unknown(
+                    origin=Origin(path="Makefile", at=("t", 2)),
+                    subject="the recipe '$(TOOL) x'",
+                    reason=f"its program is the variable TOOL, {unset}",
+                    hides="commands",
+                ),
+                Unknown(
+                    origin=Origin(path="Makefile", at=("t", 3)),
+                    subject="the recipe '${OTHER} y'",
+                    reason=f"its program is the variable OTHER, {unset}",
+                    hides="commands",
+                ),
+                Script(text="gen a.c", origin=Origin(path="Makefile", at=("a.c", 7)), opaque=VARIABLE),
+                Script(text="cc -c a.c -o a.o", origin=Origin(path="Makefile", at=("a.o", 5)), opaque=VARIABLE),
+            ],
         )
 
 

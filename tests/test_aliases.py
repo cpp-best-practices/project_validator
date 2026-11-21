@@ -12,6 +12,7 @@ from project_validator.ecosystems.dart import _dart_format
 from project_validator.ecosystems.docker.tools import _scout_action
 from project_validator.ecosystems.documentation import _markdown_link_check_action
 from project_validator.ecosystems.dotnet.tools import _nuget_audit
+from project_validator.ecosystems.graphql import _graphql_inspector_action
 from project_validator.ecosystems.haskell.tools import _hpc
 from project_validator.ecosystems.javascript import _tasks
 from project_validator.ecosystems.javascript.analysis import _tsconfig
@@ -220,6 +221,13 @@ class ActionDefaultTests(unittest.TestCase):
                 {"config": "k.yaml", "directory": "charts"},
                 (("kube-linter", "lint", "--config", "k.yaml", "charts"),),
             ),
+            (_graphql_inspector_action, {}, (("graphql-inspector", "diff"),)),
+            (
+                _graphql_inspector_action,
+                {"schema": "main:schema.graphql"},
+                (("graphql-inspector", "diff", "main:schema.graphql"),),
+            ),
+            (_graphql_inspector_action, {"schema": "main:s.graphql", "fail-on-breaking": " False "}, ()),
             # squawk-action fails the job only when told to (any case), on its files, else its pattern.
             (_squawk_action, {"fail-on-violations": "true"}, (("squawk", "migrations/*.sql"),)),
             (_squawk_action, {"fail-on-violations": " TRUE "}, (("squawk", "migrations/*.sql"),)),
