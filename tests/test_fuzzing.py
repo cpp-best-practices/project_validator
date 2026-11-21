@@ -351,6 +351,13 @@ class GoFuzzingTests(unittest.TestCase):
         plain = _kinds({"b_test.go": "func TestA(t *testing.T) {}\n", "go.mod": "module a\n"})
         self.assertNotIn(("b_test.go", GO_FUZZ_TARGETS.name), plain)
 
+    def test_a_fixture_under_testdata_is_no_test_of_the_module(self) -> None:
+        """The go tool ignores testdata/: golangci-lint's only Fuzz functions are a linter's input and expected output
+        under pkg/golinters/modernize/testdata/ (#184)."""
+        fixture = "pkg/lint/testdata/fix/in/ctx_test.go"
+        kinds = _kinds({fixture: "func FuzzX(f *testing.F) {}\nfunc TestY(t *testing.T) {}\n", "go.mod": "module a\n"})
+        self.assertEqual([kind for path, kind in kinds if path == fixture], [])
+
     def test_plain_go_test_does_not_fuzz(self) -> None:
         self.assertIsNone(GO_FUZZ.claims(command("go test ./..."), Facts([])))
         self.assertIsNotNone(GO_FUZZ.claims(command("go test -fuzz=Fuzz -fuzztime=30s ."), Facts([])))
