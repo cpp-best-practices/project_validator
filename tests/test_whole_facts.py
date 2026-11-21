@@ -232,6 +232,21 @@ class HeuristicSettingsTests(unittest.TestCase):
         )
 
 
+PROVIDES = {
+    tested: ("test", "runs"),
+    analysed: ("analysis", "checks"),
+    scanned: ("security", "scans"),
+    audited: ("audit", "runs"),
+    fuzzed: ("fuzz", "runs"),
+    links_checked: ("links", "checked"),
+    migrations_linted: ("migrations", "linted"),
+    mutated: ("mutation", "runs"),
+    validated: ("schema", "validates"),
+    examples_checked: ("examples", "checked"),
+    compatibility_checked: ("compatibility", "breaking"),
+}
+
+
 class RunHelperTests(unittest.TestCase):
     """The helpers that build a run keep the reads and heuristic flag they are given."""
 
@@ -249,37 +264,11 @@ class RunHelperTests(unittest.TestCase):
                     self.assertEqual((run.heuristic, run.read), (heuristic, read))
 
     def test_every_helper_s_run_is_not_heuristic_and_reads_nothing_by_default(self) -> None:
-        helpers = (
-            tested,
-            analysed,
-            scanned,
-            audited,
-            fuzzed,
-            links_checked,
-            migrations_linted,
-            mutated,
-            validated,
-            examples_checked,
-            compatibility_checked,
-        )
-        for helper in helpers:
+        for helper in PROVIDES:
             with self.subTest(helper=helper.__name__):
                 run = helper()
                 self.assertEqual((run.heuristic, tuple(run.read)), (False, ()))
-        provides = {
-            tested: ("test", "runs"),
-            analysed: ("analysis", "checks"),
-            scanned: ("security", "scans"),
-            audited: ("audit", "runs"),
-            fuzzed: ("fuzz", "runs"),
-            links_checked: ("links", "checked"),
-            migrations_linted: ("migrations", "linted"),
-            mutated: ("mutation", "runs"),
-            validated: ("schema", "validates"),
-            examples_checked: ("examples", "checked"),
-            compatibility_checked: ("compatibility", "breaking"),
-        }
-        for helper, (aspect, level) in provides.items():
+        for helper, (aspect, level) in PROVIDES.items():
             with self.subTest(helper=helper.__name__):
                 self.assertEqual(dict(helper().provides), {aspect: frozenset({level})})
         for run in (type_checked(strict=True), limited(), measured(Granularity.LINE), reported(Granularity.LINE)):
@@ -433,7 +422,8 @@ class MoreReaderTests(unittest.TestCase):
 
 def _make(files: dict[str, str], line: str) -> list[object]:
     with temp_project(files) as root:
-        return list(_make_targets(command(line), make_context(root)))
+        found = _make_targets(command(line), make_context(root))
+        return [] if found is None else list(found)
 
 
 class MakeExpansionTests(unittest.TestCase):

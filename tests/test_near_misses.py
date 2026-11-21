@@ -3,6 +3,7 @@ disabling settings that would otherwise credit a project with a practice it does
 
 from __future__ import annotations
 
+import re
 import unittest
 from collections.abc import Mapping
 from pathlib import Path
@@ -16,10 +17,13 @@ from project_validator.ecosystems.beam import MIX_FORMAT
 from project_validator.ecosystems.clojure import CLJFMT
 from project_validator.ecosystems.dotnet.tools import _security_analysis
 from project_validator.ecosystems.go import _excluded_everywhere
+from project_validator.ecosystems.javascript.analysis import _tsconfig
 from project_validator.ecosystems.julia import _bounded
+from project_validator.ecosystems.jvm import Wiring, _wired
 from project_validator.ecosystems.python.hatch import _environments, _script
 from project_validator.ecosystems.python.tox import _toml_tables
-from project_validator.facts import ConfigurationFile, Facts, Origin, Setting
+from project_validator.ecosystems.ruby.tools import _read_simplecov_settings
+from project_validator.facts import Command, ConfigurationFile, Facts, Origin, Setting
 from project_validator.facts.dependencies import Locked
 from project_validator.facts.formatting import FORMAT, Enforcement, _keeps
 from project_validator.facts.structure import SourceFile
@@ -248,8 +252,11 @@ class TomlDocumentShapeTests(unittest.TestCase):
 
 class BuiltTestsProbeTests(unittest.TestCase):
     def test_ctest_runs_only_with_build_options_and_a_cmake_project(self) -> None:
-        cases = (({"CMakeLists.txt": "project(x)\n"}, Options(build=True), 1), ({"main.c": ""}, Options(build=True), 0))
-        cases += (({"CMakeLists.txt": "project(x)\n"}, None, 0),)
+        cases: list[tuple[dict[str, str], Options | None, int]] = [
+            ({"CMakeLists.txt": "project(x)\n"}, Options(build=True), 1),
+            ({"main.c": ""}, Options(build=True), 0),
+            ({"CMakeLists.txt": "project(x)\n"}, None, 0),
+        ]
         for files, options, built in cases:
             with self.subTest(files=list(files), options=options), temp_project(files) as root:
                 with mock.patch.object(ctest, "count_built_tests", return_value=3) as count:
@@ -355,6 +362,71 @@ class HatchScriptShapeTests(unittest.TestCase):
         for env, name, expected in cases:
             with self.subTest(env=env, name=name):
                 self.assertEqual(_script(envs, env, name), expected)
+
+
+class JvmWiringTests(unittest.TestCase):
+    WIRING = Wiring(
+        report=re.compile(r"cov:report"),
+        maven_plugin="cov-maven",
+        bound_goal=re.compile(r"report"),
+        gradle_plugin="cov",
+    )
+
+    def setting(self, tool: str, key: str, value: object) -> Setting:
+        return Setting(origin=Origin(path="build"), tool=tool, key=key, value=value)
+
+    def test_each_build_tool_s_own_settings_wire_the_tool(self) -> None:
+        maven = self.setting("Maven", "plugin.cov-maven", ("report",))
+        applied, linked = self.setting("Gradle", "plugin", "cov"), self.setting("Gradle", "task", "cov:report")
+        facts = Facts(
+            [
+                maven,
+                applied,
+                linked,
+                self.setting("Maven", "plugin", "cov"),
+                self.setting("Maven", "task", "cov:report"),
+            ]
+        )
+        facts = Facts(
+            [*facts, self.setting("Gradle", "plugin.cov-maven", ("report",)), self.setting("Gradle", "plugin", "other")]
+        )
+        self.assertEqual(_wired(self.WIRING, "maven", facts), [maven])
+        self.assertEqual(_wired(self.WIRING, "gradle", facts), [applied, linked])
+
+    def test_a_maven_plugin_counts_only_with_a_goal_its_wiring_binds(self) -> None:
+        unbound = Facts([self.setting("Maven", "plugin.cov-maven", ("prepare-agent",))])
+        self.assertEqual(_wired(self.WIRING, "maven", unbound), [])
+
+
+class TsconfigTests(unittest.TestCase):
+    def test_the_configuration_tsc_reads_where_it_runs(self) -> None:
+        def tsc(*argv: str) -> str:
+            return _tsconfig(
+                Command(origin=Origin(path="ci.yml"), job="j", argv=("tsc", *argv), line="", directory="web")
+            )
+
+        self.assertEqual(tsc(), "web/tsconfig.json")
+        self.assertEqual(tsc("-p", "app"), "web/app/tsconfig.json")
+        self.assertEqual(tsc("--project", "tsconfig.build.json"), "web/tsconfig.build.json")
+
+
+class SimpleCovTests(unittest.TestCase):
+    def test_a_simplecov_file_starts_it_and_a_helper_must_start_it(self) -> None:
+        origin = Origin(path=".simplecov", at=("start",))
+        self.assertEqual(
+            list(_read_simplecov_settings(".simplecov", "enable_coverage :branch\n")),
+            [
+                Setting(origin=origin, tool="SimpleCov", key="start", value=True, heuristic=True),
+                Setting(
+                    origin=Origin(path=".simplecov", at=("enable_coverage",)),
+                    tool="SimpleCov",
+                    key="enable_coverage",
+                    value="branch",
+                    heuristic=True,
+                ),
+            ],
+        )
+        self.assertEqual(list(_read_simplecov_settings("spec/spec_helper.rb", "require 'rspec'\n")), [])
 
 
 if __name__ == "__main__":
