@@ -15,9 +15,16 @@ from project_validator.ecosystems.python.tox import _env_scripts
 from project_validator.ecosystems.ruby.tools import _read_rake_tasks, _read_simplecov_settings
 from project_validator.ecosystems.shell.tools import _read_pester
 from project_validator.facts import CiJob, Command, Origin, Setting, Unknown
-from project_validator.facts.analysis import analysed
+from project_validator.facts.analysis import analysed, type_checked
+from project_validator.facts.audit import audited
 from project_validator.facts.coverage import Granularity, measured, reported
 from project_validator.facts.expansion import Script
+from project_validator.facts.fuzzing import fuzzed
+from project_validator.facts.limits import limited
+from project_validator.facts.links import links_checked
+from project_validator.facts.migrations import migrations_linted
+from project_validator.facts.mutation import mutated
+from project_validator.facts.schema import compatibility_checked, examples_checked, validated
 from project_validator.facts.security import scanned
 from project_validator.facts.testing import tested
 from project_validator.tools.pre_commit import _read_hooks
@@ -232,6 +239,44 @@ class RunHelperTests(unittest.TestCase):
             ):
                 with self.subTest(run=run):
                     self.assertEqual((run.heuristic, run.read), (heuristic, read))
+
+    def test_every_helper_s_run_is_not_heuristic_and_reads_nothing_by_default(self) -> None:
+        helpers = (
+            tested,
+            analysed,
+            scanned,
+            audited,
+            fuzzed,
+            links_checked,
+            migrations_linted,
+            mutated,
+            validated,
+            examples_checked,
+            compatibility_checked,
+        )
+        for helper in helpers:
+            with self.subTest(helper=helper.__name__):
+                run = helper()
+                self.assertEqual((run.heuristic, tuple(run.read)), (False, ()))
+        provides = {
+            tested: ("test", "runs"),
+            analysed: ("analysis", "checks"),
+            scanned: ("security", "scans"),
+            audited: ("audit", "runs"),
+            fuzzed: ("fuzz", "runs"),
+            links_checked: ("links", "checked"),
+            migrations_linted: ("migrations", "linted"),
+            mutated: ("mutation", "runs"),
+            validated: ("schema", "validates"),
+            examples_checked: ("examples", "checked"),
+            compatibility_checked: ("compatibility", "breaking"),
+        }
+        for helper, (aspect, level) in provides.items():
+            with self.subTest(helper=helper.__name__):
+                self.assertEqual(dict(helper().provides), {aspect: frozenset({level})})
+        for run in (type_checked(strict=True), limited(), measured(Granularity.LINE), reported(Granularity.LINE)):
+            with self.subTest(run=run):
+                self.assertEqual((run.heuristic, tuple(run.read)), (False, ()))
 
 
 class SmallExtractorTests(unittest.TestCase):

@@ -15,12 +15,14 @@ from project_validator.core import Options, Project
 from project_validator.ecosystems.beam import MIX_FORMAT
 from project_validator.ecosystems.clojure import CLJFMT
 from project_validator.ecosystems.dotnet.tools import _security_analysis
+from project_validator.ecosystems.go import _excluded_everywhere
 from project_validator.ecosystems.julia import _bounded
-from project_validator.ecosystems.python.hatch import _environments
+from project_validator.ecosystems.python.hatch import _environments, _script
 from project_validator.ecosystems.python.tox import _toml_tables
 from project_validator.facts import ConfigurationFile, Facts, Origin, Setting
 from project_validator.facts.dependencies import Locked
 from project_validator.facts.formatting import FORMAT, Enforcement, _keeps
+from project_validator.facts.structure import SourceFile
 from project_validator.facts.tools import Run, defined_by
 from project_validator.tools.audits import _gitlab_dependency_scanning
 from tests.support import command, temp_project
@@ -279,6 +281,57 @@ class DefinedByTests(unittest.TestCase):
         )
         found = defined_by(files=("clang-format",), named=("ty.toml",), settings=("ruff",))
         self.assertEqual(list(found.found(facts)), ["a/.clang-format", "b/ty.toml", "pyproject.toml"])
+
+
+class GolangciExclusionTests(unittest.TestCase):
+    SOURCES = (
+        SourceFile(origin=Origin(path="a/x.go"), language="Go"),
+        SourceFile(origin=Origin(path="b/y.go"), language="Go"),
+    )
+
+    def excluded(self, rule: object, key: str = "linters.exclusions.rules") -> bool:
+        setting = Setting(origin=Origin(path=".golangci.yml"), tool="golangci-lint", key=key, value=(rule,))
+        return _excluded_everywhere("errcheck", Facts([*self.SOURCES, setting]))
+
+    def test_a_rule_dropping_the_linter_everywhere_excludes_it(self) -> None:
+        self.assertTrue(self.excluded({"linters": ["errcheck"]}))
+        self.assertTrue(self.excluded({"linters": ["errcheck"], "path": "."}, key="issues.exclude-rules"))
+
+    def test_a_rule_that_keeps_some_findings_does_not(self) -> None:
+        for rule in (
+            {"linters": ["errcheck"], "text": "Close"},
+            {"linters": ["errcheck"], "path": "^a/"},
+            {"linters": ["govet"]},
+            {"linters": "errcheck"},
+            {"linters": ["errcheck"], "path": "("},
+            "errcheck",
+        ):
+            with self.subTest(rule=rule):
+                self.assertFalse(self.excluded(rule))
+
+    def test_only_exclusion_rules_exclude(self) -> None:
+        self.assertFalse(self.excluded({"linters": ["errcheck"]}, key="linters.enable"))
+
+
+class HatchScriptShapeTests(unittest.TestCase):
+    def test_a_script_is_a_line_or_a_list_of_lines(self) -> None:
+        envs = {
+            "test": {"scripts": {"one": "pytest", "many": ["pytest", 1, "coverage report"], "bad": {"x": 1}}},
+            "flat": {"scripts": ["pytest"]},
+            "bare": "test",
+        }
+        cases = [
+            ("test", "one", ["pytest"]),
+            ("test", "many", ["pytest", "coverage report"]),
+            ("test", "bad", None),
+            ("test", "missing", None),
+            ("flat", "one", None),
+            ("bare", "one", None),
+            ("missing", "one", None),
+        ]
+        for env, name, expected in cases:
+            with self.subTest(env=env, name=name):
+                self.assertEqual(_script(envs, env, name), expected)
 
 
 if __name__ == "__main__":
