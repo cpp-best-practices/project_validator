@@ -11,6 +11,8 @@ from project_validator.ecosystems.beam import MIX_FORMAT
 from project_validator.ecosystems.clojure import CLJFMT
 from project_validator.ecosystems.dotnet.tools import _security_analysis
 from project_validator.ecosystems.julia import _bounded
+from project_validator.ecosystems.python.hatch import _environments
+from project_validator.ecosystems.python.tox import _toml_tables
 from project_validator.facts import Facts, Origin, Setting
 from project_validator.facts.dependencies import Locked
 from project_validator.facts.formatting import FORMAT, Enforcement, _keeps
@@ -154,6 +156,39 @@ class DotnetSecurityAnalysisTests(unittest.TestCase):
         for line in ("dotnet test --no-build", "dotnet run --no-build", "dotnet pack --no-build"):
             with self.subTest(line=line):
                 self.assertIsNone(_security_analysis(command(line), facts))
+
+
+class TomlDocumentShapeTests(unittest.TestCase):
+    """A table of the wrong type, or missing, reads as no environments rather than raising or counting."""
+
+    def test_hatch_environments(self) -> None:
+        cases = [
+            ("hatch.toml", "[envs.test]\nscripts = {}\n", {"test": {"scripts": {}}}),
+            ("pyproject.toml", "[tool.hatch.envs.test]\n", {"test": {}}),
+            ("pyproject.toml", "[project]\nname = 'x'\n", {}),
+            ("pyproject.toml", "tool = 1\n", {}),
+            ("pyproject.toml", "[tool]\nhatch = 1\n", {}),
+            ("hatch.toml", "envs = 'test'\n", {}),
+            ("hatch.toml", "envs = [", {}),
+        ]
+        for path, text, expected in cases:
+            with self.subTest(path=path, text=text):
+                self.assertEqual(_environments(path, text), expected)
+
+    def test_tox_tables(self) -> None:
+        cases = [
+            ("tox.toml", "env_list = ['a']\n", {"env_list": ["a"]}),
+            ("pyproject.toml", "[tool.tox]\nenv_list = ['a']\n", {"env_list": ["a"]}),
+            ("pyproject.toml", "[project]\nname = 'x'\n", None),
+            ("pyproject.toml", "tool = 1\n", None),
+            ("pyproject.toml", "[tool]\ntox = 1\n", None),
+            ("pyproject.toml", "[tool.tox]\n", None),
+            ("tox.toml", "", None),
+            ("tox.toml", "env_list = [", None),
+        ]
+        for path, text, expected in cases:
+            with self.subTest(path=path, text=text):
+                self.assertEqual(_toml_tables(path, text), expected)
 
 
 if __name__ == "__main__":
