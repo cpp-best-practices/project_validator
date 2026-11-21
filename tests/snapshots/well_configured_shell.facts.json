@@ -886,6 +886,7 @@
       "licenses": [
         "MIT"
       ],
+      "named": [],
       "note": false,
       "origin": "LICENSE"
     },
@@ -898,6 +899,11 @@
       "kind": "ConfigurationFile",
       "origin": "PSScriptAnalyzerSettings.psd1",
       "reader": "PSScriptAnalyzer"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "README.md",
+      "reader": "license links"
     },
     {
       "kind": "ConfigurationFile",

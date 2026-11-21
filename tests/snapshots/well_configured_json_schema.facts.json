@@ -685,8 +685,14 @@
       "licenses": [
         "MIT"
       ],
+      "named": [],
       "note": false,
       "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "README.md",
+      "reader": "license links"
     },
     {
       "advisory": "",

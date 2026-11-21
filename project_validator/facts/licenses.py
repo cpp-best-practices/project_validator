@@ -18,10 +18,19 @@ from project_validator.facts.settings import SettingsReader
 class LicenseFile(Fact):
     """A license file, and the SPDX identifiers of the licenses it holds: none when it is not recognised. A `note`
     holds no license but says something of the license files beside it (CRAN's `YEAR:`/`COPYRIGHT HOLDER:` stub, a
-    short file saying which of them apply)."""
+    short file saying which of them apply). An unrecognised text `named` licenses by name ("distributed under the
+    Apache 2.0 and MIT licenses", pointing to their texts elsewhere)."""
 
     licenses: frozenset[str]
     note: bool = False
+    named: frozenset[str] = frozenset()
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class LicenseLink(Fact):
+    """The project's README links to the license file at `target` (frog's badge, to `frog/LICENSE`)."""
+
+    target: str
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -61,4 +70,4 @@ def toml_license(table: str) -> Callable[[str], str | None]:
     return declared
 
 
-__all__ = ["DeclaredLicense", "LicenseFile", "declared_license_reader", "toml_license"]
+__all__ = ["DeclaredLicense", "LicenseFile", "LicenseLink", "declared_license_reader", "toml_license"]

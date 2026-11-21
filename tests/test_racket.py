@@ -131,6 +131,37 @@ class RacketTests(unittest.TestCase):
                 else:
                     self.assertEqual(result.status, Status.PASS, result)
 
+    def test_a_license_file_naming_the_declared_licenses_holds_them(self) -> None:
+        """typed-racket's LICENSE says it "is distributed under the Apache 2.0 and MIT licenses" and points to their
+        texts; its packages' info.rkt declare `Apache-2.0 OR MIT` (#189). A text naming other licenses than the
+        declared ones is still not recognised."""
+        pointer = (
+            "This component of Racket is distributed under the under the Apache 2.0\nand MIT licenses. The user can "
+            "choose the license under which they\nwill be using the software.\n\nSee the files\n  https://github.com/"
+            "racket/racket/blob/master/racket/src/LICENSE-APACHE.txt\nand\n  https://github.com/racket/racket/blob/"
+            "master/racket/src/LICENSE-MIT.txt\nfor the full text of the licenses.\n"
+        )
+        declared = {"typed-racket-lib/info.rkt": "#lang info\n(define license '(Apache-2.0 OR MIT))\n"}
+        result = _license({"LICENSE": pointer, **declared})
+        self.assertEqual(result.message, "the project is licensed under Apache-2.0, MIT")
+        other = {**declared, "typed-racket-lib/info.rkt": "#lang info\n(define license 'BSD-3-Clause)\n"}
+        self.assertEqual(_license({"LICENSE": pointer, **other}).status, Status.WARN)
+
+    def test_a_license_file_the_readme_links_to_is_the_projects(self) -> None:
+        """frog's only license file is in its collection directory, `frog/LICENSE`, which the README's license badge
+        links to (#189)."""
+        bsd = (
+            "Redistribution and use in source and binary forms, with or without modification, are permitted provided "
+            "that the following conditions are met:\n\n1. Redistributions of source code must retain the above "
+            "copyright notice, this list of conditions and the following disclaimer.\n\n2. Redistributions in binary "
+            "form must reproduce the above copyright notice, this list of conditions and the following disclaimer in "
+            "the documentation and/or other materials provided with the distribution.\n"
+        )
+        readme = "# Frog\n\n[![License](https://img.shields.io/badge/license-BSD-118811.svg)](frog/LICENSE)\n"
+        files = {"README.md": readme, "frog/LICENSE": bsd, "frog/main.rkt": "#lang racket/base\n"}
+        self.assertEqual(_license(files).message, "the project is licensed under BSD-2-Clause")
+        self.assertEqual(_license({**files, "README.md": "# Frog\n"}).message, "no license file")
+
     def test_raco_cover_measures_expressions(self) -> None:
         for line in ("raco cover .", "raco cover -f codecov -d coverage ."):
             with self.subTest(line=line):
