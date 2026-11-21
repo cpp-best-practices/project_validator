@@ -1,0 +1,638 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "2 of 2 actions are pinned to a tag rather than a commit",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": ".ocamlformat is defined but CI does not run ocamlformat",
+      "status": "WARN"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "no OCaml warning settings found; enable at least dune's dev profile warning set (or -w +a)",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "no branch coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "JSON: 3 JSON files parse; YAML: 2 YAML files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "dependency-management",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under BSD-3-Clause",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "CI covers 0 OS(es) (none), 0 OCaml version(s) (none), 0 combination(s); jobs on linux set up no OCaml version; expected at least 2 operating systems (found 0), at least 2 OCaml versions (found 0), at least 3 OS/OCaml version combinations (found 0)",
+      "status": "FAIL"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows no status badges",
+      "status": "FAIL"
+    },
+    {
+      "check": "tests-run",
+      "message": "test stanzas, inline_tests or cram tests in dune files: 2 file(s), but no CI configuration runs dune test (or dune runtest, dune build @runtest)",
+      "status": "WARN"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to OCaml",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": ".gitignore ignores /_build/; .gitignore ignores /_opam/",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "warnings are not treated as errors in CI configuration and the dune files",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "df9e87cdef7c0fcddf7fa7d4e8e6d8a45c95bcab",
+  "evaluated": "2026-11-21T10:58:49Z",
+  "language": "OCaml",
+  "name": "ocaml-community/yojson",
+  "score": {
+    "base": 55.26,
+    "breakdown": {
+      "": [
+        6,
+        9
+      ],
+      "Data": [
+        1,
+        1
+      ],
+      "OCaml": [
+        3.5,
+        9
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "OCaml",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "committed-artifacts",
+        "ecosystem": "OCaml",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "OCaml",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "OCaml",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "data-wellformed",
+        "ecosystem": "Data",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "large-files",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "OCaml",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "OCaml",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "OCaml",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "OCaml",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "OCaml",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      }
+    ],
+    "extra": 0.0,
+    "filled": 10.5,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "OCaml",
+        "hint": "",
+        "level": 1,
+        "message": "no OCaml warning settings found; enable at least dune's dev profile warning set (or -w +a)",
+        "needed_for": 1,
+        "points": 5.26,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "OCaml",
+        "hint": "",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration and the dune files",
+        "needed_for": 1,
+        "points": 5.26,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "OCaml",
+        "hint": "consider a CI job that runs dune build @fmt (or ocamlformat --check)",
+        "level": 1,
+        "message": ".ocamlformat is defined but CI does not run ocamlformat",
+        "needed_for": 1,
+        "points": 2.63,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "OCaml",
+        "hint": "",
+        "level": 1,
+        "message": "test stanzas, inline_tests or cram tests in dune files: 2 file(s), but no CI configuration runs dune test (or dune runtest, dune build @runtest)",
+        "needed_for": 1,
+        "points": 2.63,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "OCaml",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 5.26,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "2 of 2 actions are pinned to a tag rather than a commit",
+        "needed_for": null,
+        "points": 2.63,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "OCaml",
+        "hint": "consider running in CI: semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 2.63,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "OCaml",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 0 OS(es) (none), 0 OCaml version(s) (none), 0 combination(s); jobs on linux set up no OCaml version; expected at least 2 operating systems (found 0), at least 2 OCaml versions (found 0), at least 3 OS/OCaml version combinations (found 0)",
+        "needed_for": null,
+        "points": 5.26,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 2.63,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 2.63,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 2.63,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 2.63,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 2.63,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      }
+    ],
+    "percent": 55.26,
+    "slots": 19,
+    "summary": "55% · Level 0 Getting started · 15 of 19 gates in place",
+    "version": "1"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "6a457ee44dbce2eb16958ac1239e9fa1c1d363cc"
+}
