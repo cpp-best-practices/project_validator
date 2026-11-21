@@ -1,8 +1,8 @@
 name: mutation testing
 
 # On a pull request it mutates the functions the pull request changes and reports the survivors without failing. The
-# verdicts are cached between runs, so a push re-tests only what changed; a push to main collects the map of tests to
-# functions that a new pull request's first run starts from (a pull request reads its base branch's caches).
+# verdicts are cached between runs, so a push re-tests only what changed; a push to main collects, from nothing, the map
+# of tests to functions that a new pull request's first run starts from (a pull request reads its base branch's caches).
 on:
   pull_request:
   push:
@@ -36,6 +36,7 @@ jobs:
       # The verdicts of the newest earlier run (this pull request's, else main's), kept apart from mutants/ until
       # mutmut has made its copy of the tree; tests/mutation_cache.py merges them in.
       - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: github.event_name == 'pull_request'
         with:
           path: mutation-cache
           key: mutmut-${{ github.run_id }}-${{ github.run_attempt }}
@@ -50,8 +51,8 @@ jobs:
           timeout --signal=INT 5m mutmut run || true
           git -C mutants init -q
           git -C mutants add -A
-          python tests/mutation_cache.py restore mutation-cache
-          # The stats pass alone (the whole suite when nothing was cached, the new tests otherwise); no mutant runs.
+          # The whole stats pass, always from nothing: on restored stats, print-time-estimates (which generates no
+          # mutants) prunes every function from the map of tests to functions and saves it empty.
           mutmut print-time-estimates > /dev/null
 
       - name: Mutate the functions this pull request changes

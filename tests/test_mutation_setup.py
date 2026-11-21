@@ -147,6 +147,10 @@ class MutationSetupTests(unittest.TestCase):
             step for step in workflow["jobs"]["mutmut"]["steps"] if "mutmut print-time-estimates" in step.get("run", "")
         ]
         self.assertEqual([step["if"] for step in stats], ["github.event_name == 'push'"])
+        # Always cold: `print-time-estimates` on stats restored from a cache drops the whole map of tests to functions
+        # (mutmut prunes the functions whose mutants that process did not generate, which is all of them), and the
+        # next pull request would run its mutants against almost no tests.
+        self.assertNotIn("mutation_cache.py restore", stats[0]["run"])
 
     def test_the_summary_lists_only_the_survivors_of_the_changed_functions(self) -> None:
         workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
