@@ -25,6 +25,7 @@ from project_validator.facts.formatting import FORMAT, Enforcement, _keeps
 from project_validator.facts.structure import SourceFile
 from project_validator.facts.tools import Run, defined_by
 from project_validator.tools.audits import _gitlab_dependency_scanning
+from project_validator.tools.scanners import multi_language_scanners
 from tests.support import command, temp_project
 
 CHECKS = {FORMAT: frozenset({str(Enforcement.CHECK)})}
@@ -33,6 +34,28 @@ APPLIES = {FORMAT: frozenset({str(Enforcement.APPLY)})}
 
 def _provided(run: Run | None) -> Mapping[str, frozenset[str]] | None:
     return None if run is None else run.provides
+
+
+class ScannerSpellingTests(unittest.TestCase):
+    def test_codeql_and_semgrep_scan_by_each_of_their_commands(self) -> None:
+        tools = {tool.name: tool for tool in multi_language_scanners(frozenset({"Python"}))}
+        cases = {
+            ("CodeQL", "codeql database analyze db"): True,
+            ("CodeQL", "codeql database create db"): False,
+            ("semgrep", "semgrep ci"): True,
+            ("semgrep", "semgrep scan --error"): True,
+            ("semgrep", "semgrep --config auto"): True,
+            ("semgrep", "semgrep login"): False,
+        }
+        for (name, line), scans in cases.items():
+            with self.subTest(line=line):
+                self.assertIs(tools[name].claims(command(line), Facts()) is not None, scans)
+
+    def test_each_scanner_reads_only_the_languages_it_knows(self) -> None:
+        self.assertEqual(multi_language_scanners(frozenset({"Klingon"})), ())
+        found = multi_language_scanners(frozenset({"Python", "Klingon"}))
+        self.assertEqual([tool.name for tool in found], ["CodeQL", "GitLab SAST", "semgrep"])
+        self.assertTrue(all(tool.languages == frozenset({"Python"}) for tool in found))
 
 
 class GitDiffEnforcementTests(unittest.TestCase):
