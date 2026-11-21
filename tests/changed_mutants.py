@@ -1,13 +1,16 @@
 """The mutmut mutants of the functions a diff touches, for the repository's own mutation testing job.
 
     python tests/changed_mutants.py origin/main...HEAD
+    python tests/changed_mutants.py --shard 3/8
 
-prints one mutant name pattern per line, for `mutmut run`. mutmut 3 names a mutant `<module>.x_<function>__mutmut_N`,
-or `<module>.xǁ<Class>ǁ<method>__mutmut_N` for a method, and it only mutates top-level functions and the methods of
-top-level classes, so a changed line selects the one of those it lies in (a nested function counts as the function
-holding it). The pattern is `<module>.x_<function>*`: mutmut matches it against the mutants and, to choose the tests
-of its clean pass, against the bare function name, which `__mutmut_*` would miss; a function whose name extends
-another's (`x_top*` also matches `x_topology`) is then mutated too, which costs time but no correctness.
+prints one mutant name pattern per line, for `mutmut run`: those of the changed functions, or those of a shard of the
+package's modules (`<module>.x_*` and `<module>.xǁ*`) for the scheduled full run. mutmut 3 names a mutant
+`<module>.x_<function>__mutmut_N`, or `<module>.xǁ<Class>ǁ<method>__mutmut_N` for a method, and it only mutates
+top-level functions and the methods of top-level classes, so a changed line selects the one of those it lies in (a
+nested function counts as the function holding it). The pattern is `<module>.x_<function>*`: mutmut matches it against
+the mutants and, to choose the tests of its clean pass, against the bare function name, which `__mutmut_*` would miss; a
+function whose name extends another's (`x_top*` also matches `x_topology`) is then mutated too, which costs time but no
+correctness.
 
 Nothing is selected for lines outside any function (a module constant, a class attribute), the methods of nested
 classes, deleted files, and the functions mutmut leaves alone: decorated ones (except a bare `@staticmethod` or
@@ -21,6 +24,7 @@ import io
 import re
 import subprocess
 import sys
+import zlib
 from collections.abc import Callable, Iterable
 from pathlib import Path
 
@@ -119,6 +123,14 @@ def patterns_for(diff: str, read: Callable[[str], str | None]) -> list[str]:
     return sorted(patterns)
 
 
+def shard_patterns(modules: Iterable[str], index: int, count: int) -> list[str]:
+    """The patterns of shard `index` (from 1) of `count`: every function and method of its modules, for the scheduled
+    full run. A module's shard follows from its own path alone, so it stays in its shard (and that shard's cache) as
+    other modules come and go."""
+    chosen = (_module(path) for path in sorted(modules) if zlib.crc32(path.encode()) % count == index - 1)
+    return [pattern for module in chosen for pattern in (f"{module}.x_*", f"{module}.xǁ*")]
+
+
 def _git(*arguments: str, root: Path | None = None) -> str:
     """git's output, as text, whatever the user's diff and quoting settings, run at `root` (default: here)."""
     where = ["-C", str(root)] if root else []
@@ -138,9 +150,25 @@ def git_diff(revisions: str, root: Path) -> str:
     return _git("diff", "-U0", *options, revisions, "--", f"{PACKAGE}/*.py", f"{PACKAGE}/**/*.py", root=root)
 
 
+def _print(patterns: Iterable[str]) -> None:
+    if isinstance(sys.stdout, io.TextIOWrapper):
+        sys.stdout.reconfigure(encoding="utf-8")  # the method patterns hold a ǁ, whatever the locale
+    for pattern in patterns:
+        print(pattern)
+
+
+def _shard(argument: str) -> int:
+    index, count = (int(part) for part in argument.split("/"))
+    root = Path(_git("rev-parse", "--show-toplevel").strip())
+    _print(shard_patterns(_git("ls-files", f"{PACKAGE}/*.py", root=root).split(), index, count))
+    return 0
+
+
 def main(argv: list[str]) -> int:
+    if len(argv) == 3 and argv[1] == "--shard":
+        return _shard(argv[2])
     if len(argv) != 2:
-        print(f"usage: {argv[0]} REVISIONS", file=sys.stderr)
+        print(f"usage: {argv[0]} REVISIONS | --shard INDEX/COUNT", file=sys.stderr)
         return 2
     try:
         root = Path(_git("rev-parse", "--show-toplevel").strip())
@@ -153,10 +181,7 @@ def main(argv: list[str]) -> int:
         file = root / path
         return file.read_text(encoding="utf-8") if file.is_file() else None
 
-    if isinstance(sys.stdout, io.TextIOWrapper):
-        sys.stdout.reconfigure(encoding="utf-8")  # the method patterns hold a ǁ, whatever the locale
-    for pattern in patterns_for(diff, read):
-        print(pattern)
+    _print(patterns_for(diff, read))
     return 0
 
 

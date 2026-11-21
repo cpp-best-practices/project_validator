@@ -1,7 +1,12 @@
 name: mutation testing
 
-# Pull requests only: it mutates the functions the pull request changes and reports the survivors without failing.
-on: pull_request
+# On a pull request it mutates the functions the pull request changes and reports the survivors without failing. The
+# verdicts are cached between runs, so a push re-tests only what changed; a push to main collects, from nothing, the map
+# of tests to functions that a new pull request's first run starts from (a pull request reads its base branch's caches).
+on:
+  pull_request:
+  push:
+    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -28,7 +33,30 @@ jobs:
       - name: Install mutmut and the tests' dependencies
         run: python -m pip install --require-hashes -r .github/requirements/mutation.txt
 
+      # The verdicts of the newest earlier run (this pull request's, else main's), kept apart from mutants/ until
+      # mutmut has made its copy of the tree; tests/mutation_cache.py merges them in.
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: github.event_name == 'pull_request'
+        with:
+          path: mutation-cache
+          key: mutmut-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: mutmut-
+
+      - name: Collect the map of tests to functions
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          ulimit -v 4194304
+          # As below: the first run makes the copy, which then becomes a git repository.
+          timeout --signal=INT 5m mutmut run || true
+          git -C mutants init -q
+          git -C mutants add -A
+          # The whole stats pass, always from nothing: on restored stats, print-time-estimates (which generates no
+          # mutants) prunes every function from the map of tests to functions and saves it empty.
+          mutmut print-time-estimates > /dev/null
+
       - name: Mutate the functions this pull request changes
+        if: github.event_name == 'pull_request'
         # Explicit, so that GitHub adds pipefail: "mutmut run | tee" then fails when mutmut does.
         shell: bash
         env:
@@ -53,6 +81,8 @@ jobs:
           timeout --signal=INT 5m mutmut run "${patterns[@]}" || true
           git -C mutants init -q
           git -C mutants add -A
+          # Keep the earlier verdicts of functions whose source and tests are unchanged since they were reached.
+          python tests/mutation_cache.py restore mutation-cache
           # A budget below the job's timeout: a pull request that changes many functions still gets a report
           # of the mutants checked so far, instead of a cancelled job and no report at all. The budget covers
           # the whole run: the stats pass that maps tests to functions (the full suite, 15 to 20 minutes), the
@@ -71,10 +101,10 @@ jobs:
           # 124 is the budget's end; 137 is the KILL two minutes after it, when mutmut ignored the INT (its stats pass
           # does): both are the budget running out, reported below, not a failure.
           [ "$status" -eq 0 ] || [ "$status" -eq 124 ] || [ "$status" -eq 137 ] || exit "$status"
-          # The results also list every mutant not run (the other functions'), which would fill the summary.
+          # The results also list the other functions' mutants, which the cache keeps: only the changed functions'.
           survivors=$(mktemp)
-          mutmut results | grep -v ': not checked$' > "$survivors" || true
-          checked=$(mutmut results --all true | grep -vc ': not checked$' || true)
+          mutmut results | python tests/mutation_cache.py survivors patterns.txt | grep -v ': not checked$' > "$survivors" || true
+          checked=$(mutmut results --all true | python tests/mutation_cache.py survivors patterns.txt | grep -vc ': not checked$' || true)
           {
             echo '## Mutation testing of the changed functions'
             echo
@@ -92,3 +122,13 @@ jobs:
               echo 'no survivors'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the verdicts for the next run
+        if: always() && hashFiles('mutants/mutmut-stats.json') != ''
+        run: python tests/mutation_cache.py save mutation-cache
+
+      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: always() && hashFiles('mutation-cache/mutmut-stats.json') != ''
+        with:
+          path: mutation-cache
+          key: mutmut-${{ github.run_id }}-${{ github.run_attempt }}

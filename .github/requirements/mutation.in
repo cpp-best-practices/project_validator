@@ -2,5 +2,7 @@
 # Dependabot keeps it current.
 mutmut==3.8.1
 pytest==9.2.0
+# Fails a test that runs past its limit (`--timeout`), instead of letting it hang the run.
+pytest-timeout==2.4.0
 pyyaml==6.0.3
 markdown==3.11.3

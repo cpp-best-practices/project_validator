@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Fuzz target: the shell and PowerShell script splitters never raise."""
 
 from __future__ import annotations

@@ -52,6 +52,8 @@ jobs:
   test:
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
+    # The slowest, Windows, takes about 22 minutes; the default limit is six hours.
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
@@ -70,9 +72,10 @@ jobs:
       - name: Install the test dependencies
         run: python -m pip install --require-hashes -r .github/requirements/test.txt
 
-      # The unittest suite, run by pytest-xdist on every core; warnings are errors in each worker.
+      # The unittest suite, run by pytest-xdist on every core; warnings are errors in each worker. A test that runs
+      # past ten minutes fails alone (the slowest takes about 90 seconds on a developer machine).
       - name: Test
-        run: python -W error -m pytest -W error -n auto -p no:cacheprovider
+        run: python -W error -m pytest -W error -n auto -p no:cacheprovider --timeout=600
 
   formatting:
     name: formatting
@@ -304,67 +307,3 @@ jobs:
 
       - name: Enforce branch coverage threshold
         run: coverage report
-
-  fuzz:
-    name: fuzzing
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: "3.14"
-
-      - name: Install atheris
-        run: python -m pip install --require-hashes -r .github/requirements/fuzz.txt
-
-      - name: Fuzz yaml
-        if: ${{ !cancelled() }}
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-        run: python tests/fuzz/fuzz_yaml.py tests/fuzz/corpus/yaml -max_total_time=60 -timeout=25 -rss_limit_mb=2048
-
-      - name: Fuzz cmake
-        if: ${{ !cancelled() }}
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-        run: python tests/fuzz/fuzz_cmake.py tests/fuzz/corpus/cmake -max_total_time=60 -timeout=25 -rss_limit_mb=2048
-
-      - name: Fuzz meson
-        if: ${{ !cancelled() }}
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-        run: python tests/fuzz/fuzz_meson.py tests/fuzz/corpus/meson -max_total_time=60 -timeout=25 -rss_limit_mb=2048
-
-      - name: Fuzz shell
-        if: ${{ !cancelled() }}
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-        run: python tests/fuzz/fuzz_shell.py tests/fuzz/corpus/shell -max_total_time=60 -timeout=25 -rss_limit_mb=2048
-
-      - name: Fuzz github_expressions
-        if: ${{ !cancelled() }}
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-        run: python tests/fuzz/fuzz_github_expressions.py tests/fuzz/corpus/github_expressions -max_total_time=60 -timeout=25 -rss_limit_mb=2048
-
-      - name: Fuzz json
-        if: ${{ !cancelled() }}
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-        run: python tests/fuzz/fuzz_json.py tests/fuzz/corpus/json -max_total_time=60 -timeout=25 -rss_limit_mb=2048
-
-      - name: Upload crashes
-        if: failure() || cancelled()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: fuzz-crashes
-          path: |
-            crash-*
-            leak-*
-            timeout-*
-            oom-*
-          if-no-files-found: ignore
