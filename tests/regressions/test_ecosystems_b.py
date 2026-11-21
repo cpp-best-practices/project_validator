@@ -205,8 +205,10 @@ class ScalaTests(unittest.TestCase):
     def test_an_sbt_alias_for_scalafix_check_runs_scalafix(self) -> None:
         """`sbt scalafixCheck` runs scalafix when build.sbt's `addCommandAlias("scalafixCheck", "; scalafix --check
         ...")` says so (scalameta/metals)."""
-        result = _run(static_analysis, SBT, {**SCALAFIX_ALIAS, **github_job(CI, "sbt scalafixCheck")})
-        self.assertEqual(result.status, Status.PASS, result)
+        for run in ("sbt scalafixCheck", "sbt 'scalafixCheck; docs/run; docs/docusaurusCreateSite'"):
+            with self.subTest(run=run):
+                result = _run(static_analysis, SBT, {**SCALAFIX_ALIAS, **github_job(CI, run)})
+                self.assertEqual(result.status, Status.PASS, result)
 
     def test_scalac_options_in_the_build_definitions_scala_code_count(self) -> None:
         """`scalacOptions ++= Seq("-Werror", "-Wunused:all", ...)` in `project/*.scala` are the build's warning

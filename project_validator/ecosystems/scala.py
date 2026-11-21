@@ -120,7 +120,8 @@ _ALIAS = re.compile(r'addCommandAlias\s*\(\s*"([^"]+)"\s*,\s*"([^"]*)"')
 
 
 def _sbt_aliases(command: Command, context: Context) -> list[Expansion] | None:
-    """`sbt <alias>`: the sbt commands the alias stands for, as build.sbt defines them (metals' scalafixCheck)."""
+    """`sbt <alias>`: the sbt commands the alias stands for, as build.sbt defines them (metals' scalafixCheck), also
+    as one of several commands in a quoted word (`sbt 'scalafixCheck; docs/run'`)."""
     argv = resolved(command)
     if program(argv) not in ("sbt", "sbtn", "sbtx"):
         return None
@@ -129,9 +130,10 @@ def _sbt_aliases(command: Command, context: Context) -> list[Expansion] | None:
         return None
     aliases = dict(_ALIAS.findall(context.project.read_text(path)))
     found: list[Expansion] = [
-        Script(text=shlex.join((argv[0], aliases[word])), origin=Origin(path=path))
+        Script(text=shlex.join((argv[0], aliases[piece])), origin=Origin(path=path))
         for word in argv[1:]
-        if word in aliases
+        for piece in re.split(r"\s*;\s*", word.strip())
+        if piece in aliases
     ]
     return found or None
 
