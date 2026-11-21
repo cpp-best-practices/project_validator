@@ -843,3 +843,53 @@ class EvaluationEdgeTests(unittest.TestCase):
         found = _listed("list(APPEND FLAGS -Wall)", "add_compile_options(${FLAGS})")
         origins = [fact.origin for fact in found if isinstance(fact, CompilerOption)]
         self.assertEqual(origins, [Origin(path="CMakeLists.txt", at=("list", 1))])
+
+
+class LoopAndCallOriginTests(unittest.TestCase):
+    def _options_with_origins(self, *lines: str, **files: str) -> list[tuple[str, Origin]]:
+        found = _facts({"CMakeLists.txt": _lines(*lines), **files})
+        return [(fact.option, fact.origin) for fact in found if isinstance(fact, CompilerOption)]
+
+    def test_foreach_in_items_and_in_lists(self) -> None:
+        found = self._options_with_origins(
+            'set(FLAGS "-Wall;-Wextra")',
+            "foreach(flag IN ITEMS -Wshadow -Wconversion)",
+            "  add_compile_options(${flag})",
+            "endforeach()",
+            "foreach(flag IN LISTS FLAGS)",
+            "  add_compile_options(${flag})",
+            "endforeach()",
+        )
+        at_set = Origin(path="CMakeLists.txt", at=("set", 1))
+        self.assertEqual([option for option, _ in found], ["-Wshadow", "-Wconversion", "-Wall", "-Wextra"])
+        # A listed element comes from where the list was set.
+        self.assertEqual([origin for option, origin in found if option in ("-Wall", "-Wextra")], [at_set, at_set])
+
+    def test_zip_lists_are_not_followed(self) -> None:
+        found = self._options_with_origins(
+            "set(A x y)", "foreach(pair IN ZIP_LISTS A)", "  add_compile_options(-D${pair})", "endforeach()"
+        )
+        self.assertEqual([option for option, _ in found], ["-D${pair}"])
+
+    def test_a_function_s_options_come_from_the_file_that_defines_it(self) -> None:
+        helpers = _lines("function(warn)", "  add_compile_options(-Wall)", "endfunction()")
+        found = self._options_with_origins("include(cmake/helpers.cmake)", "warn()", **{"cmake/helpers.cmake": helpers})
+        self.assertEqual(found, [("-Wall", Origin(path="cmake/helpers.cmake", at=("add_compile_options", 2)))])
+
+    def test_add_definitions_keeps_where_each_definition_was_set(self) -> None:
+        found = self._options_with_origins('set(DEFS "-DA -DB")', "add_definitions(${DEFS} -DC)")
+        at_set = Origin(path="CMakeLists.txt", at=("set", 1))
+        self.assertEqual(
+            found, [("-DA", at_set), ("-DB", at_set), ("-DC", Origin(path="CMakeLists.txt", at=("add_definitions", 2)))]
+        )
+
+    def test_set_property_on_a_target_skips_the_append_keywords_and_on_global_has_no_target(self) -> None:
+        found = _listed(
+            "add_library(t a.c)",
+            "set_property(TARGET t APPEND_STRING PROPERTY COMPILE_OPTIONS -Wall)",
+            "set_property(GLOBAL PROPERTY COMPILE_OPTIONS -Wextra)",
+            "set_property(SOURCE a.c PROPERTY COMPILE_OPTIONS -Wshadow)",
+        )
+        self.assertEqual(
+            [(option, target) for option, target, _ in _options(found)], [("-Wall", "t"), ("-Wextra", None)]
+        )
