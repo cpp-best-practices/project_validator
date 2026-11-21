@@ -37,7 +37,8 @@ names, and counts its JDKs.
 ## `compiler-warnings`
 
 `-deprecation`, `-feature` and `-Xlint` (Scala 2) or `-Wunused`/`-Wall` (Scala 3) in `scalacOptions` (in the sbt or
-Mill build, or scala-cli's `//> using options`), or sbt-tpolecat, which sets them all.
+Mill build, or scala-cli's `//> using options`), or sbt-tpolecat, which sets them all (as do sbt-typelevel, which
+bundles it, and sbt-http4s-org, which bundles sbt-typelevel).
 
 ## `warnings-as-errors`
 

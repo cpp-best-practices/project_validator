@@ -229,10 +229,13 @@ class ScalaTests(unittest.TestCase):
 
     def test_sbt_typelevel_brings_tpolecats_strict_warning_set(self) -> None:
         """`addSbtPlugin("org.typelevel" % "sbt-typelevel" % ...)` enables the whole strict scalac set, as
-        sbt-tpolecat (which it bundles) does (typelevel/cats)."""
-        plugin = {"project/plugins.sbt": 'addSbtPlugin("org.typelevel" % "sbt-typelevel" % "0.7.7")\n'}
-        result = _run(compiler_warnings, SBT, plugin)
-        self.assertEqual(result.status, Status.PASS, result)
+        sbt-tpolecat (which it bundles) does (typelevel/cats); so does sbt-http4s-org, which bundles sbt-typelevel
+        (http4s/http4s)."""
+        for plugin in ('"org.typelevel" % "sbt-typelevel" % "0.7.7"', '"org.http4s" % "sbt-http4s-org" % "2.0.7"'):
+            with self.subTest(plugin=plugin):
+                files = {"project/plugins.sbt": f"addSbtPlugin({plugin})\n"}
+                result = _run(compiler_warnings, SBT, files)
+                self.assertEqual(result.status, Status.PASS, result)
 
     def test_a_matrix_scala_version_switched_to_with_a_space_is_counted(self) -> None:
         """`sbt '++ ${{ matrix.scala }}' test` over `scala: [2.12, 2.13, 3]` builds each Scala version on each JDK:

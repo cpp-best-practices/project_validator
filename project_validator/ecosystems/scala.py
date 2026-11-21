@@ -327,8 +327,11 @@ def _setting(name: str, regex: str) -> Pattern:
 
 
 # sbt-tpolecat sets the whole strict set (and, in its CI mode, fatal warnings).
-# sbt-typelevel bundles sbt-tpolecat (typelevel/cats).
-_TPOLECAT = r"\bsbt-tpolecat\b|\bsbt-typelevel\b|\btpolecat(?:ScalacOptions|DefaultOptionsMode|OptionsMode)\b"
+# sbt-typelevel bundles sbt-tpolecat (typelevel/cats), and sbt-http4s-org bundles sbt-typelevel (http4s/http4s).
+_TPOLECAT = (
+    r"\bsbt-tpolecat\b|\bsbt-typelevel\b|\bsbt-http4s-org\b"
+    r"|\btpolecat(?:ScalacOptions|DefaultOptionsMode|OptionsMode)\b"
+)
 DEPRECATION = _setting("-deprecation", rf"-deprecation\b|{_TPOLECAT}")
 FEATURE = _setting("-feature", rf"-feature\b|{_TPOLECAT}")
 LINT = _setting("-Xlint or -Wunused", rf"-Xlint\b|-Wunused\b|-Ywarn-unused\b|-Wall\b|{_TPOLECAT}")
