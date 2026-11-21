@@ -1,0 +1,104 @@
+name: full mutation run
+
+# Weekly, every mutant of the package, in eight shards of its modules (tests/changed_mutants.py --shard). Each shard
+# continues from its own cache: a run its budget stops is carried on by the next one, and a finished shard re-tests only
+# the functions that changed, or whose tests did, since (tests/mutation_cache.py).
+on:
+  schedule:
+    - cron: "0 3 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mutmut:
+    name: mutmut (shard ${{ matrix.shard }} of 8)
+    runs-on: ubuntu-latest
+    # GitHub's longest: the budget below, the priming run and the reports fit inside it.
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install mutmut and the tests' dependencies
+        run: python -m pip install --require-hashes -r .github/requirements/mutation.txt
+
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: mutation-cache
+          key: mutmut-full-${{ matrix.shard }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: mutmut-full-${{ matrix.shard }}-
+
+      - name: Mutate the shard's modules
+        # Explicit, so that GitHub adds pipefail.
+        shell: bash
+        run: |
+          # Its own command, so that a failure fails the step instead of reading as an empty shard.
+          python tests/changed_mutants.py --shard "${{ matrix.shard }}/8" > patterns.txt
+          mapfile -t patterns < patterns.txt
+          # As in the pull request job: the address-space cap turns a runaway mutant into a kill, and the first run
+          # only makes the copy of the tree, which then becomes a git repository for the self-referential tests.
+          ulimit -v 4194304
+          timeout --signal=INT 5m mutmut run "${patterns[@]}" || true
+          git -C mutants init -q
+          git -C mutants add -A
+          python tests/mutation_cache.py restore mutation-cache
+          before=$(mktemp)
+          after=$(mktemp)
+          mutmut results | python tests/mutation_cache.py survivors patterns.txt | grep ': survived$' | sort > "$before" || true
+          budget_minutes=330
+          status=0
+          timeout --signal=INT --kill-after=2m "${budget_minutes}m" mutmut run "${patterns[@]}" > run.log 2>&1 || status=$?
+          # 124 and 137 are the budget running out: the next run carries on from the verdicts reached.
+          if ! { [ "$status" -eq 0 ] || [ "$status" -eq 124 ] || [ "$status" -eq 137 ]; }; then
+            tail -n 50 run.log
+            exit "$status"
+          fi
+          mutmut results --all true | python tests/mutation_cache.py survivors patterns.txt > results.txt || true
+          grep ': survived$' results.txt | sort > "$after" || true
+          {
+            echo "## Full mutation run: shard ${{ matrix.shard }} of 8"
+            echo
+            if [ "$status" -ne 0 ]; then
+              echo "Stopped after $budget_minutes minutes; the next run carries on."
+              echo
+            fi
+            echo '```'
+            sed 's/.*: //' results.txt | sort | uniq -c
+            echo '```'
+            echo
+            echo 'Survivors that are new since the last run:'
+            echo
+            echo '```'
+            comm -13 "$before" "$after"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the verdicts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mutation-results-${{ matrix.shard }}
+          path: results.txt
+          if-no-files-found: ignore
+
+      - name: Keep the verdicts for the next run
+        if: always() && hashFiles('mutants/mutmut-stats.json') != ''
+        run: python tests/mutation_cache.py save mutation-cache
+
+      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: always() && hashFiles('mutation-cache/mutmut-stats.json') != ''
+        with:
+          path: mutation-cache
+          key: mutmut-full-${{ matrix.shard }}-${{ github.run_id }}-${{ github.run_attempt }}

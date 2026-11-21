@@ -1,0 +1,90 @@
+name: fuzzing
+
+# Each atheris target in tests/fuzz/ fuzzes for a minute, starting from the corpus its earlier runs grew, and saves it
+# back pruned; the weekly run fuzzes for ten minutes, so the runs on pull requests inherit a deeper corpus.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  fuzz:
+    name: fuzzing (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [cmake, github_expressions, json, meson, shell, yaml]
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install atheris
+        run: python -m pip install --require-hashes -r .github/requirements/fuzz.txt
+
+      # The target and the validator modules it imports: a change to them saves the corpus under a new key, a change
+      # elsewhere leaves this target's cache alone.
+      - name: Fingerprint the target
+        id: fingerprint
+        run: echo "digest=$(python tests/fuzz/fingerprint.py ${{ matrix.target }})" >> "$GITHUB_OUTPUT"
+
+      # The corpus of this target as it is, else as it was before its parser changed (a corpus never becomes wrong:
+      # libFuzzer keeps only the inputs that still add coverage), else none: the committed seeds are always read.
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: fuzz-corpus
+          key: fuzz-${{ matrix.target }}-${{ steps.fingerprint.outputs.digest }}-${{ github.run_id }}
+          restore-keys: |
+            fuzz-${{ matrix.target }}-${{ steps.fingerprint.outputs.digest }}-
+            fuzz-${{ matrix.target }}-
+
+      - name: Fuzz
+        env:
+          SECONDS_TO_FUZZ: ${{ github.event_name == 'schedule' && '600' || '60' }}
+        run: |
+          mkdir -p fuzz-corpus
+          python tests/fuzz/fuzz_${{ matrix.target }}.py fuzz-corpus tests/fuzz/corpus/${{ matrix.target }} \
+            -max_total_time="$SECONDS_TO_FUZZ" -timeout=25 -rss_limit_mb=2048
+
+      # Only the inputs that reach coverage the others don't, so the cache stays small.
+      - name: Prune the corpus
+        run: |
+          mkdir fuzz-merged
+          python tests/fuzz/fuzz_${{ matrix.target }}.py -merge=1 fuzz-merged fuzz-corpus tests/fuzz/corpus/${{ matrix.target }}
+          rm -rf fuzz-corpus
+          mv fuzz-merged fuzz-corpus
+
+      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: fuzz-corpus
+          key: fuzz-${{ matrix.target }}-${{ steps.fingerprint.outputs.digest }}-${{ github.run_id }}
+
+      - name: Upload crashes
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: fuzz-crashes-${{ matrix.target }}
+          path: |
+            crash-*
+            leak-*
+            timeout-*
+            oom-*
+          if-no-files-found: ignore
