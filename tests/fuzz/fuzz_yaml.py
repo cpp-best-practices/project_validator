@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Fuzz target: the YAML loader and the multi-document checker raise only `YamlError`."""
 
 from __future__ import annotations

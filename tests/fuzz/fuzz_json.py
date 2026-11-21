@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Fuzz target: `check_json` agrees with `json.loads` on whether a text is JSON."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Fuzz target: the GitHub Actions expression evaluator and renderer never raise."""
 
 from __future__ import annotations
