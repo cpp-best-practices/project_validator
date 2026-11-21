@@ -191,7 +191,8 @@ class Project:
         return sorted(path for path in paths if path and not self._excludes(path) and (self.root / path).is_file())
 
     def origin_url(self) -> str | None:
-        """The URL of the checkout's `origin` remote (where the project is published), or None."""
+        """The URL of the checkout's `origin` remote (where the project is published), or None; None too for a
+        directory inside a checkout, which is not published where the checkout is."""
         if "origin" not in self._listed:
             git = shutil.which("git")
             found = (
@@ -200,7 +201,7 @@ class Project:
                     capture_output=True,
                     check=False,
                 )
-                if git is not None
+                if git is not None and (self.root / ".git").exists()
                 else None
             )
             url = found.stdout.decode("utf-8", errors="replace").strip() if found and found.returncode == 0 else ""

@@ -122,6 +122,20 @@ class PlaceholderTests(unittest.TestCase):
         result = _run({**sources, "out/.gitkeep": "", "out/app.o": "\0"})
         self.assertEqual(result.status, Status.FAIL)
 
+    def test_what_a_build_writes_beside_sources_of_other_languages_is_still_an_output(self) -> None:
+        """A wheel in a Python dist/, beside a packaging script, and a binary in a Go bin/, beside a shell script, are
+        what the builds write (#235): the sources of other languages do not make those directories sources."""
+        python = {"pyproject.toml": "[project]\nname = 'p'\n", "p.py": ""}
+        go = {"go.mod": "module example.com/x\n", "main.go": "package main\n"}
+        cases = {
+            "wheel": {**python, "dist/p-1.0-py3-none-any.whl": "PK\0", "dist/release.sh": "#!/bin/sh\n"},
+            "binary": {**go, "bin/x": "\x7fELF\0", "bin/x.go": "package main\n"},
+            "binary beside a script": {**go, "bin/x": "\x7fELF\0", "bin/run.sh": "#!/bin/sh\n"},
+        }
+        for name, files in cases.items():
+            with self.subTest(name):
+                self.assertEqual(_run(files).status, Status.FAIL)
+
 
 class OwnerUnitTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("git"), "git is not installed")

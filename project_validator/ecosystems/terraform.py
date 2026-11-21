@@ -134,7 +134,8 @@ PROVIDER_LOCK = lockfile_reader(manager=PROVIDERS, files=(LOCKFILE,))
 PROVIDERS_MANAGER = PackageManager(
     name=PROVIDERS,
     languages=TERRAFORM_LANGUAGE,
-    lock_hint=f"commit {LOCKFILE}, which terraform init writes with the version and hashes of every provider",
+    lock_hint=f"commit {LOCKFILE}, which terraform init writes with the version and hashes of every provider, in a "
+    "root configuration; a shared module leaves the lock to the root configurations that use it",
 )
 
 # --- outputs: what init downloads, the state and plans

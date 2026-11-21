@@ -16,7 +16,7 @@ from pathlib import PurePosixPath
 
 from project_validator.facts import Facts
 from project_validator.facts.auxiliary import selectors
-from project_validator.facts.licenses import DeclaredLicense, LicenseFile
+from project_validator.facts.licenses import DeclaredLicense, LicenseFile, LicenseLink
 from project_validator.facts.roles import role
 from project_validator.facts.structure import Unit
 from project_validator.questions import Answer, LanguageAnswers, Question, answer_dict
@@ -46,7 +46,8 @@ class LicenseAnswer:
     packages: tuple[tuple[str, frozenset[str]], ...] = ()
     # The licenses the project's manifests declare (`GPL-2.0-or-later`, a text only saying GPL-2.0).
     declared: frozenset[str] = frozenset()
-    # Those declared where the ecosystem declares a license in place of a license file (a Data Package's descriptor).
+    # Those declared where the ecosystem declares a license in place of a license file (a Data Package's descriptor,
+    # Dist::Zilla's dist.ini).
     in_place: frozenset[str] = frozenset()
 
     def licenses(self) -> frozenset[str]:
@@ -97,19 +98,32 @@ def _nearest(path: str, files: tuple[LicenseFile, ...]) -> frozenset[str]:
     return frozenset()
 
 
-def _own(files: tuple[LicenseFile, ...]) -> tuple[tuple[str, frozenset[str]], ...]:
-    """The project's own license files (at its root) with their licenses; a note about the license files beside it
-    is none of them where they hold a license."""
-    root = [file for file in files if _directory(file) == "."]
+def _own(files: tuple[LicenseFile, ...], linked: frozenset[str]) -> tuple[LicenseFile, ...]:
+    """The project's own license files: at its root, or where its README links to (frog's `frog/LICENSE`); a note
+    about the license files beside it is none of them where they hold a license."""
+    root = [file for file in files if _directory(file) == "." or file.origin.path in linked]
     if any(file.licenses for file in root):
         root = [file for file in root if not file.note]
-    return tuple((file.origin.path, file.licenses) for file in root)
+    return tuple(root)
+
+
+def _held(file: LicenseFile, declarations: tuple[frozenset[str], ...]) -> frozenset[str]:
+    """The licenses `file` holds: those it is recognised as, or those of a declaration it names every license of
+    (typed-racket's LICENSE names "the Apache 2.0 and MIT licenses" its info.rkt files declare)."""
+    if file.licenses or not file.named:
+        return file.licenses
+    named = next((found for found in declarations if _comparable(found) <= file.named), None)
+    return named or frozenset()
 
 
 def license_answer(facts: Facts, language: str | None = None) -> LicenseAnswer:
     """The answer for the project, comparing the manifests of `language` (every language's, by default)."""
     files = tuple(facts.of(LicenseFile))
-    own = _own(files)
+    declarations = tuple(identifiers_in(fact.expression) for fact in facts.of(DeclaredLicense))
+    own = tuple(
+        (file.origin.path, _held(file, declarations))
+        for file in _own(files, frozenset(link.target for link in facts.of(LicenseLink)))
+    )
     mismatches = tuple(
         Mismatch(manifest=fact.origin.path, declared=fact.expression, licenses=licenses)
         for fact in _compared(facts, language)

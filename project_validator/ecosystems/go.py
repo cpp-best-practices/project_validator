@@ -155,23 +155,26 @@ GO_COVER = coverage_tool(
     measures=_go_cover,
 )
 
+# A *_test.go file outside testdata/, which the go tool ignores (a linter's fixtures, golangci-lint's).
+_GO_TEST_FILE = re.compile(r"^(?!(?:.*/)?testdata/).*_test\.go$")
+
 GO_TEST_FILES = TestFiles(
     name="Test functions in *_test.go files",
     languages=GO_LANGUAGE,
-    path=re.compile(r"_test\.go$"),
+    path=_GO_TEST_FILE,
     contains=re.compile(r"^func\s+(?:Test|Fuzz|Example)\w*\s*\(", re.MULTILINE),
 )
 
 GO_FUZZ_TARGETS = FuzzTargets(
     name="Fuzz functions (func FuzzXxx(f *testing.F))",
     languages=GO_LANGUAGE,
-    path=re.compile(r"_test\.go$"),
+    path=_GO_TEST_FILE,
     contains=re.compile(r"^func\s+Fuzz\w*\s*\(\w+\s+\*testing\.F\)", re.MULTILINE),
 )
 GO_PROPERTY_TESTS = PropertyTests(
     name="rapid and gopter tests",
     languages=GO_LANGUAGE,
-    path=re.compile(r"_test\.go$"),
+    path=_GO_TEST_FILE,
     contains=re.compile(r"pgregory\.net/rapid|leanovate/gopter"),
 )
 GO_FUZZ = fuzzer(

@@ -56,6 +56,11 @@ lizard parses Perl, so CI runs it with a length limit.
 `blib/` and the `MYMETA.*` files of a MakeMaker or Module::Build distribution, Module::Build's `_build/`, Carton's
 `local/` beside a cpanfile, and Devel::Cover's `cover_db/`.
 
+## `license`
+
+dist.ini's `license` (a Software::License name, mapped to SPDX: `Perl_5` is `Artistic-1.0-Perl OR GPL-1.0-or-later`).
+Dist::Zilla writes LICENSE from it at build time, so without a license file it stands in for one, and warns.
+
 ## `vcs-ignore`
 
 The same, each of those the project's build systems write: `blib/`, `MYMETA.*`, `cover_db/` for a MakeMaker

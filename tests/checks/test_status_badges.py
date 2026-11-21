@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import shutil
 import unittest
 from collections.abc import Mapping
 
 from project_validator.checks.status_badges import CI_HINT, QUALITY_HINT, status_badges
 from project_validator.core import Result, Status
 from tests.support import FIXTURES, make_context, temp_project
+from tests.test_project import git
 
 CI_BADGE = "![ci](https://github.com/o/r/actions/workflows/ci.yml/badge.svg)"
 QUALITY_BADGE = "![codecov](https://codecov.io/gh/o/r/graph/badge.svg)"
@@ -126,3 +128,35 @@ class StatusBadgesTests(unittest.TestCase):
         for path in ("README.rst", "readme.md", "README", ".github/README.md", "docs/README.md"):
             with self.subTest(path):
                 self.assertEqual(_run({path: f"{CI_BADGE}\n{QUALITY_BADGE}\n"}).status, Status.PASS)
+
+    @unittest.skipUnless(shutil.which("git"), "git is not installed")
+    def test_a_badge_of_another_repository_is_not_the_projects(self) -> None:
+        """got's comparison table shows the Codecov and Coveralls badges of ky, node-fetch and axios beside got's own
+        GitHub Actions badge (#240); a badge naming the project's repository still counts, and so does one outside a
+        comparison table."""
+        readme = (
+            "| | got | ky | node-fetch |\n|-|-|-|-|\n"
+            "| Coverage | TBD | [![][kc]][k4] | [![][nc]][n4] |\n| Build | [![][gb]][g5] | | |\n\n"
+            "[kc]: https://img.shields.io/codecov/c/github/sindresorhus/ky?color=0b9062&label\n"
+            "[nc]: https://img.shields.io/coveralls/github/bitinn/node-fetch?label\n"
+            "[gb]: https://github.com/sindresorhus/got/actions/workflows/main.yml/badge.svg\n"
+        )
+        own = (
+            "![codecov](https://img.shields.io/codecov/c/github/sindresorhus/got)\n"
+            "![ci](https://img.shields.io/github/actions/workflow/status/sindresorhus/got/ci.yml)\n"
+        )
+        cases = {
+            readme: "readme.md shows a CI badge (GitHub Actions) but no quality badge",
+            readme + own: "readme.md shows CI (GitHub Actions) and quality (Codecov) badges",
+            own: "readme.md shows CI (GitHub Actions) and quality (Codecov) badges",
+            # junit5's badge names the repository's new name, junit-framework: outside a comparison it is its own.
+            "![ci](https://github.com/sindresorhus/got-next/actions/workflows/ci.yml/badge.svg)\n": (
+                "readme.md shows a CI badge (GitHub Actions) but no quality badge"
+            ),
+        }
+        for text, expected in cases.items():
+            with self.subTest(text=text[:40]), temp_project({**WORKFLOW, "readme.md": text}) as root:
+                git(root, "init", "-q")
+                git(root, "remote", "add", "origin", "git@github.com:sindresorhus/got.git")
+                git(root, "add", ".")
+                self.assertEqual(status_badges.run(make_context(root)).message, expected)

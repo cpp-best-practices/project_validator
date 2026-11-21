@@ -37,7 +37,8 @@ Go tests, judged by the Go profile.
 
 The providers `required_providers` names (or `provider` blocks imply) are dependencies, and `terraform init` locks
 their versions and hashes in `.terraform.lock.hcl`, which must be committed. A configuration that names no provider has
-no dependencies to lock.
+no dependencies to lock. The hint says that the lockfile is a root configuration's: a shared module
+(terraform-aws-modules) commits none, and leaves the lock to the configurations that use it.
 
 ## `dependency-updates`
 

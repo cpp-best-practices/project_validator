@@ -9,7 +9,7 @@ from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.facts import Fact, Origin
-from project_validator.facts.licenses import LicenseFile
+from project_validator.facts.licenses import LicenseFile, LicenseLink
 from project_validator.facts.settings import SettingsReader
 
 # LICENSE, LICENSE.md, LICENSE-MIT, LICENCE, COPYING, COPYING.LESSER, UNLICENSE, ...
@@ -59,8 +59,8 @@ KNOWN_LICENSES = tuple(
     )
 )
 # Manifests that are where their ecosystem declares a license, in place of a license file (a Data Package's
-# `licenses`): their declaration stands in for one.
-DECLARED_IN_PLACE_OF_A_FILE = ("datapackage.json",)
+# `licenses`), or from which its build writes the file (Dist::Zilla's dist.ini): their declaration stands in for one.
+DECLARED_IN_PLACE_OF_A_FILE = ("datapackage.json", "datapackage.yaml", "datapackage.yml", "dist.ini")
 _QUOTED = re.compile(r"^[ \t]*>[ \t]?", re.MULTILINE)
 # How much of a license file is read: every known license is recognised by its first few paragraphs.
 HEAD_SIZE = 16384
@@ -104,12 +104,47 @@ def _note(text: str) -> bool:
     return _CRAN_STUB.fullmatch(text) is not None or (len(text) < _NOTE_SIZE and "licens" in text.lower())
 
 
+# A license as a text names it: "the Apache 2.0 and MIT licenses", "Apache License, Version 2.0".
+_NAMES = tuple(
+    (spdx, re.compile(name, re.IGNORECASE))
+    for spdx, name in (
+        ("Apache-2.0", r"\bapache(?:\s+license)?,?\s+(?:version\s+|v)?2(?:\.0)?\b"),
+        ("MIT", r"\bMIT\b"),
+        ("BSD-2-Clause", r"\b(?:2|two)-clause\s+BSD\b|\bBSD[- ]2[- ]clause\b"),
+        ("BSD-3-Clause", r"\b(?:3|three)-clause\s+BSD\b|\bBSD[- ]3[- ]clause\b"),
+        ("MPL-2.0", r"\bmozilla\s+public\s+license,?\s+(?:version\s+|v)?2(?:\.0)?\b|\bMPL[- ]2(?:\.0)?\b"),
+        ("ISC", r"\bISC\s+licen[cs]e\b"),
+    )
+)
+
+
+def _named(text: str) -> frozenset[str]:
+    """The licenses an unrecognised text names."""
+    head = text[:HEAD_SIZE]
+    return frozenset(spdx for spdx, name in _NAMES if name.search(head))
+
+
 def _read(path: str, text: str) -> Iterator[Fact]:
     file = PurePosixPath(path)
     reuse = file.parent.name == REUSE_DIRECTORY
     if reuse or (LICENSE_FILE.fullmatch(file.name) and file.suffix not in _code_suffixes()):
         found = recognised(path, text)
-        yield LicenseFile(origin=Origin(path=path), licenses=found, note=not found and _note(text))
+        named = frozenset() if found else _named(text)
+        yield LicenseFile(origin=Origin(path=path), licenses=found, note=not found and _note(text), named=named)
+
+
+# A Markdown link (`[text](frog/LICENSE)`) or an HTML one (`href="frog/LICENSE"`) to a file in the repository.
+_LINK = re.compile(r"\]\(\s*<?([^)\s>]+)|href=[\"']([^\"']+)")
+
+
+def _read_links(path: str, text: str) -> Iterator[Fact]:
+    """The license files the project's README (at the root) links to."""
+    if "/" in path:
+        return
+    for match in _LINK.finditer(text):
+        target = (match[1] or match[2]).removeprefix("./").split("#")[0]
+        if "://" not in target and not target.startswith("/") and LICENSE_FILE.fullmatch(PurePosixPath(target).name):
+            yield LicenseLink(origin=Origin(path=path), target=target)
 
 
 def _code_suffixes() -> frozenset[str]:
@@ -135,4 +170,6 @@ LICENSE_FILES = SettingsReader(
     read=_read,
 )
 
-__all__ = ["LICENSE_FILES", "REUSE_DIRECTORY", "identifiers_in", "recognised"]
+LICENSE_LINKS = SettingsReader(name="license links", files=(_any_case("readme"),), read=_read_links)
+
+__all__ = ["LICENSE_FILES", "LICENSE_LINKS", "REUSE_DIRECTORY", "identifiers_in", "recognised"]

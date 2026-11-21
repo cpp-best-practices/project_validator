@@ -120,7 +120,8 @@ _ALIAS = re.compile(r'addCommandAlias\s*\(\s*"([^"]+)"\s*,\s*"([^"]*)"')
 
 
 def _sbt_aliases(command: Command, context: Context) -> list[Expansion] | None:
-    """`sbt <alias>`: the sbt commands the alias stands for, as build.sbt defines them (metals' scalafixCheck)."""
+    """`sbt <alias>`: the sbt commands the alias stands for, as build.sbt defines them (metals' scalafixCheck), also
+    as one of several commands in a quoted word (`sbt 'scalafixCheck; docs/run'`)."""
     argv = resolved(command)
     if program(argv) not in ("sbt", "sbtn", "sbtx"):
         return None
@@ -129,9 +130,10 @@ def _sbt_aliases(command: Command, context: Context) -> list[Expansion] | None:
         return None
     aliases = dict(_ALIAS.findall(context.project.read_text(path)))
     found: list[Expansion] = [
-        Script(text=shlex.join((argv[0], aliases[word])), origin=Origin(path=path))
+        Script(text=shlex.join((argv[0], aliases[piece])), origin=Origin(path=path))
         for word in argv[1:]
-        if word in aliases
+        for piece in re.split(r"\s*;\s*", word.strip())
+        if piece in aliases
     ]
     return found or None
 
@@ -325,8 +327,11 @@ def _setting(name: str, regex: str) -> Pattern:
 
 
 # sbt-tpolecat sets the whole strict set (and, in its CI mode, fatal warnings).
-# sbt-typelevel bundles sbt-tpolecat (typelevel/cats).
-_TPOLECAT = r"\bsbt-tpolecat\b|\bsbt-typelevel\b|\btpolecat(?:ScalacOptions|DefaultOptionsMode|OptionsMode)\b"
+# sbt-typelevel bundles sbt-tpolecat (typelevel/cats), and sbt-http4s-org bundles sbt-typelevel (http4s/http4s).
+_TPOLECAT = (
+    r"\bsbt-tpolecat\b|\bsbt-typelevel\b|\bsbt-http4s-org\b"
+    r"|\btpolecat(?:ScalacOptions|DefaultOptionsMode|OptionsMode)\b"
+)
 DEPRECATION = _setting("-deprecation", rf"-deprecation\b|{_TPOLECAT}")
 FEATURE = _setting("-feature", rf"-feature\b|{_TPOLECAT}")
 LINT = _setting("-Xlint or -Wunused", rf"-Xlint\b|-Wunused\b|-Ywarn-unused\b|-Wall\b|{_TPOLECAT}")

@@ -91,6 +91,16 @@ class FormatTests(unittest.TestCase):
             self.assertIsInstance(unknown, Unknown)
             self.assertEqual(unknown.tools, ("t",))  # type: ignore[attr-defined]
 
+    def test_a_test_fixture_that_does_not_parse_hides_nothing(self) -> None:
+        """vite's playground/resolve/utf8-bom-package/package.json is a resolver fixture whose point is its BOM: not
+        the project's Jest settings, so nothing is unknown for it (#184). The project's own still is."""
+        broken = '﻿{"name": "bom"}\n'
+        for path, unknown in (("playground/resolve/utf8-bom-package/package.json", False), ("package.json", True)):
+            with self.subTest(path=path), temp_project({path: broken, "index.js": ""}) as root:
+                found = make_context(root).facts.of(Unknown)
+                unknowns = [fact.origin.path for fact in found if fact.origin.path == path]
+                self.assertEqual(bool(unknowns), unknown, unknowns)
+
 
 POM = "<project xmlns='http://maven.apache.org/POM/4.0.0'><build><plugins><plugin>"
 POM += "<artifactId>jacoco-maven-plugin</artifactId><executions><execution><goals><goal>report</goal>"
@@ -203,6 +213,9 @@ ROLES = (
     # Perl's test directories: t/ (mojo's template fixtures), and xt/ for author tests (upstream #184).
     ("t/mojolicious/json_config_lite_app.json", "test"),
     ("xt/author/pod.t", "test"),
+    # vite's end-to-end test projects; json-fortran's parser test inputs (#184, #235).
+    ("playground/glob-import/root/dir/node_modules/x/index.js", "test"),
+    ("files/inputs/invalid.json", "test"),
 )
 
 

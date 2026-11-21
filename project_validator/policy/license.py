@@ -30,7 +30,7 @@ def judge_license(answer: LicenseAnswer, *, allow_unknown: bool) -> Result:
             *(path for path, _ in answer.packages),
         )
     if not answer.files and answer.in_place:
-        return Result.warned(f"no license file; the descriptor declares {', '.join(sorted(answer.in_place))}", HINT)
+        return Result.warned(f"no license file; the manifest declares {', '.join(sorted(answer.in_place))}", HINT)
     if not answer.files:
         return Result.failed("no license file", HINT)
     if answer.unrecognised():

@@ -706,7 +706,7 @@
     },
     "dependency-management": {
       "details": [
-        "commit .terraform.lock.hcl, which terraform init writes with the version and hashes of every provider"
+        "commit .terraform.lock.hcl, which terraform init writes with the version and hashes of every provider, in a root configuration; a shared module leaves the lock to the root configurations that use it"
       ],
       "message": "dependencies are declared in main.tf (Terraform providers) but not locked",
       "status": "WARN"

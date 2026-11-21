@@ -135,7 +135,9 @@ def settings_facts(context: Context, readers: Iterable[SettingsReader], commands
     wanted = [*_read_by_default(project, readers), *_named(project, readers, commands)]
     for reader, path in dict.fromkeys(wanted):
         yield ConfigurationFile(origin=Origin(path=path), reader=reader.name)
-        yield from reader.read(path, project.read_text(path))
+        found = reader.read(path, project.read_text(path))
+        # A test's fixture may not parse on purpose (vite's BOM package.json): it hides none of the project's settings.
+        yield from (fact for fact in found if not isinstance(fact, Unknown)) if role(path) == "test" else found
     # A reader of the whole project reads it once it has one of its files, or always when it names none.
     project_readers = (*(reader for reader, _ in wanted), *(reader for reader in readers if not reader.files))
     for reader in dict.fromkeys(project_readers):

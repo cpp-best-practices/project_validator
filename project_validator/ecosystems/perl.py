@@ -16,6 +16,7 @@ from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import (
     Evidence,
@@ -38,6 +39,41 @@ MODULE_BUILD = BuildSystem(name="Module::Build", files=("Build.PL",), languages=
 DIST_ZILLA = BuildSystem(name="Dist::Zilla", files=("dist.ini",), languages=PERL)
 # A cpanfile declares the dependencies (for cpanm, cpm or Carton), with or without a distribution around it.
 CPANFILE = BuildSystem(name="cpanfile", files=("cpanfile",), languages=PERL)
+
+# dist.ini's `license` names a Software::License class, from which `dzil build` writes LICENSE.
+_SOFTWARE_LICENSES = {
+    "Perl_5": "Artistic-1.0-Perl OR GPL-1.0-or-later",
+    "Apache_1_1": "Apache-1.1",
+    "Apache_2_0": "Apache-2.0",
+    "Artistic_1_0": "Artistic-1.0",
+    "Artistic_2_0": "Artistic-2.0",
+    "BSD": "BSD-3-Clause",
+    "FreeBSD": "BSD-2-Clause",
+    "MIT": "MIT",
+    "GPL_1": "GPL-1.0-only",
+    "GPL_2": "GPL-2.0-only",
+    "GPL_3": "GPL-3.0-only",
+    "AGPL_3": "AGPL-3.0-only",
+    "LGPL_2_1": "LGPL-2.1-only",
+    "LGPL_3_0": "LGPL-3.0-only",
+    "Mozilla_1_1": "MPL-1.1",
+    "Mozilla_2_0": "MPL-2.0",
+    "CC0_1_0": "CC0-1.0",
+    "ISC": "ISC",
+    "Unlicense": "Unlicense",
+    "Zlib": "Zlib",
+}
+_DIST_LICENSE = re.compile(r"^license\s*=\s*(?:Software::License::)?(\w+)\s*$", re.MULTILINE)
+
+
+def _dist_license(text: str) -> str | None:
+    """The SPDX expression of the license dist.ini names (`license = Perl_5`)."""
+    return _SOFTWARE_LICENSES.get(found[1]) if (found := _DIST_LICENSE.search(text)) else None
+
+
+DIST_INI_LICENSE = declared_license_reader(
+    name="dist.ini license", files=("dist.ini",), languages=PERL, declared=_dist_license
+)
 DISTRIBUTIONS = frozenset({MAKEMAKER.name, MODULE_BUILD.name, DIST_ZILLA.name})
 BUILD_SYSTEMS = DISTRIBUTIONS | {CPANFILE.name}
 

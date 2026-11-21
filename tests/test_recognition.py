@@ -165,6 +165,22 @@ class UnrecognisedSuffixTests(unittest.TestCase):
         with _structure(files) as structure:
             self.assertEqual(structure.unrecognised_suffixes, ())
 
+    def test_common_test_specs_and_r_test_files_are_their_ecosystems(self) -> None:
+        """cowboy's `test/cowboy.spec` is a Common Test spec (Erlang terms); data.table's `inst/tests/*.Rraw` are R
+        test scripts and `tests/*.Rout.save` the output R CMD check compares with (#241)."""
+        cases = {
+            "BEAM": {"rebar.config": "{deps, []}.\n", "src/a.erl": "-module(a).\n", "test/cowboy.spec": ""},
+            "R": {
+                "DESCRIPTION": "Package: shop\n",
+                "R/a.R": "",
+                "inst/tests/tests.Rraw": "",
+                "tests/main.Rout.save": "",
+            },
+        }
+        for name, files in cases.items():
+            with self.subTest(ecosystem=name), _structure(files) as structure:
+                self.assertEqual(structure.unrecognised_suffixes, ())
+
 
 class ClaimConflictTests(unittest.TestCase):
     def test_built_in_ecosystems_claim_no_file_twice(self) -> None:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import unittest
 
+from project_validator.checks.license import license_ as license_check
 from project_validator.checks.schema_validation import schema_validation
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems.tabular_data import TABULAR_DATA_ECOSYSTEM
@@ -92,3 +93,15 @@ class TabularDataTests(unittest.TestCase):
             with self.subTest(inputs=inputs):
                 workflow = github_action("frictionlessdata/frictionless-ci@v2", **inputs)
                 self.assertEqual(self._run(schema_validation, workflow).status, Status.PASS)
+
+    def test_a_yaml_descriptor_declares_its_license_too(self) -> None:
+        """datasets/country-codes describes its package in `datapackage.yml`, whose `licenses` name ODC-PDDL-1.0
+        (#238); a JSON descriptor's are read the same way."""
+        licenses = {
+            "datapackage.yml": "name: codes\nlicenses:\n- name: ODC-PDDL-1.0\n  path: https://opendatacommons.org/\n",
+            "datapackage.json": '{"name": "codes", "licenses": [{"name": "ODC-PDDL-1.0"}]}\n',
+        }
+        for path, text in licenses.items():
+            with self.subTest(path=path), temp_project({path: text, "data/codes.csv": "code\nAD\n"}) as root:
+                result = license_check.run(make_context(root))
+                self.assertEqual(result.message, "no license file; the manifest declares ODC-PDDL-1.0")

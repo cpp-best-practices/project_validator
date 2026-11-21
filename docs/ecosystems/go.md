@@ -4,7 +4,8 @@ Recognised by `.go` sources and Go modules (`go.mod`).
 
 ## `tests-run`
 
-`Test` functions in `*_test.go` files run by `go test`.
+`Test` functions in `*_test.go` files run by `go test`; not those under `testdata/`, which the go tool ignores (a
+linter's fixtures).
 
 ## `fuzz-testing`
 
