@@ -24,6 +24,7 @@ from project_validator.ecosystems.scala import _mill_scalafmt
 from project_validator.ecosystems.sql import _squawk_action
 from project_validator.ecosystems.tabular_data import _frictionless_action
 from project_validator.facts import Command, Facts, Origin, Setting
+from project_validator.tools.audits import _trivy_action
 from project_validator.tools.coverage import _lcov, _llvm_cov
 from tests.support import command
 
@@ -208,6 +209,16 @@ class ActionDefaultTests(unittest.TestCase):
                 _frictionless_action,
                 {"packages": "a.json", "tables": "t/*.csv", "resources": ""},
                 (("frictionless", "validate", "a.json", "t/*.csv"),),
+            ),
+            (_trivy_action, {}, (("trivy", "image", "."),)),
+            (_trivy_action, {"image-ref": "app:1", "scan-ref": "src"}, (("trivy", "image", "app:1"),)),
+            (_trivy_action, {"scan-type": "fs", "image-ref": "app:1", "scan-ref": "src"}, (("trivy", "fs", "src"),)),
+            (_trivy_action, {"scan-type": "fs", "scanners": "vuln"}, (("trivy", "fs", "--scanners", "vuln", "."),)),
+            (_trivy_action, {"scan-type": "vm"}, ()),
+            (
+                _kube_linter_action,
+                {"config": "k.yaml", "directory": "charts"},
+                (("kube-linter", "lint", "--config", "k.yaml", "charts"),),
             ),
             # squawk-action fails the job only when told to (any case), on its files, else its pattern.
             (_squawk_action, {"fail-on-violations": "true"}, (("squawk", "migrations/*.sql"),)),

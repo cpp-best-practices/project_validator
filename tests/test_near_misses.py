@@ -5,20 +5,25 @@ from __future__ import annotations
 
 import unittest
 from collections.abc import Mapping
+from pathlib import Path
+from unittest import mock
 
+from project_validator.build_systems.cmake import ctest
+from project_validator.ci.github_actions import _own
 from project_validator.ci.github_expressions import Known, evaluate
+from project_validator.core import Options, Project
 from project_validator.ecosystems.beam import MIX_FORMAT
 from project_validator.ecosystems.clojure import CLJFMT
 from project_validator.ecosystems.dotnet.tools import _security_analysis
 from project_validator.ecosystems.julia import _bounded
 from project_validator.ecosystems.python.hatch import _environments
 from project_validator.ecosystems.python.tox import _toml_tables
-from project_validator.facts import Facts, Origin, Setting
+from project_validator.facts import ConfigurationFile, Facts, Origin, Setting
 from project_validator.facts.dependencies import Locked
 from project_validator.facts.formatting import FORMAT, Enforcement, _keeps
-from project_validator.facts.tools import Run
+from project_validator.facts.tools import Run, defined_by
 from project_validator.tools.audits import _gitlab_dependency_scanning
-from tests.support import command
+from tests.support import command, temp_project
 
 CHECKS = {FORMAT: frozenset({str(Enforcement.CHECK)})}
 APPLIES = {FORMAT: frozenset({str(Enforcement.APPLY)})}
@@ -101,6 +106,31 @@ class GithubStatusFunctionTests(unittest.TestCase):
         for expression in ("contains()", "startsWith()", "success('x')", "hashFiles()", "contains('a')"):
             with self.subTest(expression=expression):
                 self.assertIsNone(evaluate(expression, self.KNOWN))
+
+    def test_string_functions_ignore_case(self) -> None:
+        cases = {
+            "contains('Hello', 'ELL')": True,
+            "contains('Hello', 'x')": False,
+            "startsWith('Hello', 'he')": True,
+            "startsWith('Hello', 'lo')": False,
+            "endsWith('Hello', 'LO')": True,
+            "endsWith('Hello', 'he')": False,
+        }
+        for expression, expected in cases.items():
+            with self.subTest(expression=expression):
+                self.assertIs(evaluate(expression, self.KNOWN), expected)
+
+    def test_only_from_json_of_one_known_text_is_parsed(self) -> None:
+        cases = {
+            "fromJSON('true')": True,
+            "fromJSON('false')": False,
+            "hashFiles('true')": None,
+            "fromJSON('true', 'x')": None,
+            "fromJSON(steps.a.outputs.b)": None,
+        }
+        for expression, expected in cases.items():
+            with self.subTest(expression=expression):
+                self.assertIs(evaluate(expression, self.KNOWN), expected)
 
 
 class JuliaCompatTests(unittest.TestCase):
@@ -189,6 +219,66 @@ class TomlDocumentShapeTests(unittest.TestCase):
         for path, text, expected in cases:
             with self.subTest(path=path, text=text):
                 self.assertEqual(_toml_tables(path, text), expected)
+
+
+class BuiltTestsProbeTests(unittest.TestCase):
+    def test_ctest_runs_only_with_build_options_and_a_cmake_project(self) -> None:
+        cases = (({"CMakeLists.txt": "project(x)\n"}, Options(build=True), 1), ({"main.c": ""}, Options(build=True), 0))
+        cases += (({"CMakeLists.txt": "project(x)\n"}, None, 0),)
+        for files, options, built in cases:
+            with self.subTest(files=list(files), options=options), temp_project(files) as root:
+                with mock.patch.object(ctest, "count_built_tests", return_value=3) as count:
+                    found = list(ctest._built_tests(Project(root), options))
+                self.assertEqual(count.call_count, built)
+                self.assertEqual(len(found), built)
+
+    def test_the_build_configures_builds_and_lists_in_one_build_tree(self) -> None:
+        calls: list[list[str]] = []
+
+        def run(argv: list[str]) -> str:
+            calls.append(argv)
+            return '{"tests": [{"name": "a"}, {"name": "b"}]}'
+
+        with mock.patch.object(ctest, "_run", side_effect=run):
+            count = ctest.count_built_tests(Path("/src"), Options(build=True, cmake="cm", ctest="ct"))
+        build = calls[0][4]
+        self.assertTrue(Path(build).name.startswith("project_validator_"))
+        self.assertEqual(count, 2)
+        self.assertEqual(
+            calls,
+            [
+                ["cm", "-S", str(Path("/src")), "-B", build, "-DCMAKE_BUILD_TYPE=Debug"],
+                ["cm", "--build", build, "--config", "Debug"],
+                ["ct", "--test-dir", build, "-C", "Debug", "--show-only=json-v1"],
+            ],
+        )
+
+
+class OwnReusableWorkflowTests(unittest.TestCase):
+    def test_only_this_repository_s_workflow_by_its_full_name_is_its_own(self) -> None:
+        def load(path: str) -> object:
+            return "Apple/Swift-NIO" if path else None
+
+        uses = "apple/swift-nio/.github/workflows/unit.yml@main"
+        self.assertEqual(_own(uses, load), ".github/workflows/unit.yml")
+        self.assertIsNone(_own("apple/other/.github/workflows/unit.yml@main", load))
+        self.assertIsNone(_own("apple/swift-nio@main", load))
+        self.assertIsNone(_own(uses, None))
+        self.assertIsNone(_own(uses, lambda path: None))
+
+
+class DefinedByTests(unittest.TestCase):
+    def test_a_definition_is_a_file_its_reader_read_or_so_named_or_holding_its_settings(self) -> None:
+        facts = Facts(
+            [
+                ConfigurationFile(origin=Origin(path="a/.clang-format"), reader="clang-format"),
+                ConfigurationFile(origin=Origin(path="b/ty.toml"), reader="other"),
+                ConfigurationFile(origin=Origin(path="c/x.toml"), reader="other"),
+                Setting(origin=Origin(path="pyproject.toml"), tool="ruff", key="line-length", value=120),
+            ]
+        )
+        found = defined_by(files=("clang-format",), named=("ty.toml",), settings=("ruff",))
+        self.assertEqual(list(found.found(facts)), ["a/.clang-format", "b/ty.toml", "pyproject.toml"])
 
 
 if __name__ == "__main__":
