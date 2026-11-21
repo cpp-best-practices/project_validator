@@ -755,3 +755,91 @@ class GuardTests(unittest.TestCase):
         self.assertTrue(
             all(fact.tool == "CMake" for fact in found if isinstance(fact, Setting) and fact.key == "guard")
         )
+
+
+def _guards(*lines: str) -> list[object]:
+    return [fact.value for fact in _listed(*lines) if isinstance(fact, Setting) and fact.key == "guard"]
+
+
+class ResolvedPathTests(unittest.TestCase):
+    def test_a_guard_reads_a_resolved_path_as_the_path(self) -> None:
+        for resolving in (
+            'file(REAL_PATH "${CMAKE_SOURCE_DIR}" dir)',
+            'get_filename_component(dir "${CMAKE_SOURCE_DIR}" ABSOLUTE)',
+        ):
+            with self.subTest(resolving):
+                self.assertEqual(_guards(resolving, "if(${dir})", "endif()"), ["${CMAKE_SOURCE_DIR}"])
+
+    def test_other_file_and_path_operations_resolve_nothing(self) -> None:
+        for other in (
+            'file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}" dir)',
+            'file(REAL_PATH "${CMAKE_SOURCE_DIR}")',
+            'get_filename_component(dir "${CMAKE_SOURCE_DIR}" NAME)',
+            "get_filename_component(dir x)",
+            'cmake_path(ABSOLUTE_PATH "${CMAKE_SOURCE_DIR}" dir)',
+        ):
+            with self.subTest(other):
+                self.assertEqual(_guards(other, "if(${dir})", "endif()"), ["${dir}"])
+
+
+class StringAndSeparateArgumentsTests(unittest.TestCase):
+    def test_string_append_needs_a_variable(self) -> None:
+        found = _listed(
+            "string(APPEND)", 'string(APPEND FLAGS "-Wall")', "string(PREPEND)", "add_compile_options(${FLAGS})"
+        )
+        self.assertEqual([option for option, _, _ in _options(found)], ["-Wall"])
+
+    def test_string_append_with_nothing_to_add_leaves_the_variable_alone(self) -> None:
+        found = _listed('set(FLAGS "-Wall")', "string(APPEND FLAGS)", "add_compile_options(${FLAGS})")
+        self.assertEqual([option for option, _, _ in _options(found)], ["-Wall"])
+
+    def test_each_separated_word_comes_from_where_its_value_was_set(self) -> None:
+        found = _listed('set(MORE "-Wshadow -Wconversion")', "separate_arguments(MORE)", "add_compile_options(${MORE})")
+        origins = [fact.origin for fact in found if isinstance(fact, CompilerOption)]
+        self.assertEqual(origins, [Origin(path="CMakeLists.txt", at=("set", 1))] * 2)
+
+
+class EvaluationEdgeTests(unittest.TestCase):
+    def test_a_quoted_first_argument_with_values_per_build_is_one_argument(self) -> None:
+        found = _listed(
+            "if(MSVC)",
+            "  set(X /W4)",
+            "else()",
+            "  set(X -Wall)",
+            "endif()",
+            "function(f)",
+            "  add_compile_options(${ARGV1})",
+            "endfunction()",
+            'f("${X}" -Wextra)',
+        )
+        self.assertEqual([option for option, _, _ in _options(found)], ["-Wextra"])
+
+    def test_a_single_value_keyword_takes_one_word(self) -> None:
+        found = _listed(
+            "function(f)",
+            '  cmake_parse_arguments(ARG "" "FLAG" "MORE" ${ARGN})',
+            "  add_compile_options(${ARG_FLAG})",
+            "  add_link_options(${ARG_UNPARSED_ARGUMENTS})",
+            "endfunction()",
+            "f(FLAG -Wall -pie)",
+        )
+        self.assertEqual([option for option, _, _ in _options(found)], ["-Wall", "-pie"])
+        linking = [fact.option for fact in found if isinstance(fact, CompilerOption) and fact.linking]
+        self.assertEqual(linking, ["-pie"])
+
+    def test_a_file_with_an_include_guard_is_evaluated_once_and_others_each_time(self) -> None:
+        including = ("include(guarded.cmake)", "include(guarded.cmake)", "include(plain.cmake)", "include(plain.cmake)")
+        files = {
+            "CMakeLists.txt": _lines(*including),
+            "guarded.cmake": _lines(
+                "include_guard()", "if(G)", "  add_compile_options(-DG_TWICE)", "endif()", "set(G ON)"
+            ),
+            "plain.cmake": _lines("if(P)", "  add_compile_options(-DP_TWICE)", "endif()", "set(P ON)"),
+        }
+        # Conditions are evaluated symbolically, so each evaluation adds the option, under its condition.
+        self.assertEqual([option for option, _, _ in _options(_facts(files))], ["-DG_TWICE", "-DP_TWICE", "-DP_TWICE"])
+
+    def test_a_listed_word_comes_from_the_list_command(self) -> None:
+        found = _listed("list(APPEND FLAGS -Wall)", "add_compile_options(${FLAGS})")
+        origins = [fact.origin for fact in found if isinstance(fact, CompilerOption)]
+        self.assertEqual(origins, [Origin(path="CMakeLists.txt", at=("list", 1))])
