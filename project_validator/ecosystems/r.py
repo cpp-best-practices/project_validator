@@ -244,9 +244,13 @@ R_ECOSYSTEM = Ecosystem(
     languages=R,
     build_systems=(R_PACKAGE,),
     source_suffixes={".R": "R"},
-    # `.r` is REBOL's too; R Markdown, Quarto, Sweave, Rd documentation and RStudio project files are files of the
-    # ecosystem with no language of their own.
-    ambiguous_suffixes={".r": "R", ".Rmd": None, ".qmd": None, ".Rnw": None, ".Rd": None, ".Rproj": None},
+    # `.r` is REBOL's too; R Markdown, Quarto, Sweave, Rd documentation, RStudio project files, data.table's `.Rraw`
+    # test scripts and the `.Rout.save` output R CMD check compares a test's with are files of the ecosystem with no
+    # language of their own.
+    ambiguous_suffixes={
+        ".r": "R",
+        **dict.fromkeys((".Rmd", ".qmd", ".Rnw", ".Rd", ".Rproj", ".Rraw", ".save")),
+    },
     toolchain=toolchain_patterns(
         "R",
         version=_R_VERSION,

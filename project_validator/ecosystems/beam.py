@@ -517,9 +517,9 @@ BEAM = Ecosystem(
     languages=BEAM_LANGUAGES,
     build_systems=(MIX, REBAR3),
     source_suffixes={".ex": ELIXIR, ".exs": ELIXIR, ".erl": ERLANG, ".hrl": ERLANG},
-    # Erlang terms: an application resource file (`ebin/app.app`) and relx's or sys's `.config`, files of the
-    # ecosystem that add no language.
-    ambiguous_suffixes={".app": None, ".config": None},
+    # Erlang terms: an application resource file (`ebin/app.app`), relx's or sys's `.config` and a Common Test spec
+    # (`test/app.spec`), files of the ecosystem that add no language.
+    ambiguous_suffixes={".app": None, ".config": None, ".spec": None},
     toolchain=toolchain_patterns(
         "BEAM",
         programs=(*subcommands("mix", *_MIX_TASKS), "rebar3", "erlc", "elixir"),
