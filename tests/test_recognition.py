@@ -146,6 +146,12 @@ class UnrecognisedSuffixTests(unittest.TestCase):
         files = {"plugins/python-build/share/python-build/3.12.0": "", "share/2.7.18": "", "a.nim": ""}
         with _structure(files) as structure:
             self.assertEqual(structure.unrecognised_suffixes, ((".nim", 1),))
+        # The release's tail is part of the version too (`3.13.0t`, `3.4-dev`, `2.1.0-beta-src`, `9.4.0-0`), but a
+        # suffix that starts with a digit after a name is a file type (Forth's `.4th`).
+        tails = ("3.13.0t", "3.4-dev", "pypy3.10-7.3.13-src", "2.1.0-beta-src", "anaconda3-2024.06-1", "9.4.0-0")
+        files = {**{f"share/python-build/{name}": "" for name in tails}, "src/words.4th": ""}
+        with _structure(files) as structure:
+            self.assertEqual(structure.unrecognised_suffixes, ((".4th", 1),))
 
     def test_a_suffix_an_ecosystem_reads_in_any_case_is_recognised(self) -> None:
         """ISO-TC211's schemas are `.XSD`, which the XML schemas profile reads as it reads `.xsd` (#241)."""

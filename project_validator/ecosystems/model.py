@@ -56,7 +56,8 @@ class ToolchainPatterns:
     "Stackage lts-22"). `steps` read a version from a setup action's inputs, structurally: the action's repository
     (`subosito/flutter-action`) and a reader of its inputs, which returns the version named (or None). `pinned_by`
     names the files at the project's root that pin the version a job runs when it names none (`rust-toolchain.toml`),
-    each with the pattern of that version (its first group)."""
+    each with the pattern of that version (its first group). `chosen_by` patterns name the version the job's code runs
+    on over the one set up (a Gradle toolchain property: `-Pmockito.test.java=11` on a JDK 17 build)."""
 
     language: str
     versions: tuple[re.Pattern[str], ...]
@@ -66,6 +67,7 @@ class ToolchainPatterns:
     labelled: tuple[tuple[re.Pattern[str], str], ...] = ()
     steps: tuple[tuple[str, Callable[[Mapping[str, str]], str | None]], ...] = ()
     pinned_by: tuple[tuple[str, re.Pattern[str]], ...] = ()
+    chosen_by: tuple[re.Pattern[str], ...] = ()
 
     def used_by(self, texts: Iterable[str], commands: Iterable[tuple[str, ...]]) -> bool:
         """Whether a job with `texts` that runs `commands` (each its words) uses the toolchain, without naming it."""

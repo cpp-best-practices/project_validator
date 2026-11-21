@@ -7,13 +7,14 @@ import re
 from collections.abc import Iterator
 from pathlib import PurePosixPath
 
+from project_validator.core import Context
 from project_validator.ecosystems.ruby import RUBY_LANGUAGE, RUBY_ONLY, TEST_HELPERS
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import has_option, positional, program, starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
-from project_validator.facts.expansion import joined, launcher
+from project_validator.facts.expansion import CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
@@ -263,6 +264,27 @@ SIMPLECOV = coverage_tool(
 
 
 BUNDLE_EXEC = launcher("bundle exec", (("bundle", "exec"), ("bundler", "exec")))
+_RUBY_OPTIONS_WITH_VALUES = frozenset({"-I", "-r", "-E", "-C", "-x", "-0", "-F", "--encoding"})
+
+
+def _ruby_s(command: Command, _: Context) -> list[Expansion] | None:
+    """`ruby -S bundle exec cucumber`: ruby runs the script it finds on the PATH (jekyll), after its own options."""
+    argv = resolved(command)
+    if program(argv) not in ("ruby", "jruby") or "-S" not in argv:
+        return None
+    words = iter(argv[1:])
+    for word in words:
+        if word == "-S":
+            launched = tuple(words)
+            return [Launched(argv=launched)] if launched else []
+        if word in _RUBY_OPTIONS_WITH_VALUES:
+            next(words, None)
+        elif not word.startswith("-"):
+            return None  # a script ruby runs, whose arguments `-S` is one of
+    return None
+
+
+RUBY_S = CommandExpander(name="ruby -S", expand=_ruby_s)
 
 
 AUDITORS = (

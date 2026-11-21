@@ -356,6 +356,30 @@ class DependencyAndOutputTests(unittest.TestCase):
         result = run_as(self, PLATFORM_MATRIX, files, JVM)
         self.assertIn("2 JDK version(s) (17, 21)", result.message)
 
+    def test_the_test_jdk_a_build_property_chooses_is_the_jobs(self) -> None:
+        """mockito builds on JDK 17 and runs its tests on the toolchain `-Pmockito.test.java` names; okhttp's is
+        `-Ptest.java.version`, guava's surefire `-Dsurefire.toolchain.version` (#277)."""
+        for option in ("-Pmockito.test.java", "-Ptest.java.version", "-Dsurefire.toolchain.version"):
+            with self.subTest(option=option):
+                files = {
+                    GITHUB_WORKFLOW: f"""\
+                        jobs:
+                          java:
+                            runs-on: ubuntu-latest
+                            strategy:
+                              matrix:
+                                java: [11, 17, 21]
+                            steps:
+                              - uses: actions/setup-java@v4
+                                with:
+                                  java-version: 17
+                              - run: ./gradlew {option}=${{{{ matrix.java }}}} build
+                        """
+                }
+                result = run_as(self, PLATFORM_MATRIX, files, JVM)
+                self.assertIn("3 JDK version(s) (11, 17, 21)", result.message)
+                self.assertIn(".github/workflows/ci.yml: java (11): linux / 11", result.details)
+
 
 class ClassFileTests(unittest.TestCase):
     """Maven and Gradle compile into target/ and build/: ignoring those ignores the classes (xmlunit). Classes

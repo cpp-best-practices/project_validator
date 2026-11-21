@@ -24,7 +24,8 @@ JaCoCo (`jacoco:report`, `jacocoTestReport`, or `jacoco-maven-plugin` with its `
 
 ## `platform-matrix`
 
-The toolchains are JDK versions.
+The toolchains are JDK versions. A test toolchain property chooses the JDK the tests run on over the one set up:
+`-Pmockito.test.java=11`, `-Ptest.java.version=11`, `-Dsurefire.toolchain.version=11`.
 
 ## `compiler-warnings`
 

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from project_validator.core import Context
@@ -296,6 +296,13 @@ JDK_VERSIONS = (
 )
 
 
+# The JDK a build's tests run on, chosen through a toolchain property over the JDK the build runs on: mockito's
+# `-Pmockito.test.java=11`, okhttp's `-Ptest.java.version=11`, Maven surefire's `-Dsurefire.toolchain.version=11`.
+TEST_JDK = re.compile(
+    r"(?<!\S)-[PD](?=[\w.-]*(?:test|toolchain))(?=[\w.-]*(?:java|jdk|toolchain))[\w.-]+=[\"']?(\d+)\b"
+)
+
+
 JVM = Ecosystem(
     label="JVM",
     languages=frozenset({JAVA, KOTLIN}),
@@ -303,12 +310,15 @@ JVM = Ecosystem(
     source_suffixes={".java": JAVA, ".kt": KOTLIN},
     # Kotlin and Groovy scripts are mostly Gradle builds and their helpers, which name no language.
     ambiguous_suffixes={".kts": None, ".gradle": None},
-    toolchain=toolchain_patterns(
-        "JDK",
-        more=JDK_VERSIONS,
-        programs=("mvn", "mvnw", "gradle", "gradlew", "javac"),
-        setup=("java",),
-        steps=(("actions/setup-java", input_named("java-version")),),
+    toolchain=replace(
+        toolchain_patterns(
+            "JDK",
+            more=JDK_VERSIONS,
+            programs=("mvn", "mvnw", "gradle", "gradlew", "javac"),
+            setup=("java",),
+            steps=(("actions/setup-java", input_named("java-version")),),
+        ),
+        chosen_by=(TEST_JDK,),
     ),
 )
 

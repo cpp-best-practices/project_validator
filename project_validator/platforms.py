@@ -58,6 +58,12 @@ def toolchains() -> dict[str, ToolchainPatterns]:
     return {ecosystem.toolchain.language: ecosystem.toolchain for ecosystem in registered() if ecosystem.toolchain}
 
 
+def _chosen_versions(patterns: ToolchainPatterns, texts: tuple[str, ...]) -> set[str]:
+    """The versions the first text that names any chooses over the one set up (see `ToolchainPatterns.chosen_by`)."""
+    found = ({match[1] for regex in patterns.chosen_by for match in regex.finditer(text)} for text in texts)
+    return next((versions for versions in found if versions), set())
+
+
 def _named_versions(patterns: ToolchainPatterns, text: str) -> set[str]:
     versions = {match[1] for regex in patterns.versions for match in regex.finditer(text)}
     return versions | {label.format(match[1]) for regex, label in patterns.labelled for match in regex.finditer(text)}
@@ -92,8 +98,10 @@ def _language_toolchains(
     steps: Iterable[ActionStep] = (),
     pinned: str | None = None,
 ) -> set[Toolchain]:
-    """The versions named by the first text that names any and by the setup actions' inputs, or, when the language
-    is only used, the version the project pins, else the runner's default."""
+    """The versions a build option chooses, else those named by the first text that names any and by the setup
+    actions' inputs, or, when the language is only used, the version the project pins, else the runner's default."""
+    if chosen := _chosen_versions(patterns, texts):
+        return {Toolchain(language=language, version=version) for version in chosen}
     versions = next((found for text in texts if (found := _named_versions(patterns, text))), set())
     versions |= _step_versions(patterns, steps)
     if not versions and patterns.used_by(texts, commands):
