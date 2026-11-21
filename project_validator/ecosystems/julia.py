@@ -21,7 +21,7 @@ from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured
 from project_validator.facts.dependencies import Locked, PackageManager, lockfile_reader, manifest_reader
-from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
+from project_validator.facts.expansion import Action, CommandExpander, Expansion, Invocation
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
@@ -55,25 +55,39 @@ def julia_code(command: Command) -> str:
     return "\n".join(expressions or [word for word in argv[1:] if not word.startswith("-")])
 
 
-# A JLL package wraps a program built for Julia: `using biome_jll` then `` run(`$(biome_jll.biome()) check`) `` runs
-# Biome (Documenter's `make check-js`).
+# Julia code runs a command it writes in backticks: ``run(`npm run test`)`` (Pluto's frontend tests). A JLL package
+# wraps a program built for Julia: `using biome_jll` then ``run(`$(biome_jll.biome()) check`)`` runs Biome
+# (Documenter's `make check-js`).
+_RUN = re.compile(r"\b(?:run|success|read)\(\s*(?:ignorestatus\(\s*)?`([^`$]+)`")
 _JLL_COMMAND = re.compile(r"`\$\(\s*(?:(\w+)_jll\.)?(\w+)\(\)\s*\)([^`]*)`")
 _USING_JLL = re.compile(r"\b(?:using|import)\s+(\w+)_jll\b")
 
 
-def _jll_commands(command: Command, _context: Context) -> list[Expansion] | None:
-    """The programs of the JLL packages a `julia` command's code uses that its backtick commands run."""
+def _julia_commands(command: Command, _context: Context) -> list[Expansion] | None:
+    """The commands a `julia` command's code runs: those it passes to `run`, and the programs of the JLL packages it
+    uses that its backtick commands run."""
     code = julia_code(command)
     wrapped = set(_USING_JLL.findall(code))
-    found: list[Expansion] = [
-        Launched(argv=(name, *shlex.split(rest)))
+    runs = [tuple(shlex.split(text)) for text in _RUN.findall(code)]
+    runs += [
+        (name, *shlex.split(rest))
         for package, name, rest in _JLL_COMMAND.findall(code)
         if (package or name) in wrapped and (not package or package == name)
+    ]
+    # Each is a place of its own in the command's code, so that it is not taken for the command running itself.
+    place = command.origin
+    found: list[Expansion] = [
+        Invocation(
+            argv=argv,
+            line=f"`{shlex.join(argv)}` in the Julia code",
+            origin=Origin(path=place.path, at=(*place.at, "julia", index)),
+        )
+        for index, argv in enumerate(runs)
     ]
     return found or None
 
 
-JLL_COMMANDS = CommandExpander(name="JLL commands", expand=_jll_commands)
+JULIA_COMMANDS = CommandExpander(name="commands Julia code runs", expand=_julia_commands)
 
 
 # --- Tests, coverage and what the tests run ------------------------------------------------------------------------

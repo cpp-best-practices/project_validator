@@ -205,3 +205,14 @@ class JllTests(unittest.TestCase):
             facts = make_context(root).facts
         launched = [fact.argv for fact in facts.of(Command) if fact.argv[:1] == ("biome",)]
         self.assertEqual(launched, [("biome", "check")])
+
+    def test_a_command_julia_code_runs_is_run(self) -> None:
+        """Pluto's frontend tests run as ``run(`npm run test`)`` inside a `julia -e` script that starts a server
+        first (#230); a backtick command that is only built, never run, is not."""
+        code = "julia -e 'import Pluto\nserver = Pluto.run!(s)\nrun(`npm run test`)\nclose(server)'"
+        built = "julia -e 'cmd = `npm publish`; println(cmd)'"
+        files = {"Project.toml": 'name = "P"\n', "package.json": '{"scripts": {"test": "jest --verbose"}}\n'}
+        with temp_project({**files, **github_job("ubuntu-latest", code, built)}) as root:
+            facts = make_context(root).facts
+        launched = [fact.argv for fact in facts.of(Command) if fact.argv[:1] in (("npm",), ("jest",))]
+        self.assertEqual(launched, [("npm", "run", "test"), ("jest", "--verbose")])
