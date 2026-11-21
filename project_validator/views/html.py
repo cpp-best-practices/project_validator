@@ -47,6 +47,7 @@ from project_validator.views.common import (
     judged_places,
     place_label,
     reading,
+    role_directories,
     role_judgement,
     role_line,
     summary,
@@ -233,7 +234,7 @@ def _roles_card(analysis: Analysis, vendored: Sequence[str]) -> str:
     rows = (
         (
             e(role_line(found).split(":", 1)[0]),
-            e(", ".join(f"{d}/" if d != "." else "the root" for d in found.directories)),
+            e(role_directories(found)),
             str(found.files),
             e(", ".join(found.languages) or "-"),
             e(role_judgement(found)),

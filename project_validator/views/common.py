@@ -15,6 +15,7 @@ from project_validator.core import Placed, Status
 from project_validator.explanations import CATEGORIES, category
 from project_validator.project_map import LanguageFiles, Place
 from project_validator.runner import Report
+from project_validator.words import counted, folder
 
 # How each status is shown, in words and as a symbol, worst first.
 STATUS_ORDER = (Status.ERROR, Status.FAIL, Status.WARN, Status.PASS, Status.SKIP)
@@ -129,10 +130,14 @@ def units(analysis: Analysis) -> list[tuple[str, str, str, str]]:
 
 def role_line(summary_: RoleSummary) -> str:
     """`tests: tests/ (12 files, C++, Python)`, with how it is judged."""
-    directories = ", ".join(f"{directory}/" if directory != "." else "the root" for directory in summary_.directories)
     languages = f", {', '.join(summary_.languages)}" if summary_.languages else ""
-    files = f"{summary_.files} file{'s' if summary_.files != 1 else ''}"
-    return f"{ROLE_NAMES.get(summary_.role, summary_.role)}: {directories} ({files}{languages})"
+    files = counted(summary_.files, "file")
+    return f"{ROLE_NAMES.get(summary_.role, summary_.role)}: {role_directories(summary_)} ({files}{languages})"
+
+
+def role_directories(summary_: RoleSummary) -> str:
+    """`src/, tools/`: the top-level folders the code in a role is in."""
+    return ", ".join(folder(directory) for directory in summary_.directories)
 
 
 def role_judgement(summary_: RoleSummary) -> str:
@@ -154,14 +159,14 @@ def ci_summary(analysis: Analysis) -> str:
     jobs = len(structure.ci_jobs)
     files = len(structure.ci_files)
     providers = ", ".join(structure.ci_providers)
-    return f"{providers}: {jobs} job{'s' if jobs != 1 else ''} in {files} file{'s' if files != 1 else ''}"
+    return f"{providers}: {counted(jobs, 'job')} in {counted(files, 'file')}"
 
 
 def reading(analysis: Analysis) -> str:
     """`1,500 facts in 0.31 s`: how much was read, and how many paths git ignores were left out."""
     read = f"{len(analysis.facts.all):,} facts in {analysis.seconds:.2f} s"
     if count := len(analysis.ignored):
-        return f"{read}; {count} path{'s' if count != 1 else ''} git ignores left out"
+        return f"{read}; {counted(count, 'path')} git ignores left out"
     return read
 
 
@@ -169,19 +174,18 @@ PLACES_SHOWN = 4  # folders listed for a language before the rest are counted
 
 
 def _place(place: Place) -> str:
-    where = "the root" if place.directory == "." else f"{place.directory}/"
-    return f"{where} ({place.files}{'' if place.role == 'product' else f', {place.role}'})"
+    return f"{folder(place.directory)} ({place.files}{'' if place.role == 'product' else f', {place.role}'})"
 
 
 def language_files(found: LanguageFiles) -> tuple[str, str]:
     """(`4 files (44%)`, `pkg/ (3), tests/ (1, test)`): how many files a language has, its share of the project's
     own files, and the folders that hold them, past `PLACES_SHOWN` counted."""
     share = "<1" if found.share < 0.01 else str(round(found.share * 100))
-    count = f"{found.files} file{'s' if found.files != 1 else ''} ({share}%)"
+    count = f"{counted(found.files, 'file')} ({share}%)"
     shown, rest = found.places[:PLACES_SHOWN], found.places[PLACES_SHOWN:]
     where = ", ".join(_place(place) for place in shown)
     if rest:
-        where += f" and {len(rest)} more folders ({sum(place.files for place in rest)} files)"
+        where += f" and {counted(len(rest), 'more folder')} ({counted(sum(place.files for place in rest), 'file')})"
     return count, where
 
 
@@ -226,6 +230,7 @@ __all__ = [
     "language_files",
     "place_label",
     "reading",
+    "role_directories",
     "role_judgement",
     "role_line",
     "summary",

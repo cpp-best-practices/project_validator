@@ -19,6 +19,7 @@ from project_validator.facts.structure import SourceFile, Unit
 from project_validator.facts.tools import handling
 from project_validator.policy import Judge
 from project_validator.questions import AdvisedTools, LanguageAnswers, RanTools, UnitAnswer
+from project_validator.words import folder
 
 
 def labelled(results: Mapping[str, Result]) -> Result:
@@ -131,7 +132,7 @@ def _label(place: _Place, places: tuple[_Place, ...], auxiliary: _Auxiliary) -> 
     named the auxiliary code it is about, when it is."""
     language, unit = place
     languages, units = {language for language, _ in places}, {unit for _, unit in places}
-    where = "the root" if unit == "." else unit
+    where = folder(unit, slash=False)
     name = language if len(units) == 1 else where if len(languages) == 1 else f"{language} in {where}"
     return f"{name} (auxiliary: {', '.join(named)})" if (named := auxiliary.get(place)) else name
 

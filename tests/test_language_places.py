@@ -119,6 +119,8 @@ class WordsTests(unittest.TestCase):
         shown = ", ".join(f"d{index}/ (1)" for index in range(common.PLACES_SHOWN))
         rest = 7 - common.PLACES_SHOWN
         self.assertEqual(common.language_files(found)[1], f"{shown} and {rest} more folders ({rest} files)")
+        one = LanguageFiles(language="Go", files=5, share=1.0, places=places[: common.PLACES_SHOWN + 1])
+        self.assertTrue(common.language_files(one)[1].endswith(" and 1 more folder (1 file)"))
 
 
 class ViewTests(unittest.TestCase):

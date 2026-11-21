@@ -19,6 +19,7 @@ from project_validator.views.common import (
     units,
     unrecognised,
 )
+from project_validator.words import folder
 
 NEXT_STEPS = 5  # how many next steps the report lists
 
@@ -31,8 +32,7 @@ def detected_lines(analysis: Analysis) -> list[str]:
     lines += [f"  {label}: {signals}" for label, signals in ecosystems(analysis)] or ["  no recognised language"]
     lines += [f"  Where: {name}: {count} in {where}" for name, count, where in files_by_language(analysis)]
     for directory, role, systems, names in units(analysis):
-        where = "the root" if directory == "." else directory
-        lines.append(f"  Unit {where} ({role}): built with {systems}; {names}")
+        lines.append(f"  Unit {folder(directory, slash=False)} ({role}): built with {systems}; {names}")
     lines += [f"  Code of {role_line(summary_)}: {role_judgement(summary_)}" for summary_ in analysis.roles]
     if found := unrecognised(analysis):
         lines.append(f"  Not recognised: {found}")
