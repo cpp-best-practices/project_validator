@@ -188,7 +188,9 @@ class CodeFormattingTests(unittest.TestCase):
 
 
 class PythonCodeFormattingTests(unittest.TestCase):
-    HINT = "consider a CI job that runs ruff format --check (or black --check)"
+    HINT = (
+        "consider a CI job that runs ruff format --check (or black --check, autopep8 --diff --exit-code or yapf --diff)"
+    )
 
     def _run(self, files: dict[str, str]) -> Result:
         return run_as(self, code_formatting, files, PYTHON)
@@ -233,13 +235,36 @@ class PythonCodeFormattingTests(unittest.TestCase):
 
     def test_warns_when_configured_but_ci_does_not_format(self) -> None:
         files = {"pyproject.toml": "[tool.black]\nline-length = 100\n", **github_job("ubuntu-latest", "pytest")}
-        expected = Result.warned("pyproject.toml is defined but CI does not run ruff format or black", self.HINT)
+        expected = Result.warned(
+            "pyproject.toml is defined but CI does not run ruff format, black, autopep8 or yapf", self.HINT
+        )
         self.assertEqual(self._run(files), expected)
 
     def test_fails_without_a_formatter(self) -> None:
         files = {"pyproject.toml": "[project]\nname = 'black'\n", **github_job("ubuntu-latest", "black-box-tests")}
-        expected = Result.failed("CI never runs ruff format or black; its formatting is not enforced", self.HINT)
+        expected = Result.failed(
+            "CI never runs ruff format, black, autopep8 or yapf; its formatting is not enforced", self.HINT
+        )
         self.assertEqual(self._run(files), expected)
+
+    def test_autopep8_and_yapf_are_python_formatters(self) -> None:
+        """pre-commit/pre-commit formats with autopep8 (as a pre-commit hook, which fails when it changes a file);
+        yapf is the other common one (#221). Each enforces when it fails on a change, and only rewrites otherwise."""
+        enforcing = {
+            "autopep8": "autopep8 --diff --exit-code -r .",
+            "yapf": "yapf --diff --recursive .",
+        }
+        for tool, command in enforcing.items():
+            with self.subTest(tool=tool):
+                self.assertEqual(self._run(github_job("x", command)), Result.passed(f"CI enforces the {tool} style"))
+        for tool, command in {"autopep8": "autopep8 -i -r .", "yapf": "yapf -i -r ."}.items():
+            with self.subTest(tool=tool, rewrites=True):
+                self.assertEqual(self._run(github_job("x", command)).message, REWRITES.format(tool))
+        hooks = (
+            "repos:\n  - repo: https://github.com/hhatto/autopep8\n    rev: v2.3.2\n    hooks:\n      - id: autopep8\n"
+        )
+        files = {".pre-commit-config.yaml": hooks, **github_job("x", "pre-commit run --all-files")}
+        self.assertEqual(self._run(files), Result.passed("CI enforces the autopep8 style"))
 
     def test_black_that_only_rewrites_files_does_not_count(self) -> None:
         result = self._run(github_job("ubuntu-latest", "black ."))
@@ -338,8 +363,9 @@ class MixedLanguageCodeFormattingTests(unittest.TestCase):
             result,
             Result.failed(
                 "C++: .clang-format is defined and CI runs clang-format; "
-                "Python: CI never runs ruff format or black; its formatting is not enforced",
-                "Python: consider a CI job that runs ruff format --check (or black --check)",
+                "Python: CI never runs ruff format, black, autopep8 or yapf; its formatting is not enforced",
+                "Python: consider a CI job that runs ruff format --check (or black --check, autopep8 --diff "
+                "--exit-code or yapf --diff)",
             ),
         )
 

@@ -43,7 +43,7 @@ class SupportMatrixTests(unittest.TestCase):
 
     def test_a_cell_names_the_tools_of_the_check_aspect_for_the_ecosystem(self) -> None:
         self.assertEqual(self._cell("code-formatting", "Crystal"), ("crystal tool format",))
-        self.assertEqual(self._cell("code-formatting", "Python"), ("ruff format", "black"))
+        self.assertEqual(self._cell("code-formatting", "Python"), ("ruff format", "black", "autopep8", "yapf"))
 
     def test_a_check_without_an_aspect_applies_without_tools(self) -> None:
         self.assertEqual(self._cell("committed-artifacts", "Python"), ())

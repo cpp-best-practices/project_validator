@@ -74,6 +74,22 @@ BLACK = format_tool(
     style=defined_by(settings=("black",)),
     reads=("black",),
 )
+# autopep8 and yapf, the other common formatters (pre-commit/pre-commit formats with autopep8): pycodestyle's or
+# yapf's settings, or their default style. autopep8 fails on a change with --exit-code; `yapf --diff` fails on one.
+AUTOPEP8 = format_tool(
+    name="autopep8",
+    languages=PYTHON_ONLY,
+    can={Enforcement.CHECK: "autopep8 --diff --exit-code", Enforcement.APPLY: "autopep8 -i"},
+    formats=flagged(("autopep8",), checks=("--exit-code",), applies=("-i", "--in-place")),
+    style=defined_by(),
+)
+YAPF = format_tool(
+    name="yapf",
+    languages=PYTHON_ONLY,
+    can={Enforcement.CHECK: "yapf --diff", Enforcement.APPLY: "yapf -i"},
+    formats=flagged(("yapf",), checks=("-d", "--diff"), applies=("-i", "--in-place")),
+    style=defined_by(),
+)
 # The black action checks (`--check --diff`) unless its options say otherwise; ruff's action runs ruff's `args`.
 BLACK_ACTION = Action(
     name="psf/black",

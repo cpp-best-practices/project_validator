@@ -298,6 +298,14 @@
             "answer": "yes",
             "defined": {},
             "known": {
+              "autopep8": {
+                "can": {
+                  "apply": "autopep8 -i",
+                  "check": "autopep8 --diff --exit-code"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "black": {
                 "can": {
                   "apply": "black",
@@ -310,6 +318,14 @@
                 "can": {
                   "apply": "ruff format",
                   "check": "ruff format --check"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "yapf": {
+                "can": {
+                  "apply": "yapf -i",
+                  "check": "yapf --diff"
                 },
                 "needs_definition": false,
                 "required": false
