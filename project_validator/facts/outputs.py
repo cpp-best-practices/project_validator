@@ -81,6 +81,9 @@ def _glob_ignores(glob: str, path: str) -> bool:
     return False
 
 
+_SOURCE_DIRECTORY = "source"
+
+
 def _placed(path: str, directory: str) -> str:
     return path if directory in ("", ".") else f"{directory.rstrip('/')}/{path}"
 
@@ -94,6 +97,8 @@ class BuildOutput:
     `paths`. `artifacts` recognise it among the tracked files (see `artifact`), except files named one of
     `not_artifacts` (Go's `go.mod` is not a compiled Fortran module). `hint` says how to ignore it. A build with one of
     `contained_by` writes it inside an output of its own (Maven compiles classes into target/), which ignores it.
+    A unit whose sources are a `source/` directory (sphinx-quickstart's separate layout) has its output at
+    `separate_build`, beside that directory (`build/html/`).
     """
 
     name: str
@@ -105,6 +110,7 @@ class BuildOutput:
     not_artifacts: tuple[str, ...] = ()
     build_systems: frozenset[str] = frozenset()
     contained_by: frozenset[str] = frozenset()
+    separate_build: tuple[str, ...] = ()
 
     def ignored_by(self, entry: IgnoreEntry, units: Iterable[str] = (".",), sources: Iterable[str] = ()) -> bool:
         """Whether `entry` ignores the output: as the entry the output names (`globs`), or, read as the ignore
@@ -124,8 +130,22 @@ class BuildOutput:
             path for path in self.paths if not any(path != folder and path.startswith(folder) for folder in folders)
         ]
         files = [path for path in whole if "/" not in path and f"{path}/" not in self.paths]
+        units = tuple(units)
         in_units = [_placed(path, unit) for unit in units for path in whole]
-        return in_units + [_placed(path, directory) for directory in sources for path in files]
+        return (
+            in_units
+            + self._beside_sources(units)
+            + [_placed(path, directory) for directory in sources for path in files]
+        )
+
+    def _beside_sources(self, units: tuple[str, ...]) -> list[str]:
+        """The output's paths beside each unit whose sources are a `source/` directory (see `separate_build`)."""
+        return [
+            _placed(path, str(PurePosixPath(unit).parent))
+            for unit in units
+            if PurePosixPath(unit).name == _SOURCE_DIRECTORY
+            for path in self.separate_build
+        ]
 
     def artifact(self, path: str) -> str | None:
         """The build output `path` is, or is inside, as one of `artifacts` names it; None when it is not one.
