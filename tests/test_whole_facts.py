@@ -3,11 +3,14 @@ origin), its fields, and whether it is heuristic, which messages and --explain r
 
 from __future__ import annotations
 
+import json
 import unittest
 
 from project_validator.ci import gitlab, pre_commit_ci
 from project_validator.ecosystems import emacs_lisp, ocaml, zig
+from project_validator.ecosystems.javascript import _in_workspaces
 from project_validator.ecosystems.perl import _read_actions
+from project_validator.ecosystems.php.tools import _read_phpmd
 from project_validator.ecosystems.python.tox import _env_scripts
 from project_validator.ecosystems.ruby.tools import _read_rake_tasks, _read_simplecov_settings
 from project_validator.ecosystems.shell.tools import _read_pester
@@ -18,6 +21,7 @@ from project_validator.facts.expansion import Script
 from project_validator.facts.security import scanned
 from project_validator.facts.testing import tested
 from project_validator.tools.pre_commit import _read_hooks
+from tests.support import command, make_context, temp_project
 
 
 class GitlabTemplateFactTests(unittest.TestCase):
@@ -228,6 +232,44 @@ class RunHelperTests(unittest.TestCase):
             ):
                 with self.subTest(run=run):
                     self.assertEqual((run.heuristic, run.read), (heuristic, read))
+
+
+class SmallExtractorTests(unittest.TestCase):
+    def test_a_phpmd_rule_set_s_rules_and_exclusions(self) -> None:
+        text = (
+            '<ruleset><rule ref="rulesets/codesize.xml"><exclude name="TooManyMethods"/><exclude/></rule>'
+            "<rule/></ruleset>"
+        )
+        self.assertEqual(
+            list(_read_phpmd("phpmd.xml", text)),
+            [
+                Setting(
+                    origin=Origin(path="phpmd.xml", at=("rules",)),
+                    tool="PHPMD",
+                    key="rules",
+                    value=("rulesets/codesize.xml", ""),
+                ),
+                Setting(
+                    origin=Origin(path="phpmd.xml", at=("excluded",)),
+                    tool="PHPMD",
+                    key="excluded",
+                    value=("TooManyMethods", ""),
+                ),
+            ],
+        )
+
+    def test_each_workspace_package_s_script_is_placed_in_its_package_json(self) -> None:
+        files = {
+            "package.json": json.dumps({"workspaces": ["packages/*"]}),
+            "packages/a/package.json": json.dumps({"scripts": {"test": "vitest a"}}),
+            "packages/b/package.json": "{}",
+        }
+        with temp_project(files) as root:
+            found = _in_workspaces(command("turbo run test"), make_context(root), "test")
+        path = "packages/a/package.json"
+        self.assertEqual(
+            found, [Script(text="vitest a", origin=Origin(path=path, at=("scripts", "test")), directory="packages/a")]
+        )
 
 
 if __name__ == "__main__":
