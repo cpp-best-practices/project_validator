@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from project_validator.analysis import Analysis, Git, RoleSummary
 from project_validator.core import Placed, Status
 from project_validator.explanations import CATEGORIES, category
+from project_validator.project_map import LanguageFiles, Place
 from project_validator.runner import Report
 
 # How each status is shown, in words and as a symbol, worst first.
@@ -164,6 +165,33 @@ def reading(analysis: Analysis) -> str:
     return read
 
 
+PLACES_SHOWN = 4  # folders listed for a language before the rest are counted
+
+
+def _place(place: Place) -> str:
+    where = "the root" if place.directory == "." else f"{place.directory}/"
+    return f"{where} ({place.files}{'' if place.role == 'product' else f', {place.role}'})"
+
+
+def language_files(found: LanguageFiles) -> tuple[str, str]:
+    """(`4 files (44%)`, `pkg/ (3), tests/ (1, test)`): how many files a language has, its share of the project's
+    own files, and the folders that hold them, past `PLACES_SHOWN` counted."""
+    share = "<1" if found.share < 0.01 else str(round(found.share * 100))
+    count = f"{found.files} file{'s' if found.files != 1 else ''} ({share}%)"
+    shown, rest = found.places[:PLACES_SHOWN], found.places[PLACES_SHOWN:]
+    where = ", ".join(_place(place) for place in shown)
+    if rest:
+        where += f" and {len(rest)} more folders ({sum(place.files for place in rest)} files)"
+    return count, where
+
+
+def files_by_language(analysis: Analysis) -> list[tuple[str, str, str]]:
+    """(language, file count and share, folders) for each language and format, most files first."""
+    if analysis.structure is None:
+        return []
+    return [(found.language, *language_files(found)) for found in analysis.structure.files]
+
+
 def unrecognised(analysis: Analysis) -> str:
     """The suffixes no ecosystem recognised, most common first: languages the validator does not know yet."""
     if analysis.structure is None or not analysis.structure.unrecognised_suffixes:
@@ -179,6 +207,7 @@ def fact_kinds(analysis: Analysis) -> list[tuple[str, int]]:
 
 __all__ = [
     "OUTCOMES",
+    "PLACES_SHOWN",
     "ROLE_NAMES",
     "STATUS_ORDER",
     "SYMBOLS",
@@ -190,9 +219,11 @@ __all__ = [
     "dedupe",
     "ecosystems",
     "fact_kinds",
+    "files_by_language",
     "grouped",
     "is_skipped",
     "judged_places",
+    "language_files",
     "place_label",
     "reading",
     "role_judgement",

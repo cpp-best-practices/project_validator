@@ -68,6 +68,20 @@
         ".rkt files"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "Racket",
+        "places": [
+          {
+            "directory": ".",
+            "files": 2,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "Racket"

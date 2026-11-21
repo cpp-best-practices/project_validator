@@ -1566,6 +1566,37 @@
         ".R files"
       ]
     },
+    "files": [
+      {
+        "files": 5,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 5,
+            "role": "product"
+          }
+        ],
+        "share": 0.625
+      },
+      {
+        "files": 3,
+        "language": "R",
+        "places": [
+          {
+            "directory": "tests",
+            "files": 2,
+            "role": "test"
+          },
+          {
+            "directory": "R",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.375
+      }
+    ],
     "formats": [
       "YAML"
     ],

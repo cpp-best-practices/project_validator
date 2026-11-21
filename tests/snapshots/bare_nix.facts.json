@@ -63,6 +63,20 @@
         ".nix files"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "Nix",
+        "places": [
+          {
+            "directory": ".",
+            "files": 2,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "Nix"

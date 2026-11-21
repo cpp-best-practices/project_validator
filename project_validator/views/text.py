@@ -11,6 +11,7 @@ from project_validator.views.common import (
     ci_summary,
     dedupe,
     ecosystems,
+    files_by_language,
     reading,
     role_judgement,
     role_line,
@@ -28,6 +29,7 @@ def detected_lines(analysis: Analysis) -> list[str]:
         return [f"Detected: nothing, the project could not be read: {analysis.error}"]
     lines = ["Detected:"]
     lines += [f"  {label}: {signals}" for label, signals in ecosystems(analysis)] or ["  no recognised language"]
+    lines += [f"  Where: {name}: {count} in {where}" for name, count, where in files_by_language(analysis)]
     for directory, role, systems, names in units(analysis):
         where = "the root" if directory == "." else directory
         lines.append(f"  Unit {where} ({role}): built with {systems}; {names}")

@@ -1769,6 +1769,37 @@
         ".t files"
       ]
     },
+    "files": [
+      {
+        "files": 5,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 5,
+            "role": "product"
+          }
+        ],
+        "share": 0.7143
+      },
+      {
+        "files": 2,
+        "language": "Perl",
+        "places": [
+          {
+            "directory": "lib",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "t",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.2857
+      }
+    ],
     "formats": [
       "YAML"
     ],

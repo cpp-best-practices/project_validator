@@ -116,6 +116,32 @@
         ".pm files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "JSON",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 1,
+        "language": "Perl",
+        "places": [
+          {
+            "directory": "lib",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      }
+    ],
     "formats": [
       "JSON"
     ],

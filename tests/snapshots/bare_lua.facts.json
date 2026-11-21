@@ -70,6 +70,20 @@
         ".lua files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "Lua",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "Lua"

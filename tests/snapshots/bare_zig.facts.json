@@ -81,6 +81,25 @@
         ".zig files"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "Zig",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "Zig"

@@ -111,6 +111,20 @@
         ".cs files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "C#",
+        "places": [
+          {
+            "directory": "src/App",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "C#"

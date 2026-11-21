@@ -96,6 +96,25 @@
         "content"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "XML",
+        "places": [
+          {
+            "directory": "schema",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "xslt",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [
       "XML",
       "XML Schema",

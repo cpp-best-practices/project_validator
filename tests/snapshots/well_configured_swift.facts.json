@@ -5414,6 +5414,47 @@
         ".swift files"
       ]
     },
+    "files": [
+      {
+        "files": 8,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 6,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 2,
+            "role": "product"
+          }
+        ],
+        "share": 0.6154
+      },
+      {
+        "files": 5,
+        "language": "Swift",
+        "places": [
+          {
+            "directory": "Sources",
+            "files": 3,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "Tests/AppCoreTests",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.3846
+      }
+    ],
     "formats": [
       "YAML"
     ],

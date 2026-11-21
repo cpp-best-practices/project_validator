@@ -57,6 +57,20 @@
         "content"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": "k8s",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [
       "Kubernetes",
       "YAML"

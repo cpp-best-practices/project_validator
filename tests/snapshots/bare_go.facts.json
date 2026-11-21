@@ -92,6 +92,25 @@
         ".go files"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "Go",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "cmd/app",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "Go"

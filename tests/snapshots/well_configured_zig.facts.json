@@ -5182,6 +5182,37 @@
         ".zig files"
       ]
     },
+    "files": [
+      {
+        "files": 5,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 5,
+            "role": "product"
+          }
+        ],
+        "share": 0.625
+      },
+      {
+        "files": 3,
+        "language": "Zig",
+        "places": [
+          {
+            "directory": "src",
+            "files": 2,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.375
+      }
+    ],
     "formats": [
       "YAML"
     ],

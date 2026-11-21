@@ -83,6 +83,44 @@
         ".yaml files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "JSON",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.3333
+      },
+      {
+        "files": 1,
+        "language": "TOML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.3333
+      },
+      {
+        "files": 1,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.3333
+      }
+    ],
     "formats": [
       "JSON",
       "TOML",

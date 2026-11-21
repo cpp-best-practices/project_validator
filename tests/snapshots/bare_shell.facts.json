@@ -49,6 +49,32 @@
         ".sh files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "PowerShell",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 1,
+        "language": "Shell",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      }
+    ],
     "formats": [],
     "languages": [
       "PowerShell",

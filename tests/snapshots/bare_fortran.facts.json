@@ -163,6 +163,37 @@
         ".f90 files"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "Fortran",
+        "places": [
+          {
+            "directory": "app",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.6667
+      },
+      {
+        "files": 1,
+        "language": "TOML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.3333
+      }
+    ],
     "formats": [
       "TOML"
     ],

@@ -2168,6 +2168,47 @@
         ".yml files"
       ]
     },
+    "files": [
+      {
+        "files": 7,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 5,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 2,
+            "role": "product"
+          }
+        ],
+        "share": 0.7
+      },
+      {
+        "files": 3,
+        "language": "Dart",
+        "places": [
+          {
+            "directory": "bin",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "lib",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "test",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.3
+      }
+    ],
     "formats": [
       "YAML"
     ],

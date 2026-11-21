@@ -70,6 +70,20 @@
         "content"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [
       "OpenAPI",
       "YAML"

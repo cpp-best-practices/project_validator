@@ -1233,6 +1233,54 @@
         "content"
       ]
     },
+    "files": [
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 2,
+        "language": "PowerShell",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "tests",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.25
+      },
+      {
+        "files": 2,
+        "language": "Shell",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "tests",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.25
+      }
+    ],
     "formats": [
       "YAML"
     ],

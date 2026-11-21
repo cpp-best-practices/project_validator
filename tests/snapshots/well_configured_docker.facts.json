@@ -683,6 +683,37 @@
         "Dockerfile files"
       ]
     },
+    "files": [
+      {
+        "files": 5,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.8333
+      },
+      {
+        "files": 1,
+        "language": "Dockerfile",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.1667
+      }
+    ],
     "formats": [
       "Dockerfile",
       "YAML"

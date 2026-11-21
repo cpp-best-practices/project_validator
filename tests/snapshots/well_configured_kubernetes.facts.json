@@ -889,6 +889,40 @@
         "content"
       ]
     },
+    "files": [
+      {
+        "files": 10,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          },
+          {
+            "directory": "charts/shop",
+            "files": 2,
+            "role": "product"
+          },
+          {
+            "directory": "charts/shop/templates",
+            "files": 2,
+            "role": "template"
+          },
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "charts/shop/tests",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [
       "Kubernetes",
       "YAML"

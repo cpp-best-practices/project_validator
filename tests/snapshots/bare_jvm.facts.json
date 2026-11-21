@@ -124,6 +124,32 @@
         ".java files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "Java",
+        "places": [
+          {
+            "directory": "src/main/java/com/example",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 1,
+        "language": "XML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      }
+    ],
     "formats": [
       "XML"
     ],

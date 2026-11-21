@@ -160,6 +160,32 @@
         ".rs files"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "Rust",
+        "places": [
+          {
+            "directory": "src",
+            "files": 2,
+            "role": "product"
+          }
+        ],
+        "share": 0.6667
+      },
+      {
+        "files": 1,
+        "language": "TOML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.3333
+      }
+    ],
     "formats": [
       "TOML"
     ],

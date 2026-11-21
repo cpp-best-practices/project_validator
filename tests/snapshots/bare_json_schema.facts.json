@@ -71,6 +71,20 @@
         "content"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "JSON",
+        "places": [
+          {
+            "directory": "schema",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [
       "JSON",
       "JSON Schema"

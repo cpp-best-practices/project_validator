@@ -3309,6 +3309,42 @@
         ".rb files"
       ]
     },
+    "files": [
+      {
+        "files": 7,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 5,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 2,
+            "role": "product"
+          }
+        ],
+        "share": 0.7
+      },
+      {
+        "files": 3,
+        "language": "Ruby",
+        "places": [
+          {
+            "directory": "spec",
+            "files": 2,
+            "role": "test"
+          },
+          {
+            "directory": "lib",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.3
+      }
+    ],
     "formats": [
       "YAML"
     ],

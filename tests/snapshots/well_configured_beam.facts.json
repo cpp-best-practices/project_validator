@@ -2262,6 +2262,59 @@
         ".yml files"
       ]
     },
+    "files": [
+      {
+        "files": 7,
+        "language": "Elixir",
+        "places": [
+          {
+            "directory": ".",
+            "files": 3,
+            "role": "product"
+          },
+          {
+            "directory": "test",
+            "files": 2,
+            "role": "test"
+          },
+          {
+            "directory": "config",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "lib",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5833
+      },
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.3333
+      },
+      {
+        "files": 1,
+        "language": "Erlang",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.0833
+      }
+    ],
     "formats": [
       "YAML"
     ],

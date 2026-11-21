@@ -153,6 +153,32 @@
         ".py files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "Python",
+        "places": [
+          {
+            "directory": "src/app",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 1,
+        "language": "TOML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      }
+    ],
     "formats": [
       "TOML"
     ],

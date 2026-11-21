@@ -140,6 +140,49 @@
         ".sql files"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "SQL",
+        "places": [
+          {
+            "directory": "migrations",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "models",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.4
+      },
+      {
+        "files": 2,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 2,
+            "role": "product"
+          }
+        ],
+        "share": 0.4
+      },
+      {
+        "files": 1,
+        "language": "JSON",
+        "places": [
+          {
+            "directory": "target",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.2
+      }
+    ],
     "formats": [
       "JSON",
       "YAML"

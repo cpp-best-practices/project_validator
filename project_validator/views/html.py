@@ -41,6 +41,7 @@ from project_validator.views.common import (
     dedupe,
     ecosystems,
     fact_kinds,
+    files_by_language,
     grouped,
     is_skipped,
     judged_places,
@@ -207,6 +208,12 @@ def _languages_card(analysis: Analysis) -> str:
     return f'<div class="card"><h3>Languages and formats</h3>{listed}{extra}</div>'
 
 
+def _files_card(analysis: Analysis) -> str:
+    rows = ((f"<strong>{e(name)}</strong>", e(count), e(where)) for name, count, where in files_by_language(analysis))
+    listed = table(("Language or format", "Files", "Where"), rows)
+    return f'<div class="card" style="margin-top:1rem"><h3>Where the files are</h3>{listed}</div>'
+
+
 def _units_card(analysis: Analysis) -> str:
     rows = (
         (f"<code>{e(directory)}</code>", e(role), e(systems), e(names))
@@ -272,7 +279,7 @@ def _detected(analysis: Analysis) -> str:
         )
     return (
         '<section class="wrap" id="detected"><h2>What was detected</h2>'
-        f'<div class="grid two">{_languages_card(analysis)}{_units_card(analysis)}</div>'
+        f'<div class="grid two">{_languages_card(analysis)}{_units_card(analysis)}</div>{_files_card(analysis)}'
         f"{_roles_card(analysis, structure.vendored)}{_ci_card(analysis, structure.ci_jobs)}</section>"
     )
 

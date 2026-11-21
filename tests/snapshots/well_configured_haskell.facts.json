@@ -2383,6 +2383,47 @@
         ".hs files"
       ]
     },
+    "files": [
+      {
+        "files": 5,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.625
+      },
+      {
+        "files": 3,
+        "language": "Haskell",
+        "places": [
+          {
+            "directory": "app",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "test",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.375
+      }
+    ],
     "formats": [
       "YAML"
     ],

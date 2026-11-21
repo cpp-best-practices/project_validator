@@ -84,6 +84,20 @@
         ".lisp files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "Common Lisp",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "Common Lisp"

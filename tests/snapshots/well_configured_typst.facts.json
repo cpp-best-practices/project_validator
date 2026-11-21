@@ -555,6 +555,32 @@
         ".typ files"
       ]
     },
+    "files": [
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.8
+      },
+      {
+        "files": 1,
+        "language": "Typst",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.2
+      }
+    ],
     "formats": [
       "YAML"
     ],
