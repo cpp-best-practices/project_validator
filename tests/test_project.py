@@ -96,6 +96,14 @@ class TrackedFilesTests(unittest.TestCase):
             project = Project(root, frozenset({PurePosixPath("tests/fixtures")}))
             self.assertEqual(project.tracked_files(), [".github/workflows/ci.yml", "src/main.c"])
 
+    def test_the_origin_is_the_checkouts_whose_root_the_project_is(self) -> None:
+        """A directory inside a checkout (a fixture under tests/) is not published where the checkout is."""
+        with temp_project({"README.md": "", "fixture/README.md": ""}) as root:
+            git(root, "init", "-q")
+            git(root, "remote", "add", "origin", "https://github.com/acme/app.git")
+            self.assertEqual(Project(root).origin_url(), "https://github.com/acme/app.git")
+            self.assertIsNone(Project(root / "fixture").origin_url())
+
     def test_lists_every_file_outside_a_git_checkout(self) -> None:
         with temp_project({"src/main.c": "", ".github/ci.yml": ""}) as root:
             self.assertEqual(Project(root).tracked_files(), ["src/main.c"])
