@@ -24,9 +24,10 @@ The toolchains are Perl versions: shogo82148/actions-setup-perl's `perl-version`
 ## `compiler-warnings`
 
 Perl's pragmas and lints: every module, script and `.psgi` starts with `use strict` and `use warnings` (or a module
-that implies them: Moose, Moo, Mouse, Modern::Perl, Mojo::Base, Test2::V0, `use v5.36`; `use v5.12` implies strict
-alone), and perlcritic runs in CI (or Test::Perl::Critic in the tests). Modules under `corpus/` (Dist::Zilla's test
-distributions) and `inc/` (bundled build code) are not the product's.
+that implies them: Moose, Moo, Mouse, Modern::Perl, Mojo::Base, Test2::V0, Test::Most, Test::Class::Most, `use v5.36`;
+`use v5.12` implies strict alone, and so does a pragma bundle of the project's, a module that calls `strict->import`
+and `warnings->import`), and perlcritic runs in CI (or Test::Perl::Critic in the tests). Test modules (`t/`, `xt/`),
+and modules under `corpus/` (Dist::Zilla's test distributions) and `inc/` (bundled build code), are not the product's.
 
 ## `warnings-as-errors`
 

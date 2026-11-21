@@ -183,6 +183,34 @@ class PerlTests(unittest.TestCase):
                 result = _run(compiler_warnings, "Perl modules", files)
                 self.assertEqual(result.status, Status.PASS, result)
 
+    def test_test_modules_and_a_pragma_bundle_need_no_pragmas_of_their_own(self) -> None:
+        """mojo's t/ test modules are no product modules; tidyall's test classes use Test::Class::Most, which turns
+        strict and warnings on; Dist-Zilla's modules `use Dist::Zilla::Pragmas`, an in-repo bundle that imports both
+        (#248). A product module that lacks them still fails the requirement."""
+        bundle = (
+            "package Shop::Pragmas;\nuse strict;\nuse warnings;\nsub import { strict->import; warnings->import }\n1;\n"
+        )
+        cases = {
+            "a test module": {"lib/Shop.pm": STRICT_MODULE, "t/lib/Fixture.pm": "package Fixture;\n1;\n"},
+            "Test::Class::Most": {
+                "lib/Shop.pm": STRICT_MODULE,
+                "lib/Shop/T.pm": "package Shop::T;\nuse Test::Most;\n1;\n",
+            },
+            "a pragma bundle": {
+                "lib/Shop/Pragmas.pm": bundle,
+                "lib/Shop.pm": "package Shop;\nuse Shop::Pragmas;\n1;\n",
+            },
+        }
+        ci = github_job(CI, "perlcritic lib")
+        for name, files in cases.items():
+            with self.subTest(case=name):
+                result = _run(compiler_warnings, "Perl modules", {**files, **ci})
+                self.assertEqual(result.status, Status.PASS, result)
+        lacking = {"lib/Shop.pm": STRICT_MODULE, "lib/Bare.pm": "package Bare;\n1;\n", **ci}
+        self.assertNotEqual(_run(compiler_warnings, "Perl modules", lacking).status, Status.PASS)
+
+
+STRICT_MODULE = "package Shop;\nuse strict;\nuse warnings;\n1;\n"
 
 SBT = "sbt Scala"
 SCALAFIX_ALIAS = {
