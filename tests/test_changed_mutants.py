@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from typing import ClassVar
 
 from tests import changed_mutants
 from tests.changed_mutants import changed_lines, mutant_patterns, patterns_for
@@ -260,3 +261,46 @@ class MainTests(unittest.TestCase):
         done = _script("no-such-revision...HEAD")
         self.assertNotEqual(done.returncode, 0)
         self.assertEqual(done.stdout, "")
+
+
+class ShardTests(unittest.TestCase):
+    MODULES: ClassVar[list[str]] = [
+        "project_validator/__init__.py",
+        "project_validator/a.py",
+        "project_validator/facts/__init__.py",
+        *(f"project_validator/facts/m{index}.py" for index in range(20)),
+    ]
+
+    def test_each_module_falls_in_exactly_one_shard(self) -> None:
+        shards = [changed_mutants.shard_patterns(self.MODULES, index, 4) for index in range(1, 5)]
+        patterns = [pattern for shard in shards for pattern in shard]
+        self.assertEqual(len(patterns), len(set(patterns)))
+        self.assertEqual(len(patterns), 2 * len(self.MODULES))
+        self.assertTrue(all(shards))
+
+    def test_a_module_s_patterns_select_its_functions_and_methods_but_not_its_submodules(self) -> None:
+        patterns = [
+            pattern for index in range(1, 5) for pattern in changed_mutants.shard_patterns(self.MODULES, index, 4)
+        ]
+        self.assertIn("project_validator.facts.x_*", patterns)
+        self.assertIn("project_validator.facts.xǁ*", patterns)
+        self.assertIn("project_validator.x_*", patterns)
+        self.assertNotIn("project_validator.facts.*", patterns)
+
+    def test_a_module_stays_in_its_shard_when_other_modules_come_and_go(self) -> None:
+        # Each shard continues from its own cache, so a module that moved would start over in another shard.
+        before = changed_mutants.shard_patterns(self.MODULES, 2, 4)
+        after = changed_mutants.shard_patterns([*self.MODULES, "project_validator/new.py"], 2, 4)
+        self.assertEqual(set(before) - set(after), set())
+
+    def test_the_command_prints_a_shard_of_the_package(self) -> None:
+        script = Path(changed_mutants.__file__)
+        completed = subprocess.run(  # noqa: S603 - this interpreter and a script of the repository
+            [sys.executable, str(script), "--shard", "1/8"],
+            capture_output=True,
+            text=True,
+            check=True,
+            encoding="utf-8",
+        )
+        self.assertTrue(completed.stdout.splitlines())
+        self.assertTrue(all(line.startswith("project_validator.") for line in completed.stdout.splitlines()))
