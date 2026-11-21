@@ -7,6 +7,7 @@ in that repository, which is not read; it is recorded by its id, which by conven
 
 from __future__ import annotations
 
+import re
 import shlex
 from collections.abc import Iterator, Mapping
 
@@ -92,11 +93,20 @@ def _pre_commit_hooks(command: Command, context: Context) -> Iterator[Expansion]
 
 
 PRE_COMMIT_HOOKS = CommandExpander(name="pre-commit hooks", expand=_pre_commit_hooks)
+_EXPRESSION = re.compile(r"\$\{\{.*?\}\}", re.DOTALL)
+
+
+def _action_arguments(value: str) -> list[str]:
+    """The words of an action's extra arguments, without the expressions in them: Bash-it's chooses the refs to check
+    (`--from-ref …` or `--last-commit`), which select no hook."""
+    return shlex.split(_EXPRESSION.sub(" ", value))
+
+
 # The pre-commit action runs every hook, or what its `extra_args` say.
 PRE_COMMIT_ACTION = Action(
     name="pre-commit/action",
     runs=lambda inputs: (
-        ("pre-commit", "run", "--show-diff-on-failure", *shlex.split(inputs.get("extra_args", "--all-files"))),
+        ("pre-commit", "run", "--show-diff-on-failure", *_action_arguments(inputs.get("extra_args", "--all-files"))),
     ),
 )
 
@@ -104,7 +114,7 @@ PRE_COMMIT_ACTION = Action(
 PREK_ACTION = Action(
     name="j178/prek-action",
     runs=lambda inputs: (
-        ("prek", "run", "--show-diff-on-failure", *shlex.split(inputs.get("extra-args", "--all-files"))),
+        ("prek", "run", "--show-diff-on-failure", *_action_arguments(inputs.get("extra-args", "--all-files"))),
     ),
 )
 

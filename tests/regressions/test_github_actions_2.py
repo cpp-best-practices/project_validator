@@ -203,6 +203,25 @@ PRE_COMMIT_RUNNERS: dict[str, dict[str, str]] = {
         ".pre-commit-config.yaml": RUFF_HOOKS,
         **_workflow({"lint": _job({"uses": f"j178/prek-action@{SHA}"})}),
     },
+    # Bash-it's extra-args choose the refs by an expression; every hook still runs (#221).
+    "j178/prek-action with refs chosen by an expression": {
+        **PYTHON_PROJECT,
+        ".pre-commit-config.yaml": RUFF_HOOKS,
+        **_workflow(
+            {
+                "lint": _job(
+                    {
+                        "uses": f"j178/prek-action@{SHA}",
+                        "with": {
+                            "extra-args": "${{ github.event_name == 'pull_request' && format('--from-ref {0} "
+                            "--to-ref {1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha)"
+                            " || '--last-commit' }}"
+                        },
+                    }
+                )
+            }
+        ),
+    },
 }
 
 # Label -> (project files, the jobs of its workflow, the version count the platform-matrix message must give).
