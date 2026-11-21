@@ -102,6 +102,11 @@ IGNORE_SPELLINGS: dict[str, tuple[dict[str, str], str, str]] = {
         "/lisp/*.elc\n/lisp/*-autoloads.el\n",
         "*.elc\n*-autoloads.el\n",
     ),
+    "the package's own autoloads file (evil)": (
+        {"evil.el": ";;; evil.el\n", "evil-core.el": ";;; evil-core.el\n"},
+        "*.elc\n/evil-autoloads.el\n",
+        "*.elc\n*-autoloads.el\n",
+    ),
 }
 
 # (the project with the output ignored where the unit is, the same with the entry at the root) (upstream #237).

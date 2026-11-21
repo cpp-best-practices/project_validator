@@ -201,11 +201,12 @@ def _of_packages_and_sources(
 BYTE_CODE, BYTE_CODE_OF_SOURCES = _of_packages_and_sources(
     "the byte-compiled files (*.elc)", "consider ignoring *.elc", ("*.elc",), globs=r"\*\.elc", paths=("shop.elc",)
 )
+# A package has one autoloads file, so ignoring it by name (evil's `/evil-autoloads.el`) ignores it too.
 AUTOLOADS, AUTOLOADS_OF_SOURCES = _of_packages_and_sources(
     "the generated autoloads (*-autoloads.el)",
     "consider ignoring *-autoloads.el",
     ("*-autoloads.el",),
-    globs=r"\*-autoloads\.el|\*-autoloads\.el\*|\*-autoloads\.elc?",
+    globs=r"\*-autoloads\.el|\*-autoloads\.el\*|\*-autoloads\.elc?|/?[\w.+-]+-autoloads\.el",
     paths=("shop-autoloads.el",),
 )
 EASK_DIRECTORY = _output(
