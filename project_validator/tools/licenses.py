@@ -60,7 +60,7 @@ KNOWN_LICENSES = tuple(
 )
 # Manifests that are where their ecosystem declares a license, in place of a license file (a Data Package's
 # `licenses`): their declaration stands in for one.
-DECLARED_IN_PLACE_OF_A_FILE = ("datapackage.json",)
+DECLARED_IN_PLACE_OF_A_FILE = ("datapackage.json", "datapackage.yaml", "datapackage.yml")
 _QUOTED = re.compile(r"^[ \t]*>[ \t]?", re.MULTILINE)
 # How much of a license file is read: every known license is recognised by its first few paragraphs.
 HEAD_SIZE = 16384

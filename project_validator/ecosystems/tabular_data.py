@@ -136,11 +136,15 @@ FRICTIONLESS_REPOSITORY = Action(name="frictionlessdata/repository", runs=_frict
 
 
 def _data_package_licenses(text: str) -> str | None:
-    """The licenses a Data Package descriptor names (`licenses[].name`), as an SPDX expression of any of them."""
+    """The licenses a Data Package descriptor (JSON, or YAML) names (`licenses[].name`), as an SPDX expression of any
+    of them."""
     try:
         document = json.loads(text)
     except json.JSONDecodeError:
-        return None
+        try:
+            document = yaml_support.load(text)
+        except yaml_support.YamlError:
+            return None
     entries = document.get("licenses") if isinstance(document, dict) else None
     names = [entry["name"] for entry in entries or [] if isinstance(entry, dict) and isinstance(entry.get("name"), str)]
     return " OR ".join(names) or None
@@ -149,7 +153,7 @@ def _data_package_licenses(text: str) -> str | None:
 # A Data Package declares its license in its descriptor, the data world's manifest.
 DATA_PACKAGE_LICENSE = declared_license_reader(
     name="datapackage.json licenses",
-    files=("datapackage.json",),
+    files=tuple(sorted(_PACKAGE_NAMES)),
     languages=DATA_PACKAGE_ONLY,
     declared=_data_package_licenses,
 )
