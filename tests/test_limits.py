@@ -9,11 +9,19 @@ import unittest
 from collections.abc import Callable, Mapping
 
 from project_validator.build_systems import cmake
-from project_validator.build_systems.cmake.evaluation import MOST_NESTED
-from project_validator.ci import github_actions, gitlab
 from project_validator.ecosystems.javascript.analysis import _strict_settings
 from project_validator.facts import Command, Fact, Facts, Unknown
 from project_validator.facts.build import CompilerOption
+from project_validator.limits import (
+    CMAKE_NESTING,
+    COMPOSITE_ACTIONS,
+    GITLAB_EXTENDS,
+    GITLAB_INCLUDES,
+    GITLAB_REFERENCES,
+    REUSABLE_WORKFLOWS,
+    TSCONFIG_EXTENDS,
+    Limit,
+)
 from tests.support import make_context, temp_project
 
 type Files = dict[str, str]
@@ -34,10 +42,10 @@ def _reasons(found: Facts | tuple[Fact, ...]) -> list[str]:
 
 
 class LimitTestCase(unittest.TestCase):
-    def assert_limit(self, limit: int, chain: Callable[[int], Files], followed: Callable[[Files], bool]) -> None:
+    def assert_limit(self, limit: Limit, chain: Callable[[int], Files], followed: Callable[[Files], bool]) -> None:
         """A chain `limit` long is followed, and one a link longer is not."""
-        self.assertTrue(followed(chain(limit)), f"a chain of {limit} is not followed")
-        self.assertFalse(followed(chain(limit + 1)), f"a chain of {limit + 1} is followed")
+        self.assertTrue(followed(chain(limit.most)), f"a chain of {limit.most} is not followed")
+        self.assertFalse(followed(chain(limit.most + 1)), f"a chain of {limit.most + 1} is followed")
 
 
 class GitlabLimitTests(LimitTestCase):
@@ -64,22 +72,22 @@ class GitlabLimitTests(LimitTestCase):
         return {".gitlab-ci.yml": text + f"job:\n  script: [!reference [.r{levels}, script]]\n"}
 
     def test_includes_nest_at_most_the_limit_deep(self) -> None:
-        self.assert_limit(gitlab._DEPTH, self._includes, lambda files: ("ctest",) in _commands(_facts(files)))
-        self.assertIn("it is not read", " ".join(_reasons(_facts(self._includes(gitlab._DEPTH + 1)))))
+        self.assert_limit(GITLAB_INCLUDES, self._includes, lambda files: ("ctest",) in _commands(_facts(files)))
+        self.assertIn("it is not read", " ".join(_reasons(_facts(self._includes(GITLAB_INCLUDES.most + 1)))))
 
     def test_extends_nest_at_most_the_limit_deep(self) -> None:
-        self.assert_limit(gitlab._DEPTH, self._extends, lambda files: ("ctest",) in _commands(_facts(files)))
+        self.assert_limit(GITLAB_EXTENDS, self._extends, lambda files: ("ctest",) in _commands(_facts(files)))
 
     def test_extends_past_the_limit_say_so(self) -> None:
-        reasons = _reasons(_facts(self._extends(gitlab._DEPTH + 1)))
-        self.assertEqual(reasons, [f"the templates it extends nest more than {gitlab._DEPTH} levels deep"])
+        reasons = _reasons(_facts(self._extends(GITLAB_EXTENDS.most + 1)))
+        self.assertEqual(reasons, ["the templates it extends nest more than 10 levels deep"])
 
     def test_references_nest_at_most_the_limit_deep(self) -> None:
-        self.assert_limit(gitlab._DEPTH, self._references, lambda files: ("ctest",) in _commands(_facts(files)))
+        self.assert_limit(GITLAB_REFERENCES, self._references, lambda files: ("ctest",) in _commands(_facts(files)))
 
     def test_references_past_the_limit_say_so(self) -> None:
-        reasons = _reasons(_facts(self._references(gitlab._DEPTH + 1)))
-        self.assertEqual(reasons, [f"its !reference tags nest more than {gitlab._DEPTH} levels deep"])
+        reasons = _reasons(_facts(self._references(GITLAB_REFERENCES.most + 1)))
+        self.assertEqual(reasons, ["its !reference tags nest more than 10 levels deep"])
 
 
 class GithubLimitTests(LimitTestCase):
@@ -95,17 +103,31 @@ class GithubLimitTests(LimitTestCase):
         return files
 
     def test_reusable_workflows_call_each_other_at_most_the_limit_deep(self) -> None:
-        limit = github_actions._CALL_DEPTH
-        self.assert_limit(limit, self._calls, lambda files: ("ctest",) in _commands(_facts(files)))
+        self.assert_limit(REUSABLE_WORKFLOWS, self._calls, lambda files: ("ctest",) in _commands(_facts(files)))
+        limit = REUSABLE_WORKFLOWS.most
         reasons = _reasons(_facts(self._calls(limit + 1)))
         self.assertEqual(
             reasons, [f"it calls the reusable workflow ./.github/workflows/w{limit + 1}.yml, which is not read"]
         )
 
+    @staticmethod
+    def _actions(levels: int) -> Files:
+        steps = "    runs-on: ubuntu-latest\n    steps:\n      - uses: ./a1\n"
+        files = {".github/workflows/ci.yml": "on: push\njobs:\n  t:\n" + steps}
+        for level in range(1, levels):
+            files[f"a{level}/action.yml"] = f"runs:\n  using: composite\n  steps:\n    - uses: ./a{level + 1}\n"
+        files[f"a{levels}/action.yml"] = "runs:\n  using: composite\n  steps:\n    - run: ctest\n      shell: bash\n"
+        return files
+
+    def test_composite_actions_use_each_other_at_most_the_limit_deep(self) -> None:
+        self.assert_limit(COMPOSITE_ACTIONS, self._actions, lambda files: ("ctest",) in _commands(_facts(files)))
+
+    def test_composite_actions_past_the_limit_say_so(self) -> None:
+        reasons = _reasons(_facts(self._actions(COMPOSITE_ACTIONS.most + 1)))
+        self.assertEqual(reasons, ["the composite actions it uses nest more than 4 levels deep"])
+
 
 class TsconfigLimitTests(LimitTestCase):
-    LIMIT = 4
-
     @staticmethod
     def _extends(levels: int) -> Files:
         files = {"tsconfig.json": json.dumps({"extends": "./tsconfig.b1"}), "src/a.ts": "export const a = 1;\n"}
@@ -116,7 +138,7 @@ class TsconfigLimitTests(LimitTestCase):
 
     def test_a_configuration_extends_local_bases_at_most_the_limit_deep(self) -> None:
         self.assert_limit(
-            self.LIMIT, self._extends, lambda files: bool(_strict_settings("tsconfig.json", _facts(files)))
+            TSCONFIG_EXTENDS, self._extends, lambda files: bool(_strict_settings("tsconfig.json", _facts(files)))
         )
 
 
@@ -132,17 +154,24 @@ class CmakeLimitTests(LimitTestCase):
         return cmake._evaluated(files).facts
 
     def test_functions_call_each_other_at_most_the_limit_deep(self) -> None:
-        found = self._evaluated(self._calls(MOST_NESTED))
+        found = self._evaluated(self._calls(CMAKE_NESTING.most))
         self.assertIn("-deep", [fact.option for fact in found if isinstance(fact, CompilerOption)])
         self.assertEqual(_reasons(found), [])
 
     def test_calls_past_the_limit_say_so(self) -> None:
-        for levels in (MOST_NESTED + 1, MOST_NESTED + 2):
+        for levels in (CMAKE_NESTING.most + 1, CMAKE_NESTING.most + 2):
             with self.subTest(levels=levels):
                 self.assertEqual(
                     _reasons(self._evaluated(self._calls(levels))),
-                    [f"calls, includes or subdirectories nest more than {MOST_NESTED} deep"],
+                    ["calls, includes or subdirectories nest more than 24 levels deep"],
                 )
+
+
+class LimitTests(unittest.TestCase):
+    def test_a_limit_says_how_deep_it_follows(self) -> None:
+        limit = Limit("its includes", 3)
+        self.assertEqual([limit.allows(levels) for levels in (2, 3, 4)], [True, True, False])
+        self.assertEqual(limit.reason, "its includes nest more than 3 levels deep")
 
 
 if __name__ == "__main__":

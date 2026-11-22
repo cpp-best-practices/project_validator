@@ -15,6 +15,7 @@ from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, O
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
 from project_validator.facts.expansion import advised, script_facts
 from project_validator.facts.shell import ShellSyntaxError, split_words
+from project_validator.limits import COMPOSITE_ACTIONS, REUSABLE_WORKFLOWS
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
 
@@ -470,8 +471,13 @@ class _Combination:
         path, action = found
         runs = action.get("runs")
         steps = runs.get("steps") if isinstance(runs, Mapping) and runs.get("using") == "composite" else None
-        if not isinstance(steps, list) or len(via) > _CALL_DEPTH:
+        if not isinstance(steps, list):
             return  # a JavaScript or Docker action, whose commands are its own code
+        if not COMPOSITE_ACTIONS.allows(len(via)):
+            yield Unknown(
+                origin=origin, subject=f"the action ./{directory}", reason=COMPOSITE_ACTIONS.reason, hides="commands"
+            )
+            return
         values = {**_input_defaults(action.get("inputs")), **inputs}
         for number, step in enumerate(steps):
             if isinstance(step, Mapping):
@@ -517,10 +523,6 @@ def _with_inputs[T](value: T, inputs: Mapping[str, str]) -> T:
     if isinstance(value, list):
         return [_with_inputs(item, inputs) for item in value]  # type: ignore[return-value]
     return value
-
-
-# GitHub runs at most this many levels of reusable workflows.
-_CALL_DEPTH = 4
 
 
 def _triggers(document: Mapping[object, object]) -> list[str]:
@@ -591,7 +593,7 @@ def workflow_facts(
             continue
         uses = str(job["uses"]).strip()
         called = _local(uses) or _own(uses, load)
-        within_depth = caller.count(" → ") < _CALL_DEPTH
+        within_depth = REUSABLE_WORKFLOWS.allows(caller.count(" → ") + 1)
         if called is not None and load is not None and within_depth and (target := load(called)) is not None:
             for label, passed in _calls(job, target, inputs):
                 yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id}{label} → ", passed)

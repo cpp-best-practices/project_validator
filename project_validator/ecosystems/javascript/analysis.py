@@ -25,6 +25,7 @@ from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings, matched_settings
 from project_validator.facts.tools import Run, combined, defined_by, starts
+from project_validator.limits import TSCONFIG_EXTENDS
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
 
@@ -132,7 +133,7 @@ def _strict_settings(path: str, facts: Facts, depth: int = 0) -> list[Setting]:
     for setting in own:
         bases = _bases(setting.value) if setting.key == "extends" else ()
         for base in map(str, bases):
-            if base.startswith(".") and depth < 4:
+            if base.startswith(".") and TSCONFIG_EXTENDS.allows(depth + 1):
                 extended = posixpath.normpath(joined(str(PurePosixPath(path).parent), base))
                 found += _strict_settings(
                     extended if extended.endswith(".json") else f"{extended}.json", facts, depth + 1
