@@ -5,12 +5,12 @@ languages (`multi_language_scanners`) and gets those that read one of them, for 
 from __future__ import annotations
 
 import re
-import shlex
 from collections.abc import Callable
 
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.expansion import Action
 from project_validator.facts.security import scanned, scanner
+from project_validator.facts.shell import split_words
 from project_validator.facts.tools import Run, Tool, starts, when
 
 # A GitLab template include is the jobs of the template, run as a marker command (see `project_validator.ci.gitlab`).
@@ -74,6 +74,6 @@ def multi_language_scanners(languages: frozenset[str]) -> tuple[Tool, ...]:
 
 CODEQL_ACTION = Action(name="github/codeql-action/analyze", runs=lambda _inputs: (("codeql", "database", "analyze"),))
 SEMGREP_ACTIONS = tuple(
-    Action(name=name, runs=lambda inputs: (("semgrep", "ci", *shlex.split(inputs.get("config", ""))),))
+    Action(name=name, runs=lambda inputs: (("semgrep", "ci", *split_words(inputs.get("config", ""))),))
     for name in ("returntocorp/semgrep-action", "semgrep/semgrep-action")
 )

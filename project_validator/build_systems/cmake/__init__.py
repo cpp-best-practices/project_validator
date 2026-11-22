@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import posixpath
 import re
-import shlex
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import PurePosixPath
@@ -25,6 +24,7 @@ from project_validator.facts.arguments import starts_with
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader
+from project_validator.facts.shell import command_line
 
 CMAKE_FILES = ("CMakeLists.txt", "*.cmake")
 # A configure_file() template (`configure_package_config_file`'s `@PACKAGE_INIT@`): a substitution where a command
@@ -127,7 +127,7 @@ def _scripts(project: CMakeProject, name: str, built: set[tuple[str, str]]) -> I
             yield from _scripts(project, dependency, built)
         for argv, origin in target.commands:
             yield Script(
-                text=shlex.join(argv), origin=origin, directory=None if target.directory == "." else target.directory
+                text=command_line(argv), origin=origin, directory=None if target.directory == "." else target.directory
             )
 
 
@@ -178,7 +178,10 @@ def _scripts_run(command: Command, context: Context) -> list[Expansion] | None:
         Unknown(origin=Origin(path=at), subject=f"the CMake script {at}", reason=reason, hides="commands")
         for at, reason in evaluation.problems.items()
     ]
-    return [*problems, *(Script(text=shlex.join(argv), origin=origin) for argv, origin in collector.processes)] or None
+    return [
+        *problems,
+        *(Script(text=command_line(argv), origin=origin) for argv, origin in collector.processes),
+    ] or None
 
 
 SCRIPTS = CommandExpander(name="CMake scripts", expand=_scripts_run)

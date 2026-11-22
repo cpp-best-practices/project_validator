@@ -5,7 +5,6 @@ from __future__ import annotations
 import itertools
 import json
 import re
-import shlex
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, replace
 from functools import partial
@@ -15,6 +14,7 @@ from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
 from project_validator.facts.expansion import advised, script_facts
+from project_validator.facts.shell import ShellSyntaxError, split_words
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
 
@@ -64,8 +64,8 @@ def custom_shell(shell: str | None) -> tuple[str, ...] | None:
     if shell is None:
         return None
     try:
-        words = shlex.split(shell)
-    except ValueError:
+        words = list(split_words(shell))
+    except ShellSyntaxError:
         words = shell.split()
     if not words or words[0] in _SHELLS or _runs_a_shell(words):
         return None

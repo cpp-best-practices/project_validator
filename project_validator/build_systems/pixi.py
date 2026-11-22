@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import posixpath
 import re
-import shlex
 import tomllib
 from collections.abc import Iterator, Mapping
 
@@ -22,6 +21,7 @@ from project_validator.core import Context
 from project_validator.facts import Command, Origin, Unknown, resolved
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.expansion import CommandExpander, Expansion, Launched, Script, found_at, inside, joined
+from project_validator.facts.shell import quoted
 
 _MANIFESTS = ("pixi.toml", "pyproject.toml")
 _WITH_VALUES = frozenset({"-e", "--environment", "--manifest-path", "--color", "--executable"})
@@ -122,7 +122,7 @@ def _command(task: Mapping[str, object], given: list[str]) -> str | bool | None:
         return False
     values = _arguments(task, given)
     if values is None:
-        return " ".join((cmd, *(shlex.quote(word) for word in given)))
+        return " ".join((cmd, *(quoted(word) for word in given)))
     missing = False
 
     def value(match: re.Match[str]) -> str:

@@ -5,7 +5,6 @@ makes them its own for its languages (`misconfiguration_scanners`), adding the c
 
 from __future__ import annotations
 
-import shlex
 from collections.abc import Iterable
 
 from project_validator.facts import Command, resolved
@@ -13,6 +12,7 @@ from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import option_values, starts_with
 from project_validator.facts.expansion import Action
 from project_validator.facts.security import scanned, scanner
+from project_validator.facts.shell import split_words
 from project_validator.facts.tools import Condition, Tool, combined, starts, when
 
 _TRIVY_FILESYSTEM = (("trivy", "fs"), ("trivy", "filesystem"), ("trivy", "repo"), ("trivy", "repository"))
@@ -58,5 +58,5 @@ CHECKOV_ACTION = Action(
 )
 KICS_ACTION = Action(
     name="checkmarx/kics-github-action",
-    runs=lambda inputs: (("kics", "scan", "-p", *shlex.split(inputs.get("path", "."))),),
+    runs=lambda inputs: (("kics", "scan", "-p", *split_words(inputs.get("path", "."))),),
 )

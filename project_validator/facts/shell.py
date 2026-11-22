@@ -13,8 +13,34 @@ from __future__ import annotations
 
 import re
 import shlex
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, field, replace
+
+from project_validator.parsing import ParseError
+
+
+class ShellSyntaxError(ParseError):
+    """A command line that does not split into words (an unclosed quote)."""
+
+
+def split_words(text: str, *, comments: bool = False) -> tuple[str, ...]:
+    """The words of one embedded command line (an action's `args` input, an alias), as a POSIX shell splits them, a
+    `#` word and what follows it dropped when `comments` says so; `ShellSyntaxError` when they do not split."""
+    try:
+        return tuple(shlex.split(text, comments=comments))
+    except ValueError as error:
+        raise ShellSyntaxError(str(error)) from error
+
+
+def command_line(argv: Iterable[str]) -> str:
+    """`argv` as one command line, quoted so that `split_words` splits it back into the same words."""
+    return shlex.join(argv)
+
+
+def quoted(word: str) -> str:
+    """`word` quoted for a POSIX shell, when it needs to be."""
+    return shlex.quote(word)
+
 
 _CONTINUATION = re.compile(r"\\\r?\n")
 _POWERSHELL_CONTINUATION = re.compile(r"`\r?\n")

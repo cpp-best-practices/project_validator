@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-import shlex
 from collections.abc import Callable, Iterator, Mapping
 
 from project_validator.core import Context
@@ -32,6 +31,7 @@ from project_validator.facts.practices import (
 )
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings, toml_settings, yaml_settings
+from project_validator.facts.shell import split_words
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, all_of, defined_by, either, starts, when, with_option
 from project_validator.text import pattern
@@ -117,7 +117,7 @@ def _golangci_formatters(command: Command, facts: Facts) -> Run | None:
 
 GOLANGCI_LINT_ACTION = Action(
     name="golangci/golangci-lint-action",
-    runs=lambda inputs: (("golangci-lint", "run", *shlex.split(inputs.get("args", ""))),),
+    runs=lambda inputs: (("golangci-lint", "run", *split_words(inputs.get("args", ""))),),
 )
 
 GOFMT = format_tool(
@@ -327,7 +327,7 @@ SECURITY_SCANNERS = (
     *multi_language_scanners(GO_LANGUAGE),
 )
 GOSEC_ACTION = Action(
-    name="securego/gosec", runs=lambda inputs: (("gosec", *shlex.split(inputs.get("args", "./..."))),)
+    name="securego/gosec", runs=lambda inputs: (("gosec", *split_words(inputs.get("args", "./..."))),)
 )
 
 AUDITORS = (

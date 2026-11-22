@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-import shlex
 import tomllib
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import replace
@@ -25,6 +24,7 @@ from project_validator.facts.outputs import BuildOutput, directories, ignored_at
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
+from project_validator.facts.shell import split_words
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, defined_by, either, starts, when
 from project_validator.text import Pattern
@@ -94,11 +94,11 @@ YAPF = format_tool(
 BLACK_ACTION = Action(
     name="psf/black",
     runs=lambda inputs: (
-        ("black", *shlex.split(inputs.get("options", "--check --diff")), *shlex.split(inputs.get("src", "."))),
+        ("black", *split_words(inputs.get("options", "--check --diff")), *split_words(inputs.get("src", "."))),
     ),
 )
 RUFF_ACTION = Action(
-    name="astral-sh/ruff-action", runs=lambda inputs: (("ruff", *shlex.split(inputs.get("args", "check"))),)
+    name="astral-sh/ruff-action", runs=lambda inputs: (("ruff", *split_words(inputs.get("args", "check"))),)
 )
 
 
@@ -205,7 +205,7 @@ def _pytest_cov(command: Command, facts: Facts) -> Run | None:
     configuration = facts.configured("pytest", files)
     addopts = facts.setting("pytest", "addopts", paths=[configuration]) if configuration else None
     added = addopts.value if addopts is not None else ()
-    words = (*argv, *(added if isinstance(added, tuple) else shlex.split(str(added))))
+    words = (*argv, *(added if isinstance(added, tuple) else split_words(str(added))))
     if not has_option(words, "--cov"):
         return None
     named = [joined(command.directory, path) for path in option_values(tuple(words), "--cov-config")]
@@ -402,7 +402,7 @@ SECURITY_SCANNERS = (
 # py-actions/flake8 runs flake8 over its `path` (the root by default) with its `args` (llama.cpp).
 FLAKE8_ACTION = Action(
     name="py-actions/flake8",
-    runs=lambda inputs: (("flake8", *shlex.split(inputs.get("args", "")), inputs.get("path", ".")),),
+    runs=lambda inputs: (("flake8", *split_words(inputs.get("args", "")), inputs.get("path", ".")),),
 )
 BANDIT_ACTION = Action(name="PyCQA/bandit-action", runs=lambda _inputs: (("bandit", "-r", "."),))
 

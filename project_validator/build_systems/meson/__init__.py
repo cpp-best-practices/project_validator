@@ -6,7 +6,6 @@ builds it applies to, and tests. `meson compile <target>` (or `ninja <target>`) 
 
 from __future__ import annotations
 
-import shlex
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, field
 from pathlib import PurePosixPath
@@ -21,6 +20,7 @@ from project_validator.facts.conditions import both
 from project_validator.facts.expansion import CommandExpander, Expansion, Script
 from project_validator.facts.roles import role
 from project_validator.facts.settings import SettingsReader
+from project_validator.facts.shell import command_line
 from project_validator.tools.toolchains import GCC_LIKE, MSVC, WARNINGS_AS_ERRORS_BY_COMPILER, ByCompiler
 
 BUILD_SYSTEM = "Meson"
@@ -174,7 +174,7 @@ def _run_targets(command: Command, context: Context) -> list[Expansion] | None:
         return None
     targets = meson_project(context).targets
     found: list[Expansion] = [
-        Script(text=shlex.join(words), origin=origin, directory=None if directory == "." else directory)
+        Script(text=command_line(words), origin=origin, directory=None if directory == "." else directory)
         for name in names
         for words, origin, directory in targets.get(name, ())
     ]

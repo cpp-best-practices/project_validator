@@ -4,7 +4,6 @@ settings each reads (see `project_validator.facts.tools`)."""
 from __future__ import annotations
 
 import re
-import shlex
 from collections.abc import Iterator
 from pathlib import PurePosixPath
 
@@ -18,6 +17,7 @@ from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, toml_settings
+from project_validator.facts.shell import split_words
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.tools.audits import multi_ecosystem_audits
@@ -277,7 +277,7 @@ AUDITORS = (
 CARGO_DENY_ACTION = Action(
     name="EmbarkStudios/cargo-deny-action",
     runs=lambda inputs: (
-        ("cargo", "deny", *shlex.split(inputs.get("arguments", "")), *shlex.split(inputs.get("command", "check"))),
+        ("cargo", "deny", *split_words(inputs.get("arguments", "")), *split_words(inputs.get("command", "check"))),
     ),
 )
 
