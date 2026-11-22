@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 import shlex
 from collections.abc import Callable, Iterator
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 _CONTINUATION = re.compile(r"\\\r?\n")
 _POWERSHELL_CONTINUATION = re.compile(r"`\r?\n")
@@ -29,9 +29,22 @@ _REDIRECTION = re.compile(r"^[<>&|]*[<>][<>&|]*$")
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ShellCommand:
+    """A simple command, with what decides whether its failure fails the script (see `exit_status`)."""
+
     argv: tuple[str, ...]
     env: tuple[tuple[str, str], ...]
     line: str
+    # The operator after it on its line (`|`, `|&`, `&&`, `||`, `;`, `&`), or "" at the line's end.
+    operator: str = ""
+    # The keyword whose condition it is part of (`if`, `elif`, `while`, `until`), or `!`, which negates it.
+    condition: str = ""
+    # After `||`: the command that runs in its place when it fails and that can succeed, as written; "" when what
+    # follows `||` fails again (`exit 1`), or goes on past the line, where it is not read.
+    fallback: str = ""
+    # Whether the command after it reads its exit status (`$?`, `PIPESTATUS`).
+    checked: bool = False
+    # Whether it runs in a command substitution, whose status is the business of the command around it.
+    nested: bool = False
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -128,23 +141,87 @@ def _command(words: list[str], line: str) -> ShellCommand | None:
     return ShellCommand(argv=argv, env=tuple(env), line=line) if argv else None
 
 
-def _commands_of(words: list[str], line: str) -> Iterator[ShellCommand]:
+_CONDITIONS = frozenset({"if", "elif", "while", "until"})
+_BODIES = frozenset({"then", "do"})
+# What reads the exit status of the command before.
+READS_STATUS = re.compile(r"\$\?|\$\{\?\}|PIPESTATUS")
+# The operators that end a list of commands; the others (`&&`, `||`, `|`) join it to the next.
+_LIST_ENDS = frozenset({"", ";", ";;", "&"})
+
+
+@dataclass(frozen=True, slots=True)
+class _Segment:
+    """The words between two operators, the operator after them ("" at the line's end), and whether they read the
+    exit status of the command before."""
+
+    words: list[str]
+    operator: str
+    reads: bool
+
+
+def _segments(words: list[str]) -> Iterator[_Segment]:
     current: list[str] = []
-    testing = False
-    for word in [*words, ";"]:
+    testing = reads = False
+    for word in words:
+        reads = reads or bool(READS_STATUS.search(word))
         # A conditional expression, `[[ … ]]`, runs nothing: its words (and its `||`, `&&`) are not commands.
         if testing:
             testing = word != "]]"
             continue
         if word == "[[" and all(kept in _KEYWORDS for kept in current):
-            testing, current = True, []
+            testing = True
             continue
         if word in _SEPARATORS:
-            if (command := _command(current, line)) is not None:
-                yield command
-            current = []
+            yield _Segment(current, word, reads)
+            current, reads = [], False
         else:
             current.append(word)
+    yield _Segment(current, "", reads)
+
+
+def _commands_of(words: list[str], line: str) -> list[ShellCommand]:
+    found: list[ShellCommand] = []
+    segments = list(_segments(words))
+    condition = ""
+    for index, segment in enumerate(segments):
+        leading = segment.words[: next((at for at, word in enumerate(segment.words) if word not in _KEYWORDS), None)]
+        for keyword in leading:
+            condition = keyword if keyword in _CONDITIONS else "" if keyword in _BODIES else condition
+        if segment.reads and found:
+            found[-1] = replace(found[-1], checked=True)
+        if (command := _command(segment.words, line)) is not None:
+            fallback = _fallback(segments[index + 1 :]) if segment.operator == "||" else ""
+            negated = "!" if "!" in leading else ""
+            found.append(replace(command, operator=segment.operator, condition=condition or negated, fallback=fallback))
+    return found
+
+
+def _fails(argv: tuple[str, ...]) -> bool:
+    """Whether a command fails whatever came before: `false`, or an `exit`/`return` other than `exit 0`."""
+    return argv[:1] == ("false",) or (argv[:1] in (("exit",), ("return",)) and argv[1:2] != ("0",))
+
+
+def _fallback(rest: list[_Segment]) -> str:
+    """What runs after `||` (`rest`, to the line's end), as `ShellCommand.fallback` has it: "" when it fails again
+    (`exit 1`), tests the status, or goes on past the line."""
+    depth, first = 0, None
+    for segment in rest:
+        depth += sum(word.count("{") + word.count("(") - word.count("}") - word.count(")") for word in segment.words)
+        command = _command(segment.words, "")
+        # A fallback that tests the status (`|| [ $? -eq 124 ]`) fails again on all it does not accept.
+        if segment.reads or (command is not None and _fails(command.argv)):
+            return ""
+        first = first or command
+        if depth <= 0 and segment.operator in _LIST_ENDS:
+            break
+    if depth > 0 or first is None:
+        return ""
+    text = " ".join(word.translate(_RESTORED) for word in first.argv)
+    return text if len(text) <= _FALLBACK_SHOWN else f"{first.argv[0]} …"
+
+
+# The longest fallback named whole; a longer one is named by its program.
+_FALLBACK_SHOWN = 24
 
 
 _PLACEHOLDER = re.compile(r"__opaque_(\d+)__")
@@ -174,7 +251,8 @@ class _Hidden:
         ]
 
     def restored(self, command: ShellCommand) -> ShellCommand:
-        return ShellCommand(
+        return replace(
+            command,
             argv=tuple(map(self.shown, command.argv)),
             env=tuple((name, self.shown(value)) for name, value in command.env),
             line=self.shown(command.line),
@@ -213,13 +291,27 @@ def _split_script(
     escape = "`" if powershell else "\\"
     script = _substitutions(_without_heredocs(script), hidden.hide, escape)
     continuation = _POWERSHELL_CONTINUATION if powershell else _CONTINUATION
+    # Each line's last command waits for the next line, which may read its exit status.
+    last: ShellCommand | None = None
     for line, words in _lines(continuation.sub(" ", script).splitlines(), escape):
+        if last is not None:
+            yield replace(last, checked=True) if READS_STATUS.search(hidden.shown(line)) else last
+            last = None
         for commands in hidden.substituted(line):
-            yield from _split_script(commands, opaque, powershell=powershell)
+            yield from map(_nested, _split_script(commands, opaque, powershell=powershell))
         if isinstance(words, ValueError):
             yield Unsplittable(line=hidden.shown(line), reason=str(words))
             continue
-        yield from map(hidden.restored, _commands_of(words, line))
+        found = [hidden.restored(command) for command in _commands_of(words, line)]
+        if found:
+            yield from found[:-1]
+            last = found[-1]
+    if last is not None:
+        yield last
+
+
+def _nested(found: ShellCommand | Unsplittable) -> ShellCommand | Unsplittable:
+    return replace(found, nested=True) if isinstance(found, ShellCommand) else found
 
 
 # A here-document's operator and its delimiter word (`<<EOF`, `<<-'EOF'`, `<< "END"`); not a here-string (`<<<`).

@@ -26,6 +26,7 @@ from project_validator.facts.audit import audited
 from project_validator.facts.build import Applies, CompilerOption
 from project_validator.facts.coverage import Granularity, measured, reported
 from project_validator.facts.dependencies import Application
+from project_validator.facts.exit_status import POSIX
 from project_validator.facts.expansion import Script
 from project_validator.facts.fuzzing import fuzzed
 from project_validator.facts.limits import limited
@@ -310,7 +311,15 @@ class SmallExtractorTests(unittest.TestCase):
             found = _in_workspaces(command("turbo run test"), make_context(root), "test")
         path = "packages/a/package.json"
         self.assertEqual(
-            found, [Script(text="vitest a", origin=Origin(path=path, at=("scripts", "test")), directory="packages/a")]
+            found,
+            [
+                Script(
+                    text="vitest a",
+                    origin=Origin(path=path, at=("scripts", "test")),
+                    directory="packages/a",
+                    shell=POSIX,
+                )
+            ],
         )
 
 
@@ -475,8 +484,10 @@ class MakeExpansionTests(unittest.TestCase):
                     reason=f"its program is the variable OTHER, {unset}",
                     hides="commands",
                 ),
-                Script(text="gen a.c", origin=Origin(path="Makefile", at=("a.c", 7)), opaque=VARIABLE),
-                Script(text="cc -c a.c -o a.o", origin=Origin(path="Makefile", at=("a.o", 5)), opaque=VARIABLE),
+                Script(text="gen a.c", origin=Origin(path="Makefile", at=("a.c", 7)), opaque=VARIABLE, shell=POSIX),
+                Script(
+                    text="cc -c a.c -o a.o", origin=Origin(path="Makefile", at=("a.o", 5)), opaque=VARIABLE, shell=POSIX
+                ),
             ],
         )
 
