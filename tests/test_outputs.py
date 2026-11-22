@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import unittest
 
-from project_validator.facts.outputs import BuildOutput, _glob_ignores, outputs_of
+from project_validator.facts.outputs import BuildOutput, outputs_of
 
 
 def _output(name: str, *build_systems: str, language: str = "L") -> BuildOutput:
@@ -28,34 +28,3 @@ class OutputsOfTests(unittest.TestCase):
         self.assertEqual(outputs_of("L", frozenset(), outputs), (own,))
         self.assertEqual(outputs_of("L", frozenset({"Maven", "Gradle"}), outputs), (own, maven, gradle))
         self.assertEqual(outputs_of("M", frozenset({"Maven"}), outputs), (other,))
-
-
-class GlobIgnoresTests(unittest.TestCase):
-    def test_globs_match_as_gitignore_entries(self) -> None:
-        cases = {
-            # A glob without a slash matches a name at any depth; a directory it matches holds what is below it.
-            ("build", "build"): True,
-            ("build", "src/build/a.o"): True,
-            ("build", "src/builder"): False,
-            ("*.o", "src/a.o"): True,
-            ("?.o", "src/ab.o"): False,
-            ("ab*", "abc"): True,
-            ("ab*", "xabc"): False,
-            ("[ab].o", "b.o"): True,
-            ("[ab].o", "c.o"): False,
-            # A trailing slash matches directories only: a file of that name is not ignored.
-            ("build/", "src/build"): False,
-            ("build/", "src/build/"): True,
-            ("build/", "build/a.o"): True,
-            # A slash anchors the glob at the top; `**` spans directories.
-            ("/build", "src/build"): False,
-            ("/build", "build/a.o"): True,
-            ("src/*.o", "src/a.o"): True,
-            ("src/*.o", "lib/src/a.o"): False,
-            ("**/gen", "a/b/gen/x"): True,
-            ("**/gen", "a/bgen"): False,
-            ("a/**/b", "a/x/y/b"): True,
-        }
-        for (glob, path), ignored in cases.items():
-            with self.subTest(glob=glob, path=path):
-                self.assertIs(_glob_ignores(glob, path), ignored)

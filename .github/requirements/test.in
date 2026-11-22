@@ -1,5 +1,6 @@
 # The dependencies the tests run with.
 PyYAML==6.0.3
+pathspec==1.1.1
 # tests/build_site.py renders the documentation site.
 Markdown==3.11.3
 # The optional console report and TUI, so that their tests run and count.

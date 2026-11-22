@@ -28,6 +28,7 @@ The validator itself is pure Python and has no build step; it only inspects
 - Python 3.12+ (the system Python on Ubuntu 24.04 LTS and later; no installation step,
   run with `python3 -m project_validator <path>`)
 - [PyYAML](https://pyyaml.org/) 6.0+ (`python3-yaml` on Ubuntu, or `python3 -m pip install PyYAML`)
+- [pathspec](https://github.com/cpburnz/python-pathspec) 0.12+ (`python3-pathspec` on Ubuntu, or `python3 -m pip install pathspec`)
 - Optionally [rich](https://github.com/Textualize/rich) 13.0+ for the console report (`pip install
   project_validator[pretty]`), and [textual](https://github.com/Textualize/textual) for the TUI (`[tui]`; `[all]` for
   both). The HTML report needs nothing more
@@ -324,12 +325,13 @@ with as little setup as possible. To keep it that way:
 | Dependency | Kind | Why |
 |---|---|
 | [PyYAML](https://pyyaml.org/) `>=6.0` | required | The standard library has no YAML parser, and CI configuration is YAML. PyYAML is mature, MIT licensed, has no dependencies, and is packaged by every major distro (`python3-yaml` on Ubuntu). It is required rather than optional because scanning CI files as text cannot tell which compiler runs on which OS, nor apply a matrix's `include`/`exclude`, so it over-counts platform combinations and can pass `platform-matrix` for a project that should fail. Without PyYAML the validator exits with an error that says how to install it. |
+| [pathspec](https://github.com/cpburnz/python-pathspec) `>=0.12` | required | Matches `.gitignore` entries as git does (`vcs-ignore` asks whether an entry ignores each build output). git's rules (wildmatch, `**` matching zero or more directories, character classes such as `[!a]`, anchoring, directory-only entries) are subtle: a hand-written matcher got eight of them wrong. pathspec is the de facto Python implementation (black, yamllint and others use it), MPL-2.0 licensed (file-level copyleft, compatible with depending on it), pure Python with no dependencies, actively maintained, and packaged by every major distro (`python3-pathspec` on Ubuntu 24.04 is 0.12). It is required rather than optional because a wrong answer here passes or fails `vcs-ignore` wrongly, and a fallback would keep the hand-written matcher and its bugs. Without pathspec the validator exits with an error that says how to install it. |
 | [rich](https://github.com/Textualize/rich) `>=13.0` | optional (`pretty`, `tui` and `all` extras) | The console report: colour, tables, progress while the project is read. MIT licensed and widely used. Without it the validator prints plain text and says so. |
 | [textual](https://github.com/Textualize/textual) `>=1.0` | optional (`tui` and `all` extras) | The TUI (`--tui`), built on rich by its authors. MIT licensed. Without it `--tui` says how to install it. |
 | [coverage.py](https://coverage.readthedocs.io/) `>=7.10` | development only (`coverage` extra) | Measures the branch coverage of the test suite; the standard library's `trace` module does not measure branches. coverage.py is the de facto Python coverage tool, Apache 2.0 licensed and has no required dependencies. The validator itself never imports it. |
 | [ruff](https://docs.astral.sh/ruff/), [mypy](https://mypy-lang.org/), [lizard](https://github.com/terryyin/lizard), [jscpd](https://github.com/kucherenko/jscpd), [mutmut](https://mutmut.readthedocs.io/), [pytest](https://docs.pytest.org/) (with [pytest-timeout](https://github.com/pytest-dev/pytest-timeout), which fails a test past ten minutes), [atheris](https://github.com/google/atheris) | CI only | The lint, typing, function-limits and copy-paste-detection quality gates, the mutation-testing gate (mutmut needs pytest to run the suite) and atheris, the fuzz-testing gate. They are installed by their CI jobs and are never imported by the validator. |
 
-PyYAML is the only required dependency.
+PyYAML and pathspec are the only required dependencies.
 
 The tools CI installs are locked with hashes: each `.github/requirements/<job>.in` names a job's tools,
 and `<job>.txt` pins them and everything they depend on, by version and hash. CI installs them with

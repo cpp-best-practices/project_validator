@@ -183,7 +183,7 @@ jobs:
         with:
           python-version: "3.14"
 
-      - name: Install PyYAML
+      - name: Install PyYAML and pathspec
         run: python -m pip install --require-hashes -r .github/requirements/test.txt
 
       # The corpus projects are fetched at their pinned commits (once; both recordings share the checkouts) and what
