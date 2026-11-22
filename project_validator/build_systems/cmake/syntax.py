@@ -9,6 +9,8 @@ import re
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 
+from project_validator.parsing import ParseError
+
 
 class Kind(enum.Enum):
     BRACKET = "bracket"  # [[...]]: taken literally
@@ -46,10 +48,9 @@ class Block:
 type Node = Invocation | Block
 
 
-class CMakeSyntaxError(ValueError):
+class CMakeSyntaxError(ParseError):
     def __init__(self, line: int, problem: str) -> None:
-        super().__init__(f"line {line}: {problem}")
-        self.line = line
+        super().__init__(f"line {line}: {problem}", line)
 
 
 _TOKEN = re.compile(

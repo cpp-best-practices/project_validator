@@ -11,20 +11,11 @@ from dataclasses import dataclass, replace
 from project_validator.components import known
 from project_validator.core import Project
 from project_validator.facts import Fact, Facts
+from project_validator.parsing import ParseError
 
 # Files larger than this are not parsed, and recorded as unread.
 MAX_SIZE = 5 * 1024 * 1024
 NESTED_MESSAGE = "nested too deeply to read"
-
-
-class ParseError(Exception):
-    """Why a file does not parse, and where (a line and a column, counted from 1) when the parser says."""
-
-    def __init__(self, message: str, line: int | None = None, column: int | None = None) -> None:
-        super().__init__(message)
-        self.message = message
-        self.line = line
-        self.column = column
 
 
 type Parse = Callable[[str, bytes], None]

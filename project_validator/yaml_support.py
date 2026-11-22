@@ -8,16 +8,14 @@ from functools import cache
 from types import ModuleType
 from typing import Any
 
+from project_validator.parsing import ParseError
+
 MISSING_MESSAGE = "PyYAML >= 6.0 is required (python3 -m pip install PyYAML, or the distro's python3-yaml package)"
 NESTED_MESSAGE = "nested too deeply to read"
 
 
-class YamlError(Exception):
-    def __init__(self, message: str, line: int | None = None, column: int | None = None) -> None:
-        super().__init__(message)
-        # 1-based, when the parser knows where the problem is.
-        self.line = line
-        self.column = column
+class YamlError(ParseError):
+    pass
 
 
 def _import_yaml() -> ModuleType | None:
@@ -98,6 +96,12 @@ def _loader() -> type:
     return Loader
 
 
+def _position(error: Exception) -> tuple[int, int] | tuple[()]:
+    """Where PyYAML says the error is (line and column, from 1): the problem's mark, else its context's."""
+    mark = getattr(error, "problem_mark", None) or getattr(error, "context_mark", None)
+    return () if mark is None else (mark.line + 1, mark.column + 1)
+
+
 def load(text: str) -> object:
     """The YAML document of `text`; a value with a local tag is a `Tagged`."""
     if _yaml is None:
@@ -105,7 +109,7 @@ def load(text: str) -> object:
     try:
         return _yaml.load(text, Loader=_loader())
     except _yaml.YAMLError as error:
-        raise YamlError(str(error).replace("\n", " ")) from error
+        raise YamlError(str(error).replace("\n", " "), *_position(error)) from error
     except RecursionError as error:
         raise YamlError(NESTED_MESSAGE) from error
 
@@ -119,9 +123,7 @@ def check_documents(text: str) -> None:
         for _ in _yaml.compose_all(text, Loader=_yaml_1_2()):
             pass
     except _yaml.MarkedYAMLError as error:
-        mark = error.problem_mark or error.context_mark
-        problem = error.problem or error.context or "invalid YAML"
-        raise YamlError(problem, mark.line + 1, mark.column + 1) if mark else YamlError(problem) from error
+        raise YamlError(error.problem or error.context or "invalid YAML", *_position(error)) from error
     except _yaml.YAMLError as error:
         raise YamlError(str(error).replace("\n", " ")) from error
     except RecursionError as error:

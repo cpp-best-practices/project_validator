@@ -8,10 +8,12 @@ import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 
+from project_validator.parsing import ParseError
 
-class MesonSyntaxError(ValueError):
+
+class MesonSyntaxError(ParseError):
     def __init__(self, line: int, problem: str) -> None:
-        super().__init__(f"line {line}: {problem}")
+        super().__init__(f"line {line}: {problem}", line)
 
 
 @dataclass(frozen=True, slots=True)

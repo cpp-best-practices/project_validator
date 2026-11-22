@@ -22,6 +22,7 @@ from project_validator.components import known
 from project_validator.core import Context, Project
 from project_validator.facts import Command, ConfigurationFile, Fact, Facts, Origin, Setting, Unknown
 from project_validator.facts.roles import role
+from project_validator.parsing import ParseError
 from project_validator.text import strip_json_comments
 
 type Read = Callable[[str, str], Iterable[Fact]]
@@ -171,7 +172,11 @@ def settings(
 
 def unreadable(tool: str, path: str, error: Exception) -> Unknown:
     return Unknown(
-        origin=Origin(path=path), subject=f"the {tool} settings", reason=f"{error}", hides="settings", tools=(tool,)
+        origin=Origin(path=path, span=error.span if isinstance(error, ParseError) else None),
+        subject=f"the {tool} settings",
+        reason=f"{error}",
+        hides="settings",
+        tools=(tool,),
     )
 
 

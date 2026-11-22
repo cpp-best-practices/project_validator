@@ -13,6 +13,8 @@ from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Any, Protocol, cast, runtime_checkable
 
+from project_validator.parsing import Span
+
 type Location = tuple[str | int, ...]
 
 NOTHING: Mapping[str, Any] = MappingProxyType({})
@@ -26,6 +28,8 @@ class Origin:
 
     path: str
     at: Location = ()
+    # Where in the file, when the reader knows; it does not change how the origin reads.
+    span: Span | None = None
 
     def __str__(self) -> str:
         """`.github/workflows/ci.yml:jobs.test.steps[3].run`."""

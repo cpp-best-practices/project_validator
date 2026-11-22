@@ -35,11 +35,9 @@ ANALYSIS_OPTIONS = "analysis_options.yaml"
 
 
 def _pubspec(text: str) -> Mapping[str, object]:
-    """A pubspec as a mapping; one that does not parse is a ValueError, which makes the manifest unknown."""
-    try:
-        document = yaml_support.load(text)
-    except yaml_support.YamlError as error:
-        raise ValueError(str(error)) from error
+    """A pubspec as a mapping; one that does not parse raises a `YamlError`, a ValueError, which makes the manifest
+    unknown."""
+    document = yaml_support.load(text)
     return document if isinstance(document, Mapping) else {}
 
 
