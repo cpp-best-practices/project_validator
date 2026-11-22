@@ -153,6 +153,18 @@ class PartlyReadTests(unittest.TestCase):
         [noted] = [fact for fact in facts if isinstance(fact, PartlyRead)]
         self.assertEqual((noted.subject, noted.reason), ("the command 'echo \"open'", "No closing quotation at 2:6"))
 
+    def test_a_script_nothing_can_be_read_from_is_unknown(self) -> None:
+        """When the parser learns nothing at all from a script, what it runs is not known: that is unknown."""
+        from project_validator.facts import Command, Origin, PartlyRead, Unknown
+        from project_validator.facts.expansion import script_facts
+
+        facts = list(script_facts("fi\ndone\n", job="test", origin=Origin(path="ci.sh")))
+        self.assertFalse([fact for fact in facts if isinstance(fact, (Command, PartlyRead))])
+        self.assertEqual(
+            [(fact.subject, fact.reason) for fact in facts if isinstance(fact, Unknown)],
+            [("the script", "nothing in it could be read: fi closes nothing at 1:1; done closes nothing at 2:1")],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -126,7 +126,9 @@ def script_facts(
     """The commands of a shell script a job runs (see `split_script`, `Script.whole`, `masked` for the rest)."""
     assigned, constants = _seen_assigned(script, whole or not via, powershell=powershell), _Constants(script)
     command = partial(Command, origin=origin, job=job, condition=condition, via=via)
-    for found, advisory in _judged(list(split_script(script, opaque, powershell=powershell)), shell, followed):
+    split = list(split_script(script, opaque, powershell=powershell))
+    yield from _unread(split, origin)
+    for found, advisory in _judged(split, shell, followed):
         if isinstance(found, ShellCommand):
             made = command(
                 argv=found.argv,
@@ -136,14 +138,23 @@ def script_facts(
                 advisory=advisory,
             )
             yield from _with_program(made, assigned)
-        else:
-            yield _partly_read(found, origin)
 
 
-def _partly_read(found: Unsplittable, origin: Origin) -> PartlyRead:
-    """What the parser could not follow in a script: noted, not unknown (the limit may be the parser's)."""
-    where = f" at {found.span}" if found.span is not None else ""
-    return PartlyRead(origin=origin, subject=f"the command {found.line!r}", reason=f"{found.reason}{where}")
+def _unread(split: list[ShellCommand | Unsplittable], origin: Origin) -> Iterator[Fact]:
+    """What the parser could not follow in a script. Read in part, it is noted, not unknown: the limit may be the
+    parser's, and what it read is used. When nothing at all could be read, what the script runs is unknown."""
+    problems = [found for found in split if isinstance(found, Unsplittable)]
+    if problems and len(problems) == len(split):
+        reasons = "; ".join(map(_placed, problems))
+        yield Unknown(origin=origin, subject="the script", reason=f"nothing in it could be read: {reasons}")
+        return
+    for found in problems:
+        yield PartlyRead(origin=origin, subject=f"the command {found.line!r}", reason=_placed(found))
+
+
+def _placed(found: Unsplittable) -> str:
+    """Why a script could not be read there, and where: `No closing quotation at 2:6`."""
+    return f"{found.reason} at {found.span}" if found.span is not None else found.reason
 
 
 def _judged(
