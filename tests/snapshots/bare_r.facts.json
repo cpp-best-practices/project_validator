@@ -81,6 +81,20 @@
         ".R files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "R",
+        "places": [
+          {
+            "directory": "R",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "R"

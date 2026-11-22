@@ -40,6 +40,20 @@
         ".typ files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "Typst",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "Typst"

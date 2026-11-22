@@ -78,6 +78,20 @@
         ".scala files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "Scala",
+        "places": [
+          {
+            "directory": "src/main/scala/shop",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "Scala"

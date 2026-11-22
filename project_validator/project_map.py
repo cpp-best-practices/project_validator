@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator, Mapping
+from collections import defaultdict
+from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
@@ -27,6 +28,38 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class Place:
+    """A folder that holds some of a language's files: the deepest folder its files in one top-level folder and one
+    role share ("." for the root)."""
+
+    directory: str
+    role: str
+    files: int
+
+    def as_dict(self) -> dict[str, object]:
+        return {"directory": self.directory, "role": self.role, "files": self.files}
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class LanguageFiles:
+    """Where a language's (or format's) files are: how many, their share of the project's own files, and the folders
+    that hold them, most files first."""
+
+    language: str
+    files: int
+    share: float
+    places: tuple[Place, ...]
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "language": self.language,
+            "files": self.files,
+            "share": round(self.share, 4),
+            "places": [place.as_dict() for place in self.places],
+        }
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class ProjectStructure:
     languages: frozenset[str]
     # The formats (JSON, YAML) the project's own files are in: data, not programs, judged for hygiene only.
@@ -43,6 +76,8 @@ class ProjectStructure:
     ci_providers: tuple[str, ...]
     ci_files: tuple[str, ...]
     ci_jobs: tuple[Job, ...]
+    # Where each language's and format's files are, most files first.
+    files: tuple[LanguageFiles, ...] = ()
 
     @property
     def languages_and_formats(self) -> frozenset[str]:
@@ -74,6 +109,7 @@ class ProjectStructure:
                 "files": list(self.ci_files),
                 "jobs": [_job_as_dict(job) for job in self.ci_jobs],
             },
+            "files": [found.as_dict() for found in self.files],
         }
 
 
@@ -151,6 +187,41 @@ def _signals(facts: Facts, names: frozenset[str]) -> dict[str, tuple[str, ...]]:
     return {label: tuple(found) for label, found in signals.items()}
 
 
+def _shared_directory(paths: list[str]) -> str:
+    """The deepest folder every one of `paths` is in ("." for the root)."""
+    parents = [PurePosixPath(path).parent.parts for path in paths]
+    shared: list[str] = []
+    for parts in zip(*parents, strict=False):
+        if len(set(parts)) != 1:
+            break
+        shared.append(parts[0])
+    return "/".join(shared) or "."
+
+
+def language_files(sources: Iterable[SourceFile], names: frozenset[str]) -> tuple[LanguageFiles, ...]:
+    """Where the files of each of `names` (the project's languages and formats) are: the project's own sources, by
+    top-level folder and role, each placed in the deepest folder they share."""
+    grouped: dict[str, dict[tuple[str, str], list[str]]] = defaultdict(lambda: defaultdict(list))
+    for source in sources:
+        if source.language in names and not source.vendored:
+            parts = PurePosixPath(source.path).parts
+            top = parts[0] if len(parts) > 1 else "."
+            grouped[source.language][top, source.role].append(source.path)
+    total = sum(len(paths) for groups in grouped.values() for paths in groups.values())
+    found = []
+    for language, groups in grouped.items():
+        places = sorted(
+            (
+                Place(directory=_shared_directory(paths), role=role, files=len(paths))
+                for (_, role), paths in groups.items()
+            ),
+            key=lambda place: (-place.files, place.directory),
+        )
+        files = sum(place.files for place in places)
+        found.append(LanguageFiles(language=language, files=files, share=files / total, places=tuple(places)))
+    return tuple(sorted(found, key=lambda language: (-language.files, language.language)))
+
+
 def map_project(facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis) -> ProjectStructure:
     """The project map: a view over the structure facts, and the CI the facts show."""
     vendored = [source.path for source in facts.of(SourceFile) if source.vendored]
@@ -166,4 +237,5 @@ def map_project(facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis
         ci_providers=tuple(dict.fromkeys(ci_file.provider.name for ci_file in ci_files)),
         ci_files=tuple(ci_file.path for ci_file in ci_files),
         ci_jobs=analysis.jobs,
+        files=language_files(facts.of(SourceFile), languages | formats_),
     )

@@ -115,6 +115,37 @@
         ".exs files"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "Elixir",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "lib",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.6667
+      },
+      {
+        "files": 1,
+        "language": "Erlang",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.3333
+      }
+    ],
     "formats": [],
     "languages": [
       "Elixir",

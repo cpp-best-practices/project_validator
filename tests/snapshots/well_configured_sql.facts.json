@@ -1241,6 +1241,52 @@
         ".sql files"
       ]
     },
+    "files": [
+      {
+        "files": 9,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 4,
+            "role": "product"
+          },
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          },
+          {
+            "directory": "models/staging",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.75
+      },
+      {
+        "files": 3,
+        "language": "SQL",
+        "places": [
+          {
+            "directory": "migrations",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "models/staging",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "tests",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.25
+      }
+    ],
     "formats": [
       "YAML"
     ],

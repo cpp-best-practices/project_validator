@@ -652,6 +652,44 @@
         ".ipynb files"
       ]
     },
+    "files": [
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.6667
+      },
+      {
+        "files": 1,
+        "language": "Jupyter",
+        "places": [
+          {
+            "directory": "notebooks",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.1667
+      },
+      {
+        "files": 1,
+        "language": "TOML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.1667
+      }
+    ],
     "formats": [
       "Jupyter",
       "TOML",

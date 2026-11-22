@@ -1866,6 +1866,37 @@
         ".hcl files"
       ]
     },
+    "files": [
+      {
+        "files": 6,
+        "language": "Terraform",
+        "places": [
+          {
+            "directory": ".",
+            "files": 5,
+            "role": "product"
+          },
+          {
+            "directory": "tests",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.6
+      },
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.4
+      }
+    ],
     "formats": [
       "YAML"
     ],

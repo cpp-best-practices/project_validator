@@ -864,6 +864,52 @@
         "content"
       ]
     },
+    "files": [
+      {
+        "files": 5,
+        "language": "XML",
+        "places": [
+          {
+            "directory": "data",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "examples/valid",
+            "files": 1,
+            "role": "example"
+          },
+          {
+            "directory": "schema",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "tests",
+            "files": 1,
+            "role": "test"
+          },
+          {
+            "directory": "xslt",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5556
+      },
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.4444
+      }
+    ],
     "formats": [
       "XML",
       "XML Schema",

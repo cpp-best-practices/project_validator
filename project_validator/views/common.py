@@ -13,7 +13,9 @@ from dataclasses import dataclass
 from project_validator.analysis import Analysis, Git, RoleSummary
 from project_validator.core import Placed, Status
 from project_validator.explanations import CATEGORIES, category
+from project_validator.project_map import LanguageFiles, Place
 from project_validator.runner import Report
+from project_validator.words import counted, folder
 
 # How each status is shown, in words and as a symbol, worst first.
 STATUS_ORDER = (Status.ERROR, Status.FAIL, Status.WARN, Status.PASS, Status.SKIP)
@@ -128,10 +130,14 @@ def units(analysis: Analysis) -> list[tuple[str, str, str, str]]:
 
 def role_line(summary_: RoleSummary) -> str:
     """`tests: tests/ (12 files, C++, Python)`, with how it is judged."""
-    directories = ", ".join(f"{directory}/" if directory != "." else "the root" for directory in summary_.directories)
     languages = f", {', '.join(summary_.languages)}" if summary_.languages else ""
-    files = f"{summary_.files} file{'s' if summary_.files != 1 else ''}"
-    return f"{ROLE_NAMES.get(summary_.role, summary_.role)}: {directories} ({files}{languages})"
+    files = counted(summary_.files, "file")
+    return f"{ROLE_NAMES.get(summary_.role, summary_.role)}: {role_directories(summary_)} ({files}{languages})"
+
+
+def role_directories(summary_: RoleSummary) -> str:
+    """`src/, tools/`: the top-level folders the code in a role is in."""
+    return ", ".join(folder(directory) for directory in summary_.directories)
 
 
 def role_judgement(summary_: RoleSummary) -> str:
@@ -153,15 +159,51 @@ def ci_summary(analysis: Analysis) -> str:
     jobs = len(structure.ci_jobs)
     files = len(structure.ci_files)
     providers = ", ".join(structure.ci_providers)
-    return f"{providers}: {jobs} job{'s' if jobs != 1 else ''} in {files} file{'s' if files != 1 else ''}"
+    return f"{providers}: {counted(jobs, 'job')} in {counted(files, 'file')}"
 
 
 def reading(analysis: Analysis) -> str:
     """`1,500 facts in 0.31 s`: how much was read, and how many paths git ignores were left out."""
     read = f"{len(analysis.facts.all):,} facts in {analysis.seconds:.2f} s"
     if count := len(analysis.ignored):
-        return f"{read}; {count} path{'s' if count != 1 else ''} git ignores left out"
+        return f"{read}; {counted(count, 'path')} git ignores left out"
     return read
+
+
+PLACES_SHOWN = 4  # folders listed for a language before the rest are counted
+
+
+def place_count(place: Place) -> str:
+    """`(3)`, `(1, test)`: how many of a language's files a folder holds, and their role when not the product's."""
+    return f"({place.files}{'' if place.role == 'product' else f', {place.role}'})"
+
+
+def shown_places(found: LanguageFiles) -> tuple[tuple[Place, ...], str]:
+    """The folders of a language listed, and what is said of the rest (` and 2 more folders (5 files)`, else "")."""
+    shown, rest = found.places[:PLACES_SHOWN], found.places[PLACES_SHOWN:]
+    if not rest:
+        return shown, ""
+    return shown, f" and {counted(len(rest), 'more folder')} ({counted(sum(place.files for place in rest), 'file')})"
+
+
+def file_count(found: LanguageFiles) -> str:
+    """`4 files (44%)`: how many files a language has, and its share of the project's own files."""
+    share = "<1" if found.share < 0.01 else str(round(found.share * 100))
+    return f"{counted(found.files, 'file')} ({share}%)"
+
+
+def language_files(found: LanguageFiles) -> tuple[str, str]:
+    """(`4 files (44%)`, `pkg/ (3), tests/ (1, test)`): how many files a language has, its share, and the folders
+    that hold them, past `PLACES_SHOWN` counted."""
+    shown, rest = shown_places(found)
+    return file_count(found), ", ".join(f"{folder(place.directory)} {place_count(place)}" for place in shown) + rest
+
+
+def files_by_language(analysis: Analysis) -> list[tuple[str, str, str]]:
+    """(language, file count and share, folders) for each language and format, most files first."""
+    if analysis.structure is None:
+        return []
+    return [(found.language, *language_files(found)) for found in analysis.structure.files]
 
 
 def unrecognised(analysis: Analysis) -> str:
@@ -179,6 +221,7 @@ def fact_kinds(analysis: Analysis) -> list[tuple[str, int]]:
 
 __all__ = [
     "OUTCOMES",
+    "PLACES_SHOWN",
     "ROLE_NAMES",
     "STATUS_ORDER",
     "SYMBOLS",
@@ -190,13 +233,19 @@ __all__ = [
     "dedupe",
     "ecosystems",
     "fact_kinds",
+    "file_count",
+    "files_by_language",
     "grouped",
     "is_skipped",
     "judged_places",
+    "language_files",
+    "place_count",
     "place_label",
     "reading",
+    "role_directories",
     "role_judgement",
     "role_line",
+    "shown_places",
     "summary",
     "units",
     "unrecognised",

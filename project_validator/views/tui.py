@@ -22,6 +22,7 @@ from project_validator.views.common import (
     ci_summary,
     dedupe,
     ecosystems,
+    files_by_language,
     judged_places,
     place_label,
     reading,
@@ -80,6 +81,11 @@ def detected(analysis: Analysis) -> str:
         return f"[bold red]The project could not be read:[/] {markup(analysis.error)}"
     lines = ["[bold]Languages and formats[/]"]
     lines += [f"  [cyan]{markup(label)}[/]: {markup(signals)}" for label, signals in ecosystems(analysis)]
+    lines += ["", "[bold]Where the files are[/]"]
+    lines += [
+        f"  [cyan]{markup(name)}[/]: {markup(count)} in {markup(where)}"
+        for name, count, where in files_by_language(analysis)
+    ]
     lines += ["", "[bold]Units[/]"]
     lines += [
         f"  [cyan]{markup(directory)}[/] ({markup(role)}): built with {markup(systems)}; {markup(names)}"

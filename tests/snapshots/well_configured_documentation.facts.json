@@ -846,6 +846,25 @@
         "content"
       ]
     },
+    "files": [
+      {
+        "files": 6,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 2,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [
       "MkDocs",
       "YAML"

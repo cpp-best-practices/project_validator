@@ -88,6 +88,20 @@
         ".ml files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "OCaml",
+        "places": [
+          {
+            "directory": "bin",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "OCaml"

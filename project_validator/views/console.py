@@ -24,6 +24,7 @@ from project_validator.views.common import (
     credit,
     dedupe,
     ecosystems,
+    files_by_language,
     grouped,
     is_skipped,
     judged_places,
@@ -137,6 +138,10 @@ class _Renderer:
         for label, signals in ecosystems(analysis):
             languages.add_row(self.text(label, style=f"bold {ACCENT}"), signals)
         self.print(languages)
+        files = self.table("Language or format", "Files", "Where")
+        for name, count, where in files_by_language(analysis):
+            files.add_row(self.text(name, style=f"bold {ACCENT}"), count, where)
+        self.print(files)
         found = self.table("Unit", "Role", "Built with", "Languages and formats")
         for directory, role, systems, names in units(analysis):
             found.add_row(directory if directory != "." else ". (the root)", role, systems, names)

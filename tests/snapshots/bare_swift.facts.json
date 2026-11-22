@@ -101,6 +101,25 @@
         ".swift files"
       ]
     },
+    "files": [
+      {
+        "files": 2,
+        "language": "Swift",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "Sources/App",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [],
     "languages": [
       "Swift"

@@ -93,6 +93,32 @@
         ".yaml files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "Dart",
+        "places": [
+          {
+            "directory": "lib",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 1,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      }
+    ],
     "formats": [
       "YAML"
     ],

@@ -3726,6 +3726,54 @@
         ".js files"
       ]
     },
+    "files": [
+      {
+        "files": 5,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 5,
+            "role": "product"
+          }
+        ],
+        "share": 0.4167
+      },
+      {
+        "files": 4,
+        "language": "JavaScript",
+        "places": [
+          {
+            "directory": "src",
+            "files": 2,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "fuzz",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.3333
+      },
+      {
+        "files": 3,
+        "language": "JSON",
+        "places": [
+          {
+            "directory": ".",
+            "files": 3,
+            "role": "product"
+          }
+        ],
+        "share": 0.25
+      }
+    ],
     "formats": [
       "JSON",
       "YAML"

@@ -119,6 +119,32 @@
         ".ts files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "JSON",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 1,
+        "language": "TypeScript",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      }
+    ],
     "formats": [
       "JSON"
     ],

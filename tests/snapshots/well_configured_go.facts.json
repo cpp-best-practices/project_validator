@@ -4224,6 +4224,42 @@
         ".go files"
       ]
     },
+    "files": [
+      {
+        "files": 7,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 6,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.7
+      },
+      {
+        "files": 3,
+        "language": "Go",
+        "places": [
+          {
+            "directory": ".",
+            "files": 2,
+            "role": "product"
+          },
+          {
+            "directory": "cmd/app",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.3
+      }
+    ],
     "formats": [
       "YAML"
     ],

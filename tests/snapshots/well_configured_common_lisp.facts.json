@@ -1506,6 +1506,37 @@
         ".yml files"
       ]
     },
+    "files": [
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.6667
+      },
+      {
+        "files": 2,
+        "language": "Common Lisp",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "tests",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.3333
+      }
+    ],
     "formats": [
       "YAML"
     ],

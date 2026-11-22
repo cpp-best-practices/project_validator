@@ -869,6 +869,42 @@
         "content"
       ]
     },
+    "files": [
+      {
+        "files": 4,
+        "language": "JSON",
+        "places": [
+          {
+            "directory": "examples",
+            "files": 2,
+            "role": "example"
+          },
+          {
+            "directory": "data",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "schema",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      }
+    ],
     "formats": [
       "JSON",
       "JSON Schema",

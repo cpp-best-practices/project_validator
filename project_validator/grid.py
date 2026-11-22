@@ -7,6 +7,7 @@ from collections.abc import Mapping, Sequence
 from project_validator.core import Status
 from project_validator.ecosystems import applies_to
 from project_validator.runner import Report
+from project_validator.words import folder
 
 MARKS: Mapping[Status, str] = {
     Status.PASS: "✅",
@@ -40,7 +41,7 @@ def _heading(column: _Column, single_unit: bool) -> str:
     unit, ecosystem = column
     if single_unit or not unit:
         return _md(ecosystem)
-    return _md(f"{ecosystem} in {'the root' if unit == '.' else unit}")
+    return _md(f"{ecosystem} in {folder(unit, slash=False)}")
 
 
 def _cell(row: Report, column: _Column) -> str:

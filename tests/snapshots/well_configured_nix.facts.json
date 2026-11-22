@@ -1069,6 +1069,32 @@
         ".nix files"
       ]
     },
+    "files": [
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.6667
+      },
+      {
+        "files": 2,
+        "language": "Nix",
+        "places": [
+          {
+            "directory": ".",
+            "files": 2,
+            "role": "product"
+          }
+        ],
+        "share": 0.3333
+      }
+    ],
     "formats": [
       "YAML"
     ],

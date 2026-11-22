@@ -44,6 +44,20 @@
         ".graphql files"
       ]
     },
+    "files": [
+      {
+        "files": 1,
+        "language": "GraphQL",
+        "places": [
+          {
+            "directory": "schema",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [
       "GraphQL"
     ],

@@ -844,6 +844,45 @@
         ".yml files"
       ]
     },
+    "files": [
+      {
+        "files": 13,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          },
+          {
+            "directory": "roles/shop",
+            "files": 4,
+            "role": "product"
+          },
+          {
+            "directory": "molecule/default",
+            "files": 2,
+            "role": "product"
+          },
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "inventory",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "playbooks",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
     "formats": [
       "Ansible",
       "YAML"

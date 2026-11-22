@@ -23,11 +23,12 @@ import math
 from collections.abc import Iterable, Sequence
 from datetime import UTC, datetime
 
-from project_validator.analysis import Analysis, file_url
+from project_validator.analysis import Analysis, file_url, folder_url
 from project_validator.core import Placed, Status
 from project_validator.explanations import why
 from project_validator.facts import as_dict
 from project_validator.facts.jobs import Job
+from project_validator.project_map import LanguageFiles
 from project_validator.runner import Report
 from project_validator.score import LEVEL_NAMES, Score
 from project_validator.views.common import (
@@ -41,18 +42,23 @@ from project_validator.views.common import (
     dedupe,
     ecosystems,
     fact_kinds,
+    file_count,
     grouped,
     is_skipped,
     judged_places,
+    place_count,
     place_label,
     reading,
+    role_directories,
     role_judgement,
     role_line,
+    shown_places,
     summary,
     units,
     unrecognised,
 )
 from project_validator.views.theme import STYLESHEET, THEME_SCRIPT, asset
+from project_validator.words import folder
 
 UNIT_HEADERS = ("Directory", "Role", "Built with", "Languages and formats")
 JOB_HEADERS = ("Job", "OS", "Compilers", "Toolchains", "Builds", "Configurations")
@@ -207,6 +213,29 @@ def _languages_card(analysis: Analysis) -> str:
     return f'<div class="card"><h3>Languages and formats</h3>{listed}{extra}</div>'
 
 
+def _linked_folder(analysis: Analysis, directory: str) -> str:
+    """A folder's name, linked to where it can be seen on the web when it can."""
+    name = e(folder(directory))
+    url = folder_url(analysis.git, directory)
+    return f'<a href="{e(url)}">{name}</a>' if url else name
+
+
+def _linked_places(analysis: Analysis, found: LanguageFiles) -> str:
+    shown, rest = shown_places(found)
+    places = (f"{_linked_folder(analysis, place.directory)} {e(place_count(place))}" for place in shown)
+    return ", ".join(places) + e(rest)
+
+
+def _files_card(analysis: Analysis) -> str:
+    files = analysis.structure.files if analysis.structure else ()
+    rows = (
+        (f"<strong>{e(found.language)}</strong>", e(file_count(found)), _linked_places(analysis, found))
+        for found in files
+    )
+    listed = table(("Language or format", "Files", "Where"), rows)
+    return f'<div class="card" style="margin-top:1rem"><h3>Where the files are</h3>{listed}</div>'
+
+
 def _units_card(analysis: Analysis) -> str:
     rows = (
         (f"<code>{e(directory)}</code>", e(role), e(systems), e(names))
@@ -226,7 +255,7 @@ def _roles_card(analysis: Analysis, vendored: Sequence[str]) -> str:
     rows = (
         (
             e(role_line(found).split(":", 1)[0]),
-            e(", ".join(f"{d}/" if d != "." else "the root" for d in found.directories)),
+            e(role_directories(found)),
             str(found.files),
             e(", ".join(found.languages) or "-"),
             e(role_judgement(found)),
@@ -272,7 +301,7 @@ def _detected(analysis: Analysis) -> str:
         )
     return (
         '<section class="wrap" id="detected"><h2>What was detected</h2>'
-        f'<div class="grid two">{_languages_card(analysis)}{_units_card(analysis)}</div>'
+        f'<div class="grid two">{_languages_card(analysis)}{_units_card(analysis)}</div>{_files_card(analysis)}'
         f"{_roles_card(analysis, structure.vendored)}{_ci_card(analysis, structure.ci_jobs)}</section>"
     )
 
