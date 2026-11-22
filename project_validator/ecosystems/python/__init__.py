@@ -491,11 +491,9 @@ CONDA = "conda packages"
 
 
 def _conda_declares(_path: str, text: str) -> bool:
-    """A conda environment file declares dependencies in its `dependencies` list."""
-    try:
-        environment = yaml_support.load(text)
-    except yaml_support.YamlError as error:
-        raise ValueError(str(error)) from error
+    """A conda environment file declares dependencies in its `dependencies` list (one that does not parse raises a
+    `YamlError`, a ValueError, which makes the manifest unknown)."""
+    environment = yaml_support.load(text)
     return isinstance(environment, dict) and bool(environment.get("dependencies"))
 
 

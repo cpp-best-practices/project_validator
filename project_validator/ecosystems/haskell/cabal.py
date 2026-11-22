@@ -12,13 +12,15 @@ import re
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 
+from project_validator.parsing import ParseError
+
 _FIELD = re.compile(r"(?P<name>[A-Za-z][\w-]*)\s*:(?P<value>.*)$")
 # The sections that are components of a package, or of a project the options apply to.
 COMPONENTS = frozenset({"library", "executable", "test-suite", "benchmark", "foreign-library", "package"})
 COMPONENTS |= {"program-options"}
 
 
-class CabalSyntaxError(ValueError):
+class CabalSyntaxError(ParseError):
     pass
 
 
@@ -39,7 +41,7 @@ def _lines(text: str) -> Iterator[tuple[int, int, str]]:
         stripped = raw.strip()
         if stripped and not stripped.startswith("--"):
             if "\t" in raw[: len(raw) - len(raw.lstrip())]:
-                raise CabalSyntaxError(f"line {number}: tab in indentation")
+                raise CabalSyntaxError(f"line {number}: tab in indentation", number)
             yield number, len(raw) - len(raw.lstrip()), stripped
 
 

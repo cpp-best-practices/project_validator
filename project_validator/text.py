@@ -6,6 +6,8 @@ import re
 from collections.abc import Iterable
 from dataclasses import dataclass
 
+from project_validator.parsing import ParseError
+
 
 @dataclass(frozen=True, slots=True)
 class Pattern:
@@ -38,12 +40,8 @@ def strip_json_comments(text: str) -> str:
     return _JSONC_TOKENS.sub(_blank_unless_string, _JSONC_TOKENS.sub(_blank_unless_string, text))
 
 
-class JsonSyntaxError(ValueError):
+class JsonSyntaxError(ParseError):
     """JSON that is not one value, and where (line and column, from 1) the token that breaks it starts."""
-
-    def __init__(self, message: str, line: int, column: int) -> None:
-        super().__init__(message)
-        self.line, self.column = line, column
 
 
 _JSON_TOKEN = re.compile(

@@ -9,7 +9,6 @@ import unittest
 from project_validator.build_systems.cmake.ctest import BuildError, _run
 from project_validator.build_systems.meson.syntax import MesonSyntaxError
 from project_validator.build_systems.meson.syntax import parse as parse_meson
-from project_validator.ecosystems.data import _check_deep_json
 from project_validator.ecosystems.docker.dockerfile import parse as parse_dockerfile
 from project_validator.ecosystems.haskell.cabal import CabalSyntaxError
 from project_validator.ecosystems.haskell.cabal import parse as parse_cabal
@@ -17,7 +16,7 @@ from project_validator.facts.wellformed import ParseError
 from project_validator.text import JsonSyntaxError, check_json
 
 
-def _json_error(text: str) -> tuple[str, int, int]:
+def _json_error(text: str) -> tuple[str, int | None, int | None]:
     try:
         check_json(text)
     except JsonSyntaxError as error:
@@ -52,13 +51,6 @@ class JsonPositionTests(unittest.TestCase):
         for text, column in ((",", 1), ('"a":', 4), ("1,", 2), ('"a" :', 5)):
             with self.subTest(text=text):
                 self.assertEqual(_json_error(text), ("malformed JSON", 1, column))
-
-    def test_deep_json_keeps_the_position(self) -> None:
-        with self.assertRaises(ParseError) as raised:
-            _check_deep_json("[1,\n  ]")
-        self.assertEqual(
-            (raised.exception.message, raised.exception.line, raised.exception.column), ("malformed JSON", 2, 3)
-        )
 
 
 class DockerfilePositionTests(unittest.TestCase):

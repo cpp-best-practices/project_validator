@@ -10,6 +10,7 @@ from project_validator.ecosystems import data
 from project_validator.ecosystems.data import DATA
 from project_validator.facts.structure import NOT_SOURCE_SUFFIXES
 from project_validator.facts.wellformed import ParseError, known_parsers
+from project_validator.text import check_json
 from tests.support import make_context, temp_project
 
 
@@ -59,10 +60,10 @@ class ParserTests(unittest.TestCase):
         bad = (*bad, "1 2", ":", ",", '{"a":}', "]", '{"a",1}', "[1:2]")
         for text in good:
             with self.subTest(text=text):
-                data._check_deep_json(text)
+                check_json(text)
         for text in bad:
             with self.subTest(text=text), self.assertRaises(ParseError):
-                data._check_deep_json(text)
+                check_json(text)
 
     def test_json_counts_as_deep_only_past_the_limit(self) -> None:
         limit = data._DEEP

@@ -16,7 +16,7 @@ from xml.parsers import expat
 from project_validator import yaml_support
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.wellformed import ParseError, Parser, decoded
-from project_validator.text import JsonSyntaxError, check_json, strip_json_comments
+from project_validator.text import check_json, strip_json_comments
 
 JSON, TOML, XML, YAML = "JSON", "TOML", "XML", "YAML"
 DATA_FORMATS = frozenset({JSON, TOML, XML, YAML})
@@ -34,14 +34,6 @@ JSON_WITH_COMMENTS = (
 def _allows_comments(path: str) -> bool:
     name = PurePosixPath(path).name
     return any(fnmatchcase(path, glob) or fnmatchcase(name, glob) for glob in JSON_WITH_COMMENTS)
-
-
-def _check_deep_json(text: str) -> None:
-    """JSON nested deeper than Python's parser recurses (a JSON parser's test data), read without recursion."""
-    try:
-        check_json(text)
-    except JsonSyntaxError as error:
-        raise ParseError(str(error), error.line, error.column) from error
 
 
 # Deeper than this, JSON is read without recursion: how deep Python's own decoder goes depends on the interpreter, and
@@ -66,14 +58,14 @@ def _parse_json(path: str, data: bytes) -> None:
     text = decoded(data)
     text = strip_json_comments(text) if _allows_comments(path) else text
     if _deep(text):
-        _check_deep_json(text)
+        check_json(text)
         return
     try:
         json.loads(text)
     except json.JSONDecodeError as error:
         raise ParseError(error.msg, error.lineno, error.colno) from error
     except RecursionError:
-        _check_deep_json(text)
+        check_json(text)
 
 
 # Where a TOML error is, as tomllib writes it into the message; Python 3.14 also gives `lineno` and `colno`.
@@ -91,10 +83,7 @@ def _parse_toml(_path: str, data: bytes) -> None:
 
 
 def _parse_yaml(_path: str, data: bytes) -> None:
-    try:
-        yaml_support.check_documents(decoded(data))
-    except yaml_support.YamlError as error:
-        raise ParseError(str(error), error.line, error.column) from error
+    yaml_support.check_documents(decoded(data))
 
 
 def _parse_xml(_path: str, data: bytes) -> None:
