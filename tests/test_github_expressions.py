@@ -81,6 +81,10 @@ class RenderedTests(unittest.TestCase):
             ("${{ matrix.generator }}", ""),
             ("${{ 3 }}", "3"),
             ("${{ 1.5 }}", "1.5"),
+            # A number is written out in full, as JavaScript writes it, not in exponent notation.
+            ("${{ 1234567 }}", "1234567"),
+            ("${{ 123456789012 }}", "123456789012"),
+            ("${{ 1234567 == '1234567' }}", "true"),
             ("${{ github.sha }}", None),
         ):
             with self.subTest(expression=expression):

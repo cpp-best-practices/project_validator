@@ -61,7 +61,8 @@ def _text(value: Maybe) -> str:
     if isinstance(value, bool):
         return "true" if value else "false"
     if isinstance(value, float):
-        return f"{value:g}"
+        # As JavaScript writes a number: a whole one without a fraction or an exponent (below 1e21, where it would).
+        return str(int(value)) if value.is_integer() and abs(value) < 1e21 else repr(value)
     return str(value)
 
 

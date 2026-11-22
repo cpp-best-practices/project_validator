@@ -448,6 +448,17 @@ class VcsIgnoreTests(unittest.TestCase):
             with self.subTest(name):
                 self.assert_ignored_like(variant, control)
 
+    def test_a_nested_ignore_file_counts_only_as_its_own_kind_where_a_unit_writes(self) -> None:
+        """docs/.gitignore ignores the Sphinx site's _build and is named as where the entry is; a docs/.hgignore is
+        no .gitignore, and other/.gitignore is in no directory the site is written below."""
+        files = {**SPHINX_DOCS, ".gitignore": "*.pyc\n"}
+        result = _run(vcs_ignore, {**files, "docs/.gitignore": "_build\n"})
+        self.assertIn("Documentation site: .gitignore ignores _build (docs/.gitignore)", result.message)
+        for other in ("docs/.hgignore", "other/.gitignore"):
+            with self.subTest(other=other):
+                result = _run(vcs_ignore, {**files, other: "_build\n"})
+                self.assertIn("Documentation site: .gitignore does not ignore the Sphinx site _build/", result.message)
+
 
 class LicenseTests(unittest.TestCase):
     def test_recognises_the_licenses_of_the_corpus(self) -> None:
