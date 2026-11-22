@@ -52,6 +52,12 @@ class TaggedTests(unittest.TestCase):
             },
         )
 
+    def test_a_tagged_collection_as_a_key_is_a_yaml_error_not_a_crash(self) -> None:
+        for text in ("? !t {a: 1}\n: x\n", "? !t [a]\n: x\n", "jobs:\n? !est:\n  run: x\n"):
+            with self.subTest(text=text), self.assertRaisesRegex(yaml_support.YamlError, "unhashable key"):
+                yaml_support.load(text)
+        self.assertEqual(yaml_support.load("? !t a\n: x\n"), {yaml_support.Tagged("!t", "a"): "x"})
+
     def test_a_flow_entry_may_start_with_a_colon_and_json_keys_keep_their_values(self) -> None:
         text = 'a: [:x, :y]\nb: {"k":1, :z: 2}\nc: [ x:y ]\n'
         self.assertEqual(yaml_support.load(text), {"a": [":x", ":y"], "b": {"k": 1, ":z": 2}, "c": ["x:y"]})

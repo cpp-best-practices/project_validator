@@ -77,7 +77,15 @@ def _loader() -> type:
     yaml: Any = _yaml
 
     class Loader(_yaml_1_2()):  # type: ignore[misc]
-        pass
+        def construct_mapping(self, node: Any, deep: bool = False) -> dict[object, object]:
+            """A mapping, where a key that is a tagged collection (`? !t {a: 1}`) is unhashable, as an untagged one
+            is: a `Tagged` passes the loader's own check for a hashable key, and hashing its value fails."""
+            try:
+                return super().construct_mapping(node, deep=deep)  # type: ignore[no-any-return]
+            except TypeError as error:
+                raise yaml.constructor.ConstructorError(
+                    "while constructing a mapping", node.start_mark, "found unhashable key", node.start_mark
+                ) from error
 
     def tagged(loader: Any, suffix: str, node: Any) -> Tagged:
         if isinstance(node, yaml.SequenceNode):
