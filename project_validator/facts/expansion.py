@@ -17,7 +17,7 @@ from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
 from project_validator.components import known
-from project_validator.evidence import PRE_COMMIT_CONFIGURATION
+from project_validator.evidence import DEVENV, DEVENV_HOOKS, PRE_COMMIT_CONFIGURATION
 from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, Unknown, resolved
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.exit_status import Shell, masked
@@ -349,8 +349,14 @@ def expanded(
 
 
 def from_hook(command: Command) -> bool:
-    """Whether `command` runs as a pre-commit hook, which fails when it changes a file."""
-    return any(PurePosixPath(origin.path).name in PRE_COMMIT_CONFIGURATION for origin in (*command.via, command.origin))
+    """Whether `command` runs as a pre-commit hook (one a pre-commit configuration or a `devenv.nix` defines), which
+    fails when it changes a file."""
+    return any(_defines_hook(origin) for origin in (*command.via, command.origin))
+
+
+def _defines_hook(origin: Origin) -> bool:
+    name = PurePosixPath(origin.path).name
+    return name in PRE_COMMIT_CONFIGURATION or (name == DEVENV and bool(origin.at) and origin.at[0] in DEVENV_HOOKS)
 
 
 def known_expanders() -> tuple[CommandExpander, ...]:

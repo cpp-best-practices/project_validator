@@ -298,6 +298,55 @@ class PreCommitTests(unittest.TestCase):
         files = {".pre-commit-config.yaml": self.CONFIG, **github_job("ubuntu-latest", "pre-commit install")}
         self.assertEqual(_expanded(_facts(files)), [])
 
+    DEVENV = """\
+        { pkgs, ... }:
+        {
+          git-hooks = {
+            package = pkgs.prek;
+            hooks = {
+              nixfmt = { enable = true; files = "\\\\.nix$"; };
+              rustfmt.enable = true;
+              markdownlint.enable = false;
+              clippy.settings.denyWarnings = true;
+            };
+          };
+        }
+        """
+
+    def test_without_a_configuration_the_hooks_devenv_enables_run(self) -> None:
+        """devenv writes (and ignores) the configuration from `devenv.nix`'s git-hooks when its shell starts: those it
+        enables are what `prek run` runs (cachix/devenv, upstream #285)."""
+        cases = {
+            "prek run -a": [("nixfmt",), ("rustfmt",)],
+            "devenv shell -- prek run -a": [("prek", "run", "-a"), ("nixfmt",), ("rustfmt",)],
+            "pre-commit run rustfmt": [("rustfmt",)],
+            "SKIP=nixfmt prek run": [("rustfmt",)],
+        }
+        for line, expected in cases.items():
+            with self.subTest(line=line):
+                facts = _facts({"devenv.nix": self.DEVENV, **github_job("ubuntu-latest", line)})
+                self.assertEqual(_expanded(facts), expected)
+                self.assertEqual(facts.of(Unknown), ())
+        rustfmt = next(command for command in facts.of(Command) if command.argv == ("rustfmt",))
+        self.assertEqual(
+            (rustfmt.line, rustfmt.origin),
+            ("the rustfmt hook of devenv.nix", Origin(path="devenv.nix", at=("git-hooks", "hooks", "rustfmt"))),
+        )
+
+    def test_devenvs_older_name_for_its_hooks_is_read(self) -> None:
+        devenv = "{ pre-commit.hooks.shellcheck.enable = true; }"
+        facts = _facts({"devenv.nix": devenv, **github_job("ubuntu-latest", "pre-commit run -a")})
+        self.assertEqual(_expanded(facts), [("shellcheck",)])
+
+    def test_a_committed_or_named_configuration_wins_over_devenv(self) -> None:
+        for files, line, expected in (
+            ({".pre-commit-config.yaml": self.CONFIG}, "prek run", [("ruff", "--fix"), ("ruff-format",)]),
+            ({}, "prek run -c hooks.yaml", []),
+        ):
+            with self.subTest(line=line):
+                facts = _facts({"devenv.nix": self.DEVENV, **files, **github_job("ubuntu-latest", line)})
+                self.assertEqual(_expanded(facts)[:2], expected)
+
 
 TOX_INI = """\
 [tox]
