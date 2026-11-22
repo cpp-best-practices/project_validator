@@ -6,10 +6,10 @@ pipelines (`&&`, `||`), a pipeline commands joined by `|`, and a command a simpl
 subshell, a group, `if`, `while`/`until`, `for`/`select`, `case`, a `[[ ]]` test, an arithmetic command, a function
 definition). Words keep their command substitutions, parsed in turn (to `SHELL_NESTING` deep).
 
-What CI writes is not always a whole script (a Make recipe line, a fragment), so the parser is lenient where a shell
-would refuse: a compound command that is never closed ends with the script, and a closing word that closes nothing is
-skipped. Only what does not split into words (an unclosed quote) is an error, and it loses its line only: the script
-goes on after it (`Script.items` holds a `Malformed` in its place).
+A script with errors still yields all it can: each error is reported in `Script.errors`, with where it is, and the
+parser goes on past it. An unclosed quote (or `$'…'`, `${…}`) ends with the line it opened on; an unclosed substitution
+is text; a substitution nested past `SHELL_NESTING` is kept as written, not parsed; a compound command that is never
+closed ends with the script; and a closing word that closes nothing is skipped.
 
 PowerShell (`powershell=True`) is split with the backquote as its escape character and without the POSIX shell's
 compound commands: its lines are lists of pipelines of simple commands, keywords and braces included as words.
@@ -27,11 +27,15 @@ from project_validator.parsing import ParseError, Span
 
 
 class ShellSyntaxError(ParseError):
-    """A command line that does not split into words (an unclosed quote)."""
+    """What is wrong in a script (an unclosed quote, an `if` without its `fi`), and where: `offset` in the text."""
+
+    def __init__(self, message: str, line: int | None = None, column: int | None = None, offset: int = 0) -> None:
+        super().__init__(message, line, column)
+        self.offset = offset
 
 
-class _TooDeep(ShellSyntaxError):
-    """Substitutions nested past `SHELL_NESTING`: the whole line is lost, not only the innermost substitution."""
+class _Unclosed(ShellSyntaxError):
+    """A quote (or `${`) still open where the text being read ends."""
 
 
 # --- the tree
@@ -248,24 +252,16 @@ class Item:
 
 
 @dataclass(frozen=True, slots=True)
-class Malformed:
-    """A line that does not split into words, from its start to where splitting stopped."""
-
-    reason: str
-    start: int
-    end: int
-    span: Span
-
-
-@dataclass(frozen=True, slots=True)
 class Script:
     """Items in order; `lines` are the script's logical lines (offsets: a quoted string, a substitution or a line
-    continuation may make one span several physical lines), those that hold anything but a comment."""
+    continuation may make one span several physical lines), those that hold anything but a comment; `errors` are what
+    is wrong in it (on the script of a whole text or a substitution: the scripts of compound commands have none)."""
 
-    items: tuple[Item | Malformed, ...]
+    items: tuple[Item, ...]
     lines: tuple[tuple[int, int], ...]
     start: int
     end: int
+    errors: tuple[ShellSyntaxError, ...] = ()
 
     def line_of(self, offset: int) -> int:
         """The index in `lines` of the line that holds `offset`."""
@@ -312,8 +308,8 @@ class _Source:
     def span(self, start: int, end: int) -> Span:
         return Span(*self.position(start), *self.position(end))
 
-    def error(self, message: str, offset: int) -> ShellSyntaxError:
-        return ShellSyntaxError(message, *self.position(offset))
+    def error(self, message: str, offset: int, kind: type[ShellSyntaxError] = ShellSyntaxError) -> ShellSyntaxError:
+        return kind(message, *self.position(offset), offset=offset)
 
 
 def _closing(text: str, start: int, end: int, escape: str = "\\") -> int | None:
@@ -351,6 +347,7 @@ class _Lexer:
         self.tokens: list[_Token] = []
         self.heredocs: list[tuple[str, _Token]] = []  # delimiters waiting for the next newline, with their token
         self.bodies: dict[int, str] = {}  # a here-document's body by its delimiter word's offset
+        self.errors: list[ShellSyntaxError] = []
 
     def at_continuation(self, position: int) -> int:
         """The length of the line continuation at `position` (escape, newline), or 0."""
@@ -460,14 +457,34 @@ class _WordReader:
         elif character == escape:
             self.escaped(position, quote)
         elif character == "'" and not quote:
-            self.single_quoted(position)
+            self.bounded(self.single_quoted, position)
         elif character == "$" and not quote and self.text.startswith("$'", position) and escape == "\\":
-            self.ansi_c_quoted(position)
+            self.bounded(self.ansi_c_quoted, position)
         elif character == '"' and not quote:
-            self.double_quoted(position)
+            self.bounded(self.double_quoted, position)
         else:
             self.literal.append(character)
             lexer.position += 1
+
+    def bounded(self, reader: Callable[[int], None], position: int) -> None:
+        """Read a quoted part with `reader`; when it is never closed, report it, and read it again to the end of the
+        line it opened on, where it is taken to close."""
+        lexer, kept = self.lexer, (len(self.parts), list(self.literal), len(self.lexer.errors), self.quoted)
+        try:
+            reader(position)
+            return
+        except _Unclosed as error:
+            del self.parts[kept[0] :], lexer.errors[kept[2] :]
+            self.literal, self.quoted = kept[1], kept[3]
+            lexer.errors.append(error)
+        newline = self.text.find("\n", position, lexer.end)
+        whole, lexer.end = lexer.end, lexer.end if newline < 0 else newline
+        try:
+            reader(position)
+        except _Unclosed:
+            lexer.position = lexer.end
+        finally:
+            lexer.end = whole
 
     def escaped(self, position: int, quote: str) -> None:
         if (skip := self.lexer.at_continuation(position)) and quote:
@@ -475,7 +492,10 @@ class _WordReader:
             self.lexer.position += skip
             return
         if position + 1 >= self.lexer.end:
-            raise self.source.error("No escaped character", position)
+            self.lexer.errors.append(self.source.error("No escaped character", position))
+            self.literal.append(self.text[position])
+            self.lexer.position += 1
+            return
         following = self.text[position + 1]
         if quote and following not in (quote, self.source.escape):
             self.literal.append(self.text[position : position + 2])  # in double quotes an escape is mostly text
@@ -499,7 +519,7 @@ class _WordReader:
                 self.literal.append(self.text[here])
                 lexer.position += 1
         if lexer.position >= lexer.end:
-            raise self.source.error("No closing quotation", position)
+            raise self.source.error("No closing quotation", position, _Unclosed)
         lexer.position += 1
 
     def ansi_c_quoted(self, position: int) -> None:
@@ -518,7 +538,7 @@ class _WordReader:
                 self.literal.append(self.text[here])
                 lexer.position += 1
         if lexer.position >= lexer.end:
-            raise self.source.error("No closing quotation", position)
+            raise self.source.error("No closing quotation", position, _Unclosed)
         lexer.position += 1
 
     def double_quoted(self, position: int) -> None:
@@ -528,7 +548,7 @@ class _WordReader:
         while lexer.position < lexer.end and self.text[lexer.position] != '"':
             self.step(quote='"')
         if lexer.position >= lexer.end:
-            raise self.source.error("No closing quotation", position)
+            raise self.source.error("No closing quotation", position, _Unclosed)
         lexer.position += 1
 
     def expansion(self, position: int, quote: str) -> bool:
@@ -540,17 +560,17 @@ class _WordReader:
         ):
             self.add(Verbatim(text[position:end]))
         elif text.startswith("${", position):
-            self.parameter(position, quote)
+            self.bounded(lambda start: self.parameter(start, quote), position)
             return True
         elif self.opens_substitution(position):
             if (end := _closing(text, position, lexer.end, self.source.escape)) is None:
-                return False
-            self.add(Substitution(text[position:end], self.inner(position + 2, end - 1)))
+                return self.unclosed(position)
+            self.substitution(position, end, position + 2, end - 1)
         elif text.startswith("`", position) and self.source.escape != "`":
             if (close := text.find("`", position + 1, lexer.end)) < 0:
-                return False
+                return self.unclosed(position)
             end = close + 1
-            self.add(Substitution(text[position:end], self.inner(position + 1, close)))
+            self.substitution(position, end, position + 1, close)
         else:
             return False
         lexer.position = end
@@ -570,7 +590,7 @@ class _WordReader:
                 return
             depth += {"{": 1, "}": -1}.get(character, 0)
             self.step(quote=quote)
-        raise self.source.error("No closing brace", position)
+        raise self.source.error("No closing brace", position, _Unclosed)
 
     def opens_substitution(self, position: int) -> bool:
         """Whether `$(` (not `$((`) starts at `position`, or a process substitution (`<(`, `>(`) starts the word."""
@@ -578,8 +598,28 @@ class _WordReader:
             return not self.text.startswith("$((", position)
         return position == self.start and self.text.startswith(("<(", ">("), position)
 
-    def inner(self, start: int, end: int) -> Script:
-        return _parse(self.source, start, end, self.lexer.depth + 1, powershell=self.lexer.powershell)
+    def unclosed(self, position: int) -> bool:
+        """A substitution that is never closed: reported, and its opening read as text of the word."""
+        self.lexer.errors.append(self.source.error("the command substitution is never closed", position))
+        opening = 1 if self.text.startswith("`", position) else 2
+        self.literal.append(self.text[position : position + opening])
+        self.lexer.position = position + opening
+        return True
+
+    def substitution(self, start: int, end: int, inner_start: int, inner_end: int) -> None:
+        """The substitution `text[start:end]`, its script parsed from `text[inner_start:inner_end]`; kept as written
+        when it is nested deeper than `SHELL_NESTING`."""
+        depth = self.lexer.depth + 1
+        if not SHELL_NESTING.allows(depth):
+            self.lexer.errors.append(self.source.error(SHELL_NESTING.reason, start))
+            self.add(Verbatim(self.text[start:end]))
+            return
+        self.add(
+            Substitution(
+                self.text[start:end],
+                _parse(self.source, inner_start, inner_end, depth, powershell=self.lexer.powershell),
+            )
+        )
 
     def quoted_delimiter_ok(self, word: Word) -> bool:
         """Whether a word after `<<` delimits a here-document (a name, quoted or not)."""
@@ -603,6 +643,12 @@ class _Parser:
         self.index = 0
         self.stops: list[frozenset[str]] = []
         self.open_subshells = 0
+        self.errors: list[ShellSyntaxError] = []
+
+    def problem(self, message: str, offset: int) -> None:
+        """Report what is wrong at `offset`; PowerShell, read without compound commands, is not judged by them."""
+        if not self.powershell:
+            self.errors.append(self.source.error(message, offset))
 
     # tokens
 
@@ -646,7 +692,7 @@ class _Parser:
     def script(self, start: int, stop: frozenset[str] = frozenset(), *, line: bool = False) -> Script:
         """Items up to a word in `stop` (or a stop of an enclosing command), the `)` of an open subshell, or the end;
         with `line`, only to the end of the line."""
-        items: list[Item | Malformed] = []
+        items: list[Item] = []
         self.stops.append(stop)
         while True:
             if not line:
@@ -656,8 +702,13 @@ class _Parser:
                 break
             if self.operator(")") and self.open_subshells:
                 break
-            if self.reserved(*_CLOSERS) or self.operator(")", *_LIST_TERMINATORS):
-                self.index += 1  # closes nothing here: skipped
+            if self.reserved(*_CLOSERS) or self.operator(")"):
+                self.problem(f"{token.text} closes nothing", token.start)
+                self.index += 1
+                continue
+            if self.operator(*_LIST_TERMINATORS):
+                self.problem(f"unexpected {token.text}", token.start)
+                self.index += 1
                 continue
             items.append(self.item())
         self.stops.pop()
@@ -734,13 +785,17 @@ class _Parser:
             if token.kind == "operator" and token.text not in REDIRECTIONS and token.text != "(":
                 if token.text != ")" or not self.stray_parenthesis():
                     break
+                self.problem(") closes nothing", token.start)
                 self.index += 1
             elif token.kind == "number" or _is(token, *REDIRECTIONS):
                 redirections.append(self.redirection())
             elif _is(token, "("):
-                self.index += 1  # not a command's start: text a shell would refuse, dropped
+                self.problem("unexpected (", token.start)  # not a command's start: dropped
+                self.index += 1
             elif not words and token.word is not None and _ASSIGNMENT.match(token.text):
                 assignments.append(self.assignment())
+            elif self.opens_array(token):
+                words.append(self.array_argument())
             else:
                 words.append(self.take().word)  # type: ignore[arg-type]
         end = self.last_end(start)
@@ -757,16 +812,45 @@ class _Parser:
         name = token.text.split("=", 1)[0].removesuffix("+")
         following = self.peek()
         if token.text.endswith("=") and _is(following, "(") and following.start == token.end:  # type: ignore[union-attr]
-            self.index += 1
-            elements: list[Word] = []
-            while (element := self.peek()) is not None and not _is(element, ")"):
-                self.index += 1
-                if element.word is not None:
-                    elements.append(element.word)
-            if element is not None:
-                self.index += 1
-            return Assignment(name, word, tuple(elements))
+            return Assignment(name, word, self.array_elements())
         return Assignment(name, word)
+
+    def opens_array(self, token: _Token) -> bool:
+        """Whether `token` starts an array (`NAME=(`), as an assignment or a declaration's argument."""
+        following = self.peek(1)
+        return (
+            token.kind == "word"
+            and token.text.endswith("=")
+            and _ASSIGNMENT.fullmatch(token.text) is not None
+            and _is(following, "(")
+            and following.start == token.end  # type: ignore[union-attr]
+        )
+
+    def array_elements(self) -> tuple[Word, ...]:
+        """The elements of an array, from its `(` (the next token) to its `)`, over as many lines as they take."""
+        self.index += 1
+        elements: list[Word] = []
+        while (element := self.peek()) is not None and not _is(element, ")"):
+            self.index += 1
+            if element.word is not None:
+                elements.append(element.word)
+        if element is not None:
+            self.index += 1
+        return tuple(elements)
+
+    def array_argument(self) -> Word:
+        """An array given to a declaration (`declare -a V=(a b)`): one word, `V=(a b)`, its elements' parts kept."""
+        name = self.take()
+        elements = self.array_elements()
+        parts: list[Part] = [Text(name.text + "(")]
+        for index, element in enumerate(elements):
+            parts.extend([Text(" ")] if index else [])
+            parts.extend(element.parts)
+        parts.append(Text(")"))
+        end = self.last_end(name.start)
+        return Word(
+            tuple(parts), any(element.quoted for element in elements), name.start, end, self.span(name.start, end)
+        )
 
     def redirection(self) -> Redirection:
         descriptor = self.take().text if self.peek() is not None and self.peek().kind == "number" else None  # type: ignore[union-attr]
@@ -786,9 +870,19 @@ class _Parser:
 
     # compound commands
 
-    def finish(self, keyword: str) -> None:
+    def close(self, keyword: str, opener: str, start: int) -> None:
+        """Take the word that closes a compound command; report it missing."""
         if self.reserved(keyword):
             self.index += 1
+        else:
+            self.problem(f"the {opener} is never closed with {keyword}", start)
+
+    def expect(self, keyword: str, opener: str, start: int) -> None:
+        """Take the word that opens a compound command's body (`then`, `do`, `in`); report it missing."""
+        if self.reserved(keyword):
+            self.index += 1
+        else:
+            self.problem(f"the {opener} has no {keyword}", start)
 
     def body(self, start: int, *stop: str) -> Script:
         return self.script(start, frozenset(stop))
@@ -813,6 +907,8 @@ class _Parser:
         self.open_subshells -= 1
         if self.operator(")"):
             self.index += 1
+        else:
+            self.problem("the ( is never closed with )", start)
         end = self.last_end(start)
         return Subshell(body, start, end, self.span(start, end))
 
@@ -828,24 +924,26 @@ class _Parser:
     def group(self, start: int) -> Group:
         self.index += 1
         body = self.body(start, "}")
-        self.finish("}")
+        self.close("}", "{", start)
         end = self.last_end(start)
         return Group(body, start, end, self.span(start, end))
 
     def if_(self, start: int) -> If:
         clauses, otherwise = [], None
         while self.reserved("if", "elif"):
-            keyword = self.take().text
+            opener = self.take()
             condition = self.condition(start, "then", "elif", "else", "fi")
             if condition is None:  # no `then`: its own line was the condition, and it has no body
-                clauses.append(Clause(keyword, self.script(start, line=True), self.empty(start)))
-                break
-            self.finish("then")
-            clauses.append(Clause(keyword, condition, self.body(start, "elif", "else", "fi")))
+                self.problem(f"the {opener.text} has no then", opener.start)
+                clauses.append(Clause(opener.text, self.script(start, line=True), self.empty(start)))
+                end = self.last_end(start)
+                return If(tuple(clauses), None, start, end, self.span(start, end))
+            self.expect("then", opener.text, opener.start)
+            clauses.append(Clause(opener.text, condition, self.body(start, "elif", "else", "fi")))
         if self.reserved("else"):
             self.index += 1
             otherwise = self.body(start, "fi")
-        self.finish("fi")
+        self.close("fi", "if", start)
         end = self.last_end(start)
         return If(tuple(clauses), otherwise, start, end, self.span(start, end))
 
@@ -853,12 +951,13 @@ class _Parser:
         keyword = self.take().text
         condition = self.condition(start, "do", "done")
         if condition is None:  # no `do`
+            self.problem(f"the {keyword} has no do", start)
             condition, body = self.script(start, line=True), self.empty(start)
             end = self.last_end(start)
             return Loop(keyword, condition, body, start, end, self.span(start, end))
-        self.finish("do")
+        self.expect("do", keyword, start)
         body = self.body(start, "done")
-        self.finish("done")
+        self.close("done", keyword, start)
         end = self.last_end(start)
         return Loop(keyword, condition, body, start, end, self.span(start, end))
 
@@ -869,9 +968,9 @@ class _Parser:
             self.arithmetic(start)  # for (( … ))
         words = self.for_words()
         self.newlines()
-        self.finish("do")
+        self.expect("do", keyword, start)
         body = self.body(start, "done")
-        self.finish("done")
+        self.close("done", keyword, start)
         end = self.last_end(start)
         return For(keyword, variable, words, body, start, end, self.span(start, end))
 
@@ -893,14 +992,14 @@ class _Parser:
         self.index += 1
         subject = self.take().word if self.peek() is not None and self.peek().kind == "word" else None  # type: ignore[union-attr]
         self.newlines()
-        self.finish("in")
+        self.expect("in", "case", start)
         items = []
         while True:
             self.newlines()
             if self.peek() is None or self.reserved("esac"):
                 break
             items.append(self.case_item(start))
-        self.finish("esac")
+        self.close("esac", "case", start)
         end = self.last_end(start)
         return Case(subject, tuple(items), start, end, self.span(start, end))
 
@@ -914,7 +1013,7 @@ class _Parser:
                 patterns.append(token.word)
         if self.operator(")"):
             self.index += 1
-        items: list[Item | Malformed] = []
+        items: list[Item] = []
         while True:
             self.newlines()
             if self.peek() is None or self.reserved("esac"):
@@ -932,7 +1031,7 @@ class _Parser:
             self.index += 1
             if token.word is not None:
                 words.append(token.word)
-        self.finish("]]")
+        self.close("]]", "[[", start)
         end = self.last_end(start)
         return Test(tuple(words), start, end, self.span(start, end))
 
@@ -986,64 +1085,14 @@ def _lines(tokens: list[_Token], end: int) -> list[tuple[int, int]]:
     return lines
 
 
-def _line_start(tokens: list[_Token], start: int) -> int:
-    """Where the line being split started: after the last newline token (the line's tokens are dropped)."""
-    while tokens and tokens[-1].kind != "newline":
-        tokens.pop()
-    return tokens[-1].end if tokens else start
-
-
 def _parse(source: _Source, start: int, end: int, depth: int, *, powershell: bool) -> Script:
-    if not SHELL_NESTING.allows(depth):
-        raise _TooDeep(SHELL_NESTING.reason, *source.position(start))
-    segments: list[tuple[list[_Token], dict[int, str], Malformed | None]] = []
-    position = start
-    while position < end:
-        lexer = _Lexer(source, position, end, depth, powershell=powershell)
-        try:
-            lexer.run()
-        except ShellSyntaxError as error:
-            if isinstance(error, _TooDeep) and depth > 0:
-                raise
-            line_start = _line_start(lexer.tokens, position)
-            stop = _malformed_end(source, error, line_start, end)
-            segments.append(
-                (lexer.tokens, lexer.bodies, Malformed(error.message, line_start, stop, source.span(line_start, stop)))
-            )
-            position = stop
-            continue
-        segments.append((lexer.tokens, lexer.bodies, None))
-        break
-    return _parsed(source, segments, start, end, powershell=powershell)
-
-
-def _malformed_end(source: _Source, error: ShellSyntaxError, line_start: int, end: int) -> int:
-    """Where a malformed line ends: an unclosed quote takes the rest of the script; a line nested too deeply, its
-    physical line."""
-    if not isinstance(error, _TooDeep):
-        return end
-    newline = source.text.find("\n", line_start, end)
-    return end if newline < 0 else newline
-
-
-def _parsed(
-    source: _Source,
-    segments: list[tuple[list[_Token], dict[int, str], Malformed | None]],
-    start: int,
-    end: int,
-    *,
-    powershell: bool,
-) -> Script:
-    items: list[Item | Malformed] = []
-    lines: list[tuple[int, int]] = []
-    for tokens, bodies, malformed in segments:
-        script = _Parser(source, tokens, bodies, powershell=powershell).script(start)
-        items.extend(script.items)
-        lines.extend(_lines(tokens, end if malformed is None else malformed.start))
-        if malformed is not None:
-            items.append(malformed)
-            lines.append((malformed.start, malformed.end))
-    return Script(tuple(items), tuple(lines), start, end)
+    """The tree of `text[start:end]`, `depth` substitutions deep, with what is wrong in it."""
+    lexer = _Lexer(source, start, end, depth, powershell=powershell)
+    lexer.run()
+    parser = _Parser(source, lexer.tokens, lexer.bodies, powershell=powershell)
+    script = parser.script(start)
+    errors = sorted([*lexer.errors, *parser.errors], key=lambda error: error.offset)
+    return Script(script.items, tuple(_lines(lexer.tokens, end)), start, end, tuple(errors))
 
 
 def parse(script: str, *, opaque: re.Pattern[str] | None = None, powershell: bool = False) -> Script:

@@ -6,7 +6,17 @@ import json
 import unittest
 
 from project_validator.ci.github_actions import EXPRESSION
-from project_validator.facts import ActionStep, CiConfiguration, CiJob, Command, Facts, Origin, Unknown, as_dict
+from project_validator.facts import (
+    ActionStep,
+    CiConfiguration,
+    CiJob,
+    Command,
+    Facts,
+    Origin,
+    PartlyRead,
+    Unknown,
+    as_dict,
+)
 from project_validator.facts.auxiliary import AuxiliaryCode
 from project_validator.facts.build import Applies, CompilerOption
 from project_validator.facts.conditions import DIMENSIONS
@@ -14,7 +24,7 @@ from project_validator.facts.jobs import Job
 from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
 from project_validator.facts.structure import SourceFile, Unit
 from project_validator.facts.wellformed import DataFile
-from project_validator.limits import SHELL_NESTING
+from project_validator.parsing import Span
 from tests.support import GITHUB_WORKFLOW, make_context, temp_project
 
 
@@ -80,8 +90,11 @@ class ShellTests(unittest.TestCase):
     def test_opaque_text_keeps_its_quotes(self) -> None:
         [found] = split_script("""echo "a ${{ x == 'y' }}" '${{ z }}'""", EXPRESSION)
         self.assertEqual(found, ShellCommand(argv=("echo", "a ${{ x == 'y' }}", "${{ z }}"), env=(), line=found.line))
-        [unsplittable] = split_script("echo ${{ 'a' }} 'open", EXPRESSION)
-        self.assertEqual(unsplittable, Unsplittable(line="echo ${{ 'a' }} 'open", reason="No closing quotation"))
+        unsplittable, command = split_script("echo ${{ 'a' }} 'open", EXPRESSION)
+        self.assertEqual(
+            unsplittable, Unsplittable(line="echo ${{ 'a' }} 'open", reason="No closing quotation", span=Span(1, 17))
+        )
+        self.assertIsInstance(command, ShellCommand)
 
     def test_arithmetic_expansion_is_a_value_not_a_command(self) -> None:
         """`total=$((total + price))` assigns; `echo $(( 1 + 2 ))` runs echo with one argument."""
@@ -94,7 +107,7 @@ class ShellTests(unittest.TestCase):
             ("cd $(dirname $(pwd)) && ls", [("pwd",), ("dirname", "$(pwd)"), ("cd", "$(dirname $(pwd))"), ("ls",)]),
             ("echo $((1 + 2)) '$(not run)'", [("echo", "$((1 + 2))", "$(not run)")]),
             ('echo "\\$(not run)" \\`x', [("echo", "\\$(not run)", "`x")]),
-            ("echo $(unclosed", [("echo", "$", "unclosed")]),
+            ("echo $(unclosed", [("echo", "$(unclosed")]),
             ("echo `unclosed", [("echo", "`unclosed")]),
         ):
             with self.subTest(script=script):
@@ -117,28 +130,10 @@ class ShellTests(unittest.TestCase):
             self._split(script), [("gh", "api", "x", "--jq", ".runs[]\n | .id"), ("xargs", "echo"), ("ls",)]
         )
 
-    def test_an_unbalanced_quote_cannot_be_split(self) -> None:
-        self.assertEqual(
-            list(split_script('echo "open')), [Unsplittable(line='echo "open', reason="No closing quotation")]
-        )
-
-
-class ShellDepthTests(unittest.TestCase):
-    def test_deeply_nested_substitutions_are_unsplittable(self) -> None:
-        found = list(split_script("echo " + "$(" * 5000 + "x" + ")" * 5000))
-        self.assertEqual([type(item) for item in found], [Unsplittable])
-        assert isinstance(found[0], Unsplittable)  # noqa: S101
-        self.assertEqual(found[0].reason, SHELL_NESTING.reason)
-
-
-class ShellLineDepthTests(unittest.TestCase):
-    def test_only_the_line_nested_too_deeply_is_lost(self) -> None:
-        deep = "echo " + "$(" * 2000 + "x" + ")" * 2000
-        found = list(split_script(f"cmake --build build\nctest\n{deep}\n"))
-        self.assertEqual(
-            [item.argv if isinstance(item, ShellCommand) else item.line for item in found],
-            [("cmake", "--build", "build"), ("ctest",), deep],
-        )
+    def test_an_unbalanced_quote_is_reported_and_its_line_is_read(self) -> None:
+        unsplittable, command = split_script('echo "open')
+        self.assertEqual(unsplittable, Unsplittable(line='echo "open', reason="No closing quotation", span=Span(1, 6)))
+        self.assertEqual(command.argv if isinstance(command, ShellCommand) else None, ("echo", "open"))
 
 
 class GitHubActionsFactTests(unittest.TestCase):
@@ -397,9 +392,11 @@ class OtherProviderFactTests(unittest.TestCase):
         self.assertTrue(facts.of(CiJob)[0].heuristic)
         self.assertIn("invalid YAML", facts.of(Unknown)[0].reason)
 
-    def test_a_line_that_cannot_be_split_is_unknown(self) -> None:
+    def test_a_line_read_only_in_part_is_noted_not_unknown(self) -> None:
+        """The parser's limit may be its own, not the script's: what it cannot follow is noted, not unknown."""
         facts = _facts({".gitlab-ci.yml": 'build:\n  script:\n    - echo "open\n'})
-        self.assertEqual(facts.of(Unknown)[0].subject, "the command 'echo \"open'")
+        self.assertEqual(facts.of(PartlyRead)[0].subject, "the command 'echo \"open'")
+        self.assertFalse(facts.of(Unknown))
 
 
 def _option(applies: Applies) -> CompilerOption:

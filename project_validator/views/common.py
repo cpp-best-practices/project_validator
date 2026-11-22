@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from project_validator.analysis import Analysis, Git, RoleSummary
 from project_validator.core import Placed, Status
 from project_validator.explanations import CATEGORIES, category
+from project_validator.facts import PartlyRead
 from project_validator.project_map import LanguageFiles, Place
 from project_validator.runner import Report
 from project_validator.words import counted, folder
@@ -163,11 +164,21 @@ def ci_summary(analysis: Analysis) -> str:
 
 
 def reading(analysis: Analysis) -> str:
-    """`1,500 facts in 0.31 s`: how much was read, and how many paths git ignores were left out."""
-    read = f"{len(analysis.facts.all):,} facts in {analysis.seconds:.2f} s"
+    """`1,500 facts in 0.31 s`: how much was read, how many paths git ignores were left out, and how many places a
+    reader could follow only in part (see `partly_read`)."""
+    found = [f"{len(analysis.facts.all):,} facts in {analysis.seconds:.2f} s"]
     if count := len(analysis.ignored):
-        return f"{read}; {counted(count, 'path')} git ignores left out"
-    return read
+        found.append(f"{counted(count, 'path')} git ignores left out")
+    if count := len(partly_read(analysis)):
+        found.append(f"{counted(count, 'place')} read only in part")
+    return "; ".join(found)
+
+
+def partly_read(analysis: Analysis) -> list[str]:
+    """The places a reader could follow only in part, as `subject: reason (origin)`: noted, not judged."""
+    return list(
+        dict.fromkeys(f"{fact.subject}: {fact.reason} ({fact.origin})" for fact in analysis.facts.of(PartlyRead))
+    )
 
 
 PLACES_SHOWN = 4  # folders listed for a language before the rest are counted

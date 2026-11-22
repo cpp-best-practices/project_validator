@@ -15,7 +15,6 @@ from project_validator.facts.shell_syntax import (
     If,
     Item,
     Loop,
-    Malformed,
     Script,
     Simple,
     Subshell,
@@ -29,10 +28,7 @@ from project_validator.parsing import Span
 
 
 def _items(script: Script) -> list[Item]:
-    items = [item for item in script.items if isinstance(item, Item)]
-    if len(items) != len(script.items):
-        raise AssertionError(f"malformed items in {script}")
-    return items
+    return list(script.items)
 
 
 def _command(text: str) -> object:
@@ -191,31 +187,89 @@ class PositionTests(unittest.TestCase):
         self.assertEqual([text[start:end] for start, end in script.lines], ["a \\\n  b", "c # trailing"])
 
 
-class MalformedTests(unittest.TestCase):
-    def test_an_unclosed_quote_loses_its_line_only(self) -> None:
-        script = parse('make\necho "open\nmore')
-        self.assertIsInstance(script.items[0], Item)
-        malformed = script.items[1]
-        if not isinstance(malformed, Malformed):
-            self.fail(malformed)
-        self.assertEqual((malformed.reason, malformed.span.line), ("No closing quotation", 2))
+def _errors(text: str) -> list[tuple[str, int, int | None]]:
+    """The syntax errors of `text`: each reason with its line and column."""
+    return [(error.message, error.line or 0, error.column) for error in parse(text).errors]
 
-    def test_an_unclosed_parameter_expansion_is_malformed(self) -> None:
-        malformed = parse("make\necho ${X:-a\nls").items[1]
-        if not isinstance(malformed, Malformed):
-            self.fail(malformed)
-        self.assertEqual(malformed.reason, "No closing brace")
+
+def _argvs(text: str) -> list[tuple[str, ...]]:
+    """The argv of every simple command at the top of `text`, in order."""
+    return [
+        tuple(word.value for word in command.words)
+        for item in _items(parse(text))
+        for pipeline in item.list.pipelines
+        for command in pipeline.commands
+        if isinstance(command, Simple)
+    ]
+
+
+class RecoveryTests(unittest.TestCase):
+    """A script with an error reports it, with where it is, and keeps everything that can still be read."""
+
+    def test_a_well_formed_script_has_no_errors(self) -> None:
+        script = 'set -e\nif [ -f x ]; then\n  make || exit 1\nfi\ncase $1 in a) b;; esac\necho "$(date)" ${X:-y}\n'
+        self.assertEqual(_errors(script), [])
+
+    def test_an_unclosed_quote_ends_with_its_line(self) -> None:
+        text = 'make\necho "open\nls'
+        self.assertEqual(_argvs(text), [("make",), ("echo", "open"), ("ls",)])
+        self.assertEqual(_errors(text), [("No closing quotation", 2, 6)])
+
+    def test_an_unclosed_single_quote_and_parameter_expansion_end_with_their_line(self) -> None:
+        text = "echo 'a b\necho ${X:-c\nls"
+        self.assertEqual(_argvs(text), [("echo", "a b"), ("echo", "${X:-c"), ("ls",)])
+        self.assertEqual(_errors(text), [("No closing quotation", 1, 6), ("No closing brace", 2, 6)])
+
+    def test_an_unclosed_substitution_is_text(self) -> None:
+        self.assertEqual(_argvs("echo $(ls\nmake"), [("echo", "$(ls"), ("make",)])
+        self.assertEqual(_errors("echo $(ls\nmake"), [("the command substitution is never closed", 1, 6)])
+        self.assertEqual(_errors("echo `ls"), [("the command substitution is never closed", 1, 6)])
+
+    def test_a_trailing_escape_is_text(self) -> None:
+        self.assertEqual(_argvs("echo a\\"), [("echo", "a\\")])
+        self.assertEqual(_errors("echo a\\"), [("No escaped character", 1, 7)])
 
     def test_substitutions_nest_at_most_the_limit_deep(self) -> None:
         most = SHELL_NESTING.most
-        deep = "echo " + "$(" * most + "x" + ")" * most
-        self.assertIsInstance(parse(deep).items[0], Item)
+        self.assertEqual(_errors("echo " + "$(" * most + "x" + ")" * most), [])
         deeper = "echo " + "$(" * (most + 1) + "x" + ")" * (most + 1)
-        malformed = parse(f"make\n{deeper}\nls").items[1]
-        if not isinstance(malformed, Malformed):
-            self.fail(malformed)
-        self.assertEqual(malformed.reason, SHELL_NESTING.reason)
-        self.assertEqual(len(parse(f"make\n{deeper}\nls").items), 3)
+        script = parse(f"make\n{deeper}\nls")
+        self.assertEqual(_argvs(f"make\n{deeper}\nls"), [("make",), ("echo", deeper[5:]), ("ls",)])
+        self.assertEqual(script.errors, ())
+        innermost = Script((script.items[1],), (), 0, 0)
+        for _ in range(most):
+            [item] = _items(innermost)
+            command = item.list.pipelines[0].commands[0]
+            if not isinstance(command, Simple):
+                self.fail(command)
+            [substitution] = list(command.words[-1].substitutions())
+            innermost = substitution.script
+        self.assertEqual([error.message for error in innermost.errors], [SHELL_NESTING.reason])
+
+    def test_unclosed_compound_commands_say_so(self) -> None:
+        for text, error in (
+            ("if a; then\n  b", ("the if is never closed with fi", 1, 1)),
+            ("while true; do\n  make", ("the while is never closed with done", 1, 1)),
+            ("for f in a b; do\n  echo", ("the for is never closed with done", 1, 1)),
+            ("case $x in\n a) b;;", ("the case is never closed with esac", 1, 1)),
+            ("make && { a; b", ("the { is never closed with }", 1, 9)),
+            ("( cd x && make", ("the ( is never closed with )", 1, 1)),
+            ("[[ -f x", ("the [[ is never closed with ]]", 1, 1)),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(_errors(text), [error])
+
+    def test_a_condition_without_its_body_says_so(self) -> None:
+        self.assertEqual(_errors('if "a" equ "b" call x.bat\nmake'), [("the if has no then", 1, 1)])
+        self.assertEqual(_errors("while read x\nmake"), [("the while has no do", 1, 1)])
+
+    def test_what_closes_nothing_says_so(self) -> None:
+        self.assertEqual(_argvs("fi\nmake\ndone"), [("make",)])
+        self.assertEqual(_errors("fi\nmake\ndone"), [("fi closes nothing", 1, 1), ("done closes nothing", 3, 1)])
+        self.assertEqual(_errors("make )"), [(") closes nothing", 1, 6)])
+
+    def test_powershell_has_no_compound_commands_to_be_wrong_about(self) -> None:
+        self.assertEqual([error.message for error in parse("if ($x) { a }", powershell=True).errors], [])
 
 
 if __name__ == "__main__":

@@ -5,7 +5,9 @@ from __future__ import annotations
 import re
 import unittest
 
-from project_validator.facts.shell import ShellCommand, split_script
+from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
+from project_validator.limits import SHELL_NESTING
+from project_validator.parsing import Span
 
 MAKE_VARIABLE = re.compile(r"\$(?:\([^()]*\)|\{[^{}]*\}|[^({$\s])")
 
@@ -29,6 +31,14 @@ class StructureTests(unittest.TestCase):
 
     def test_an_appending_assignment_is_no_command(self) -> None:
         self.assertEqual(_argvs('archives+=("$a")\nX+=1 make\n'), [("make",)])
+
+    def test_an_array_given_to_declare_is_one_argument(self) -> None:
+        commands = _commands("declare -a V=(\n  '1.7'\n  $(ls)\n)\nlocal x=(a b)\n")
+        self.assertEqual(
+            [(command.argv, command.nested) for command in commands],
+            [(("ls",), True), (("declare", "-a", "V=(1.7 $(ls))"), False), (("local", "x=(a b)"), False)],
+        )
+        self.assertFalse([found for found in split_script("declare -a V=(a b)") if isinstance(found, Unsplittable)])
 
     def test_a_function_definition_is_not_a_command_but_its_body_runs(self) -> None:
         self.assertEqual(_argvs("warn () {\n  echo x\n}\nf() { ls; }\n"), [("echo", "x"), ("ls",)])
@@ -88,6 +98,60 @@ class WordTests(unittest.TestCase):
     def test_a_fallback_names_opaque_text_as_written(self) -> None:
         [first, _] = _commands("test -f a || $(call GET,x)\n", MAKE_VARIABLE)
         self.assertEqual(first.fallback, "$(call GET,x)")
+
+
+class PowerShellTests(unittest.TestCase):
+    def test_an_assignment_is_no_command_but_a_command_it_assigns_runs(self) -> None:
+        script = '$workspace = "C:\\" + (Split-Path $env:X -Leaf)\n$n = 3\n$r = gh issue create -t x\n$a += "b"\n'
+        found = [found.argv for found in split_script(script, powershell=True) if isinstance(found, ShellCommand)]
+        self.assertEqual(found, [("gh", "issue", "create", "-t", "x")])
+
+
+class ErrorTests(unittest.TestCase):
+    """A script with an error yields the error, where it is, and every command that can still be read."""
+
+    def _stream(self, script: str) -> list[object]:
+        return [
+            found.argv if isinstance(found, ShellCommand) else (found.reason, found.line, found.span)
+            for found in split_script(script)
+        ]
+
+    def test_an_unclosed_quote_is_reported_and_the_rest_is_read(self) -> None:
+        self.assertEqual(
+            self._stream('make\necho "open\nls\n'),
+            [("make",), ("No closing quotation", 'echo "open', Span(2, 6)), ("echo", "open"), ("ls",)],
+        )
+
+    def test_an_unclosed_compound_command_is_reported_and_its_commands_are_read(self) -> None:
+        self.assertEqual(
+            self._stream("if [ -f x ]; then\n  make\n"),
+            [("the if is never closed with fi", "if [ -f x ]; then", Span(1, 1)), ("[", "-f", "x", "]"), ("make",)],
+        )
+
+    def test_a_line_nested_too_deeply_keeps_its_command(self) -> None:
+        deep = "echo " + "$(" * 60 + "x" + ")" * 60
+        found = list(split_script(f"cmake --build build\nctest\n{deep}\n"))
+        top = [item.argv for item in found if isinstance(item, ShellCommand) and not item.nested]
+        self.assertEqual(top, [("cmake", "--build", "build"), ("ctest",), ("echo", deep[5:])])
+        self.assertIn(SHELL_NESTING.reason, [item.reason for item in found if isinstance(item, Unsplittable)])
+
+
+class PartlyReadTests(unittest.TestCase):
+    """What the parser cannot follow may be its own limit, not the script's error: it is noted, never unknown, and
+    what could be read is used."""
+
+    def test_a_script_read_in_part_is_noted_not_unknown(self) -> None:
+        from project_validator.facts import Command, Origin, PartlyRead, Unknown
+        from project_validator.facts.expansion import script_facts
+
+        origin = Origin(path=".github/workflows/ci.yml", at=("jobs", "test", "steps", 0, "run"))
+        facts = list(script_facts('make\necho "open\nctest\n', job="test", origin=origin))
+        self.assertEqual(
+            [fact.argv for fact in facts if isinstance(fact, Command)], [("make",), ("echo", "open"), ("ctest",)]
+        )
+        self.assertFalse([fact for fact in facts if isinstance(fact, Unknown)])
+        [noted] = [fact for fact in facts if isinstance(fact, PartlyRead)]
+        self.assertEqual((noted.subject, noted.reason), ("the command 'echo \"open'", "No closing quotation at 2:6"))
 
 
 if __name__ == "__main__":

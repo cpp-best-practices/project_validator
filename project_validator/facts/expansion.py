@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING
 
 from project_validator.components import known
 from project_validator.evidence import DEVENV, DEVENV_HOOKS, PRE_COMMIT_CONFIGURATION
-from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, Unknown, resolved
+from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, PartlyRead, Unknown, resolved
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.exit_status import Shell, masked
 from project_validator.facts.shell import ShellCommand, ShellSyntaxError, Unsplittable, split_script
@@ -137,7 +137,13 @@ def script_facts(
             )
             yield from _with_program(made, assigned)
         else:
-            yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
+            yield _partly_read(found, origin)
+
+
+def _partly_read(found: Unsplittable, origin: Origin) -> PartlyRead:
+    """What the parser could not follow in a script: noted, not unknown (the limit may be the parser's)."""
+    where = f" at {found.span}" if found.span is not None else ""
+    return PartlyRead(origin=origin, subject=f"the command {found.line!r}", reason=f"{found.reason}{where}")
 
 
 def _judged(

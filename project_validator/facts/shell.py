@@ -25,7 +25,6 @@ from project_validator.facts.shell_syntax import (
     If,
     Item,
     Loop,
-    Malformed,
     Pipeline,
     Script,
     ShellSyntaxError,
@@ -35,6 +34,7 @@ from project_validator.facts.shell_syntax import (
     Word,
     parse,
 )
+from project_validator.parsing import Span
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -59,10 +59,12 @@ class ShellCommand:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Unsplittable:
-    """A line the shell rules above cannot split, such as one with an unbalanced quote."""
+    """What is wrong in a script (an unclosed quote, an `if` without its `fi`): the line it is on, why, and where in the
+    script (`span`). The commands around it, and in it as far as they can be read, are still split."""
 
     line: str
     reason: str
+    span: Span | None = None
 
 
 def split_words(text: str, *, comments: bool = False) -> tuple[str, ...]:
@@ -123,7 +125,7 @@ class _Level:
     text: str
     root: Script
     powershell: bool
-    found: list[_Found | Malformed] = field(default_factory=list)
+    found: list[_Found] = field(default_factory=list)
     substitutions: list[Word] = field(default_factory=list)  # the words that hold them, in order
 
     def line(self, offset: int) -> int:
@@ -138,10 +140,7 @@ class _Level:
 
     def script(self, script: Script, condition: str) -> None:
         for item in script.items:
-            if isinstance(item, Malformed):
-                self.found.append(item)
-            else:
-                self.item(item, condition)
+            self.item(item, condition)
 
     def item(self, item: Item, condition: str) -> None:
         chain = item.list
@@ -174,7 +173,7 @@ class _Level:
         kept for the commands up to `then`/`do` on its line), and a closing word dropping its command."""
         keywords = 0
         line = self.line(command.start)
-        previous = next((found for found in reversed(self.found) if isinstance(found, _Found)), None)
+        previous = self.found[-1] if self.found else None
         if previous is not None and self.line(previous.command.start) == line and previous.condition in _CONDITIONS:
             condition = condition or previous.condition
         while keywords < len(argv) and argv[keywords] in _KEYWORDS:
@@ -184,7 +183,7 @@ class _Level:
         argv = argv[keywords:]
         if argv[:1] in (("for",), ("select",)) or (argv and argv[0] in _CLOSING):
             return (), condition
-        return argv, condition
+        return _powershell_assigned(command.words[keywords:], argv), condition
 
     def compound(self, command: Compounded, operator: str, condition: str, rest: tuple[Pipeline, ...]) -> None:
         before = len(self.found)
@@ -233,13 +232,13 @@ class _Level:
         if len(self.found) == before:
             return
         last = self.found[-1]
-        if isinstance(last, _Found) and not last.operator and self.line(last.command.start) == self.line(end - 1):
+        if not last.operator and self.line(last.command.start) == self.line(end - 1):
             last.operator, last.rest = operator, rest
 
     # the flags that need neighbours
 
     def settle(self) -> None:
-        commands = [found for found in self.found if isinstance(found, _Found)]
+        commands = self.found
         for index, found in enumerate(commands):
             line = self.line(found.command.start)
             following = commands[index + 1] if index + 1 < len(commands) else None
@@ -261,7 +260,7 @@ class _Level:
         level = _Level(self.text, self.root, self.powershell)
         for pipeline in found.rest:
             level.pipeline(pipeline, "", (), "")
-        commands = [other for other in level.found if isinstance(other, _Found)]
+        commands = level.found
         if not commands or any(_fails(other.argv) for other in commands):
             return ""
         text = " ".join(commands[0].argv)
@@ -270,25 +269,30 @@ class _Level:
     # the stream
 
     def stream(self) -> Iterator[ShellCommand | Unsplittable]:
-        """Line by line: the commands of the line's substitutions, then its own; a line's last command waits for the
-        next line, which may read its exit status."""
+        """Line by line: the commands of the line's substitutions, what is wrong on the line, then its own commands;
+        a line's last command waits for the next line, which may read its exit status."""
         self.settle()
-        by_line: dict[int, list[_Found | Malformed]] = {}
+        by_line: dict[int, list[_Found]] = {}
         for found in self.found:
-            start = found.start if isinstance(found, Malformed) else found.command.start
-            by_line.setdefault(self.line(start), []).append(found)
+            by_line.setdefault(self.line(found.command.start), []).append(found)
         last: ShellCommand | None = None
         for index in range(len(self.root.lines)):
             text = self.line_text(index)
             if last is not None:
                 yield replace(last, checked=True) if READS_STATUS.search(text) else last
             yield from self.nested_on(index)
+            yield from self.errors_on(index, text)
             commands = [self.shell_command(found, text) for found in by_line.get(index, ())]
-            final = commands[-1] if commands else None
-            last = final if isinstance(final, ShellCommand) else None
-            yield from commands if last is None else commands[:-1]
+            last = commands.pop() if commands else None
+            yield from commands
         if last is not None:
             yield last
+
+    def errors_on(self, line: int, text: str) -> Iterator[Unsplittable]:
+        """What is wrong on a line of the script, with where."""
+        for error in self.root.errors:
+            if self.line(error.offset) == line:
+                yield Unsplittable(line=text, reason=error.message, span=error.span)
 
     def nested_on(self, line: int) -> Iterator[ShellCommand | Unsplittable]:
         """The commands of the substitutions on a line, in order, marked `nested`."""
@@ -297,11 +301,7 @@ class _Level:
             for substitution in word.substitutions():
                 yield from map(_nested, _derived(self.text, substitution.script, self.powershell))
 
-    def shell_command(self, found: _Found | Malformed, line: str) -> ShellCommand | Unsplittable:
-        if isinstance(found, Malformed):
-            continuation = _POWERSHELL_CONTINUATION if self.powershell else _CONTINUATION
-            text = continuation.sub(" ", self.text[found.start : found.end]).strip()
-            return Unsplittable(line=text, reason=found.reason)
+    def shell_command(self, found: _Found, line: str) -> ShellCommand:
         return ShellCommand(
             argv=found.argv,
             env=found.env,
@@ -311,6 +311,21 @@ class _Level:
             fallback=self.fallback(found),
             checked=found.checked,
         )
+
+
+# A PowerShell assignment (`$x = …`, `$x += …`), and a command name its value may be the output of (`$r = gh …`).
+_POWERSHELL_ASSIGNMENT = frozenset({"=", "+=", "-=", "*=", "/=", "%=", "??="})
+_POWERSHELL_COMMAND = re.compile(r"[A-Za-z][\w.-]*")
+
+
+def _powershell_assigned(words: tuple[Word, ...], argv: tuple[str, ...]) -> tuple[str, ...]:
+    """A PowerShell assignment is no command: what it assigns is, when that starts with a command's name."""
+    if len(argv) < 2 or not argv[0].startswith("$") or argv[1] not in _POWERSHELL_ASSIGNMENT:
+        return argv
+    value = words[2:]
+    if value and not value[0].quoted and _POWERSHELL_COMMAND.fullmatch(value[0].value):
+        return argv[2:]
+    return ()
 
 
 def _extent(pipeline: Pipeline) -> tuple[int, int]:

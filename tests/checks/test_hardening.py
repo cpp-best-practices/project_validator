@@ -14,7 +14,6 @@ from tests.support import (
     CI_FILES,
     GITHUB_WORKFLOW,
     PROJECT_LAYOUTS,
-    UNSTRUCTURED_CI_FILES,
     WELL_CONFIGURED,
     WELL_CONFIGURED_RUST,
     ci_running,
@@ -95,11 +94,10 @@ class CAndCxxHardeningTests(unittest.TestCase):
     def test_passes_with_every_gcc_and_clang_option_on_the_command_line(self) -> None:
         for provider in CI_FILES:
             with self.subTest(ci=provider):
+                # A heuristic scan strips the line's closing quote: the quote is taken to close at the line's end, so
+                # the options are read there too.
                 result = self._run(ci_running(provider, f"cmake -S . -B build -DCMAKE_CXX_FLAGS='{GCC_FLAGS}'"))
-                if provider in UNSTRUCTURED_CI_FILES:  # scanned heuristically, which keeps no quoted command
-                    self.assertEqual(result.status, Status.ERROR)
-                else:
-                    self.assertEqual(result, Result.passed(f"hardening options are enabled: {GCC_OPTIONS}"))
+                self.assertEqual(result, Result.passed(f"hardening options are enabled: {GCC_OPTIONS}"))
 
     def test_options_in_cmake_presets_count(self) -> None:
         preset = f'{{"configurePresets": [{{"name": "ci", "cacheVariables": {{"CMAKE_CXX_FLAGS": "{GCC_FLAGS}"}}}}]}}\n'
