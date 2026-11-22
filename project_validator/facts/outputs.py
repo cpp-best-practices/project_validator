@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
+from project_validator import gitignore
 from project_validator.components import known
 from project_validator.facts import Fact
 
@@ -50,35 +51,6 @@ def _regex_matches_any(pattern: str, paths: Iterable[str]) -> bool:
     except re.error:
         return False
     return any(compiled.search(path) for path in paths)
-
-
-def _glob_regex(glob: str) -> re.Pattern[str]:
-    """A gitignore glob as a regular expression over a whole path: `*` and `?` stay within a component, `**` spans
-    components."""
-    out, index = [], 0
-    while index < len(glob):
-        if glob.startswith("**", index):
-            out.append(".*")
-            index += 2
-            continue
-        character = glob[index]
-        out.append({"*": "[^/]*", "?": "[^/]"}.get(character) or ("[" if character == "[" else re.escape(character)))
-        index += 1
-    return re.compile("".join(out).replace("\\]", "]").replace("\\!", "!"))
-
-
-def _glob_ignores(glob: str, path: str) -> bool:
-    """Whether a gitignore glob ignores `path` (a directory when it ends in "/"), or a directory it is in. A trailing
-    "/" matches directories only; a slash anchors the glob to the ignore file's directory."""
-    directory_only, glob = glob.endswith("/"), glob.rstrip("/")
-    anchored, regex = "/" in glob, _glob_regex(glob.lstrip("/"))
-    components = path.rstrip("/").split("/")
-    for depth in range(1, len(components) + 1):
-        if directory_only and depth == len(components) and not path.endswith("/"):
-            continue
-        if regex.fullmatch("/".join(components[:depth]) if anchored else components[depth - 1]):
-            return True
-    return False
 
 
 _SOURCE_DIRECTORY = "source"
@@ -120,7 +92,7 @@ class BuildOutput:
             return _regex_matches_any(entry.pattern, self.paths)
         if self.globs.fullmatch(entry.pattern) is not None:
             return True
-        return any(_glob_ignores(entry.pattern, path) for path in self._placed(units, sources))
+        return any(gitignore.ignores(entry.pattern, path) for path in self._placed(units, sources))
 
     def _placed(self, units: Iterable[str], sources: Iterable[str]) -> list[str]:
         """The output's paths in each unit, and, for a file output, beside each source directory. A sample inside a

@@ -11,7 +11,7 @@ import traceback
 from collections.abc import Sequence
 from pathlib import Path, PurePosixPath
 
-from project_validator import yaml_support
+from project_validator import gitignore, yaml_support
 from project_validator.analysis import Analysis, analyse
 from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, ExtractionError, Observer, Options, Project
 from project_validator.ecosystems import applies_to
@@ -316,8 +316,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _usage_error(parser, str(error))
         print("\n".join(explain(found, tuple(plugins.checks)).lines()))
         return EXIT_SUCCESS
-    if not yaml_support.available():
-        return _usage_error(parser, yaml_support.MISSING_MESSAGE)
+    for required in (yaml_support, gitignore):
+        if not required.available():
+            return _usage_error(parser, required.MISSING_MESSAGE)
     if not arguments.path.is_dir():
         return _usage_error(parser, f"{arguments.path} is not a directory")
 

@@ -11,7 +11,7 @@ from typing import Any
 from unittest import mock
 from unittest.mock import patch
 
-from project_validator import yaml_support
+from project_validator import gitignore, yaml_support
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
 from project_validator.ecosystems import applies_to
 from project_validator.facts import Fact
@@ -253,6 +253,12 @@ class CliTests(unittest.TestCase):
             code, output, error = run_cli(str(FIXTURES / "well_configured_cpp"))
         self.assertEqual((code, output), (EXIT_USAGE, ""))
         self.assertIn("PyYAML", error)
+
+    def test_missing_pathspec_is_an_error_instead_of_reduced_accuracy(self) -> None:
+        with mock.patch.object(gitignore, "_pathspec", None):
+            code, output, error = run_cli(str(FIXTURES / "well_configured_cpp"))
+        self.assertEqual((code, output), (EXIT_USAGE, ""))
+        self.assertIn(gitignore.MISSING_MESSAGE, error)
 
     def test_pyyaml_can_not_be_disabled(self) -> None:
         with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):

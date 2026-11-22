@@ -2,6 +2,7 @@
 mypy==2.4.1
 types-PyYAML==6.0.12.20261103
 PyYAML==6.0.3
+pathspec==1.1.1
 rich==15.0.0
 textual==8.2.8
 types-Markdown==3.11.3.20261108
