@@ -1,0 +1,94 @@
+"""The commands derived from a shell script's tree: what the line splitter got wrong, and the tree gets right."""
+
+from __future__ import annotations
+
+import re
+import unittest
+
+from project_validator.facts.shell import ShellCommand, split_script
+
+MAKE_VARIABLE = re.compile(r"\$(?:\([^()]*\)|\{[^{}]*\}|[^({$\s])")
+
+
+def _commands(script: str, opaque: re.Pattern[str] | None = None) -> list[ShellCommand]:
+    return [found for found in split_script(script, opaque) if isinstance(found, ShellCommand)]
+
+
+def _argvs(script: str) -> list[tuple[str, ...]]:
+    return [command.argv for command in _commands(script)]
+
+
+class StructureTests(unittest.TestCase):
+    def test_case_patterns_are_not_commands(self) -> None:
+        script = 'case "$x" in\n  OWNER|MEMBER)\n    echo ok\n    ;;\n  *)\n    echo no\n    ;;\nesac\n'
+        self.assertEqual(_argvs(script), [("echo", "ok"), ("echo", "no")])
+
+    def test_an_array_over_several_lines_is_an_assignment(self) -> None:
+        script = 'args=(\n  --dist out\n  --title "$V"\n)\npython build.py "${args[@]}"\n'
+        self.assertEqual(_argvs(script), [("python", "build.py", "${args[@]}")])
+
+    def test_an_appending_assignment_is_no_command(self) -> None:
+        self.assertEqual(_argvs('archives+=("$a")\nX+=1 make\n'), [("make",)])
+
+    def test_a_function_definition_is_not_a_command_but_its_body_runs(self) -> None:
+        self.assertEqual(_argvs("warn () {\n  echo x\n}\nf() { ls; }\n"), [("echo", "x"), ("ls",)])
+
+    def test_an_arithmetic_command_runs_nothing(self) -> None:
+        self.assertEqual(_argvs("(( i++ ))\nif (( $A < $B )); then exit 1; fi\n"), [("exit", "1")])
+
+    def test_a_condition_over_several_lines_is_one_condition(self) -> None:
+        script = 'if [ -n "$A" ] ||\n   ! git merge-base --is-ancestor a b; then\n  exit 1\nfi\n'
+        conditions = [command.condition for command in _commands(script)]
+        self.assertEqual(conditions, ["if", "if", ""])
+
+    def test_a_negated_group_negates_every_command_in_it(self) -> None:
+        commands = _commands("! (report | tee summary | grep ':x:')")
+        self.assertEqual([command.condition for command in commands], ["!", "!", "!"])
+
+
+class WordTests(unittest.TestCase):
+    def test_an_apostrophe_in_a_comment_does_not_quote_what_follows(self) -> None:
+        script = '# Extract the binary\'s paths\nTARGET=$(dirname "$LIB")\n'
+        self.assertEqual(
+            [(command.argv, command.env, command.nested) for command in _commands(script)],
+            [(("dirname", "$LIB"), (), True)],
+        )
+
+    def test_a_quoted_parenthesis_does_not_close_a_substitution(self) -> None:
+        script = "opens=$(grep -cE '(open|openat)\\([^)]*\"x\"' log || true)\necho \"$(printf ')')\"\n"
+        self.assertEqual(
+            [command.argv for command in _commands(script)],
+            [("grep", "-cE", '(open|openat)\\([^)]*"x"', "log"), ("true",), ("printf", ")"), ("echo", "$(printf ')')")],
+        )
+
+    def test_a_parameter_expansion_is_one_word_and_runs_its_substitutions(self) -> None:
+        commands = _commands('make -j ${JOBS:-$(nproc)} ${MSG:-"a b"} ${X:-a b}\n')
+        self.assertEqual(
+            [(command.argv, command.nested) for command in commands],
+            [(("nproc",), True), (("make", "-j", "${JOBS:-$(nproc)}", "${MSG:-a b}", "${X:-a b}"), False)],
+        )
+
+    def test_escapes_in_a_quoted_parameter_expansion_are_kept(self) -> None:
+        self.assertEqual(_argvs('echo "${tag//-/\\~}" ${tag//-/\\~}\n'), [("echo", "${tag//-/\\~}", "${tag//-/~}")])
+
+    def test_an_ansi_c_quote_inside_a_substitution_does_not_unbalance_it(self) -> None:
+        commands = _commands("x=$(rg -o $'[\\'`]' f | sort)\n")
+        self.assertEqual([(command.argv[0], command.nested) for command in commands], [("rg", True), ("sort", True)])
+
+    def test_a_number_before_a_spaced_redirection_is_an_argument(self) -> None:
+        self.assertEqual(_argvs("report -p 0 >> summary\n"), [("report", "-p", "0")])
+
+    def test_a_process_substitution_runs_its_command(self) -> None:
+        commands = _commands("bash <(curl https://x/install.sh)\n")
+        self.assertEqual(
+            [(command.argv, command.nested) for command in commands],
+            [(("curl", "https://x/install.sh"), True), (("bash", "<(curl https://x/install.sh)"), False)],
+        )
+
+    def test_a_fallback_names_opaque_text_as_written(self) -> None:
+        [first, _] = _commands("test -f a || $(call GET,x)\n", MAKE_VARIABLE)
+        self.assertEqual(first.fallback, "$(call GET,x)")
+
+
+if __name__ == "__main__":
+    unittest.main()

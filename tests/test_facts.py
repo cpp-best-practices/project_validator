@@ -14,6 +14,7 @@ from project_validator.facts.jobs import Job
 from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
 from project_validator.facts.structure import SourceFile, Unit
 from project_validator.facts.wellformed import DataFile
+from project_validator.limits import SHELL_NESTING
 from tests.support import GITHUB_WORKFLOW, make_context, temp_project
 
 
@@ -127,7 +128,7 @@ class ShellDepthTests(unittest.TestCase):
         found = list(split_script("echo " + "$(" * 5000 + "x" + ")" * 5000))
         self.assertEqual([type(item) for item in found], [Unsplittable])
         assert isinstance(found[0], Unsplittable)  # noqa: S101
-        self.assertEqual(found[0].reason, "nested too deeply to split")
+        self.assertEqual(found[0].reason, SHELL_NESTING.reason)
 
 
 class ShellLineDepthTests(unittest.TestCase):

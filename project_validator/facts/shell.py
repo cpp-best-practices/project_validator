@@ -1,56 +1,40 @@
-"""Splitting the shell scripts CI runs into commands, the way a POSIX shell splits simple commands.
+"""The simple commands of the shell scripts CI runs, derived from their syntax tree (`facts.shell_syntax`).
 
-Only what the validator needs is understood: line continuations, comments, quoting (a quoted string may span
-lines), the operators that separate commands (`;`, `&&`, `||`, `|`, `&`), and command substitution (`$(…)` and
-backquotes), whose commands run before the command they are part of. PowerShell scripts (`powershell=True`) are split
-the same way, with PowerShell's escape character, the backquote, in place of the backslash (which is text there).
-Leading `NAME=value` assignments (and arrays, `NAME=(a b)`) are the command's environment; a conditional expression,
-`[[ … ]]`, runs nothing, over as many lines as it takes, and the body of a here-document is data, not commands.
-Compound commands (`if`, `for`, `case`) are not interpreted; their lines are split like any other.
+A command substitution's commands (`$(…)`, backquotes) come before the command they are part of, marked `nested`;
+leading `NAME=value` assignments (and arrays, `NAME=(a b)`) are the command's environment; a conditional expression,
+`[[ … ]]`, an arithmetic command and the headers of compound commands run nothing, and the body of a here-document is
+data. Each command keeps what decides whether its failure fails the script (see `exit_status`): the operator after it,
+the condition it is part of, the fallback after its `||`, and whether the command after it reads its exit status.
+`split_words`, `command_line` and `quoted` are the one place an embedded command line is split or joined.
 """
 
 from __future__ import annotations
 
 import re
 import shlex
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field, replace
 
-from project_validator.parsing import ParseError
-
-
-class ShellSyntaxError(ParseError):
-    """A command line that does not split into words (an unclosed quote)."""
-
-
-def split_words(text: str, *, comments: bool = False) -> tuple[str, ...]:
-    """The words of one embedded command line (an action's `args` input, an alias), as a POSIX shell splits them, a
-    `#` word and what follows it dropped when `comments` says so; `ShellSyntaxError` when they do not split."""
-    try:
-        return tuple(shlex.split(text, comments=comments))
-    except ValueError as error:
-        raise ShellSyntaxError(str(error)) from error
-
-
-def command_line(argv: Iterable[str]) -> str:
-    """`argv` as one command line, quoted so that `split_words` splits it back into the same words."""
-    return shlex.join(argv)
-
-
-def quoted(word: str) -> str:
-    """`word` quoted for a POSIX shell, when it needs to be."""
-    return shlex.quote(word)
-
-
-_CONTINUATION = re.compile(r"\\\r?\n")
-_POWERSHELL_CONTINUATION = re.compile(r"`\r?\n")
-_SEPARATORS = frozenset({";", "&&", "||", "|", "&", ";;", "|&"})
-_ASSIGNMENT = re.compile(r"^[A-Za-z_]\w*=")
-# Words that only introduce or wrap the command that follows.
-_KEYWORDS = frozenset({"then", "do", "else", "elif", "if", "while", "until", "!", "{", "}"})
-_CLOSING = frozenset({"fi", "done", "esac"})
-# A redirection operator (`>`, `2>&1`'s `>&`, `<<`); it and its target are not arguments.
-_REDIRECTION = re.compile(r"^[<>&|]*[<>][<>&|]*$")
+from project_validator.facts.shell_syntax import (
+    Assignment,
+    Case,
+    Compounded,
+    For,
+    Function,
+    Group,
+    If,
+    Item,
+    Loop,
+    Malformed,
+    Pipeline,
+    Script,
+    ShellSyntaxError,
+    Simple,
+    Subshell,
+    Test,
+    Word,
+    parse,
+)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -81,145 +65,36 @@ class Unsplittable:
     reason: str
 
 
-_OPERATOR_CHARACTERS = ";&|()<>"
-# Operator characters that are quoted or escaped are text: they stand in for them while the line is split.
-_STAND_INS = {character: chr(0xE000 + index) for index, character in enumerate(_OPERATOR_CHARACTERS)}
-_RESTORED = str.maketrans({stand_in: character for character, stand_in in _STAND_INS.items()})
+def split_words(text: str, *, comments: bool = False) -> tuple[str, ...]:
+    """The words of one embedded command line (an action's `args` input, an alias), as a POSIX shell splits them, a
+    `#` word and what follows it dropped when `comments` says so; `ShellSyntaxError` when they do not split."""
+    try:
+        return tuple(shlex.split(text, comments=comments))
+    except ValueError as error:
+        raise ShellSyntaxError(str(error)) from error
 
 
-def _protected(line: str, escape: str = "\\") -> str:
-    """`line` with the operator characters that are quoted (`awk -F '|'`) or escaped (`\\;`) replaced by stand-ins."""
-    out: list[str] = []
-    quote: str | None = None
-    escaped = False
-    for character in line:
-        if escaped or (quote is not None and character != quote):
-            out.append(_STAND_INS.get(character, character))
-            escaped = character == escape and quote == '"' and not escaped
-            continue
-        escaped = character == escape and quote is None
-        if character in "'\"":
-            quote = None if quote == character else character
-        out.append(character)
-    return "".join(out)
+def command_line(argv: Iterable[str]) -> str:
+    """`argv` as one command line, quoted so that `split_words` splits it back into the same words."""
+    return shlex.join(argv)
 
 
-# A `#` begins a comment at the start of a word only (`.#checks` is one word); shlex would end the word there.
-_HASH_IN_WORD = re.compile(r"(?<=\S)#")
-_HASH_STAND_IN = chr(0xE000 + len(_OPERATOR_CHARACTERS))
+def quoted(word: str) -> str:
+    """`word` quoted for a POSIX shell, when it needs to be."""
+    return shlex.quote(word)
 
 
-def _words(line: str, escape: str = "\\") -> list[str]:
-    protected = _HASH_IN_WORD.sub(_HASH_STAND_IN, _protected(line, escape))
-    lexer = shlex.shlex(protected, posix=True, punctuation_chars=_OPERATOR_CHARACTERS)
-    lexer.escape = escape
-    lexer.whitespace_split = True
-    lexer.commenters = "#"
-    # Quoted operator characters stay stand-ins until the commands are split (see `_command`).
-    return [word.replace(_HASH_STAND_IN, "#") for word in lexer]
-
-
-def _without_redirections(words: list[str]) -> list[str]:
-    kept: list[str] = []
-    skip = False
-    for word in words:
-        if skip:
-            skip = False
-        elif _REDIRECTION.match(word):
-            if kept and kept[-1].isdigit():
-                kept.pop()  # the descriptor of `2>`
-            skip = True
-        else:
-            kept.append(word)
-    return kept
-
-
-def _without_compound_headers(words: list[str]) -> list[str]:
-    """`words` without what only opens a compound command: a `for`/`select` header (it assigns, it runs nothing), a
-    `case WORD in` header, and a case clause's pattern (`a)`, when commands follow it; a `)` with none after it ends a
-    subshell)."""
-    if words[:1] in (["for"], ["select"]):
-        return []
-    if words[:1] == ["case"]:
-        words = words[words.index("in") + 1 :] if "in" in words else []
-    if ")" in words and "(" not in words[: (close := words.index(")"))] and close + 1 < len(words):
-        words = words[close + 1 :]
-    return words
-
-
-def _command(words: list[str], line: str) -> ShellCommand | None:
-    words = _without_redirections(words)
-    while words and words[0] in _KEYWORDS:
-        words = words[1:]
-    words = _without_compound_headers(words)
-    if words and words[0] in _CLOSING:
-        return None
-    env = []
-    while words and _ASSIGNMENT.match(words[0]):
-        name, value = words[0].split("=", 1)
-        words = words[1:]
-        if not value and words[:1] == ["("] and ")" in words:
-            # An array assignment, `name=(a b)`: its elements are its value, not a command.
-            close = words.index(")")
-            value, words = " ".join(words[1:close]), words[close + 1 :]
-        env.append((name, value.translate(_RESTORED)))
-    argv = tuple(word.translate(_RESTORED) for word in words if word not in {"(", ")"})
-    return ShellCommand(argv=argv, env=tuple(env), line=line) if argv else None
-
-
-_CONDITIONS = frozenset({"if", "elif", "while", "until"})
-_BODIES = frozenset({"then", "do"})
 # What reads the exit status of the command before.
 READS_STATUS = re.compile(r"\$\?|\$\{\?\}|PIPESTATUS")
-# The operators that end a list of commands; the others (`&&`, `||`, `|`) join it to the next.
-_LIST_ENDS = frozenset({"", ";", ";;", "&"})
-
-
-@dataclass(frozen=True, slots=True)
-class _Segment:
-    """The words between two operators, the operator after them ("" at the line's end), and whether they read the
-    exit status of the command before."""
-
-    words: list[str]
-    operator: str
-    reads: bool
-
-
-def _segments(words: list[str]) -> Iterator[_Segment]:
-    current: list[str] = []
-    testing = reads = False
-    for word in words:
-        reads = reads or bool(READS_STATUS.search(word))
-        # A conditional expression, `[[ … ]]`, runs nothing: its words (and its `||`, `&&`) are not commands.
-        if testing:
-            testing = word != "]]"
-            continue
-        if word == "[[" and all(kept in _KEYWORDS for kept in current):
-            testing = True
-            continue
-        if word in _SEPARATORS:
-            yield _Segment(current, word, reads)
-            current, reads = [], False
-        else:
-            current.append(word)
-    yield _Segment(current, "", reads)
-
-
-def _commands_of(words: list[str], line: str) -> list[ShellCommand]:
-    found: list[ShellCommand] = []
-    segments = list(_segments(words))
-    condition = ""
-    for index, segment in enumerate(segments):
-        leading = segment.words[: next((at for at, word in enumerate(segment.words) if word not in _KEYWORDS), None)]
-        for keyword in leading:
-            condition = keyword if keyword in _CONDITIONS else "" if keyword in _BODIES else condition
-        if segment.reads and found:
-            found[-1] = replace(found[-1], checked=True)
-        if (command := _command(segment.words, line)) is not None:
-            fallback = _fallback(segments[index + 1 :]) if segment.operator == "||" else ""
-            negated = "!" if "!" in leading else ""
-            found.append(replace(command, operator=segment.operator, condition=condition or negated, fallback=fallback))
-    return found
+# The longest fallback named whole; a longer one is named by its program.
+_FALLBACK_SHOWN = 24
+_CONTINUATION = re.compile(r"\\\r?\n")
+_POWERSHELL_CONTINUATION = re.compile(r"`\r?\n")
+# PowerShell has no compound commands in the tree: its keywords and braces are words, read as they always were.
+_KEYWORDS = frozenset({"then", "do", "else", "elif", "if", "while", "until", "!", "{", "}"})
+_CLOSING = frozenset({"fi", "done", "esac"})
+_CONDITIONS = frozenset({"if", "elif", "while", "until"})
+_BODIES = frozenset({"then", "do"})
 
 
 def _fails(argv: tuple[str, ...]) -> bool:
@@ -227,216 +102,270 @@ def _fails(argv: tuple[str, ...]) -> bool:
     return argv[:1] == ("false",) or (argv[:1] in (("exit",), ("return",)) and argv[1:2] != ("0",))
 
 
-def _fallback(rest: list[_Segment]) -> str:
-    """What runs after `||` (`rest`, to the line's end), as `ShellCommand.fallback` has it: "" when it fails again
-    (`exit 1`), tests the status, or goes on past the line."""
-    depth, first = 0, None
-    for segment in rest:
-        depth += sum(word.count("{") + word.count("(") - word.count("}") - word.count(")") for word in segment.words)
-        command = _command(segment.words, "")
-        # A fallback that tests the status (`|| [ $? -eq 124 ]`) fails again on all it does not accept.
-        if segment.reads or (command is not None and _fails(command.argv)):
-            return ""
-        first = first or command
-        if depth <= 0 and segment.operator in _LIST_ENDS:
-            break
-    if depth > 0 or first is None:
-        return ""
-    text = " ".join(word.translate(_RESTORED) for word in first.argv)
-    return text if len(text) <= _FALLBACK_SHOWN else f"{first.argv[0]} …"
+@dataclass(slots=True)
+class _Found:
+    """A simple command of one script, before the flags that need its neighbours are settled."""
 
-
-# The longest fallback named whole; a longer one is named by its program.
-_FALLBACK_SHOWN = 24
-
-
-_PLACEHOLDER = re.compile(r"__opaque_(\d+)__")
+    command: Simple
+    argv: tuple[str, ...]
+    env: tuple[tuple[str, str], ...]
+    operator: str
+    condition: str
+    # After `||`: the pipelines that run when it fails, to the end of its and-or list.
+    rest: tuple[Pipeline, ...] = ()
+    checked: bool = False
 
 
 @dataclass(slots=True)
-class _Hidden:
-    """The text hidden from the splitter while a script is split, by placeholder: opaque text, and command
-    substitutions with the commands they run."""
+class _Level:
+    """The commands of one script (the whole, or a substitution's), as the tree is walked."""
 
-    texts: list[str] = field(default_factory=list)
-    substitutions: dict[int, str] = field(default_factory=dict)
+    text: str
+    root: Script
+    powershell: bool
+    found: list[_Found | Malformed] = field(default_factory=list)
+    substitutions: list[Word] = field(default_factory=list)  # the words that hold them, in order
 
-    def shown(self, text: str) -> str:
-        return _PLACEHOLDER.sub(lambda match: self.texts[int(match[1])], text)
+    def line(self, offset: int) -> int:
+        return self.root.line_of(offset)
 
-    def hide(self, text: str, commands: str | None = None) -> str:
-        self.texts.append(self.shown(text))
-        if commands is not None:
-            self.substitutions[len(self.texts) - 1] = self.shown(commands)
-        return f"__opaque_{len(self.texts) - 1}__"
+    def line_text(self, index: int) -> str:
+        start, end = self.root.lines[index]
+        continuation = _POWERSHELL_CONTINUATION if self.powershell else _CONTINUATION
+        return continuation.sub(" ", self.text[start:end]).strip()
 
-    def substituted(self, line: str) -> list[str]:
-        """The commands of the command substitutions in `line`."""
-        return [
-            self.substitutions[index] for index in map(int, _PLACEHOLDER.findall(line)) if index in self.substitutions
-        ]
+    # walking the tree
 
-    def restored(self, command: ShellCommand) -> ShellCommand:
-        return replace(
-            command,
-            argv=tuple(map(self.shown, command.argv)),
-            env=tuple((name, self.shown(value)) for name, value in command.env),
-            line=self.shown(command.line),
+    def script(self, script: Script, condition: str) -> None:
+        for item in script.items:
+            if isinstance(item, Malformed):
+                self.found.append(item)
+            else:
+                self.item(item, condition)
+
+    def item(self, item: Item, condition: str) -> None:
+        chain = item.list
+        for index, pipeline in enumerate(chain.pipelines):
+            after = chain.operators[index] if index < len(chain.operators) else item.terminator
+            rest = chain.pipelines[index + 1 :] if after == "||" else ()
+            self.pipeline(pipeline, after, rest, condition)
+
+    def pipeline(self, pipeline: Pipeline, after: str, rest: tuple[Pipeline, ...], condition: str) -> None:
+        for index, command in enumerate(pipeline.commands):
+            last = index == len(pipeline.commands) - 1
+            operator = after if last else pipeline.operators[index]
+            negated = "!" if pipeline.negated and index == 0 else ""
+            if isinstance(command, Simple):
+                self.simple(command, operator, condition or negated, rest if last else ())
+            else:
+                self.compound(command, operator, condition or negated, rest if last else ())
+
+    def simple(self, command: Simple, operator: str, condition: str, rest: tuple[Pipeline, ...]) -> None:
+        self.substitutions.extend(_words_of(command))
+        argv = tuple(word.value for word in command.words)
+        if self.powershell:
+            argv, condition = self.powershell_words(command, argv, condition)
+        env = tuple((assignment.name, _assigned(assignment)) for assignment in command.assignments)
+        if argv:
+            self.found.append(_Found(command, argv, env, operator, condition, rest))
+
+    def powershell_words(self, command: Simple, argv: tuple[str, ...], condition: str) -> tuple[tuple[str, ...], str]:
+        """PowerShell's words as the line splitter always read them: leading keywords dropped (a condition's keyword
+        kept for the commands up to `then`/`do` on its line), and a closing word dropping its command."""
+        keywords = 0
+        line = self.line(command.start)
+        previous = next((found for found in reversed(self.found) if isinstance(found, _Found)), None)
+        if previous is not None and self.line(previous.command.start) == line and previous.condition in _CONDITIONS:
+            condition = condition or previous.condition
+        while keywords < len(argv) and argv[keywords] in _KEYWORDS:
+            keyword = argv[keywords]
+            condition = keyword if keyword in _CONDITIONS else "" if keyword in _BODIES else condition
+            keywords += 1
+        argv = argv[keywords:]
+        if argv[:1] in (("for",), ("select",)) or (argv and argv[0] in _CLOSING):
+            return (), condition
+        return argv, condition
+
+    def compound(self, command: Compounded, operator: str, condition: str, rest: tuple[Pipeline, ...]) -> None:
+        before = len(self.found)
+        inner = command.command
+        for redirection in command.redirections:
+            if redirection.target is not None:
+                self.substitutions.append(redirection.target)
+        if isinstance(inner, (Subshell, Group)):
+            self.script(inner.body, condition)
+        elif isinstance(inner, If):
+            self.branches(inner)
+        elif isinstance(inner, Loop):
+            self.script(inner.condition, inner.keyword)
+            self.script(inner.body, "")
+        else:
+            self.other(inner)
+        self.inherit(before, inner.end, operator, rest)
+
+    def branches(self, command: If) -> None:
+        for clause in command.clauses:
+            self.script(clause.condition, clause.keyword)
+            self.script(clause.body, "")
+        if command.otherwise is not None:
+            self.script(command.otherwise, "")
+
+    def other(self, command: object) -> None:
+        if isinstance(command, For):
+            self.substitutions.extend(command.words or ())
+            self.script(command.body, "")
+        elif isinstance(command, Case):
+            self.substitutions.extend([command.subject] if command.subject else [])
+            for case_item in command.items:
+                self.substitutions.extend(case_item.patterns)
+                self.script(case_item.body, "")
+        elif isinstance(command, Test):
+            self.substitutions.extend(command.words)
+        elif isinstance(command, Function):
+            body = command.body
+            self.compound(Compounded(body, ()), "", "", ()) if not isinstance(body, Simple) else self.simple(
+                body, "", "", ()
+            )
+
+    def inherit(self, before: int, end: int, operator: str, rest: tuple[Pipeline, ...]) -> None:
+        """The operator after a compound command is its last command's, when that one ends the line without its own
+        (`(cd x && make) || true`)."""
+        if len(self.found) == before:
+            return
+        last = self.found[-1]
+        if isinstance(last, _Found) and not last.operator and self.line(last.command.start) == self.line(end - 1):
+            last.operator, last.rest = operator, rest
+
+    # the flags that need neighbours
+
+    def settle(self) -> None:
+        commands = [found for found in self.found if isinstance(found, _Found)]
+        for index, found in enumerate(commands):
+            line = self.line(found.command.start)
+            following = commands[index + 1] if index + 1 < len(commands) else None
+            if following is not None and self.line(following.command.start) == line:
+                region = self.text[found.command.end : following.command.end]
+            else:
+                region = self.text[found.command.end : self.root.lines[line][1]]
+            found.checked = bool(READS_STATUS.search(region))
+
+    def fallback(self, found: _Found) -> str:
+        """What runs after `||`, as `ShellCommand.fallback` has it: "" when it fails again (`exit 1`), tests the
+        status, or goes on past the line."""
+        if found.operator != "||" or not found.rest:
+            return ""
+        start, end = _extent(found.rest[0]), _extent(found.rest[-1])
+        line = self.line(found.command.start)
+        if self.line(end[1] - 1) != line or READS_STATUS.search(self.text[start[0] : end[1]]):
+            return ""
+        level = _Level(self.text, self.root, self.powershell)
+        for pipeline in found.rest:
+            level.pipeline(pipeline, "", (), "")
+        commands = [other for other in level.found if isinstance(other, _Found)]
+        if not commands or any(_fails(other.argv) for other in commands):
+            return ""
+        text = " ".join(commands[0].argv)
+        return text if len(text) <= _FALLBACK_SHOWN else f"{commands[0].argv[0]} …"
+
+    # the stream
+
+    def stream(self) -> Iterator[ShellCommand | Unsplittable]:
+        """Line by line: the commands of the line's substitutions, then its own; a line's last command waits for the
+        next line, which may read its exit status."""
+        self.settle()
+        by_line: dict[int, list[_Found | Malformed]] = {}
+        for found in self.found:
+            start = found.start if isinstance(found, Malformed) else found.command.start
+            by_line.setdefault(self.line(start), []).append(found)
+        last: ShellCommand | None = None
+        for index in range(len(self.root.lines)):
+            text = self.line_text(index)
+            if last is not None:
+                yield replace(last, checked=True) if READS_STATUS.search(text) else last
+            yield from self.nested_on(index)
+            commands = [self.shell_command(found, text) for found in by_line.get(index, ())]
+            final = commands[-1] if commands else None
+            last = final if isinstance(final, ShellCommand) else None
+            yield from commands if last is None else commands[:-1]
+        if last is not None:
+            yield last
+
+    def nested_on(self, line: int) -> Iterator[ShellCommand | Unsplittable]:
+        """The commands of the substitutions on a line, in order, marked `nested`."""
+        words = sorted((word for word in self.substitutions if self.line(word.start) == line), key=lambda w: w.start)
+        for word in words:
+            for substitution in word.substitutions():
+                yield from map(_nested, _derived(self.text, substitution.script, self.powershell))
+
+    def shell_command(self, found: _Found | Malformed, line: str) -> ShellCommand | Unsplittable:
+        if isinstance(found, Malformed):
+            continuation = _POWERSHELL_CONTINUATION if self.powershell else _CONTINUATION
+            text = continuation.sub(" ", self.text[found.start : found.end]).strip()
+            return Unsplittable(line=text, reason=found.reason)
+        return ShellCommand(
+            argv=found.argv,
+            env=found.env,
+            line=line,
+            operator=found.operator,
+            condition=found.condition,
+            fallback=self.fallback(found),
+            checked=found.checked,
         )
 
 
-def split_script(
-    script: str, opaque: re.Pattern[str] | None = None, *, powershell: bool = False
-) -> Iterator[ShellCommand | Unsplittable]:
-    """The simple commands of `script`, in order, each with the line it was written on; the commands of a command
-    substitution come before the command it is part of.
-
-    Text matching `opaque` (such as a CI expression the CI service evaluates before the shell runs) is kept as
-    written, quotes and all, inside the word it is part of.
-    """
-    try:
-        found = list(_split_script(script, opaque, powershell=powershell))
-    except RecursionError:
-        # Line by line, so only the lines nested too deeply are lost.
-        found = []
-        for line in script.splitlines():
-            try:
-                found.extend(_split_script(line, opaque, powershell=powershell))
-            except RecursionError:
-                found.append(Unsplittable(line=line, reason="nested too deeply to split"))
-    yield from found
+def _extent(pipeline: Pipeline) -> tuple[int, int]:
+    first, last = pipeline.commands[0], pipeline.commands[-1]
+    start = first.start if isinstance(first, Simple) else first.command.start
+    end = last.end if isinstance(last, Simple) else last.command.end
+    return start, end
 
 
-def _split_script(
-    script: str, opaque: re.Pattern[str] | None, *, powershell: bool
-) -> Iterator[ShellCommand | Unsplittable]:
-    hidden = _Hidden()
-    # Opaque text first: a Make variable `$(CC)` is not a command substitution.
-    if opaque is not None:
-        script = opaque.sub(lambda match: hidden.hide(match[0]), script)
-    escape = "`" if powershell else "\\"
-    script = _substitutions(_without_heredocs(script), hidden.hide, escape)
-    continuation = _POWERSHELL_CONTINUATION if powershell else _CONTINUATION
-    # Each line's last command waits for the next line, which may read its exit status.
-    last: ShellCommand | None = None
-    for line, words in _lines(continuation.sub(" ", script).splitlines(), escape):
-        if last is not None:
-            yield replace(last, checked=True) if READS_STATUS.search(hidden.shown(line)) else last
-            last = None
-        for commands in hidden.substituted(line):
-            yield from map(_nested, _split_script(commands, opaque, powershell=powershell))
-        if isinstance(words, ValueError):
-            yield Unsplittable(line=hidden.shown(line), reason=str(words))
-            continue
-        found = [hidden.restored(command) for command in _commands_of(words, line)]
-        if found:
-            yield from found[:-1]
-            last = found[-1]
-    if last is not None:
-        yield last
+def _words_of(command: Simple) -> list[Word]:
+    words = [assignment.value for assignment in command.assignments]
+    for assignment in command.assignments:
+        words.extend(assignment.elements or ())
+    words.extend(command.words)
+    words.extend(redirection.target for redirection in command.redirections if redirection.target is not None)
+    return words
+
+
+def _assigned(assignment: Assignment) -> str:
+    """An assignment's value: the text after `=`, or an array's elements joined by spaces."""
+    if assignment.elements is not None:
+        return " ".join(element.value for element in assignment.elements)
+    return assignment.value.value.split("=", 1)[1]
 
 
 def _nested(found: ShellCommand | Unsplittable) -> ShellCommand | Unsplittable:
     return replace(found, nested=True) if isinstance(found, ShellCommand) else found
 
 
-# A here-document's operator and its delimiter word (`<<EOF`, `<<-'EOF'`, `<< "END"`); not a here-string (`<<<`).
-_HEREDOC = re.compile(r"(?<!<)<<(?!<)-?\s*(['\"]?)([A-Za-z_][\w.-]*)\1")
+def _derived(text: str, script: Script, powershell: bool) -> Iterator[ShellCommand | Unsplittable]:
+    level = _Level(text, script, powershell)
+    level.script(script, "")
+    return level.stream()
 
 
-def _without_heredocs(script: str) -> str:
-    """`script` without the bodies of its here-documents: the lines after `<<WORD`, up to the line that is `WORD`,
-    are data the command reads, not commands."""
-    kept: list[str] = []
-    pending: list[str] = []
-    for line in script.splitlines():
-        if pending:
-            if line.strip() == pending[0]:
-                pending.pop(0)
-            continue
-        kept.append(line)
-        pending = [match[2] for match in _HEREDOC.finditer(line.split(" #", 1)[0])]
-    return "\n".join(kept)
+def split_script(
+    script: str, opaque: re.Pattern[str] | None = None, *, powershell: bool = False
+) -> Iterator[ShellCommand | Unsplittable]:
+    """The simple commands of `script`, in order, each with the line it was written on; the commands of a command
+    substitution come before the line they are part of.
+
+    Text matching `opaque` (such as a CI expression the CI service evaluates before the shell runs) is kept as
+    written, quotes and all, inside the word it is part of. PowerShell scripts (`powershell=True`) are split with
+    PowerShell's escape character, the backquote, in place of the backslash (which is text there).
+    """
+    yield from _derived(script, parse(script, opaque=opaque, powershell=powershell), powershell)
 
 
-def _substitutions(script: str, hide: Callable[[str, str | None], str], escape: str = "\\") -> str:
-    """`script` with each command substitution outside single quotes (`$(…)`, and `` `…` `` where the backquote is no
-    escape; not arithmetic `$((…))`) replaced by what `hide` returns for its text and its commands."""
-    out: list[str] = []
-    index, quote = 0, ""
-    while index < len(script):
-        character = script[index]
-        if quote != "'" and (arithmetic := _arithmetic_end(script, index)) is not None:
-            out.append(hide(script[index:arithmetic], None))  # a value: kept whole, it runs nothing
-            index = arithmetic
-            continue
-        end = None if quote == "'" else _substitution_end(script, index, backquotes=escape != "`")
-        if end is not None:
-            text = script[index:end]
-            out.append(hide(text, text[2:-1] if text.startswith("$(") else text[1:-1]))
-            index = end
-            continue
-        if character == escape and quote != "'":
-            out.append(script[index : index + 2])
-            index += 2
-            continue
-        if character in "'\"" and quote in ("", character):
-            quote = "" if quote else character
-        out.append(character)
-        index += 1
-    return "".join(out)
-
-
-def _closing(script: str, start: int) -> int | None:
-    """Just after the parenthesis that closes the one at `start + 1` (`$(` or `$((`), or None when none does."""
-    depth = 0
-    for index in range(start + 1, len(script)):
-        depth += {"(": 1, ")": -1}.get(script[index], 0)
-        if depth == 0:
-            return index + 1
-    return None
-
-
-def _arithmetic_end(script: str, start: int) -> int | None:
-    """Where the arithmetic expansion `$((…))` starting at `start` ends (just after it); None if none starts there."""
-    return _closing(script, start) if script.startswith("$((", start) else None
-
-
-def _substitution_end(script: str, start: int, *, backquotes: bool = True) -> int | None:
-    """Where the command substitution starting at `start` ends (just after it), or None if none starts there."""
-    if backquotes and script.startswith("`", start):
-        end = script.find("`", start + 1)
-        return None if end < 0 else end + 1
-    if not script.startswith("$(", start) or script.startswith("$((", start):
-        return None
-    return _closing(script, start)
-
-
-def _lines(raw: list[str], escape: str = "\\") -> Iterator[tuple[str, list[str] | ValueError]]:
-    """Each line with its words; a quoted string that is still open at the end of a line goes on to the next."""
-    lines = iter(raw)
-    for first in lines:
-        line = first.strip()
-        if not line or line.startswith("#"):
-            continue
-        while True:
-            try:
-                words = _words(line, escape)
-            except ValueError as error:
-                following = next(lines, None)
-                if following is None or "quotation" not in str(error):
-                    yield line, error
-                    break
-                line = f"{line}\n{following}"
-                continue
-            # A `[[ … ]]` test may go on over several lines (`a ||` at the end of one); it is one command.
-            following = next(lines, None) if _open_test(words) else None
-            if following is None:
-                yield line, words
-                break
-            line = f"{line} {following.strip()}"
-
-
-def _open_test(words: list[str]) -> bool:
-    """Whether the words open more `[[` tests than they close."""
-    return words.count("[[") > words.count("]]")
+__all__ = [
+    "READS_STATUS",
+    "ShellCommand",
+    "ShellSyntaxError",
+    "Unsplittable",
+    "command_line",
+    "quoted",
+    "split_script",
+    "split_words",
+]
