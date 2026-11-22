@@ -56,12 +56,15 @@ _COMMITTING_ACTIONS = frozenset(
 
 def _keeps(command: Command) -> bool | None:
     """Whether `command` fails when a file changed (`git diff --exit-code` or `--quiet`) or keeps the changes
-    (`git commit`): True; whether it shows them for a later step to fail on (`git diff`, `git status --porcelain`):
-    False; None when it does neither."""
+    (`git commit`): True; whether it shows them for a later step to fail on (`git diff`, `git status --porcelain`, or
+    a `git diff --quiet` whose status the script tests, `if git diff --quiet; then`): False; None when it does
+    neither."""
     argv = resolved(command)
     if program(argv) != "git" or len(argv) < 2:
         return None
-    if argv[1] == "commit" or (argv[1] == "diff" and has_option(argv, "--exit-code", "--quiet")):
+    if argv[1] == "commit" or (
+        argv[1] == "diff" and has_option(argv, "--exit-code", "--quiet") and not command.advisory
+    ):
         return True
     return False if argv[1] == "diff" or (argv[1] == "status" and has_option(argv, "--porcelain", "-s")) else None
 

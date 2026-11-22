@@ -25,6 +25,8 @@ from project_validator.ecosystems.python.tox import _toml_tables
 from project_validator.ecosystems.ruby.tools import _read_simplecov_settings
 from project_validator.facts import Command, ConfigurationFile, Facts, Origin, Setting
 from project_validator.facts.dependencies import Locked
+from project_validator.facts.exit_status import ERREXIT
+from project_validator.facts.expansion import script_facts
 from project_validator.facts.formatting import FORMAT, Enforcement, _keeps
 from project_validator.facts.structure import SourceFile
 from project_validator.facts.tools import Run, defined_by
@@ -81,6 +83,18 @@ class GitDiffEnforcementTests(unittest.TestCase):
         for line, expected in cases.items():
             with self.subTest(line=line):
                 self.assertIs(_keeps(command(line)), expected)
+
+    def test_a_diff_whose_status_the_script_tests_only_shows_the_changes(self) -> None:
+        """`if git diff --quiet x; then ...; fi` decides what the script does next; it fails nothing itself
+        (nix-community/home-manager's update-maintainers.yml)."""
+        for script in ("if git diff --quiet x; then echo same; fi", "git diff --exit-code || true"):
+            with self.subTest(script=script):
+                [diff] = (
+                    fact
+                    for fact in script_facts(script, job="job", origin=Origin(path="ci.yml"), shell=ERREXIT)
+                    if isinstance(fact, Command) and fact.argv[:2] == ("git", "diff")
+                )
+                self.assertIs(_keeps(diff), False)
 
 
 class GitlabDependencyScanningTests(unittest.TestCase):

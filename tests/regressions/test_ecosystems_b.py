@@ -407,7 +407,7 @@ class NixTests(unittest.TestCase):
                 result = _run(code_formatting, NIX, github_job(CI, line))
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #285: `git diff --quiet` in an `if` condition counts as a failing step
+    @unittest.expectedFailure  # upstream #285: a job that shows the diff (or commits it back) is taken to enforce it
     def test_a_git_diff_quiet_in_an_if_condition_is_not_a_failing_step(self) -> None:
         """`nix fmt one-file.nix` followed by `if git diff --quiet ...; then ...; else git commit ...; fi` commits what
         changed; nothing fails, so the style is not enforced (nix-community/home-manager)."""
