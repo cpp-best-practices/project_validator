@@ -106,6 +106,12 @@ class SequenceTests(unittest.TestCase):
         self.assertEqual(_reason("set -e\npytest\necho done", POSIX), "")
         self.assertEqual(_reason("set -o errexit\npytest\necho done", POSIX), "")
 
+    def test_a_set_command_is_never_reported(self) -> None:
+        """glib's scripts open with `set -eux -o pipefail`, which runs before errexit is on: what set does is the
+        shell's options, not a step whose failure matters."""
+        self.assertEqual(_reason("set -eux -o pipefail\npytest", POSIX, "set"), "")
+        self.assertEqual(_reason("set +e\nset -e\npytest", ERREXIT, "set"), "")
+
     def test_with_errexit_a_command_before_and_in_the_middle_of_a_script_is_ignored(self) -> None:
         self.assertEqual(_reason("pytest && echo ok\necho next", ERREXIT), "before && in the middle of the script")
         self.assertEqual(_reason("echo first\npytest && echo ok", ERREXIT), "")
@@ -199,13 +205,31 @@ class GitHubTests(unittest.TestCase):
 
 
 class GitLabTests(unittest.TestCase):
-    def _advisory(self, script: list[str]) -> list[str]:
-        with temp_project({".gitlab-ci.yml": json.dumps({"check": {"script": script}})}) as root:
+    def _advisory(self, script: list[str], **job: object) -> list[str]:
+        with temp_project({".gitlab-ci.yml": json.dumps({"check": {"script": script, **job}})}) as root:
             return [command.advisory for command in make_context(root).facts.of(Command) if not command.via]
 
     def test_gitlab_s_bash_has_errexit_and_pipefail(self) -> None:
         self.assertEqual(self._advisory(["ruff check . | tee lint.log"]), ["", ""])
         self.assertEqual(self._advisory(["ruff check . || true"]), ["|| true", ""])
+
+    def test_the_lines_of_before_script_and_script_are_one_script(self) -> None:
+        """GitLab Runner runs a job's before_script and script lines as one shell script: errexit passes over a
+        failure before `&&` on any line but the last, which ends the script with its status."""
+        middle = "before && in the middle of the script"
+        self.assertEqual(self._advisory(["ruff check . && echo ok", "pytest"]), [middle, "", ""])
+        self.assertEqual(self._advisory(["pytest", "ruff check . && echo ok"]), ["", "", ""])
+        self.assertEqual(self._advisory(["pytest"], before_script=["ruff check . && echo ok"]), [middle, "", ""])
+
+    def test_a_set_on_one_line_holds_for_the_lines_after_it(self) -> None:
+        masked = "followed by other commands without set -e"
+        self.assertEqual(self._advisory(["set +e", "ruff check .", "echo done"]), ["", masked, ""])
+        self.assertEqual(self._advisory(["set +e", "set -e", "ruff check .", "echo done"])[2], "")
+
+    def test_after_script_cannot_fail_the_job(self) -> None:
+        """GitLab ignores the exit status of after_script, which runs in a shell of its own."""
+        after = "in after_script, whose failure GitLab ignores"
+        self.assertEqual(self._advisory(["pytest"], after_script=["ruff check .", "echo done"]), ["", after, after])
 
 
 class ExpandedTests(unittest.TestCase):
