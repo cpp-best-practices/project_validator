@@ -34,6 +34,10 @@ def json_value(context: Context, path: str, *keys: str, comments: bool = False) 
 
 # pre-commit's configuration: a hook it runs counts as evidence much as a CI step does.
 PRE_COMMIT_CONFIGURATION = (".pre-commit-config.yaml", ".pre-commit-config.yml")
+# devenv's module, whose `git-hooks` (named `pre-commit` before devenv 1.4) are pre-commit hooks: devenv writes the
+# configuration from them when its shell starts.
+DEVENV = "devenv.nix"
+DEVENV_HOOKS = frozenset({"git-hooks", "pre-commit"})
 
 
 # Where GitHub, GitLab and other forges look for a project's community documents (SECURITY.md, ...).

@@ -47,4 +47,6 @@ A `result` symlink is a build output, never committed.
 Renovate), is a dependency rule (#24). What nix runs in turn is followed (`nix run nixpkgs#statix -- check .` runs
 statix; `nix develop -c <command>`, `nix shell … -c <command>` and devenv's `devenv [<options>] shell -- <command>`
 run the command), except `nix-shell --run "…"`,
-whose command is a string.
+whose command is a string. Where no `.pre-commit-config.yaml` is committed, `pre-commit run` and `prek run` run the
+hooks `devenv.nix` enables (`git-hooks.hooks.rustfmt.enable = true;`, or devenv's older `pre-commit.hooks`): devenv
+writes the configuration from them when its shell starts.

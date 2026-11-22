@@ -434,7 +434,6 @@ class NixTests(unittest.TestCase):
                 tests = _run(tests_run, "Cargo Rust", {**RUST_TEST, **github_job(CI, line)})
                 self.assertEqual(tests.status, Status.PASS, tests)
 
-    @unittest.expectedFailure  # upstream #285: devenv's git-hooks are unknown
     def test_devenv_git_hooks_are_preks(self) -> None:
         """`devenv shell -- prek run -a` runs the hooks `devenv.nix` enables (rustfmt), which is the formatter checking
         (cachix/devenv)."""

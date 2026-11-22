@@ -3,6 +3,10 @@
 A local hook (`repo: local`) runs its `entry` with its `args`. A hook from another repository runs an entry defined
 in that repository, which is not read; it is recorded by its id, which by convention names its tool (`ruff`,
 `clang-format`), with its args.
+
+devenv writes the configuration from the hooks `devenv.nix` enables (`git-hooks.hooks.rustfmt.enable = true;`, named
+`pre-commit` before devenv 1.4) when its shell starts, and ignores the file it writes: where no configuration is
+committed, those hooks are what `pre-commit run` runs, each by its id.
 """
 
 from __future__ import annotations
@@ -13,10 +17,11 @@ from collections.abc import Iterator, Mapping
 
 from project_validator import yaml_support
 from project_validator.core import Context
-from project_validator.evidence import PRE_COMMIT_CONFIGURATION
+from project_validator.evidence import DEVENV, DEVENV_HOOKS, PRE_COMMIT_CONFIGURATION
 from project_validator.facts import Command, Fact, Origin, Setting, Unknown
 from project_validator.facts.arguments import positional
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Invocation, Script, found_at
+from project_validator.facts.nix_syntax import attributes
 from project_validator.facts.settings import SettingsReader
 
 _PROGRAMS = frozenset({"pre-commit", "prek"})
@@ -47,8 +52,12 @@ def _expansion(path: str, at: tuple[str | int, ...], repo: str, hook: Mapping[st
     words = tuple(str(arg) for arg in args) if isinstance(args, list) else ()
     if repo == "local" and isinstance(entry := hook.get("entry"), str):
         return Script(text=" ".join((entry, *(f"'{word}'" for word in words))), origin=origin)
-    program = _PROGRAMS_OF_HOOKS.get(str(hook["id"]), str(hook["id"]))
-    return Invocation(argv=(program, *words), line=f"the {hook['id']} hook of {repo}", origin=origin)
+    return _invocation(str(hook["id"]), words, repo, origin)
+
+
+def _invocation(hook: str, words: tuple[str, ...], repo: str, origin: Origin) -> Invocation:
+    program = _PROGRAMS_OF_HOOKS.get(hook, hook)
+    return Invocation(argv=(program, *words), line=f"the {hook} hook of {repo}", origin=origin)
 
 
 # Hooks whose id is not their program's name: the program the repository's hook runs (hadolint's `hadolint-docker`
@@ -61,10 +70,30 @@ _OPTIONS = frozenset(
 )
 
 
+def _devenv_hooks(path: str, context: Context) -> dict[str, Origin]:
+    """The ids of the hooks the `devenv.nix` at `path` enables, each where it does."""
+    return {
+        found[2]: Origin(path=path, at=found[:3])
+        for found, value in attributes(context.project.read_text(path))
+        if len(found) == 4 and found[0] in DEVENV_HOOKS and found[1] == "hooks" and found[3] == "enable"
+        if value == "true"
+    }
+
+
+def _devenv_run(path: str, enabled: dict[str, Origin], words: list[str], skipped: set[str]) -> Iterator[Expansion]:
+    """The hooks a `devenv.nix` enables that `pre-commit run` runs: those it names, if any, but those SKIP names."""
+    for hook, origin in enabled.items():
+        if (not words or hook in words) and hook not in skipped:
+            yield _invocation(hook, (), path, origin)
+
+
 def _configuration(command: Command, context: Context, options: dict[str, str]) -> tuple[str, object] | Unknown:
-    """The parsed configuration `pre-commit run` reads, or why it cannot be read."""
+    """The parsed configuration `pre-commit run` reads (the hooks a `devenv.nix` enables, where none is committed),
+    or why it cannot be read."""
     named = options.get("--config") or options.get("-c")
     path = found_at(context, command.directory, [named] if named else PRE_COMMIT_CONFIGURATION)
+    if path is None and not named and (devenv := found_at(context, command.directory, [DEVENV])) is not None:
+        return devenv, _devenv_hooks(devenv, context)
     if path is None:
         return Unknown(origin=command.origin, subject="the hooks", reason="no pre-commit configuration is found")
     try:
@@ -85,6 +114,8 @@ def _pre_commit_hooks(command: Command, context: Context) -> Iterator[Expansion]
     stage = options.get("--hook-stage")
     # pre-commit skips the hooks its SKIP variable names.
     skipped = {name.strip() for name in command.env.get("SKIP", "").split(",")}
+    if path.endswith(DEVENV) and isinstance(document, dict):
+        return _devenv_run(path, document, words, skipped)
     return (
         _expansion(path, ("repos", repo_index, "hooks", hook_index), repo, hook)
         for repo_index, hook_index, repo, hook in _hooks(document)
